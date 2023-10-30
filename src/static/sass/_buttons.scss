@@ -1,1 +1,86 @@
-// todos los botones
+@mixin btn-solid ($btnSize, $btnBG, $btnColor){
+    width: $btnSize;
+    background-color: $btnBG;
+    color: $btnColor;
+    border: none; 
+}
+@mixin btn-border ($btnSize, $btnColor){
+    width: $btnSize;
+    background-color: transparent;
+    color: $btnColor;
+    border: 2px solid $btnColor;    
+}
+@mixin typo-style{
+    padding: 10px;
+    text-align: center;
+    font-family: Roboto;
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+}
+// Boton primario
+// fondo azul con letras blancas. Existe en S-fitcontent Y L-100%
+.btn-primario-s{
+    @include btn-solid(fit-content, $blue-color, $white-color);
+    @include typo-style;
+}
+.btn-primario-s:hover{
+    background-color: $white-color;
+    color: $blue-color;
+    border: 2px solid $blue-color;
+}
+.btn-primario-l{
+    @include btn-solid(100%, $blue-color, $white-color);
+    @include typo-style;
+}
+.btn-primario-l:hover{
+    background-color: $white-color;
+    color: $blue-color;
+    border: 2px solid $blue-color;
+}
+
+// Boton secundario
+// fondo transp. con borde y letras azules. Existe en S-fitcontent Y L-100%
+.btn-secundario-s{
+    @include btn-border(fit-content, $blue-color);
+    @include typo-style;
+}
+.btn-secundario-s:hover{
+    background-color: $blue-color;
+    color: $white-color;
+    border:none;
+}
+.btn-secundario-l{
+    @include btn-border(100%, $blue-color);
+    @include typo-style;
+}
+.btn-secundario-l:hover{
+    background-color: $blue-color;
+    color: $white-color;
+    border:none;
+}
+// Boton terciario
+// fondo transp. con borde y letras rojas
+.btn-terciario{
+    @include btn-border(fit-content, $dark-red);
+    @include typo-style;
+    text-decoration: underline;
+    border-radius: 4px;
+}
+.btn-terciario:hover{
+    background-color: $dark-red;
+    color: $white-color;
+    border:none;
+}
+
+// Boton danger
+//fondo rojo con letras blancas
+.btn-danger{
+    @include btn-solid(fit-content, $dark-red, $white-color);
+    @include typo-style;
+}
+.btn-danger:hover{
+    background-color: $white-color;
+    color: $dark-red;
+    border: 2px solid $dark-red;
+}
