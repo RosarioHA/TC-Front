@@ -1,0 +1,129 @@
+// ESTILOS DE TEXTO CON SERIFA
+@mixin font-serif ($fontSize, $fontColor) {
+    font-family: 'Roboto Slab';
+    color: $fontColor;
+    font-size: $fontSize;
+}
+.text-serif-h1{
+    @include font-serif(49px, $grey-a-color);
+}
+.text-serif-h2{
+    @include font-serif(31px, $grey-a-color);
+    font-weight: 700;
+}
+.text-serif-h3{
+    @include font-serif(24px, $grey-a-color);
+    font-weight: 700;
+}
+
+// ESTILOS DE TEXTO SIN SERIFA
+@mixin font-sans ($fontSize, $fontWeight, $fontColor) {
+    font-family: 'Roboto';
+    color: $fontColor;
+    font-size: $fontSize;
+    font-weight: $fontWeight;
+}
+// h1
+.text-sans-h1{
+    @include font-sans(39px, 500, $grey-a-color);
+}
+.text-sans-h1-muted {
+    @include font-sans(39px, 500, $grey-light-color);
+}
+
+// h2
+.text-sans-h2{
+    @include font-sans(31px, 500, $grey-a-color);
+}
+.text-sans-h2-white{
+    @include font-sans(31px, 500, $white-color);
+}
+.text-sans-h2-tertiary{
+    @include font-sans(31px, 500, $tertiary-color);
+}
+
+//h3
+.text-sans-h3{
+    @include font-sans(25px, 500, $grey-a-color);
+}
+.text-sans-h3-tertiary{
+    @include font-sans(25px, 500, $tertiary-color);
+}
+.text-sans-h3-greyc{
+    @include font-sans(25px, 500, $grey-c-color);
+}
+
+// h4
+.text-sans-h4{
+    @include font-sans(23px, 500, $grey-a-color);
+}
+
+// h5
+.text-sans-h5{
+    @include font-sans(20px, 600, $grey-a-color);
+}
+.text-sans-h5-white{
+    @include font-sans(20px, 600, $white-color);
+}
+
+// h6
+.text-sans-h6{
+    @include font-sans(14px, 400, $grey-a-color);
+}
+.text-sans-h6-primary{
+    @include font-sans(14px, 400, $primary-color);
+}
+.text-sans-h6-darkred{
+    @include font-sans(14px, 400, $dark-red);
+}
+// h6 bold
+.text-sans-h6-bold{
+    @include font-sans(14px, 700, $grey-a-color);
+}
+
+// p
+.text-sans-p{
+    @include font-sans(16px, 400, $grey-a-color);
+    line-height: 30px;
+}
+.text-sans-p-blue{
+    @include font-sans(16px, 400, $blue-color);
+}
+.text-sans-p-tertiary{
+    @include font-sans(16px, 400, $tertiary-color);
+}
+.text-sans-p-white{
+    @include font-sans(16px, 400, $white-color);
+    line-height: 35px;
+}
+.text-sans-p-lightgrey{
+    @include font-sans(16px, 400, $grey-light-color); 
+}
+.text-sans-p-grayc{
+    @include font-sans(16px, 400, $grey-c-color);
+    line-height: 22px;
+}
+// p bold
+.text-sans-p-bold{
+    @include font-sans(16px, 700, $grey-a-color);
+    line-height: 22px;
+}
+.text-sans-p-bold-darkred{
+    @include font-sans(16px, 700, $dark-red);
+    line-height: 35px;
+}
+.text-sans-p-bold-blue{
+    @include font-sans(16px, 700, $blue-color);
+    line-height:24px;
+}
+.text-sans-p-bold-white{
+    @include font-sans(16px, 700, $white-color);
+    line-height: 24px;
+}
+.text-sans-b-darkred{
+    @include font-sans(16px, 700, $dark-red);
+    line-height: 24px;
+    text-decoration-line: underline;
+}
+
+
