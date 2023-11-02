@@ -1,13 +1,22 @@
+import { useState } from "react";
 import CustomInput from "../components/forms/custom_input";
 import CustomTextarea from "../components/forms/custom_textarea";
+import DropdownSelect from "../components/forms/dropdown_select";
 import DropdownCheckbox from "../components/forms/dropdwon_checkbox";
 
 const Home = () => {
+  const [selectedValue, setSelectedValue] = useState(null);
   const options = ['Alternativa 1', 'Alternativa 2', 'Alternativa 3'];
 
-  const handleSelectionChange = (selectedOptions) => {
-    // Esta función se llamará cuando el usuario confirme las selecciones en el dropdown.
+  // Funcion callback que recibe las opciones del checkbox seleccionado. Se entrega como parametro al componente DropdownCheckbox.
+  const handleCheckboxChange = (selectedOptions) => {
     console.log('Selecciones:', selectedOptions);
+  };
+
+  // Funcion callback que recibe la opcion elegida. Se entrega como parametro a DropdownSelect
+  const handleSelectChange = (selectedOption) => {
+    setSelectedValue(selectedOption);
+    console.log('Selecciones:', selectedValue);
   };
 
   return (
@@ -23,24 +32,32 @@ const Home = () => {
           <button className="btn-danger mb-5">Danger</button>
           <div className="my-3">
             < CustomInput 
-            label="Label del input"
+            label="Input"
             placeholder="ingresa tu informacion"
             id="idpersonalizado1"
             maxLength={80}/>
           </div>
           <div className="my-3">
             < CustomTextarea 
-            label="Label del textarea"
+            label="Textarea"
             placeholder="ingresa tu informacion"
             id="idpersonalizado2"
             maxLength={500} />
           </div>
           <div className="my-3">
             < DropdownCheckbox 
-            label="Label Dropdown Checkboxes"
+            label="Dropdown Checkboxes"
             placeholder="Placeholder personalizado"
             options={options}
-            onSelectionChange={handleSelectionChange}
+            onSelectionChange={handleCheckboxChange}
+            />
+          </div>
+          <div>
+            < DropdownSelect 
+            label="Dropdown Select"
+            placeholder="Selecciona una alternativa"
+            options={options}
+            onSelectionChange={handleSelectChange}
             />
           </div>
         </div>
