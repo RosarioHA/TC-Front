@@ -38,6 +38,7 @@ const Home = () => {
           <div className="my-3">
             < DropdownCheckbox 
             label="Label Dropdown Checkboxes"
+            placeholder="Placeholder personalizado"
             options={options}
             onSelectionChange={handleSelectionChange}
             />

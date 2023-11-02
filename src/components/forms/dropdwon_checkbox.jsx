@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 
-const DropdownCheckbox = ({ label, options, onSelectionChange }) => {
+const DropdownCheckbox = ({ label, placeholder, options, onSelectionChange }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [selectedOptions, setSelectedOptions] = useState([]);
     const dropdownRef = useRef(null);
@@ -45,13 +45,18 @@ const DropdownCheckbox = ({ label, options, onSelectionChange }) => {
     };  
 
   return (
-    <div>
-      <button onClick={toggleDropdown}>{label}</button>
+    <div className="input-container">
+      <label className="text-sans-p input-label">{label}</label>  
+      <button onClick={toggleDropdown} className="text-sans-p dropdown-btn">
+        {placeholder}
+        <i className="material-symbols-rounded ms-2">expand_more</i>
+      </button>
       {isOpen && (
         <div className="dropdown d-flex flex-column" ref={dropdownRef}>
           {options.map((option) => (
-            <label key={option}>
+            <label className={selectedOptions.includes(option) ? 'selected-option' : 'unselected-option'} key={option}>
               <input
+                className="ms-2 me-2 my-3"
                 type="checkbox"
                 value={option}
                 checked={selectedOptions.includes(option)}
