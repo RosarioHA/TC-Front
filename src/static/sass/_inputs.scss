@@ -1,0 +1,18 @@
+.input-container{
+    position: relative;
+}
+.input-label{
+    position: absolute;
+    top: -12px; /* Ajusta distancia vertical */
+    left: 10px; /* Ajusta distancia horizontal */
+    background-color: $white-color;
+    padding: 0 7px;
+}
+.input-s{
+    height: 60px;  
+}
+
+.dropdown-btn{
+    background-color: transparent;
+    border: 2px solid $grey-a-color;
+}
