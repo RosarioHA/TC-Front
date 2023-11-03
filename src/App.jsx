@@ -1,5 +1,6 @@
 import React, { Suspense } from 'react';
 import { Route, Routes } from 'react-router-dom';
+const Muestrario = React.lazy(() => import('./views/muestrario'));
 const MainLayout = React.lazy(() => import('./layout/mainLayout'));
 const Home = React.lazy(() => import('./views/home'));
 const Landing = React.lazy(() => import('./views/landing'));
@@ -16,6 +17,7 @@ function App()
   return (
       <Suspense fallback={<div>Cargando página...</div>}>
         <Routes>
+          <Route path="/muestrario" element={<Muestrario />} />
           <Route path="/" element={<Landing />} />
           <Route path="/home" element={<MainLayout />}>
             <Route index element={<Home />} />
