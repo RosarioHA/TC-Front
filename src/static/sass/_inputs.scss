@@ -1,0 +1,32 @@
+.input-container{
+    position: relative;
+}
+.input-label{
+    position: absolute;
+    top: -12px; /* Ajusta distancia vertical */
+    left: 10px; /* Ajusta distancia horizontal */
+    background-color: $white-color;
+    padding: 0 7px;
+}
+.input-s{
+    height: 60px;  
+}
+
+.dropdown-btn{
+    display: flex;
+    padding: 17px;
+    background-color: $white-color;
+    align-items: center;
+    justify-content:space-between;
+    border: 1px solid $grey-c-color;
+    height: 60px;
+    width: 100%;  
+}
+.selected-option{
+    border: 1px solid $grey-light-color;
+    background-color: $neutral-color;
+}
+.unselected-option{
+    border: 1px solid $grey-light-color;
+    background-color: $white-color; 
+}
