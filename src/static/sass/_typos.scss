@@ -16,6 +16,12 @@
     font-weight: 700;
 }
 
+.text-serif-title{
+    @include font-serif(18px, $grey-a-color);  
+    font-weight: 700; 
+}
+
+
 // ESTILOS DE TEXTO SIN SERIFA
 @mixin font-sans ($fontSize, $fontWeight, $fontColor) {
     font-family: 'Roboto';
@@ -125,5 +131,4 @@
     line-height: 24px;
     text-decoration-line: underline;
 }
-
 
