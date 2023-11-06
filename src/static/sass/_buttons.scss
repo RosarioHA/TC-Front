@@ -84,3 +84,56 @@
     color: $dark-red;
     border: 2px solid $dark-red;
 }
+
+.btn-sidebar {
+    display: flex;
+    padding: 0px 15px;
+    justify-content: center;
+    height: 48px;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid $blue-color;
+    background-color: $white-color;
+    color:$blue-color; 
+    text-align: center;
+    font-family: Roboto;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.btn-sidebar{ 
+    width: 248px;
+    &:hover, &:focus {
+      background-color: $blue-color;
+      color: $white-color;
+      border: 3px solid $light-blue;
+    }
+  }
+  
+  
+  .btn-logout {
+  display: flex;
+  padding: 0px 15px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  height: 48px;
+  border: 1px solid $dark-red;
+  background-color: $white-color;
+  color:$dark-red; 
+  text-align: center;
+  font-family: Roboto;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  text-decoration: none;
+  &:hover, &:focus {
+    border: 1px solid $dark-red;
+    background-color: $dark-red;
+    color:$white-color; 
+    }
+  }
+
+  

@@ -1,0 +1,118 @@
+.line-container{
+  position:absolute;
+  top: 0px;
+  height: fit-content;
+  bottom: 0;
+  left: 45px;
+}
+@mixin deco-line ($widthsize, $bgcolor){
+  width: $widthsize;
+  height: 8px;
+  background-color: $bgcolor;
+}
+#lineBlue {
+  @include deco-line(58px, #0f69c4);
+}
+#lineRed {
+  @include deco-line(82px, $secondary-color);
+}
+.sidebar {
+  display: flex;
+  width: 280px;
+  height:100vh;
+  flex-direction: column;
+  justify-content: flex-end;
+  background-color: $white-color;
+  align-items: center;
+  flex-shrink: 0;
+  top: 0%;
+  padding: 16px 16px 0px 16px;
+}
+
+
+  .title-section {
+    color: $grey-c-color;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 23px;
+  }
+
+  i.material-symbols-outlined,
+span.material-symbols-outlined {
+  align-self: center;
+  font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+
+.text-link {
+  color: $blue-color;
+  text-align: center;
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: 700;  
+  font-size: 20px;
+  line-height: 30px;
+  vertical-align: middle;
+  text-decoration: underline;
+  &:hover  , &:focus  {
+      color:$dark-blue; 
+    }
+  }
+
+  a.btn-link {
+    display:flex;
+    width: 248px;
+    align-items: center;
+    height: 48px;
+    color:$blue-color; 
+    text-align: center;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 24px; 
+    vertical-align: middle;
+    text-decoration: none;
+    &:hover  , &:focus  {
+      color:$dark-blue; 
+      background-color: $blue-sky;
+    }
+    }
+  
+
+  .badge-notification { 
+    display: flex;
+    padding: 4.2px 7.8px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 100px;
+    background: $dark-red;
+    text-align: center;
+    font-family: Roboto;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 100%;
+    }
+
+    .circle-user {
+      background-color:$tertiary-color; 
+      width: 44px;
+      height: 44px;
+      border-radius: 50px;
+      margin: 5px 15px 5px 15px;
+      }
+      
+      #icon-user span.material-symbols-outlined{
+        color:$white-color; 
+        font-size: 40px;
+        margin-left: 2px;
+      }
+      
+      #icon-setting span.material-symbols-outlined{
+        color:$tertiary-color; 
+        font-size: 24px ;
+        margin: 15px 12px 12px 12px 
+      }
+      
+      

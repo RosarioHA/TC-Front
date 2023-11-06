@@ -29,7 +29,10 @@ const Home = () => {
           <button className="btn-secundario-s mb-2">Secundario S</button>
           <button className="btn-secundario-l mb-2">Secundario L</button>
           <button className="btn-terciario mb-2">Terciario</button>
-          <button className="btn-danger mb-5">Danger</button>
+          <button className="btn-danger my-2">Danger</button>
+          <button className="btn-sidebar my-2">sidebar</button>
+
+          <button className='btn-logout my-2'>logout</button>
           <div className="my-3">
             < CustomInput 
             label="Input"
