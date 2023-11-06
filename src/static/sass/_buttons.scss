@@ -2,13 +2,15 @@
     width: $btnSize;
     background-color: $btnBG;
     color: $btnColor;
-    border: none; 
+    border: none;
+    display: flex; 
 }
 @mixin btn-border ($btnSize, $btnColor){
     width: $btnSize;
     background-color: transparent;
     color: $btnColor;
-    border: 2px solid $btnColor;    
+    border: 2px solid $btnColor;
+    display: flex;     
 }
 @mixin typo-style{
     padding: 10px;

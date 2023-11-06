@@ -18,9 +18,9 @@ const CustomInput = ({label, placeholder, id, maxLength}) => {
 
   return (
     <div className="d-flex flex-column input-container">
-      <label className="text-sans-p input-label ms-3 ms-sm-0">{label}</label>
+      <label className="text-sans-h5 input-label ms-3 ms-sm-0">{label}</label>
       <input 
-        className="input-s p-3"
+        className="input-s p-3 text-sans-p"
         type="text"
         placeholder={placeholder}
         id={id}

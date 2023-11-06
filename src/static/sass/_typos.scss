@@ -33,24 +33,24 @@
 
 // h2
 .text-sans-h2{
-    @include font-sans(31px, 500, $grey-a-color);
+    @include font-sans(32px, 500, $grey-a-color);
 }
 .text-sans-h2-white{
-    @include font-sans(31px, 500, $white-color);
+    @include font-sans(32px, 500, $white-color);
 }
 .text-sans-h2-tertiary{
-    @include font-sans(31px, 500, $tertiary-color);
+    @include font-sans(32px, 500, $tertiary-color);
 }
 
 //h3
 .text-sans-h3{
-    @include font-sans(25px, 500, $grey-a-color);
+    @include font-sans(24px, 500, $grey-a-color);
 }
 .text-sans-h3-tertiary{
-    @include font-sans(25px, 500, $tertiary-color);
+    @include font-sans(24px, 500, $tertiary-color);
 }
 .text-sans-h3-greyc{
-    @include font-sans(25px, 500, $grey-c-color);
+    @include font-sans(24px, 500, $grey-c-color);
 }
 
 // h4
@@ -60,10 +60,10 @@
 
 // h5
 .text-sans-h5{
-    @include font-sans(20px, 600, $grey-a-color);
+    @include font-sans(18px, 400, $grey-a-color);
 }
 .text-sans-h5-white{
-    @include font-sans(20px, 600, $white-color);
+    @include font-sans(18px, 400, $white-color);
 }
 
 // h6

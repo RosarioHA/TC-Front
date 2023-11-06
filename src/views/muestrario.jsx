@@ -3,6 +3,7 @@ import CustomInput from "../components/forms/custom_input";
 import CustomTextarea from "../components/forms/custom_textarea";
 import DropdownSelect from "../components/forms/dropdown_select";
 import DropdownCheckbox from "../components/forms/dropdwon_checkbox";
+import DropdownCheckboxBuscador from "../components/forms/dropdown_checkbox_buscador";
 
 const Home = () => {
   const [selectedValue, setSelectedValue] = useState(null);
@@ -58,6 +59,14 @@ const Home = () => {
             placeholder="Selecciona una alternativa"
             options={options}
             onSelectionChange={handleSelectChange}
+            />
+          </div>
+          <div className="my-3">
+            < DropdownCheckboxBuscador 
+            label="Dropdown Checkboxes con Buscador"
+            placeholder="Placeholder personalizado"
+            options={options}
+            onSelectionChange={handleCheckboxChange}
             />
           </div>
         </div>
