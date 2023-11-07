@@ -35,42 +35,42 @@
 .text-sans-h2 {
   font-family: "Roboto";
   color: #373737;
-  font-size: 31px;
+  font-size: 32px;
   font-weight: 500;
 }
 
 .text-sans-h2-white {
   font-family: "Roboto";
   color: #FFF;
-  font-size: 31px;
+  font-size: 32px;
   font-weight: 500;
 }
 
 .text-sans-h2-tertiary {
   font-family: "Roboto";
   color: #001C41;
-  font-size: 31px;
+  font-size: 32px;
   font-weight: 500;
 }
 
 .text-sans-h3 {
   font-family: "Roboto";
   color: #373737;
-  font-size: 25px;
+  font-size: 24px;
   font-weight: 500;
 }
 
 .text-sans-h3-tertiary {
   font-family: "Roboto";
   color: #001C41;
-  font-size: 25px;
+  font-size: 24px;
   font-weight: 500;
 }
 
 .text-sans-h3-greyc {
   font-family: "Roboto";
   color: #656565;
-  font-size: 25px;
+  font-size: 24px;
   font-weight: 500;
 }
 
@@ -84,15 +84,15 @@
 .text-sans-h5 {
   font-family: "Roboto";
   color: #373737;
-  font-size: 20px;
-  font-weight: 600;
+  font-size: 18px;
+  font-weight: 400;
 }
 
 .text-sans-h5-white {
   font-family: "Roboto";
   color: #FFF;
-  font-size: 20px;
-  font-weight: 600;
+  font-size: 18px;
+  font-weight: 400;
 }
 
 .text-sans-h6 {
@@ -214,7 +214,8 @@
   width: fit-content;
   background-color: #0F69C4;
   color: #FFF;
-  border: none;
+  border: 2px solid #0F69C4;
+  display: flex;
   padding: 10px;
   text-align: center;
   font-family: Roboto;
@@ -233,7 +234,8 @@
   width: 100%;
   background-color: #0F69C4;
   color: #FFF;
-  border: none;
+  border: 2px solid #0F69C4;
+  display: flex;
   padding: 10px;
   text-align: center;
   font-family: Roboto;
@@ -254,6 +256,7 @@
   background-color: transparent;
   color: #0F69C4;
   border: 2px solid #0F69C4;
+  display: flex;
   padding: 10px;
   text-align: center;
   font-family: Roboto;
@@ -265,7 +268,7 @@
 .btn-secundario-s:hover {
   background-color: #0F69C4;
   color: #FFF;
-  border: none;
+  border: 2px solid #0F69C4;
 }
 
 .btn-secundario-l {
@@ -273,6 +276,7 @@
   background-color: transparent;
   color: #0F69C4;
   border: 2px solid #0F69C4;
+  display: flex;
   padding: 10px;
   text-align: center;
   font-family: Roboto;
@@ -293,6 +297,7 @@
   background-color: transparent;
   color: #871a1a;
   border: 2px solid #871a1a;
+  display: flex;
   padding: 10px;
   text-align: center;
   font-family: Roboto;
@@ -314,7 +319,8 @@
   width: fit-content;
   background-color: #871a1a;
   color: #FFF;
-  border: none;
+  border: 2px solid #871a1a;
+  display: flex;
   padding: 10px;
   text-align: center;
   font-family: Roboto;
@@ -364,4 +370,9 @@
 .unselected-option {
   border: 1px solid #BBBBBB;
   background-color: #FFF;
+}
+
+.ghost-input {
+  border: none;
+  width: 100%;
 }/*# sourceMappingURL=styles.css.map */

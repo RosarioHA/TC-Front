@@ -125,30 +125,32 @@ const CreacionUsuario = () => {
           </div>
         </div>
 
-        <div>
-          <table>
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Competencia</th>
-                <th>Acción</th>
-              </tr>
-            </thead>
-            <tbody>
-              {Object.keys(competenciasSeleccionadas).map((competencia, index) => (
-                <tr key={competencia}>
-                  <td>{index + 1}</td>
-                  <td>{competencia}</td>
-                  <td>
-                    <button onClick={() => handleRemoveCompetencia(competencia)}>
-                      Eliminar
-                    </button>
-                  </td>
+        {Object.keys(competenciasSeleccionadas).length > 0 && (
+          <div>
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Competencia</th>
+                  <th>Acción</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {Object.keys(competenciasSeleccionadas).map((competencia, index) => (
+                  <tr key={competencia}>
+                    <td>{index + 1}</td>
+                    <td>{competencia}</td>
+                    <td>
+                      <button onClick={() => handleRemoveCompetencia(competencia)}>
+                        Eliminar
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
         
         <button className="btn-primario-s mb-5">
           <p className="mb-0">Crear Usuario</p>
