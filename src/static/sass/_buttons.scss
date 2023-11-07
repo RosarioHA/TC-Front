@@ -74,6 +74,19 @@
     color: $white-color;
     border:none;
 }
+// Boton terciario sin borde
+// fondo transp. con borde y letras rojas
+.btn-terciario-ghost{
+    @include btn-border(fit-content, $dark-red);
+    @include typo-style;
+    border-radius: 4px;
+    border: none;
+}
+.btn-terciario-ghost:hover{
+    background-color: $dark-red;
+    color: $white-color;
+    border:none;
+}
 
 // Boton danger
 //fondo rojo con letras blancas
