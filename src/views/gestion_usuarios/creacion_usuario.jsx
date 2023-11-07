@@ -6,6 +6,7 @@ import DropdownCheckboxBuscador from "../../components/forms/dropdown_checkbox_b
 
 const CreacionUsuario = () => {
   const [estado, setEstado] = useState('inactivo');
+  const [activeButton, setActiveButton] = useState(null);
   const opcionesPerfil = ['SUBDERE', 'Sectorial', 'DIPRES', 'GORE']; //Luego vendran desde el back
   const opcionesCompetencia = ['Una competencia x', 'compilado', 'complejo', 'CoMpOnEnTe', 'compadre', 'Otra competencia x', 'Competencia y', 'Competencia z']; //Luego vendran desde el back
 
@@ -23,6 +24,7 @@ const CreacionUsuario = () => {
   // Maneja cambio de estado
   const handleEstadoChange = (nuevoEstado) => {
     setEstado(nuevoEstado);
+    setActiveButton(nuevoEstado);
     console.log('estado seleccionado', estado)
   };
 
@@ -73,14 +75,16 @@ const CreacionUsuario = () => {
           <h5 className="text-sans-h5">Estado</h5>
           <div className="d-flex mb-5">
             <button
-            className={` ${estado === 'activo' ? 'btn-primario-s' : 'btn-secundario-s'}`}
+            className={` ${activeButton === 'activo' ? 'btn-primario-s' : 'btn-secundario-s'}`}
             onClick={() => handleEstadoChange('activo')}>
               <p className="mb-0 text-decoration-underline">Activo</p>
+              {activeButton === 'activo' && <i className="material-symbols-rounded ms-2">check</i>}
             </button>
             <button
-            className={`ms-2 ${estado === 'inactivo' ? 'btn-primario-s' : 'btn-secundario-s'}`}
+            className={`ms-2 ${activeButton === 'inactivo' ? 'btn-primario-s' : 'btn-secundario-s'}`}
             onClick={() => handleEstadoChange('inactivo')}>
               <p className="mb-0 text-decoration-underline">Inactivo</p>
+              {activeButton === 'inactivo' && <i className="material-symbols-rounded ms-2">check</i>}
             </button>
           </div>
         </div>
