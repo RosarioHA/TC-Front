@@ -1,23 +1,30 @@
-import { useNavigate } from "react-router-dom"
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import CustomInput from "../../components/forms/custom_input";
 import DropdownSelect from "../../components/forms/dropdown_select";
 import DropdownCheckboxBuscador from "../../components/forms/dropdown_checkbox_buscador";
 
 const CreacionUsuario = () => {
+  const [estado, setEstado] = useState('inactivo');
   const opcionesPerfil = ['SUBDERE', 'Sectorial', 'DIPRES', 'GORE']; //Luego vendran desde el back
-  const opcionesCompetencia = ['Una competencia x', 'compilado', 'complejo', 'CoMpOnEnTe', 'Otra competencia x', 'Competencia y', 'Competencia z']; //Luego vendran desde el back
+  const opcionesCompetencia = ['Una competencia x', 'compilado', 'complejo', 'CoMpOnEnTe', 'compadre', 'Otra competencia x', 'Competencia y', 'Competencia z']; //Luego vendran desde el back
 
   // Funcion callback que recibe las opciones del checkbox seleccionado. Se entrega como parametro al componente DropdownCheckbox.
   const handleCheckboxChange = (perfilSeleccionado) => {
     console.log('Perfil seleccionado:', perfilSeleccionado);
   };
 
-    // Maneja boton de volver atras
-    const history = useNavigate();
-    const handleBackButtonClick = () => {
-      history(-1);
-    };
-  
+  // Maneja boton de volver atras
+  const history = useNavigate();
+  const handleBackButtonClick = () => {
+    history(-1);
+  };
+
+  // Maneja cambio de estado
+  const handleEstadoChange = (nuevoEstado) => {
+    setEstado(nuevoEstado);
+    console.log('estado seleccionado', estado)
+  };
 
   return (
     <div className="container">
@@ -64,13 +71,15 @@ const CreacionUsuario = () => {
 
         <div className="mb-5">
           <h5 className="text-sans-h5">Estado</h5>
-          <div className="d-flex">
-            {/* Aqui tiene que aparecer un check dinamicamente en la 
-            opcion seleccionada, y cambiar de estilo a azul */}
-            <button className="btn-secundario-s">
+          <div className="d-flex mb-5">
+            <button
+            className={` ${estado === 'activo' ? 'btn-primario-s' : 'btn-secundario-s'}`}
+            onClick={() => handleEstadoChange('activo')}>
               <p className="mb-0 text-decoration-underline">Activo</p>
-              </button>
-            <button className="btn-secundario-s ms-2">
+            </button>
+            <button
+            className={`ms-2 ${estado === 'inactivo' ? 'btn-primario-s' : 'btn-secundario-s'}`}
+            onClick={() => handleEstadoChange('inactivo')}>
               <p className="mb-0 text-decoration-underline">Inactivo</p>
             </button>
           </div>
