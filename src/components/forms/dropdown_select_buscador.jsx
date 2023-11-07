@@ -59,7 +59,7 @@ const DropdownButtonSearch = ({ label, placeholder, options, onSelectionChange }
               onMouseDown={handleInputClick}
             />
           ) : (
-            <span>{placeholder}</span>
+            <span>{selectedOption || placeholder}</span>
           )}
           <i className="material-symbols-rounded ms-2">
             {isOpen ? 'expand_less' : 'expand_more'}
@@ -73,12 +73,12 @@ const DropdownButtonSearch = ({ label, placeholder, options, onSelectionChange }
               className={selectedOption && selectedOption.includes(option) ? 'selected-option' : 'unselected-option'}
                 key={option}
               >
-                <button
+                <div
                   className="ms-2 me-2 my-3"
                   onClick={() => handleOptionClick(option)}
                 >
                   {option}
-                </button>
+                </div>
               </label>
             ))}
           </div>
