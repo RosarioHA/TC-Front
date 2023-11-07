@@ -2,8 +2,9 @@ import { useState } from "react";
 import CustomInput from "../components/forms/custom_input";
 import CustomTextarea from "../components/forms/custom_textarea";
 import DropdownSelect from "../components/forms/dropdown_select";
-import DropdownCheckbox from "../components/forms/dropdwon_checkbox";
+import DropdownCheckbox from "../components/forms/dropdown_checkbox";
 import DropdownCheckboxBuscador from "../components/forms/dropdown_checkbox_buscador";
+import DropdownSelectBuscador from "../components/forms/dropdown_select_buscador";
 
 const Home = () => {
   const [selectedValue, setSelectedValue] = useState(null);
@@ -72,6 +73,14 @@ const Home = () => {
             placeholder="Placeholder personalizado"
             options={options}
             onSelectionChange={handleCheckboxChange}
+            />
+          </div>
+          <div>
+            <DropdownSelectBuscador
+            label= "Dropdown Select con Buscador" 
+            placeholder="Placeholder personalizado" 
+            options={options}
+            onSelectionChange={handleSelectChange}
             />
           </div>
         </div>

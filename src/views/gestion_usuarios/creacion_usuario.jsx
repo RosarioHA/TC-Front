@@ -9,7 +9,7 @@ const CreacionUsuario = () => {
   const [activeButton, setActiveButton] = useState(null);
   const [competenciasSeleccionadas, setCompetenciasSeleccionadas] = useState({});
   const opcionesPerfil = ['SUBDERE', 'Sectorial', 'DIPRES', 'GORE']; //Luego vendran desde el back
-  const opcionesCompetencia = ['Una competencia x', 'compilado', 'complejo', 'CoMpOnEnTe', 'compadre', 'Otra competencia x', 'Competencia y', 'Competencia z']; //Luego vendran desde el back
+  const opcionesCompetencia = ['Una competencia x', 'compilado', 'complejo', 'CoMpOnEnTe', 'compadre', 'Otra competencia x']; //Luego vendran desde el back
 
   // Maneja boton de volver atras.
   const history = useNavigate();
