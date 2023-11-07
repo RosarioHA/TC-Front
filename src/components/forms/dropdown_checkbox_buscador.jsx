@@ -1,8 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 
-const DropdownCheckboxBuscador = ({ label, placeholder, options, onSelectionChange }) => {
+const DropdownCheckboxBuscador = ({ label, placeholder, options, onSelectionChange, selectedOptions }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOptions, setSelectedOptions] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const dropdownRef = useRef(null);
 
@@ -11,7 +10,6 @@ const DropdownCheckboxBuscador = ({ label, placeholder, options, onSelectionChan
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         // Hacer clic fuera del dropdown, cierra el dropdown y refleja las selecciones
         setIsOpen(false);
-        onSelectionChange(selectedOptions);
       }
     }
 
@@ -27,20 +25,19 @@ const DropdownCheckboxBuscador = ({ label, placeholder, options, onSelectionChan
       // Limpieza al desmontar el componente
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [isOpen, selectedOptions, onSelectionChange]);
+  }, [isOpen]);
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
-    if (!isOpen) {
-      setIsOpen(true);
-    }
   };
 
   const handleCheckboxChange = (option) => {
     if (selectedOptions.includes(option)) {
-      setSelectedOptions(selectedOptions.filter((item) => item !== option));
+      // Deselecciona la opción
+      onSelectionChange(selectedOptions.filter((item) => item !== option));
     } else {
-      setSelectedOptions([...selectedOptions, option]);
+      // Selecciona la opción
+      onSelectionChange([...selectedOptions, option]);
     }
   };
 

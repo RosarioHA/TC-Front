@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import CustomInput from "../../components/forms/custom_input";
 import DropdownSelect from "../../components/forms/dropdown_select";
@@ -7,26 +7,45 @@ import DropdownCheckboxBuscador from "../../components/forms/dropdown_checkbox_b
 const CreacionUsuario = () => {
   const [estado, setEstado] = useState('inactivo');
   const [activeButton, setActiveButton] = useState(null);
+  const [competenciasSeleccionadas, setCompetenciasSeleccionadas] = useState({});
   const opcionesPerfil = ['SUBDERE', 'Sectorial', 'DIPRES', 'GORE']; //Luego vendran desde el back
   const opcionesCompetencia = ['Una competencia x', 'compilado', 'complejo', 'CoMpOnEnTe', 'compadre', 'Otra competencia x', 'Competencia y', 'Competencia z']; //Luego vendran desde el back
 
-  // Funcion callback que recibe las opciones del checkbox seleccionado. Se entrega como parametro al componente DropdownCheckbox.
-  const handleCheckboxChange = (perfilSeleccionado) => {
-    console.log('Perfil seleccionado:', perfilSeleccionado);
-  };
-
-  // Maneja boton de volver atras
+  // Maneja boton de volver atras.
   const history = useNavigate();
   const handleBackButtonClick = () => {
     history(-1);
   };
 
-  // Maneja cambio de estado
+  // Callback que recibe las opciones de DropdownCheckbox de Perfil.
+  const handlePerfilChange = (perfilSeleccionado) => {
+    console.log('Perfil seleccionado:', perfilSeleccionado);
+  };
+
+  // Maneja cambio de Estado del usuario.
   const handleEstadoChange = (nuevoEstado) => {
     setEstado(nuevoEstado);
     setActiveButton(nuevoEstado);
     console.log('estado seleccionado', estado)
   };
+
+  // Callback que maneja competencias seleccionadas y su eliminacion.
+  const handleCompetenciasChange = useCallback(
+    (selectedOptions) => {
+      const updatedCompetencias = {};
+      selectedOptions.forEach((competencia) => {
+        updatedCompetencias[competencia] = true;
+      });
+      setCompetenciasSeleccionadas(updatedCompetencias);
+    },
+    []
+  );
+  const handleRemoveCompetencia = (competencia) => {
+    const updatedCompetencias = { ...competenciasSeleccionadas };
+    delete updatedCompetencias[competencia];
+    setCompetenciasSeleccionadas(updatedCompetencias);
+  };
+  
 
   return (
     <div className="container">
@@ -66,7 +85,7 @@ const CreacionUsuario = () => {
           label="Elige el perfil de usuario (Obligatorio)"
           placeholder="Elige el perfil de usuario"
           options={opcionesPerfil}
-          onSelectionChange={handleCheckboxChange} />
+          onSelectionChange={handlePerfilChange} />
         </div>
 
         {/* AQUI APARECE UN SEGUNDO SELECTOR SI SE ESCOGE LA ALTERNATIVA "SECTORIAL" */}
@@ -95,7 +114,8 @@ const CreacionUsuario = () => {
             label="Competencia Asignada (Opcional)"
             placeholder="Busca el nombre de la competencia"
             options={opcionesCompetencia}
-            onSelectionChange={handleCheckboxChange}
+            selectedOptions={Object.keys(competenciasSeleccionadas)}
+            onSelectionChange={handleCompetenciasChange}
             />
           </div> 
         
@@ -103,6 +123,31 @@ const CreacionUsuario = () => {
             <i className="material-symbols-rounded me-2">info</i>
             <h6 className="">Si la competencia no está creada, debes crearla primero y luego asociarle un usuario. </h6>
           </div>
+        </div>
+
+        <div>
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Competencia</th>
+                <th>Acción</th>
+              </tr>
+            </thead>
+            <tbody>
+              {Object.keys(competenciasSeleccionadas).map((competencia, index) => (
+                <tr key={competencia}>
+                  <td>{index + 1}</td>
+                  <td>{competencia}</td>
+                  <td>
+                    <button onClick={() => handleRemoveCompetencia(competencia)}>
+                      Eliminar
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
         
         <button className="btn-primario-s mb-5">
