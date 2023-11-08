@@ -1,7 +1,7 @@
 const Navbar = () =>
 {
   return (
-    <nav className="d-flex  bg-white border-bottom justify-content-end me-5 w-100 sticky-top mt-1 py-3">
+    <nav className="d-flex  bg-white border-bottom justify-content-end me-5 w-100 sticky-top mt-1 py-1">
       <div className="align-self-center mx-2 text-sans-h5">
         <span>Hola, $userName</span>
         </div>

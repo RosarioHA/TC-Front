@@ -2,7 +2,7 @@
     width: $btnSize;
     background-color: $btnBG;
     color: $btnColor;
-    border: none; 
+    border: 2px solid $btnColor; 
 }
 @mixin btn-border ($btnSize, $btnColor){
     width: $btnSize;
@@ -42,13 +42,13 @@
 // Boton secundario
 // fondo transp. con borde y letras azules. Existe en S-fitcontent Y L-100%
 .btn-secundario-s{
-    @include btn-border(fit-content, $blue-color);
+    @include btn-border(fit-content, $blue-color, );
     @include typo-style;
 }
 .btn-secundario-s:hover{
     background-color: $blue-color;
     color: $white-color;
-    border:none;
+    border: 2px solid $blue-color;   
 }
 .btn-secundario-l{
     @include btn-border(100%, $blue-color);
@@ -57,7 +57,7 @@
 .btn-secundario-l:hover{
     background-color: $blue-color;
     color: $white-color;
-    border:none;
+    border: 2px solid $blue-color;   
 }
 // Boton terciario
 // fondo transp. con borde y letras rojas
@@ -70,7 +70,7 @@
 .btn-terciario:hover{
     background-color: $dark-red;
     color: $white-color;
-    border:none;
+    border: 2px solid $dark-red;   
 }
 
 // Boton danger

@@ -4,6 +4,7 @@
   height: fit-content;
   bottom: 0;
   left: 45px;
+  padding-left: 15px;
 }
 @mixin deco-line ($widthsize, $bgcolor){
   width: $widthsize;
@@ -11,7 +12,7 @@
   background-color: $bgcolor;
 }
 #lineBlue {
-  @include deco-line(58px, #0f69c4);
+  @include deco-line(58px, $blue-color);
 }
 #lineRed {
   @include deco-line(82px, $secondary-color);
@@ -29,13 +30,6 @@
   padding: 16px 16px 0px 16px;
 }
 
-
-  .title-section {
-    color: $grey-c-color;
-    font-size: 18px;
-    font-weight: 400;
-    line-height: 23px;
-  }
 
   i.material-symbols-outlined,
 span.material-symbols-outlined {

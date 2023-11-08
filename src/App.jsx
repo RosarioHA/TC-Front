@@ -21,7 +21,7 @@ function App()
           <Route path="/" element={<Landing />} />
           <Route path="/home" element={<MainLayout />}>
             <Route index element={<Home />} />
-            <Route path="gestion_usuarios" element={<GestionUsuarios />}></Route>
+            <Route path="administrar_usuarios" element={<GestionUsuarios />}></Route>
             <Route path="crear_usuario" element={<CrearUsuario />}></Route>
             <Route path="editar_usuario" element={<EditarUsuario />}></Route>
             <Route path="gestion_competencias" element={<GestionCompetencias />}></Route>
