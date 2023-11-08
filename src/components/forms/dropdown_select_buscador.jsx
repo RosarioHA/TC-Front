@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 
-const DropdownButtonSearch = ({ label, placeholder, options, onSelectionChange }) => {
+const DropdownSelectBuscador = ({ label, placeholder, options, onSelectionChange }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedOption, setSelectedOption] = useState(null);
@@ -87,5 +87,5 @@ const DropdownButtonSearch = ({ label, placeholder, options, onSelectionChange }
     );
   };
   
-  export default DropdownButtonSearch;
+  export default DropdownSelectBuscador;
   

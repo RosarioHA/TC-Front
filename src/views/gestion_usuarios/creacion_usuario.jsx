@@ -3,13 +3,22 @@ import { useNavigate } from "react-router-dom";
 import CustomInput from "../../components/forms/custom_input";
 import DropdownSelect from "../../components/forms/dropdown_select";
 import DropdownCheckboxBuscador from "../../components/forms/dropdown_checkbox_buscador";
+import DropdownSelectBuscador from "../../components/forms/dropdown_select_buscador";
 
 const CreacionUsuario = () => {
   const [estado, setEstado] = useState('inactivo');
   const [activeButton, setActiveButton] = useState(null);
   const [competenciasSeleccionadas, setCompetenciasSeleccionadas] = useState({});
-  const opcionesPerfil = ['SUBDERE', 'Sectorial', 'DIPRES', 'GORE']; //Luego vendran desde el back
-  const opcionesCompetencia = ['Una competencia x', 'compilado', 'complejo', 'CoMpOnEnTe', 'compadre', 'Otra competencia x']; //Luego vendran desde el back
+  const [perfilSeleccionado, setPerfilSeleccionado] = useState(null);
+  const [sectorSeleccionado, setSectorSeleccionado] = useState(null);
+  const [regionSeleccionada, setRegionSeleccionada] = useState(null);
+
+
+  // Opciones selectores y checkboxes, luego vendran desde el backend
+  const opcionesPerfil = ['SUBDERE', 'Sectorial', 'DIPRES', 'GORE'];
+  const opcionesSector = ['un sector', 'otro sector','organismo random'];
+  const regiones = ['Arica y Parinacota', 'Magallanes', 'Metropolitana de Santiago', 'O`Higgins']
+  const opcionesCompetencia = ['Una competencia x', 'compilado', 'complejo', 'CoMpOnEnTe', 'compadre', 'Otra competencia x'];
 
   // Maneja boton de volver atras.
   const history = useNavigate();
@@ -18,9 +27,22 @@ const CreacionUsuario = () => {
   };
 
   // Callback que recibe las opciones de DropdownCheckbox de Perfil.
-  const handlePerfilChange = (perfilSeleccionado) => {
-    console.log('Perfil seleccionado:', perfilSeleccionado);
+  const handlePerfilChange = (perfil) => {
+    setPerfilSeleccionado(perfil);
+    console.log("perfil seleccionado", perfilSeleccionado)
   };
+
+  // Callback que recibe las opciones de DropdownSelectBuscador de Sector
+  const handleSectorChange = (sector) => {
+    setSectorSeleccionado(sector);
+    console.log("sector seleccionado", sectorSeleccionado)
+  }
+
+  // Callback que recibe las opciones de DropdownSelectBuscador de Sector
+  const handleRegionChange = (region) => {
+    setRegionSeleccionada(region);
+    console.log("region seleccionada", regionSeleccionada)
+  }
 
   // Maneja cambio de Estado del usuario.
   const handleEstadoChange = (nuevoEstado) => {
@@ -52,7 +74,7 @@ const CreacionUsuario = () => {
       <h2 className="text-sans-h2 mb-3">Administrar Usuarios</h2>
       <div className="d-flex  align-items-center mb-5">
         <button className="btn-secundario-s" onClick={handleBackButtonClick}>
-          <i className="material-symbols-rounded me-2">expand_more</i>
+          <i className="material-symbols-rounded me-2">arrow_back_ios</i>
           <p className="mb-0">Volver</p>
         </button>
         <h3 className="text-sans-h3 ms-3 mb-0">Crear Usuario</h3>
@@ -88,7 +110,37 @@ const CreacionUsuario = () => {
           onSelectionChange={handlePerfilChange} />
         </div>
 
-        {/* AQUI APARECE UN SEGUNDO SELECTOR SI SE ESCOGE LA ALTERNATIVA "SECTORIAL" */}
+        {/* Se generan condicionalmente nuevos componentes para el detalle de usuarios GORE y Sectorial */}
+        {perfilSeleccionado === "Sectorial" && (
+          <>
+            <div className="d-flex mb-4 text-sans-h6-primary">
+              <i className="material-symbols-rounded me-2">info</i>
+              <h6 className="">Al usuario Sectorial debes asignarle un organismo. </h6>
+            </div>
+            <div className="mb-4">
+              <DropdownSelectBuscador
+                label="Elige el organismo al que pertenece (Obligatorio)"
+                placeholder="Elige un organismo"
+                options={opcionesSector}
+                onSelectionChange={handleSectorChange} />
+            </div>
+          </>
+        )}
+        {perfilSeleccionado === "GORE" && (
+          <>
+            <div className="d-flex mb-4 text-sans-h6-primary">
+              <i className="material-symbols-rounded me-2">info</i>
+              <h6 className="">Al usuario GORE debes asignarle una región. </h6>
+            </div>
+            <div className="mb-4">
+              <DropdownSelectBuscador
+                label="Elige la región a la que representa (Obligatorio)"
+                placeholder="Elige una región"
+                options={regiones}
+                onSelectionChange={handleRegionChange} />
+            </div>
+          </>
+        )}
 
         <div className="mb-5">
           <h5 className="text-sans-h5">Estado</h5>
@@ -155,7 +207,7 @@ const CreacionUsuario = () => {
         
         <button className="btn-primario-s mb-5">
           <p className="mb-0">Crear Usuario</p>
-          <i className="material-symbols-rounded me-2">info</i>
+          <i className="material-symbols-rounded ms-2">arrow_forward_ios</i>
         </button>
 
       </div>
