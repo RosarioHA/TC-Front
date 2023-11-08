@@ -18,26 +18,26 @@ const Error503 = React.lazy(() => import('./views/Errors/Error503'));
 function App()
 {
   return (
-    <Suspense fallback={<div>Cargando página...</div>}>
-      <Routes>
-        <Route path="/muestrario" element={<Muestrario />} />
-        <Route path="/" element={<Landing />} >
-        </Route>
-        <Route path="/home" element={<MainLayout />}>
-          <Route index element={<Home />} />
-          <Route path="gestion_usuarios" element={<GestionUsuarios />}></Route>
-          <Route path="crear_usuario" element={<CrearUsuario />}></Route>
-          <Route path="editar_usuario" element={<EditarUsuario />}></Route>
-          <Route path="gestion_competencias" element={<GestionCompetencias />}></Route>
-          <Route path="crear_competencia" element={<CrearCompetencia />}></Route>
-          <Route path="editar_competencia" element={<EditarCompetencia />}></Route>
+      <Suspense fallback={<div>Cargando página...</div>}>
+        <Routes>
+          <Route path="/muestrario" element={<Muestrario />} />
+          <Route path="/" element={<Landing />} />
+          <Route path="/home" element={<MainLayout />}>
+            <Route index element={<Home />} />
+            <Route path="administrar_usuarios" element={<GestionUsuarios />}></Route>
+            <Route path="crear_usuario" element={<CrearUsuario />}></Route>
+            <Route path="editar_usuario" element={<EditarUsuario />}></Route>
+            <Route path="gestion_competencias" element={<GestionCompetencias />}></Route>
+            <Route path="crear_competencia" element={<CrearCompetencia />}></Route>
+            <Route path="editar_competencia" element={<EditarCompetencia />}></Route>
           <Route path="*" element={<Error404 />} />
           <Route path="404" element={<Error404 />} />
           <Route path="500" element={<Error500 />} />
           <Route path="503" element={<Error503 />} />
-        </Route>
-      </Routes>
-    </Suspense>
+          </Route> 
+        </Routes>
+      </Suspense>
+
   );
 }
 

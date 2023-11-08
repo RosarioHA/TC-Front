@@ -21,8 +21,9 @@
 .text-serif-title {
   font-family: "Roboto Slab";
   color: #373737;
-  font-size: 18px;
+  font-size: 15px;
   font-weight: 700;
+  line-height: 18px;
 }
 
 .text-sans-h1 {
@@ -42,7 +43,7 @@
 .text-sans-h2 {
   font-family: "Roboto";
   color: #373737;
-  font-size: 31px;
+  font-size: 32px;
   font-weight: 500;
 }
 
@@ -78,6 +79,13 @@
   font-family: "Roboto";
   color: #656565;
   font-size: 25px;
+  font-weight: 500;
+}
+
+.text-sans-24 {
+  font-family: "Roboto";
+  color: #373737;
+  font-size: 24px;
   font-weight: 500;
 }
 
@@ -221,7 +229,7 @@
   width: fit-content;
   background-color: #0F69C4;
   color: #FFF;
-  border: none;
+  border: 2px solid #FFF;
   padding: 10px;
   text-align: center;
   font-family: Roboto;
@@ -240,7 +248,7 @@
   width: 100%;
   background-color: #0F69C4;
   color: #FFF;
-  border: none;
+  border: 2px solid #FFF;
   padding: 10px;
   text-align: center;
   font-family: Roboto;
@@ -272,7 +280,7 @@
 .btn-secundario-s:hover {
   background-color: #0F69C4;
   color: #FFF;
-  border: none;
+  border: 2px solid #0F69C4;
 }
 
 .btn-secundario-l {
@@ -291,7 +299,7 @@
 .btn-secundario-l:hover {
   background-color: #0F69C4;
   color: #FFF;
-  border: none;
+  border: 2px solid #0F69C4;
 }
 
 .btn-terciario {
@@ -313,7 +321,7 @@
 .btn-terciario:hover {
   background-color: #871a1a;
   color: #FFF;
-  border: none;
+  border: 2px solid #871a1a;
 }
 
 .btn-danger {
@@ -321,7 +329,7 @@
   width: fit-content;
   background-color: #871a1a;
   color: #FFF;
-  border: none;
+  border: 2px solid #FFF;
   padding: 10px;
   text-align: center;
   font-family: Roboto;
@@ -390,6 +398,21 @@
   min-width: 900px;
 }
 
+#icon-inputSearch i.material-symbols-outlined,
+#icon-inputClose i.material-symbols-outlined {
+  font-size: 28px;
+  justify-self: center;
+  padding-top: 5px;
+}
+
+#icon-inputSearch i.material-symbols-outlined {
+  color: #3f87d0;
+}
+
+#icon-inputClose i.material-symbols-outlined {
+  color: #871a1a;
+}
+
 .input-container {
   position: relative;
 }
@@ -427,6 +450,11 @@
   background-color: #FFF;
 }
 
+.input-search {
+  border: 2px solid #363636;
+  background: #FFF;
+}
+
 .line-container {
   position: absolute;
   top: 0px;
@@ -434,12 +462,13 @@
   height: fit-content;
   bottom: 0;
   left: 45px;
+  padding-left: 15px;
 }
 
 #lineBlue {
   width: 58px;
   height: 8px;
-  background-color: #0f69c4;
+  background-color: #0F69C4;
 }
 
 #lineRed {
@@ -459,13 +488,6 @@
   flex-shrink: 0;
   top: 0%;
   padding: 16px 16px 0px 16px;
-}
-
-.title-section {
-  color: #656565;
-  font-size: 18px;
-  font-weight: 400;
-  line-height: 23px;
 }
 
 i.material-symbols-outlined,
@@ -555,4 +577,36 @@ a.btn-link:hover, a.btn-link:focus {
   gap: 10px;
   text-align: center;
   vertical-align: middle;
+}
+
+.badge-activo {
+  background-color: #0F69C4;
+  color: #FFF;
+}
+
+.badge-inactivo {
+  background-color: #656565;
+}
+
+.badge-type {
+  align-self: flex-start;
+  background-color: #CFE1F3;
+  border-radius: 5px;
+  padding: 4px;
+}
+
+.check {
+  width: 20px;
+  height: 20px;
+}
+
+.custom-pagination-btn {
+  border: none;
+  background-color: transparent;
+  color: #0F69C4;
+}
+
+.custom-pagination-btn.active {
+  background-color: #0F69C4;
+  color: #FFF;
 }/*# sourceMappingURL=styles.css.map */

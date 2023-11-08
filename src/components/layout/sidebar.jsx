@@ -6,13 +6,13 @@ const Sidebar = () =>
 
   return (
     <div className="sidebar  fixed-top  d-flex flex-column flex-shrink-0  border-end">
-      <div className="my-0">
-        <div className="line-container row">
+      <div className="my-0 text-start">
+        <div className="line-container row ">
           <div id="lineBlue" />
           <div id="lineRed" />
         </div>
-        <div className="d-flex flex-column">
-          <span className="text-serif-title mx-2 mb-1"><u>Plataforma de Gestión de <br /> Transferencia de <br /> Competencias</u></span>
+        <div className="d-flex justify-content-start">
+          <span className="text-serif-title mb-1"><u>Plataforma de Gestión de <br /> Transferencia de <br /> Competencias</u></span>
         </div>
         <hr className="w-100 mt-0" />
       </div>
