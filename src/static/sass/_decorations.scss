@@ -1,0 +1,30 @@
+@mixin deco-line ($widthsize, $bgcolor){
+  width: $widthsize;
+  height: 8px;
+  background-color: $bgcolor;
+}
+#lineBlue {
+  @include deco-line(58px, #0f69c4);
+}
+#lineRed {
+  @include deco-line(82px, $secondary-color);
+}
+
+
+.line{
+  width: 80%;
+  height: 3px;
+  display: flex;
+}
+.blue{
+  width: 50%;
+  height: 100%;
+  background-color: $primary-color;
+}
+.red{
+  width: 50%;
+  height: 100%;
+  background-color: $secondary-color;
+}
+
+

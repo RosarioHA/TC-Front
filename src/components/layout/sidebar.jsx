@@ -18,7 +18,7 @@ const Sidebar = () =>
       </div>
       <ul className="nav nav-pills flex-column mb-auto mt-0">
         <li className="my-1">
-          <NavLink to="/dashboard" className="mx-4 btn-link" aria-current="page" type="button" >
+          <NavLink to="/home" className="mx-4 btn-link" aria-current="page" type="button" >
             <i className="material-symbols-outlined mx-3 ">
               home
             </i> <span className="text-link">Inicio</span>
@@ -46,7 +46,6 @@ const Sidebar = () =>
         <li className="my-1">
           <NavLink to="#" className="mx-4 btn-link" type="button">
             <i className="material-symbols-outlined mx-3">supervised_user_circle</i>
-            <i className="badge badge-notification mx-3"> 99+</i>
             <u>Administrar Usuarios</u>
           </NavLink>
         </li>

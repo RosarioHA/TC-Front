@@ -1,0 +1,32 @@
+.line-reference{
+  position: relative;
+}
+.logo-container{
+  display: flex;
+  align-items: flex-end;
+}
+.deco-line {
+  height: 10px;
+  width: 150px;
+  position: absolute;
+  bottom: -48px;
+  left: 20px;
+  display:flex;
+}
+.azul {
+  width: 40%;
+  height: 100%;
+  background-color: $primary-color;
+}  
+.rojo {
+  width: 60%;
+  height: 100%;
+  background-color: #EB3C46;
+}
+
+.divider{
+  width: 97%;
+  height: 17px;
+  flex-shrink: 0;
+  border-bottom: 1px solid $white-color;
+}

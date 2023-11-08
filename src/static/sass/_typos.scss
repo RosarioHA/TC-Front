@@ -118,6 +118,10 @@
     line-height: 22px;
 }
 // p bold
+.text-sans-m-bold{
+    @include font-sans(20px, 700, $grey-a-color);
+    line-height: 22px;
+}
 .text-sans-p-bold{
     @include font-sans(16px, 700, $grey-a-color);
     line-height: 22px;
