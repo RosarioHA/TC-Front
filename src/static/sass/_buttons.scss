@@ -2,12 +2,8 @@
     width: $btnSize;
     background-color: $btnBG;
     color: $btnColor;
-<<<<<<< HEAD
     border: 2px solid $btnBG;
     display: flex; 
-=======
-    border: 2px solid $btnColor; 
->>>>>>> main
 }
 @mixin btn-border ($btnSize, $btnColor){
     width: $btnSize;
@@ -54,11 +50,7 @@
 .btn-secundario-s:hover{
     background-color: $blue-color;
     color: $white-color;
-<<<<<<< HEAD
     border: 2px solid $blue-color;
-=======
-    border: 2px solid $blue-color;   
->>>>>>> main
 }
 .btn-secundario-l{
     @include btn-border(100%, $blue-color);

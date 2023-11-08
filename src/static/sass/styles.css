@@ -190,6 +190,14 @@
   line-height: 22px;
 }
 
+.text-sans-m-bold {
+  font-family: "Roboto";
+  color: #373737;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 22px;
+}
+
 .text-sans-p-bold {
   font-family: "Roboto";
   color: #373737;
@@ -236,12 +244,8 @@
   width: fit-content;
   background-color: #0F69C4;
   color: #FFF;
-<<<<<<< HEAD
   border: 2px solid #0F69C4;
   display: flex;
-=======
-  border: 2px solid #FFF;
->>>>>>> main
   padding: 10px;
   text-align: center;
   font-family: Roboto;
@@ -260,12 +264,8 @@
   width: 100%;
   background-color: #0F69C4;
   color: #FFF;
-<<<<<<< HEAD
   border: 2px solid #0F69C4;
   display: flex;
-=======
-  border: 2px solid #FFF;
->>>>>>> main
   padding: 10px;
   text-align: center;
   font-family: Roboto;
@@ -372,12 +372,8 @@
   width: fit-content;
   background-color: #871a1a;
   color: #FFF;
-<<<<<<< HEAD
   border: 2px solid #871a1a;
   display: flex;
-=======
-  border: 2px solid #FFF;
->>>>>>> main
   padding: 10px;
   text-align: center;
   font-family: Roboto;
@@ -446,6 +442,10 @@
   min-width: 900px;
 }
 
+.footer-container {
+  background-color: #001C41;
+}
+
 #icon-inputSearch i.material-symbols-outlined,
 #icon-inputClose i.material-symbols-outlined {
   font-size: 28px;
@@ -498,10 +498,14 @@
   background-color: #FFF;
 }
 
-<<<<<<< HEAD
 .ghost-input {
   border: none;
   width: 100%;
+}
+
+.input-search {
+  border: 2px solid #363636;
+  background: #FFF;
 }
 
 .white-line {
@@ -510,10 +514,38 @@
 
 .neutral-line {
   background-color: #EEEEEE;
-=======
-.input-search {
-  border: 2px solid #363636;
-  background: #FFF;
+}
+
+.badge-activo {
+  background-color: #0F69C4;
+  color: #FFF;
+}
+
+.badge-inactivo {
+  background-color: #656565;
+}
+
+.badge-type {
+  align-self: flex-start;
+  background-color: #CFE1F3;
+  border-radius: 5px;
+  padding: 4px;
+}
+
+.check {
+  width: 20px;
+  height: 20px;
+}
+
+.custom-pagination-btn {
+  border: none;
+  background-color: transparent;
+  color: #0F69C4;
+}
+
+.custom-pagination-btn.active {
+  background-color: #0F69C4;
+  color: #FFF;
 }
 
 .line-container {
@@ -640,6 +672,14 @@ a.btn-link:hover, a.btn-link:focus {
   vertical-align: middle;
 }
 
+.white-line {
+  background-color: #FFF;
+}
+
+.neutral-line {
+  background-color: #EEEEEE;
+}
+
 .badge-activo {
   background-color: #0F69C4;
   color: #FFF;
@@ -670,5 +710,90 @@ a.btn-link:hover, a.btn-link:focus {
 .custom-pagination-btn.active {
   background-color: #0F69C4;
   color: #FFF;
->>>>>>> main
+}
+
+.line-reference {
+  position: relative;
+}
+
+.logo-container {
+  display: flex;
+  align-items: flex-end;
+}
+
+.deco-line {
+  height: 10px;
+  width: 150px;
+  position: absolute;
+  bottom: -48px;
+  left: 20px;
+  display: flex;
+}
+
+.azul {
+  width: 40%;
+  height: 100%;
+  background-color: #006FB3;
+}
+
+.rojo {
+  width: 60%;
+  height: 100%;
+  background-color: #EB3C46;
+}
+
+.divider {
+  width: 97%;
+  height: 17px;
+  flex-shrink: 0;
+  border-bottom: 1px solid #FFF;
+}
+
+.line-container {
+  position: absolute;
+  top: 0px;
+  height: -moz-fit-content;
+  height: fit-content;
+  bottom: 0;
+  left: 45px;
+}
+
+.logo-subdere {
+  font-family: "Roboto";
+  color: #373737;
+  font-size: 16px;
+  font-weight: 700;
+  width: 210px;
+  margin-left: 20px;
+  text-decoration: none;
+}
+
+#lineBlue {
+  width: 58px;
+  height: 8px;
+  background-color: #0f69c4;
+}
+
+#lineRed {
+  width: 82px;
+  height: 8px;
+  background-color: #E22C2C;
+}
+
+.line {
+  width: 80%;
+  height: 3px;
+  display: flex;
+}
+
+.blue {
+  width: 50%;
+  height: 100%;
+  background-color: #006FB3;
+}
+
+.red {
+  width: 50%;
+  height: 100%;
+  background-color: #E22C2C;
 }/*# sourceMappingURL=styles.css.map */
