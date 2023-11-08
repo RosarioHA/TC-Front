@@ -1,0 +1,14 @@
+#icon-inputSearch i.material-symbols-outlined, 
+#icon-inputClose i.material-symbols-outlined {
+  font-size: 28px;
+  justify-self: center;
+  padding-top: 5px;
+}
+
+#icon-inputSearch i.material-symbols-outlined {
+  color: $light-blue;
+}
+
+#icon-inputClose i.material-symbols-outlined {
+  color: $dark-red;
+}

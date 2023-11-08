@@ -18,6 +18,14 @@
   font-weight: 700;
 }
 
+.text-serif-title {
+  font-family: "Roboto Slab";
+  color: #373737;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 18px;
+}
+
 .text-sans-h1 {
   font-family: "Roboto";
   color: #373737;
@@ -70,6 +78,13 @@
 .text-sans-h3-greyc {
   font-family: "Roboto";
   color: #656565;
+  font-size: 24px;
+  font-weight: 500;
+}
+
+.text-sans-24 {
+  font-family: "Roboto";
+  color: #373737;
   font-size: 24px;
   font-weight: 500;
 }
@@ -221,8 +236,12 @@
   width: fit-content;
   background-color: #0F69C4;
   color: #FFF;
+<<<<<<< HEAD
   border: 2px solid #0F69C4;
   display: flex;
+=======
+  border: 2px solid #FFF;
+>>>>>>> main
   padding: 10px;
   text-align: center;
   font-family: Roboto;
@@ -241,8 +260,12 @@
   width: 100%;
   background-color: #0F69C4;
   color: #FFF;
+<<<<<<< HEAD
   border: 2px solid #0F69C4;
   display: flex;
+=======
+  border: 2px solid #FFF;
+>>>>>>> main
   padding: 10px;
   text-align: center;
   font-family: Roboto;
@@ -295,7 +318,7 @@
 .btn-secundario-l:hover {
   background-color: #0F69C4;
   color: #FFF;
-  border: none;
+  border: 2px solid #0F69C4;
 }
 
 .btn-terciario {
@@ -318,7 +341,7 @@
 .btn-terciario:hover {
   background-color: #871a1a;
   color: #FFF;
-  border: none;
+  border: 2px solid #871a1a;
 }
 
 .btn-terciario-ghost {
@@ -349,8 +372,12 @@
   width: fit-content;
   background-color: #871a1a;
   color: #FFF;
+<<<<<<< HEAD
   border: 2px solid #871a1a;
   display: flex;
+=======
+  border: 2px solid #FFF;
+>>>>>>> main
   padding: 10px;
   text-align: center;
   font-family: Roboto;
@@ -363,6 +390,75 @@
   background-color: #FFF;
   color: #871a1a;
   border: 2px solid #871a1a;
+}
+
+.btn-sidebar {
+  display: flex;
+  padding: 0px 15px;
+  justify-content: center;
+  height: 48px;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid #0F69C4;
+  background-color: #FFF;
+  color: #0F69C4;
+  text-align: center;
+  font-family: Roboto;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.btn-sidebar {
+  width: 248px;
+}
+.btn-sidebar:hover, .btn-sidebar:focus {
+  background-color: #0F69C4;
+  color: #FFF;
+  border: 3px solid #3f87d0;
+}
+
+.btn-logout {
+  display: flex;
+  padding: 0px 15px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  height: 48px;
+  border: 1px solid #871a1a;
+  background-color: #FFF;
+  color: #871a1a;
+  text-align: center;
+  font-family: Roboto;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  text-decoration: none;
+}
+.btn-logout:hover, .btn-logout:focus {
+  border: 1px solid #871a1a;
+  background-color: #871a1a;
+  color: #FFF;
+}
+
+.container-fluid {
+  min-width: 900px;
+}
+
+#icon-inputSearch i.material-symbols-outlined,
+#icon-inputClose i.material-symbols-outlined {
+  font-size: 28px;
+  justify-self: center;
+  padding-top: 5px;
+}
+
+#icon-inputSearch i.material-symbols-outlined {
+  color: #3f87d0;
+}
+
+#icon-inputClose i.material-symbols-outlined {
+  color: #871a1a;
 }
 
 .input-container {
@@ -402,6 +498,7 @@
   background-color: #FFF;
 }
 
+<<<<<<< HEAD
 .ghost-input {
   border: none;
   width: 100%;
@@ -413,4 +510,165 @@
 
 .neutral-line {
   background-color: #EEEEEE;
+=======
+.input-search {
+  border: 2px solid #363636;
+  background: #FFF;
+}
+
+.line-container {
+  position: absolute;
+  top: 0px;
+  height: -moz-fit-content;
+  height: fit-content;
+  bottom: 0;
+  left: 45px;
+  padding-left: 15px;
+}
+
+#lineBlue {
+  width: 58px;
+  height: 8px;
+  background-color: #0F69C4;
+}
+
+#lineRed {
+  width: 82px;
+  height: 8px;
+  background-color: #E22C2C;
+}
+
+.sidebar {
+  display: flex;
+  width: 280px;
+  height: 100vh;
+  flex-direction: column;
+  justify-content: flex-end;
+  background-color: #FFF;
+  align-items: center;
+  flex-shrink: 0;
+  top: 0%;
+  padding: 16px 16px 0px 16px;
+}
+
+i.material-symbols-outlined,
+span.material-symbols-outlined {
+  align-self: center;
+  font-variation-settings: "FILL" 1, "wght" 400, "GRAD" 0, "opsz" 24;
+}
+
+.text-link {
+  color: #0F69C4;
+  text-align: center;
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 30px;
+  vertical-align: middle;
+  text-decoration: underline;
+}
+.text-link:hover, .text-link:focus {
+  color: #093F75;
+}
+
+a.btn-link {
+  display: flex;
+  width: 248px;
+  align-items: center;
+  height: 48px;
+  color: #0F69C4;
+  text-align: center;
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 24px;
+  vertical-align: middle;
+  text-decoration: none;
+}
+a.btn-link:hover, a.btn-link:focus {
+  color: #093F75;
+  background-color: #CFE1F3;
+}
+
+.badge-notification {
+  display: flex;
+  padding: 4.2px 7.8px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 100px;
+  background: #871a1a;
+  text-align: center;
+  font-family: Roboto;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 100%;
+}
+
+.circle-user {
+  background-color: #001C41;
+  width: 44px;
+  height: 44px;
+  border-radius: 50px;
+  margin: 5px 15px 5px 15px;
+}
+
+#icon-user span.material-symbols-outlined {
+  color: #FFF;
+  font-size: 40px;
+  margin-left: 2px;
+}
+
+#icon-setting span.material-symbols-outlined {
+  color: #001C41;
+  font-size: 24px;
+  margin: 15px 12px 12px 12px;
+}
+
+.dropdown-sidebar {
+  display: flex;
+  background-color: transparent;
+  width: 248px;
+  padding: 15px;
+  padding: 0px 15px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.badge-activo {
+  background-color: #0F69C4;
+  color: #FFF;
+}
+
+.badge-inactivo {
+  background-color: #656565;
+}
+
+.badge-type {
+  align-self: flex-start;
+  background-color: #CFE1F3;
+  border-radius: 5px;
+  padding: 4px;
+}
+
+.check {
+  width: 20px;
+  height: 20px;
+}
+
+.custom-pagination-btn {
+  border: none;
+  background-color: transparent;
+  color: #0F69C4;
+}
+
+.custom-pagination-btn.active {
+  background-color: #0F69C4;
+  color: #FFF;
+>>>>>>> main
 }/*# sourceMappingURL=styles.css.map */

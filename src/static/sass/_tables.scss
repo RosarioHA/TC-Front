@@ -1,6 +1,40 @@
+<<<<<<< HEAD
 .white-line{
     background-color: $white-color;
 }
 .neutral-line{
     background-color: $neutral-color;
+=======
+
+
+.badge-activo{
+ background-color: $blue-color;
+ color:$white-color
+}
+
+.badge-inactivo{
+  background-color: $grey-c-color;
+}
+
+.badge-type {
+  align-self: flex-start;
+  background-color: $blue-sky;
+  border-radius: 5px;
+  padding:4px; 
+}
+
+.check{
+  width: 20px;
+  height: 20px;
+}
+
+.custom-pagination-btn{
+  border: none;
+  background-color: transparent;
+  color: $blue-color;
+}
+.custom-pagination-btn.active {
+  background-color:$blue-color;
+  color: $white-color;
+>>>>>>> main
 }

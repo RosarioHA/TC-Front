@@ -1,0 +1,16 @@
+
+
+.line-container{
+  position:absolute;
+  top: 0px;
+  height: fit-content;
+  bottom: 0;
+  left: 45px;
+}
+
+.logo-subdere{
+  @include font-sans(16px, 700, $grey-a-color);
+  width: 210px;
+  margin-left: 20px;
+  text-decoration: none;
+}
