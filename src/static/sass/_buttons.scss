@@ -2,13 +2,15 @@
     width: $btnSize;
     background-color: $btnBG;
     color: $btnColor;
-    border: 2px solid $btnColor; 
+    border: 2px solid $btnBG;
+    display: flex; 
 }
 @mixin btn-border ($btnSize, $btnColor){
     width: $btnSize;
     background-color: transparent;
     color: $btnColor;
-    border: 2px solid $btnColor;    
+    border: 2px solid $btnColor;
+    display: flex;     
 }
 @mixin typo-style{
     padding: 10px;
@@ -48,7 +50,7 @@
 .btn-secundario-s:hover{
     background-color: $blue-color;
     color: $white-color;
-    border: 2px solid $blue-color;   
+    border: 2px solid $blue-color;
 }
 .btn-secundario-l{
     @include btn-border(100%, $blue-color);
@@ -71,6 +73,19 @@
     background-color: $dark-red;
     color: $white-color;
     border: 2px solid $dark-red;   
+}
+// Boton terciario sin borde
+// fondo transp. con borde y letras rojas
+.btn-terciario-ghost{
+    @include btn-border(fit-content, $dark-red);
+    @include typo-style;
+    border-radius: 4px;
+    border: none;
+}
+.btn-terciario-ghost:hover{
+    background-color: $dark-red;
+    color: $white-color;
+    border:none;
 }
 
 // Boton danger

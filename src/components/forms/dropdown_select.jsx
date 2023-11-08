@@ -35,7 +35,7 @@ const DropdownSelect = ({ label, placeholder, options, onSelectionChange }) => {
 
   return (
     <div className="input-container">
-      <label className="text-sans-p input-label">{label}</label>
+      <label className="text-sans-h5 input-label">{label}</label>
       <button onClick={toggleDropdown} className="text-sans-p dropdown-btn">
         {selectedOption || placeholder}
       </button>
@@ -45,7 +45,7 @@ const DropdownSelect = ({ label, placeholder, options, onSelectionChange }) => {
             <div
               key={option}
               onClick={() => handleOptionClick(option)}
-              className={`unselected-option ${option === selectedOption ? 'selected-option' : ''}`}
+              className={`p-3 ${option === selectedOption ? 'selected-option' : 'unselected-option'}`}
             >
               {option}
             </div>

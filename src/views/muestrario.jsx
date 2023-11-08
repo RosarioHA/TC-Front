@@ -2,7 +2,9 @@ import { useState } from "react";
 import CustomInput from "../components/forms/custom_input";
 import CustomTextarea from "../components/forms/custom_textarea";
 import DropdownSelect from "../components/forms/dropdown_select";
-import DropdownCheckbox from "../components/forms/dropdwon_checkbox";
+import DropdownCheckbox from "../components/forms/dropdown_checkbox";
+import DropdownCheckboxBuscador from "../components/forms/dropdown_checkbox_buscador";
+import DropdownSelectBuscador from "../components/forms/dropdown_select_buscador";
 import InputSearch from "../components/forms/Input_search";
 import { TableCheckbox } from "../components/tables/TableCheck";
 import { columnTitlesUser, userData } from "../Data/Usuarios";
@@ -35,7 +37,12 @@ const Home = () =>
           <button className="btn-secundario-s mb-2">Secundario S</button>
           <button className="btn-secundario-l mb-2">Secundario L</button>
           <button className="btn-terciario mb-2">Terciario</button>
+          <button className="btn-terciario-ghost">
+            <p className="mb-0">Eliminar</p>
+            <i className="material-symbols-rounded me-2">delete</i>
+          </button>
           <button className="btn-danger my-2">Danger</button>
+
           <button className="btn-sidebar my-2">sidebar</button>
 
           <button className='btn-logout my-2'>logout</button>
@@ -68,6 +75,22 @@ const Home = () =>
               placeholder="Selecciona una alternativa"
               options={options}
               onSelectionChange={handleSelectChange}
+            />
+          </div>
+          <div className="my-3">
+            < DropdownCheckboxBuscador 
+            label="Dropdown Checkboxes con Buscador"
+            placeholder="Placeholder personalizado"
+            options={options}
+            onSelectionChange={handleCheckboxChange}
+            />
+          </div>
+          <div>
+            <DropdownSelectBuscador
+            label= "Dropdown Select con Buscador" 
+            placeholder="Placeholder personalizado" 
+            options={options}
+            onSelectionChange={handleSelectChange}
             />
           </div>
           <div className="my-3">

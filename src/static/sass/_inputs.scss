@@ -30,7 +30,10 @@
     border: 1px solid $grey-light-color;
     background-color: $white-color; 
 }
-
+.ghost-input{
+    border: none;
+    width: 100%;
+}
 .input-search  {
     border: 2px solid $grey-color;
     background: $white-color;

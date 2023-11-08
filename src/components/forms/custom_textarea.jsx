@@ -18,7 +18,7 @@ const CustomTextarea = ({label, placeholder, id, maxLength}) => {
 
   return (
     <div className="d-flex flex-column input-container">
-      <label className="text-sans-p input-label ms-3 ms-sm-0">{label}</label>
+      <label className="text-sans-h5 input-label ms-3 ms-sm-0">{label}</label>
       <textarea 
         className="input-s p-3"
         type="text"
