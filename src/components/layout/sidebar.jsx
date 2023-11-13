@@ -3,9 +3,8 @@ import { NavLink } from 'react-router-dom';
 const Sidebar = () =>
 {
 
-
   return (
-    <div className="sidebar  fixed-top  d-flex flex-column flex-shrink-0  border-end col-2">
+    <div className="sidebar  fixed-top  d-flex flex-column flex-shrink-0  border-end ">
       <div className="my-0 text-start">
         <div className="line-container row ">
           <div id="lineBlue" />

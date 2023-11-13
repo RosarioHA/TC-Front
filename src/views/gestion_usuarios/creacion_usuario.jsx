@@ -70,7 +70,7 @@ const CreacionUsuario = () => {
   
 
   return (
-    <div className="container my-4">
+    <div className="container col-10 my-4">
       <h2 className="text-sans-h2 mb-3">Administrar Usuarios</h2>
       <div className="d-flex  align-items-center mb-5">
         <button className="btn-secundario-s" onClick={handleBackButtonClick}>
