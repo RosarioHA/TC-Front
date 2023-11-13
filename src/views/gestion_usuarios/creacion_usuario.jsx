@@ -23,7 +23,7 @@ const schema = yup.object().shape({
   .max(30, 'El nombre no debe exceder los 30 caracteres'),
   email: yup.string().email('Formato de correo electrónico inválido').required('El correo electrónico es obligatorio'),
   perfil: yup.string().required('El perfil es obligatorio'),
-
+  estado: yup.string().required('Debes seleccionar un estado para el usuario'),
 });
 
 const CreacionUsuario = () => {
@@ -63,7 +63,6 @@ const CreacionUsuario = () => {
   // Callback que recibe las opciones de DropdownCheckbox de Perfil.
   const handlePerfilChange = (perfil) => {
     setPerfilSeleccionado(perfil);
-    console.log("perfil seleccionado", perfilSeleccionado)
   };
 
   // Callback que recibe las opciones de DropdownSelectBuscador de Sector
@@ -82,7 +81,7 @@ const CreacionUsuario = () => {
   const handleEstadoChange = (nuevoEstado) => {
     setEstado(nuevoEstado);
     setActiveButton(nuevoEstado);
-    console.log('estado seleccionado', estado)
+    console.log("estado seleccionado", estado)
   };
 
   // Callback que maneja competencias seleccionadas y su eliminacion.
@@ -175,7 +174,7 @@ const CreacionUsuario = () => {
             }} />
             )}/>
             {errors.perfil && (
-              <p className="error-message">{errors.perfil.message}</p>
+              <p className="text-sans-h6-darkred mt-2 mb-0">{errors.perfil.message}</p>
             )}
           </div>
 
@@ -212,21 +211,38 @@ const CreacionUsuario = () => {
           )}
 
           <div className="mb-5">
-            <h5 className="text-sans-h5">Estado</h5>
-            <div className="d-flex mb-5">
-              <button
-              className={` ${activeButton === 'activo' ? 'btn-primario-s' : 'btn-secundario-s'}`}
-              onClick={() => handleEstadoChange('activo')}>
-                <p className="mb-0 text-decoration-underline">Activo</p>
-                {activeButton === 'activo' && <i className="material-symbols-rounded ms-2">check</i>}
-              </button>
-              <button
-              className={`ms-2 ${activeButton === 'inactivo' ? 'btn-primario-s' : 'btn-secundario-s'}`}
-              onClick={() => handleEstadoChange('inactivo')}>
-                <p className="mb-0 text-decoration-underline">Inactivo</p>
-                {activeButton === 'inactivo' && <i className="material-symbols-rounded ms-2">check</i>}
-              </button>
-            </div>
+            < Controller 
+            name="estado"
+            control={control}
+            render={({field}) => (
+              <>
+              <h5 className="text-sans-h5">Estado</h5>
+              <div className="d-flex mb-2">
+                <button
+                  className={` ${activeButton === 'activo' ? 'btn-primario-s' : 'btn-secundario-s'}`}
+                  onClick={() => {
+                    handleEstadoChange('activo');
+                    field.onChange('activo');
+                  }}>
+                    <p className="mb-0 text-decoration-underline">Activo</p>
+                    {activeButton === 'activo' && <i className="material-symbols-rounded ms-2">check</i>}
+                </button>
+                <button
+                  className={`ms-2 ${activeButton === 'inactivo' ? 'btn-primario-s' : 'btn-secundario-s'}`}
+                  onClick={() => {
+                    handleEstadoChange('inactivo');
+                    field.onChange('inactivo');
+                  }}>
+                    <p className="mb-0 text-decoration-underline">Inactivo</p>
+                    {activeButton === 'inactivo' && <i className="material-symbols-rounded ms-2">check</i>}
+                </button>
+              </div>
+              {errors.estado && (
+                <p className="text-sans-h6-darkred mt-2 mb-0">{errors.estado.message}</p>
+              )}
+              </>
+            )}/>
+
           </div>
 
           <div className="mb-5">

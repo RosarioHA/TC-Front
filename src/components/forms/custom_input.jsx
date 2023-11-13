@@ -37,7 +37,7 @@ const CustomInput = forwardRef (({ label, placeholder, id, maxLength, error, ...
         </div>
       )}
       {error && (
-        <p className="error-message">{error}</p>
+        <p className="text-sans-h6-darkred mt-2 mb-0">{error}</p>
       )}
     </div>
     );
