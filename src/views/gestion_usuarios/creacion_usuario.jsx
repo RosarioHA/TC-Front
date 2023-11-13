@@ -8,12 +8,22 @@ import DropdownSelect from "../../components/forms/dropdown_select";
 import DropdownCheckboxBuscador from "../../components/forms/dropdown_checkbox_buscador";
 import DropdownSelectBuscador from "../../components/forms/dropdown_select_buscador";
 
+// Expresiones regulares para validaciones
+const rutRegex = /^[0-9]+-[0-9kK]{1}$/;
+const nombreRegex = /^[A-Za-záéíóúüÜñÑ\s']+$/;
+
 // Esquema de validacion Yup
 const schema = yup.object().shape({
-  rut: yup.string().required('El RUT es obligatorio'),
-  nombre: yup.string().required('El nombre es obligatorio'),
+  rut: yup.string().matches(rutRegex, 'Formato de RUT inválido').required('El RUT es obligatorio'),
+  nombre: yup
+  .string()
+  .matches(nombreRegex, 'Formato de nombre inválido')
+  .required('El nombre es obligatorio')
+  .min(3, 'El nombre debe tener al menos 3 caracteres')
+  .max(30, 'El nombre no debe exceder los 30 caracteres'),
   email: yup.string().email('Formato de correo electrónico inválido').required('El correo electrónico es obligatorio'),
-  // agregar mas validaciones de los campos dropdown y seleccion de estado
+  perfil: yup.string().required('El perfil es obligatorio'),
+
 });
 
 const CreacionUsuario = () => {
@@ -37,7 +47,6 @@ const CreacionUsuario = () => {
     history(-1);
   };
 
-  // AQUI YA EMPIEZA LA LOGICA PARA MANEJAR DATOS DE LOS INPUT Y SELECTORES
   const {
     control,
     handleSubmit,
@@ -49,12 +58,7 @@ const CreacionUsuario = () => {
   const onSubmit = (data) => {
     // Aqui la logica de envio del formulario
     console.log("datos enviados", data);
-    // Verifica si hay errores
-    if (Object.keys(errors).length > 0) {
-      console.log('Errores de validación:', errors);
-    }
   };
-
 
   // Callback que recibe las opciones de DropdownCheckbox de Perfil.
   const handlePerfilChange = (perfil) => {
