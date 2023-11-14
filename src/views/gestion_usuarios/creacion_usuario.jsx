@@ -43,7 +43,6 @@ const CreacionUsuario = () => {
   const [regionSeleccionada, setRegionSeleccionada] = useState(null);
   const [submitClicked, setSubmitClicked] = useState(false);
 
-
   // Opciones selectores y checkboxes, luego vendran desde el backend
   const opcionesPerfil = ['SUBDERE', 'Sectorial', 'DIPRES', 'GORE'];
   const opcionesSector = ['un sector', 'otro sector','organismo random'];
@@ -140,7 +139,7 @@ const CreacionUsuario = () => {
         <h3 className="text-sans-h3 ms-3 mb-0">Crear Usuario</h3>
       </div>
 
-      <div className="col-10">
+      <div className="col-10 ms-5">
         <form  onSubmit={handleSubmit(onSubmit)}>
           <div className="mb-4">
             <Controller
@@ -270,7 +269,6 @@ const CreacionUsuario = () => {
               )}
               </>
             )}/>
-
           </div>
 
           <div className="mb-5">
