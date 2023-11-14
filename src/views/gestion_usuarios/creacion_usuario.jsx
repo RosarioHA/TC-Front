@@ -8,6 +8,14 @@ import DropdownSelect from "../../components/forms/dropdown_select";
 import DropdownCheckboxBuscador from "../../components/forms/dropdown_checkbox_buscador";
 import DropdownSelectBuscador from "../../components/forms/dropdown_select_buscador";
 
+const initialValues = {
+  rut: '',
+  nombre: '',
+  email: '',
+  perfil: '',
+  estado: '',
+};
+
 // Expresiones regulares para validaciones
 const rutRegex = /^[0-9]+-[0-9kK]{1}$/;
 const nombreRegex = /^[A-Za-záéíóúüÜñÑ\s']+$/;
@@ -33,6 +41,7 @@ const CreacionUsuario = () => {
   const [perfilSeleccionado, setPerfilSeleccionado] = useState(null);
   const [sectorSeleccionado, setSectorSeleccionado] = useState(null);
   const [regionSeleccionada, setRegionSeleccionada] = useState(null);
+  const [submitClicked, setSubmitClicked] = useState(false);
 
 
   // Opciones selectores y checkboxes, luego vendran desde el backend
@@ -51,13 +60,32 @@ const CreacionUsuario = () => {
     control,
     handleSubmit,
     formState: { errors },
+    trigger,
   } = useForm({
     resolver: yupResolver(schema),
+    defaultValues: initialValues,
+    shouldUnregister: false,
+    mode: 'manual', // Desactiva la validacion automatica
   });
 
-  const onSubmit = (data) => {
-    // Aqui la logica de envio del formulario
-    console.log("datos enviados", data);
+  const onSubmit = async (data) => {
+    try {
+      data.organismo = sectorSeleccionado;
+      data.region = regionSeleccionada;
+      data.competencias = competenciasSeleccionadas;
+      if (submitClicked) {
+        const isValid = await trigger(); // Realiza la validación manualmente
+        if (isValid) {
+          // Aquí la lógica de envío del formulario
+          console.log("datos enviados", data);
+          history('/home/success');
+        } else {
+          console.log("El formulario no es válido");
+        }
+      }
+    } catch (error) {
+      console.error('Error al enviar el formulario:', error);
+    }
   };
 
   // Callback que recibe las opciones de DropdownCheckbox de Perfil.
@@ -290,7 +318,7 @@ const CreacionUsuario = () => {
             </div>
           )}
           
-          <button className="btn-primario-s mb-5" type="submit">
+          <button className="btn-primario-s mb-5" type="submit" onClick={() => setSubmitClicked(true)}>
             <p className="mb-0">Crear Usuario</p>
             <i className="material-symbols-rounded ms-2">arrow_forward_ios</i>
           </button>
