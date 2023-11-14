@@ -47,7 +47,7 @@ const DropdownCheckbox = ({ label, placeholder, options, onSelectionChange }) =>
   return (
     <div className="input-container">
       <label className="text-sans-h5 input-label">{label}</label>  
-      <button type="button" onClick={toggleDropdown} className="text-sans-p dropdown-btn">
+      <button type="button" onClick={toggleDropdown} className="text-sans-p-lightgrey dropdown-btn">
         {placeholder}
         <i className="material-symbols-rounded ms-2">expand_more</i>
       </button>

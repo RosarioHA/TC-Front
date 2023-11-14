@@ -36,7 +36,7 @@ const DropdownSelect = ({ label, placeholder, options, onSelectionChange }) => {
   return (
     <div className="input-container">
       <label className="text-sans-h5 input-label">{label}</label>
-      <button type="button" onClick={toggleDropdown} className="text-sans-p dropdown-btn">
+      <button type="button" onClick={toggleDropdown} className="text-sans-p-lightgrey dropdown-btn">
         {selectedOption || placeholder}
       </button>
       {isOpen && (

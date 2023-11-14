@@ -8,6 +8,7 @@ const CreacionCompetencia = () => {
   const [regionesSeleccionadas, setRegionesSeleccionadas] = useState(null);
   const [sectoresSeleccionados, setSectoresSeleccionados] = useState(null);
   const [origenSeleccionado, setOrigenSeleccionado] = useState(null);
+  const [ambitoSeleccionado, setAmbitoSeleccionado] = useState(null);
   const history = useNavigate();
 
   // Maneja boton de volver atras.
@@ -19,6 +20,7 @@ const CreacionCompetencia = () => {
   const regiones = ['Arica y Parinacota', 'Magallanes', 'Metropolitana de Santiago', 'O`Higgins']
   const sectores = ['Organismo 1', 'Organismo 2', 'Organismo 3', 'Organismo 4']
   const origen = ['Oficio Presidencial', 'Solicitud GORE'];
+  const ambito = ['Fomento de las Actividades Productivas', 'Ordenamiento Territorial', 'Desarrollo Social y Cultural']
 
   // Callbacks que manejan la entrega de informacion desde los componentes del formulario
   const handleRegionesChange = (region) => {
@@ -32,6 +34,10 @@ const CreacionCompetencia = () => {
   const handleOrigenChange = (origen) => {
     setOrigenSeleccionado(origen);
     console.log("origen seleccionado", origenSeleccionado)
+  }
+  const handleAmbitoChange = (ambito) => {
+    setAmbitoSeleccionado(ambito);
+    console.log("ambito seleccionado", ambitoSeleccionado)
   }
 
   return (
@@ -79,10 +85,46 @@ const CreacionCompetencia = () => {
             }}/>
           </div>
           <div className="mb-4">
-
+            < DropdownSelect 
+              label="Elige el ámbito de la competencia (Obligatorio)"
+              placeholder="Elige el ámbito de la competencia"
+              options={ambito}
+              onSelectionChange={(selectedOption) => {
+                // field.onChange(selectedOption);
+                handleAmbitoChange(selectedOption);
+              }}/>
+            <div className="d-flex mt-2 text-sans-h6-primary">
+              <i className="material-symbols-rounded me-2">info</i>
+              <h6> editable </h6>
+            </div>
           </div>
           <div className="mb-4">
+            <div className="">COMPONENTE BUSCADOR - VER SI SIRVE LO QUE HIZO VERO</div>
+            <div className="d-flex mt-2 text-sans-h6-primary">
+              <i className="material-symbols-rounded me-2">info</i>
+              <h6> Si aun no creas los usuarios para esta competencia, puedes crear la competencia y asignarle usuario más tarde. </h6>
+            </div>
+          </div>
 
+          <div className="mb-4">
+            <h5 className="text-sans-h5">Adjunta el oficio correspondiente a la competencia</h5>
+            <h6 className="text-sans-h6 mb-4">(Máximo 1 archivo, peso máximo 20 MB, formato PDF)</h6>
+            <div className="">COMPONENTE SUBIR ARCHIVO</div>
+          </div>
+
+          <div className="mb-4">
+            < CustomInput 
+              label="Plazo para formulario sectorial (Obligatorio)"
+              placeholder="Escribe el número de días corridos"
+              id="plazo"
+              maxLength={null}/>
+              <div className="d-flex justify-content-end">
+                <h6 className="text-sans-h6-grey mt-1 me-4">Número entre 15 y 30</h6>
+              </div>
+              <div className="d-flex text-sans-h6-primary">
+                <i className="material-symbols-rounded me-2">info</i>
+                <h6> El plazo debe ser de 15 a 30 días corridos y se contará desde el día en que asocies un usuario sectorial a la competencia. </h6>
+            </div>
           </div>
 
           <div className="d-flex justify-content-end">
