@@ -141,75 +141,67 @@ const CreacionCompetencia = () => {
           </div>
 
           <div className="mb-4">
-            <Controller 
-              name="regiones"
-              control={control}
-              render={({field}) => (
-                <DropdownCheckbox
-                label="Región (Obligatorio)" 
-                placeholder="Elige la o las regiones donde se ejercerá la competencia" 
-                options={regiones}
-                onSelectionChange={(selectedOption) => {
-                  handleRegionesChange(selectedOption);
-                  field.onChange(selectedOption);
-                }}
-                selected={field.value} />
-              )}
+            <DropdownCheckbox
+              label="Región (Obligatorio)" 
+              placeholder="Elige la o las regiones donde se ejercerá la competencia" 
+              options={regiones}
+              onSelectionChange={(selectedOption) => {
+                handleRegionesChange(selectedOption);
+                setValue('regiones', selectedOption, { shouldValidate: true });
+              }}
+              selected={regionesSeleccionadas} 
             />
+            {errors.regiones && (
+              <p className="text-sans-h6-darkred mt-2 mb-0">{errors.regiones.message}</p>
+            )}  
           </div>
 
           <div className="mb-4">
-            <Controller 
-              name="sectores"
-              control={control}
-              render={({field}) => (
-                <DropdownCheckbox
-                label="Elige el sector de la competencia (Obligatorio)" 
-                placeholder="Elige el sector de la competencia" 
-                options={sectores}
-                onSelectionChange={(selectedOption) => {
-                  handleSectorChange(selectedOption);
-                  field.onChange(selectedOption);
-                }}
-                selected={field.value} />
-              )}
+            <DropdownCheckbox
+              label="Elige el sector de la competencia (Obligatorio)" 
+              placeholder="Elige el sector de la competencia" 
+              options={sectores}
+              onSelectionChange={(selectedOption) => {
+                handleSectorChange(selectedOption);
+                setValue('sectores', selectedOption, { shouldValidate: true });
+              }}
+              selected={sectoresSeleccionados} 
             />
+            {errors.sectores && (
+              <p className="text-sans-h6-darkred mt-2 mb-0">{errors.sectores.message}</p>
+            )} 
           </div>
 
           <div className="mb-4">
-            <Controller 
-              name="origen"
-              control={control}
-              render={({field}) => (
-                <DropdownSelect 
-                label="Origen de la competencia (Obligatorio)"
-                placeholder="Elige el origen de la competencia"
-                options={origen}
-                onSelectionChange={(selectedOption) => {
-                  handleOrigenChange(selectedOption);
-                  field.onChange(selectedOption);
-                }}
-                selected={field.value} />
-              )}
+            <DropdownSelect
+              label="Origen de la competencia (Obligatorio)"
+              placeholder="Elige el origen de la competencia"
+              options={origen}
+              onSelectionChange={(selectedOption) => {
+                handleOrigenChange(selectedOption);
+                setValue('origen', selectedOption, { shouldValidate: true });
+              }}
+              selected={origenSeleccionado}
             />
+            {errors.origen && (
+              <p className="text-sans-h6-darkred mt-2 mb-0">{errors.origen.message}</p>
+            )}
           </div>
 
           <div className="mb-4">
-            <Controller 
-              name="ambito"
-              control={control}
-              render={({field}) => (
-                <DropdownSelect 
-                label="Elige el ámbito de la competencia (Obligatorio)"
-                placeholder="Elige el ámbito de la competencia"
-                options={ambito}
-                onSelectionChange={(selectedOption) => {
-                  handleAmbitoChange(selectedOption);
-                  field.onChange(selectedOption);
-                }}
-                selected={field.value} />
-              )}
+            <DropdownSelect 
+              label="Elige el ámbito de la competencia (Obligatorio)"
+              placeholder="Elige el ámbito de la competencia"
+              options={ambito}
+              onSelectionChange={(selectedOption) => {
+                handleAmbitoChange(selectedOption);
+                setValue('ambito', selectedOption, { shouldValidate : true})
+              }}
+              selected={ambitoSeleccionado} 
             />
+            {errors.ambito && (
+              <p className="text-sans-h6-darkred mt-2 mb-0">{errors.ambito.message}</p>
+            )}
             <div className="d-flex mt-2 text-sans-h6-primary">
               <i className="material-symbols-rounded me-2">info</i>
               <h6> editable </h6>
