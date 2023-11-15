@@ -2,11 +2,11 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
 import CustomInput from "../../components/forms/custom_input";
 import DropdownCheckbox from "../../components/forms/dropdown_checkbox";
 import DropdownSelect from "../../components/forms/dropdown_select";
 import { regiones, opcionesSector, origenCompetencia, ambitoCompetencia } from "../../Data/OpcionesFormulario";
+import { esquemaCreacionCompetencia } from "../../validaciones/esquemaValidacion";
 
 const initialValues = {
   nombre: '',
@@ -14,31 +14,8 @@ const initialValues = {
   sectores: [],
   origen: '',
   ambito: '',
-  plazo: 0,
+  plazo: null,
 };
-
-// Expresiones regulares para validaciones
-const nombreRegex = /^[A-Za-záéíóúüÜñÑ\s']+$/;
-
-// Esquema de validacion
-const schema = yup.object().shape({
-  nombre: yup
-  .string()
-  .required('El nombre de la competencia es obligatorio')
-  .matches(nombreRegex, 'Formato de nombre inválido')
-  .min(3, 'El nombre debe tener al menos 3 caracteres')
-  .max(30, 'El nombre no debe exceder los 30 caracteres'),
-  regiones: yup.array().min(1, 'Debes seleccionar al menos una región'),
-  sectores: yup.array().min(1, 'Debes seleccionar al menos un sector'),
-  origen: yup.string().required('El origen de la competencia es obligatorio'),
-  ambito: yup.string().required('El ámbito de la competencia es obligatorio'),
-  plazo: yup
-  .number()
-  .required('El plazo para el formulario sectorial es obligatorio')
-  .integer('El plazo debe ser un número entero')
-  .min(15, 'El plazo mínimo es de 15 días.')
-  .max(30, 'El plazo máximo es de 30 días.'),
-});
 
 const CreacionCompetencia = () => {
   const [regionesSeleccionadas, setRegionesSeleccionadas] = useState([]);
@@ -60,7 +37,7 @@ const CreacionCompetencia = () => {
     formState: { errors },
     trigger,
   } = useForm({
-    resolver: yupResolver(schema),
+    resolver: yupResolver(esquemaCreacionCompetencia),
     defaultValues: initialValues,
     shouldUnregister: false,
     mode: 'manual', // Desactiva la validacion automatica
