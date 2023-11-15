@@ -12,11 +12,17 @@ const SuccessViews = () => {
     titulo = "Administrar Usuarios";
     subtitulo = "Crear Usuario";
     tituloRecuadro = "Creaste un usuario con éxito";
-  } else {
+  } if (origen === "crear_competencia") {
     titulo = "Administrar Competencias";
     subtitulo = "Crear Competencia";
     tituloRecuadro = "Creaste una competencia con éxito";
+  } else {
+    titulo = "Exito!";
+    subtitulo = "Plataforma Transferencia de Competencias";
+    tituloRecuadro = "Esta es la vista de success";
   }
+
+  console.log("origen desde vista success", origen)
   
   return (
     <div className="container view-container ms-5">

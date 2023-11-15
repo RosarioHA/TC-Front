@@ -2,12 +2,12 @@ import { useState, useCallback } from "react";
 import { useForm, Controller } from 'react-hook-form';
 import { useNavigate } from "react-router-dom";
 import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
 import CustomInput from "../../components/forms/custom_input";
 import DropdownSelect from "../../components/forms/dropdown_select";
 import DropdownCheckboxBuscador from "../../components/forms/dropdown_checkbox_buscador";
 import DropdownSelectBuscador from "../../components/forms/dropdown_select_buscador";
-import { opcionesPerfilUsuario, opcionesSectorUsuario, regiones, opcionesCompetencia } from "../../Data/OpcionesFormulario";
+import { opcionesPerfilUsuario, opcionesSector, regiones, opcionesCompetencia } from "../../Data/OpcionesFormulario";
+import { esquemaCreacionUsuario } from "../../validaciones/esquemaValidacion";
 
 const initialValues = {
   rut: '',
@@ -17,24 +17,6 @@ const initialValues = {
   estado: '',
 };
 
-// Expresiones regulares para validaciones
-const rutRegex = /^[0-9]+-[0-9kK]{1}$/;
-const nombreRegex = /^[A-Za-záéíóúüÜñÑ\s']+$/;
-
-// Esquema de validacion
-const schema = yup.object().shape({
-  rut: yup.string().matches(rutRegex, 'Formato de RUT inválido').required('El RUT es obligatorio'),
-  nombre: yup
-  .string()
-  .matches(nombreRegex, 'Formato de nombre inválido')
-  .required('El nombre es obligatorio')
-  .min(3, 'El nombre debe tener al menos 3 caracteres')
-  .max(30, 'El nombre no debe exceder los 30 caracteres'),
-  email: yup.string().email('Formato de correo electrónico inválido').required('El correo electrónico es obligatorio'),
-  perfil: yup.string().required('El perfil es obligatorio'),
-  estado: yup.string().required('Debes seleccionar un estado para el usuario'),
-});
-
 const CreacionUsuario = () => {
   const [estado, setEstado] = useState('inactivo');
   const [activeButton, setActiveButton] = useState(null);
@@ -43,6 +25,7 @@ const CreacionUsuario = () => {
   const [sectorSeleccionado, setSectorSeleccionado] = useState(null);
   const [regionSeleccionada, setRegionSeleccionada] = useState(null);
   const [submitClicked, setSubmitClicked] = useState(false);
+
 
   // Maneja boton de volver atras.
   const history = useNavigate();
@@ -56,7 +39,7 @@ const CreacionUsuario = () => {
     formState: { errors },
     trigger,
   } = useForm({
-    resolver: yupResolver(schema),
+    resolver: yupResolver(esquemaCreacionUsuario),
     defaultValues: initialValues,
     shouldUnregister: false,
     mode: 'manual', // Desactiva la validacion automatica
@@ -67,15 +50,17 @@ const CreacionUsuario = () => {
       data.organismo = sectorSeleccionado;
       data.region = regionSeleccionada;
       data.competencias = competenciasSeleccionadas;
-      if (submitClicked) {
-        const isValid = await trigger(); // Realiza la validación manualmente
-        if (isValid) {
-          // Aquí la lógica de envío del formulario
-          console.log("datos enviados", data);
-          history('/home/success');
-        } else {
-          console.log("El formulario no es válido");
-        }
+  
+      // Realiza la validación manualmente
+      const isValid = await trigger();
+  
+      if (submitClicked && isValid) {
+        // Aquí la lógica de envío del formulario
+        console.log("datos enviados", data);
+        console.log(location.state);
+        history('/home/success', { state: { origen: "crear_usuario" } });
+      } else {
+        console.log("El formulario no es válido o no se ha hecho click en 'Crear Usuario'");
       }
     } catch (error) {
       console.error('Error al enviar el formulario:', error);
@@ -211,7 +196,7 @@ const CreacionUsuario = () => {
                 <DropdownSelectBuscador
                   label="Elige el organismo al que pertenece (Obligatorio)"
                   placeholder="Elige un organismo"
-                  options={opcionesSectorUsuario}
+                  options={opcionesSector}
                   onSelectionChange={handleSectorChange} />
               </div>
             </>

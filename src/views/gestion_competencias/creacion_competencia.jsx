@@ -73,7 +73,7 @@ const CreacionCompetencia = () => {
         if (isValid) {
           // Aqui enviaria la data hacia el backend
           console.log('Datos de competencia:', data);
-          history('/home/success');
+          history('/home/success', { state: { origen: "crear_competencia" } });
         } else {
           console.log('El formulario no es válido');
         }
