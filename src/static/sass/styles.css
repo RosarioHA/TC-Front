@@ -138,6 +138,13 @@
   font-weight: 400;
 }
 
+.text-sans-h6-grey {
+  font-family: "Roboto";
+  color: #656565;
+  font-size: 14px;
+  font-weight: 400;
+}
+
 .text-sans-h6-bold {
   font-family: "Roboto";
   color: #373737;
@@ -446,6 +453,13 @@
   background-color: #001C41;
 }
 
+.success-container {
+  border: 1px solid #006636;
+  border-radius: 4px;
+  box-shadow: 2px 5px 10px #BBBBBB;
+  margin-left: 10%;
+}
+
 #icon-inputSearch i.material-symbols-outlined,
 #icon-inputClose i.material-symbols-outlined {
   font-size: 28px;
@@ -475,6 +489,7 @@
 
 .input-s {
   height: 60px;
+  border: 1px solid #BBBBBB;
 }
 
 .dropdown-btn {
@@ -483,7 +498,7 @@
   background-color: #FFF;
   align-items: center;
   justify-content: space-between;
-  border: 1px solid #656565;
+  border: 1px solid #BBBBBB;
   height: 60px;
   width: 100%;
 }
