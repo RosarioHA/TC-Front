@@ -48,7 +48,11 @@ const DropdownCheckbox = ({ label, placeholder, options, onSelectionChange }) =>
     <div className="input-container">
       <label className="text-sans-h5 input-label">{label}</label>  
       <button type="button" onClick={toggleDropdown} className="text-sans-p-lightgrey dropdown-btn">
-        {placeholder}
+        {selectedOptions.length > 0
+          ? (selectedOptions.length === 1
+              ? selectedOptions[0]
+              : `${selectedOptions.length} alternativas seleccionadas`)
+          : placeholder}
         <i className="material-symbols-rounded ms-2">expand_more</i>
       </button>
       {isOpen && (

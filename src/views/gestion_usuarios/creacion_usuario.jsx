@@ -7,6 +7,7 @@ import CustomInput from "../../components/forms/custom_input";
 import DropdownSelect from "../../components/forms/dropdown_select";
 import DropdownCheckboxBuscador from "../../components/forms/dropdown_checkbox_buscador";
 import DropdownSelectBuscador from "../../components/forms/dropdown_select_buscador";
+import { opcionesPerfilUsuario, opcionesSectorUsuario, regiones, opcionesCompetencia } from "../../Data/OpcionesFormulario";
 
 const initialValues = {
   rut: '',
@@ -42,12 +43,6 @@ const CreacionUsuario = () => {
   const [sectorSeleccionado, setSectorSeleccionado] = useState(null);
   const [regionSeleccionada, setRegionSeleccionada] = useState(null);
   const [submitClicked, setSubmitClicked] = useState(false);
-
-  // Opciones selectores y checkboxes, luego vendran desde el backend
-  const opcionesPerfil = ['SUBDERE', 'Sectorial', 'DIPRES', 'GORE'];
-  const opcionesSector = ['un sector', 'otro sector','organismo random'];
-  const regiones = ['Arica y Parinacota', 'Magallanes', 'Metropolitana de Santiago', 'O`Higgins']
-  const opcionesCompetencia = ['Una competencia x', 'compilado', 'complejo', 'CoMpOnEnTe', 'compadre', 'Otra competencia x'];
 
   // Maneja boton de volver atras.
   const history = useNavigate();
@@ -194,7 +189,7 @@ const CreacionUsuario = () => {
               < DropdownSelect 
             label="Elige el perfil de usuario (Obligatorio)"
             placeholder="Elige el perfil de usuario"
-            options={opcionesPerfil}
+            options={opcionesPerfilUsuario}
             onSelectionChange={(selectedOption) => {
               field.onChange(selectedOption);
               handlePerfilChange(selectedOption);
@@ -216,7 +211,7 @@ const CreacionUsuario = () => {
                 <DropdownSelectBuscador
                   label="Elige el organismo al que pertenece (Obligatorio)"
                   placeholder="Elige un organismo"
-                  options={opcionesSector}
+                  options={opcionesSectorUsuario}
                   onSelectionChange={handleSectorChange} />
               </div>
             </>

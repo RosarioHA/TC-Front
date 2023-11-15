@@ -6,6 +6,7 @@ import * as yup from 'yup';
 import CustomInput from "../../components/forms/custom_input";
 import DropdownCheckbox from "../../components/forms/dropdown_checkbox";
 import DropdownSelect from "../../components/forms/dropdown_select";
+import { regiones, opcionesSector, origenCompetencia, ambitoCompetencia } from "../../Data/OpcionesFormulario";
 
 const initialValues = {
   nombre: '',
@@ -46,12 +47,6 @@ const CreacionCompetencia = () => {
   const [ambitoSeleccionado, setAmbitoSeleccionado] = useState('');
   const [submitClicked, setSubmitClicked] = useState(false);
   const history = useNavigate();
-
-  // Opciones selectores y checkboxes, luego vendran desde el backend
-  const regiones = ['Arica y Parinacota', 'Magallanes', 'Metropolitana de Santiago', 'O`Higgins'];
-  const sectores = ['Organismo 1', 'Organismo 2', 'Organismo 3', 'Organismo 4'];
-  const origen = ['Oficio Presidencial', 'Solicitud GORE'];
-  const ambito = ['Fomento de las Actividades Productivas', 'Ordenamiento Territorial', 'Desarrollo Social y Cultural'];
 
   // Maneja boton de volver atras.
   const handleBackButtonClick = () => {
@@ -160,7 +155,7 @@ const CreacionCompetencia = () => {
             <DropdownCheckbox
               label="Elige el sector de la competencia (Obligatorio)" 
               placeholder="Elige el sector de la competencia" 
-              options={sectores}
+              options={opcionesSector}
               onSelectionChange={(selectedOption) => {
                 handleSectorChange(selectedOption);
                 setValue('sectores', selectedOption, { shouldValidate: true });
@@ -176,7 +171,7 @@ const CreacionCompetencia = () => {
             <DropdownSelect
               label="Origen de la competencia (Obligatorio)"
               placeholder="Elige el origen de la competencia"
-              options={origen}
+              options={origenCompetencia}
               onSelectionChange={(selectedOption) => {
                 handleOrigenChange(selectedOption);
                 setValue('origen', selectedOption, { shouldValidate: true });
@@ -192,7 +187,7 @@ const CreacionCompetencia = () => {
             <DropdownSelect 
               label="Elige el ámbito de la competencia (Obligatorio)"
               placeholder="Elige el ámbito de la competencia"
-              options={ambito}
+              options={ambitoCompetencia}
               onSelectionChange={(selectedOption) => {
                 handleAmbitoChange(selectedOption);
                 setValue('ambito', selectedOption, { shouldValidate : true})
