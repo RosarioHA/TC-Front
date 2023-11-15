@@ -1,8 +1,8 @@
 import { useState, useCallback } from "react";
 import { useForm, Controller } from 'react-hook-form';
+import { useNavigate } from "react-router-dom";
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { useNavigate } from "react-router-dom";
 import CustomInput from "../../components/forms/custom_input";
 import DropdownSelect from "../../components/forms/dropdown_select";
 import DropdownCheckboxBuscador from "../../components/forms/dropdown_checkbox_buscador";
@@ -20,7 +20,7 @@ const initialValues = {
 const rutRegex = /^[0-9]+-[0-9kK]{1}$/;
 const nombreRegex = /^[A-Za-záéíóúüÜñÑ\s']+$/;
 
-// Esquema de validacion Yup
+// Esquema de validacion
 const schema = yup.object().shape({
   rut: yup.string().matches(rutRegex, 'Formato de RUT inválido').required('El RUT es obligatorio'),
   nombre: yup
@@ -140,7 +140,7 @@ const CreacionUsuario = () => {
       </div>
 
       <div className="col-10 ms-5">
-        <form  onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <div className="mb-4">
             <Controller
             name="rut"
