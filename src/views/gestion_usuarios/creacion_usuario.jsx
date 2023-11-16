@@ -1,30 +1,21 @@
 import { useState, useCallback } from "react";
 import { useForm, Controller } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
 import { useNavigate } from "react-router-dom";
+import { yupResolver } from '@hookform/resolvers/yup';
 import CustomInput from "../../components/forms/custom_input";
 import DropdownSelect from "../../components/forms/dropdown_select";
 import DropdownCheckboxBuscador from "../../components/forms/dropdown_checkbox_buscador";
 import DropdownSelectBuscador from "../../components/forms/dropdown_select_buscador";
+import { opcionesPerfilUsuario, opcionesSector, regiones, opcionesCompetencia } from "../../Data/OpcionesFormulario";
+import { esquemaCreacionUsuario } from "../../validaciones/esquemaValidacion";
 
-// Expresiones regulares para validaciones
-const rutRegex = /^[0-9]+-[0-9kK]{1}$/;
-const nombreRegex = /^[A-Za-záéíóúüÜñÑ\s']+$/;
-
-// Esquema de validacion Yup
-const schema = yup.object().shape({
-  rut: yup.string().matches(rutRegex, 'Formato de RUT inválido').required('El RUT es obligatorio'),
-  nombre: yup
-  .string()
-  .matches(nombreRegex, 'Formato de nombre inválido')
-  .required('El nombre es obligatorio')
-  .min(3, 'El nombre debe tener al menos 3 caracteres')
-  .max(30, 'El nombre no debe exceder los 30 caracteres'),
-  email: yup.string().email('Formato de correo electrónico inválido').required('El correo electrónico es obligatorio'),
-  perfil: yup.string().required('El perfil es obligatorio'),
-  estado: yup.string().required('Debes seleccionar un estado para el usuario'),
-});
+const initialValues = {
+  rut: '',
+  nombre: '',
+  email: '',
+  perfil: '',
+  estado: '',
+};
 
 const CreacionUsuario = () => {
   const [estado, setEstado] = useState('inactivo');
@@ -33,13 +24,8 @@ const CreacionUsuario = () => {
   const [perfilSeleccionado, setPerfilSeleccionado] = useState(null);
   const [sectorSeleccionado, setSectorSeleccionado] = useState(null);
   const [regionSeleccionada, setRegionSeleccionada] = useState(null);
+  const [submitClicked, setSubmitClicked] = useState(false);
 
-
-  // Opciones selectores y checkboxes, luego vendran desde el backend
-  const opcionesPerfil = ['SUBDERE', 'Sectorial', 'DIPRES', 'GORE'];
-  const opcionesSector = ['un sector', 'otro sector','organismo random'];
-  const regiones = ['Arica y Parinacota', 'Magallanes', 'Metropolitana de Santiago', 'O`Higgins']
-  const opcionesCompetencia = ['Una competencia x', 'compilado', 'complejo', 'CoMpOnEnTe', 'compadre', 'Otra competencia x'];
 
   // Maneja boton de volver atras.
   const history = useNavigate();
@@ -51,13 +37,34 @@ const CreacionUsuario = () => {
     control,
     handleSubmit,
     formState: { errors },
+    trigger,
   } = useForm({
-    resolver: yupResolver(schema),
+    resolver: yupResolver(esquemaCreacionUsuario),
+    defaultValues: initialValues,
+    shouldUnregister: false,
+    mode: 'manual', // Desactiva la validacion automatica
   });
 
-  const onSubmit = (data) => {
-    // Aqui la logica de envio del formulario
-    console.log("datos enviados", data);
+  const onSubmit = async (data) => {
+    try {
+      data.organismo = sectorSeleccionado;
+      data.region = regionSeleccionada;
+      data.competencias = competenciasSeleccionadas;
+  
+      // Realiza la validación manualmente
+      const isValid = await trigger();
+  
+      if (submitClicked && isValid) {
+        // Aquí la lógica de envío del formulario
+        console.log("datos enviados", data);
+        console.log("location state desde vista creacion de usuario", location.state);
+        history('/home/success', { state: { origen: "crear_usuario" } });
+      } else {
+        console.log("El formulario no es válido o no se ha hecho click en 'Crear Usuario'");
+      }
+    } catch (error) {
+      console.error('Error al enviar el formulario:', error);
+    }
   };
 
   // Callback que recibe las opciones de DropdownCheckbox de Perfil.
@@ -112,8 +119,8 @@ const CreacionUsuario = () => {
         <h3 className="text-sans-h3 ms-3 mb-0">Crear Usuario</h3>
       </div>
 
-      <div className="col-10">
-        <form  onSubmit={handleSubmit(onSubmit)}>
+      <div className="col-10 ms-5">
+        <form onSubmit={handleSubmit(onSubmit)}>
           <div className="mb-4">
             <Controller
             name="rut"
@@ -167,7 +174,7 @@ const CreacionUsuario = () => {
               < DropdownSelect 
             label="Elige el perfil de usuario (Obligatorio)"
             placeholder="Elige el perfil de usuario"
-            options={opcionesPerfil}
+            options={opcionesPerfilUsuario}
             onSelectionChange={(selectedOption) => {
               field.onChange(selectedOption);
               handlePerfilChange(selectedOption);
@@ -242,7 +249,6 @@ const CreacionUsuario = () => {
               )}
               </>
             )}/>
-
           </div>
 
           <div className="mb-5">
@@ -290,7 +296,7 @@ const CreacionUsuario = () => {
             </div>
           )}
           
-          <button className="btn-primario-s mb-5" type="submit">
+          <button className="btn-primario-s mb-5" type="submit" onClick={() => setSubmitClicked(true)}>
             <p className="mb-0">Crear Usuario</p>
             <i className="material-symbols-rounded ms-2">arrow_forward_ios</i>
           </button>

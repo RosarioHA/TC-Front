@@ -124,6 +124,9 @@
     line-height: 18px;
     font-style: normal;
 }
+.text-sans-h6-grey{
+    @include font-sans(14px, 400, $grey-c-color);
+}
 // h6 bold
 .text-sans-h6-bold{
     @include font-sans(14px, 700, $grey-a-color);

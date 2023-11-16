@@ -17,6 +17,7 @@ const Minuta = React.lazy(()=>import('./views/gestion_competencias/Minuta'));
 const Error404 = React.lazy(() => import('./views/Errors/Error404'));
 const Error500 = React.lazy(() => import('./views/Errors/Error500'));
 const Error503 = React.lazy(() => import('./views/Errors/Error503'));
+const Success = React.lazy(() => import ('./views/success'));
 
 
 function App()
@@ -28,12 +29,13 @@ function App()
           <Route path="/" element={<Landing />} />
           <Route path="/home" element={<MainLayout />}>
             <Route index element={<Home />} />
-            <Route path="administrar_usuarios" element={<GestionUsuarios />}></Route>
-            <Route path="crear_usuario" element={<CrearUsuario />}></Route>
-            <Route path="editar_usuario" element={<EditarUsuario />}></Route>
-            <Route path="gestion_competencias" element={<GestionCompetencias />}></Route>
-            <Route path="crear_competencia" element={<CrearCompetencia />}></Route>
-            <Route path="editar_competencia" element={<EditarCompetencia />}></Route>
+            <Route path="administrar_usuarios" element={<GestionUsuarios />} />
+            <Route path="crear_usuario" element={<CrearUsuario />} />
+            <Route path="editar_usuario" element={<EditarUsuario />} />
+            <Route path="gestion_competencias" element={<GestionCompetencias />} />
+            <Route path="crear_competencia" element={<CrearCompetencia />} />
+            <Route path="editar_competencia" element={<EditarCompetencia />} />
+            <Route path="success" element={<Success />} />
             <Route path="formulario_sectorial" element={<FormularioSectorial/>}></Route>
             <Route path="estado_compentencia/:id" element={<EstadoCompentencia/>}></Route>
             <Route path="ingresar_observaciones" element={<Observaciones/>}></Route>
