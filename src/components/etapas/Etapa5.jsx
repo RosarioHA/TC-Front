@@ -7,45 +7,70 @@ export const Etapa5 = ({ etapaCompetencia }) =>
 
     const SubetapaButton = ({ subetapa }) =>
     {
-        let buttonText = "Acción"; // Valor por defecto
-        let path = "/";
+        let buttonText, icon, path = "/";
+        const isFinalizado = subetapa.estado === "Finalizado";
         const isDisabled = subetapa.estado === "Pendiente";
+        const isRevision = subetapa.estado === "Revision";
 
+        // Cambiar el ícono a 'draft' si el estado es 'Pendiente' o 'Revisión'
+        icon = (isDisabled || isRevision) ? "draft" : "visibility";
 
-        switch (subetapa.nombre)
+        if (isFinalizado)
         {
-            case "Notificar a usuario":
+            if (subetapa.nombre === "Notificar a")
+            {
+                buttonText = "Finalizada";
+            } else if (subetapa.nombre === "Subir minuta")
+            {
+                buttonText = "Ver Minuta";
+                path = "/home/ver_minuta";
+            } else
+            {
+                buttonText = "Ver Observaciones";
+                path = "/home/ver_observaciones";
+            }
+        } else
+        {
+            if (subetapa.nombre === "Notificar a" && (subetapa.estado === "Pendiente" || subetapa.estado === "Revision"))
+            {
                 buttonText = "Agregar Usuario";
-                path = "/home/";
-                break;
-            case "Subir minuta":
+            } else if (subetapa.nombre === "Subir minuta")
+            {
                 buttonText = "Subir Minuta";
                 path = "/home/agregar_minuta";
-                break;
-            case "Revisión SUBDERE":
-                buttonText = "Subir Observaciones";
-                path = "/home/ingresar_observaciones";
-                break;
+            } else
+            {
+                // Asegúrate de que esta condición no incluye incorrectamente el caso de "Notificar a" en "Revisión"
+                if (subetapa.nombre !== "Notificar a")
+                {
+                    buttonText = "Subir Observaciones";
+                    path = "/home/ingresar_observaciones";
+                }
+            }
         }
 
-        if (isDisabled)
+        if (isFinalizado && subetapa.nombre === "Notificar a")
         {
-            // Renderizar un botón deshabilitado cuando la subetapa está en estado 'Pendiente'
+            return <span className="badge-status-finish">{buttonText}</span>;
+        } else if (isDisabled || isRevision)
+        {
             return (
-                <button className="btn-secundario-s" disabled>
+                <button className="btn-secundario-s" id="btn" disabled={isDisabled}>
+                    <span className="material-symbols-outlined me-1">{icon}</span>
                     <u>{buttonText}</u>
                 </button>
             );
         } else
         {
-            // Renderizar un Link envolviendo el botón cuando la subetapa no está en estado 'Pendiente'
             return (
-                <Link to={path} className="btn-secundario-s">
+                <Link to={path} className="btn-secundario-s text-decoration-none" id="btn">
+                    <span className="material-symbols-outlined me-1">{icon}</span>
                     <u>{buttonText}</u>
                 </Link>
             );
         }
     };
+
     return (
         <div className="my-3">
             <div className="d-flex justify-content-between my-2 text-sans-p">
@@ -54,8 +79,10 @@ export const Etapa5 = ({ etapaCompetencia }) =>
             <div>
                 {subetapas.map((subetapa, index) => (
                     <div key={index} className="d-flex justify-content-between text-sans-p border-top border-bottom my-3 py-1">
-                        <div className="align-self-center"> {subetapa.nombre}</div>
-                        {subetapa.estado === "Finalizado" && <span className="badge-status-finish">Finalizada</span>}
+                        <div className="align-self-center">
+                            {subetapa.nombre}
+                            {subetapa.nombre === "Notificar a" && subetapa.estado === "Finalizado" && subetapa.usuarioDesignado && ` : ${subetapa.usuarioDesignado}`}
+                        </div>
                         <SubetapaButton subetapa={subetapa} />
                     </div>
                 ))}
@@ -65,3 +92,4 @@ export const Etapa5 = ({ etapaCompetencia }) =>
         </div>
     );
 };
+

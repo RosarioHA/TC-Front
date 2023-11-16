@@ -8,7 +8,7 @@ export const Etapa1 = ({ etapaCompetencia }) => {
   return (
     <div className="my-3">
       <div className="d-flex justify-content-between my-2 text-sans-p">
-        Para completar la {etapa} con éxito deben cumplirse estas condiciones:
+        Para completar el {etapa} con éxito deben cumplirse estas condiciones:
       </div>
       <div className="">
         {subetapas.map((subetapa, index) => (
