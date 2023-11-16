@@ -1,0 +1,226 @@
+/* Grafico
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+
+.chart-skills {
+  margin: 0 auto;
+  padding: 0;
+  list-style-type: none;
+}
+
+.chart-skills *,
+.chart-skills::before {
+  box-sizing: border-box;
+}
+
+
+.chart-skills::before,
+.chart-skills::after {
+  position: absolute;
+}
+
+/* CHART-SKILLS STYLES
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+
+.chart-skills {
+  position: relative;
+  width: 350px;
+  height: 175px;
+  overflow: hidden;
+}
+
+
+.chart-text{
+ display:block; 
+ position: absolute;
+ z-index:4; 
+ margin-left: 105px;
+ margin-top: 105px; 
+ text-align: center;
+}
+
+.chart-skills::before {
+  content: '';
+  width: inherit;
+  height: inherit;
+  border-bottom: none;
+  border: 45px solid $blue-sky; 
+  border-bottom: none;
+  border-top-left-radius: 175px;
+  border-top-right-radius: 175px;
+}
+
+
+.chart-skills li {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: inherit;
+  height: inherit;
+  border: 45px solid;
+  border-top: none;
+  border-bottom-left-radius: 175px;
+  border-bottom-right-radius: 175px;
+  transform-origin: 50% 0;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  animation-fill-mode: forwards;
+  animation-duration: .4s;
+  animation-timing-function: linear;
+  
+}
+
+.chart-skills li:nth-child(1) {
+  z-index: 4;
+  border-color:$blue-color;
+  animation-name: rotate-one;
+}
+
+.chart-skills li:nth-child(2) {
+  z-index: 3;
+  border-color: $blue-color;
+  animation-name: rotate-two;
+  animation-delay: .4s;
+}
+
+.chart-skills li:nth-child(3) {
+  z-index: 2;
+  border-color: $blue-color;
+  animation-name: rotate-three;
+  animation-delay: .8s;
+}
+
+.chart-skills li:nth-child(4) {
+  z-index: 1;
+  border-color: $blue-color;
+  animation-name: rotate-four;
+  animation-delay: 1.2s;
+}
+.chart-skills li:nth-child(5) {
+  z-index: 0;
+  border-color: $blue-color;
+  animation-name: rotate-five;
+  animation-delay: 1.2s;
+}
+
+
+.chart-skills span {
+  position: absolute;
+  font-size: .85rem;
+  backface-visibility: hidden;
+  animation: fade-in .4s linear forwards;
+}
+
+.chart-skills li:nth-child(1) span {
+  top: 5px;
+  left: 10px;
+  transform: rotate(-37.8deg);
+}
+
+.chart-skills li:nth-child(2) span {
+  top: 20px;
+  left: 10px;
+  transform: rotate(-72deg);
+  animation-delay: .4s;
+}
+
+.chart-skills li:nth-child(3) span {
+  top: 18px;
+  left: 10px;
+  transform: rotate(-108deg);
+  animation-delay: .8s;
+}
+
+.chart-skills li:nth-child(4) span {
+  top: 10px;
+  left: 10px;
+  transform: rotate(-144deg);
+  animation-delay: 1.2s;
+}
+
+.chart-skills li:nth-child(5) span {
+  top: 10px;
+  left: 10px;
+  transform: rotate(-180deg);
+  animation-delay: 1.2s;
+}
+
+
+
+/* ANIMATIONS
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+
+@keyframes rotate-one {
+  100% {
+    transform: rotate(37.8deg);
+    /**
+     * 12% => 21.6deg
+     */
+  }
+}
+
+@keyframes rotate-two {
+  0% {
+    transform: rotate(37.8deg);
+  }
+  100% {
+    transform: rotate(72deg);
+    /**
+     * 32% => 57.6deg 
+     * 57.6 + 21.6 => 79.2deg
+     */
+  }
+}
+
+@keyframes rotate-three {
+  0% {
+    transform: rotate(72deg);
+  }
+  100% {
+    transform: rotate(108deg);
+    /**
+     * 34% => 61.2deg 
+     * 61.2 + 79.2 => 140.4deg
+     */
+  }
+}
+
+@keyframes rotate-four {
+  0% {
+    transform: rotate(108deg);
+  }
+  100% {
+    transform: rotate(144deg);
+    /**
+     * 22% => 39.6deg  
+     * 140.4 + 39.6 => 180deg
+     */
+  }
+}
+@keyframes rotate-five {
+  0% {
+    transform: rotate(144deg);
+  }
+  100% {
+    transform: rotate(180deg);
+    /**
+     * 22% => 39.6deg  
+     * 140.4 + 39.6 => 180deg
+     */
+  }
+}
+
+@keyframes fade-in {
+  0%,
+  90% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.text-grafico{
+  display: flex;
+  justify-content: center;
+  margin-top:155px;
+}

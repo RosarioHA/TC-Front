@@ -57,7 +57,7 @@ const CreacionUsuario = () => {
       if (submitClicked && isValid) {
         // Aquí la lógica de envío del formulario
         console.log("datos enviados", data);
-        console.log(location.state);
+        console.log("location state desde vista creacion de usuario", location.state);
         history('/home/success', { state: { origen: "crear_usuario" } });
       } else {
         console.log("El formulario no es válido o no se ha hecho click en 'Crear Usuario'");

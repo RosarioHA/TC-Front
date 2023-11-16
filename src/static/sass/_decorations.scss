@@ -27,4 +27,92 @@
   background-color: $secondary-color;
 }
 
+.white-line{
+  background-color: $white-color;
+}
+.neutral-line{
+  background-color: $neutral-color;
+}
 
+.badge-activo{
+background-color: $blue-color;
+color:$white-color
+}
+
+.check{
+  width: 20px;
+  height: 20px;
+}
+.badge-inactivo{
+background-color: $grey-c-color;
+}
+
+.badge-type {
+align-self: flex-start;
+background-color: $blue-sky;
+border-radius: 5px;
+padding:4px; 
+}
+
+.circle-color-blue{
+  width: 16px;
+height: 16px;
+background-color: $blue-color;
+border-radius: 50%;
+}
+
+
+.circle-color-light-blue{
+  width: 16px;
+height: 16px;
+background-color: $blue-sky;
+border-radius: 50%;
+}
+
+
+
+
+@mixin badge-status ($bg, $color) {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: $bg;
+  color:$color; 
+  padding:4px 8px 4px 8px; 
+  border-radius: 5px;
+  text-align: center;
+  font-family: Roboto;
+  font-size: 16px; 
+  font-style: normal;
+  font-weight: 700;
+  line-height: 100%;
+
+}
+
+.badge-status-finish{
+  @include badge-status($blue-color,$white-color )  
+}
+
+.badge-status-review{
+
+@include badge-status($blue-marine,$white-color )
+}
+
+.badge-status-pending{
+  @include badge-status($grey-light-color,$grey-a-color )
+}
+
+.badge-percent {
+  background:$grey-light-b;
+  color: $dark-grey;
+  border-radius: 15px;
+  text-align: center;
+}
+
+.badge-percent-b {
+  background:$grey-light-a;
+  color: $white-color;
+  border-radius: 15px;
+  text-align: center;
+}
