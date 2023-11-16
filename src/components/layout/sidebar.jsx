@@ -5,7 +5,7 @@ const Sidebar = () =>
 
 
   return (
-    <div className="sidebar  fixed-top  d-flex flex-column flex-shrink-0  border-end col-2">
+    <div className="sidebar  fixed-top  d-flex flex-column flex-shrink-0  border-end ">
       <div className="my-0 text-start">
         <div className="line-container row ">
           <div id="lineBlue" />
@@ -37,14 +37,14 @@ const Sidebar = () =>
         <hr className="w-85 mx-4" />
         <span className="title-section  ms-4 my-1">Gestión de Usuarios</span>
         <li className="my-1">
-          <NavLink to="#" className="btn-sidebar my-1 mx-4" type="button">
+          <NavLink to="/home/crear_usuario" className="btn-sidebar my-1 mx-4" type="button">
             <u>Crear Usuarios </u> <i className="material-symbols-outlined">
               person_add
             </i>
           </NavLink>
         </li>
         <li className="my-1">
-          <NavLink to="#" className="mx-4 btn-link" type="button">
+          <NavLink to="/home/administrar_usuarios" className="mx-4 btn-link" type="button">
             <i className="material-symbols-outlined mx-3">supervised_user_circle</i>
             <u>Administrar Usuarios</u>
           </NavLink>

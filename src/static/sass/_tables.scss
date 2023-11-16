@@ -1,31 +1,5 @@
-.white-line{
-    background-color: $white-color;
-}
-.neutral-line{
-    background-color: $neutral-color;
-}
 
-.badge-activo{
- background-color: $blue-color;
- color:$white-color
-}
-
-.badge-inactivo{
-  background-color: $grey-c-color;
-}
-
-.badge-type {
-  align-self: flex-start;
-  background-color: $blue-sky;
-  border-radius: 5px;
-  padding:4px; 
-}
-
-.check{
-  width: 20px;
-  height: 20px;
-}
-
+//paginacion tabla con checkbox 
 .custom-pagination-btn{
   border: none;
   background-color: transparent;
@@ -34,4 +8,17 @@
 .custom-pagination-btn.active {
   background-color:$blue-color;
   color: $white-color;
+}
+
+//table Personas Asignadas 
+.nav-underline .nav-link {
+  color: $tertiary-color;
+  border-bottom: 2px solid transparent;
+}
+
+
+.nav-link:hover,
+.nav-link-active:hover{
+  color: $primary-color;
+  border-bottom: 2px solid $primary-color; 
 }
