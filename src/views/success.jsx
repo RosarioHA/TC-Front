@@ -12,7 +12,7 @@ const SuccessViews = () => {
     titulo = "Administrar Usuarios";
     subtitulo = "Crear Usuario";
     tituloRecuadro = "Creaste un usuario con éxito";
-  } if (origen === "crear_competencia") {
+  } else if (origen === "crear_competencia") {
     titulo = "Administrar Competencias";
     subtitulo = "Crear Competencia";
     tituloRecuadro = "Creaste una competencia con éxito";
