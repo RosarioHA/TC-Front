@@ -30,6 +30,12 @@
     font-size: $fontSize;
     font-weight: $fontWeight;
 }
+//title-views 
+.text-sans-Title{
+    @include font-sans(49px, 700,$grey-a-color);
+}
+
+
 // h1
 .text-sans-h1{
     @include font-sans(39px, 500, $grey-a-color);
@@ -52,6 +58,17 @@
     @include font-sans(32px, 500, $tertiary-color);
 }
 
+.text-sans-h2-bold-tertiary{
+    @include font-sans(32px, 700, $tertiary-color);
+}
+
+//25px
+
+.text-sans-25{
+    @include font-sans(25px, 500, $dark-grey);
+    line-height: 31px;
+}
+
 //h3
 .text-sans-h3{
     @include font-sans(24px, 500, $grey-a-color);
@@ -61,6 +78,10 @@
 }
 .text-sans-h3-greyc{
     @include font-sans(24px, 500, $grey-c-color);
+}
+
+.text-sans-h3-bold{
+    @include font-sans(24px, 700, $dark-grey);
 }
 
 // h4
@@ -82,6 +103,10 @@
 .text-sans-h5-bol{
     @include font-sans(18px, 600, $grey-a-color);
 }
+.text-sans-h5-medium{
+    @include font-sans(18px, 500, $grey-a-color);
+}
+
 
 
 // h6
@@ -94,15 +119,31 @@
 .text-sans-h6-darkred{
     @include font-sans(14px, 400, $dark-red);
 }
+.text-sans-h6-darkblue{
+    @include font-sans(14px, 400, $tertiary-color);
+    line-height: 18px;
+    font-style: normal;
+}
 // h6 bold
 .text-sans-h6-bold{
     @include font-sans(14px, 700, $grey-a-color);
 }
 
+.text-sans-h6-bold-darkblue{
+    @include font-sans(14px, 700, $tertiary-color);
+    line-height: 18px;
+    font-style: normal;
+}
+
+
 // p
 .text-sans-p{
     @include font-sans(16px, 400, $grey-a-color);
     line-height: 30px;
+}
+.text-sans-p-grey{
+    @include font-sans(16px, 400, $grey-light-a);
+    line-height: 24px; 
 }
 .text-sans-p-blue{
     @include font-sans(16px, 400, $blue-color);
@@ -116,6 +157,8 @@
 }
 .text-sans-p-lightgrey{
     @include font-sans(16px, 400, $grey-light-color); 
+    line-height: 24px; 
+    letter-spacing: 0.04px;
 }
 .text-sans-p-grayc{
     @include font-sans(16px, 400, $grey-c-color);
