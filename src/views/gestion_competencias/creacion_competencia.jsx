@@ -180,7 +180,7 @@ const CreacionCompetencia = () => {
             </div>
           </div>
           <div className="mb-4">
-            <div className="">COMPONENTE BUSCADOR - VER SI SIRVE LO QUE HIZO VERO</div>
+            <div className="">COMPONENTE BUSCADOR</div>
             <div className="d-flex mt-2 text-sans-h6-primary">
               <i className="material-symbols-rounded me-2">info</i>
               <h6> Si aun no creas los usuarios para esta competencia, puedes crear la competencia y asignarle usuario más tarde. </h6>
