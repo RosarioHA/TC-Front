@@ -43,20 +43,40 @@
 
 // Boton secundario
 // fondo transp. con borde y letras azules. Existe en S-fitcontent Y L-100%
-.btn-secundario-s{
-    @include btn-border(fit-content, $blue-color, );
+.btn-secundario-s {
+    @include btn-border(fit-content, $blue-color);
     @include typo-style;
+
+    // Asegurar que el color del ícono sea el mismo que el texto por defecto
+    span.material-symbols-outlined {
+        color: inherit;
+    }
 }
-.btn-secundario-s:hover{
+
+// Cambios de estilo para hover y focus
+.btn-secundario-s:hover, .btn-secundario-s:focus {
     background-color: $blue-color;
     color: $white-color;
-    border: 2px solid $blue-color;
+
+    // Cambiar el color del ícono a blanco en hover y focus
+    span.material-symbols-outlined {
+        color: inherit;
+    }
 }
-.btn-secundario-s:disabled{
+
+// Estilos para el botón deshabilitado
+.btn-secundario-s:disabled {
     background-color: $white-color;
     color: $grey-c-color;
     border: 2px solid $grey-c-color;
+
+    // Mantener el color del ícono acorde al botón deshabilitado
+    span.material-symbols-outlined {
+        color: $grey-c-color;
+    }
 }
+
+
 .btn-secundario-l{
     @include btn-border(100%, $blue-color);
     @include typo-style;
@@ -157,3 +177,14 @@
   }
 
   
+
+// Estilos específicos para el ícono cuando no es hover ni focus
+span.material-symbols-outlined {
+    align-self: center;
+    font-variation-settings: 'FILL' 2, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+// Estilo específico para el ícono en el botón con id #btn
+#btn span.material-symbols-outlined {
+    color: inherit;
+}
