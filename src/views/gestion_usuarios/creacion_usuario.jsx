@@ -6,6 +6,7 @@ import CustomInput from "../../components/forms/custom_input";
 import DropdownSelect from "../../components/forms/dropdown_select";
 import DropdownCheckboxBuscador from "../../components/forms/dropdown_checkbox_buscador";
 import DropdownSelectBuscador from "../../components/forms/dropdown_select_buscador";
+import TablaSelecciones from "../../components/forms/tabla_selecciones";
 import { opcionesPerfilUsuario, opcionesSector, regiones, opcionesCompetencia } from "../../Data/OpcionesFormulario";
 import { esquemaCreacionUsuario } from "../../validaciones/esquemaValidacion";
 
@@ -269,31 +270,10 @@ const CreacionUsuario = () => {
           </div>
 
           {Object.keys(competenciasSeleccionadas).length > 0 && (
-            <div className="mb-5">
-              <table>
-                <thead className="">
-                  <tr className="">
-                    <th className="col-1"> <p className="ms-4">#</p> </th>
-                    <th className="col-5"> <p >Competencia</p> </th>
-                    <th className="col-1"> <p className="ms-2">Acción</p> </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {Object.keys(competenciasSeleccionadas).map((competencia, index) => (
-                    <tr key={competencia} className={index % 2 === 0 ? 'neutral-line' : 'white-line'}>
-                      <td> <p className="ms-4 my-3">{index + 1}</p> </td>
-                      <td> <p className="my-3">{competencia}</p> </td>
-                      <td>
-                        <button className="btn-terciario-ghost" onClick={() => handleRemoveCompetencia(competencia)}>
-                          <p className="mb-0 text-decoration-underline">Eliminar</p>
-                          <i className="material-symbols-rounded ms-2">delete</i>
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+            < TablaSelecciones 
+            selecciones={competenciasSeleccionadas}
+            onRemove={handleRemoveCompetencia}
+            colTitle="Competencia"/>
           )}
           
           <button className="btn-primario-s mb-5" type="submit" onClick={() => setSubmitClicked(true)}>

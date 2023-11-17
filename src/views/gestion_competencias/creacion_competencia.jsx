@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import CustomInput from "../../components/forms/custom_input";
 import DropdownCheckbox from "../../components/forms/dropdown_checkbox";
 import DropdownSelect from "../../components/forms/dropdown_select";
+import DropdownCheckboxBuscador from "../../components/forms/dropdown_checkbox_buscador";
 import { regiones, opcionesSector, origenCompetencia, ambitoCompetencia } from "../../Data/OpcionesFormulario";
+import { userData } from "../../Data/Usuarios";
 import { esquemaCreacionCompetencia } from "../../validaciones/esquemaValidacion";
 
 const initialValues = {
@@ -14,7 +16,7 @@ const initialValues = {
   sectores: [],
   origen: '',
   ambito: '',
-  plazo: null,
+  plazo: undefined,
 };
 
 const CreacionCompetencia = () => {
@@ -22,6 +24,7 @@ const CreacionCompetencia = () => {
   const [sectoresSeleccionados, setSectoresSeleccionados] = useState([]);
   const [origenSeleccionado, setOrigenSeleccionado] = useState('');
   const [ambitoSeleccionado, setAmbitoSeleccionado] = useState('');
+  const [usuariosSeleccionados, setUsuariosSeleccionados] = useState([]);
   const [submitClicked, setSubmitClicked] = useState(false);
   const history = useNavigate();
 
@@ -81,6 +84,27 @@ const CreacionCompetencia = () => {
     setValue('ambito', ambito, { shouldValidate: true });
     console.log("ambito seleccionado", ambitoSeleccionado)
   };
+
+  // Callback que maneja usuarios seleccionados y su eliminacion.
+  const handleUsuariosChange = useCallback(
+    (selectedOptions) => {
+      const updatedUsuarios = {};
+      selectedOptions.forEach((usuario) => {
+        if (usuario && usuario.nombre) {
+          updatedUsuarios[usuario.nombre] = true;
+        }
+      });
+      setUsuariosSeleccionados(updatedUsuarios);
+    },
+    []
+  );
+  console.log("usuarios seleccionados:", usuariosSeleccionados)
+  //FUNCION PARA ELIMINAR USUARIOS DESDE TABLA
+  // const handleRemoveUsuario = (usuario) => {
+  //   const updatedUsuarios = { ...usuariosSeleccionados };
+  //   delete updatedUsuarios[usuario];
+  //   setUsuariosSeleccionados(updatedUsuarios);
+  // };
 
   return (
     <div className="container col-10 my-4">
@@ -180,7 +204,15 @@ const CreacionCompetencia = () => {
             </div>
           </div>
           <div className="mb-4">
-            <div className="">COMPONENTE BUSCADOR</div>
+            <div className="">
+              < DropdownCheckboxBuscador 
+                label="Asignar Usuarios (Opcional)"
+                placeholder="Busca el nombre de la persona"
+                options={userData}
+                selectedOptions={Object.keys(usuariosSeleccionados).map(id => userData.find(user => user.id === id))}
+                onSelectionChange={handleUsuariosChange}
+              />
+            </div>
             <div className="d-flex mt-2 text-sans-h6-primary">
               <i className="material-symbols-rounded me-2">info</i>
               <h6> Si aun no creas los usuarios para esta competencia, puedes crear la competencia y asignarle usuario más tarde. </h6>

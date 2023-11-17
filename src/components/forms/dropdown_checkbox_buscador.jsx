@@ -8,21 +8,15 @@ const DropdownCheckboxBuscador = ({ label, placeholder, options, onSelectionChan
   useEffect(() => {
     function handleClickOutside(event) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        // Hacer clic fuera del dropdown, cierra el dropdown y refleja las selecciones
         setIsOpen(false);
       }
     }
-
     if (isOpen) {
-      // Agregar un event listener para cerrar el dropdown al hacer clic fuera de el
       document.addEventListener('mousedown', handleClickOutside);
     } else {
-      // Remover el event listener cuando el dropdown esta cerrado
       document.removeEventListener('mousedown', handleClickOutside);
     }
-
     return () => {
-      // Limpieza al desmontar el componente
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [isOpen]);
@@ -33,23 +27,19 @@ const DropdownCheckboxBuscador = ({ label, placeholder, options, onSelectionChan
 
   const handleCheckboxChange = (option) => {
     if (selectedOptions.includes(option)) {
-      // Deselecciona la opción
       onSelectionChange(selectedOptions.filter((item) => item !== option));
     } else {
-      // Selecciona la opción
       onSelectionChange([...selectedOptions, option]);
     }
   };
 
-  const handleInputClick = (e) => {
-    // Previene que el evento se propague al boton
-    e.stopPropagation();
-  };
-
-  // Filtrar opciones segun termino de busqueda
-  const filteredOptions = options.filter((option) =>
-    option.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredOptions = options.filter((option) => {
+    const searchTextLower = searchTerm.toLowerCase();
+    if (typeof option === 'object' && option.nombre && typeof option.nombre === 'string') {
+      return option.nombre.toLowerCase().includes(searchTextLower);
+    }
+    return option.toLowerCase().includes(searchTextLower);
+  });
 
   return (
     <div className="input-container">
@@ -57,36 +47,33 @@ const DropdownCheckboxBuscador = ({ label, placeholder, options, onSelectionChan
       <button onClick={toggleDropdown} className="text-sans-p dropdown-btn">
         {isOpen ? (
           <input
-          className="ghost-input"
-          type="text"
-          placeholder="Buscar..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          onClick={handleInputClick}
-          onMouseDown={handleInputClick}
+            className="ghost-input"
+            type="text"
+            placeholder="Buscar..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
-          ) : (
+        ) : (
           <span>{placeholder}</span>
-          )}
-          <i className="material-symbols-rounded ms-2">
-          {isOpen ? 'expand_less' : 'expand_more'}
-          </i>
+        )}
+        <i className="material-symbols-rounded ms-2">{isOpen ? 'expand_less' : 'expand_more'}</i>
       </button>
-      
+
       {isOpen && (
         <div className="dropdown d-flex flex-column" ref={dropdownRef}>
           {filteredOptions.map((option) => (
             <label
-            className={selectedOptions.includes(option) ? 'selected-option' : 'unselected-option'}
-            key={option}>
+              className={selectedOptions.includes(option) ? 'selected-option' : 'unselected-option'}
+              key={typeof option === 'object' ? option.id : option}
+            >
               <input
                 className="ms-2 me-2 my-3"
                 type="checkbox"
-                value={option}
+                value={typeof option === 'object' ? option.id : option}
                 checked={selectedOptions.includes(option)}
                 onChange={() => handleCheckboxChange(option)}
               />
-              {option}
+              {typeof option === 'object' ? option.nombre : option}
             </label>
           ))}
         </div>
