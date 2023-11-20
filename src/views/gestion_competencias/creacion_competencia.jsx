@@ -5,9 +5,10 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import CustomInput from "../../components/forms/custom_input";
 import DropdownCheckbox from "../../components/forms/dropdown_checkbox";
 import DropdownSelect from "../../components/forms/dropdown_select";
-import DropdownCheckboxBuscador from "../../components/forms/dropdown_checkbox_buscador";
+import DropdownCheckboxUsuarios from "../../components/forms/dropdown_checkbox_conSecciones";
 import { regiones, opcionesSector, origenCompetencia, ambitoCompetencia } from "../../Data/OpcionesFormulario";
 import { userData } from "../../Data/Usuarios";
+
 import { esquemaCreacionCompetencia } from "../../validaciones/esquemaValidacion";
 
 const initialValues = {
@@ -31,6 +32,14 @@ const CreacionCompetencia = () => {
   // Maneja boton de volver atras.
   const handleBackButtonClick = () => {
     history(-1);
+  };
+
+  // Agrupa usuarios por tipo
+  const groupUsersByType = (users) => {
+    return Array.from(new Set(users.map((user) => user.tipoUsuario))).map((userType) => ({
+      label: userType,
+      options: users.filter((user) => user.tipoUsuario === userType),
+    }));
   };
 
   const {
@@ -205,14 +214,16 @@ const CreacionCompetencia = () => {
           </div>
           <div className="mb-4">
             <div className="">
-              < DropdownCheckboxBuscador 
+              < DropdownCheckboxUsuarios 
                 label="Asignar Usuarios (Opcional)"
                 placeholder="Busca el nombre de la persona"
-                options={userData}
-                selectedOptions={Object.keys(usuariosSeleccionados).map(id => userData.find(user => user.id === id))}
+                options={groupUsersByType(userData)}
+                selectedOptions={Object.keys(usuariosSeleccionados)
+                  .map(id => userData.find(user => user.id === id))}
                 onSelectionChange={handleUsuariosChange}
               />
             </div>
+
             <div className="d-flex mt-2 text-sans-h6-primary">
               <i className="material-symbols-rounded me-2">info</i>
               <h6> Si aun no creas los usuarios para esta competencia, puedes crear la competencia y asignarle usuario más tarde. </h6>
