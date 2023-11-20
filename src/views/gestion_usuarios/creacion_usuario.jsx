@@ -4,10 +4,11 @@ import { useNavigate } from "react-router-dom";
 import { yupResolver } from '@hookform/resolvers/yup';
 import CustomInput from "../../components/forms/custom_input";
 import DropdownSelect from "../../components/forms/dropdown_select";
-import DropdownCheckboxBuscador from "../../components/forms/dropdown_checkbox_buscador";
+import DropdownCheckboxSinSecciones from "../../components/forms/dropdown_checkbox_sinSecciones";
 import DropdownSelectBuscador from "../../components/forms/dropdown_select_buscador";
 import TablaSelecciones from "../../components/forms/tabla_selecciones";
-import { opcionesPerfilUsuario, opcionesSector, regiones, opcionesCompetencia } from "../../Data/OpcionesFormulario";
+import { competencias } from "../../Data/Competencias";
+import { opcionesPerfilUsuario, opcionesSector, regiones } from "../../Data/OpcionesFormulario";
 import { esquemaCreacionUsuario } from "../../validaciones/esquemaValidacion";
 
 const initialValues = {
@@ -26,7 +27,6 @@ const CreacionUsuario = () => {
   const [sectorSeleccionado, setSectorSeleccionado] = useState(null);
   const [regionSeleccionada, setRegionSeleccionada] = useState(null);
   const [submitClicked, setSubmitClicked] = useState(false);
-
 
   // Maneja boton de volver atras.
   const history = useNavigate();
@@ -51,12 +51,11 @@ const CreacionUsuario = () => {
       data.organismo = sectorSeleccionado;
       data.region = regionSeleccionada;
       data.competencias = competenciasSeleccionadas;
-  
-      // Realiza la validación manualmente
+      // Realiza la validacion manualmente
       const isValid = await trigger();
   
       if (submitClicked && isValid) {
-        // Aquí la lógica de envío del formulario
+        // Aqui la logica de envio del formulario
         console.log("datos enviados", data);
         console.log("location state desde vista creacion de usuario", location.state);
         history('/home/success', { state: { origen: "crear_usuario" } });
@@ -107,6 +106,12 @@ const CreacionUsuario = () => {
     const updatedCompetencias = { ...competenciasSeleccionadas };
     delete updatedCompetencias[competencia];
     setCompetenciasSeleccionadas(updatedCompetencias);
+  };
+
+  const handleInputClick = (e) => {
+    // Previene que el evento se propague al boton
+    e.stopPropagation();
+    console.log("propagacion detenida en vista Crear usuario")
   };
   
   return (
@@ -254,15 +259,27 @@ const CreacionUsuario = () => {
 
           <div className="mb-5">
             <div className="my-3">
-              < DropdownCheckboxBuscador 
-              label="Competencia Asignada (Opcional)"
-              placeholder="Busca el nombre de la competencia"
-              options={opcionesCompetencia}
-              selectedOptions={Object.keys(competenciasSeleccionadas)}
-              onSelectionChange={handleCompetenciasChange}
-              />
+            <Controller
+              name="competenciasSeleccionadas"
+              control={control}
+              defaultValue={Object.keys(competenciasSeleccionadas)}
+              render={({ field }) => (
+                <DropdownCheckboxSinSecciones
+                  label="Competencia Asignada (Opcional)"
+                  placeholder="Busca el nombre de la competencia"
+                  options={competencias}
+                  selectedOptions={field.value}
+                  onSelectionChange={(selectedOptions) => {
+                    field.onChange(selectedOptions);
+                    handleCompetenciasChange(selectedOptions);
+                  }}
+                  onClick={handleInputClick}
+                  onMouseDown={handleInputClick}
+                />
+              )}
+            />
             </div> 
-          
+
             <div className="d-flex mt-1 text-sans-h6-primary">
               <i className="material-symbols-rounded me-2">info</i>
               <h6 className="">Si la competencia no está creada, debes crearla primero y luego asociarle un usuario. </h6>
@@ -270,7 +287,8 @@ const CreacionUsuario = () => {
           </div>
 
           {Object.keys(competenciasSeleccionadas).length > 0 && (
-            < TablaSelecciones 
+            < TablaSelecciones
+            data={competencias}
             selecciones={competenciasSeleccionadas}
             onRemove={handleRemoveCompetencia}
             colTitle="Competencia"/>
