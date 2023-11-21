@@ -31,14 +31,20 @@ const DropdownCheckboxSinSecciones = ({ label, placeholder, options, onSelection
     setIsOpen(!isOpen);
   };
 
+
   const handleCheckboxChange = (optionId) => {
-    if (selectedOptions.includes(optionId)) {
-      // Deselecciona la opción
-      onSelectionChange(selectedOptions.filter((item) => item !== optionId));
+    const updatedOptions = [...selectedOptions]; // Cambia de objeto a array
+  
+    const optionIndex = updatedOptions.indexOf(optionId);
+    if (optionIndex !== -1) {
+      // Si ya está en la lista, quítalo
+      updatedOptions.splice(optionIndex, 1);
     } else {
-      // Selecciona la opción
-      onSelectionChange([...selectedOptions, optionId]);
+      // Si no está en la lista, agrégalo
+      updatedOptions.push(optionId);
     }
+  
+    onSelectionChange(updatedOptions);
   };
 
   const handleInputClick = (e) => {
@@ -78,18 +84,19 @@ const DropdownCheckboxSinSecciones = ({ label, placeholder, options, onSelection
         <div className="dropdown d-flex flex-column" ref={dropdownRef}>
           {filteredOptions.map((option) => (
             <label
-            className={selectedOptions.includes(option.id) ? 'selected-option' : 'unselected-option'}
-            key={option.id}>
-              <input
-                className="ms-2 me-2 my-3"
-                type="checkbox"
-                value={option.id}
-                checked={selectedOptions.includes(option.id)}
-                onChange={() => handleCheckboxChange(option.id)}
-              />
-              {option.nombre}
+              className={selectedOptions.includes(option.id) ? 'selected-option' : 'unselected-option'}
+              key={option.id}
+            >
+            <input
+              className="ms-2 me-2 my-3"
+              type="checkbox"
+              value={option.id}
+              checked={selectedOptions.includes(option.id)}
+              onChange={() => handleCheckboxChange(option.id)}
+            />
+            {option.nombre}
             </label>
-          ))}
+            ))}
         </div>
       )}
     </div>

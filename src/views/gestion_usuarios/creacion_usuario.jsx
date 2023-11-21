@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useForm, Controller } from 'react-hook-form';
 import { useNavigate } from "react-router-dom";
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -27,6 +27,10 @@ const CreacionUsuario = () => {
   const [sectorSeleccionado, setSectorSeleccionado] = useState(null);
   const [regionSeleccionada, setRegionSeleccionada] = useState(null);
   const [submitClicked, setSubmitClicked] = useState(false);
+
+  useEffect(() => {
+    console.log("competencias seleccionadas en vista", competenciasSeleccionadas);
+  }, [competenciasSeleccionadas]);
 
   // Maneja boton de volver atras.
   const history = useNavigate();
@@ -95,8 +99,8 @@ const CreacionUsuario = () => {
   const handleCompetenciasChange = useCallback(
     (selectedOptions) => {
       const updatedCompetencias = {};
-      selectedOptions.forEach((competencia) => {
-        updatedCompetencias[competencia] = true;
+      selectedOptions.forEach((competenciaId) => {
+        updatedCompetencias[competenciaId] = true;
       });
       setCompetenciasSeleccionadas(updatedCompetencias);
     },
@@ -106,6 +110,7 @@ const CreacionUsuario = () => {
     const updatedCompetencias = { ...competenciasSeleccionadas };
     delete updatedCompetencias[competencia];
     setCompetenciasSeleccionadas(updatedCompetencias);
+    console.log("eliminando competencia con handleRemoveCompetencia", updatedCompetencias)
   };
 
   const handleInputClick = (e) => {
@@ -262,6 +267,7 @@ const CreacionUsuario = () => {
             <Controller
               name="competenciasSeleccionadas"
               control={control}
+              //defaultValue={{}}
               defaultValue={Object.keys(competenciasSeleccionadas)}
               render={({ field }) => (
                 <DropdownCheckboxSinSecciones
