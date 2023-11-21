@@ -4,9 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { yupResolver } from '@hookform/resolvers/yup';
 import CustomInput from "../../components/forms/custom_input";
 import DropdownSelect from "../../components/forms/dropdown_select";
-import DropdownCheckboxSinSecciones from "../../components/forms/dropdown_checkbox_sinSecciones";
+import DropdownSinSecciones from "../../components/forms/dropdown_checkbox_sinSecciones_conTabla";
 import DropdownSelectBuscador from "../../components/forms/dropdown_select_buscador";
-import TablaSelecciones from "../../components/forms/tabla_selecciones";
 import { competencias } from "../../Data/Competencias";
 import { opcionesPerfilUsuario, opcionesSector, regiones } from "../../Data/OpcionesFormulario";
 import { esquemaCreacionUsuario } from "../../validaciones/esquemaValidacion";
@@ -106,12 +105,6 @@ const CreacionUsuario = () => {
     },
     []
   );
-  const handleRemoveCompetencia = (competencia) => {
-    const updatedCompetencias = { ...competenciasSeleccionadas };
-    delete updatedCompetencias[competencia];
-    setCompetenciasSeleccionadas(updatedCompetencias);
-    console.log("eliminando competencia con handleRemoveCompetencia", updatedCompetencias)
-  };
 
   const handleInputClick = (e) => {
     // Previene que el evento se propague al boton
@@ -270,7 +263,7 @@ const CreacionUsuario = () => {
               //defaultValue={{}}
               defaultValue={Object.keys(competenciasSeleccionadas)}
               render={({ field }) => (
-                <DropdownCheckboxSinSecciones
+                <DropdownSinSecciones
                   label="Competencia Asignada (Opcional)"
                   placeholder="Busca el nombre de la competencia"
                   options={competencias}
@@ -285,20 +278,7 @@ const CreacionUsuario = () => {
               )}
             />
             </div> 
-
-            <div className="d-flex mt-1 text-sans-h6-primary">
-              <i className="material-symbols-rounded me-2">info</i>
-              <h6 className="">Si la competencia no está creada, debes crearla primero y luego asociarle un usuario. </h6>
-            </div>
           </div>
-
-          {Object.keys(competenciasSeleccionadas).length > 0 && (
-            < TablaSelecciones
-            data={competencias}
-            selecciones={competenciasSeleccionadas}
-            onRemove={handleRemoveCompetencia}
-            colTitle="Competencia"/>
-          )}
           
           <button className="btn-primario-s mb-5" type="submit" onClick={() => setSubmitClicked(true)}>
             <p className="mb-0">Crear Usuario</p>

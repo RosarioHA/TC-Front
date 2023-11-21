@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 
-const DropdownCheckboxSinSecciones = ({ label, placeholder, options, onSelectionChange, selectedOptions }) => {
+const DropdownSinSecciones = ({ label, placeholder, options, onSelectionChange, selectedOptions }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const dropdownRef = useRef(null);
@@ -12,7 +12,6 @@ const DropdownCheckboxSinSecciones = ({ label, placeholder, options, onSelection
         setIsOpen(false);
       }
     }
-
     if (isOpen) {
       // Agregar un event listener para cerrar el dropdown al hacer clic fuera de el
       document.addEventListener('mousedown', handleClickOutside);
@@ -20,7 +19,6 @@ const DropdownCheckboxSinSecciones = ({ label, placeholder, options, onSelection
       // Remover el event listener cuando el dropdown esta cerrado
       document.removeEventListener('mousedown', handleClickOutside);
     }
-
     return () => {
       // Limpieza al desmontar el componente
       document.removeEventListener('mousedown', handleClickOutside);
@@ -30,7 +28,6 @@ const DropdownCheckboxSinSecciones = ({ label, placeholder, options, onSelection
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
-
 
   const handleCheckboxChange = (optionId) => {
     const updatedOptions = [...selectedOptions]; // Cambia de objeto a array
@@ -43,7 +40,6 @@ const DropdownCheckboxSinSecciones = ({ label, placeholder, options, onSelection
       // Si no está en la lista, agrégalo
       updatedOptions.push(optionId);
     }
-  
     onSelectionChange(updatedOptions);
   };
 
@@ -99,8 +95,47 @@ const DropdownCheckboxSinSecciones = ({ label, placeholder, options, onSelection
             ))}
         </div>
       )}
+
+      <div className="d-flex mt-3 text-sans-h6-primary">
+        <i className="material-symbols-rounded me-2">info</i>
+        <h6 className="">Si la competencia no está creada, debes crearla primero y luego asociarle un usuario. </h6>
+      </div>
+
+      {selectedOptions.length > 0 && (
+        <div className="mb-5 mt-5">
+          <table>
+            <thead className="">
+              <tr className="">
+                <th className="col-1"> <p className="ms-4">#</p> </th>
+                <th className="col-5"> <p >Competencia</p> </th>
+                <th className="col-1"> <p className="ms-2">Acción</p> </th>
+              </tr>
+            </thead>
+            <tbody>
+              {selectedOptions.map((competenciaId, index) => {
+                const competencia = options.find(comp => comp.id === parseInt(competenciaId));
+                const competenciaNombre = competencia ? competencia.nombre : `Competencia ${competenciaId}`;
+
+                return (
+                  <tr key={competenciaId} className={index % 2 === 0 ? 'neutral-line' : 'white-line'}>
+                    <td> <p className="ms-4 my-3">{index + 1}</p> </td>
+                    <td> <p className="my-3">{competenciaNombre}</p> </td>
+                    <td>
+                      <button className="btn-terciario-ghost" onClick={() => handleCheckboxChange(competenciaId)}>
+                        <p className="mb-0 text-decoration-underline">Eliminar</p>
+                        <i className="material-symbols-rounded ms-2">delete</i>
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      )}
+
     </div>
   );
 };
 
-export default DropdownCheckboxSinSecciones;
+export default DropdownSinSecciones;
