@@ -64,13 +64,13 @@ const DropdownCheckboxUsuarios = ({ label, placeholder, options }) => {
       </button>
 
       {isOpen && (
-        <div className="dropdown d-flex flex-column" ref={dropdownRef}>
+        <div className="dropdown d-flex flex-column unselected-option" ref={dropdownRef}>
           {filteredOptions.map((optionGroup, index) => (
             <React.Fragment key={index}>
-              <div className="group-label">{optionGroup.label}</div>
+              <div className="group-label unselected-option py-2 ps-3 d-flex"><p className="me-1 mb-0">Usuarios</p>{optionGroup.label}</div>
               {optionGroup.options && optionGroup.options.map((option) => (
                 <label
-                  className={selectedOptions.includes(option) ? 'selected-option' : 'unselected-option'}
+                  className={selectedOptions.includes(option) ? 'selected-option-ghost' : 'unselected-option-ghost'}
                   key={typeof option === 'object' ? option.id : option}
                 >
                   <input
@@ -99,17 +99,16 @@ const DropdownCheckboxUsuarios = ({ label, placeholder, options }) => {
               </tr>
             </thead>
             <tbody>
-              {selectedOptions.map((usuarioId, index) => {
-                //const usuario = options.find(comp => comp.id === parseInt(usuarioId));
-                const usuarioNombre = usuarioId ? usuarioId.nombre : `Competencia ${usuarioId}`;
-                console.log(usuarioId)
+              {selectedOptions.map((usuario, index) => {
+                const usuarioNombre = usuario ? usuario.nombre : `Competencia ${usuario}`;
+                console.log(usuario)
 
                 return (
-                  <tr key={usuarioId.id} className={index % 2 === 0 ? 'neutral-line' : 'white-line'}>
+                  <tr key={usuario.id} className={index % 2 === 0 ? 'neutral-line' : 'white-line'}>
                     <td> <p className="ms-4 my-3">{index + 1}</p> </td>
                     <td> <p className="my-3">{usuarioNombre}</p> </td>
                     <td>
-                      <button className="btn-terciario-ghost" onClick={() => handleCheckboxChange(usuarioId)}>
+                      <button className="btn-terciario-ghost" onClick={() => handleCheckboxChange(usuario)}>
                         <p className="mb-0 text-decoration-underline">Eliminar</p>
                         <i className="material-symbols-rounded ms-2">delete</i>
                       </button>
