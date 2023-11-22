@@ -70,31 +70,23 @@ const CreacionUsuario = () => {
     }
   };
 
-  // Callback que recibe las opciones de DropdownCheckbox de Perfil.
+  // Callbacks que manejan la entrega de informacion desde los componentes del formulario
   const handlePerfilChange = (perfil) => {
     setPerfilSeleccionado(perfil);
   };
-
-  // Callback que recibe las opciones de DropdownSelectBuscador de Sector
   const handleSectorChange = (sector) => {
     setSectorSeleccionado(sector);
     console.log("sector seleccionado", sectorSeleccionado)
   }
-
-  // Callback que recibe las opciones de DropdownSelectBuscador de Sector
   const handleRegionChange = (region) => {
     setRegionSeleccionada(region);
     console.log("region seleccionada", regionSeleccionada)
   }
-
-  // Maneja cambio de Estado del usuario.
   const handleEstadoChange = (nuevoEstado) => {
     setEstado(nuevoEstado);
     setActiveButton(nuevoEstado);
     console.log("estado seleccionado", estado)
   };
-
-  // Callback que maneja competencias seleccionadas y su eliminacion.
   const handleCompetenciasChange = useCallback(
     (selectedOptions) => {
       const updatedCompetencias = {};

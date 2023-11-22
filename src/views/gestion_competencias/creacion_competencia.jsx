@@ -17,6 +17,7 @@ const initialValues = {
   sectores: [],
   origen: '',
   ambito: '',
+  usuarios: '',
   plazo: undefined,
 };
 
@@ -93,14 +94,12 @@ const CreacionCompetencia = () => {
     setValue('ambito', ambito, { shouldValidate: true });
     console.log("ambito seleccionado", ambitoSeleccionado)
   };
-
-  // Callback que maneja usuarios seleccionados y su eliminacion.
   const handleUsuariosChange = useCallback(
     (selectedOptions) => {
       const updatedUsuarios = {};
       selectedOptions.forEach((usuario) => {
-        if (usuario && usuario.nombre) {
-          updatedUsuarios[usuario.nombre] = true;
+        if (usuario && usuario.id) {
+          updatedUsuarios[usuario.id] = true;
         }
       });
       setUsuariosSeleccionados(updatedUsuarios);
@@ -108,12 +107,6 @@ const CreacionCompetencia = () => {
     []
   );
   console.log("usuarios seleccionados:", usuariosSeleccionados)
-  //FUNCION PARA ELIMINAR USUARIOS DESDE TABLA
-  // const handleRemoveUsuario = (usuario) => {
-  //   const updatedUsuarios = { ...usuariosSeleccionados };
-  //   delete updatedUsuarios[usuario];
-  //   setUsuariosSeleccionados(updatedUsuarios);
-  // };
 
   return (
     <div className="container col-10 my-4">
