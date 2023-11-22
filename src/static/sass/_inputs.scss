@@ -31,6 +31,18 @@
     border: 1px solid $grey-light-color;
     background-color: $white-color; 
 }
+.selected-option-ghost{
+    border: 1px solid $grey-light-color;
+    border-bottom: none;
+    border-top: none;
+    background-color: $neutral-color;
+}
+.unselected-option-ghost{
+    border: 1px solid $grey-light-color;
+    border-bottom: none;
+    border-top: none;
+    background-color: $white-color; 
+}
 .ghost-input{
     border: none;
     width: 100%;

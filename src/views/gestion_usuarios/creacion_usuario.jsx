@@ -1,12 +1,13 @@
-import { useState, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useForm, Controller } from 'react-hook-form';
 import { useNavigate } from "react-router-dom";
 import { yupResolver } from '@hookform/resolvers/yup';
 import CustomInput from "../../components/forms/custom_input";
 import DropdownSelect from "../../components/forms/dropdown_select";
-import DropdownCheckboxBuscador from "../../components/forms/dropdown_checkbox_buscador";
+import DropdownSinSecciones from "../../components/forms/dropdown_checkbox_sinSecciones_conTabla";
 import DropdownSelectBuscador from "../../components/forms/dropdown_select_buscador";
-import { opcionesPerfilUsuario, opcionesSector, regiones, opcionesCompetencia } from "../../Data/OpcionesFormulario";
+import { competencias } from "../../Data/Competencias";
+import { opcionesPerfilUsuario, opcionesSector, regiones } from "../../Data/OpcionesFormulario";
 import { esquemaCreacionUsuario } from "../../validaciones/esquemaValidacion";
 
 const initialValues = {
@@ -26,6 +27,9 @@ const CreacionUsuario = () => {
   const [regionSeleccionada, setRegionSeleccionada] = useState(null);
   const [submitClicked, setSubmitClicked] = useState(false);
 
+  useEffect(() => {
+    console.log("competencias seleccionadas en vista", competenciasSeleccionadas);
+  }, [competenciasSeleccionadas]);
 
   // Maneja boton de volver atras.
   const history = useNavigate();
@@ -50,12 +54,11 @@ const CreacionUsuario = () => {
       data.organismo = sectorSeleccionado;
       data.region = regionSeleccionada;
       data.competencias = competenciasSeleccionadas;
-  
-      // Realiza la validación manualmente
+      // Realiza la validacion manualmente
       const isValid = await trigger();
   
       if (submitClicked && isValid) {
-        // Aquí la lógica de envío del formulario
+        // Aqui la logica de envio del formulario
         console.log("datos enviados", data);
         console.log("location state desde vista creacion de usuario", location.state);
         history('/home/success', { state: { origen: "crear_usuario" } });
@@ -95,17 +98,18 @@ const CreacionUsuario = () => {
   const handleCompetenciasChange = useCallback(
     (selectedOptions) => {
       const updatedCompetencias = {};
-      selectedOptions.forEach((competencia) => {
-        updatedCompetencias[competencia] = true;
+      selectedOptions.forEach((competenciaId) => {
+        updatedCompetencias[competenciaId] = true;
       });
       setCompetenciasSeleccionadas(updatedCompetencias);
     },
     []
   );
-  const handleRemoveCompetencia = (competencia) => {
-    const updatedCompetencias = { ...competenciasSeleccionadas };
-    delete updatedCompetencias[competencia];
-    setCompetenciasSeleccionadas(updatedCompetencias);
+
+  const handleInputClick = (e) => {
+    // Previene que el evento se propague al boton
+    e.stopPropagation();
+    console.log("propagacion detenida en vista Crear usuario")
   };
   
   return (
@@ -253,48 +257,28 @@ const CreacionUsuario = () => {
 
           <div className="mb-5">
             <div className="my-3">
-              < DropdownCheckboxBuscador 
-              label="Competencia Asignada (Opcional)"
-              placeholder="Busca el nombre de la competencia"
-              options={opcionesCompetencia}
-              selectedOptions={Object.keys(competenciasSeleccionadas)}
-              onSelectionChange={handleCompetenciasChange}
-              />
+            <Controller
+              name="competenciasSeleccionadas"
+              control={control}
+              //defaultValue={{}}
+              defaultValue={Object.keys(competenciasSeleccionadas)}
+              render={({ field }) => (
+                <DropdownSinSecciones
+                  label="Competencia Asignada (Opcional)"
+                  placeholder="Busca el nombre de la competencia"
+                  options={competencias}
+                  selectedOptions={field.value}
+                  onSelectionChange={(selectedOptions) => {
+                    field.onChange(selectedOptions);
+                    handleCompetenciasChange(selectedOptions);
+                  }}
+                  onClick={handleInputClick}
+                  onMouseDown={handleInputClick}
+                />
+              )}
+            />
             </div> 
-          
-            <div className="d-flex mt-1 text-sans-h6-primary">
-              <i className="material-symbols-rounded me-2">info</i>
-              <h6 className="">Si la competencia no está creada, debes crearla primero y luego asociarle un usuario. </h6>
-            </div>
           </div>
-
-          {Object.keys(competenciasSeleccionadas).length > 0 && (
-            <div className="mb-5">
-              <table>
-                <thead className="">
-                  <tr className="">
-                    <th className="col-1"> <p className="ms-4">#</p> </th>
-                    <th className="col-5"> <p >Competencia</p> </th>
-                    <th className="col-1"> <p className="ms-2">Acción</p> </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {Object.keys(competenciasSeleccionadas).map((competencia, index) => (
-                    <tr key={competencia} className={index % 2 === 0 ? 'neutral-line' : 'white-line'}>
-                      <td> <p className="ms-4 my-3">{index + 1}</p> </td>
-                      <td> <p className="my-3">{competencia}</p> </td>
-                      <td>
-                        <button className="btn-terciario-ghost" onClick={() => handleRemoveCompetencia(competencia)}>
-                          <p className="mb-0 text-decoration-underline">Eliminar</p>
-                          <i className="material-symbols-rounded ms-2">delete</i>
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
           
           <button className="btn-primario-s mb-5" type="submit" onClick={() => setSubmitClicked(true)}>
             <p className="mb-0">Crear Usuario</p>
