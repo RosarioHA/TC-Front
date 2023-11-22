@@ -87,6 +87,41 @@ const DropdownCheckboxUsuarios = ({ label, placeholder, options }) => {
           ))}
         </div>
       )}
+
+      {selectedOptions.length > 0 && (
+        <div className="mb-5 mt-5">
+          <table>
+            <thead className="">
+              <tr className="">
+                <th className="col-1"> <p className="ms-4">#</p> </th>
+                <th className="col-5"> <p >Usuario</p> </th>
+                <th className="col-1"> <p className="ms-2">Acción</p> </th>
+              </tr>
+            </thead>
+            <tbody>
+              {selectedOptions.map((usuarioId, index) => {
+                //const usuario = options.find(comp => comp.id === parseInt(usuarioId));
+                const usuarioNombre = usuarioId ? usuarioId.nombre : `Competencia ${usuarioId}`;
+                console.log(usuarioId)
+
+                return (
+                  <tr key={usuarioId.id} className={index % 2 === 0 ? 'neutral-line' : 'white-line'}>
+                    <td> <p className="ms-4 my-3">{index + 1}</p> </td>
+                    <td> <p className="my-3">{usuarioNombre}</p> </td>
+                    <td>
+                      <button className="btn-terciario-ghost" onClick={() => handleCheckboxChange(usuarioId)}>
+                        <p className="mb-0 text-decoration-underline">Eliminar</p>
+                        <i className="material-symbols-rounded ms-2">delete</i>
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      )}
+
     </div>
   );
 };
