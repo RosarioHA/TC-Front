@@ -366,17 +366,25 @@
   justify-content: center;
   align-items: center;
 }
+.btn-secundario-s span.material-symbols-outlined {
+  color: inherit;
+}
 
-.btn-secundario-s:hover {
+.btn-secundario-s:hover, .btn-secundario-s:focus {
   background-color: #0F69C4;
   color: #FFF;
-  border: 2px solid #0F69C4;
+}
+.btn-secundario-s:hover span.material-symbols-outlined, .btn-secundario-s:focus span.material-symbols-outlined {
+  color: inherit;
 }
 
 .btn-secundario-s:disabled {
   background-color: #FFF;
   color: #656565;
   border: 2px solid #656565;
+}
+.btn-secundario-s:disabled span.material-symbols-outlined {
+  color: #656565;
 }
 
 .btn-secundario-l {
@@ -514,6 +522,15 @@
   border: 1px solid #871a1a;
   background-color: #871a1a;
   color: #FFF;
+}
+
+span.material-symbols-outlined {
+  align-self: center;
+  font-variation-settings: "FILL" 2, "wght" 400, "GRAD" 0, "opsz" 24;
+}
+
+#btn span.material-symbols-outlined {
+  color: inherit;
 }
 
 .container-fluid {

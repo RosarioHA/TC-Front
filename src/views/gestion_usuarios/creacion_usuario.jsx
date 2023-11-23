@@ -4,18 +4,14 @@ import { useNavigate } from "react-router-dom";
 import { yupResolver } from '@hookform/resolvers/yup';
 import CustomInput from "../../components/forms/custom_input";
 import DropdownSelect from "../../components/forms/dropdown_select";
-import DropdownSinSecciones from "../../components/forms/dropdown_checkbox_sinSecciones_tabla";
 import DropdownSelectBuscador from "../../components/forms/dropdown_select_buscador";
 import DropdownSinSecciones from "../../components/forms/dropdown_checkbox_sinSecciones_conTabla";
-import DropdownSelectBuscador from "../../components/forms/dropdown_select_buscador";
 import { competencias } from "../../Data/Competencias";
-import { opcionesPerfilUsuario, opcionesSector, regiones } from "../../Data/OpcionesFormulario";
 import { esquemaCreacionUsuario } from "../../validaciones/esquemaValidacion";
 import { useCreateUser } from "../../hooks/useCreateUser";
 import { useRegionComuna } from "../../hooks/useRegionComuna";
 import { useGroups } from "../../hooks/useGroups";
 import { useSector } from "../../hooks/useSector";
-import { competencias } from "../../Data/Competencias";
 
 const initialValues = {
   rut: '',
@@ -26,8 +22,7 @@ const initialValues = {
   password: '',
 };
 
-const CreacionUsuario = () =>
-{
+const CreacionUsuario = () => {
   const { createUser, isLoading, error } = useCreateUser();
   const { dataGroups, loadingGroups, errorGroups } = useGroups();
   const { dataSector, loadingSector, errorSector} = useSector(); 
@@ -69,13 +64,6 @@ const CreacionUsuario = () =>
     console.log("competencias seleccionadas en vista", competenciasSeleccionadas);
   }, [competenciasSeleccionadas]);
 
-  const handleInputClick = (e) => {
-    // Previene que el evento se propague al boton
-    e.stopPropagation();
-    console.log("propagacion detenida en vista Crear usuario")
-  };
-
-
   //opciones de perfil 
   const  opcionesGroups = dataGroups.map(group => ({
     value:group.id,
@@ -88,28 +76,8 @@ const CreacionUsuario = () =>
       setPerfilSeleccionado(selectedProfile.label);
     }else { 
       setPerfilSeleccionado(null); 
-  const onSubmit = async (data) => {
-    try {
-      data.organismo = sectorSeleccionado;
-      data.region = regionSeleccionada;
-      data.competencias = competenciasSeleccionadas;
-      // Realiza la validacion manualmente
-      const isValid = await trigger();
-  
-      if (submitClicked && isValid) {
-        // Aqui la logica de envio del formulario
-        console.log("datos enviados", data);
-        console.log("location state desde vista creacion de usuario", location.state);
-        history('/home/success', { state: { origen: "crear_usuario" } });
-      } else {
-        console.log("El formulario no es válido o no se ha hecho click en 'Crear Usuario'");
-      }
-    } catch (error) {
-      console.error('Error al enviar el formulario:', error);
-    }
-  }
-
-
+  }}
+      
   //opciones de regiones
   const opcionesDeRegiones = dataRegiones.map(region => ({
     value: region.id,
@@ -120,7 +88,6 @@ const CreacionUsuario = () =>
   {
     setRegionSeleccionada(region);
   }
-
 
   //opciones sector 
   const opcionesSector = dataSector.map(sector => ({
@@ -135,29 +102,11 @@ const CreacionUsuario = () =>
     setSectorSeleccionado(sector);
   }
 
-
   const handleEstadoChange = (nuevoEstado) =>
   {
     setEstado(nuevoEstado);
     setActiveButton(nuevoEstado);
   };
-
-  const handleCompetenciasChange = useCallback(
-    (selectedOptions) =>
-    {
-      const updatedCompetencias = {};
-      selectedOptions.forEach((competencia) =>
-      {
-        updatedCompetencias[ competencia ] = true;
-      selectedOptions.forEach((competenciaId) => {
-        updatedCompetencias[competenciaId] = true;
-      src/views/gestion_usuarios/creacion_usuario.jsx
-      });
-      setCompetenciasSeleccionadas(updatedCompetencias);
-    },
-    []
-    );
-  );
 
   const handleInputClick = (e) => {
     // Previene que el evento se propague al boton
@@ -165,33 +114,41 @@ const CreacionUsuario = () =>
     console.log("propagacion detenida en vista Crear usuario")
   };
 
-
-    const onSubmit = async (data) =>
-    {
-      try
+  const handleCompetenciasChange = useCallback(
+    (selectedOptions) => {
+      const updatedCompetencias = {};
+      selectedOptions.forEach((competencia) =>
       {
-        const userData = {
-          ...data,
-          nombre_completo: data.nombre,
-          perfil: perfilSeleccionado,
-          sector: sectorSeleccionado,
-          region: regionSeleccionada,
-          password: data.password,
-          is_active: estado === 'activo',
-          competencias: Object.keys(competenciasSeleccionadas)
-        };
+        updatedCompetencias[ competencia ] = true;
+      selectedOptions.forEach((competenciaId) => {
+        updatedCompetencias[competenciaId] = true;
+      });
+      setCompetenciasSeleccionadas(updatedCompetencias);
+    },[]);
+  });
+
+  const onSubmit = async (data) => {
+    try {
+      const userData = {
+        ...data,
+        nombre_completo: data.nombre,
+        perfil: perfilSeleccionado,
+        sector: sectorSeleccionado,
+        region: regionSeleccionada,
+        password: data.password,
+        is_active: estado === 'activo',
+        competencias: Object.keys(competenciasSeleccionadas)
+      };
   
-        const isValid = await trigger();
-        if (submitClicked && isValid)
-        {
-          await createUser(userData);
-          console.log("Usuario creado con éxito");
-          history('/home/success', { state: { origen: "crear_usuario" } });
-        } else
-        {
-          console.log("El formulario no es válido o no se ha hecho click en 'Crear Usuario'");
-        }
-      } catch (error)
+      const isValid = await trigger();
+      if (submitClicked && isValid)
+      {
+        await createUser(userData);
+        console.log("Usuario creado con éxito");
+        history('/home/success', { state: { origen: "crear_usuario" } });
+      } else {
+        console.log("El formulario no es válido o no se ha hecho click en 'Crear Usuario'");
+      }} catch (error)
       {
         console.error('Error al enviar el formulario:', error);
       }
