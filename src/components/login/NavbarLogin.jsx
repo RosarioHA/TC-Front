@@ -19,12 +19,6 @@ const NavbarLogin = () =>{
         </div>
       </div>
     </nav>  
-    <div className="row my-4 col-12">
-      {/* Navegacion */}
-      <div className="mx-5  mx-lg-auto mx-xl-auto d-flex flex-column flex-md-row justify-content-start px-5">
-        <Link to="/" className="link text-black text-underline mx-md-3 d-none d-md-block"> Inicio </Link>
-      </div>
-    </div> 
   </>
 );
 };
