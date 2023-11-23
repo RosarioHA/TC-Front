@@ -31,11 +31,45 @@ export  const stages = [
           { nombre: "Completar formulario sectorial", estado: "Finalizado", },
           { nombre: "Revisión SUBDERE", estado: "Finalizado" },
         ],},
+        { id: 3, etapa: 'Complemento y validación de DIPRES', estado: 'Finalizado' ,  
+        subetapas: [
+          { nombre: "Notificar a", estado: "Finalizado", usuarioDesignado:"Casian Andor" },
+          { nombre: "Subir minuta", estado: "Finalizado" },
+          { nombre: "Revisión SUBDERE", estado: "Finalizado" },
+        ],},
+        { id: 4, etapa: 'Levantamiento de antecedentes GORE', estado: 'Finalizado',
+        subetapas: [
+          { nombre: "Notificar a", estado: "Finalizado", usuarioDesignado:"Jyn Erso" },
+          { nombre: "Completar formulario GORE", estado: "Finalizado" },
+        ], },
+        { id: 5, etapa: 'Complemento y validación de DIPRES', estado: 'En Estudio' ,   
+        subetapas: [
+          { nombre: "Notificar a", estado: "Finalizado" ,usuarioDesignado:"Galen Erso"},
+          { nombre: "Subir minuta", estado: "Finalizado" },
+          { nombre: "Revisión SUBDERE", estado: "Finalizado" },
+        ],},
+      ],
+    },
+    {
+      id: 2,
+      nombre: 'Competencia 2',
+      detalles: 'Detalles de la competencia 2',
+      etapas: [
+        { id: 1, etapa: 'Inicio de transferencia de competencia', estado: 'Finalizado'  , 
+        subetapas: [
+          { nombre: "Crear competencia", estado: "Finalizado" },
+          { nombre: "Usuario sectorial vinculado a la competencia creada", estado: "Finalizado" },
+        ], },
+        { id: 2, etapa: 'Levantamiento de antecedentes sectoriales', estado:'Finalizado' ,
+        subetapas: [
+          { nombre: "Completar formulario sectorial", estado: "Revision", },
+          { nombre: "Revisión SUBDERE", estado: "finalizado" },
+        ],},
         { id: 3, etapa: 'Complemento y validación de DIPRES', estado: 'En Estudio' ,  
         subetapas: [
-          { nombre: "Notificar a usuario", estado: "Finalizado" },
-          { nombre: "Subir minuta", estado: "Finalizado" },
-          { nombre: "Revisión SUBDERE", estado: "Revision" },
+          { nombre: "Notificar a usuario", estado: "revision" },
+          { nombre: "Subir minuta", estado: "Pendiente" },
+          { nombre: "Revisión SUBDERE", estado: "Pendiente" },
         ],},
         { id: 4, etapa: 'Levantamiento de antecedentes GORE', estado: 'Pendiente',
         subetapas: [
@@ -51,9 +85,9 @@ export  const stages = [
       ],
     },
     {
-      id: 2,
-      nombre: 'Competencia 2',
-      detalles: 'Detalles de la competencia 2',
+      id: 3,
+      nombre: 'Competencia 3',
+      detalles: 'Detalles de la competencia 3',
       etapas: [
         { id: 1, etapa: 'Inicio de transferencia de competencia', estado: 'Finalizado'  , 
         subetapas: [

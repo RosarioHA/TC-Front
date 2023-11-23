@@ -6,6 +6,10 @@ import CustomInput from "../../components/forms/custom_input";
 import DropdownSelect from "../../components/forms/dropdown_select";
 import DropdownSinSecciones from "../../components/forms/dropdown_checkbox_sinSecciones_tabla";
 import DropdownSelectBuscador from "../../components/forms/dropdown_select_buscador";
+import DropdownSinSecciones from "../../components/forms/dropdown_checkbox_sinSecciones_conTabla";
+import DropdownSelectBuscador from "../../components/forms/dropdown_select_buscador";
+import { competencias } from "../../Data/Competencias";
+import { opcionesPerfilUsuario, opcionesSector, regiones } from "../../Data/OpcionesFormulario";
 import { esquemaCreacionUsuario } from "../../validaciones/esquemaValidacion";
 import { useCreateUser } from "../../hooks/useCreateUser";
 import { useRegionComuna } from "../../hooks/useRegionComuna";
@@ -24,7 +28,6 @@ const initialValues = {
 
 const CreacionUsuario = () =>
 {
-
   const { createUser, isLoading, error } = useCreateUser();
   const { dataGroups, loadingGroups, errorGroups } = useGroups();
   const { dataSector, loadingSector, errorSector} = useSector(); 
@@ -38,6 +41,11 @@ const CreacionUsuario = () =>
   const { dataRegiones, loadingRegiones, errorRegiones } = useRegionComuna();
 
   console.log(dataSector); 
+
+  useEffect(() => {
+    console.log("competencias seleccionadas en vista", competenciasSeleccionadas);
+  }, [competenciasSeleccionadas]);
+
 
   // Maneja boton de volver atras.
   const history = useNavigate();
@@ -57,7 +65,6 @@ const CreacionUsuario = () =>
     shouldUnregister: false,
     mode: 'manual',
   });
-
   useEffect(() => {
     console.log("competencias seleccionadas en vista", competenciasSeleccionadas);
   }, [competenciasSeleccionadas]);
@@ -81,6 +88,24 @@ const CreacionUsuario = () =>
       setPerfilSeleccionado(selectedProfile.label);
     }else { 
       setPerfilSeleccionado(null); 
+  const onSubmit = async (data) => {
+    try {
+      data.organismo = sectorSeleccionado;
+      data.region = regionSeleccionada;
+      data.competencias = competenciasSeleccionadas;
+      // Realiza la validacion manualmente
+      const isValid = await trigger();
+  
+      if (submitClicked && isValid) {
+        // Aqui la logica de envio del formulario
+        console.log("datos enviados", data);
+        console.log("location state desde vista creacion de usuario", location.state);
+        history('/home/success', { state: { origen: "crear_usuario" } });
+      } else {
+        console.log("El formulario no es válido o no se ha hecho click en 'Crear Usuario'");
+      }
+    } catch (error) {
+      console.error('Error al enviar el formulario:', error);
     }
   }
 
@@ -124,12 +149,22 @@ const CreacionUsuario = () =>
       selectedOptions.forEach((competencia) =>
       {
         updatedCompetencias[ competencia ] = true;
+      selectedOptions.forEach((competenciaId) => {
+        updatedCompetencias[competenciaId] = true;
+      src/views/gestion_usuarios/creacion_usuario.jsx
       });
       setCompetenciasSeleccionadas(updatedCompetencias);
     },
     []
     );
-  
+  );
+
+  const handleInputClick = (e) => {
+    // Previene que el evento se propague al boton
+    e.stopPropagation();
+    console.log("propagacion detenida en vista Crear usuario")
+  };
+
 
     const onSubmit = async (data) =>
     {
