@@ -1,7 +1,11 @@
 import { NavLink } from 'react-router-dom';
-
+import { useAuth } from '../../context/AuthContext'; 
 const Sidebar = () =>
 {
+
+  const { userData} = useAuth(); 
+
+  const userSubdere = userData?.perfil?.includes('SUBDERE'); 
 
   return (
     <div className="sidebar  fixed-top  d-flex flex-column flex-shrink-0  border-end ">
@@ -35,13 +39,14 @@ const Sidebar = () =>
         </li>
         <hr className="w-85 mx-4" />
         <span className="title-section  ms-4 my-1">Gestión de Usuarios</span>
+        { userSubdere && (
         <li className="my-1">
           <NavLink to="/home/crear_usuario" className="btn-sidebar my-1 mx-4" type="button">
             <u>Crear Usuarios </u> <i className="material-symbols-outlined">
               person_add
             </i>
           </NavLink>
-        </li>
+        </li>)}
         <li className="my-1">
           <NavLink to="/home/administrar_usuarios" className="mx-4 btn-link" type="button">
             <i className="material-symbols-outlined mx-3">supervised_user_circle</i>
@@ -50,6 +55,7 @@ const Sidebar = () =>
         </li>
         <hr className="w-85 mx-4" />
         <span className="title-section ms-4 my-2">Gestión de Competencias</span>
+        { userSubdere && (
         <li>
           <NavLink to="crearproyectos" className="btn-sidebar my-1 mx-4" >
             <u><strong>Crear Competencia</strong></u><i className="material-symbols-outlined">
@@ -57,6 +63,7 @@ const Sidebar = () =>
             </i>
           </NavLink>
         </li>
+        )}
         <li className="my-1">
           <NavLink to="#" className="mx-4 btn-link" type="button">
             <i className="material-symbols-outlined mx-3">library_books</i>
