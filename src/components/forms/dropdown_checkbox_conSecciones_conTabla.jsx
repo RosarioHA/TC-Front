@@ -1,4 +1,6 @@
+
 import React, { useState, useRef, useEffect } from 'react';
+
 
 const DropdownCheckboxUsuarios = ({ label, placeholder, options }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -69,6 +71,9 @@ const DropdownCheckboxUsuarios = ({ label, placeholder, options }) => {
       {isOpen && (
         <div className="dropdown d-flex flex-column unselected-option" ref={dropdownRef}>
           {filteredOptions.map((optionGroup, index) => (
+
+            <div key={index}>
+
             <React.Fragment key={index}>
               <div className="group-label unselected-option py-2 ps-3 d-flex"><p className="me-1 mb-0">Usuarios</p>{optionGroup.label}</div>
               {optionGroup.options && optionGroup.options.map((option) => (
@@ -86,7 +91,10 @@ const DropdownCheckboxUsuarios = ({ label, placeholder, options }) => {
                   {typeof option === 'object' ? option.nombre : option}
                 </label>
               ))}
-            </React.Fragment>
+              </React.Fragment>
+            </div>
+
+            
           ))}
         </div>
       )}

@@ -1,14 +1,17 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useForm, Controller } from 'react-hook-form';
 import { useNavigate } from "react-router-dom";
 import { yupResolver } from '@hookform/resolvers/yup';
 import CustomInput from "../../components/forms/custom_input";
 import DropdownSelect from "../../components/forms/dropdown_select";
-import DropdownSinSecciones from "../../components/forms/dropdown_checkbox_sinSecciones_conTabla";
 import DropdownSelectBuscador from "../../components/forms/dropdown_select_buscador";
+import DropdownSinSecciones from "../../components/forms/dropdown_checkbox_sinSecciones_conTabla";
 import { competencias } from "../../Data/Competencias";
-import { opcionesPerfilUsuario, opcionesSector, regiones } from "../../Data/OpcionesFormulario";
 import { esquemaCreacionUsuario } from "../../validaciones/esquemaValidacion";
+import { useCreateUser } from "../../hooks/useCreateUser";
+import { useRegionComuna } from "../../hooks/useRegionComuna";
+import { useGroups } from "../../hooks/useGroups";
+import { useSector } from "../../hooks/useSector";
 
 const initialValues = {
   rut: '',
@@ -16,24 +19,33 @@ const initialValues = {
   email: '',
   perfil: '',
   estado: '',
+  password: '',
 };
 
 const CreacionUsuario = () => {
-  const [estado, setEstado] = useState('inactivo');
-  const [activeButton, setActiveButton] = useState(null);
-  const [competenciasSeleccionadas, setCompetenciasSeleccionadas] = useState({});
-  const [perfilSeleccionado, setPerfilSeleccionado] = useState(null);
-  const [sectorSeleccionado, setSectorSeleccionado] = useState(null);
-  const [regionSeleccionada, setRegionSeleccionada] = useState(null);
-  const [submitClicked, setSubmitClicked] = useState(false);
+  const { createUser, isLoading, error } = useCreateUser();
+  const { dataGroups, loadingGroups, errorGroups } = useGroups();
+  const { dataSector, loadingSector, errorSector} = useSector(); 
+  const [ estado, setEstado ] = useState('inactivo');
+  const [ activeButton, setActiveButton ] = useState(null);
+  const [ competenciasSeleccionadas, setCompetenciasSeleccionadas ] = useState({});
+  const [ perfilSeleccionado, setPerfilSeleccionado ] = useState(null);
+  const [ sectorSeleccionado, setSectorSeleccionado ] = useState(null);
+  const [ regionSeleccionada, setRegionSeleccionada ] = useState(null);
+  const [ submitClicked, setSubmitClicked ] = useState(false);
+  const { dataRegiones, loadingRegiones, errorRegiones } = useRegionComuna();
+
+  console.log(dataSector); 
 
   useEffect(() => {
     console.log("competencias seleccionadas en vista", competenciasSeleccionadas);
   }, [competenciasSeleccionadas]);
 
+
   // Maneja boton de volver atras.
   const history = useNavigate();
-  const handleBackButtonClick = () => {
+  const handleBackButtonClick = () =>
+  {
     history(-1);
   };
 
@@ -46,64 +58,118 @@ const CreacionUsuario = () => {
     resolver: yupResolver(esquemaCreacionUsuario),
     defaultValues: initialValues,
     shouldUnregister: false,
-    mode: 'manual', // Desactiva la validacion automatica
+    mode: 'manual',
   });
+  useEffect(() => {
+    console.log("competencias seleccionadas en vista", competenciasSeleccionadas);
+  }, [competenciasSeleccionadas]);
 
-  const onSubmit = async (data) => {
-    try {
-      data.organismo = sectorSeleccionado;
-      data.region = regionSeleccionada;
-      data.competencias = competenciasSeleccionadas;
-      // Realiza la validacion manualmente
-      const isValid = await trigger();
+  //opciones de perfil 
+  const  opcionesGroups = dataGroups.map(group => ({
+    value:group.id,
+    label: group.name
+  }))
   
-      if (submitClicked && isValid) {
-        // Aqui la logica de envio del formulario
-        console.log("datos enviados", data);
-        console.log("location state desde vista creacion de usuario", location.state);
-        history('/home/success', { state: { origen: "crear_usuario" } });
-      } else {
-        console.log("El formulario no es válido o no se ha hecho click en 'Crear Usuario'");
-      }
-    } catch (error) {
-      console.error('Error al enviar el formulario:', error);
-    }
-  };
+  const handlePerfilChange = ( selectedValue) => {
+    const selectedProfile = opcionesGroups.find(option => option.value === selectedValue)
+    if(selectedProfile) {
+      setPerfilSeleccionado(selectedProfile.label);
+    }else { 
+      setPerfilSeleccionado(null); 
+  }}
+      
+  //opciones de regiones
+  const opcionesDeRegiones = dataRegiones.map(region => ({
+    value: region.id,
+    label: region.region
+  }));
 
-  // Callbacks que manejan la entrega de informacion desde los componentes del formulario
-  const handlePerfilChange = (perfil) => {
-    setPerfilSeleccionado(perfil);
-  };
-  const handleSectorChange = (sector) => {
-    setSectorSeleccionado(sector);
-    console.log("sector seleccionado", sectorSeleccionado)
-  }
-  const handleRegionChange = (region) => {
+  const handleRegionChange = (region) =>
+  {
     setRegionSeleccionada(region);
-    console.log("region seleccionada", regionSeleccionada)
   }
-  const handleEstadoChange = (nuevoEstado) => {
+
+  //opciones sector 
+  const opcionesSector = dataSector.map(sector => ({
+    value:sector.id,
+    label:sector.nombre,
+  })); 
+
+  console.log(opcionesSector); 
+
+  const handleSectorChange = (sector) =>
+  {
+    setSectorSeleccionado(sector);
+  }
+
+  const handleEstadoChange = (nuevoEstado) =>
+  {
     setEstado(nuevoEstado);
     setActiveButton(nuevoEstado);
-    console.log("estado seleccionado", estado)
   };
-  const handleCompetenciasChange = useCallback(
-    (selectedOptions) => {
-      const updatedCompetencias = {};
-      selectedOptions.forEach((competenciaId) => {
-        updatedCompetencias[competenciaId] = true;
-      });
-      setCompetenciasSeleccionadas(updatedCompetencias);
-    },
-    []
-  );
 
   const handleInputClick = (e) => {
     // Previene que el evento se propague al boton
     e.stopPropagation();
     console.log("propagacion detenida en vista Crear usuario")
   };
+
+  const handleCompetenciasChange = useCallback(
+    (selectedOptions) => {
+      const updatedCompetencias = {};
+      selectedOptions.forEach((competencia) =>
+      {
+        updatedCompetencias[ competencia ] = true;
+      selectedOptions.forEach((competenciaId) => {
+        updatedCompetencias[competenciaId] = true;
+      });
+      setCompetenciasSeleccionadas(updatedCompetencias);
+    },[]);
+  });
+
+  const onSubmit = async (data) => {
+    try {
+      const userData = {
+        ...data,
+        nombre_completo: data.nombre,
+        perfil: perfilSeleccionado,
+        sector: sectorSeleccionado,
+        region: regionSeleccionada,
+        password: data.password,
+        is_active: estado === 'activo',
+        competencias: Object.keys(competenciasSeleccionadas)
+      };
   
+      const isValid = await trigger();
+      if (submitClicked && isValid)
+      {
+        await createUser(userData);
+        console.log("Usuario creado con éxito");
+        history('/home/success', { state: { origen: "crear_usuario" } });
+      } else {
+        console.log("El formulario no es válido o no se ha hecho click en 'Crear Usuario'");
+      }} catch (error)
+      {
+        console.error('Error al enviar el formulario:', error);
+      }
+    };
+  if (isLoading)
+  {
+    return <div>Cargando...</div>; // O tu componente personalizado de carga
+  }
+  { error && <div className="error-message">Error al crear el usuario: {error.message}</div> }
+
+
+  if (loadingRegiones && loadingGroups && loadingSector)
+  {
+    return <div>Cargando datos...</div>;
+  }
+
+  if (errorRegiones && errorGroups && errorSector)
+  {
+    return <div>Error al cargar datos : {errorRegiones.message} || {errorGroups.message} || { errorSector.message} </div>;
+  }
+
   return (
     <div className="container col-10 my-4">
       <h2 className="text-sans-h2 mb-3">Administrar Usuarios</h2>
@@ -119,70 +185,71 @@ const CreacionUsuario = () => {
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="mb-4">
             <Controller
-            name="rut"
-            control={control}
-            render={({field}) => (
-              < CustomInput 
-              label="RUT (Obligatorio)"
-              placeholder="Escribe el RUT con guión sin puntos."
-              id="rut"
-              maxLength={null}
-              error={errors.rut?.message}
-              ref={field.ref}
-              {...field} />
-            )} />
+              name="rut"
+              control={control}
+              render={({ field }) => (
+                < CustomInput
+                  label="RUT (Obligatorio)"
+                  placeholder="Escribe el RUT con guión sin puntos."
+                  id="rut"
+                  maxLength={null}
+                  error={errors.rut?.message}
+                  ref={field.ref}
+                  onBlur={() => field.onBlur()} 
+                  {...field} />
+              )} />
           </div>
           <div className="mb-4">
-            <Controller 
-            name="nombre"
-            control={control}
-            render={({field}) => (
-              < CustomInput 
-              label="Nombre Completo (Obligatorio)"
-              placeholder="Escribe el nombre completo."
-              id="nombre"
-              maxLength={null}
-              error={errors.nombre?.message}
-              ref={field.ref}
-              {...field} />
-            )}/>
+            <Controller
+              name="nombre"
+              control={control}
+              render={({ field }) => (
+                < CustomInput
+                  label="Nombre Completo (Obligatorio)"
+                  placeholder="Escribe el nombre completo."
+                  id="nombre"
+                  maxLength={null}
+                  error={errors.nombre?.message}
+                  ref={field.ref}
+                  {...field} />
+              )} />
           </div>
           <div className="mb-4">
-            <Controller 
-            name="email"
-            control={control}
-            render={({field}) => (
-              < CustomInput 
-              label="Correo electrónico"
-              placeholder="Escribe el correo electrónico del usuario."
-              id="mail"
-              maxLength={null}
-              error={errors.email?.message}
-              ref={field.ref}
-              {...field} />
-            )}/>
+            <Controller
+              name="email"
+              control={control}
+              render={({ field }) => (
+                < CustomInput
+                  label="Correo electrónico"
+                  placeholder="Escribe el correo electrónico del usuario."
+                  id="mail"
+                  maxLength={null}
+                  error={errors.email?.message}
+                  ref={field.ref}
+                  {...field} />
+              )} />
           </div>
           <div className="mb-4">
-            < Controller 
-            name="perfil"
-            control={control}
-            render={({field}) => (
-              < DropdownSelect 
-            label="Elige el perfil de usuario (Obligatorio)"
-            placeholder="Elige el perfil de usuario"
-            options={opcionesPerfilUsuario}
-            onSelectionChange={(selectedOption) => {
-              field.onChange(selectedOption);
-              handlePerfilChange(selectedOption);
-            }} />
-            )}/>
+            < Controller
+              name="perfil"
+              control={control}
+              render={({ field }) => (
+                < DropdownSelect
+                  label="Elige el perfil de usuario (Obligatorio)"
+                  placeholder="Elige el perfil de usuario"
+                  options={loadingGroups ? [] : opcionesGroups}
+                  onSelectionChange={(selectedOption) =>
+                  {
+                    field.onChange(selectedOption);
+                    handlePerfilChange(selectedOption);
+                  }} />
+              )} />
             {errors.perfil && (
               <p className="text-sans-h6-darkred mt-2 mb-0">{errors.perfil.message}</p>
             )}
           </div>
-
           {/* Se generan condicionalmente nuevos componentes para el detalle de usuarios GORE y Sectorial */}
-          {perfilSeleccionado === "Sectorial" && (
+          {perfilSeleccionado === "Usuario Sectorial" && (
             <>
               <div className="d-flex mb-4 text-sans-h6-primary">
                 <i className="material-symbols-rounded me-2">info</i>
@@ -192,7 +259,7 @@ const CreacionUsuario = () => {
                 <DropdownSelectBuscador
                   label="Elige el organismo al que pertenece (Obligatorio)"
                   placeholder="Elige un organismo"
-                  options={opcionesSector}
+                  options={loadingSector ? []: opcionesSector}
                   onSelectionChange={handleSectorChange} />
               </div>
             </>
@@ -207,44 +274,66 @@ const CreacionUsuario = () => {
                 <DropdownSelectBuscador
                   label="Elige la región a la que representa (Obligatorio)"
                   placeholder="Elige una región"
-                  options={regiones}
-                  onSelectionChange={handleRegionChange} />
+                  options={loadingRegiones ? [] : opcionesDeRegiones}
+                  onSelectionChange={handleRegionChange}
+                />
               </div>
             </>
           )}
+          {/* input provisorio contraseña */}
+          <div className="mb-4">
+            <Controller
+              name="password"
+              control={control}
+              render={({ field }) => (
+                <CustomInput
+                  type="password"
+                  label="Contraseña (Obligatorio)"
+                  placeholder="Escribe la contraseña."
+                  id="password"
+                  maxLength={null}
+                  error={errors.password?.message}
+                  ref={field.ref}
+                  {...field}
+                />
+              )}
+            />
+          </div>
 
           <div className="mb-5">
-            < Controller 
-            name="estado"
-            control={control}
-            render={({field}) => (
-              <>
-              <h5 className="text-sans-h5">Estado</h5>
-              <div className="d-flex mb-2">
-                <button
-                  className={` ${activeButton === 'activo' ? 'btn-primario-s' : 'btn-secundario-s'}`}
-                  onClick={() => {
-                    handleEstadoChange('activo');
-                    field.onChange('activo');
-                  }}>
-                    <p className="mb-0 text-decoration-underline">Activo</p>
-                    {activeButton === 'activo' && <i className="material-symbols-rounded ms-2">check</i>}
-                </button>
-                <button
-                  className={`ms-2 ${activeButton === 'inactivo' ? 'btn-primario-s' : 'btn-secundario-s'}`}
-                  onClick={() => {
-                    handleEstadoChange('inactivo');
-                    field.onChange('inactivo');
-                  }}>
-                    <p className="mb-0 text-decoration-underline">Inactivo</p>
-                    {activeButton === 'inactivo' && <i className="material-symbols-rounded ms-2">check</i>}
-                </button>
-              </div>
-              {errors.estado && (
-                <p className="text-sans-h6-darkred mt-2 mb-0">{errors.estado.message}</p>
-              )}
-              </>
-            )}/>
+            < Controller
+              name="estado"
+              control={control}
+              render={({ field }) => (
+                <>
+                  <h5 className="text-sans-h5">Estado</h5>
+                  <div className="d-flex mb-2">
+                    <button
+                      className={` ${activeButton === 'activo' ? 'btn-primario-s' : 'btn-secundario-s'}`}
+                      onClick={() =>
+                      {
+                        handleEstadoChange('activo');
+                        field.onChange('activo');
+                      }}>
+                      <p className="mb-0 text-decoration-underline">Activo</p>
+                      {activeButton === 'activo' && <i className="material-symbols-rounded ms-2">check</i>}
+                    </button>
+                    <button
+                      className={`ms-2 ${activeButton === 'inactivo' ? 'btn-primario-s' : 'btn-secundario-s'}`}
+                      onClick={() =>
+                      {
+                        handleEstadoChange('inactivo');
+                        field.onChange('inactivo');
+                      }}>
+                      <p className="mb-0 text-decoration-underline">Inactivo</p>
+                      {activeButton === 'inactivo' && <i className="material-symbols-rounded ms-2">check</i>}
+                    </button>
+                  </div>
+                  {errors.estado && (
+                    <p className="text-sans-h6-darkred mt-2 mb-0">{errors.estado.message}</p>
+                  )}
+                </>
+              )} />
           </div>
 
           <div className="mb-5">
@@ -271,7 +360,7 @@ const CreacionUsuario = () => {
             />
             </div> 
           </div>
-          
+
           <button className="btn-primario-s mb-5" type="submit" onClick={() => setSubmitClicked(true)}>
             <p className="mb-0">Crear Usuario</p>
             <i className="material-symbols-rounded ms-2">arrow_forward_ios</i>
