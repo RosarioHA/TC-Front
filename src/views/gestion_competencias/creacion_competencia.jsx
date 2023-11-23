@@ -5,7 +5,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import CustomInput from "../../components/forms/custom_input";
 import DropdownCheckbox from "../../components/forms/dropdown_checkbox";
 import DropdownSelect from "../../components/forms/dropdown_select";
-import DropdownCheckboxUsuarios from "../../components/forms/dropdown_checkbox_conSecciones";
+import DropdownCheckboxUsuarios from "../../components/forms/dropdown_checkbox_conSecciones_conTabla";
 import { regiones, opcionesSector, origenCompetencia, ambitoCompetencia } from "../../Data/OpcionesFormulario";
 import { userData } from "../../Data/Usuarios";
 
