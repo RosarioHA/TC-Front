@@ -47,7 +47,7 @@ function App()
               </ProtectedRoute>
             }
           />
-          <Route path="gestion_competencias" element={<GestionCompetencias />} />
+          <Route path="administrar_competencias" element={<GestionCompetencias />} />
           <Route path="crear_competencia" element={<CrearCompetencia />} />
           <Route path="editar_competencia" element={<EditarCompetencia />} />
           <Route path="success" element={<Success />} />

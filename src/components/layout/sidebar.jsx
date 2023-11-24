@@ -57,7 +57,7 @@ const Sidebar = () =>
         <span className="title-section ms-4 my-2">Gestión de Competencias</span>
         { userSubdere && (
         <li>
-          <NavLink to="crearproyectos" className="btn-sidebar my-1 mx-4" >
+          <NavLink to="/home/crear_competencia" className="btn-sidebar my-1 mx-4" >
             <u><strong>Crear Competencia</strong></u><i className="material-symbols-outlined">
               post_add
             </i>
@@ -65,7 +65,7 @@ const Sidebar = () =>
         </li>
         )}
         <li className="my-1">
-          <NavLink to="#" className="mx-4 btn-link" type="button">
+          <NavLink to="/home/administrar_competencias" className="mx-4 btn-link" type="button">
             <i className="material-symbols-outlined mx-3">library_books</i>
             <i className="badge badge-notification mx-3">99+</i>
             <u>Listado de Competencias</u>

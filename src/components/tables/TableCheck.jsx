@@ -45,10 +45,6 @@ export const TableCheckbox = ({ columnTitles, renderRow, data = [], sortableColu
     setSortConfig({ key, direction });
   };
 
-  if (!data || data.length === 0) {
-    return <div>No hay datos disponibles.</div>;
-  }
-
   return (
     <>
       <table className="table table-striped">

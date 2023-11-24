@@ -3,15 +3,16 @@ import { useForm, Controller } from 'react-hook-form';
 import { useNavigate } from "react-router-dom";
 import { yupResolver } from '@hookform/resolvers/yup';
 import CustomInput from "../../components/forms/custom_input";
-import DropdownSelect from "../../components/forms/dropdown_select";
-import DropdownSelectBuscador from "../../components/forms/dropdown_select_buscador";
-import DropdownSinSecciones from "../../components/forms/dropdown_checkbox_sinSecciones_conTabla";
+import DropdownSelect from "../../components/dropdown/select";
+import DropdownSinSecciones from "../../components/dropdown/checkbox_sinSecciones_conTabla";
+import DropdownSelectBuscador from "../../components/dropdown/select_buscador";
 import { competencias } from "../../Data/Competencias";
 import { esquemaCreacionUsuario } from "../../validaciones/esquemaValidacion";
 import { useCreateUser } from "../../hooks/useCreateUser";
 import { useRegionComuna } from "../../hooks/useRegionComuna";
 import { useGroups } from "../../hooks/useGroups";
 import { useSector } from "../../hooks/useSector";
+
 
 const initialValues = {
   rut: '',
@@ -22,10 +23,11 @@ const initialValues = {
   password: '',
 };
 
-const CreacionUsuario = () => {
+const CreacionUsuario = () =>
+{
   const { createUser, isLoading, error } = useCreateUser();
-  const { dataGroups, loadingGroups, errorGroups } = useGroups();
-  const { dataSector, loadingSector, errorSector} = useSector(); 
+  const { dataGroups, loadingGroups } = useGroups();
+  const { dataSector, loadingSector} = useSector(); 
   const [ estado, setEstado ] = useState('inactivo');
   const [ activeButton, setActiveButton ] = useState(null);
   const [ competenciasSeleccionadas, setCompetenciasSeleccionadas ] = useState({});
@@ -33,7 +35,7 @@ const CreacionUsuario = () => {
   const [ sectorSeleccionado, setSectorSeleccionado ] = useState(null);
   const [ regionSeleccionada, setRegionSeleccionada ] = useState(null);
   const [ submitClicked, setSubmitClicked ] = useState(false);
-  const { dataRegiones, loadingRegiones, errorRegiones } = useRegionComuna();
+  const { dataRegiones, loadingRegiones } = useRegionComuna();
 
   console.log(dataSector); 
 
@@ -160,15 +162,6 @@ const CreacionUsuario = () => {
   { error && <div className="error-message">Error al crear el usuario: {error.message}</div> }
 
 
-  if (loadingRegiones && loadingGroups && loadingSector)
-  {
-    return <div>Cargando datos...</div>;
-  }
-
-  if (errorRegiones && errorGroups && errorSector)
-  {
-    return <div>Error al cargar datos : {errorRegiones.message} || {errorGroups.message} || { errorSector.message} </div>;
-  }
 
   return (
     <div className="container col-10 my-4">
