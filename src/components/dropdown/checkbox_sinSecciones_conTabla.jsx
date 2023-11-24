@@ -101,6 +101,7 @@ const DropdownSinSecciones = ({ label, placeholder, options, onSelectionChange, 
         <h6 className="">Si la competencia no está creada, debes crearla primero y luego asociarle un usuario. </h6>
       </div>
 
+      {/* Tabla de selecciones */}
       {selectedOptions.length > 0 && (
         <div className="mb-5 mt-5">
           <table>
