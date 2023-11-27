@@ -11,7 +11,7 @@ const EdicionUsuario = () => {
   };
 
   const handleEditClick = () => {
-    setEditMode(true);
+    setEditMode((prevMode) => !prevMode);
   };
 
   return (
@@ -27,7 +27,7 @@ const EdicionUsuario = () => {
         </div>
         <button className="btn-secundario-s" onClick={handleEditClick}>
           <i className="material-symbols-rounded me-2">edit</i>
-          <p className="mb-0">Editar</p>
+          <p className="mb-0">{editMode ? 'Editando' : 'Editar'}</p>
         </button> 
       </div>
 
@@ -72,7 +72,7 @@ const EdicionUsuario = () => {
           Organismos Sectorial - DropdownSelectBuscador
         </div>
 
-        <div className="mb-4">
+        <div className="my-4">
           ESTADO - 
         </div>
 
