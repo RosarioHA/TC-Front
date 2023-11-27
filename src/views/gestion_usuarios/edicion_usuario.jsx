@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CustomInput from "../../components/forms/custom_input";
+import DropdownSelect from "../../components/dropdown/select";
 
 const EdicionUsuario = () => {
   const history = useNavigate();
@@ -63,7 +64,12 @@ const EdicionUsuario = () => {
         </div>
 
         <div className="mb-4">
-          PERFIL - DopdownSelect
+          < DropdownSelect
+            label="Elige el perfil de usuario (Obligatorio)"
+            placeholder="Elige el perfil de usuario"
+            options={['opcion 1', 'opcion 2']}
+            readOnly={!editMode}
+          />
         </div>
         <div>
           Regiones GORE - DropdownSelectBuscador

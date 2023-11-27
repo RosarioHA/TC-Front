@@ -1,11 +1,18 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CustomInput from "../../components/forms/custom_input";
+import DropdownSelect from "../../components/dropdown/select";
 
 const EdicionCompetencia = () => {
   const history = useNavigate();
+  const [editMode, setEditMode] = useState(false);
 
   const handleBackButtonClick = () => {
     history(-1);
+  };
+
+  const handleEditClick = () => {
+    setEditMode((prevMode) => !prevMode);
   };
 
   return (
@@ -19,7 +26,7 @@ const EdicionCompetencia = () => {
           </button>
           <h3 className="text-sans-h3 ms-3 mb-0">Competencia: $NombreCompetencia</h3>
         </div>
-        <button className="btn-secundario-s">
+        <button className="btn-secundario-s" onClick={handleEditClick}>
           <i className="material-symbols-rounded me-2">edit</i>
           <p className="mb-0">Editar</p>
         </button> 
@@ -31,7 +38,7 @@ const EdicionCompetencia = () => {
             label="Nombre de la Competencia (Obligatorio)"
             placeholder="Escribe el nombre de la competencia"
             id="nombre"
-            readOnly={true}
+            readOnly={!editMode}
             maxLength={null}
           />
         </div>
@@ -45,11 +52,31 @@ const EdicionCompetencia = () => {
         </div>
 
         <div className="mb-4">
-          AMBITO
+          <DropdownSelect
+            label="Origen de la competencia (Obligatorio)"
+            placeholder="Elige el origen de la competencia"
+            readOnly={!editMode}
+            // options={origenCompetencia}
+            // onSelectionChange={(selectedOption) => {
+            //   handleOrigenChange(selectedOption);
+            //   setValue('origen', selectedOption, { shouldValidate: true });
+            // }}
+            // selected={origenSeleccionado}
+            />
         </div>
 
         <div className="mb-4">
-          ORIGEN
+          <DropdownSelect 
+            label="Elige el ámbito de la competencia (Obligatorio)"
+            placeholder="Elige el ámbito de la competencia"
+            readOnly={!editMode}
+            // options={ambitoCompetencia}
+            // onSelectionChange={(selectedOption) => {
+            //   handleAmbitoChange(selectedOption);
+            //   setValue('ambito', selectedOption, { shouldValidate : true})
+            // }}
+            // selected={ambitoSeleccionado} 
+          />
         </div>
 
         <div className="mb-4">
