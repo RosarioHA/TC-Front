@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import CustomInput from "../../components/forms/custom_input";
 
 const EdicionCompetencia = () => {
   const history = useNavigate();
@@ -26,7 +27,13 @@ const EdicionCompetencia = () => {
 
       <form>
         <div className="mb-4">
-          NOMBRE
+          < CustomInput 
+            label="Nombre de la Competencia (Obligatorio)"
+            placeholder="Escribe el nombre de la competencia"
+            id="nombre"
+            readOnly={true}
+            maxLength={null}
+          />
         </div>
 
         <div className="mb-4">

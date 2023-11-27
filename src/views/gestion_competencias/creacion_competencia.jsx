@@ -131,6 +131,7 @@ const CreacionCompetencia = () => {
                 label="Nombre de la Competencia (Obligatorio)"
                 placeholder="Escribe el nombre de la competencia"
                 id="nombre"
+                readOnly={true}
                 maxLength={null}
                 error={errors.nombre?.message}
                 ref={field.ref}

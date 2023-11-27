@@ -114,6 +114,7 @@ const CreacionUsuario = () => {
     console.log("propagacion detenida en vista Crear usuario")
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleCompetenciasChange = useCallback(
     (selectedOptions) => {
       const updatedCompetencias = {};
