@@ -1,11 +1,16 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import CustomInput from "../../components/forms/custom_input";
 import DropdownSelect from "../../components/dropdown/select";
+import DropdownCheckbox from "../../components/dropdown/checkbox";
+import DropdownConSecciones from "../../components/dropdown/checkbox_conSecciones_conTabla";
+// temporales
+import { userData } from "../../Data/Usuarios";
 
 const EdicionCompetencia = () => {
   const history = useNavigate();
   const [editMode, setEditMode] = useState(false);
+  const [usuariosSeleccionados, setUsuariosSeleccionados] = useState([]);
 
   const handleBackButtonClick = () => {
     history(-1);
@@ -14,6 +19,20 @@ const EdicionCompetencia = () => {
   const handleEditClick = () => {
     setEditMode((prevMode) => !prevMode);
   };
+
+  const handleUsuariosChange = useCallback(
+    (selectedOptions) => {
+      const updatedUsuarios = {};
+      selectedOptions.forEach((usuario) => {
+        if (usuario && usuario.id) {
+          updatedUsuarios[usuario.id] = true;
+        }
+      });
+      setUsuariosSeleccionados(updatedUsuarios);
+    },
+    []
+  );
+  console.log("usuarios seleccionados:", usuariosSeleccionados)
 
   return (
     <div className="container col-10 my-4">
@@ -44,11 +63,31 @@ const EdicionCompetencia = () => {
         </div>
 
         <div className="mb-4">
-          REGION
+          <DropdownCheckbox
+            label="Región (Obligatorio)" 
+            placeholder="Elige la o las regiones donde se ejercerá la competencia" 
+            options={['opcion 1', 'opcion 2', 'opcion 3']}
+            readOnly={!editMode}
+            // onSelectionChange={(selectedOption) => {
+            //   handleRegionesChange(selectedOption);
+            //   setValue('regiones', selectedOption, { shouldValidate: true });
+            // }}
+            // selected={regionesSeleccionadas} 
+          />
         </div>
 
         <div className="mb-4">
-          SECTOR
+          <DropdownCheckbox
+            label="Elige el sector de la competencia (Obligatorio)" 
+            placeholder="Elige el sector de la competencia" 
+            options={['opcion 1', 'opcion 2', 'opcion 3']}
+            readOnly={!editMode}
+            // onSelectionChange={(selectedOption) => {
+            //   handleSectorChange(selectedOption);
+            //   setValue('sectores', selectedOption, { shouldValidate: true });
+            // }}
+            // selected={sectoresSeleccionados} 
+            />
         </div>
 
         <div className="mb-4">
@@ -80,15 +119,37 @@ const EdicionCompetencia = () => {
         </div>
 
         <div className="mb-4">
-          USUARIOS
+          < DropdownConSecciones 
+            label="Asignar Usuarios (Opcional)"
+            placeholder="Busca el nombre de la persona"
+            readOnly={!editMode}
+            options={['opcion 1', 'opcion 2', 'opcion 3']}
+            selectedOptions={Object.keys(usuariosSeleccionados)
+            .map(id => userData.find(user => user.id === id))}
+            onSelectionChange={handleUsuariosChange}
+          />
         </div>
 
         <div className="mb-4">
-          OFICIO - puede subir otro archivo? solo puede descargar?
+          OFICIO - No se puede editar, solo descargar.
         </div>
 
         <div className="mb-4">
-          PLAZO
+          < CustomInput 
+            label="Plazo para formulario sectorial (Obligatorio)"
+            placeholder="Escribe el número de días corridos"
+            id="plazo"
+            maxLength={null}
+            readOnly={!editMode} />
+        </div>
+
+        <div className="mb-4">
+        < CustomInput 
+          label="Plazo para formulario GORE (Obligatorio)"
+          placeholder="Escribe el número de días corridos"
+          id="plazoGORE"
+          maxLength={null}
+          readOnly={!editMode} />        
         </div>
 
         <button className="btn-primario-s mb-5" type="submit">

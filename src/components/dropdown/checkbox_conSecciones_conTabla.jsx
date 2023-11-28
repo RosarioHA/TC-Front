@@ -1,7 +1,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 
-const DropdownConSecciones = ({ label, placeholder, options }) => {
+const DropdownConSecciones = ({ label, placeholder, options, readOnly }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedOptions, setSelectedOptions] = useState({});
@@ -50,26 +50,40 @@ const DropdownConSecciones = ({ label, placeholder, options }) => {
   });
 
   return (
-    <div className="input-container">
-      <label className="text-sans-h5 input-label">{label}</label>
-      <button onClick={toggleDropdown} className="text-sans-p dropdown-btn">
-        {isOpen ? (
-          <input
-            className="ghost-input"
-            type="text"
-            placeholder="Buscar..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        ) : (
-          <span>{placeholder}</span>
-        )}
-        <i className="material-symbols-rounded ms-2">{isOpen ? 'expand_less' : 'expand_more'}</i>
-      </button>
-      <div className="d-flex mt-3 text-sans-h6-primary">
-        <i className="material-symbols-rounded me-2">info</i>
-        <h6> Si aun no creas los usuarios para esta competencia, puedes crear la competencia y asignarle usuario más tarde. </h6>
-      </div>
+    <div className={`input-container ${readOnly ? 'readonly' : ''}`}>
+      {readOnly ? (
+        <>
+          <label className="text-sans-h5 input-label">{label}</label>
+          <p className="text-sans-p ms-3 pt-3">
+            Opciones seleccionadas:{' '}
+            {Object.keys(selectedOptions)
+              .map((id) => options.find((option) => option.id === id)?.nombre)
+              .join(', ') || placeholder}
+          </p>
+        </>
+      ) : (
+        <>
+          <label className="text-sans-h5 input-label">{label}</label>
+          <button onClick={toggleDropdown} className="text-sans-p dropdown-btn">
+            {isOpen ? (
+              <input
+                className="ghost-input"
+                type="text"
+                placeholder="Buscar..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            ) : (
+              <span>{placeholder}</span>
+            )}
+            <i className="material-symbols-rounded ms-2">{isOpen ? 'expand_less' : 'expand_more'}</i>
+          </button>
+          <div className="d-flex mt-3 text-sans-h6-primary">
+            <i className="material-symbols-rounded me-2">info</i>
+            <h6> Si aun no creas los usuarios para esta competencia, puedes crear la competencia y asignarle usuario más tarde. </h6>
+          </div>
+        </>
+      )}
 
       {isOpen && (
         <div className="dropdown d-flex flex-column unselected-option" ref={dropdownRef}>

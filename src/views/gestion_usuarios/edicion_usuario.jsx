@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CustomInput from "../../components/forms/custom_input";
 import DropdownSelect from "../../components/dropdown/select";
+import DropdownSelectBuscador from "../../components/dropdown/select_buscador";
+import DropdownSinSecciones from "../../components/dropdown/checkbox_sinSecciones_conTabla";
 
 const EdicionUsuario = () => {
   const history = useNavigate();
@@ -71,19 +73,43 @@ const EdicionUsuario = () => {
             readOnly={!editMode}
           />
         </div>
-        <div>
-          Regiones GORE - DropdownSelectBuscador
+        <div className="mb-4">
+          <DropdownSelectBuscador
+            label="Elige la región a la que representa (Obligatorio)"
+            placeholder="Elige una región"
+            readOnly={!editMode}
+            options={['opcion 1', 'opcion 2']}
+            //onSelectionChange={handleRegionChange}
+          />
         </div>
-        <div>
-          Organismos Sectorial - DropdownSelectBuscador
+        <div className="mb-4">
+          <DropdownSelectBuscador
+            label="Elige el organismo al que pertenece (Obligatorio)"
+            placeholder="Elige un organismo"
+            readOnly={!editMode}
+            options={['opcion 1', 'opcion 2']}
+            // onSelectionChange={handleSectorChange} 
+          />
         </div>
 
         <div className="my-4">
-          ESTADO - 
+          ESTADO - no es componente, deberia serlo?
         </div>
 
         <div className="mb-4">
-          COMPETENCIAS - DropdownSinSecciones
+          <DropdownSinSecciones
+            label="Competencia Asignada (Opcional)"
+            placeholder="Busca el nombre de la competencia"
+            readOnly={!editMode}
+            options={['opcion 1', 'opcion 2', 'opcion 3']}
+            selectedOptions={['opcion 1', 'opcion 2']}
+            // onSelectionChange={(selectedOptions) => {
+            //   field.onChange(selectedOptions);
+            //   handleCompetenciasChange(selectedOptions);
+            //   }}
+            // onClick={handleInputClick}
+            // onMouseDown={handleInputClick}
+          />
         </div>
 
         <button className="btn-primario-s mb-5" type="submit">

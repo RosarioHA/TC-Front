@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 
-const DropdownCheckbox = ({ label, placeholder, options, onSelectionChange }) => {
+const DropdownCheckbox = ({ label, placeholder, options, onSelectionChange, readOnly }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [selectedOptions, setSelectedOptions] = useState([]);
     const dropdownRef = useRef(null);
@@ -45,17 +45,26 @@ const DropdownCheckbox = ({ label, placeholder, options, onSelectionChange }) =>
     };  
 
   return (
-    <div className="input-container">
-      <label className="text-sans-h5 input-label">{label}</label>  
-      <button type="button" onClick={toggleDropdown} className="text-sans-p-lightgrey dropdown-btn">
-        {selectedOptions.length > 0
-          ? (selectedOptions.length === 1
-              ? selectedOptions[0]
-              : `${selectedOptions.length} alternativas seleccionadas`)
-          : placeholder}
-        <i className="material-symbols-rounded ms-2">expand_more</i>
-      </button>
-      {isOpen && (
+    <div className={`input-container ${readOnly ? 'readonly' : ''}`}>
+      {readOnly ? (
+        <>
+          <label className="text-sans-h5 input-label">{label}</label>
+          <p className="text-sans-p ms-3 pt-3">Opcion seleccionada: {selectedOptions ? selectedOptions.label : placeholder}</p>
+        </>
+      ) : (
+        <>
+          <label className="text-sans-h5 input-label">{label}</label>  
+          <button type="button" onClick={toggleDropdown} className="text-sans-p-lightgrey dropdown-btn">
+            {selectedOptions.length > 0
+              ? (selectedOptions.length === 1
+                  ? selectedOptions[0]
+                  : `${selectedOptions.length} alternativas seleccionadas`)
+              : placeholder}
+            <i className="material-symbols-rounded ms-2">expand_more</i>
+          </button>
+        </>
+      )}
+      {isOpen && !readOnly && (
         <div className="dropdown d-flex flex-column" ref={dropdownRef}>
           {options.map((option) => (
             <label className={selectedOptions.includes(option) ? 'selected-option' : 'unselected-option'} key={option}>

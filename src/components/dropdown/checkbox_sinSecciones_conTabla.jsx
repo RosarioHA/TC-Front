@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 
-const DropdownSinSecciones = ({ label, placeholder, options, onSelectionChange, selectedOptions }) => {
+const DropdownSinSecciones = ({ label, placeholder, options, onSelectionChange, selectedOptions, readOnly }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const dropdownRef = useRef(null);
@@ -34,10 +34,8 @@ const DropdownSinSecciones = ({ label, placeholder, options, onSelectionChange, 
   
     const optionIndex = updatedOptions.indexOf(optionId);
     if (optionIndex !== -1) {
-      // Si ya está en la lista, quítalo
       updatedOptions.splice(optionIndex, 1);
     } else {
-      // Si no está en la lista, agrégalo
       updatedOptions.push(optionId);
     }
     onSelectionChange(updatedOptions);
@@ -54,35 +52,46 @@ const DropdownSinSecciones = ({ label, placeholder, options, onSelectionChange, 
   String(option).toLowerCase().includes(searchTerm.toLowerCase())
 );
 
-  return (
-    <div className="input-container">
-      <label className="text-sans-h5 input-label">{label}</label>
-      <button onClick={toggleDropdown} className="text-sans-p dropdown-btn">
-        {isOpen ? (
-          <input
-          className="ghost-input"
-          type="text"
-          placeholder="Buscar..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          onClick={handleInputClick}
-          onMouseDown={handleInputClick}
-          />
+return (
+  <div className={`input-container ${readOnly ? 'readonly' : ''}`}>
+    {readOnly ? (
+      <>
+        <label className="text-sans-h5 input-label">{label}</label>
+        <p className="text-sans-p ms-3 pt-3">
+          Opciones seleccionadas: {selectedOptions.map((id) => options.find((option) => option.id === id)?.nombre).join(', ') || placeholder}
+        </p>
+      </>
+    ) : (
+      <>
+        <label className="text-sans-h5 input-label">{label}</label>
+        <button onClick={toggleDropdown} className="text-sans-p dropdown-btn">
+          {isOpen ? (
+            <input
+              className="ghost-input"
+              type="text"
+              placeholder="Buscar..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              onClick={handleInputClick}
+              onMouseDown={handleInputClick}
+            />
           ) : (
-          <span>{placeholder}</span>
+            <span>{placeholder}</span>
           )}
           <i className="material-symbols-rounded ms-2">
-          {isOpen ? 'expand_less' : 'expand_more'}
+            {isOpen ? 'expand_less' : 'expand_more'}
           </i>
-      </button>
-      
-      {isOpen && (
-        <div className="dropdown d-flex flex-column" ref={dropdownRef}>
-          {filteredOptions.map((option) => (
-            <label
-              className={selectedOptions.includes(option.id) ? 'selected-option' : 'unselected-option'}
-              key={option.id}
-            >
+        </button>
+      </>
+    )}
+
+    {isOpen && (
+      <div className="dropdown d-flex flex-column" ref={dropdownRef}>
+        {filteredOptions.map((option) => (
+          <label
+            className={selectedOptions.includes(option.id) ? 'selected-option' : 'unselected-option'}
+            key={option.id}
+          >
             <input
               className="ms-2 me-2 my-3"
               type="checkbox"
@@ -91,52 +100,63 @@ const DropdownSinSecciones = ({ label, placeholder, options, onSelectionChange, 
               onChange={() => handleCheckboxChange(option.id)}
             />
             {option.nombre}
-            </label>
-            ))}
-        </div>
-      )}
-
-      <div className="d-flex mt-3 text-sans-h6-primary">
-        <i className="material-symbols-rounded me-2">info</i>
-        <h6 className="">Si la competencia no está creada, debes crearla primero y luego asociarle un usuario. </h6>
+          </label>
+        ))}
       </div>
+    )}
 
-      {/* Tabla de selecciones */}
-      {selectedOptions.length > 0 && (
-        <div className="mb-5 mt-5">
-          <table>
-            <thead className="">
-              <tr className="">
-                <th className="col-1"> <p className="ms-4">#</p> </th>
-                <th className="col-5"> <p >Competencia</p> </th>
-                <th className="col-1"> <p className="ms-2">Acción</p> </th>
-              </tr>
-            </thead>
-            <tbody>
-              {selectedOptions.map((competenciaId, index) => {
-                const competencia = options.find(comp => comp.id === parseInt(competenciaId));
-                const competenciaNombre = competencia ? competencia.nombre : `Competencia ${competenciaId}`;
-
-                return (
-                  <tr key={competenciaId} className={index % 2 === 0 ? 'neutral-line' : 'white-line'}>
-                    <td> <p className="ms-4 my-3">{index + 1}</p> </td>
-                    <td> <p className="my-3">{competenciaNombre}</p> </td>
-                    <td>
-                      <button className="btn-terciario-ghost" onClick={() => handleCheckboxChange(competenciaId)}>
-                        <p className="mb-0 text-decoration-underline">Eliminar</p>
-                        <i className="material-symbols-rounded ms-2">delete</i>
-                      </button>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-      )}
-
+    <div className="d-flex mt-3 text-sans-h6-primary">
+      <i className="material-symbols-rounded me-2">info</i>
+      <h6 className="">
+        Si la competencia no está creada, debes crearla primero y luego asociarle un usuario.
+      </h6>
     </div>
-  );
+
+    {/* Tabla de Selecciones */}
+    {selectedOptions.length > 0 && (
+      <div className="mb-5 mt-5">
+        <table>
+          <thead className="">
+            <tr className="">
+              <th className="col-1">
+                <p className="ms-4">#</p>
+              </th>
+              <th className="col-5">
+                <p>Competencia</p>
+              </th>
+              <th className="col-1">
+                <p className="ms-2">Acción</p>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {selectedOptions.map((competenciaId, index) => {
+              const competencia = options.find(comp => comp.id === parseInt(competenciaId));
+              const competenciaNombre = competencia ? competencia.nombre : `Competencia ${competenciaId}`;
+
+              return (
+                <tr key={competenciaId} className={index % 2 === 0 ? 'neutral-line' : 'white-line'}>
+                  <td>
+                    <p className="ms-4 my-3">{index + 1}</p>
+                  </td>
+                  <td>
+                    <p className="my-3">{competenciaNombre}</p>
+                  </td>
+                  <td>
+                    <button className="btn-terciario-ghost" onClick={() => handleCheckboxChange(competenciaId)}>
+                      <p className="mb-0 text-decoration-underline">Eliminar</p>
+                      <i className="material-symbols-rounded ms-2">delete</i>
+                    </button>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    )}
+  </div>
+);
 };
 
 export default DropdownSinSecciones;
