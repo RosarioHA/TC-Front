@@ -130,7 +130,7 @@ const EdicionCompetencia = () => {
           />
         </div>
 
-        <div className="mb-4">
+        <div className="mb-4 border">
           OFICIO - No se puede editar, solo descargar.
         </div>
 

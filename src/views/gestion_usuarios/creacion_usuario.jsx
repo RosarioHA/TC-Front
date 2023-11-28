@@ -6,6 +6,7 @@ import CustomInput from "../../components/forms/custom_input";
 import DropdownSelect from "../../components/dropdown/select";
 import DropdownSelectBuscador from "../../components/dropdown/select_buscador";
 import DropdownSinSecciones from "../../components/dropdown/checkbox_sinSecciones_conTabla";
+import RadioButtons from "../../components/forms/radio_btns";
 import { competencias } from "../../Data/Competencias";
 import { esquemaCreacionUsuario } from "../../validaciones/esquemaValidacion";
 import { useCreateUser } from "../../hooks/useCreateUser";
@@ -44,8 +45,7 @@ const CreacionUsuario = () => {
 
   // Maneja boton de volver atras.
   const history = useNavigate();
-  const handleBackButtonClick = () =>
-  {
+  const handleBackButtonClick = () => {
     history(-1);
   };
 
@@ -60,6 +60,7 @@ const CreacionUsuario = () => {
     shouldUnregister: false,
     mode: 'manual',
   });
+
   useEffect(() => {
     console.log("competencias seleccionadas en vista", competenciasSeleccionadas);
   }, [competenciasSeleccionadas]);
@@ -84,8 +85,7 @@ const CreacionUsuario = () => {
     label: region.region
   }));
 
-  const handleRegionChange = (region) =>
-  {
+  const handleRegionChange = (region) => {
     setRegionSeleccionada(region);
   }
 
@@ -97,13 +97,11 @@ const CreacionUsuario = () => {
 
   console.log(opcionesSector); 
 
-  const handleSectorChange = (sector) =>
-  {
+  const handleSectorChange = (sector) => {
     setSectorSeleccionado(sector);
   }
 
-  const handleEstadoChange = (nuevoEstado) =>
-  {
+  const handleEstadoChange = (nuevoEstado) => {
     setEstado(nuevoEstado);
     setActiveButton(nuevoEstado);
   };
@@ -307,32 +305,12 @@ const CreacionUsuario = () => {
               control={control}
               render={({ field }) => (
                 <>
-                  <h5 className="text-sans-h5">Estado</h5>
-                  <div className="d-flex mb-2">
-                    <button
-                      className={` ${activeButton === 'activo' ? 'btn-primario-s' : 'btn-secundario-s'}`}
-                      onClick={() =>
-                      {
-                        handleEstadoChange('activo');
-                        field.onChange('activo');
-                      }}>
-                      <p className="mb-0 text-decoration-underline">Activo</p>
-                      {activeButton === 'activo' && <i className="material-symbols-rounded ms-2">check</i>}
-                    </button>
-                    <button
-                      className={`ms-2 ${activeButton === 'inactivo' ? 'btn-primario-s' : 'btn-secundario-s'}`}
-                      onClick={() =>
-                      {
-                        handleEstadoChange('inactivo');
-                        field.onChange('inactivo');
-                      }}>
-                      <p className="mb-0 text-decoration-underline">Inactivo</p>
-                      {activeButton === 'inactivo' && <i className="material-symbols-rounded ms-2">check</i>}
-                    </button>
-                  </div>
-                  {errors.estado && (
-                    <p className="text-sans-h6-darkred mt-2 mb-0">{errors.estado.message}</p>
-                  )}
+                  <RadioButtons
+                    initialState={activeButton}
+                    handleEstadoChange={handleEstadoChange}
+                    field={field}
+                    errors={errors}
+                  />
                 </>
               )} />
           </div>
