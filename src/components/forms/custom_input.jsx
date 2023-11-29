@@ -21,9 +21,19 @@ const CustomInput = forwardRef (
     <div className="d-flex flex-column input-container">
       {readOnly ? (
         <>
-          <label className="text-sans-h5 input-label ms-3 ms-sm-0">{label}</label>
-          <p className="text-sans-p mt-4 ms-3">Valor del input: {inputValue}</p>
-        </>
+        <label className="text-sans-h5 input-label ms-3 ms-sm-0">{label}</label>
+        <input
+          className={`input-s p-3 text-sans-p ${error ? 'input-error' : ''}`}
+          type="text"
+          placeholder={placeholder}
+          id={id}
+          value={inputValue}
+          onChange={handleInputChange}
+          ref={ref}
+          disabled
+          {...props}
+        />
+      </>
       ) : (
         <>
           <label className="text-sans-h5 input-label ms-3 ms-sm-0">{label}</label>

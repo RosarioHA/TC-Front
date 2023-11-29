@@ -55,14 +55,7 @@ const DropdownSelectBuscador = ({ label, placeholder, options, onSelectionChange
 
   return (
     <div className={`input-container ${readOnly ? 'readonly' : ''}`}>
-      {readOnly ? (
-        <>
-          <label className="text-sans-h5 input-label">{label}</label>
-          <p className="text-sans-p ms-3 pt-3">{selectedOption ? selectedOption.label : placeholder}</p>
-        </>
-      ) : (
-        <>
-          <label className="text-sans-h5 input-label">{label}</label>
+      <label className="text-sans-h5 input-label">{label}</label>
           {isOpen ? (
             <input
               className="ghost-input dropdown-btn"
@@ -74,15 +67,15 @@ const DropdownSelectBuscador = ({ label, placeholder, options, onSelectionChange
               autoFocus
             />
           ) : (
-            <button onClick={toggleDropdown} className="text-sans-p dropdown-btn">
+            <button
+              type="button" 
+              onClick={toggleDropdown} 
+              className={`text-sans-p dropdown-btn ${readOnly ? "disabled" : ""}`}
+            >
               <span>{selectedOption ? selectedOption.label : placeholder}</span>
-              <i className="material-symbols-rounded ms-2">
-                {isOpen ? 'expand_less' : 'expand_more'}
-              </i>
+              {!readOnly && <i className="material-symbols-rounded ms-2">{isOpen ? 'expand_less' : 'expand_more'}</i>}
             </button>
           )}
-        </>
-      )}
 
       {isOpen && (
         <div className="dropdown d-flex flex-column" ref={dropdownRef}>

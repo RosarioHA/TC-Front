@@ -35,19 +35,15 @@ const DropdownSelect = ({ label, placeholder, options, onSelectionChange, readOn
 
   return (
     <div className={`input-container ${readOnly ? 'readonly' : ''}`}>
-      {readOnly ? (
-        <>
-          <label className="text-sans-h5 input-label">{label}</label>
-          <p className="text-sans-p ms-3 pt-3">Opcion seleccionada: {selectedOption ? selectedOption.label : placeholder}</p>
-        </>
-      ) : (
-        <>
-          <label className="text-sans-h5 input-label">{label}</label>
-          <button type="button" onClick={toggleDropdown} className="text-sans-p-lightgrey dropdown-btn">
-            {selectedOption ? selectedOption.label : placeholder}
-          </button>
-        </>
-      )}
+      <label className="text-sans-h5 input-label">{label}</label>
+      <button 
+      type="button" 
+      onClick={toggleDropdown} 
+      className={`text-sans-p dropdown-btn ${readOnly ? "disabled" : ""}`}
+      >
+        {selectedOption ? selectedOption.label : placeholder}
+        {!readOnly && <i className="material-symbols-rounded ms-2">{isOpen ? 'expand_less' : 'expand_more'}</i>}
+      </button>
       {isOpen && !readOnly && (
         <div className="dropdown d-flex flex-column" ref={dropdownRef}>
           {options.map((option) => (

@@ -46,24 +46,20 @@ const DropdownCheckbox = ({ label, placeholder, options, onSelectionChange, read
 
   return (
     <div className={`input-container ${readOnly ? 'readonly' : ''}`}>
-      {readOnly ? (
-        <>
-          <label className="text-sans-h5 input-label">{label}</label>
-          <p className="text-sans-p ms-3 pt-3">Opcion seleccionada: {selectedOptions ? selectedOptions.label : placeholder}</p>
-        </>
-      ) : (
-        <>
-          <label className="text-sans-h5 input-label">{label}</label>  
-          <button type="button" onClick={toggleDropdown} className="text-sans-p-lightgrey dropdown-btn">
-            {selectedOptions.length > 0
-              ? (selectedOptions.length === 1
-                  ? selectedOptions[0]
-                  : `${selectedOptions.length} alternativas seleccionadas`)
-              : placeholder}
-            <i className="material-symbols-rounded ms-2">expand_more</i>
-          </button>
-        </>
-      )}
+      <label className="text-sans-h5 input-label">{label}</label>  
+      <button 
+      type="button" 
+      onClick={toggleDropdown} 
+      className={`text-sans-p dropdown-btn ${readOnly ? "disabled" : ""}`}
+      >
+        {selectedOptions.length > 0
+          ? (selectedOptions.length === 1
+              ? selectedOptions[0]
+              : `${selectedOptions.length} alternativas seleccionadas`)
+          : placeholder}
+         {!readOnly && <i className="material-symbols-rounded ms-2">{isOpen ? 'expand_less' : 'expand_more'}</i>}
+      </button>
+    
       {isOpen && !readOnly && (
         <div className="dropdown d-flex flex-column" ref={dropdownRef}>
           {options.map((option) => (

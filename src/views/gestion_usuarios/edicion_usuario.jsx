@@ -100,6 +100,8 @@ const EdicionUsuario = () => {
             readOnly={!editMode}
           />
         </div>
+
+        {/* Tienen que aparecer de manera condicional segun el tipo de usuario */}
         <div className="my-4">
           <DropdownSelectBuscador
             label="Elige la región a la que representa (Obligatorio)"

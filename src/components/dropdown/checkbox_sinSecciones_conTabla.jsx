@@ -56,15 +56,45 @@ return (
   <div className={`input-container ${readOnly ? 'readonly' : ''}`}>
     {readOnly ? (
       <>
-        <label className="text-sans-h5 input-label">{label}</label>
-        <p className="text-sans-p ms-3 pt-3">
-          Opciones seleccionadas: {selectedOptions.map((id) => options.find((option) => option.id === id)?.nombre).join(', ') || placeholder}
-        </p>
+      <label className="text-sans-h5 input-label ps-0">Competencia(s) Asignada(s)</label>
+      {selectedOptions.length > 0 && (
+        <div className="mb-5 pt-5">
+          <table>
+            <thead className="">
+              <tr className="">
+                <th className="col-1">
+                  <p className="ms-4">#</p>
+                </th>
+                <th className="col-5">
+                  <p>Competencia</p>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {selectedOptions.map((competenciaId, index) => {
+                const competencia = options.find(comp => comp.id === parseInt(competenciaId));
+                const competenciaNombre = competencia ? competencia.nombre : `${competenciaId}`;
+
+                return (
+                  <tr key={competenciaId} className={index % 2 === 0 ? 'neutral-line' : 'white-line'}>
+                    <td>
+                      <p className="ms-4 my-3">{index + 1}</p>
+                    </td>
+                    <td>
+                      <p className="my-3">{competenciaNombre}</p>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      )}
       </>
     ) : (
       <>
         <label className="text-sans-h5 input-label">{label}</label>
-        <button onClick={toggleDropdown} className="text-sans-p dropdown-btn">
+        <button type="button" onClick={toggleDropdown} className="text-sans-p dropdown-btn">
           {isOpen ? (
             <input
               className="ghost-input"
@@ -82,9 +112,13 @@ return (
             {isOpen ? 'expand_less' : 'expand_more'}
           </i>
         </button>
+        <div className="d-flex mt-3 text-sans-h6-primary">
+          <i className="material-symbols-rounded me-2">info</i>
+          <h6 className=""> Si la competencia no está creada, debes crearla primero y luego asociarle un usuario. </h6>
+        </div>
       </>
     )}
-
+    
     {isOpen && (
       <div className="dropdown d-flex flex-column" ref={dropdownRef}>
         {filteredOptions.map((option) => (
@@ -105,15 +139,8 @@ return (
       </div>
     )}
 
-    <div className="d-flex mt-3 text-sans-h6-primary">
-      <i className="material-symbols-rounded me-2">info</i>
-      <h6 className="">
-        Si la competencia no está creada, debes crearla primero y luego asociarle un usuario.
-      </h6>
-    </div>
-
     {/* Tabla de Selecciones */}
-    {selectedOptions.length > 0 && (
+    {!readOnly && selectedOptions.length > 0 && (
       <div className="mb-5 mt-5">
         <table>
           <thead className="">

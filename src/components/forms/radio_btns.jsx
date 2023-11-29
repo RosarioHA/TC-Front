@@ -13,31 +13,39 @@ const RadioButtons = ({ initialState, handleEstadoChange, field, errors, readOnl
       <div className="mb-5">
         {readOnly ? (
           <>
-            <h5 className="text-sans-h5 ms-3">Estado</h5>
-            <p className="text-sans-p ms-3">Estado Usuario</p>
+            <h5 className="text-sans-h5">Estado</h5>
+            <button
+            type="button"
+            className="btn-primario-s"
+            disabled
+            >
+              EstadoUsuario
+            </button>
           </>
         ) : (
           <>
             <h5 className="text-sans-h5">Estado</h5>
             <div className="d-flex mb-2">
               <button
-                className={` ${activeButton === 'activo' ? 'btn-primario-s' : 'btn-secundario-s'}`}
-                onClick={() => {
-                  handleEstadoChange('activo');
-                  field.onChange('activo');
-                  setActiveButton('activo'); // Actualizar estado interno
-                } }
+              type="button"
+              className={` ${activeButton === 'activo' ? 'btn-primario-s' : 'btn-secundario-s'}`}
+              onClick={() => {
+                handleEstadoChange('activo');
+                field.onChange('activo');
+                setActiveButton('activo'); // Actualizar estado interno
+              } }
               >
                 <p className="mb-0 text-decoration-underline">Activo</p>
                 {activeButton === 'activo' && <i className="material-symbols-rounded ms-2">check</i>}
               </button>
               <button
-                className={`ms-2 ${activeButton === 'inactivo' ? 'btn-primario-s' : 'btn-secundario-s'}`}
-                onClick={() => {
-                  handleEstadoChange('inactivo');
-                  field.onChange('inactivo');
-                  setActiveButton('inactivo'); // Actualizar estado interno
-                } }
+              type="button"
+              className={`ms-2 ${activeButton === 'inactivo' ? 'btn-primario-s' : 'btn-secundario-s'}`}
+              onClick={() => {
+                handleEstadoChange('inactivo');
+                field.onChange('inactivo');
+                setActiveButton('inactivo'); // Actualizar estado interno
+              } }
               >
                 <p className="mb-0 text-decoration-underline">Inactivo</p>
                 {activeButton === 'inactivo' && <i className="material-symbols-rounded ms-2">check</i>}
