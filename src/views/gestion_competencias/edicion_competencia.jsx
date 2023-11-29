@@ -174,12 +174,12 @@ const EdicionCompetencia = () => {
         </div>
 
         {editMode ? (
-          <button className="btn-primario-s mb-5" type="submit">
+          <button className="btn-primario-s my-5" type="submit">
             <i className="material-symbols-rounded me-2">save</i>
             <p className="mb-0">Guardar</p>
           </button>
         ) : (
-          <button className="btn-secundario-s mb-5" type="button">
+          <button className="btn-secundario-s my-5" type="button">
             <p className="mb-0 text-decoration-underline">Ver historial de usuario</p>
             <i className="material-symbols-rounded ms-2">history</i>
           </button>
