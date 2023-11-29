@@ -157,11 +157,13 @@ const EdicionUsuario = () => {
           />
         </div>
 
+        {editMode && (
         <button className="btn-primario-s mb-5" type="submit">
           <i className="material-symbols-rounded me-2">save</i>
           <p className="mb-0">Guardar</p>
         </button>
-
+        )}
+       
       </form>
     </div>
   );
