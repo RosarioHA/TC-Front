@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-const RadioButtons = ({ initialState, handleEstadoChange, field, errors, readOnly }) => {
+const RadioButtons = ({ initialState, handleEstadoChange, field, errors, readOnly, is_active }) => {
     const [activeButton, setActiveButton] = useState(initialState);
     console.log("activeButton en compo radio button". activeButton);
   
@@ -16,10 +16,10 @@ const RadioButtons = ({ initialState, handleEstadoChange, field, errors, readOnl
             <h5 className="text-sans-h5">Estado</h5>
             <button
             type="button"
-            className="btn-primario-s"
+            className={`btn-primario-s ${is_active ? 'activo' : 'inactivo'}`}
             disabled
             >
-              EstadoUsuario
+              {is_active ? 'Activo' : 'Inactivo'}
             </button>
           </>
         ) : (

@@ -155,7 +155,7 @@ const EdicionCompetencia = () => {
           </div>
         </div>
 
-        <div className="mb-4">
+        <div className={editMode ? 'mb-3' : 'mb-4'}>
           < CustomInput 
             label="Plazo para formulario sectorial (Obligatorio)"
             placeholder="Escribe el número de días corridos"
@@ -163,8 +163,14 @@ const EdicionCompetencia = () => {
             maxLength={null}
             readOnly={!editMode} />
         </div>
+        {editMode && (
+          <div className="d-flex text-sans-h6-primary pb-4">
+            <i className="material-symbols-rounded me-2">info</i>
+            <h6> El plazo debe ser de 15 a 30 días corridos y se contará desde el día en que asocies un usuario GORE a la competencia. </h6>
+          </div>
+        )}
 
-        <div className="mb-4">
+        <div className={editMode ? 'mb-3' : 'mb-4'}>
         < CustomInput 
           label="Plazo para formulario GORE (Obligatorio)"
           placeholder="Escribe el número de días corridos"
@@ -172,6 +178,12 @@ const EdicionCompetencia = () => {
           maxLength={null}
           readOnly={!editMode} />        
         </div>
+        {editMode && (
+          <div className="d-flex text-sans-h6-primary pb-4">
+            <i className="material-symbols-rounded me-2">info</i>
+            <h6> El plazo debe ser de 15 a 30 días corridos y se contará desde el día en que asocies un usuario GORE a la competencia. </h6>
+          </div>
+        )}
 
         {editMode ? (
           <button className="btn-primario-s my-5" type="submit">

@@ -37,7 +37,7 @@ function App()
         <Route path="/home" element={<MainLayout />}>
           <Route index element={<Home />} />
           <Route path="administrar_usuarios" element={<GestionUsuarios />} />
-          <Route path="editar_usuario" element={<EditarUsuario />} />
+          <Route path="editar_usuario/:id" element={<EditarUsuario />} />
           <Route path="detalle_usuario/:id" element={<DetalleUsuario />} />
           <Route
             path="crear_usuario"

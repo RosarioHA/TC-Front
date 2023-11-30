@@ -1,31 +1,55 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useForm, Controller } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { esquemaCreacionUsuario } from "../../validaciones/esquemaValidacion";
+import { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { Controller, useForm } from 'react-hook-form';
+//import { yupResolver } from '@hookform/resolvers/yup';
+//import { esquemaCreacionUsuario } from "../../validaciones/esquemaValidacion";
+import { useEditUser } from "../../hooks/useEditUser";
+import { useUserDetails } from "../../hooks/useUserDetail";
 import CustomInput from "../../components/forms/custom_input";
 import DropdownSelect from "../../components/dropdown/select";
 import DropdownSelectBuscador from "../../components/dropdown/select_buscador";
 import DropdownSinSecciones from "../../components/dropdown/checkbox_sinSecciones_conTabla";
 import RadioButtons from "../../components/forms/radio_btns";
 
-const initialValues = {
-  rut: '',
-  nombre: '',
-  email: '',
-  perfil: '',
-  estado: '',
-  password: '',
+const useFetchUserDetails = (id) => {
+  const { userDetails, loading, error } = useUserDetails(id);
+  console.log("User Details Hook:", userDetails, loading, error);
+  return { details: userDetails, loading, error };
 };
 
 const EdicionUsuario = () => {
+  const { id } = useParams();
+  console.log("id de usuario en vista Editar usuario", id);
   const history = useNavigate();
   const [editMode, setEditMode] = useState(false);
   const [ activeButton, setActiveButton ] = useState(null);
 
+  const { editUser, isLoading: editUserLoading, error: editUserError } = useEditUser();
+
+  const { details } = useFetchUserDetails(id);
+  console.log("details en vista Edicion usuario", details);
+
+  const { control, handleSubmit, setValue, formState: { errors } } = useForm({
+    shouldUnregister: false,
+    mode: 'manual',
+  });
+
+  useEffect(() => {
+    if (editMode && details) {
+      const rutValue = details.rut || '';
+      const nombreValue = details.nombre_completo || '';
+      setValue('rut', rutValue);
+      setValue('nombre', nombreValue);
+      // ... Establecer otros valores según sea necesario
+    }
+  }, [editMode, setValue, details]);
+  
+  
+
   const handleBackButtonClick = () => {
     history(-1);
   };
+
   const handleEditClick = () => {
     setEditMode((prevMode) => !prevMode);
   };
@@ -34,15 +58,14 @@ const EdicionUsuario = () => {
     setActiveButton(nuevoEstado);
   };
 
-  const {
-    control,
-    formState: { errors },
-  } = useForm({
-    resolver: yupResolver(esquemaCreacionUsuario),
-    defaultValues: initialValues,
-    shouldUnregister: false,
-    mode: 'manual',
-  });
+  const onSubmit = async (data) => {
+    try {
+      await editUser(id, data); // Envia los datos actualizados al backend
+      setEditMode(false); // Desactiva el modo de edicion después de guardar
+    } catch (editUserError) {
+      console.error("Error al editar el usuario:", editUserError);
+    }
+  };
 
   return (
     <div className="container col-10 my-4">
@@ -61,11 +84,11 @@ const EdicionUsuario = () => {
         </button> 
       </div>
 
-      <form>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <div className="mb-4">
           < CustomInput
             label="RUT (Obligatorio)"
-            placeholder="Escribe el RUT con guión sin puntos."
+            placeholder={details ? details.rut : ''}
             id="rut"
             readOnly={!editMode}
             maxLength={null}
@@ -75,7 +98,7 @@ const EdicionUsuario = () => {
         <div className="my-4">
           < CustomInput
             label="Nombre Completo (Obligatorio)"
-            placeholder="Escribe el nombre completo."
+            placeholder={details ? details.nombre_completo : ''}
             id="nombre"
             readOnly={!editMode}
             maxLength={null}
@@ -85,7 +108,7 @@ const EdicionUsuario = () => {
         <div className="my-4">
           < CustomInput
             label="Correo electrónico"
-            placeholder="Escribe el correo electrónico del usuario."
+            placeholder={details ? details.email : ''}
             id="mail"
             readOnly={!editMode}
             maxLength={null}
@@ -95,31 +118,35 @@ const EdicionUsuario = () => {
         <div className="my-4">
           < DropdownSelect
             label="Elige el perfil de usuario (Obligatorio)"
-            placeholder="Elige el perfil de usuario"
+            placeholder={details ? details.perfil : ''}
             options={['opcion 1', 'opcion 2']}
             readOnly={!editMode}
           />
         </div>
 
-        {/* Tienen que aparecer de manera condicional segun el tipo de usuario */}
-        <div className="my-4">
-          <DropdownSelectBuscador
-            label="Elige la región a la que representa (Obligatorio)"
-            placeholder="Elige una región"
-            readOnly={!editMode}
-            options={['opcion 1', 'opcion 2']}
-            //onSelectionChange={handleRegionChange}
-          />
-        </div>
-        <div className="my-4">
-          <DropdownSelectBuscador
-            label="Elige el organismo al que pertenece (Obligatorio)"
-            placeholder="Elige un organismo"
-            readOnly={!editMode}
-            options={['opcion 1', 'opcion 2']}
-            // onSelectionChange={handleSectorChange} 
-          />
-        </div>
+        {/* Renderizan de manera condicional segun el tipo de usuario */}
+        {details && details.perfil === 'GORE' && (
+          <div className="my-4">
+            <DropdownSelectBuscador
+              label="Elige la región a la que representa (Obligatorio)"
+              placeholder={details.region || ''}
+              readOnly={!editMode}
+              options={['opcion 1', 'opcion 2']}
+              //onSelectionChange={handleRegionChange}
+            />
+          </div>
+        )}
+        {details && details.perfil === 'Usuario Sectorial' && (
+          <div className="my-4">
+            <DropdownSelectBuscador
+              label="Elige el organismo al que pertenece (Obligatorio)"
+              placeholder={details.sector || ''}
+              readOnly={!editMode}
+              options={['opcion 1', 'opcion 2']}
+              // onSelectionChange={handleSectorChange}
+            />
+          </div>
+        )}
 
         <div className="my-4">
           < Controller
@@ -133,6 +160,7 @@ const EdicionUsuario = () => {
                   handleEstadoChange={handleEstadoChange}
                   field={field}
                   errors={errors}
+                  is_active={details ? details.is_active : false}
                 />
                 {errors.estado && (
                   <p className="text-sans-h6-darkred mt-2 mb-0">{errors.estado.message}</p>
@@ -165,6 +193,8 @@ const EdicionUsuario = () => {
         )}
        
       </form>
+      {editUserLoading && <p>Cargando...</p>}
+      {editUserError && <p>Error al editar el usuario: {editUserError.message}</p>}
     </div>
   );
 }
