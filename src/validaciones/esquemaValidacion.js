@@ -28,7 +28,15 @@ export const esquemaCreacionCompetencia = yup.object().shape({
     sectores: yup.array().min(1, 'Debes seleccionar al menos un sector'),
     origen: yup.string().required('El origen de la competencia es obligatorio'),
     ambito: yup.string().required('El ámbito de la competencia es obligatorio'),
-    plazo: yup
+    plazoSectoial: yup
+    .number()
+    .required('El plazo para el formulario sectorial es obligatorio')
+    .integer('El plazo debe ser un número entero')
+    .typeError('El plazo debe ser un número válido')
+    .positive('El plazo debe ser un número positivo')
+    .min(15, 'El plazo mínimo es de 15 días.')
+    .max(30, 'El plazo máximo es de 30 días.'),
+    plazoGORE: yup
     .number()
     .required('El plazo para el formulario sectorial es obligatorio')
     .integer('El plazo debe ser un número entero')
