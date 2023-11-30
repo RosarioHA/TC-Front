@@ -30,16 +30,25 @@ const DropdownSinSecciones = ({ label, placeholder, options, onSelectionChange, 
   };
 
   const handleCheckboxChange = (optionId) => {
-    const updatedOptions = [...selectedOptions]; // Cambia de objeto a array
-  
-    const optionIndex = updatedOptions.indexOf(optionId);
-    if (optionIndex !== -1) {
-      updatedOptions.splice(optionIndex, 1);
+    let updatedOptions = [...selectedOptions];
+
+    if (optionId === 'Todas') {
+      updatedOptions.length === options.length
+        ? updatedOptions.splice(0, options.length)
+        : (updatedOptions = options.map((option) => option.id));
+    } else if (optionId === 'Eliminar Selección') {
+      updatedOptions.length > 0 && updatedOptions.splice(0, updatedOptions.length);
     } else {
-      updatedOptions.push(optionId);
+      const optionIndex = updatedOptions.indexOf(optionId);
+      if (optionIndex !== -1) {
+        updatedOptions.splice(optionIndex, 1);
+      } else {
+        updatedOptions.push(optionId);
+      }
     }
     onSelectionChange(updatedOptions);
   };
+
 
   const handleInputClick = (e) => {
     e.preventDefault();
@@ -121,6 +130,28 @@ return (
     
     {isOpen && (
       <div className="dropdown d-flex flex-column" ref={dropdownRef}>
+        <label className="unselected-option" key="Todas">
+            <input
+              className="ms-2 me-2 my-3"
+              type="checkbox"
+              value="Todas"
+              checked={selectedOptions.length === options.length}
+              onChange={() => handleCheckboxChange('Todas')}
+            />
+            Seleccionar todas las opciones
+          </label>
+
+          <label className="unselected-option" key="Eliminar Selección">
+            <input
+              className="ms-2 me-2 my-3"
+              type="checkbox"
+              value="Eliminar Selección"
+              checked={selectedOptions.length === 0}
+              onChange={() => handleCheckboxChange('Eliminar Selección')}
+            />
+            Eliminar Selección
+          </label>
+
         {filteredOptions.map((option) => (
           <label
             className={selectedOptions.includes(option.id) ? 'selected-option' : 'unselected-option'}

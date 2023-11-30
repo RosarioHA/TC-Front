@@ -8,7 +8,6 @@ const DropdownCheckbox = ({ label, placeholder, options, onSelectionChange, read
     useEffect(() => {
       function handleClickOutside(event) {
         if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-          // Hacer clic fuera del dropdown, cierra el dropdown y refleja las selecciones
           setIsOpen(false);
           onSelectionChange(selectedOptions);
         }
@@ -37,12 +36,18 @@ const DropdownCheckbox = ({ label, placeholder, options, onSelectionChange, read
     };
   
     const handleCheckboxChange = (option) => {
-      if (selectedOptions.includes(option)) {
-        setSelectedOptions(selectedOptions.filter((item) => item !== option));
+      if (option === 'Todas') {
+        setSelectedOptions(selectedOptions.length === options.length ? [] : [...options]);
+      } else if (option === 'Eliminar Selección') {
+        setSelectedOptions([]);
       } else {
-        setSelectedOptions([...selectedOptions, option]);
+        const updatedOptions = selectedOptions.includes(option)
+          ? selectedOptions.filter((item) => item !== option)
+          : [...selectedOptions, option];
+  
+        setSelectedOptions(updatedOptions);
       }
-    };  
+    };
 
   return (
     <div className={`input-container ${readOnly ? 'readonly' : ''}`}>
@@ -62,6 +67,27 @@ const DropdownCheckbox = ({ label, placeholder, options, onSelectionChange, read
     
       {isOpen && !readOnly && (
         <div className="dropdown d-flex flex-column" ref={dropdownRef}>
+          <label className="unselected-option" key="Todas">
+            <input
+              className="ms-2 me-2 my-3"
+              type="checkbox"
+              value="Todas"
+              checked={selectedOptions.length === options.length}
+              onChange={() => handleCheckboxChange('Todas')}
+            />
+            Seleccionar todas las opciones
+          </label>
+          <label className="unselected-option" key="Eliminar Selección">
+            <input
+              className="ms-2 me-2 my-3"
+              type="checkbox"
+              value="Eliminar Selección"
+              checked={selectedOptions.length === 0}
+              onChange={() => handleCheckboxChange('Eliminar Selección')}
+            />
+            Eliminar Selección
+          </label>
+          <br/>
           {options.map((option) => (
             <label className={selectedOptions.includes(option) ? 'selected-option' : 'unselected-option'} key={option}>
               <input
