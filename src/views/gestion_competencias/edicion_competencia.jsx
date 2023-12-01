@@ -1,5 +1,6 @@
-import { useState, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useCallback, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { useCompetenciaDetails } from "../../hooks/useCompetenciaDetail";
 import CustomInput from "../../components/forms/custom_input";
 import DropdownSelect from "../../components/dropdown/select";
 import DropdownCheckbox from "../../components/dropdown/checkbox";
@@ -12,6 +13,8 @@ const EdicionCompetencia = () => {
   const history = useNavigate();
   const [editMode, setEditMode] = useState(false);
   const [usuariosSeleccionados, setUsuariosSeleccionados] = useState([]);
+  const { id } = useParams();
+  const { competenciaDetails, loading, error } = useCompetenciaDetails(id);
 
   const handleBackButtonClick = () => {
     history(-1);
@@ -33,7 +36,19 @@ const EdicionCompetencia = () => {
     },
     []
   );
-  console.log("usuarios seleccionados:", usuariosSeleccionados)
+
+  useEffect(() => {
+    // Actualiza el estado de usuariosSeleccionados cuando cambian los detalles de la competencia
+    setUsuariosSeleccionados({});
+  }, [competenciaDetails]);
+
+  if (loading) {
+    return <p>Cargando detalles de la competencia...</p>;
+  }
+
+  if (error) {
+    return <p>Error al cargar detalles de la competencia: {error.message}</p>;
+  }
 
   return (
     <div className="container col-10 my-4">
@@ -56,7 +71,7 @@ const EdicionCompetencia = () => {
         <div className="mb-4">
           < CustomInput 
             label="Nombre de la Competencia (Obligatorio)"
-            placeholder="Escribe el nombre de la competencia"
+            placeholder={competenciaDetails ? competenciaDetails.nombre : ''}
             id="nombre"
             readOnly={!editMode}
             maxLength={null}
@@ -80,7 +95,7 @@ const EdicionCompetencia = () => {
         <div className="mb-4">
           <DropdownCheckbox
             label="Elige el sector de la competencia (Obligatorio)" 
-            placeholder="Elige el sector de la competencia" 
+            placeholder={competenciaDetails ? competenciaDetails.sectores.sector : ''} 
             options={['opcion 1', 'opcion 2', 'opcion 3']}
             readOnly={!editMode}
             // onSelectionChange={(selectedOption) => {

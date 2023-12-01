@@ -49,7 +49,7 @@ function App()
           />
           <Route path="gestion_competencias" element={<GestionCompetencias />} />
           <Route path="crear_competencia" element={<CrearCompetencia />} />
-          <Route path="editar_competencia" element={<EditarCompetencia />} />
+          <Route path="editar_competencia/:id" element={<EditarCompetencia />} />
           <Route path="success" element={<Success />} />
           <Route path="formulario_sectorial" element={<FormularioSectorial />}></Route>
           <Route path="estado_compentencia/:id" element={<EstadoCompentencia />}></Route>
