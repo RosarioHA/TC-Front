@@ -94,7 +94,7 @@ const EdicionCompetencia = () => {
         <div className="mb-4">
           <DropdownCheckbox
             label="Elige el sector de la competencia (Obligatorio)" 
-            placeholder={competenciaDetails ? competenciaDetails.sectores.sector : ''} 
+            placeholder='Elige el sector de la competencia'
             options={['opcion 1', 'opcion 2', 'opcion 3']}
             readOnly={!editMode}
             // onSelectionChange={(selectedOption) => {
