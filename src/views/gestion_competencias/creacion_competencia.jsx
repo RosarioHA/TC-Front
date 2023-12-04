@@ -19,7 +19,8 @@ const initialValues = {
   origen: '',
   ambito: '',
   usuarios: '',
-  plazo: undefined,
+  plazoSectorial: undefined,
+  plazoGore: undefined,
 };
 
 const CreacionCompetencia = () => {
@@ -131,6 +132,7 @@ const CreacionCompetencia = () => {
                 label="Nombre de la Competencia (Obligatorio)"
                 placeholder="Escribe el nombre de la competencia"
                 id="nombre"
+                readOnly={true}
                 maxLength={null}
                 error={errors.nombre?.message}
                 ref={field.ref}
@@ -244,15 +246,15 @@ const CreacionCompetencia = () => {
 
           <div className="mb-4">
             < Controller 
-              name="plazo"
+              name="plazoSecorial"
               control={control}
               render={({field}) => (
                 < CustomInput 
                 label="Plazo para formulario sectorial (Obligatorio)"
                 placeholder="Escribe el número de días corridos"
-                id="plazo"
+                id="plazoSecorial"
                 maxLength={null}
-                error={errors.plazo?.message}
+                error={errors.plazoSecorial?.message}
                 ref={field.ref}
                 {...field}/>
                 )}/>
@@ -262,6 +264,29 @@ const CreacionCompetencia = () => {
               <div className="d-flex text-sans-h6-primary">
                 <i className="material-symbols-rounded me-2">info</i>
                 <h6> El plazo debe ser de 15 a 30 días corridos y se contará desde el día en que asocies un usuario sectorial a la competencia. </h6>
+            </div>
+          </div>
+
+          <div className="mb-4">
+            < Controller 
+              name="plazoGORE"
+              control={control}
+              render={({field}) => (
+                < CustomInput 
+                label="Plazo para formulario GORE (Obligatorio)"
+                placeholder="Escribe el número de días corridos"
+                id="plazoGORE"
+                maxLength={null}
+                error={errors.plazoGORE?.message}
+                ref={field.ref}
+                {...field}/>
+                )}/>
+              <div className="d-flex justify-content-end">
+                <h6 className="text-sans-h6-grey mt-1 me-4">Número entre 15 y 30</h6>
+              </div>
+              <div className="d-flex text-sans-h6-primary">
+                <i className="material-symbols-rounded me-2">info</i>
+                <h6> El plazo debe ser de 15 a 30 días corridos y se contará desde el día en que asocies un usuario GORE a la competencia. </h6>
             </div>
           </div>
 

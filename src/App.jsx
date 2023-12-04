@@ -36,40 +36,32 @@ function App()
         </Route>
         <Route path="/home/*" element={<MainLayout />}>
           <Route index element={<Home />} />
-              <Route index element={<Home />} />
-              <Route path="administrar_usuarios" element={<GestionUsuarios />} />
-              <Route path="editar_usuario" element={<EditarUsuario />} />
-              <Route path="detalle_usuario/:id" element={<DetalleUsuario />} />
-              <Route 
-                path="crear_usuario" 
-                element={
-                  <ProtectedRoute allowedProfiles={['SUBDERE']}>
-                    <CrearUsuario />
-                  </ProtectedRoute>
-                }
-              />
-              <Route 
-                path="crear_competencia" 
-                element={
-                  <ProtectedRoute allowedProfiles={['SUBDERE']}>
-                    <CrearCompetencia />
-                  </ProtectedRoute>
-                }
-              />
-              <Route path="listado_competencias" element={<GestionCompetencias />} />
-              <Route path="editar_competencia" element={<EditarCompetencia />} />
-              <Route path="estado_competencia/:id" element={<EstadoCompentencia />} />
-              <Route path="success" element={<Success />} />
-              <Route path="formulario_sectorial" element={<FormularioSectorial />} />
-              <Route path="ingresar_observaciones" element={<Observaciones />} />
-              <Route path="agregar_minuta" element={<Minuta />} />
-              <Route path="*" element={<Error404 />} />
-              <Route path="404" element={<Error404 />} />
-              <Route path="500" element={<Error500 />} />
-              <Route path="503" element={<Error503 />} />
-            </Route>
-      </Routes >
-    </Suspense >
+          <Route path="administrar_usuarios" element={<GestionUsuarios />} />
+          <Route path="editar_usuario/:id" element={<EditarUsuario />} />
+          <Route path="detalle_usuario/:id" element={<DetalleUsuario />} />
+          <Route
+            path="crear_usuario"
+            element={
+              <ProtectedRoute allowedProfiles={[ 'SUBDERE' ]}>
+                <CrearUsuario />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="gestion_competencias" element={<GestionCompetencias />} />
+          <Route path="crear_competencia" element={<CrearCompetencia />} />
+          <Route path="editar_competencia/:id" element={<EditarCompetencia />} />
+          <Route path="success" element={<Success />} />
+          <Route path="formulario_sectorial" element={<FormularioSectorial />}></Route>
+          <Route path="estado_compentencia/:id" element={<EstadoCompentencia />}></Route>
+          <Route path="ingresar_observaciones" element={<Observaciones />}></Route>
+          <Route path="agregar_minuta" element={<Minuta />}></Route>
+          <Route path="*" element={<Error404 />} />
+          <Route path="404" element={<Error404 />} />
+          <Route path="500" element={<Error500 />} />
+          <Route path="503" element={<Error503 />} />
+        </Route>
+      </Routes>
+    </Suspense>
 
   );
 }

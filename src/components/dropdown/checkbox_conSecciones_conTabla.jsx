@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 
-const DropdownConSecciones = ({ label, placeholder, options }) => {
+const DropdownConSecciones = ({ label, placeholder, options, readOnly }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedOptions, setSelectedOptions] = useState({});
@@ -51,29 +51,107 @@ const DropdownConSecciones = ({ label, placeholder, options }) => {
     return groupLabel.toLowerCase().includes(searchTextLower);
   });
 
-  return (
-    <div className="input-container">
-      <label className="text-sans-h5 input-label">{label}</label>
-      <button onClick={toggleDropdown} className="text-sans-p dropdown-btn">
-        {isOpen ? (
-          <input
-            className="ghost-input"
-            type="text"
-            placeholder="Buscar..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        ) : (
-          <span>{placeholder}</span>
-        )}
-        <i className="material-symbols-rounded ms-2">
-          {isOpen ? 'expand_less' : 'expand_more'}
-        </i>
-      </button>
-      <div className="d-flex mt-3 text-sans-h6-primary">
-        <i className="material-symbols-rounded me-2">info</i>
-        <h6> Si aun no creas los usuarios para esta competencia, puedes crear la competencia y asignarle usuario más tarde. </h6>
+  const renderTablaResumen = (users, tipoUsuario) => {
+    return (
+      <div className="mb-5 mt-5">
+        <p className="text-sans-p ms-2 mb-3">{`Usuarios ${tipoUsuario}`}</p>
+        <table>
+          <thead className="">
+            <tr className="">
+              <th className="col-1">
+                <p className="ms-4">#</p>
+              </th>
+              <th className="col-5">
+                <p>Usuario</p>
+              </th>
+              {!readOnly && (
+                <th className="col-1">
+                  <p className="ms-2">Acción</p>
+                </th>
+              )}
+            </tr>
+          </thead>
+          <tbody>
+            {users.map((selectedOption, index) => {
+              const usuarioNombre = selectedOption
+                ? selectedOption.nombre
+                : `Usuario ${selectedOption.id}`;
+
+              return (
+                <tr
+                  key={selectedOption.id}
+                  className={
+                    index % 2 === 0 ? 'neutral-line' : 'white-line'
+                  }
+                >
+                  <td>
+                    <p className="ms-4 my-3">{index + 1}</p>
+                  </td>
+                  <td>
+                    <p className="my-3">{usuarioNombre}</p>
+                  </td>
+                  {!readOnly && (
+                    <td>
+                      <button
+                        type="button"
+                        className="btn-terciario-ghost"
+                        onClick={() => handleCheckboxChange(selectedOption)}
+                      >
+                        <p className="mb-0 text-decoration-underline">
+                          Eliminar
+                        </p>
+                        <i className="material-symbols-rounded ms-2">delete</i>
+                      </button>
+                    </td>
+                  )}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
       </div>
+    );
+  };
+  
+
+  return (
+    <div className={`input-container ${readOnly ? 'readonly' : ''}`}>
+      {readOnly ? (
+        <>
+          <label className="text-sans-h5 input-label">Usuario(s) Asignado(s):</label>
+          {Object.keys(selectedOptions).some(tipo => selectedOptions[tipo].length > 0) ? (
+            // Renderizar la tabla solo si hay usuarios asignados
+            Object.keys(selectedOptions).map((tipo) =>
+              renderTablaResumen(selectedOptions[tipo], tipo)
+            )
+          ) : (
+            // Mostrar el mensaje si no hay usuarios asignados
+            <p className="text-sans-p pt-4 ms-3">Sin usuarios asignados</p>
+          )}
+        </>
+      ) : (
+        <>
+          <label className="text-sans-h5 input-label">{label}</label>
+          <button type="button" onClick={toggleDropdown} className="text-sans-p dropdown-btn">
+            {isOpen ? (
+              <input
+                className="ghost-input"
+                type="text"
+                placeholder="Buscar..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            ) : (
+              <span>{placeholder}</span>
+            )}
+            <i className="material-symbols-rounded ms-2">{isOpen ? 'expand_less' : 'expand_more'}</i>
+          </button>
+          <div className="d-flex mt-3 text-sans-h6-primary">
+            <i className="material-symbols-rounded me-2">info</i>
+            <h6> Si aun no creas los usuarios para esta competencia, puedes crear la competencia y asignarle usuario más tarde. </h6>
+          </div>
+        </>
+      )}
 
       {isOpen && (
         <div
@@ -116,68 +194,9 @@ const DropdownConSecciones = ({ label, placeholder, options }) => {
       )}
 
       {/* Tabla de selecciones */}
-      {Object.keys(selectedOptions).map((tipoUsuario) => (
-        <div key={tipoUsuario} className="mb-5 mt-5">
-          <p className="text-sans-p ms-2 mb-3">Usuarios {tipoUsuario}</p>
-          <table>
-            <thead className="">
-              <tr className="">
-                <th className="col-1">
-                  {' '}
-                  <p className="ms-4">#</p>{' '}
-                </th>
-                <th className="col-5">
-                  {' '}
-                  <p>Usuario</p>{' '}
-                </th>
-                <th className="col-1">
-                  {' '}
-                  <p className="ms-2">Acción</p>{' '}
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {selectedOptions[tipoUsuario] &&
-                selectedOptions[tipoUsuario].map((selectedOption, index) => {
-                  const usuarioNombre = selectedOption
-                    ? selectedOption.nombre
-                    : `Competencia ${selectedOption.id}`;
-
-                  return (
-                    <tr
-                      key={selectedOption.id}
-                      className={
-                        index % 2 === 0 ? 'neutral-line' : 'white-line'
-                      }
-                    >
-                      <td>
-                        {' '}
-                        <p className="ms-4 my-3">{index + 1}</p>{' '}
-                      </td>
-                      <td>
-                        {' '}
-                        <p className="my-3">{usuarioNombre}</p>{' '}
-                      </td>
-                      <td>
-                        <button
-                          className="btn-terciario-ghost"
-                          onClick={() => handleCheckboxChange(selectedOption)}
-                        >
-                          <p className="mb-0 text-decoration-underline">
-                            Eliminar
-                          </p>
-                          <i className="material-symbols-rounded ms-2">
-                            delete
-                          </i>
-                        </button>
-                      </td>
-                    </tr>
-                  );
-                })}
-            </tbody>
-          </table>
-        </div>
-      ))}
+      {Object.keys(selectedOptions).map((tipoUsuario) =>
+        renderTablaResumen(selectedOptions[tipoUsuario], tipoUsuario)
+      )}
     </div>
   );
 };

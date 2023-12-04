@@ -1,37 +1,29 @@
 import { useState, useRef, useEffect } from 'react';
 
-const DropdownSelect = ({ label, placeholder, options, onSelectionChange }) =>
-{
+const DropdownSelect = ({ label, placeholder, options, onSelectionChange, readOnly }) => {
   const [ isOpen, setIsOpen ] = useState(false);
   const [ selectedOption, setSelectedOption ] = useState(null);
   const dropdownRef = useRef(null);
 
-  useEffect(() =>
-  {
-    function handleClickOutside(event)
-    {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target))
-      {
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsOpen(false);
       }
     }
 
-    if (isOpen)
-    {
+    if (isOpen) {
       document.addEventListener('mousedown', handleClickOutside);
-    } else
-    {
+    } else {
       document.removeEventListener('mousedown', handleClickOutside);
     }
 
-    return () =>
-    {
+    return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [ isOpen ]);
 
-  const toggleDropdown = () =>
-  {
+  const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
 
@@ -42,18 +34,23 @@ const DropdownSelect = ({ label, placeholder, options, onSelectionChange }) =>
   };
 
   return (
-    <div className="input-container">
+    <div className={`input-container ${readOnly ? 'readonly' : ''}`}>
       <label className="text-sans-h5 input-label">{label}</label>
-      <button type="button" onClick={toggleDropdown} className="text-sans-p-lightgrey dropdown-btn">
+      <button 
+      type="button" 
+      onClick={toggleDropdown} 
+      className={`text-sans-p dropdown-btn ${readOnly ? "disabled" : ""}`}
+      >
         {selectedOption ? selectedOption.label : placeholder}
+        {!readOnly && <i className="material-symbols-rounded ms-2">{isOpen ? 'expand_less' : 'expand_more'}</i>}
       </button>
-      {isOpen && (
+      {isOpen && !readOnly && (
         <div className="dropdown d-flex flex-column" ref={dropdownRef}>
           {options.map((option) => (
             <div
               key={option.value}
               onClick={() => handleOptionClick(option)}
-              className={`p-3 ${option.value === selectedOption?.value? 'selected-option' : 'unselected-option'}`}
+              className={`p-3 ${option.value === selectedOption?.value ? 'selected-option' : 'unselected-option'}`}
             >
               {option.label}
             </div>
