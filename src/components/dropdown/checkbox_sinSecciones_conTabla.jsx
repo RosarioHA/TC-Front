@@ -8,19 +8,15 @@ const DropdownSinSecciones = ({ label, placeholder, options, onSelectionChange, 
   useEffect(() => {
     function handleClickOutside(event) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        // Hacer clic fuera del dropdown, cierra el dropdown y refleja las selecciones
         setIsOpen(false);
       }
     }
     if (isOpen) {
-      // Agregar un event listener para cerrar el dropdown al hacer clic fuera de el
       document.addEventListener('mousedown', handleClickOutside);
     } else {
-      // Remover el event listener cuando el dropdown esta cerrado
       document.removeEventListener('mousedown', handleClickOutside);
     }
     return () => {
-      // Limpieza al desmontar el componente
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [isOpen]);
@@ -130,27 +126,20 @@ return (
     
     {isOpen && (
       <div className="dropdown d-flex flex-column" ref={dropdownRef}>
-        <label className="unselected-option" key="Todas">
-            <input
-              className="ms-2 me-2 my-3"
-              type="checkbox"
-              value="Todas"
-              checked={selectedOptions.length === options.length}
-              onChange={() => handleCheckboxChange('Todas')}
-            />
-            Seleccionar todas las opciones
-          </label>
-
-          <label className="unselected-option" key="Eliminar Selección">
-            <input
-              className="ms-2 me-2 my-3"
-              type="checkbox"
-              value="Eliminar Selección"
-              checked={selectedOptions.length === 0}
-              onChange={() => handleCheckboxChange('Eliminar Selección')}
-            />
-            Eliminar Selección
-          </label>
+        <button
+          type="button"
+          className={`text-sans-p btn-option ${selectedOptions.length > 0 ? 'active' : ''}`}
+          onClick={() => handleCheckboxChange('Todas')}
+        >
+          Todos
+        </button>
+        <button
+          type="button"
+          className={`text-sans-p btn-option ${selectedOptions.length === 0 ? 'active' : ''}`}
+          onClick={() => handleCheckboxChange('Eliminar Selección')}
+        >
+          Eliminar Selección
+        </button>
 
         {filteredOptions.map((option) => (
           <label
