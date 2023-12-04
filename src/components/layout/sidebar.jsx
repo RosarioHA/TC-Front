@@ -65,7 +65,7 @@ const Sidebar = () =>
         </li>
         )}
         <li className="my-1">
-          <NavLink to="/home/administrar_competencias" className="mx-4 btn-link" type="button">
+          <NavLink to="/home/listado_competencias" className="mx-4 btn-link" type="button">
             <i className="material-symbols-outlined mx-3">library_books</i>
             <i className="badge badge-notification mx-3">99+</i>
             <u>Listado de Competencias</u>

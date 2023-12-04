@@ -5,7 +5,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import CustomInput from "../../components/forms/custom_input";
 import DropdownCheckbox from "../../components/dropdown/checkbox";
 import DropdownSelect from "../../components/dropdown/select";
-import DropdownCheckboxUsuarios from "../../components/dropdown/checkbox_conSecciones_conTabla";
+import DropdownConSecciones from "../../components/dropdown/checkbox_conSecciones_conTabla";
+import SubirArchivo from "../../components/forms/subir_archivo";
 import { regiones, opcionesSector, origenCompetencia, ambitoCompetencia } from "../../Data/OpcionesFormulario";
 import { userData } from "../../Data/Usuarios";
 
@@ -207,7 +208,7 @@ const CreacionCompetencia = () => {
           </div>
           <div className="mb-4">
             <div className="">
-              < DropdownCheckboxUsuarios 
+              < DropdownConSecciones 
                 label="Asignar Usuarios (Opcional)"
                 placeholder="Busca el nombre de la persona"
                 options={groupUsersByType(userData)}
@@ -216,17 +217,29 @@ const CreacionCompetencia = () => {
                 onSelectionChange={handleUsuariosChange}
               />
             </div>
-
-            <div className="d-flex mt-2 text-sans-h6-primary">
-              <i className="material-symbols-rounded me-2">info</i>
-              <h6> Si aun no creas los usuarios para esta competencia, puedes crear la competencia y asignarle usuario más tarde. </h6>
-            </div>
           </div>
 
-          <div className="mb-4">
-            <h5 className="text-sans-h5">Adjunta el oficio correspondiente a la competencia</h5>
-            <h6 className="text-sans-h6 mb-4">(Máximo 1 archivo, peso máximo 20 MB, formato PDF)</h6>
-            <div className="">COMPONENTE SUBIR ARCHIVO</div>
+          <div className="mb-5">
+            <div>
+              <h5 className="text-sans-h5">Adjunta el oficio correspondiente a la competencia</h5>
+              <h6 className="text-sans-h6 mb-4">(Máximo 1 archivo, peso máximo 20 MB, formato PDF)</h6>
+            </div>
+
+            <div className="ps-3">
+              <div className="d-flex justify-content-between py-3 fw-bold">
+                <div className="d-flex mb-2">
+                  <div className="ms-4">#</div>
+                  <div className="ms-5">Documento</div>
+                </div>
+                <div className="me-5">Acción</div>
+              </div>
+              <div className="row neutral-line align-items-center">
+                <SubirArchivo 
+                index="1"
+                fileType="No seleccionado"/>
+              </div>
+            </div>
+
           </div>
 
           <div className="mb-4">

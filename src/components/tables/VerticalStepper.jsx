@@ -1,26 +1,26 @@
 import { Etapa1, Etapa2, Etapa3, Etapa4, Etapa5 } from "../etapas";
 
-export const VerticalStepper = ({ competencia }) =>
+export const VerticalStepper = ({ etapas }) =>
 {
 
-  if (!competencia)
+  console.log('etapas',etapas)
+  if (!etapas || etapas.length === 0)
   {
-    console.log('Competencia no definida');
+    console.log('Etapas no definidas o vacías');
     return <div>Cargando...</div>;
   }
 
-  const etapas = competencia.etapas;
-  let lastCompletedIndex = etapas.findIndex(stage => stage.estado !== 'Finalizado');
+  let lastCompletedIndex = etapas.findIndex(etapa => etapa && etapa.estado !== 'Finalizado');
 
   const renderBadge = (estado) =>
   {
     switch (estado)
     {
-      case 'Finalizado':
+      case 'Finalizada':
         return <span className="badge-status-finish">Finalizada</span>;
       case 'En Estudio':
         return <span className="badge-status-review">En Estudio</span>;
-      case 'Pendiente':
+      case 'Aún no puede comenzar':
         return <span className="badge-status-pending">Aún no puede comenzar</span>;
       default:
         return null;
@@ -28,11 +28,11 @@ export const VerticalStepper = ({ competencia }) =>
   };
 
   return (
-    <div className="wrapper d-flex justify-content-start mx-1">
+    <div className="wrapper d-flex justify-content-start mx-0">
       <ol className="stepper">
         {etapas.map((etapa, index) => (
           <li
-            className={`stepperItem ${etapa.estado === 'Finalizado' ? 'completed' : ''} ${index === lastCompletedIndex ? 'next-step' : ''}`}
+            className={`stepperItem ${etapa.estado === 'Finalizada' ? 'completed' : ''} ${index === lastCompletedIndex ? 'next-step' : ''}`}
             key={etapa.id}
           >
             <div className="stepNumber" >
@@ -45,12 +45,12 @@ export const VerticalStepper = ({ competencia }) =>
               )}
             </div>
             <div className="stepperContent">
-              <div className="d-flex justify-content-between "><h3 className="stepperTitle">{etapa.etapa}</h3><div>{renderBadge(etapa.estado)}</div></div>
-              {index === 0 && <Etapa1 etapaCompetencia={competencia.etapas[ 0 ]} />}
-              {index === 1 && <Etapa2 etapaCompetencia={competencia.etapas[ 1 ]} />}
-              {index === 2 && <Etapa3 etapaCompetencia={competencia.etapas[ 2 ]} />}
-              {index === 3 && <Etapa4 etapaCompetencia={competencia.etapas[ 3 ]} />}
-              {index === 4 && <Etapa5 etapaCompetencia={competencia.etapas[ 4 ]} />}
+              <div className="d-flex justify-content-between "><h3 className="stepperTitle">{etapa.nombre_etapa}</h3><div>{renderBadge(etapa.estado)}</div></div>
+              {index === 0 && <Etapa1 etapaCompetencia={etapas[ 0 ]} />}
+              {index === 1 && <Etapa2 etapaCompetencia={etapas[ 1 ]} />}
+              {index === 2 && <Etapa3 etapaCompetencia={etapas[ 2 ]} />}
+              {index === 3 && <Etapa4 etapaCompetencia={etapas[ 3 ]} />}
+              {index === 4 && <Etapa5 etapaCompetencia={etapas[ 4 ]} />}
             </div>
           </li>
         ))}

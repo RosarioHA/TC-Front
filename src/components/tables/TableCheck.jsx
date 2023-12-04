@@ -27,12 +27,12 @@ export const TableCheckbox = ({ columnTitles, renderRow, data = [], sortableColu
   };
 
   const sortedData = () => {
+    let sorted = data;
     if (sortConfig.key && sortOptions[sortConfig.key]) {
-      return [...data].sort(sortOptions[sortConfig.key](sortConfig.direction));
+      sorted = [...data].sort(sortOptions[sortConfig.key](sortConfig.direction));
     }
-    return data;
+    return sorted;
   };
-
 
   const requestSort = (key) => {
     let direction = 'asc';
@@ -62,13 +62,14 @@ export const TableCheckbox = ({ columnTitles, renderRow, data = [], sortableColu
             {
               const isSortable = sortableColumns.includes(title);
               const isSortingColumn = sortConfig.key === title;
+              const columnStyle = index !== 0  ? { width: '230px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' } : {};
 
               return (
                 <th
                   key={index}
                   scope="col"
                   onClick={() => isSortable && requestSort(title)}
-                  style={{ cursor: isSortable ? 'pointer' : 'default' }}
+                  style={{ cursor: isSortable ? 'pointer' : 'default', ...columnStyle }}
                   className="mt-3 p-2"
                 >
                   {title}

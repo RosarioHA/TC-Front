@@ -6,7 +6,6 @@ import { TableCheckbox } from "../../components/tables/TableCheck";
 import { columnTitlesUser } from "../../Data/Usuarios";
 import { useUsers } from '../../hooks/useUsers';
 
-
 const GestionUsuarios = () =>
 {
   const { userData } = useAuth();

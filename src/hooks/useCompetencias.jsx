@@ -1,11 +1,10 @@
 import { useCallback, useEffect, useState } from "react"
 import { apiTransferenciaCompentencia } from "../services/transferenciaCompetencia";
-
-
-
-export const useCompetencia = () =>
+export const useCompetencia = (id) =>
 {
-  const [ dataConpentencia, setDataCompetencia ] = useState([]);
+  const [ dataCompetencia, setDataCompetencia ] = useState([]);
+  const [ dataListCompetencia, setDataListCompetencia ] = useState([]);
+  const [ competenciaDetails , setCompetenciaDetails] = useState([]); 
   const [ loadingCompetencia, setLoadingComptencia ] = useState(true);
   const [ errorCompetencia, setErrorCompetencia ] = useState(null);
   const [ paginationCompetencia, setPaginationCompeencia ] = useState({ count: 0, next: null, previous: null });
@@ -17,9 +16,9 @@ export const useCompetencia = () =>
     setLoadingComptencia(true);
     try
     {
-      const response = await apiTransferenciaCompentencia.get(`/competencias/?page=${currentPage}`);
+      const response = await apiTransferenciaCompentencia.get(`/competencias/lista-home/?page=${currentPage}`);
       const { data, count, next, previous } = response
-      setDataCompetencia(data);
+      setDataCompetencia(data.results);
       setPaginationCompeencia({ count, next, previous });
     } catch (err)
     {
@@ -31,17 +30,61 @@ export const useCompetencia = () =>
     }
   }, [ currentPage ]);
 
-  useEffect(() =>
-  {
-    fetchCompetencias();
-  }, [ fetchCompetencias ]);
 
+  const fetchListaCompentencias = useCallback(async () =>
+  {
+    try
+    {
+      const response = await apiTransferenciaCompentencia.get('competencias/');
+      setDataListCompetencia(response.data);
+    } catch (err)
+    {
+      console.error(err);
+    }
+  }, []);
+
+  
   const updatePage = (newPage) =>
   {
     setCurrentPage(newPage);
   }
+  
+  
+  const fetchCompetenciaDetails = useCallback(async (id) =>
+  {
+    setLoadingComptencia(true);
+    try
+    {
+      const response = await apiTransferenciaCompentencia.get(`competencias/${id}/`);
+      setCompetenciaDetails(response.data);
+    } catch (err)
+    {
+      console.log(err);
+      setErrorCompetencia(err);
+    } finally
+    {
+      setLoadingComptencia(false);
+    }
+  }, []);
 
-  console.log(dataConpentencia)
-  return { dataConpentencia, loadingCompetencia, errorCompetencia, paginationCompetencia, updatePage };
+  useEffect(() => {
+    if (id) {
+      fetchCompetenciaDetails(id);
+    } else {
+      fetchCompetencias();
+      fetchListaCompentencias();
+    }
+  }, [id, fetchCompetencias, fetchListaCompentencias, fetchCompetenciaDetails]);
+
+
+  return {
+    dataCompetencia,
+    dataListCompetencia,
+    competenciaDetails,
+    loadingCompetencia,
+    errorCompetencia,
+    paginationCompetencia,
+    updatePage
+  };
 
 }

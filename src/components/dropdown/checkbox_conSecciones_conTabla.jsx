@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 
-const DropdownCheckboxUsuarios = ({ label, placeholder, options }) => {
+const DropdownConSecciones = ({ label, placeholder, options }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedOptions, setSelectedOptions] = useState({});
@@ -70,6 +70,10 @@ const DropdownCheckboxUsuarios = ({ label, placeholder, options }) => {
           {isOpen ? 'expand_less' : 'expand_more'}
         </i>
       </button>
+      <div className="d-flex mt-3 text-sans-h6-primary">
+        <i className="material-symbols-rounded me-2">info</i>
+        <h6> Si aun no creas los usuarios para esta competencia, puedes crear la competencia y asignarle usuario más tarde. </h6>
+      </div>
 
       {isOpen && (
         <div
@@ -111,6 +115,7 @@ const DropdownCheckboxUsuarios = ({ label, placeholder, options }) => {
         </div>
       )}
 
+      {/* Tabla de selecciones */}
       {Object.keys(selectedOptions).map((tipoUsuario) => (
         <div key={tipoUsuario} className="mb-5 mt-5">
           <p className="text-sans-p ms-2 mb-3">Usuarios {tipoUsuario}</p>
@@ -177,4 +182,4 @@ const DropdownCheckboxUsuarios = ({ label, placeholder, options }) => {
   );
 };
 
-export default DropdownCheckboxUsuarios;
+export default DropdownConSecciones;

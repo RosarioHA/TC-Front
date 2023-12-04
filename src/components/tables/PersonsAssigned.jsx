@@ -1,10 +1,27 @@
-import { useState } from 'react'; // Importa el hook useState
-import { TypeUser } from './../../Data/Usuarios';
+import { useState } from 'react';
 import { Table } from './Table';
 
-export const PersonsAssigned = () => {
-  const [selectedTab, setSelectedTab] = useState(TypeUser[0].tipoUsuario); // Estado para rastrear la pestaña/tab activa
+export const PersonsAssigned = ({ usuariosSubdere, usuariosDipres, usuariosSectoriales, usuariosGore }) => {
 
+  // Cambiar el estado inicial para que coincida con la primera pestaña en el nuevo orden
+  const [selectedTab, setSelectedTab] = useState('Subdere');
+
+  // Reorganizar el array TypeUser para reflejar el nuevo orden de las pestañas
+  const TypeUser = [
+    { id: 2, tipoUsuario: 'Subdere' },
+    { id: 3, tipoUsuario: 'Sectorial' },
+    { id: 4, tipoUsuario: 'Gore' },
+    { id: 1, tipoUsuario: 'Dipres' },
+  ];
+
+  const userMappings = {
+    Dipres: usuariosDipres,
+    Subdere: usuariosSubdere,
+    Sectorial: usuariosSectoriales,
+    Gore: usuariosGore
+  };
+
+  const getUserData = () => userMappings[selectedTab] || [];
   const handleTabClick = (tabId) => {
     setSelectedTab(tabId);
   };
@@ -40,7 +57,7 @@ export const PersonsAssigned = () => {
             tabIndex="0"
             key={user.id}
           >
-            <Table filterTypeId={String(user.id)} />
+            <Table userData={getUserData()} />
           </div>
         ))}
       </div>

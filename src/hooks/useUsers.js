@@ -15,7 +15,7 @@ export const useUsers = () =>
     try {
       const response = await apiTransferenciaCompentencia.get(`/users/?page=${currentPage}`);
       const { data, count, next, previous } = response; 
-      setUsers(data);
+      setUsers(data.results);
       setPagination({ count, next, previous });
     } catch (err) {
       console.error(err);
