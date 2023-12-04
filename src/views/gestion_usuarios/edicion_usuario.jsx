@@ -5,6 +5,7 @@ import { Controller, useForm } from 'react-hook-form';
 //import { esquemaCreacionUsuario } from "../../validaciones/esquemaValidacion";
 import { useEditUser } from "../../hooks/useEditUser";
 import { useUserDetails } from "../../hooks/useUserDetail";
+import { useGroups } from "../../hooks/useGroups";
 import CustomInput from "../../components/forms/custom_input";
 import DropdownSelect from "../../components/dropdown/select";
 import DropdownSelectBuscador from "../../components/dropdown/select_buscador";
@@ -23,16 +24,22 @@ const EdicionUsuario = () => {
   const history = useNavigate();
   const [editMode, setEditMode] = useState(false);
   const [ activeButton, setActiveButton ] = useState(null);
+  //const [ perfilSeleccionado, setPerfilSeleccionado ] = useState(null);
 
   const { editUser, isLoading: editUserLoading, error: editUserError } = useEditUser();
-
+  const { dataGroups, loadingGroups } = useGroups();
   const { details } = useFetchUserDetails(id);
-  console.log("details en vista Edicion usuario", details);
 
   const { control, handleSubmit, setValue, formState: { errors } } = useForm({
     shouldUnregister: false,
     mode: 'manual',
   });
+
+  //opciones de perfil 
+  const  opcionesGroups = dataGroups.map(group => ({
+    value:group.id,
+    label: group.name
+  }))
 
   useEffect(() => {
     if (editMode && details) {
@@ -51,6 +58,14 @@ const EdicionUsuario = () => {
   const handleEditClick = () => {
     setEditMode((prevMode) => !prevMode);
   };
+
+  // const handlePerfilChange = ( selectedValue) => {
+  //   const selectedProfile = opcionesGroups.find(option => option.value === selectedValue)
+  //   if(selectedProfile) {
+  //     setPerfilSeleccionado(selectedProfile.label);
+  //   }else { 
+  //     setPerfilSeleccionado(null); 
+  // }}
 
   const handleEstadoChange = (nuevoEstado) => {
     setActiveButton(nuevoEstado);
@@ -117,8 +132,13 @@ const EdicionUsuario = () => {
           < DropdownSelect
             label="Elige el perfil de usuario (Obligatorio)"
             placeholder={details ? details.perfil : ''}
-            options={['opcion 1', 'opcion 2']}
+            options={loadingGroups ? [] : opcionesGroups}
             readOnly={!editMode}
+            // onSelectionChange={(selectedOption) =>
+            //   {
+            //     field.onChange(selectedOption);
+            //     handlePerfilChange(selectedOption);
+            //   }}
           />
         </div>
 

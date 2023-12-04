@@ -46,9 +46,9 @@ const DropdownSelect = ({ label, placeholder, options, onSelectionChange, readOn
       </button>
       {isOpen && !readOnly && (
         <div className="dropdown d-flex flex-column" ref={dropdownRef}>
-          {options.map((option) => (
+          {options.map((option, index) => (
             <div
-              key={option.value}
+              key={index}
               onClick={() => handleOptionClick(option)}
               className={`p-3 ${option.value === selectedOption?.value ? 'selected-option' : 'unselected-option'}`}
             >
