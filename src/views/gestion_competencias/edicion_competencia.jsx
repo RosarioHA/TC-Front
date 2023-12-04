@@ -38,7 +38,6 @@ const EdicionCompetencia = () => {
   );
 
   useEffect(() => {
-    // Actualiza el estado de usuariosSeleccionados cuando cambian los detalles de la competencia
     setUsuariosSeleccionados({});
   }, [competenciaDetails]);
 
