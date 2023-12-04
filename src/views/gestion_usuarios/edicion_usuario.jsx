@@ -44,8 +44,6 @@ const EdicionUsuario = () => {
     }
   }, [editMode, setValue, details]);
   
-  
-
   const handleBackButtonClick = () => {
     history(-1);
   };

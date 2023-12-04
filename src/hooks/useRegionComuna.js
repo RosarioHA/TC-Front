@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import { apiTransferenciaCompentencia } from "../services/transferenciaCompetencia.js";
 
-
-
 export const useRegionComuna = () =>
 {
   const [ dataRegiones, setDataRegiones ] = useState([]);
