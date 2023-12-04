@@ -3,14 +3,16 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Controller, useForm } from 'react-hook-form';
 //import { yupResolver } from '@hookform/resolvers/yup';
 //import { esquemaCreacionUsuario } from "../../validaciones/esquemaValidacion";
-import { useEditUser } from "../../hooks/useEditUser";
-import { useUserDetails } from "../../hooks/useUserDetail";
-import { useGroups } from "../../hooks/useGroups";
 import CustomInput from "../../components/forms/custom_input";
 import DropdownSelect from "../../components/dropdown/select";
 import DropdownSelectBuscador from "../../components/dropdown/select_buscador";
 import DropdownSinSecciones from "../../components/dropdown/checkbox_sinSecciones_conTabla";
 import RadioButtons from "../../components/forms/radio_btns";
+import { useEditUser } from "../../hooks/useEditUser";
+import { useUserDetails } from "../../hooks/useUserDetail";
+import { useGroups } from "../../hooks/useGroups";
+import { useRegionComuna } from "../../hooks/useRegionComuna";
+import { useSector } from "../../hooks/useSector";
 
 const useFetchUserDetails = (id) => {
   const { userDetails, loading, error } = useUserDetails(id);
@@ -20,26 +22,19 @@ const useFetchUserDetails = (id) => {
 
 const EdicionUsuario = () => {
   const { id } = useParams();
-  console.log("id de usuario en vista Editar usuario", id);
   const history = useNavigate();
   const [editMode, setEditMode] = useState(false);
   const [ activeButton, setActiveButton ] = useState(null);
   //const [ perfilSeleccionado, setPerfilSeleccionado ] = useState(null);
-
   const { editUser, isLoading: editUserLoading, error: editUserError } = useEditUser();
   const { dataGroups, loadingGroups } = useGroups();
+  const { dataRegiones, loadingRegiones } = useRegionComuna();
+  const { dataSector, loadingSector} = useSector(); 
   const { details } = useFetchUserDetails(id);
-
   const { control, handleSubmit, setValue, formState: { errors } } = useForm({
     shouldUnregister: false,
     mode: 'manual',
   });
-
-  //opciones de perfil 
-  const  opcionesGroups = dataGroups.map(group => ({
-    value:group.id,
-    label: group.name
-  }))
 
   useEffect(() => {
     if (editMode && details) {
@@ -50,14 +45,12 @@ const EdicionUsuario = () => {
       // ... Establecer otros valores según sea necesario
     }
   }, [editMode, setValue, details]);
-  
-  const handleBackButtonClick = () => {
-    history(-1);
-  };
 
-  const handleEditClick = () => {
-    setEditMode((prevMode) => !prevMode);
-  };
+  //opciones de perfil 
+  const  opcionesGroups = dataGroups.map(group => ({
+    value:group.id,
+    label: group.name
+  }))
 
   // const handlePerfilChange = ( selectedValue) => {
   //   const selectedProfile = opcionesGroups.find(option => option.value === selectedValue)
@@ -66,6 +59,34 @@ const EdicionUsuario = () => {
   //   }else { 
   //     setPerfilSeleccionado(null); 
   // }}
+
+  // opciones region
+  const opcionesDeRegiones = dataRegiones.map(region => ({
+    value: region.id,
+    label: region.region
+  }));
+
+  // const handleRegionChange = (region) => {
+  //   setRegionSeleccionada(region);
+  // }
+
+  // opciones sector
+  const opcionesSector = dataSector.map(sector => ({
+    value:sector.id,
+    label:sector.nombre,
+  }));
+
+  // const handleSectorChange = (sector) => {
+  //   setSectorSeleccionado(sector);
+  // }
+  
+  const handleBackButtonClick = () => {
+    history(-1);
+  };
+
+  const handleEditClick = () => {
+    setEditMode((prevMode) => !prevMode);
+  };
 
   const handleEstadoChange = (nuevoEstado) => {
     setActiveButton(nuevoEstado);
@@ -149,7 +170,7 @@ const EdicionUsuario = () => {
               label="Elige la región a la que representa (Obligatorio)"
               placeholder={details.region || ''}
               readOnly={!editMode}
-              options={['opcion 1', 'opcion 2']}
+              options={loadingRegiones ? [] : opcionesDeRegiones}
               //onSelectionChange={handleRegionChange}
             />
           </div>
@@ -160,7 +181,7 @@ const EdicionUsuario = () => {
               label="Elige el organismo al que pertenece (Obligatorio)"
               placeholder={details.sector || 'Selecciona un sector'}
               readOnly={!editMode}
-              options={['opcion 1', 'opcion 2']}
+              options={loadingSector ? []: opcionesSector}
               // onSelectionChange={handleSectorChange}
             />
           </div>
