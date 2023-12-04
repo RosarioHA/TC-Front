@@ -1,21 +1,28 @@
 import { useState } from "react";
 import UploadBtn from "../commons/uploadBtn";
 
-const SubirArchivo = ({ index, fileType }) => {
-  const [ fileUploaded, setFileUploaded ] = useState(false);
-  const [ fileName, setFileName ] = useState('');
+const SubirArchivo = ({ index, fileType, readOnly, archivoDescargaUrl }) => {
+  const [fileUploaded, setFileUploaded] = useState(false);
+  const [fileName, setFileName] = useState('');
 
   const handleFileChange = (event) => {
-    const file = event.target.files[ 0 ];
-    if (file)
-    {
+    const file = event.target.files[0];
+    if (file) {
       setFileUploaded(true);
       setFileName(file.name);
     }
   };
+
   const handleDelete = () => {
     setFileUploaded(false);
     setFileName('');
+  };
+
+  const handleDownload = () => {
+    // Agrega lógica para la descarga del archivo desde el backend
+    // Puedes utilizar 'archivoDescargaUrl' para obtener el enlace de descarga
+    // Por ahora, puedes simplemente abrir el enlace en una nueva ventana/tab
+    window.open(archivoDescargaUrl, '_blank');
   };
 
   return (
@@ -27,13 +34,27 @@ const SubirArchivo = ({ index, fileType }) => {
         </div>
         <div>
           <div className="col p-3 d-flex">
-          <UploadBtn onFileChange={handleFileChange} fileUploaded={fileUploaded} />
-          {fileUploaded && <button onClick={handleDelete} className="btn-terciario-ghost px-2 d-flex align-items-center mx-1"><span className="text-sans-b-red ">Borrar</span><i className="material-symbols-rounded ">delete</i></button>}
-        </div>
+            {!readOnly ? (
+              <>
+                <UploadBtn onFileChange={handleFileChange} fileUploaded={fileUploaded} />
+                {fileUploaded && (
+                  <button onClick={handleDelete} className="btn-terciario-ghost px-2 d-flex align-items-center mx-1">
+                    <span className="text-sans-b-red">Borrar</span>
+                    <i className="material-symbols-rounded">delete</i>
+                  </button>
+                )}
+              </>
+            ) : (
+              <button onClick={handleDownload} className="btn-secundario-s px-2 d-flex align-items-center mx-1">
+                <span className="text-sans-b-green text-decoration-underline mx-1">Descargar</span>
+                <i className="material-symbols-rounded ms-2">download</i>
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </>
   );
-}
+};
 
 export default SubirArchivo;
