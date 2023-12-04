@@ -138,7 +138,7 @@ const EdicionUsuario = () => {
           <div className="my-4">
             <DropdownSelectBuscador
               label="Elige el organismo al que pertenece (Obligatorio)"
-              placeholder={details.sector || ''}
+              placeholder={details.sector || 'Selecciona un sector'}
               readOnly={!editMode}
               options={['opcion 1', 'opcion 2']}
               // onSelectionChange={handleSectorChange}
