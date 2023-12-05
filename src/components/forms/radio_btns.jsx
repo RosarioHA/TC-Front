@@ -1,13 +1,5 @@
-import { useState, useEffect } from "react";
-
-const RadioButtons = ({ initialState, handleEstadoChange, field, errors, readOnly, is_active }) => {
-    const [activeButton, setActiveButton] = useState(initialState);
+const RadioButtons = ({ initialState, handleEstadoChange, errors, readOnly, is_active }) => {
     console.log("activeButton en compo radio button". activeButton);
-  
-    // Efecto para actualizar el estado interno cuando cambia la propiedad initialState
-    useEffect(() => {
-      setActiveButton(initialState);
-    }, [initialState]);
   
     return (
       <div className="mb-5">
@@ -28,27 +20,19 @@ const RadioButtons = ({ initialState, handleEstadoChange, field, errors, readOnl
             <div className="d-flex mb-2">
               <button
               type="button"
-              className={` ${activeButton === 'activo' ? 'btn-primario-s' : 'btn-secundario-s'}`}
-              onClick={() => {
-                handleEstadoChange('activo');
-                field.onChange('activo');
-                setActiveButton('activo'); // Actualizar estado interno
-              } }
+              className={` ${initialState === 'activo' ? 'btn-primario-s' : 'btn-secundario-s'}`}
+              onClick={() => handleEstadoChange('activo')}
               >
                 <p className="mb-0 text-decoration-underline">Activo</p>
-                {activeButton === 'activo' && <i className="material-symbols-rounded ms-2">check</i>}
+                {initialState === 'activo' && <i className="material-symbols-rounded ms-2">check</i>}
               </button>
               <button
               type="button"
-              className={`ms-2 ${activeButton === 'inactivo' ? 'btn-primario-s' : 'btn-secundario-s'}`}
-              onClick={() => {
-                handleEstadoChange('inactivo');
-                field.onChange('inactivo');
-                setActiveButton('inactivo'); // Actualizar estado interno
-              } }
+              className={`ms-2 ${initialState === 'inactivo' ? 'btn-primario-s' : 'btn-secundario-s'}`}
+              onClick={() => handleEstadoChange('inactivo')}
               >
                 <p className="mb-0 text-decoration-underline">Inactivo</p>
-                {activeButton === 'inactivo' && <i className="material-symbols-rounded ms-2">check</i>}
+                {initialState === 'inactivo' && <i className="material-symbols-rounded ms-2">check</i>}
               </button>
             </div>
           </>

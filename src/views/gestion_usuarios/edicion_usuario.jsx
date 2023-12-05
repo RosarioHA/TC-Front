@@ -13,10 +13,10 @@ import { useUserDetails } from "../../hooks/useUserDetail";
 import { useGroups } from "../../hooks/useGroups";
 import { useRegionComuna } from "../../hooks/useRegionComuna";
 import { useSector } from "../../hooks/useSector";
+import { useCompetencias } from "../../hooks/useCompetencias";
 
 const useFetchUserDetails = (id) => {
   const { userDetails, loading, error } = useUserDetails(id);
-  console.log("User Details Hook:", userDetails, loading, error);
   return { details: userDetails, loading, error };
 };
 
@@ -29,22 +29,34 @@ const EdicionUsuario = () => {
   const { editUser, isLoading: editUserLoading, error: editUserError } = useEditUser();
   const { dataGroups, loadingGroups } = useGroups();
   const { dataRegiones, loadingRegiones } = useRegionComuna();
-  const { dataSector, loadingSector} = useSector(); 
+  const { dataSector, loadingSector} = useSector();
+  const { competencias } = useCompetencias(); 
   const { details } = useFetchUserDetails(id);
   const { control, handleSubmit, setValue, formState: { errors } } = useForm({
     shouldUnregister: false,
     mode: 'manual',
   });
+  console.log("Competencias en vista Editar usuario:", competencias);
 
   useEffect(() => {
     if (editMode && details) {
       const rutValue = details.rut || '';
       const nombreValue = details.nombre_completo || '';
+      const emailValue = details.email || '';
+      const perfilValue = details.perfil || '';
+      const regionValue = details.region || '';
+      const sectorValue = details.sector || '';
+      const estadoValue = details.estado || '';
       setValue('rut', rutValue);
-      setValue('nombre', nombreValue);
-      // ... Establecer otros valores según sea necesario
+      setValue('nombre_completo', nombreValue);
+      setValue('email', emailValue);
+      setValue('perfil', perfilValue);
+      setValue('region', regionValue);
+      setValue('sector', sectorValue);
+      setValue('is_active', estadoValue)
     }
   }, [editMode, setValue, details]);
+  console.log("Detalles del usuario al cargar la pagina:", details);
 
   //opciones de perfil 
   const  opcionesGroups = dataGroups.map(group => ({
@@ -79,6 +91,13 @@ const EdicionUsuario = () => {
   // const handleSectorChange = (sector) => {
   //   setSectorSeleccionado(sector);
   // }
+
+  const handleEstadoChange = (nuevoEstado) => {
+    setActiveButton(nuevoEstado);
+    // Transformar el string a booleano
+    const isActivo = nuevoEstado === 'activo';
+    setValue('is_active', isActivo);
+  };
   
   const handleBackButtonClick = () => {
     history(-1);
@@ -88,16 +107,13 @@ const EdicionUsuario = () => {
     setEditMode((prevMode) => !prevMode);
   };
 
-  const handleEstadoChange = (nuevoEstado) => {
-    setActiveButton(nuevoEstado);
-  };
-
   const onSubmit = async (data) => {
     try {
+      console.log("Datos que se enviarán al backend:", data);
       await editUser(id, data); // Envia los datos actualizados al backend
-      setEditMode(false); // Desactiva el modo de edicion después de guardar
-    } catch (editUserError) {
-      console.error("Error al editar el usuario:", editUserError);
+      setEditMode(false); // Desactiva el modo de edicion despues de guardar
+    } catch (error) {
+      console.error("Error al editar el usuario:", error);
     }
   };
 
@@ -124,6 +140,7 @@ const EdicionUsuario = () => {
             label="RUT (Obligatorio)"
             placeholder={details ? details.rut : ''}
             id="rut"
+            name="rut"
             readOnly={!editMode}
             maxLength={null}
           />
@@ -133,7 +150,8 @@ const EdicionUsuario = () => {
           < CustomInput
             label="Nombre Completo (Obligatorio)"
             placeholder={details ? details.nombre_completo : ''}
-            id="nombre"
+            id="nombre_completo"
+            name="nombre_completo"
             readOnly={!editMode}
             maxLength={null}
           />
@@ -143,7 +161,8 @@ const EdicionUsuario = () => {
           < CustomInput
             label="Correo electrónico"
             placeholder={details ? details.email : ''}
-            id="mail"
+            id="email"
+            name="email"
             readOnly={!editMode}
             maxLength={null}
           />
@@ -153,6 +172,8 @@ const EdicionUsuario = () => {
           < DropdownSelect
             label="Elige el perfil de usuario (Obligatorio)"
             placeholder={details ? details.perfil : ''}
+            id="perfil"
+            name="perfil"
             options={loadingGroups ? [] : opcionesGroups}
             readOnly={!editMode}
             // onSelectionChange={(selectedOption) =>
@@ -169,6 +190,8 @@ const EdicionUsuario = () => {
             <DropdownSelectBuscador
               label="Elige la región a la que representa (Obligatorio)"
               placeholder={details.region || ''}
+              id="region"
+              name="region"
               readOnly={!editMode}
               options={loadingRegiones ? [] : opcionesDeRegiones}
               //onSelectionChange={handleRegionChange}
@@ -180,6 +203,8 @@ const EdicionUsuario = () => {
             <DropdownSelectBuscador
               label="Elige el organismo al que pertenece (Obligatorio)"
               placeholder={details.sector || 'Selecciona un sector'}
+              id="sector"
+              name="sector"
               readOnly={!editMode}
               options={loadingSector ? []: opcionesSector}
               // onSelectionChange={handleSectorChange}
@@ -189,12 +214,13 @@ const EdicionUsuario = () => {
 
         <div className="my-4">
           < Controller
-            name="estado"
+            name="is_active"
             control={control}
             render={({ field }) => (
               <>
                 <RadioButtons
                   readOnly={!editMode}
+                  id="is_active"
                   initialState={activeButton}
                   handleEstadoChange={handleEstadoChange}
                   field={field}
@@ -213,7 +239,10 @@ const EdicionUsuario = () => {
             label="Competencia Asignada (Opcional)"
             placeholder="Busca el nombre de la competencia"
             readOnly={!editMode}
-            options={['opcion 1', 'opcion 2', 'opcion 3']}
+            options={competencias.map((competencia) => ({
+              value: competencia.id,
+              label: competencia.nombre,
+            }))}
             selectedOptions={['opcion 1', 'opcion 2']}
             // onSelectionChange={(selectedOptions) => {
             //   field.onChange(selectedOptions);

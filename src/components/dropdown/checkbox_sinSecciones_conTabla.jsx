@@ -49,7 +49,6 @@ const DropdownSinSecciones = ({ label, placeholder, options, onSelectionChange, 
   const handleInputClick = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    console.log("propagacion detenida en componente")
   };
 
   // Filtrar opciones segun termino de busqueda
