@@ -47,12 +47,12 @@ function App()
               </ProtectedRoute>
             }
           />
-          <Route path="gestion_competencias" element={<GestionCompetencias />} />
+          <Route path="listado_competencias" element={<GestionCompetencias />} />
           <Route path="crear_competencia" element={<CrearCompetencia />} />
           <Route path="editar_competencia/:id" element={<EditarCompetencia />} />
           <Route path="success" element={<Success />} />
           <Route path="formulario_sectorial" element={<FormularioSectorial />}></Route>
-          <Route path="estado_compentencia/:id" element={<EstadoCompentencia />}></Route>
+          <Route path="estado_competencia/:id" element={<EstadoCompentencia />}></Route>
           <Route path="ingresar_observaciones" element={<Observaciones />}></Route>
           <Route path="agregar_minuta" element={<Minuta />}></Route>
           <Route path="*" element={<Error404 />} />

@@ -34,7 +34,7 @@ const Home = () =>
               <div className="container-info p-2 mx-4">
                 <span className="text-sans-p-grey align-self-start ms-2">Tiempo promedio proceso de<br /> levantamiento de información</span>
                 <div className="d-flex justify-content-between">
-                  <div className="text-sans-25 align-self-start me-5 pe-5">3.1 meses</div><div className="align-self-end ms-5 ps-3 badge-percent px-3">+2,5%</div>
+                  <div className="text-sans-25 align-self-start me-5 ">3.1 meses</div><div className="align-self-end ms-5 ps-3 badge-percent px-3">+2,5%</div>
                 </div>
               </div>
               <div className="container-info p-2 mx-4">
@@ -55,7 +55,7 @@ const Home = () =>
                 <div className="container-compentencia" >
                   <div className="container" key={competencia.id}>
                     <h3 className="my-3">{competencia.nombre}</h3>
-                    <SummaryDetail competencia={competencia} />
+                    <SummaryDetail competencia={competencia} tiempoTranscurrido={competencia.tiempo_transcurrido} />
                     <div className="d-flex justify-content-end">
                       <button onClick={() => handleDetailsCompetencia(competencia)} className="btn-secundario-s link-underline link-underline-opacity-0 py-3">
                         <u>Ver competencia</u>

@@ -5,6 +5,7 @@ export const SummaryDetail = ({ competencia }) =>
   console.log('summary', competencia)
 
   const etapas_info = competencia.etapas_info || competencia.resumen_competencia?.etapas_info;
+  const tiempo_transcurrido = competencia.tiempo_transcurrido || competencia.resumen_competencia?.tiempo_transcurrido;
 
   if (!competencia || !etapas_info)
   {
@@ -37,7 +38,7 @@ export const SummaryDetail = ({ competencia }) =>
 
   // Calcula el tiempo restante (ajusta los valores según sea necesario)
   const totalEtapas = etapasArray.length;
-  const { dias, horas, minutos } = competencia.resumen_competencia?.tiempo_transcurrido || {};
+  const { dias, horas, minutos } = tiempo_transcurrido;
 
 
   return (

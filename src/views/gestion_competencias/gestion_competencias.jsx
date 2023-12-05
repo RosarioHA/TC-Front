@@ -114,7 +114,7 @@ const GestionCompetencias = () =>
   };
 
   return (
-    <div className="container-fluid mt-2 ps-0" >
+    <div className="container-fluid mt-2 mx-3" >
       <div className="text-sans-h2 mx-3">Listado de Competencias</div>
       {filteredCompetencia.length === 0 ? (
         <div className="container-home d-flex justify-content-center my-5 py-5 ">
@@ -138,7 +138,7 @@ const GestionCompetencias = () =>
           }
         </div>
       ) : (
-        <><div className="d-flex flex-row px-4">
+        <><div className="d-flex flex-row mx-5">
           <div className="w-50 pl-2 text-sans-24 align-self-center">Todas las competencias</div>
           <InputSearch
             value={searchQuery}
