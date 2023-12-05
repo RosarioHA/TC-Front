@@ -6,16 +6,17 @@ import { TableCheckbox } from "../../components/tables/TableCheck";
 import { columnTitlesUser } from "../../Data/Usuarios";
 import { useUsers } from '../../hooks/useUsers';
 
-
 const GestionUsuarios = () =>
 {
   const { userData } = useAuth();
-  const { users, loading, error, pagination, updateUrl } = useUsers();
+  const { users, pagination, updateUrl } = useUsers();
   const [ searchQuery, setSearchQuery ] = useState('');
   const [ filteredUsers, setFilteredUsers ] = useState([users]);
   const navigate = useNavigate();
 
   const userSubdere = userData?.perfil?.includes('SUBDERE');
+
+  //mostrar  siempre a si mismo en primer lugar y eliminar checkbox 
 
   useEffect(() => {
     if (users) {
@@ -102,8 +103,7 @@ const GestionUsuarios = () =>
     );
   };
 
-  if (loading) return <div>Cargando...</div>;
-  if (error) return <div>Error: {error.message}</div>;
+
 
 
   return (

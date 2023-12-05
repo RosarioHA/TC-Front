@@ -1,15 +1,29 @@
-import { Link } from 'react-router-dom';
-import { competencias } from '../Data/Competencias';
+import { useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { SummaryDetail } from '../components/tables/SummaryDetail';
+import { CompetenciasContext } from '../context/competenciasContext';
 
 const Home = () =>
 {
+  const { dataCompetencia } = useContext(CompetenciasContext);
+  const  navigate =  useNavigate(); 
+
+  console.log('home', dataCompetencia); 
+
+  const handleDetailsCompetencia = (competencia) => {
+    navigate(`/home/estado_competencia/${competencia.id}`, { state: { competencia } });
+  };
+
+    // Verifica si dataCompetencia es un arreglo y no está vacío
+    const tieneCompetencias = Array.isArray(dataCompetencia) && dataCompetencia.length > 0;
+
+
   return (
     <>
       <div className="container-home">
         {/* Verificar si hay competencias */}
-        {competencias.length === 0 ? (
-          <div className="d-flex justify-content-center">
+        {!tieneCompetencias ? (
+          <div className="d-flex justify-content-center my-5 py-5">
             <span className="align-self-center text-sans-h2-tertiary my-5 py-5">
               Aún no tienes competencias asignadas
             </span>
@@ -36,17 +50,19 @@ const Home = () =>
                 </div>
               </div>
             </div>
-            {competencias.map(competencia => (
+            {dataCompetencia.map(competencia => (
               <>
                 <div className="container-compentencia" >
                   <div className="container" key={competencia.id}>
                     <h3 className="my-3">{competencia.nombre}</h3>
-                    <SummaryDetail competencia={competencia}/>
+                    <SummaryDetail competencia={competencia} />
                     <div className="d-flex justify-content-end">
-                      <Link to={`/home/estado_compentencia/${competencia.id}`} className="btn-secundario-s link-underline link-underline-opacity-0 py-3"><u>Ver competencia</u><span className="material-symbols-outlined">
-                        arrow_forward_ios
-                      </span>
-                      </Link>
+                      <button onClick={() => handleDetailsCompetencia(competencia)} className="btn-secundario-s link-underline link-underline-opacity-0 py-3">
+                        <u>Ver competencia</u>
+                        <span className="material-symbols-outlined">
+                          arrow_forward_ios
+                        </span>
+                      </button>
                     </div>
                   </div>
                 </div>

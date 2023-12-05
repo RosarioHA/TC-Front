@@ -34,7 +34,7 @@ function App()
           <Route index element={<Landing />} />
           <Route path="/login" element={<Login />} />
         </Route>
-        <Route path="/home" element={<MainLayout />}>
+        <Route path="/home/*" element={<MainLayout />}>
           <Route index element={<Home />} />
           <Route path="administrar_usuarios" element={<GestionUsuarios />} />
           <Route path="editar_usuario/:id" element={<EditarUsuario />} />
