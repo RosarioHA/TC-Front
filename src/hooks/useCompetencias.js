@@ -10,11 +10,15 @@ const useCompetencias = () => {
     const fetchCompetencias = async () => {
       try {
         const response = await apiTransferenciaCompentencia.get('/competencias/');
-        console.log('Response from API:', response);
-        const competenciasData = response.data.results || [];
+        console.log('Complete API Response:', response);
+
+        // Ajustamos el código para manejar diferentes estructuras de respuesta
+        const competenciasData = response.data.data || response.data.results || response.data || [];
+
         console.log('Competencias Data:', competenciasData);
         setCompetencias(competenciasData);
       } catch (error) {
+        console.error('Error fetching competencias:', error);
         setError(error);
       } finally {
         setLoading(false);

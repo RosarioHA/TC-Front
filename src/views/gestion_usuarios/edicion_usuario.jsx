@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Controller, useForm } from 'react-hook-form';
-//import { yupResolver } from '@hookform/resolvers/yup';
-//import { esquemaCreacionUsuario } from "../../validaciones/esquemaValidacion";
 import CustomInput from "../../components/forms/custom_input";
 import DropdownSelect from "../../components/dropdown/select";
 import DropdownSelectBuscador from "../../components/dropdown/select_buscador";
@@ -15,48 +13,50 @@ import { useRegionComuna } from "../../hooks/useRegionComuna";
 import { useSector } from "../../hooks/useSector";
 import { useCompetencias } from "../../hooks/useCompetencias";
 
-const useFetchUserDetails = (id) => {
-  const { userDetails, loading, error } = useUserDetails(id);
-  return { details: userDetails, loading, error };
-};
-
 const EdicionUsuario = () => {
   const { id } = useParams();
   const history = useNavigate();
   const [editMode, setEditMode] = useState(false);
-  const [ activeButton, setActiveButton ] = useState(null);
-  //const [ perfilSeleccionado, setPerfilSeleccionado ] = useState(null);
+  const [activeButton, setActiveButton] = useState(null);
   const { editUser, isLoading: editUserLoading, error: editUserError } = useEditUser();
   const { dataGroups, loadingGroups } = useGroups();
   const { dataRegiones, loadingRegiones } = useRegionComuna();
-  const { dataSector, loadingSector} = useSector();
-  const { competencias } = useCompetencias(); 
-  const { details } = useFetchUserDetails(id);
+  const { dataSector, loadingSector } = useSector();
+  const { competencias, loading: competenciasLoading, error: competenciasError } = useCompetencias();
+  const { userDetails } = useUserDetails(id);
+
   const { control, handleSubmit, setValue, formState: { errors } } = useForm({
     shouldUnregister: false,
     mode: 'manual',
   });
-  console.log("Competencias en vista Editar usuario:", competencias);
 
   useEffect(() => {
-    if (editMode && details) {
-      const rutValue = details.rut || '';
-      const nombreValue = details.nombre_completo || '';
-      const emailValue = details.email || '';
-      const perfilValue = details.perfil || '';
-      const regionValue = details.region || '';
-      const sectorValue = details.sector || '';
-      const estadoValue = details.estado || '';
+    // Verificamos si las competencias se han cargado
+    if (!competenciasLoading && !competenciasError) {
+      // Puedes realizar alguna lógica adicional si es necesario con las competencias
+      console.log("Competencias en vista Editar usuario:", competencias);
+    }
+  }, [competenciasLoading, competenciasError, competencias]);
+
+  useEffect(() => {
+    // Verificamos si estamos en modo de edición y los detalles del usuario están disponibles
+    if (editMode && userDetails) {
+      const rutValue = userDetails.rut || '';
+      const nombreValue = userDetails.nombre_completo || '';
+      const emailValue = userDetails.email || '';
+      const perfilValue = userDetails.perfil || '';
+      const regionValue = userDetails.region || '';
+      const sectorValue = userDetails.sector || '';
+      const estadoValue = userDetails.estado || '';
       setValue('rut', rutValue);
       setValue('nombre_completo', nombreValue);
       setValue('email', emailValue);
       setValue('perfil', perfilValue);
       setValue('region', regionValue);
       setValue('sector', sectorValue);
-      setValue('is_active', estadoValue)
+      setValue('is_active', estadoValue);
     }
-  }, [editMode, setValue, details]);
-  console.log("Detalles del usuario al cargar la pagina:", details);
+  }, [editMode, setValue, userDetails]);
 
   //opciones de perfil 
   const  opcionesGroups = dataGroups.map(group => ({
@@ -138,7 +138,7 @@ const EdicionUsuario = () => {
         <div className="mb-4">
           < CustomInput
             label="RUT (Obligatorio)"
-            placeholder={details ? details.rut : ''}
+            placeholder={userDetails ? userDetails.rut : ''}
             id="rut"
             name="rut"
             readOnly={!editMode}
@@ -149,7 +149,7 @@ const EdicionUsuario = () => {
         <div className="my-4">
           < CustomInput
             label="Nombre Completo (Obligatorio)"
-            placeholder={details ? details.nombre_completo : ''}
+            placeholder={userDetails ? userDetails.nombre_completo : ''}
             id="nombre_completo"
             name="nombre_completo"
             readOnly={!editMode}
@@ -160,7 +160,7 @@ const EdicionUsuario = () => {
         <div className="my-4">
           < CustomInput
             label="Correo electrónico"
-            placeholder={details ? details.email : ''}
+            placeholder={userDetails ? userDetails.email : ''}
             id="email"
             name="email"
             readOnly={!editMode}
@@ -171,7 +171,7 @@ const EdicionUsuario = () => {
         <div className="my-4">
           < DropdownSelect
             label="Elige el perfil de usuario (Obligatorio)"
-            placeholder={details ? details.perfil : ''}
+            placeholder={userDetails ? userDetails.perfil : ''}
             id="perfil"
             name="perfil"
             options={loadingGroups ? [] : opcionesGroups}
@@ -185,11 +185,11 @@ const EdicionUsuario = () => {
         </div>
 
         {/* Renderizan de manera condicional segun el tipo de usuario */}
-        {details && details.perfil === 'GORE' && (
+        {userDetails && userDetails.perfil === 'GORE' && (
           <div className="my-4">
             <DropdownSelectBuscador
               label="Elige la región a la que representa (Obligatorio)"
-              placeholder={details.region || ''}
+              placeholder={userDetails.region || ''}
               id="region"
               name="region"
               readOnly={!editMode}
@@ -198,11 +198,11 @@ const EdicionUsuario = () => {
             />
           </div>
         )}
-        {details && details.perfil === 'Usuario Sectorial' && (
+        {userDetails && userDetails.perfil === 'Usuario Sectorial' && (
           <div className="my-4">
             <DropdownSelectBuscador
               label="Elige el organismo al que pertenece (Obligatorio)"
-              placeholder={details.sector || 'Selecciona un sector'}
+              placeholder={userDetails.sector || 'Selecciona un sector'}
               id="sector"
               name="sector"
               readOnly={!editMode}
@@ -225,7 +225,7 @@ const EdicionUsuario = () => {
                   handleEstadoChange={handleEstadoChange}
                   field={field}
                   errors={errors}
-                  is_active={details ? details.is_active : false}
+                  is_active={userDetails ? userDetails.is_active : false}
                 />
                 {errors.estado && (
                   <p className="text-sans-h6-darkred mt-2 mb-0">{errors.estado.message}</p>

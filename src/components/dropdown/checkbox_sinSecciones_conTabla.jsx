@@ -25,26 +25,26 @@ const DropdownSinSecciones = ({ label, placeholder, options, onSelectionChange, 
     setIsOpen(!isOpen);
   };
 
-  const handleCheckboxChange = (optionId) => {
+  const handleCheckboxChange = (option) => {
     let updatedOptions = [...selectedOptions];
-
-    if (optionId === 'Todas') {
+    console.log("option desde componente dropdown", option)
+  
+    if (option === 'Todas') {
       updatedOptions.length === options.length
         ? updatedOptions.splice(0, options.length)
-        : (updatedOptions = options.map((option) => option.id));
-    } else if (optionId === 'Eliminar Selección') {
+        : (updatedOptions = options.map((option) => option.id.toString())); // Convertir a cadena
+    } else if (option === 'Eliminar Selección') {
       updatedOptions.length > 0 && updatedOptions.splice(0, updatedOptions.length);
     } else {
-      const optionIndex = updatedOptions.indexOf(optionId);
+      const optionIndex = updatedOptions.indexOf(option.toString()); // Convertir a cadena
       if (optionIndex !== -1) {
         updatedOptions.splice(optionIndex, 1);
       } else {
-        updatedOptions.push(optionId);
+        updatedOptions.push(option.toString()); // Convertir a cadena
       }
     }
     onSelectionChange(updatedOptions);
   };
-
 
   const handleInputClick = (e) => {
     e.preventDefault();
@@ -142,17 +142,17 @@ return (
 
         {filteredOptions.map((option) => (
           <label
-            className={selectedOptions.includes(option.id) ? 'selected-option' : 'unselected-option'}
-            key={option.id}
+          key={option.value}
+          className={selectedOptions.includes(option.value) ? 'selected-option' : 'unselected-option'}
           >
             <input
               className="ms-2 me-2 my-3"
               type="checkbox"
-              value={option.id}
-              checked={selectedOptions.includes(option.id)}
-              onChange={() => handleCheckboxChange(option.id)}
+              value={option.value}
+              checked={selectedOptions.includes(option.value)}
+              onChange={() => handleCheckboxChange(option.value)}
             />
-            {option.nombre}
+            {option.label}
           </label>
         ))}
       </div>
