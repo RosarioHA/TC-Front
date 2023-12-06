@@ -35,7 +35,7 @@ export const Etapa2 = ({ etapaCompetencia }) =>
     switch (subetapa.nombre)
     {
       case "Completar formulario Sectorial":
-        path = isFinalizado ? "/home/ver_minuta" : "/home/agregar_minuta";
+        path = isFinalizado ? "/home/formulario_sectorial" : "/home/formulario_sectorial/paso_uno";
         icon = isFinalizado ? "visibility" : "draft"
         break;
       case "Observación del formulario sectorial":

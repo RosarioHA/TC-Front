@@ -17,9 +17,9 @@ export const Counter = ({ plazoDias, tiempoTranscurrido }) => {
 
   return (
     <div className="d-flex my-3">
-      <div className="text-sans-p me-4">Plazo para completar formulario:<strong>{plazoDias} días corridos</strong></div>
+      <div className="text-sans-p me-4">Plazo para completar formulario: <strong>{plazoDias} días corridos</strong></div>
       <div className="text-sans-p ms-4 ps-5">
-        Tiempo restante:<strong>{tiempoRestante.dias} días {tiempoRestante.horas} horas {tiempoRestante.minutos} minutos</strong>
+        Tiempo restante: <strong>{tiempoRestante.dias} días {tiempoRestante.horas} horas {tiempoRestante.minutos} minutos</strong>
       </div>
     </div>
   );

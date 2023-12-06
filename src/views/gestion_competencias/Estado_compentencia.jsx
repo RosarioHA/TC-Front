@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate, Link, useLocation } from "react-router-dom";
 import { SummaryDetail } from "../../components/tables/SummaryDetail";
 import { PersonsAssigned } from "../../components/tables/PersonsAssigned";
-import { VerticalStepper } from "../../components/tables/VerticalStepper";
+import { VerticalStepper } from "../../components/stepers/VerticalStepper";
 import { useCompetencia } from "../../hooks/useCompetencias";
 
 const EstadoCompetencia = () =>
