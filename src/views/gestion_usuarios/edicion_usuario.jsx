@@ -24,6 +24,7 @@ const EdicionUsuario = () => {
     perfil: null,
     region: null,
     sector: null,
+    is_active: null,
   });
   //const [selectedPerfil, setSelectedPerfil] = useState(null);
   const { editUser, isLoading: editUserLoading, error: editUserError } = useEditUser();
@@ -121,11 +122,17 @@ const EdicionUsuario = () => {
   //   setValue('sector', selectedSector.value);
   // };
 
-  const handleEstadoChange = (nuevoEstado) => {
-    setActiveButton(nuevoEstado);
+  const handleEstadoChange = (selectionName, nuevoEstado) => {
+    setActiveButton(selectionName);
+    console.log("nuevo estado:", nuevoEstado)
     // Transformar el string a booleano
-    const isActivo = nuevoEstado === 'activo';
+    const isActivo = selectionName === 'activo';
     setValue('is_active', isActivo);
+    setFormData((prevData) => ({
+      ...prevData,
+      is_active: isActivo,
+    }));
+    console.log('Estado cambiado en handleEstadoChange:', selectionName, isActivo);
   };
 
   // const handleCompetenciasChange = (selectedCompetencias) => {
