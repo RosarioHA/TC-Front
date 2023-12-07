@@ -2,7 +2,7 @@ export const Etapa1 = ({ etapaCompetencia }) => {
   const { estado, nombre_etapa, usuarios_vinculados, fecha_ultima_modificacion, ultimo_editor } = etapaCompetencia;
 
   // Determinar el texto del badge según el estado
-  const badgeText = estado === "Finalizada" ? "Finalizada" : "";
+  const badgeText = estado === "Finalizada" ? "Finalizada" : "Sin Usuarios designados";
 
   // Si no hay usuarios vinculados o no es un arreglo, manejar adecuadamente
   if (!Array.isArray(usuarios_vinculados)) {

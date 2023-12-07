@@ -10,7 +10,7 @@ export const VerticalStepper = ({ etapas }) =>
     return <div>Cargando...</div>;
   }
 
-  let lastCompletedIndex = etapas.findIndex(etapa => etapa && etapa.estado !== 'Finalizado');
+  let lastCompletedIndex = etapas.findIndex(etapa => etapa && etapa.estado !== 'Finalizada');
 
   const renderBadge = (estado) =>
   {
@@ -36,12 +36,12 @@ export const VerticalStepper = ({ etapas }) =>
             key={etapa.id}
           >
             <div className="stepNumber" >
-              {etapa.estado === 'Finalizado' ? (
+              {etapa.estado === 'Finalizada' ? (
                 <i className="material-symbols-outlined" >done</i>
               ) : etapa.estado === 'En Estudio' ? (
-                <span className="stepIndex revision">{index + 1}</span>
+                <span className="stepIndex">{index + 1}</span>
               ) : (
-                <span className="stepIndex pendiente">{index + 1}</span>
+                <span className="stepIndex ">{index + 1}</span>
               )}
             </div>
             <div className="stepperContent">
