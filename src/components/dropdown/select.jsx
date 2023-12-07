@@ -1,8 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 
-const DropdownSelect = ({ label, placeholder, options, onSelectionChange, readOnly }) => {
+const DropdownSelect = ({ label, placeholder, options, onSelectionChange, readOnly, initialValue }) => {
   const [ isOpen, setIsOpen ] = useState(false);
-  const [ selectedOption, setSelectedOption ] = useState(null);
+  const [ selectedOption, setSelectedOption ] = useState(initialValue || '');
   const dropdownRef = useRef(null);
 
   useEffect(() => {

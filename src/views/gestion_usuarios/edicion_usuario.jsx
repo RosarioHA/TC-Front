@@ -21,7 +21,9 @@ const EdicionUsuario = () => {
   const [formData, setFormData] = useState({
     nombre_completo: '',
     email: '',
+    perfil: null,
   });
+  //const [selectedPerfil, setSelectedPerfil] = useState(null);
   const { editUser, isLoading: editUserLoading, error: editUserError } = useEditUser();
   const { dataGroups, loadingGroups } = useGroups();
   const { dataRegiones, loadingRegiones } = useRegion();
@@ -78,8 +80,11 @@ const EdicionUsuario = () => {
     label: group.name
   }))
 
-  const handlePerfilChange=(selectedOption) => {
-    setValue('perfil', selectedOption.value);
+  const handleSelectionChange = (fieldName, selectedOption) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      [fieldName]: selectedOption.label,
+    }));
   };
 
   // opciones region
@@ -156,15 +161,16 @@ const EdicionUsuario = () => {
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="mb-4">
+        <div className="d-flex align-items-center mb-4">
           < CustomInput
             label="RUT (Obligatorio)"
             placeholder={userDetails ? userDetails.rut : ''}
             id="rut"
             name="rut"
-            readOnly={!editMode}
+            readOnly={true}
             maxLength={null}
           />
+          {editMode ? <i className="col material-symbols-rounded ms-2">lock</i> : '' }
         </div>
 
         <div className="my-4">
@@ -201,7 +207,9 @@ const EdicionUsuario = () => {
             name="perfil"
             options={loadingGroups ? [] : opcionesGroups}
             readOnly={!editMode}
-            onSelectionChange={handlePerfilChange}
+            onSelectionChange={(selectedOption) => handleSelectionChange('perfil', selectedOption)}
+            selectedOption={formData.perfil}
+            initialValue={userDetails ? userDetails.perfil : ''}
           />
         </div>
 
