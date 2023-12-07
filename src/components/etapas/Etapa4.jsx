@@ -11,36 +11,31 @@ export const Etapa4 = ({ etapaCompetencia }) =>
     fecha_ultima_modificacion
   } = etapaCompetencia;
 
-  const combinedSubetapas = [
-    ...usuarios_gore,
-    ...formularios_gore,
-  ];
 
   const renderButtonForSubetapa = (subetapa) =>
   {
-    let buttonText = subetapa.accion; // Asigna el texto de acción directamente
-    let icon, path = "/";
+    const { estado, accion, nombre } = subetapa;
+    let buttonText = accion;
+    let icon = estado === "finalizada" ? "visibility" : "draft";
+    let path = "/";
 
-    const isFinalizado = subetapa.estado === "finalizada";
-    const isDisabled = subetapa.estado === "pendiente";
-    const isRevision = subetapa.estado === "revision";
 
-    if (subetapa.nombre.startsWith("Notificar a") && isFinalizado)
+    if (nombre.startsWith("Notificar a") && estado === "finalizada")
     {
-      return <span className="badge-status-finish">{buttonText}</span>;
+      return <span className="badge-status-finish">{accion}</span>;
     }
 
-    switch (subetapa.nombre)
+    switch (nombre)
     {
-      case "Completar formulario GORE":
-        path = isFinalizado ? "/home/ver_minuta" : "/home/agregar_minuta";
-        icon = isFinalizado ? "visibility" : "draft"
-        break; 
+      case "Completar formulario Sectorial":
+        path = estado === "finalizada" ? "/home/ver_minuta" : "/home/formulario_sectorial/";
+        break;
     }
 
+    const isDisabled = estado === "pendiente" || estado === "revision";
 
-    return isDisabled || isRevision ? (
-      <button className={`btn-secundario-s ${isDisabled ? "disabled" : ""}`} id="btn">
+    return isDisabled ? (
+      <button className={`btn-secundario-s ${estado === "pendiente" ? "disabled" : ""}`} id="btn">
         <span className="material-symbols-outlined me-1">{icon}</span>
         <u>{buttonText}</u>
       </button>
@@ -48,8 +43,19 @@ export const Etapa4 = ({ etapaCompetencia }) =>
       <Link to={path} className="btn-secundario-s text-decoration-none" id="btn">
         <span className="material-symbols-outlined me-1">{icon}</span>
         <u>{buttonText}</u>
+        {console.log(path)}
       </Link>
     );
+  };
+
+  const renderSubetapas = (subetapas) =>
+  {
+    return subetapas.map((subetapa, index) => (
+      <div key={index} className="d-flex justify-content-between text-sans-p border-top border-bottom my-3 py-1">
+        <div className="align-self-center">{subetapa.nombre}</div>
+        {renderButtonForSubetapa(subetapa)}
+      </div>
+    ));
   };
 
   return (
@@ -58,12 +64,8 @@ export const Etapa4 = ({ etapaCompetencia }) =>
         Para completar {nombre_etapa} con éxito deben cumplirse estas condiciones:
       </div>
       <div>
-        {combinedSubetapas.map((subetapa, index) => (
-          <div key={index} className="d-flex justify-content-between text-sans-p border-top border-bottom my-3 py-1">
-            <div className="align-self-center">{subetapa.nombre}</div>
-            {renderButtonForSubetapa(subetapa)}
-          </div>
-        ))}
+        {usuarios_gore.length > 0 && renderSubetapas(usuarios_gore)}
+        {formularios_gore.length > 0 && renderSubetapas(formularios_gore)}
         {estado === "En Estudio" && (
           <Counter
             plazoDias={etapaCompetencia.plazo_dias}

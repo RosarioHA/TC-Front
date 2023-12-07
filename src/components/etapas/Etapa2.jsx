@@ -12,51 +12,50 @@ export const Etapa2 = ({ etapaCompetencia }) =>
     fecha_ultima_modificacion
   } = etapaCompetencia;
 
-  const combinedSubetapas = [
-    ...usuarios_notificados,
-    ...formulario_sectorial,
-    ...observaciones_sectorial
-  ];
+const renderButtonForSubetapa = (subetapa) => {
+  const { estado, accion, nombre } = subetapa;
+  let buttonText = accion;
+  let icon = estado === "finalizada" ? "visibility" : "draft";
+  let path = "/";
 
-  const renderButtonForSubetapa = (subetapa) =>
+  if (nombre.startsWith("Notificar a") && estado === "finalizada") {
+    return <span className="badge-status-finish">{accion}</span>;
+  }
+
+  switch (true) {
+    case nombre.includes("Completar formulario Sectorial"):
+      path = estado === "finalizada" ? "/home/ver_minuta" : "/home/formulario_sectorial/";
+      break;
+    case nombre.includes("Observación del formulario sectorial"):
+      path = estado === "finalizada" ? "/home/ver_observaciones" : "/home/ingresar_observaciones";
+      break;
+    default:      // Manejo de otros casos o nombre por defecto
+      break;
+  }
+  
+  const isDisabled = estado === "pendiente" || estado === "revision";
+
+  return isDisabled ? (
+    <button className={`btn-secundario-s ${estado === "pendiente" ? "disabled" : ""}`} id="btn">
+      <span className="material-symbols-outlined me-1">{icon}</span>
+      <u>{buttonText}</u>
+    </button>
+  ) : (
+    <Link to={path} className="btn-secundario-s text-decoration-none" id="btn">
+      <span className="material-symbols-outlined me-1">{icon}</span>
+      <u>{buttonText}</u>
+    </Link>
+  );
+};
+
+  const renderSubetapas = (subetapas) =>
   {
-    let buttonText = subetapa.accion; // Asigna el texto de acción directamente
-    let icon, path = "/";
-
-    const isFinalizado = subetapa.estado === "finalizada";
-    const isDisabled = subetapa.estado === "pendiente";
-    const isRevision = subetapa.estado === "revision";
-
-    if (subetapa.nombre.startsWith("Notificar a") && isFinalizado)
-    {
-      return <span className="badge-status-finish">{buttonText}</span>;
-    }
-
-    switch (subetapa.nombre)
-    {
-      case "Completar formulario Sectorial":
-        path = isFinalizado ? "/home/formulario_sectorial" : "/home/formulario_sectorial/paso_uno";
-        icon = isFinalizado ? "visibility" : "draft"
-        break;
-      case "Observación del formulario sectorial":
-        path = isFinalizado ? "/home/ver_observaciones" : "/home/ingresar_observaciones";
-        icon = isFinalizado ? "visibility" : "draft"
-        break;
-      // Añadir más casos según sea necesario
-    }
-
-
-    return isDisabled || isRevision ? (
-      <button className={`btn-secundario-s ${isDisabled ? "disabled" : ""}`} id="btn">
-        <span className="material-symbols-outlined me-1">{icon}</span>
-        <u>{buttonText}</u>
-      </button>
-    ) : (
-      <Link to={path} className="btn-secundario-s text-decoration-none" id="btn">
-        <span className="material-symbols-outlined me-1">{icon}</span>
-        <u>{buttonText}</u>
-      </Link>
-    );
+    return subetapas.map((subetapa, index) => (
+      <div key={index} className="d-flex justify-content-between text-sans-p border-top border-bottom my-3 py-1">
+        <div className="align-self-center">{subetapa.nombre}</div>
+        {renderButtonForSubetapa(subetapa)}
+      </div>
+    ));
   };
 
   return (
@@ -65,12 +64,9 @@ export const Etapa2 = ({ etapaCompetencia }) =>
         Para completar {nombre_etapa} con éxito deben cumplirse estas condiciones:
       </div>
       <div>
-        {combinedSubetapas.map((subetapa, index) => (
-          <div key={index} className="d-flex justify-content-between text-sans-p border-top border-bottom my-3 py-1">
-            <div className="align-self-center">{subetapa.nombre}</div>
-            {renderButtonForSubetapa(subetapa)}
-          </div>
-        ))}
+        {usuarios_notificados.length > 0 && renderSubetapas(usuarios_notificados)}
+        {formulario_sectorial.length > 0 && renderSubetapas(formulario_sectorial)}
+        {observaciones_sectorial.length > 0 && renderSubetapas(observaciones_sectorial)}
         {estado === "En Estudio" && (
           <Counter
             plazoDias={etapaCompetencia.plazo_dias}
