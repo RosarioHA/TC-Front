@@ -3,7 +3,7 @@ import { apiTransferenciaCompentencia } from "../services/transferenciaCompetenc
 
 
 
-export const useRegionComuna = () =>
+export const useRegion = () =>
 {
   const [ dataRegiones, setDataRegiones ] = useState([]);
   const [ loadingRegiones, setLoadingRegiones ] = useState(true);
