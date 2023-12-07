@@ -18,6 +18,10 @@ const EdicionUsuario = () => {
   const history = useNavigate();
   const [editMode, setEditMode] = useState(false);
   const [activeButton, setActiveButton] = useState(null);
+  const [formData, setFormData] = useState({
+    nombre_completo: '',
+    email: '',
+  });
   const { editUser, isLoading: editUserLoading, error: editUserError } = useEditUser();
   const { dataGroups, loadingGroups } = useGroups();
   const { dataRegiones, loadingRegiones } = useRegionComuna();
@@ -25,27 +29,28 @@ const EdicionUsuario = () => {
   const { competencias, loading: competenciasLoading, error: competenciasError } = useCompetencias();
   const { userDetails } = useUserDetails(id);
 
-  const { control, handleSubmit, setValue, formState: { errors } } = useForm({
+  const { control, handleSubmit, setValue, watch, formState: { errors } } = useForm({
     shouldUnregister: false,
     mode: 'manual',
+    defaultValues: {
+      region: userDetails?.region?.id || null,
+    },
   });
 
   useEffect(() => {
-    // Verificamos si las competencias se han cargado
+    // Verifica si las competencias se han cargado
     if (!competenciasLoading && !competenciasError) {
-      // Puedes realizar alguna lógica adicional si es necesario con las competencias
       console.log("Competencias en vista Editar usuario:", competencias);
     }
   }, [competenciasLoading, competenciasError, competencias]);
 
   useEffect(() => {
-    // Verificamos si estamos en modo de edición y los detalles del usuario están disponibles
     if (editMode && userDetails) {
       const rutValue = userDetails.rut || '';
       const nombreValue = userDetails.nombre_completo || '';
       const emailValue = userDetails.email || '';
       const perfilValue = userDetails.perfil || '';
-      const regionValue = userDetails.region || '';
+      const regionValue = userDetails.region ? userDetails.region.id : null;
       const sectorValue = userDetails.sector || '';
       const estadoValue = userDetails.estado || '';
       setValue('rut', rutValue);
@@ -55,8 +60,17 @@ const EdicionUsuario = () => {
       setValue('region', regionValue);
       setValue('sector', sectorValue);
       setValue('is_active', estadoValue);
+
+      console.log("Valores del formulario después de la configuración:", watch());
     }
-  }, [editMode, setValue, userDetails]);
+  }, [editMode, setValue, userDetails, watch]);
+
+  const handleInputChange = (fieldName, value) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      [fieldName]: value,
+    }));
+  };
 
   //opciones de perfil 
   const  opcionesGroups = dataGroups.map(group => ({
@@ -64,13 +78,9 @@ const EdicionUsuario = () => {
     label: group.name
   }))
 
-  // const handlePerfilChange = ( selectedValue) => {
-  //   const selectedProfile = opcionesGroups.find(option => option.value === selectedValue)
-  //   if(selectedProfile) {
-  //     setPerfilSeleccionado(selectedProfile.label);
-  //   }else { 
-  //     setPerfilSeleccionado(null); 
-  // }}
+  const handlePerfilChange=(selectedOption) => {
+    setValue('perfil', selectedOption.value);
+  };
 
   // opciones region
   const opcionesDeRegiones = dataRegiones.map(region => ({
@@ -78,9 +88,9 @@ const EdicionUsuario = () => {
     label: region.region
   }));
 
-  // const handleRegionChange = (region) => {
-  //   setRegionSeleccionada(region);
-  // }
+  const handleRegionChange = (selectedRegion) => {
+    setValue('region', selectedRegion.id);
+  };
 
   // opciones sector
   const opcionesSector = dataSector.map(sector => ({
@@ -88,9 +98,9 @@ const EdicionUsuario = () => {
     label:sector.nombre,
   }));
 
-  // const handleSectorChange = (sector) => {
-  //   setSectorSeleccionado(sector);
-  // }
+  const handleSectorChange = (selectedSector) => {
+    setValue('sector', selectedSector.value);
+  };
 
   const handleEstadoChange = (nuevoEstado) => {
     setActiveButton(nuevoEstado);
@@ -98,6 +108,10 @@ const EdicionUsuario = () => {
     const isActivo = nuevoEstado === 'activo';
     setValue('is_active', isActivo);
   };
+
+  // const handleCompetenciasChange = (selectedCompetencias) => {
+  //   setValue('competencias', selectedCompetencias);
+  // }
   
   const handleBackButtonClick = () => {
     history(-1);
@@ -107,10 +121,17 @@ const EdicionUsuario = () => {
     setEditMode((prevMode) => !prevMode);
   };
 
-  const onSubmit = async (data) => {
+  const onSubmit = async () => {
+    console.log("ON SUBMIT ACTIVADO");
     try {
-      console.log("Datos que se enviarán al backend:", data);
-      await editUser(id, data); // Envia los datos actualizados al backend
+      // Combina los valores actuales del formulario con los valores antiguos de userDetails
+      const updatedFormData = {
+        ...userDetails,
+        ...formData,
+      };
+  
+      console.log("Datos que se enviarán al backend:", updatedFormData);
+      await editUser(id, updatedFormData); // Envia los datos actualizados al backend
       setEditMode(false); // Desactiva el modo de edicion despues de guardar
     } catch (error) {
       console.error("Error al editar el usuario:", error);
@@ -154,6 +175,8 @@ const EdicionUsuario = () => {
             name="nombre_completo"
             readOnly={!editMode}
             maxLength={null}
+            onChange={(newValue) => handleInputChange('nombre_completo', newValue)}
+            initialValue={userDetails ? userDetails.nombre_completo : ''}
           />
         </div>
 
@@ -165,6 +188,8 @@ const EdicionUsuario = () => {
             name="email"
             readOnly={!editMode}
             maxLength={null}
+            onChange={(newValue) => handleInputChange('email', newValue)}
+            initialValue={userDetails ? userDetails.email : ''}
           />
         </div>
 
@@ -176,11 +201,7 @@ const EdicionUsuario = () => {
             name="perfil"
             options={loadingGroups ? [] : opcionesGroups}
             readOnly={!editMode}
-            // onSelectionChange={(selectedOption) =>
-            //   {
-            //     field.onChange(selectedOption);
-            //     handlePerfilChange(selectedOption);
-            //   }}
+            onSelectionChange={handlePerfilChange}
           />
         </div>
 
@@ -194,7 +215,7 @@ const EdicionUsuario = () => {
               name="region"
               readOnly={!editMode}
               options={loadingRegiones ? [] : opcionesDeRegiones}
-              //onSelectionChange={handleRegionChange}
+              onSelectionChange={handleRegionChange}
             />
           </div>
         )}
@@ -207,7 +228,7 @@ const EdicionUsuario = () => {
               name="sector"
               readOnly={!editMode}
               options={loadingSector ? []: opcionesSector}
-              // onSelectionChange={handleSectorChange}
+              onSelectionChange={handleSectorChange}
             />
           </div>
         )}

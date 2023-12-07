@@ -12,12 +12,13 @@ export const useEditUser = () => {
 
     try {
       const formattedData = {
+        password: userData.password,
         nombre_completo: userData.nombre_completo,
         rut: userData.rut,
         email: userData.email,
         perfil: userData.perfil,
-        sector: userData.sector,
-        region: userData.region,
+        sector: userData.sector ? userData.sector.id : null,
+        region: userData.region ? userData.region.id : null,
         is_active: userData.is_active,
       };
 
