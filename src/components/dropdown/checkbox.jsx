@@ -1,46 +1,59 @@
 import { useState, useRef, useEffect } from 'react';
 
-const DropdownCheckbox = ({ label, placeholder, options, onSelectionChange, readOnly }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [selectedOptions, setSelectedOptions] = useState([]);
+const DropdownCheckbox = ({ label, placeholder, options, onSelectionChange, readOnly }) =>
+{
+  const [ isOpen, setIsOpen ] = useState(false);
+  const [ selectedOptions, setSelectedOptions ] = useState([]);
   const dropdownRef = useRef(null);
 
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+  useEffect(() =>
+  {
+    function handleClickOutside(event)
+    {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target))
+      {
         setIsOpen(false);
         onSelectionChange(selectedOptions);
       }
     }
 
-    if (isOpen) {
+    if (isOpen)
+    {
       document.addEventListener('mousedown', handleClickOutside);
-    } else {
+    } else
+    {
       document.removeEventListener('mousedown', handleClickOutside);
     }
 
-    return () => {
+    return () =>
+    {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [isOpen, selectedOptions, onSelectionChange]);
+  }, [ isOpen, selectedOptions, onSelectionChange ]);
 
-  const toggleDropdown = () => {
+  const toggleDropdown = () =>
+  {
     setIsOpen(!isOpen);
-    if (isOpen) {
+    if (isOpen)
+    {
       setIsOpen(false);
       onSelectionChange(selectedOptions);
     }
   };
 
-  const handleCheckboxChange = (option) => {
-    if (option === 'Todas') {
-      setSelectedOptions(selectedOptions.length === options.length ? [] : [...options]);
-    } else if (option === 'Eliminar Selección') {
+  const handleCheckboxChange = (option) =>
+  {
+    if (option.value === 'Todas')
+    {
+      setSelectedOptions(selectedOptions.length === options.length ? [] : [ ...options ]);
+    } else if (option.value === 'Eliminar Selección')
+    {
       setSelectedOptions([]);
-    } else {
-      const updatedOptions = selectedOptions.includes(option)
-        ? selectedOptions.filter((item) => item !== option)
-        : [...selectedOptions, option];
+    } else
+    {
+      const updatedOptions = selectedOptions.find(opt => opt.value === option.value)
+        ? selectedOptions.filter((item) => item.value !== option.value)
+        : [ ...selectedOptions, option ];
 
       setSelectedOptions(updatedOptions);
     }
@@ -56,7 +69,7 @@ const DropdownCheckbox = ({ label, placeholder, options, onSelectionChange, read
       >
         {selectedOptions.length > 0
           ? selectedOptions.length === 1
-            ? selectedOptions[0]
+            ? selectedOptions[ 0 ].label
             : `${selectedOptions.length} alternativas seleccionadas`
           : placeholder}
         {!readOnly && (
@@ -83,17 +96,17 @@ const DropdownCheckbox = ({ label, placeholder, options, onSelectionChange, read
 
           {options.map((option) => (
             <label
-              className={selectedOptions.includes(option) ? 'selected-option' : 'unselected-option'}
-              key={option}
+              className={selectedOptions.find(opt => opt.value === option.value) ? 'selected-option' : 'unselected-option'}
+              key={option.value}
             >
               <input
                 className="ms-2 me-2 my-3"
                 type="checkbox"
-                value={option}
-                checked={selectedOptions.includes(option)}
+                value={option.value}
+                checked={selectedOptions.find(opt => opt.value === option.value)}
                 onChange={() => handleCheckboxChange(option)}
               />
-              {option}
+              {option.label}
             </label>
           ))}
         </div>

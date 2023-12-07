@@ -13,7 +13,7 @@ const CrearUsuario = React.lazy(() => import('./views/gestion_usuarios/creacion_
 const EditarUsuario = React.lazy(() => import('./views/gestion_usuarios/edicion_usuario'));
 const DetalleUsuario = React.lazy(() => import('./views/gestion_usuarios/detalleUsuario'));
 const GestionCompetencias = React.lazy(() => import('./views/gestion_competencias/gestion_competencias'));
-const CrearCompetencia = React.lazy(() => import('./views/gestion_competencias/creacion_competencia'));
+const CreacionCompetencia = React.lazy(() => import('./views/gestion_competencias/creacion_competencia'));
 const EditarCompetencia = React.lazy(() => import('./views/gestion_competencias/edicion_competencia'));
 const EstadoCompentencia = React.lazy(() => import('./views/gestion_competencias/Estado_compentencia'));
 const Observaciones = React.lazy(() => import('./views/gestion_competencias/Observaciones'));
@@ -54,7 +54,7 @@ function App()
           />
           <Route path="listado_competencias" element={<GestionCompetencias />} />
           <Route path="estado_competencia/:id" element={<EstadoCompentencia />}/>
-          <Route path="crear_competencia" element={<CrearCompetencia />} />
+          <Route path="crear_competencia" element={<CreacionCompetencia />} />
           <Route path="editar_competencia/:id" element={<EditarCompetencia />} />
           <Route path="success" element={<Success />} />
           <Route path="formulario_sectorial" element={<FormularioLayout />}>

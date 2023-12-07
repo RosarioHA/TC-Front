@@ -115,7 +115,7 @@
 $step-size: 32px; 
 $step-line-height: $step-size; 
 $step-border-color: $blue-color; 
-$line-thickness: 2px; // Grosor de la línea
+$line-thickness: 2px; 
 
 .stepper-pasos {
   display: flex;
@@ -140,7 +140,7 @@ $line-thickness: 2px; // Grosor de la línea
     &:not(:first-child)::before {
       content: '';
       position: absolute;
-      top: $step-size / 2 - $line-thickness / 3;
+      top: calc($step-size / 2) - calc($line-thickness / 3);
       right: 102%; 
       width: 80%;
       height: $line-thickness;

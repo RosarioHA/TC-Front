@@ -7,10 +7,15 @@ import DropdownCheckbox from "../../components/dropdown/checkbox";
 import DropdownSelect from "../../components/dropdown/select";
 import DropdownConSecciones from "../../components/dropdown/checkbox_conSecciones_conTabla";
 import SubirArchivo from "../../components/forms/subir_archivo";
-import { regiones, opcionesSector, origenCompetencia, ambitoCompetencia } from "../../Data/OpcionesFormulario";
-import { userData } from "../../Data/Usuarios";
+
 
 import { esquemaCreacionCompetencia } from "../../validaciones/esquemaValidacion";
+import { useCrearCompetencia } from "../../hooks/useCrearCompetencia";
+import { useRegion } from "../../hooks/useRegion";
+import { useUsers } from "../../hooks/useUsers";
+import { useGroups } from "../../hooks/useGroups";
+import { useSector } from "../../hooks/useSector";
+
 
 const initialValues = {
   nombre: '',
@@ -23,27 +28,56 @@ const initialValues = {
   plazoGore: undefined,
 };
 
-const CreacionCompetencia = () => {
-  const [regionesSeleccionadas, setRegionesSeleccionadas] = useState([]);
-  const [sectoresSeleccionados, setSectoresSeleccionados] = useState([]);
-  const [origenSeleccionado, setOrigenSeleccionado] = useState('');
-  const [ambitoSeleccionado, setAmbitoSeleccionado] = useState('');
-  const [usuariosSeleccionados, setUsuariosSeleccionados] = useState([]);
-  const [submitClicked, setSubmitClicked] = useState(false);
+
+const groupUsersByType = (users) =>
+{
+  const grouped = users.reduce((acc, user) =>
+  {
+    acc[ user.perfil ] = acc[ user.perfil ] || [];
+    acc[ user.perfil ].push(user);
+    return acc;
+  }, {});
+
+  return Object.entries(grouped).map(([ perfil, users ]) => ({
+    label: perfil,
+    options: users,
+  }));
+};
+
+const CreacionCompetencia = () =>
+{
+
+  const { createCompetencia } = useCrearCompetencia();
+  const { dataRegiones } = useRegion();
+  const { users } = useUsers();
+  const { dataGroups } = useGroups();
+  const { dataSector } = useSector();
+  const userOptions = groupUsersByType(users);
+
+
+
+  console.log('crear', createCompetencia);
+  console.log('regiones', dataRegiones);
+  console.log('user', users);
+  console.log('grupos', dataGroups);
+  console.log('sector', dataSector);
+
+
+  const [ regionesSeleccionadas, setRegionesSeleccionadas ] = useState(null);
+  const [ sectoresSeleccionados, setSectoresSeleccionados ] = useState([]);
+  const [ origenSeleccionado, setOrigenSeleccionado ] = useState('');
+  const [ ambitoSeleccionado, setAmbitoSeleccionado ] = useState('');
+  const [ usuariosSeleccionados, setUsuariosSeleccionados ] = useState([]);
+  const [ submitClicked, setSubmitClicked ] = useState(false);
   const history = useNavigate();
 
   // Maneja boton de volver atras.
-  const handleBackButtonClick = () => {
+  const handleBackButtonClick = () =>
+  {
     history(-1);
   };
 
-  // Agrupa usuarios por tipo
-  const groupUsersByType = (users) => {
-    return Array.from(new Set(users.map((user) => user.tipoUsuario))).map((userType) => ({
-      label: userType,
-      options: users.filter((user) => user.tipoUsuario === userType),
-    }));
-  };
+
 
   const {
     control,
@@ -55,59 +89,91 @@ const CreacionCompetencia = () => {
     resolver: yupResolver(esquemaCreacionCompetencia),
     defaultValues: initialValues,
     shouldUnregister: false,
-    mode: 'manual', // Desactiva la validacion automatica
+    mode: 'manual',// Desactiva la validacion automatica
   });
 
-  const onSubmit = async (data) => {
-    try {
-      if (submitClicked) {
-        const isValid = await trigger();
-        if (isValid) {
-          // Aqui enviaria la data hacia el backend
-          console.log('Datos de competencia:', data);
-          history('/home/success', { state: { origen: "crear_competencia" } });
-        } else {
-          console.log('El formulario no es válido');
-        }
-      }
-    } catch (error) {
-      console.error('Error al enviar el formulario:', error);
+  const onSubmit = async (data) =>
+  {
+    // Mapear los datos del formulario al formato esperado por la API
+    const competenciaData = {
+      nombre: data.nombre,
+      ambito: data.ambito,
+      origen: data.origen,
+      plazo_formulario_sectorial: data.plazoSectorial,
+      plazo_formulario_gore: data.plazoGore,
+      sectores: data.sectoresSeleccionados.map(s => s.id),
+      regiones: data.regionesSeleccionadas.map(r => r.id),
+      // Otros campos según sea necesario
+    };
+
+    try
+    {
+      await createCompetencia(competenciaData);
+      // Manejar la respuesta, redireccionar o mostrar un mensaje de éxito
+    } catch (error)
+    {
+      // Manejar el error
     }
   };
-  
+
   // Callbacks que manejan la entrega de informacion desde los componentes del formulario
-  const handleRegionesChange = (region) => {
-    setRegionesSeleccionadas(region);
-    setValue('regiones', region, { shouldValidate: true });
-    console.log("regiones seleccionadas", regionesSeleccionadas)
+
+  //opciones regiones 
+  const opcionesRegiones = dataRegiones.map(region => ({
+    label: region.region,
+    value: region.id,
+  }));
+
+  const handleRegionesChange = (selectedOptions) =>
+  {
+    setRegionesSeleccionadas(selectedOptions);
+    setValue('regiones', selectedOptions.map(option => option.value), { shouldValidate: true });
   };
-  const handleSectorChange = (sector) => {
-    setSectoresSeleccionados(sector);
-    setValue('sectores', sector, { shouldValidate: true });
-    console.log("sectores seleccionados", sectoresSeleccionados)
+
+  //opciones sector 
+  const opcionesSectores = dataSector.map(sector => ({
+    label: sector.nombre,
+    value: sector.id,
+  }));
+
+  const handleSectorChange = (selectedOptions) =>
+  {
+    setSectoresSeleccionados(selectedOptions);
+    setValue('sectores', selectedOptions.map(option => option.value), { shouldValidate: true });
   };
-  const handleOrigenChange = (origen) => {
+
+  const handleOrigenChange = (origen) =>
+  {
     setOrigenSeleccionado(origen);
     setValue('origen', origen, { shouldValidate: true });
     console.log("origen seleccionado", origenSeleccionado)
   };
-  const handleAmbitoChange = (ambito) => {
+  const handleAmbitoChange = (ambito) =>
+  {
     setAmbitoSeleccionado(ambito);
     setValue('ambito', ambito, { shouldValidate: true });
     console.log("ambito seleccionado", ambitoSeleccionado)
   };
-  const handleUsuariosChange = useCallback(
-    (selectedOptions) => {
-      const updatedUsuarios = {};
-      selectedOptions.forEach((usuario) => {
-        if (usuario && usuario.id) {
-          updatedUsuarios[usuario.id] = true;
-        }
-      });
-      setUsuariosSeleccionados(updatedUsuarios);
-    },
-    []
-  );
+
+  const handleUsuariosChange = useCallback((selectedOptions) =>
+  {
+    const updatedUsuarios = {};
+
+    for (const perfil in selectedOptions)
+    {
+      // Verifica si el objeto selectedOptions tiene la propiedad perfil
+      if (Object.prototype.hasOwnProperty.call(selectedOptions, perfil))
+      {
+        selectedOptions[ perfil ].forEach((usuario) =>
+        {
+          updatedUsuarios[ usuario.id ] = usuario;
+        });
+      }
+    }
+
+    setUsuariosSeleccionados(updatedUsuarios);
+  }, [ setUsuariosSeleccionados ]);
+
   console.log("usuarios seleccionados:", usuariosSeleccionados)
 
   return (
@@ -124,61 +190,55 @@ const CreacionCompetencia = () => {
       <div className="col-10 ms-5">
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="mb-4">
-            <Controller 
+            <Controller
               name="nombre"
               control={control}
-              render={({field}) => (
-                < CustomInput 
-                label="Nombre de la Competencia (Obligatorio)"
-                placeholder="Escribe el nombre de la competencia"
-                id="nombre"
-                readOnly={true}
-                maxLength={null}
-                error={errors.nombre?.message}
-                ref={field.ref}
-                {...field}/>
+              render={({ field }) => (
+                <CustomInput
+                  label="Nombre de la Competencia (Obligatorio)"
+                  placeholder="Escribe el nombre de la competencia"
+                  id="nombre"
+                  maxLength={200} // Configura el maxLength según la API
+                  error={errors.nombre?.message}
+                  ref={field.ref}
+                  {...field} />
               )}
             />
           </div>
 
           <div className="mb-4">
             <DropdownCheckbox
-              label="Región (Obligatorio)" 
-              placeholder="Elige la o las regiones donde se ejercerá la competencia" 
-              options={regiones}
-              onSelectionChange={(selectedOption) => {
-                handleRegionesChange(selectedOption);
-                setValue('regiones', selectedOption, { shouldValidate: true });
-              }}
-              selected={regionesSeleccionadas} 
+              label="Región (Obligatorio)"
+              placeholder="Elige la o las regiones donde se ejercerá la competencia"
+              options={opcionesRegiones}
+              onSelectionChange={handleRegionesChange}
+              selected={regionesSeleccionadas}
             />
             {errors.regiones && (
               <p className="text-sans-h6-darkred mt-2 mb-0">{errors.regiones.message}</p>
-            )}  
+            )}
           </div>
 
           <div className="mb-4">
             <DropdownCheckbox
-              label="Elige el sector de la competencia (Obligatorio)" 
-              placeholder="Elige el sector de la competencia" 
-              options={opcionesSector}
-              onSelectionChange={(selectedOption) => {
-                handleSectorChange(selectedOption);
-                setValue('sectores', selectedOption, { shouldValidate: true });
-              }}
-              selected={sectoresSeleccionados} 
+              label="Elige el sector de la competencia (Obligatorio)"
+              placeholder="Elige el sector de la competencia"
+              options={opcionesSectores}
+              onSelectionChange={handleSectorChange}
+              selected={sectoresSeleccionados}
             />
             {errors.sectores && (
               <p className="text-sans-h6-darkred mt-2 mb-0">{errors.sectores.message}</p>
-            )} 
+            )}
           </div>
 
           <div className="mb-4">
             <DropdownSelect
               label="Origen de la competencia (Obligatorio)"
               placeholder="Elige el origen de la competencia"
-              options={origenCompetencia}
-              onSelectionChange={(selectedOption) => {
+              options=''
+              onSelectionChange={(selectedOption) =>
+              {
                 handleOrigenChange(selectedOption);
                 setValue('origen', selectedOption, { shouldValidate: true });
               }}
@@ -190,15 +250,16 @@ const CreacionCompetencia = () => {
           </div>
 
           <div className="mb-4">
-            <DropdownSelect 
+            <DropdownSelect
               label="Elige el ámbito de la competencia (Obligatorio)"
               placeholder="Elige el ámbito de la competencia"
-              options={ambitoCompetencia}
-              onSelectionChange={(selectedOption) => {
+              options=''
+              onSelectionChange={(selectedOption) =>
+              {
                 handleAmbitoChange(selectedOption);
-                setValue('ambito', selectedOption, { shouldValidate : true})
+                setValue('ambito', selectedOption, { shouldValidate: true })
               }}
-              selected={ambitoSeleccionado} 
+              selected={ambitoSeleccionado}
             />
             {errors.ambito && (
               <p className="text-sans-h6-darkred mt-2 mb-0">{errors.ambito.message}</p>
@@ -210,12 +271,12 @@ const CreacionCompetencia = () => {
           </div>
           <div className="mb-4">
             <div className="">
-              < DropdownConSecciones 
+              <DropdownConSecciones
                 label="Asignar Usuarios (Opcional)"
                 placeholder="Busca el nombre de la persona"
-                options={groupUsersByType(userData)}
+                options={userOptions}
                 selectedOptions={Object.keys(usuariosSeleccionados)
-                  .map(id => userData.find(user => user.id === id))}
+                  .map(id => users.find(user => user.id === id))}
                 onSelectionChange={handleUsuariosChange}
               />
             </div>
@@ -236,57 +297,57 @@ const CreacionCompetencia = () => {
                 <div className="me-5">Acción</div>
               </div>
               <div className="row neutral-line align-items-center">
-                <SubirArchivo 
-                index="1"
-                fileType="No seleccionado"/>
+                <SubirArchivo
+                  index="1"
+                  fileType="No seleccionado" />
               </div>
             </div>
 
           </div>
 
           <div className="mb-4">
-            < Controller 
+            < Controller
               name="plazoSecorial"
               control={control}
-              render={({field}) => (
-                < CustomInput 
-                label="Plazo para formulario sectorial (Obligatorio)"
-                placeholder="Escribe el número de días corridos"
-                id="plazoSecorial"
-                maxLength={null}
-                error={errors.plazoSecorial?.message}
-                ref={field.ref}
-                {...field}/>
-                )}/>
-              <div className="d-flex justify-content-end">
-                <h6 className="text-sans-h6-grey mt-1 me-4">Número entre 15 y 30</h6>
-              </div>
-              <div className="d-flex text-sans-h6-primary">
-                <i className="material-symbols-rounded me-2">info</i>
-                <h6> El plazo debe ser de 15 a 30 días corridos y se contará desde el día en que asocies un usuario sectorial a la competencia. </h6>
+              render={({ field }) => (
+                < CustomInput
+                  label="Plazo para formulario sectorial (Obligatorio)"
+                  placeholder="Escribe el número de días corridos"
+                  id="plazoSecorial"
+                  maxLength={null}
+                  error={errors.plazoSecorial?.message}
+                  ref={field.ref}
+                  {...field} />
+              )} />
+            <div className="d-flex justify-content-end">
+              <h6 className="text-sans-h6-grey mt-1 me-4">Número entre 15 y 30</h6>
+            </div>
+            <div className="d-flex text-sans-h6-primary">
+              <i className="material-symbols-rounded me-2">info</i>
+              <h6> El plazo debe ser de 15 a 30 días corridos y se contará desde el día en que asocies un usuario sectorial a la competencia. </h6>
             </div>
           </div>
 
           <div className="mb-4">
-            < Controller 
+            < Controller
               name="plazoGORE"
               control={control}
-              render={({field}) => (
-                < CustomInput 
-                label="Plazo para formulario GORE (Obligatorio)"
-                placeholder="Escribe el número de días corridos"
-                id="plazoGORE"
-                maxLength={null}
-                error={errors.plazoGORE?.message}
-                ref={field.ref}
-                {...field}/>
-                )}/>
-              <div className="d-flex justify-content-end">
-                <h6 className="text-sans-h6-grey mt-1 me-4">Número entre 15 y 30</h6>
-              </div>
-              <div className="d-flex text-sans-h6-primary">
-                <i className="material-symbols-rounded me-2">info</i>
-                <h6> El plazo debe ser de 15 a 30 días corridos y se contará desde el día en que asocies un usuario GORE a la competencia. </h6>
+              render={({ field }) => (
+                < CustomInput
+                  label="Plazo para formulario GORE (Obligatorio)"
+                  placeholder="Escribe el número de días corridos"
+                  id="plazoGORE"
+                  maxLength={null}
+                  error={errors.plazoGORE?.message}
+                  ref={field.ref}
+                  {...field} />
+              )} />
+            <div className="d-flex justify-content-end">
+              <h6 className="text-sans-h6-grey mt-1 me-4">Número entre 15 y 30</h6>
+            </div>
+            <div className="d-flex text-sans-h6-primary">
+              <i className="material-symbols-rounded me-2">info</i>
+              <h6> El plazo debe ser de 15 a 30 días corridos y se contará desde el día en que asocies un usuario GORE a la competencia. </h6>
             </div>
           </div>
 

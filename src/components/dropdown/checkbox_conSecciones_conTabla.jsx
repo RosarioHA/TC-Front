@@ -1,128 +1,120 @@
 import React, { useState, useRef, useEffect } from 'react';
 
-const DropdownConSecciones = ({ label, placeholder, options, readOnly }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedOptions, setSelectedOptions] = useState({});
+const DropdownConSecciones = ({ label, placeholder, options, readOnly }) =>
+{
+  const [ isOpen, setIsOpen ] = useState(false);
+  const [ searchTerm, setSearchTerm ] = useState('');
+  const [ selectedOptions, setSelectedOptions ] = useState({});
   const dropdownRef = useRef(null);
 
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+  useEffect(() =>
+  {
+    function handleClickOutside(event)
+    {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target))
+      {
         setIsOpen(false);
       }
     }
-    if (isOpen) {
+    if (isOpen)
+    {
       document.addEventListener('mousedown', handleClickOutside);
-    } else {
+    } else
+    {
       document.removeEventListener('mousedown', handleClickOutside);
     }
-    return () => {
+    return () =>
+    {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [isOpen]);
+  }, [ isOpen ]);
 
-  const toggleDropdown = () => {
+  const toggleDropdown = () =>
+  {
     setIsOpen(!isOpen);
   };
 
-  const handleCheckboxChange = (option) => {
-    const { tipoUsuario, id } = option;
-    const updatedSelection = { ...selectedOptions };
-    if (!updatedSelection[tipoUsuario]) {
-      updatedSelection[tipoUsuario] = [];
+
+
+  const handleCheckboxChange = (option) =>
+  {
+    const perfil = option.perfil; // Asumiendo que cada 'option' tiene un perfil
+    let updatedSelection = { ...selectedOptions };
+
+    if (!updatedSelection[ perfil ])
+    {
+      updatedSelection[ perfil ] = [];
     }
-    const optionIndex = updatedSelection[tipoUsuario].findIndex(
-      (selectedOption) => selectedOption.id === id
+
+    const optionIndex = updatedSelection[ perfil ].findIndex(
+      (selectedOption) => selectedOption.id === option.id
     );
-    if (optionIndex !== -1) {
-      updatedSelection[tipoUsuario].splice(optionIndex, 1);
-    } else {
-      updatedSelection[tipoUsuario].push(option);
+
+    if (optionIndex !== -1)
+    {
+      updatedSelection[ perfil ].splice(optionIndex, 1);
+    } else
+    {
+      updatedSelection[ perfil ].push(option);
     }
+
     setSelectedOptions(updatedSelection);
   };
 
-  const filteredOptions = options.filter((optionGroup) => {
-    const groupLabel =
-      typeof optionGroup === 'object' ? optionGroup.label : optionGroup;
+  const filteredOptions = options.filter((optionGroup) =>
+  {
     const searchTextLower = searchTerm.toLowerCase();
 
-    return groupLabel.toLowerCase().includes(searchTextLower);
+    return optionGroup.label.toLowerCase().includes(searchTextLower) ||
+      optionGroup.options.some(option => option.nombre.toLowerCase().includes(searchTextLower));
   });
-
-  const renderTablaResumen = (users, tipoUsuario) => {
+  const renderTablaResumen = (users, tipoUsuario) =>
+  {
     return (
       <div className="mb-5 mt-5">
         <p className="text-sans-p ms-2 mb-3">{`Usuarios ${tipoUsuario}`}</p>
         <table>
-          <thead className="">
-            <tr className="">
-              <th className="col-1">
-                <p className="ms-4">#</p>
-              </th>
-              <th className="col-5">
-                <p>Usuario</p>
-              </th>
-              {!readOnly && (
-                <th className="col-1">
-                  <p className="ms-2">Acción</p>
-                </th>
-              )}
+          <thead>
+            <tr>
+              <th className="col-1"><p className="ms-4">#</p></th>
+              <th className="col-5"><p>Usuario</p></th>
+              {!readOnly && <th className="col-1"><p className="ms-2">Acción</p></th>}
             </tr>
           </thead>
           <tbody>
-            {users.map((selectedOption, index) => {
-              const usuarioNombre = selectedOption
-                ? selectedOption.nombre
-                : `Usuario ${selectedOption.id}`;
-
-              return (
-                <tr
-                  key={selectedOption.id}
-                  className={
-                    index % 2 === 0 ? 'neutral-line' : 'white-line'
-                  }
-                >
+            {users.map((user, index) => (
+              <tr key={user.id} className={index % 2 === 0 ? 'neutral-line' : 'white-line'}>
+                <td><p className="ms-4 my-3">{index + 1}</p></td>
+                <td><p className="my-3">{user.nombre_completo}</p></td>
+                {!readOnly && (
                   <td>
-                    <p className="ms-4 my-3">{index + 1}</p>
+                    <button
+                      type="button"
+                      className="btn-terciario-ghost"
+                      onClick={() => handleCheckboxChange(user)}
+                    >
+                      <p className="mb-0 text-decoration-underline">Eliminar</p>
+                      <i className="material-symbols-rounded ms-2">delete</i>
+                    </button>
                   </td>
-                  <td>
-                    <p className="my-3">{usuarioNombre}</p>
-                  </td>
-                  {!readOnly && (
-                    <td>
-                      <button
-                        type="button"
-                        className="btn-terciario-ghost"
-                        onClick={() => handleCheckboxChange(selectedOption)}
-                      >
-                        <p className="mb-0 text-decoration-underline">
-                          Eliminar
-                        </p>
-                        <i className="material-symbols-rounded ms-2">delete</i>
-                      </button>
-                    </td>
-                  )}
-                </tr>
-              );
-            })}
+                )}
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
     );
   };
-  
 
   return (
     <div className={`input-container ${readOnly ? 'readonly' : ''}`}>
       {readOnly ? (
         <>
           <label className="text-sans-h5 input-label">Usuario(s) Asignado(s):</label>
-          {Object.keys(selectedOptions).some(tipo => selectedOptions[tipo].length > 0) ? (
+          {Object.keys(selectedOptions).some(tipo => selectedOptions[ tipo ].length > 0) ? (
             // Renderizar la tabla solo si hay usuarios asignados
             Object.keys(selectedOptions).map((tipo) =>
-              renderTablaResumen(selectedOptions[tipo], tipo)
+              renderTablaResumen(selectedOptions[ tipo ], tipo)
             )
           ) : (
             // Mostrar el mensaje si no hay usuarios asignados
@@ -168,24 +160,25 @@ const DropdownConSecciones = ({ label, placeholder, options, readOnly }) => {
                 optionGroup.options.map((option) => (
                   <label
                     className={
-                      selectedOptions[option.tipoUsuario] &&
-                      selectedOptions[option.tipoUsuario].includes(option)
+                      selectedOptions[ option.perfil ] &&
+                        selectedOptions[ option.perfil ].includes(option)
                         ? 'selected-option-ghost'
                         : 'unselected-option-ghost'
                     }
-                    key={typeof option === 'object' ? option.id : option}
+                    key={option.id}
                   >
                     <input
                       className="ms-2 me-2 my-3"
                       type="checkbox"
-                      value={typeof option === 'object' ? option.id : option}
+                      value={option.id}
                       checked={
-                        selectedOptions[option.tipoUsuario] &&
-                        selectedOptions[option.tipoUsuario].includes(option)
+                        selectedOptions[ option.perfil ] &&
+                        selectedOptions[ option.perfil ].includes(option)
                       }
                       onChange={() => handleCheckboxChange(option)}
                     />
-                    {typeof option === 'object' ? option.nombre : option}
+                    {/* Asegúrate de que aquí se utilice la propiedad nombre_completo */}
+                    {option.nombre_completo}
                   </label>
                 ))}
             </React.Fragment>
@@ -195,7 +188,7 @@ const DropdownConSecciones = ({ label, placeholder, options, readOnly }) => {
 
       {/* Tabla de selecciones */}
       {Object.keys(selectedOptions).map((tipoUsuario) =>
-        renderTablaResumen(selectedOptions[tipoUsuario], tipoUsuario)
+        renderTablaResumen(selectedOptions[ tipoUsuario ], tipoUsuario)
       )}
     </div>
   );

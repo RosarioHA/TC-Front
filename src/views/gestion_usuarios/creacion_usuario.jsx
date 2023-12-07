@@ -10,7 +10,7 @@ import RadioButtons from "../../components/forms/radio_btns";
 import { competencias } from "../../Data/Competencias";
 import { esquemaCreacionUsuario } from "../../validaciones/esquemaValidacion";
 import { useCreateUser } from "../../hooks/useCreateUser";
-import { useRegionComuna } from "../../hooks/useRegionComuna";
+import { useRegion } from "../../hooks/useRegion";
 import { useGroups } from "../../hooks/useGroups";
 import { useSector } from "../../hooks/useSector";
 
@@ -36,7 +36,7 @@ const CreacionUsuario = () =>
   const [ sectorSeleccionado, setSectorSeleccionado ] = useState(null);
   const [ regionSeleccionada, setRegionSeleccionada ] = useState(null);
   const [ submitClicked, setSubmitClicked ] = useState(false);
-  const { dataRegiones, loadingRegiones } = useRegionComuna();
+  const { dataRegiones, loadingRegiones } = useRegion();
 
   console.log(dataSector); 
 
