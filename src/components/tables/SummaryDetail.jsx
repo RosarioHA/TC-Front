@@ -2,32 +2,43 @@
 export const SummaryDetail = ({ competencia }) =>
 {
 
+  console.log('summary', competencia)
 
-  if (!competencia)
+  const etapas_info = competencia.etapas_info || competencia.resumen_competencia?.etapas_info;
+  const tiempo_transcurrido = competencia.tiempo_transcurrido || competencia.resumen_competencia?.tiempo_transcurrido;
+
+  if (!competencia || !etapas_info)
   {
     return <div>Cargando...</div>;
   }
+  // Transformar etapas_info en un arreglo para facilitar su manejo
+  const etapasArray = Object.keys(etapas_info).map(key => ({
+    id: key,
+    ...etapas_info[ key ]
+  }));
 
   // Calcula la cantidad de etapas finalizadas
-  const etapasFinalizadas = competencia.etapas.filter((etapa) => etapa.estado === 'Finalizado').length;
+  const etapasFinalizadas = etapasArray.filter(etapa => etapa.estado === 'Finalizada').length;
+
 
 
   const getBadgeDetails = (estado) =>
   {
-    const badgeDetails = {
-      'Finalizado': { class: 'badge-status-finish', text: 'Finalizada' },
-      'En Estudio': { class: 'badge-status-review', text: 'En Estudio' },
-      'Pendiente': { class: 'badge-status-pending', text: 'Aún no puede comenzar' },
+    const badgeClasses = {
+      'Finalizada': 'badge-status-finish',
+      'En Estudio': 'badge-status-review',
+      'Aún no puede comenzar': 'badge-status-pending',
     };
-    return badgeDetails[ estado ] || { class: '', text: '' };
+
+    const classForState = badgeClasses[ estado ] || '';
+
+    return { class: classForState, text: estado };
   };
 
 
   // Calcula el tiempo restante (ajusta los valores según sea necesario)
-  const diasRestantes = 5 - etapasFinalizadas;
-  const horasRestantes = 24;
-  const minutosRestantes = 60;
-  const totalEtapas = competencia.etapas.length;
+  const totalEtapas = etapasArray.length;
+  const { dias, horas, minutos } = tiempo_transcurrido;
 
 
   return (
@@ -57,20 +68,20 @@ export const SummaryDetail = ({ competencia }) =>
             <div className="container text-center mt-3">
               <div className="row">
                 <div className="col">
-                  <span className="text-sans-h6-bold-darkblue">Tiempo para completar el proceso</span>
+                  <span className="text-sans-h6-bold-darkblue">Tiempo transcurrido del proceso</span>
                 </div>
               </div>
               <div className="row mx-5 px-3 py-2 gap-1">
                 <div className="col d-flex flex-column ms-3">
-                  <span className="text-sans-h6-bold-darkblue">{diasRestantes}</span>
+                  <span className="text-sans-h6-bold-darkblue">{dias}</span>
                   <span className="text-sans-h6-darkblue">Días</span>
                 </div>
                 <div className="col d-flex flex-column">
-                  <span className="text-sans-h6-bold-darkblue">{horasRestantes}</span>
+                  <span className="text-sans-h6-bold-darkblue">{horas}</span>
                   <span className="text-sans-h6-darkblue" >Horas</span>
                 </div>
                 <div className="col d-flex flex-column me-3">
-                  <span className="text-sans-h6-bold-darkblue">{minutosRestantes}</span>
+                  <span className="text-sans-h6-bold-darkblue">{minutos}</span>
                   <span className="text-sans-h6-darkblue" >Mins</span>
                 </div>
               </div>
@@ -80,18 +91,17 @@ export const SummaryDetail = ({ competencia }) =>
         <div className="col-8">
           <div className="mb-4 ms-4">
             <ul className="list-group list-group-flush my-3">
-              {competencia.etapas.map((etapa) =>
+              {etapasArray.map((etapa) =>
               {
-                const { class: badgeClass, text: etapaTexto } = getBadgeDetails(etapa.estado);
-
+                const badgeDetails = getBadgeDetails(etapa.estado);
                 return (
-                  <li className="list-group-item d-flex justify-content-between" key={etapa.id}>
+                  <li className="list-group-item d-flex justify-content-between " key={etapa.id}>
                     <span>
-                      <strong className="pe-2">Etapa {etapa.id}:</strong>
-                      {etapa.etapa}
+                      <strong className="pe-2">{etapa.id}:</strong>
+                      {etapa.nombre}
                     </span>
-                    <div className={badgeClass}>
-                      {etapaTexto}
+                    <div className={badgeDetails.class}>
+                      {badgeDetails.text}
                     </div>
                   </li>
                 );

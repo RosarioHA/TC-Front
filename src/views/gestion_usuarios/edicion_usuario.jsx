@@ -9,9 +9,9 @@ import RadioButtons from "../../components/forms/radio_btns";
 import { useEditUser } from "../../hooks/useEditUser";
 import { useUserDetails } from "../../hooks/useUserDetail";
 import { useGroups } from "../../hooks/useGroups";
-import { useRegionComuna } from "../../hooks/useRegionComuna";
+import { useRegion } from "../../hooks/useRegion";
 import { useSector } from "../../hooks/useSector";
-import { useCompetencias } from "../../hooks/useCompetencias";
+import { useCompetenciasList } from "../../hooks/useCompetenciasList";
 
 const EdicionUsuario = () => {
   const { id } = useParams();
@@ -24,9 +24,9 @@ const EdicionUsuario = () => {
   });
   const { editUser, isLoading: editUserLoading, error: editUserError } = useEditUser();
   const { dataGroups, loadingGroups } = useGroups();
-  const { dataRegiones, loadingRegiones } = useRegionComuna();
+  const { dataRegiones, loadingRegiones } = useRegion();
   const { dataSector, loadingSector } = useSector();
-  const { competencias, loading: competenciasLoading, error: competenciasError } = useCompetencias();
+  const { competencias, loading: competenciasLoading, error: competenciasError } = useCompetenciasList();
   const { userDetails } = useUserDetails(id);
 
   const { control, handleSubmit, setValue, watch, formState: { errors } } = useForm({

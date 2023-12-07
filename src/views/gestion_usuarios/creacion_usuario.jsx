@@ -10,9 +10,10 @@ import RadioButtons from "../../components/forms/radio_btns";
 import { competencias } from "../../Data/Competencias";
 import { esquemaCreacionUsuario } from "../../validaciones/esquemaValidacion";
 import { useCreateUser } from "../../hooks/useCreateUser";
-import { useRegionComuna } from "../../hooks/useRegionComuna";
+import { useRegion } from "../../hooks/useRegion";
 import { useGroups } from "../../hooks/useGroups";
 import { useSector } from "../../hooks/useSector";
+
 
 const initialValues = {
   rut: '',
@@ -23,10 +24,11 @@ const initialValues = {
   password: '',
 };
 
-const CreacionUsuario = () => {
+const CreacionUsuario = () =>
+{
   const { createUser, isLoading, error } = useCreateUser();
-  const { dataGroups, loadingGroups, errorGroups } = useGroups();
-  const { dataSector, loadingSector, errorSector} = useSector(); 
+  const { dataGroups, loadingGroups } = useGroups();
+  const { dataSector, loadingSector} = useSector(); 
   const [ estado, setEstado ] = useState('inactivo');
   const [ activeButton, setActiveButton ] = useState(null);
   const [ competenciasSeleccionadas, setCompetenciasSeleccionadas ] = useState({});
@@ -34,7 +36,7 @@ const CreacionUsuario = () => {
   const [ sectorSeleccionado, setSectorSeleccionado ] = useState(null);
   const [ regionSeleccionada, setRegionSeleccionada ] = useState(null);
   const [ submitClicked, setSubmitClicked ] = useState(false);
-  const { dataRegiones, loadingRegiones, errorRegiones } = useRegionComuna();
+  const { dataRegiones, loadingRegiones } = useRegion();
 
   console.log(dataSector); 
 
@@ -159,15 +161,6 @@ const CreacionUsuario = () => {
   { error && <div className="error-message">Error al crear el usuario: {error.message}</div> }
 
 
-  if (loadingRegiones && loadingGroups && loadingSector)
-  {
-    return <div>Cargando datos...</div>;
-  }
-
-  if (errorRegiones && errorGroups && errorSector)
-  {
-    return <div>Error al cargar datos : {errorRegiones.message} || {errorGroups.message} || { errorSector.message} </div>;
-  }
 
   return (
     <div className="container col-10 my-4">

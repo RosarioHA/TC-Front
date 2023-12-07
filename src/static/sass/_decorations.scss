@@ -103,6 +103,10 @@ border-radius: 50%;
   @include badge-status($grey-light-color,$grey-a-color )
 }
 
+.badge-status-warning{
+  @include badge-status($alert-danger,$white-color); 
+}
+
 .badge-percent {
   background:$grey-light-b;
   color: $dark-grey;

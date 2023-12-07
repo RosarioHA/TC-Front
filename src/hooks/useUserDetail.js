@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
 import { apiTransferenciaCompentencia } from '../services/transferenciaCompetencia';
-import { useRegionComuna } from './useRegionComuna';
+import { useRegion } from './useRegion';
 import { useSector } from "./useSector";
 
 export const useUserDetails = (userId) => {
   const [userDetails, setUserDetails] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { dataRegiones } = useRegionComuna();
+  const { dataRegiones } = useRegion();
   const { dataSector } = useSector();
 
   const [regionOptions, setRegionOptions] = useState([]);

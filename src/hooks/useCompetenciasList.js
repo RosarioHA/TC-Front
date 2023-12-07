@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { apiTransferenciaCompentencia } from '../services/transferenciaCompetencia';
 
-const useCompetencias = () => {
+const useCompetenciasList = () => {
   const [competencias, setCompetencias] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -31,4 +31,4 @@ const useCompetencias = () => {
   return { competencias, loading, error };
 };
 
-export { useCompetencias };
+export { useCompetenciasList };
