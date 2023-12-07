@@ -158,6 +158,7 @@ const EdicionUsuario = () => {
       console.log("Datos que se enviarán al backend:", updatedFormData);
       await editUser(id, updatedFormData); // Envia los datos actualizados al backend
       setEditMode(false); // Desactiva el modo de edicion despues de guardar
+      history('/home/success', { state: { origen: "editar_usuario" } });
     } catch (error) {
       console.error("Error al editar el usuario:", error);
     }

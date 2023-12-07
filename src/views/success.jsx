@@ -16,6 +16,10 @@ const SuccessViews = () => {
     titulo = "Administrar Competencias";
     subtitulo = "Crear Competencia";
     tituloRecuadro = "Creaste una competencia con éxito";
+  } else if (origen === "editar_usuario") {
+    titulo = "Administrar Usuario";
+    subtitulo = "Editar Usuario";
+    tituloRecuadro = "Editaste un usuario con éxito";
   } else {
     titulo = "Exito!";
     subtitulo = "Plataforma Transferencia de Competencias";
