@@ -22,6 +22,8 @@ const EdicionUsuario = () => {
     nombre_completo: '',
     email: '',
     perfil: null,
+    region: null,
+    sector: null,
   });
   //const [selectedPerfil, setSelectedPerfil] = useState(null);
   const { editUser, isLoading: editUserLoading, error: editUserError } = useEditUser();
@@ -80,7 +82,7 @@ const EdicionUsuario = () => {
     label: group.name
   }))
 
-  const handleSelectionChange = (fieldName, selectedOption) => {
+  const handlePerfilChange = (fieldName, selectedOption) => {
     setFormData((prevData) => ({
       ...prevData,
       [fieldName]: selectedOption.label,
@@ -93,9 +95,15 @@ const EdicionUsuario = () => {
     label: region.region
   }));
 
-  const handleRegionChange = (selectedRegion) => {
-    setValue('region', selectedRegion.id);
+  const handleRegionChange = (fieldName, selectedOption) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      [fieldName]: selectedOption.id,
+    }));
   };
+  // const handleRegionChange = (selectedRegion) => {
+  //   setValue('region', selectedRegion.id);
+  // };
 
   // opciones sector
   const opcionesSector = dataSector.map(sector => ({
@@ -103,9 +111,15 @@ const EdicionUsuario = () => {
     label:sector.nombre,
   }));
 
-  const handleSectorChange = (selectedSector) => {
-    setValue('sector', selectedSector.value);
+  const handleSectorChange = (fieldName, selectedOption) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      [fieldName]: selectedOption.id,
+    }));
   };
+  // const handleSectorChange = (selectedSector) => {
+  //   setValue('sector', selectedSector.value);
+  // };
 
   const handleEstadoChange = (nuevoEstado) => {
     setActiveButton(nuevoEstado);
@@ -127,7 +141,6 @@ const EdicionUsuario = () => {
   };
 
   const onSubmit = async () => {
-    console.log("ON SUBMIT ACTIVADO");
     try {
       // Combina los valores actuales del formulario con los valores antiguos de userDetails
       const updatedFormData = {
@@ -207,7 +220,7 @@ const EdicionUsuario = () => {
             name="perfil"
             options={loadingGroups ? [] : opcionesGroups}
             readOnly={!editMode}
-            onSelectionChange={(selectedOption) => handleSelectionChange('perfil', selectedOption)}
+            onSelectionChange={(selectedOption) => handlePerfilChange('perfil', selectedOption)}
             selectedOption={formData.perfil}
             initialValue={userDetails ? userDetails.perfil : ''}
           />
@@ -224,6 +237,7 @@ const EdicionUsuario = () => {
               readOnly={!editMode}
               options={loadingRegiones ? [] : opcionesDeRegiones}
               onSelectionChange={handleRegionChange}
+              initialValue={userDetails ? userDetails.region : ''}
             />
           </div>
         )}
@@ -237,6 +251,7 @@ const EdicionUsuario = () => {
               readOnly={!editMode}
               options={loadingSector ? []: opcionesSector}
               onSelectionChange={handleSectorChange}
+              initialValue={userDetails ? userDetails.sector : ''}
             />
           </div>
         )}

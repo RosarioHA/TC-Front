@@ -1,9 +1,9 @@
 import { useState, useRef, useEffect } from 'react';
 
-const DropdownSelectBuscador = ({ label, placeholder, options, onSelectionChange, readOnly }) => {
+const DropdownSelectBuscador = ({ label, placeholder, options, onSelectionChange, readOnly, initialValue }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedOption, setSelectedOption] = useState(null);
+  const [selectedOption, setSelectedOption] = useState(initialValue || '');
   const [hasOpened, setHasOpened] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -46,7 +46,7 @@ const DropdownSelectBuscador = ({ label, placeholder, options, onSelectionChange
   const handleOptionClick = (option) => {
     setSelectedOption(option);
     setIsOpen(false);
-    onSelectionChange(option.value);
+    onSelectionChange(option);
   };
 
   const filteredOptions = options.filter((option) =>
