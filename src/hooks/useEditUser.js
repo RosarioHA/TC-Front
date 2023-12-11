@@ -17,14 +17,16 @@ export const useEditUser = () => {
         rut: userData.rut,
         email: userData.email,
         perfil: userData.perfil,
-        sector: userData.sector ? userData.sector.id : null,
-        region: userData.region ? userData.region.id : null,
+        sector: userData.sector,
+        region: userData.region,
+        // sector: userData.sector ? userData.sector.id : null,
+        // region: userData.region ? userData.region.id : null,
         is_active: userData.is_active,
       };
 
       console.log('Data after formatting:', formattedData);
 
-      const response = await apiTransferenciaCompentencia.patch(`users/update_profile/`, formattedData);
+      const response = await apiTransferenciaCompentencia.put(`users/${userId}/`, formattedData);
       return response.data;
     } catch (error) {
       setError(error);
