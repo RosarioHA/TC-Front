@@ -1,8 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 
-const DropdownSelect = ({ label, placeholder, options, onSelectionChange, readOnly, initialValue }) => {
+const DropdownSelect = ({ label, placeholder, options, onSelectionChange, readOnly }) => {
   const [ isOpen, setIsOpen ] = useState(false);
-  const [ selectedOption, setSelectedOption ] = useState(initialValue || '');
+  const [ selectedOption, setSelectedOption ] = useState(null);
   const dropdownRef = useRef(null);
 
   useEffect(() => {
@@ -30,7 +30,7 @@ const DropdownSelect = ({ label, placeholder, options, onSelectionChange, readOn
   const handleOptionClick = (option) => {
     setSelectedOption(option);
     setIsOpen(false);
-    onSelectionChange(option); 
+    onSelectionChange(option.value); 
   };
 
   return (
@@ -46,9 +46,9 @@ const DropdownSelect = ({ label, placeholder, options, onSelectionChange, readOn
       </button>
       {isOpen && !readOnly && (
         <div className="dropdown d-flex flex-column" ref={dropdownRef}>
-          {options.map((option, index) => (
+          {options.map((option) => (
             <div
-              key={index}
+              key={option.value}
               onClick={() => handleOptionClick(option)}
               className={`p-3 ${option.value === selectedOption?.value ? 'selected-option' : 'unselected-option'}`}
             >
