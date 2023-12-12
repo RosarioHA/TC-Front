@@ -12,6 +12,7 @@ export const useEditUser = () => {
 
     try {
       const formattedData = {
+        ...userData,
         password: userData.password,
         nombre_completo: userData.nombre_completo,
         rut: userData.rut,

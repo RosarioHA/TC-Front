@@ -19,18 +19,22 @@ const EdicionUsuario = () => {
   const [editMode, setEditMode] = useState(false);
   const [activeButton, setActiveButton] = useState(null);
   const [originalData, setOriginalData] = useState({});
+  const [currentPerfil, setCurrentPerfil] = useState('');
   const { editUser, isLoading: editUserLoading, error: editUserError } = useEditUser();
   const { dataGroups, loadingGroups } = useGroups();
   const { dataRegiones, loadingRegiones } = useRegion();
   const { dataSector, loadingSector } = useSector();
   const { competencias, loading: competenciasLoading, error: competenciasError } = useCompetenciasList();
   const { userDetails } = useUserDetails(id);
+  console.log("userDetails", userDetails);
 
   const { control, handleSubmit, setValue, watch, formState: { errors } } = useForm({
     shouldUnregister: false,
     mode: 'manual',
     defaultValues: {
+      perfil: userDetails?.perfil || '',
       region: userDetails?.region?.id || null,
+      sector: userDetails?.sector?.id || null,
     },
   });
 
@@ -40,6 +44,16 @@ const EdicionUsuario = () => {
       console.log("Competencias en vista Editar usuario:", competencias);
     }
   }, [competenciasLoading, competenciasError, competencias]);
+
+  useEffect(() => {
+    if (editMode) {
+      // Si esta en modo edicion, utiliza originalData.perfil
+      setCurrentPerfil(originalData.perfil || '');
+    } else {
+      // Si esta en modo visualizacion, utiliza userDetails.perfil
+      setCurrentPerfil(userDetails?.perfil || '');
+    }
+  }, [editMode, userDetails, originalData]);
 
   useEffect(() => {
     if (editMode && userDetails) {
@@ -111,16 +125,27 @@ const EdicionUsuario = () => {
       console.log('DropdownChange - fieldName:', fieldName, 'selectedOption:', selectedOption.label);
       if (selectedOption && selectedOption.label) {
         setValue(fieldName, selectedOption.label);
-        // Actualiza el estado originalData con el ID del sector
-        setOriginalData((prevData) => ({
-          ...prevData,
-          [fieldName]: selectedOption.label,
-        }));
+  
+        setOriginalData(prevData => {
+          const newData = {
+            ...prevData,
+            [fieldName]: selectedOption.label,
+            ...(selectedOption.label === 'Usuario Sectorial' ? { region: null } : {}),
+            ...(selectedOption.label === 'GORE' ? { sector: null } : {}),
+            ...(selectedOption.label === 'DIPRES' ? { sector: null, region: null } : {}),
+            ...(selectedOption.label === 'SUBDERE' ? { sector: null, region: null } : {}),
+            ...(selectedOption.label === 'Usuario Observador' ? { sector: null, region: null } : {}),
+          };
+  
+          console.log('Updated originalData:', newData);
+          return newData;
+        });
       }
     } catch (error) {
       console.error('Error en handleDropdownChange:', error);
     }
   };
+  console.log("originalData.perfil", originalData.perfil)
   
   const handleDdSelectBuscadorChange = async (fieldName, selectedOption) => {
     try {
@@ -239,9 +264,9 @@ const EdicionUsuario = () => {
             initialValue={userDetails ? userDetails.perfil : ''}
           />
         </div>
-
+        
         {/* Renderizan de manera condicional segun el tipo de usuario */}
-        {userDetails && userDetails.perfil === 'GORE' && (
+        {currentPerfil === 'GORE' && (
           <div className="my-4">
             <DropdownSelectBuscador
               label="Elige la región a la que representa (Obligatorio)"
@@ -255,7 +280,7 @@ const EdicionUsuario = () => {
             />
           </div>
         )}
-        {userDetails && userDetails.perfil === 'Usuario Sectorial' && (
+        {currentPerfil === 'Usuario Sectorial' && (
           <div className="my-4">
             <DropdownSelectBuscador
               label="Elige el organismo al que pertenece (Obligatorio)"
