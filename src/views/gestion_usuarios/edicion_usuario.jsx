@@ -17,9 +17,8 @@ const EdicionUsuario = () => {
   const { id } = useParams();
   const history = useNavigate();
   const [editMode, setEditMode] = useState(false);
-  //const [activeButton, setActiveButton] = useState(null);
   const [originalData, setOriginalData] = useState({});
-  const [currentPerfil, setCurrentPerfil] = useState('');
+  const [currentPerfil, setCurrentPerfil] = useState("");
   const { editUser, isLoading: editUserLoading, error: editUserError } = useEditUser();
   const { dataGroups, loadingGroups } = useGroups();
   const { dataRegiones, loadingRegiones } = useRegion();
@@ -27,17 +26,31 @@ const EdicionUsuario = () => {
   const { competencias, loading: competenciasLoading, error: competenciasError } = useCompetenciasList();
   const { userDetails } = useUserDetails(id);
   console.log("userDetails", userDetails);
+  console.log("originalData", originalData)
+  console.log("originalData is_active", originalData.is_active);
 
   const { control, handleSubmit, setValue, watch, formState: { errors } } = useForm({
     shouldUnregister: false,
-    mode: 'manual',
+    mode: "manual",
     defaultValues: {
-      perfil: userDetails?.perfil || '',
+      perfil: userDetails?.perfil || "",
       region: userDetails?.region?.id || null,
       sector: userDetails?.sector?.id || null,
       is_active: userDetails?.is_active || false,
     },
   });
+
+  useEffect(() => {
+    if (userDetails) {
+      setOriginalData({
+        ...userDetails,
+        is_active: userDetails.is_active || false,
+      });
+
+      const is_activeValue = userDetails.is_active === "activo";
+      setValue("is_active", is_activeValue);
+    }
+  }, [userDetails, setValue]);
 
   useEffect(() => {
     // Verifica si las competencias se han cargado
@@ -82,8 +95,6 @@ const EdicionUsuario = () => {
       setValue('region', regionValue);
       setValue('sector', sectorValue);
       setValue('is_active', estadoValue);
-
-      console.log("Valores del formulario después de la configuración:", watch());
     }
   }, [editMode, setValue, userDetails, watch]);
 
@@ -160,14 +171,12 @@ const EdicionUsuario = () => {
   }; 
   
   const handleEstadoChange = (selectionName, nuevoEstado) => {
-    console.log("nuevo estado:", nuevoEstado);
-    const isActivo = selectionName === 'activo';
-    setValue('is_active', isActivo);
+    const isActivo = nuevoEstado === "activo";
+    setValue("is_active", isActivo);
     setOriginalData((prevData) => ({
       ...prevData,
       is_active: isActivo,
     }));
-    console.log('Estado cambiado en handleEstadoChange:', selectionName, isActivo);
   };
 
   // const handleCompetenciasChange = (selectedCompetencias) => {
@@ -291,25 +300,39 @@ const EdicionUsuario = () => {
         )}
 
         <div className="my-4">
-          < Controller
-            name="is_active"
-            control={control}
-            render={({ field }) => (
-              <>
-                <RadioButtons
-                  readOnly={!editMode}
-                  id="is_active"
-                  initialState={originalData.is_active}
-                  handleEstadoChange={handleEstadoChange}
-                  field={field}
-                  errors={errors}
-                  is_active={originalData.is_active}
-                />
-                {errors.estado && (
-                  <p className="text-sans-h6-darkred mt-2 mb-0">{errors.estado.message}</p>
+          {!editMode ? (
+            <div className="mb-5">
+              <h5 className="text-sans-h5">Estado</h5>
+              <button
+                type="button"
+                className="btn-primario-s"
+                disabled
+              >
+                {originalData.is_active ? 'Activo' : 'Inactivo'}
+              </button>
+            </div>
+          ) : (
+            <div className="mb-5">
+              <Controller
+                name="is_active"
+                control={control}
+                render={({ field }) => (
+                  <RadioButtons
+                    readOnly={!editMode}
+                    id="is_active"
+                    initialState={originalData.is_active}
+                    handleEstadoChange={handleEstadoChange}
+                    field={field}
+                    errors={errors}
+                    is_active={watch('is_active')}
+                  />
                 )}
-              </>
-            )} />
+              />
+              {errors.estado && (
+                <p className="text-sans-h6-darkred mt-2 mb-0">{errors.estado.message}</p>
+              )}
+            </div>
+          )}
         </div>
 
         <div className="my-4">

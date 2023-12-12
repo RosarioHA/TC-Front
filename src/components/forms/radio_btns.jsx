@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 
-const RadioButtons = ({ initialState, handleEstadoChange, field, errors, readOnly, is_active }) => {
+const RadioButtons = ({ initialState, handleEstadoChange, field, errors, is_active }) => {
     const [activeButton, setActiveButton] = useState(initialState);
     console.log("activeButton en compo radio button". activeButton);
+    console.log("is_active en radio buttons", is_active);
   
     // Efecto para actualizar el estado interno cuando cambia la propiedad initialState
     useEffect(() => {
@@ -11,18 +12,7 @@ const RadioButtons = ({ initialState, handleEstadoChange, field, errors, readOnl
   
     return (
       <div className="mb-5">
-        {readOnly ? (
-          <>
-            <h5 className="text-sans-h5">Estado</h5>
-            <button
-            type="button"
-            className={`btn-primario-s ${is_active ? 'activo' : 'inactivo'}`}
-            disabled
-            >
-              {is_active ? 'Activo' : 'Inactivo'}
-            </button>
-          </>
-        ) : (
+        
           <>
             <h5 className="text-sans-h5">Estado</h5>
             <div className="d-flex mb-2">
@@ -52,7 +42,7 @@ const RadioButtons = ({ initialState, handleEstadoChange, field, errors, readOnl
               </button>
             </div>
           </>
-        )}
+        
         {errors.estado && <p className="text-sans-h6-darkred mt-2 mb-0">{errors.estado.message}</p>}
       </div>
     );
