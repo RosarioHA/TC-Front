@@ -27,9 +27,6 @@ const EdicionUsuario = () => {
   const { dataSector, loadingSector } = useSector();
   const { competencias, loading: competenciasLoading, error: competenciasError } = useCompetenciasList();
   const { userDetails } = useUserDetails(id);
-  console.log("userDetails", userDetails);
-  console.log("originalData", originalData)
-  console.log("originalData is_active", originalData.is_active);
 
   const { control, handleSubmit, setValue, watch, formState: { errors } } = useForm({
     shouldUnregister: false,
@@ -44,17 +41,18 @@ const EdicionUsuario = () => {
       is_active: userDetails?.is_active !== undefined ? userDetails.is_active === 'activo' : false,
     },
   });
-  console.log("userDetails is_active", userDetails?.is_active)
-  console.log("userDetails", userDetails)
 
   useEffect(() => {
+    // Inicializa datos originales al montar componente y al cambiar userDetails
     if (userDetails) {
+      console.log("userDetails (antes de setOriginalData):", userDetails);
       setOriginalData({
         ...userDetails,
         is_active: userDetails.is_active || false,
       });
 
-      const is_activeValue = userDetails.is_active === "activo";
+      const is_activeValue = userDetails.is_active || false;
+      console.log("is_activeValue:", is_activeValue);
       setValue("is_active", is_activeValue);
     }
   }, [userDetails, setValue]);
@@ -76,14 +74,18 @@ const EdicionUsuario = () => {
   }, [editMode, userDetails, originalData]);
 
   useEffect(() => {
+    console.log("editMode:", editMode);
+    console.log("userDetails (antes del segundo bloque):", userDetails);
+    // Establece valores iniciales en modo Edicion
     if (editMode && userDetails) {
+      console.log("editMode y userDetails (antes de setOriginalData):", editMode, userDetails);
       const rutValue = userDetails.rut || '';
       const nombreValue = userDetails.nombre_completo || '';
       const emailValue = userDetails.email || '';
       const perfilValue = userDetails.perfil || '';
       const regionValue = userDetails.region ? userDetails.region.id : null;
       const sectorValue = userDetails.sector ? userDetails.sector.id : null;
-      const estadoValue = userDetails.is_active ? 'activo' : 'inactivo';
+      const estadoValue = userDetails.is_active === true;
       
       setOriginalData({
         rut: rutValue,
@@ -136,7 +138,6 @@ const EdicionUsuario = () => {
 
   const handleDdSelectChange = async (fieldName, selectedOption) => {
     try {
-      console.log('DropdownChange - fieldName:', fieldName, 'selectedOption:', selectedOption.label);
       if (selectedOption && selectedOption.label) {
         setValue(fieldName, selectedOption.label);
   
@@ -150,8 +151,6 @@ const EdicionUsuario = () => {
             ...(selectedOption.label === 'SUBDERE' ? { sector: null, region: null } : {}),
             ...(selectedOption.label === 'Usuario Observador' ? { sector: null, region: null } : {}),
           };
-  
-          console.log('Updated originalData:', newData);
           return newData;
         });
       }
@@ -159,11 +158,9 @@ const EdicionUsuario = () => {
       console.error('Error en handleDropdownChange:', error);
     }
   };
-  console.log("originalData.perfil", originalData.perfil)
   
   const handleDdSelectBuscadorChange = async (fieldName, selectedOption) => {
     try {
-      console.log('DropdownChange - fieldName:', fieldName, 'selectedOption:', selectedOption.value);
       if (selectedOption && selectedOption.value) {
         setValue(fieldName, selectedOption.value);
         // Actualiza el estado originalData con el ID del sector
@@ -196,8 +193,6 @@ const EdicionUsuario = () => {
         ...userDetails,
         ...originalData,
       };
-
-      console.log("Datos que se enviarán al backend:", updatedFormData);
       await editUser(id, updatedFormData);
       setEditMode(false);
       history('/home/success', { state: { origen: "editar_usuario" } });
