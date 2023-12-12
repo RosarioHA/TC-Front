@@ -108,13 +108,13 @@ const EdicionUsuario = () => {
 
   const handleDdSelectChange = async (fieldName, selectedOption) => {
     try {
-      console.log('DropdownChange - fieldName:', fieldName, 'selectedOption:', selectedOption);
-      if (selectedOption && selectedOption.nombre) {
-        setValue(fieldName, selectedOption.nombre);
+      console.log('DropdownChange - fieldName:', fieldName, 'selectedOption:', selectedOption.label);
+      if (selectedOption && selectedOption.label) {
+        setValue(fieldName, selectedOption.label);
         // Actualiza el estado originalData con el ID del sector
         setOriginalData((prevData) => ({
           ...prevData,
-          [fieldName]: selectedOption.id,
+          [fieldName]: selectedOption.label,
         }));
       }
     } catch (error) {
@@ -124,13 +124,13 @@ const EdicionUsuario = () => {
   
   const handleDdSelectBuscadorChange = async (fieldName, selectedOption) => {
     try {
-      console.log('DropdownChange - fieldName:', fieldName, 'selectedOption:', selectedOption);
-      if (selectedOption && selectedOption.id) {
-        setValue(fieldName, selectedOption.id);
+      console.log('DropdownChange - fieldName:', fieldName, 'selectedOption:', selectedOption.value);
+      if (selectedOption && selectedOption.value) {
+        setValue(fieldName, selectedOption.value);
         // Actualiza el estado originalData con el ID del sector
         setOriginalData((prevData) => ({
           ...prevData,
-          [fieldName]: selectedOption.id,
+          [fieldName]: selectedOption.value,
         }));
       }
     } catch (error) {
