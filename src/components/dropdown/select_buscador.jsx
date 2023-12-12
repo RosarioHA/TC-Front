@@ -46,7 +46,7 @@ const DropdownSelectBuscador = ({ label, placeholder, options, onSelectionChange
   const handleOptionClick = (option) => {
     setSelectedOption(option);
     setIsOpen(false);
-    onSelectionChange(option.value);
+    onSelectionChange(option);
   };
 
   const filteredOptions = options.filter((option) =>
