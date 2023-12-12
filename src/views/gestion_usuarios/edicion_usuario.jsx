@@ -12,6 +12,8 @@ import { useGroups } from "../../hooks/useGroups";
 import { useRegion } from "../../hooks/useRegion";
 import { useSector } from "../../hooks/useSector";
 import { useCompetenciasList } from "../../hooks/useCompetenciasList";
+import { yupResolver } from '@hookform/resolvers/yup';
+import { esquemaEdicionUsuarioNUEVO } from "../../validaciones/esquemaEditarUsuario";
 
 const EdicionUsuario = () => {
   const { id } = useParams();
@@ -32,13 +34,18 @@ const EdicionUsuario = () => {
   const { control, handleSubmit, setValue, watch, formState: { errors } } = useForm({
     shouldUnregister: false,
     mode: "manual",
+    resolver: yupResolver(esquemaEdicionUsuarioNUEVO),
     defaultValues: {
+      nombre_completo: userDetails?.nombre_completo || "",
+      email: userDetails?.email || "",
       perfil: userDetails?.perfil || "",
       region: userDetails?.region?.id || null,
       sector: userDetails?.sector?.id || null,
-      is_active: userDetails?.is_active || false,
+      is_active: userDetails?.is_active !== undefined ? userDetails.is_active === 'activo' : false,
     },
   });
+  console.log("userDetails is_active", userDetails?.is_active)
+  console.log("userDetails", userDetails)
 
   useEffect(() => {
     if (userDetails) {
@@ -230,29 +237,49 @@ const EdicionUsuario = () => {
         </div>
 
         <div className="my-4">
-          < CustomInput
-            label="Nombre Completo (Obligatorio)"
-            placeholder={userDetails ? userDetails.nombre_completo : ''}
-            id="nombre_completo"
+          <Controller
             name="nombre_completo"
-            readOnly={!editMode}
-            maxLength={null}
-            onChange={(newValue) => handleInputChange('nombre_completo', newValue)}
-            initialValue={userDetails ? userDetails.nombre_completo : ''}
+            control={control}
+            render={({ field }) => (
+              <CustomInput
+                label="Nombre Completo (Obligatorio)"
+                placeholder={userDetails ? userDetails.nombre_completo : ''}
+                id="nombre_completo"
+                readOnly={!editMode}
+                maxLength={null}
+                onChange={(newValue) => {
+                  setValue('nombre_completo', newValue);
+                  handleInputChange('nombre_completo', newValue);
+                }}
+                initialValue={userDetails ? userDetails.nombre_completo : ''}
+                error={errors.nombre_completo?.message}
+                {...field}
+              />
+            )}
           />
         </div>
 
         <div className="my-4">
-          < CustomInput
-            label="Correo electrónico"
-            placeholder={userDetails ? userDetails.email : ''}
-            id="email"
-            name="email"
-            readOnly={!editMode}
-            maxLength={null}
-            onChange={(newValue) => handleInputChange('email', newValue)}
-            initialValue={userDetails ? userDetails.email : ''}
-          />
+          <Controller
+          name="email"
+          control={control}
+          render={({ field }) => (
+            <CustomInput
+              label="Correo electrónico"
+              placeholder={userDetails ? userDetails.email : ''}
+              id="email"
+              readOnly={!editMode}
+              maxLength={null}
+              onChange={(newValue) => {
+                setValue('email', newValue);
+                handleInputChange('email', newValue);
+              }}
+              initialValue={userDetails ? userDetails.email : ''}
+              error={errors.email?.message}
+              {...field}
+            />
+          )}
+        />
         </div>
 
         <div className="my-4">
