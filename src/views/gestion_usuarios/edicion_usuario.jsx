@@ -17,7 +17,7 @@ const EdicionUsuario = () => {
   const { id } = useParams();
   const history = useNavigate();
   const [editMode, setEditMode] = useState(false);
-  const [activeButton, setActiveButton] = useState(null);
+  //const [activeButton, setActiveButton] = useState(null);
   const [originalData, setOriginalData] = useState({});
   const [currentPerfil, setCurrentPerfil] = useState('');
   const { editUser, isLoading: editUserLoading, error: editUserError } = useEditUser();
@@ -35,6 +35,7 @@ const EdicionUsuario = () => {
       perfil: userDetails?.perfil || '',
       region: userDetails?.region?.id || null,
       sector: userDetails?.sector?.id || null,
+      is_active: userDetails?.is_active || false,
     },
   });
 
@@ -61,8 +62,8 @@ const EdicionUsuario = () => {
       const emailValue = userDetails.email || '';
       const perfilValue = userDetails.perfil || '';
       const regionValue = userDetails.region ? userDetails.region.id : null;
-      const sectorValue = userDetails.sector || '';
-      const estadoValue = userDetails.estado || '';
+      const sectorValue = userDetails.sector ? userDetails.sector.id : null;
+      const estadoValue = userDetails.is_active ? 'activo' : 'inactivo';
       
       setOriginalData({
         rut: rutValue,
@@ -159,7 +160,6 @@ const EdicionUsuario = () => {
   }; 
   
   const handleEstadoChange = (selectionName, nuevoEstado) => {
-    setActiveButton(selectionName);
     console.log("nuevo estado:", nuevoEstado);
     const isActivo = selectionName === 'activo';
     setValue('is_active', isActivo);
@@ -299,7 +299,7 @@ const EdicionUsuario = () => {
                 <RadioButtons
                   readOnly={!editMode}
                   id="is_active"
-                  initialState={activeButton}
+                  initialState={originalData.is_active}
                   handleEstadoChange={handleEstadoChange}
                   field={field}
                   errors={errors}
