@@ -46,11 +46,10 @@ const EdicionUsuario = () => {
   }, [competenciasLoading, competenciasError, competencias]);
 
   useEffect(() => {
+    // Define el conjunto de data a utilizar en renderizado condicional de campos Region y Sector.
     if (editMode) {
-      // Si esta en modo edicion, utiliza originalData.perfil
       setCurrentPerfil(originalData.perfil || '');
     } else {
-      // Si esta en modo visualizacion, utiliza userDetails.perfil
       setCurrentPerfil(userDetails?.perfil || '');
     }
   }, [editMode, userDetails, originalData]);
@@ -102,19 +101,15 @@ const EdicionUsuario = () => {
     }));
   };
 
-  //opciones de perfil 
+  //opciones de Perfil, Region y Sector 
   const  opcionesGroups = dataGroups.map(group => ({
     value:group.id,
     label: group.name
   }))
-
-  // opciones region
   const opcionesDeRegiones = dataRegiones.map(region => ({
     value: region.id,
     label: region.region
   }));
-
-  // opciones sector
   const opcionesSector = dataSector.map(sector => ({
     value:sector.id,
     label:sector.nombre,
@@ -265,7 +260,7 @@ const EdicionUsuario = () => {
           />
         </div>
         
-        {/* Renderizan de manera condicional segun el tipo de usuario */}
+        {/* Renderizan de manera condicional segun el Perfil de usuario */}
         {currentPerfil === 'GORE' && (
           <div className="my-4">
             <DropdownSelectBuscador
