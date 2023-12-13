@@ -45,14 +45,14 @@ const EdicionUsuario = () => {
   const renderizadoCondicional = editMode ? perfil : userDetails?.perfil;
 
   useEffect(() => {
-    if (editMode) {
-      // En modo edicion, actualiza los valores iniciales con los valores actuales.
-      setValue('nombre_completo', userDetails?.nombre_completo || "");
-      setValue('email', userDetails?.email || "");
-      setValue('perfil', userDetails?.perfil || "");
-      setValue('region', userDetails?.region?.id || null);
-      setValue('sector', userDetails?.sector?.id || null);
-      setValue('is_active', userDetails?.is_active !== undefined ? userDetails.is_active === 'activo' : false);
+    if (editMode && userDetails) {
+      // En modo edición, actualiza los valores iniciales con los valores actuales.
+      setValue('nombre_completo', userDetails.nombre_completo || "");
+      setValue('email', userDetails.email || "");
+      setValue('perfil', userDetails.perfil || "");
+      setValue('region', userDetails.region ? userDetails.region.id : null);
+      setValue('sector', userDetails.sector ? userDetails.sector.id : null);
+      setValue('is_active', userDetails.is_active !== undefined ? userDetails.is_active : false);
     }
   }, [editMode, userDetails, setValue]);
 
@@ -123,8 +123,6 @@ const EdicionUsuario = () => {
       console.error("Error al editar el usuario:", error);
     }
   };
-
-  console.log("watch perfil", watch('perfil'))
 
   return (
     <div className="container col-10 my-4">
