@@ -3,25 +3,27 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Controller, useForm } from 'react-hook-form';
 //import { yupResolver } from '@hookform/resolvers/yup';
 //import { esquemaCreacionUsuario } from "../../validaciones/esquemaValidacion";
-import { useEditUser } from "../../hooks/useEditUser";
-import { useUserDetails } from "../../hooks/useUserDetail";
+import { useEditUser } from "../../hooks/usuarios/useEditUser";
+import { useUserDetails } from "../../hooks/usuarios/useUserDetail";
 import CustomInput from "../../components/forms/custom_input";
 import DropdownSelect from "../../components/dropdown/select";
 import DropdownSelectBuscador from "../../components/dropdown/select_buscador";
 import DropdownSinSecciones from "../../components/dropdown/checkbox_sinSecciones_conTabla";
 import RadioButtons from "../../components/forms/radio_btns";
 
-const useFetchUserDetails = (id) => {
+const useFetchUserDetails = (id) =>
+{
   const { userDetails, loading, error } = useUserDetails(id);
   console.log("User Details Hook:", userDetails, loading, error);
   return { details: userDetails, loading, error };
 };
 
-const EdicionUsuario = () => {
+const EdicionUsuario = () =>
+{
   const { id } = useParams();
   console.log("id de usuario en vista Editar usuario", id);
   const history = useNavigate();
-  const [editMode, setEditMode] = useState(false);
+  const [ editMode, setEditMode ] = useState(false);
   const [ activeButton, setActiveButton ] = useState(null);
 
   const { editUser, isLoading: editUserLoading, error: editUserError } = useEditUser();
@@ -34,35 +36,43 @@ const EdicionUsuario = () => {
     mode: 'manual',
   });
 
-  useEffect(() => {
-    if (editMode && details) {
+  useEffect(() =>
+  {
+    if (editMode && details)
+    {
       const rutValue = details.rut || '';
       const nombreValue = details.nombre_completo || '';
       setValue('rut', rutValue);
       setValue('nombre', nombreValue);
       // ... Establecer otros valores según sea necesario
     }
-  }, [editMode, setValue, details]);
-  
-  
+  }, [ editMode, setValue, details ]);
 
-  const handleBackButtonClick = () => {
+
+
+  const handleBackButtonClick = () =>
+  {
     history(-1);
   };
 
-  const handleEditClick = () => {
+  const handleEditClick = () =>
+  {
     setEditMode((prevMode) => !prevMode);
   };
 
-  const handleEstadoChange = (nuevoEstado) => {
+  const handleEstadoChange = (nuevoEstado) =>
+  {
     setActiveButton(nuevoEstado);
   };
 
-  const onSubmit = async (data) => {
-    try {
+  const onSubmit = async (data) =>
+  {
+    try
+    {
       await editUser(id, data); // Envia los datos actualizados al backend
       setEditMode(false); // Desactiva el modo de edicion después de guardar
-    } catch (editUserError) {
+    } catch (editUserError)
+    {
       console.error("Error al editar el usuario:", editUserError);
     }
   };
@@ -81,7 +91,7 @@ const EdicionUsuario = () => {
         <button className="btn-secundario-s" onClick={handleEditClick}>
           <i className="material-symbols-rounded me-2">edit</i>
           <p className="mb-0">{editMode ? 'Editando' : 'Editar'}</p>
-        </button> 
+        </button>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -119,7 +129,7 @@ const EdicionUsuario = () => {
           < DropdownSelect
             label="Elige el perfil de usuario (Obligatorio)"
             placeholder={details ? details.perfil : ''}
-            options={['opcion 1', 'opcion 2']}
+            options={[ 'opcion 1', 'opcion 2' ]}
             readOnly={!editMode}
           />
         </div>
@@ -131,8 +141,8 @@ const EdicionUsuario = () => {
               label="Elige la región a la que representa (Obligatorio)"
               placeholder={details.region || ''}
               readOnly={!editMode}
-              options={['opcion 1', 'opcion 2']}
-              //onSelectionChange={handleRegionChange}
+              options={[ 'opcion 1', 'opcion 2' ]}
+            //onSelectionChange={handleRegionChange}
             />
           </div>
         )}
@@ -142,8 +152,8 @@ const EdicionUsuario = () => {
               label="Elige el organismo al que pertenece (Obligatorio)"
               placeholder={details.sector || ''}
               readOnly={!editMode}
-              options={['opcion 1', 'opcion 2']}
-              // onSelectionChange={handleSectorChange}
+              options={[ 'opcion 1', 'opcion 2' ]}
+            // onSelectionChange={handleSectorChange}
             />
           </div>
         )}
@@ -174,24 +184,24 @@ const EdicionUsuario = () => {
             label="Competencia Asignada (Opcional)"
             placeholder="Busca el nombre de la competencia"
             readOnly={!editMode}
-            options={['opcion 1', 'opcion 2', 'opcion 3']}
-            selectedOptions={['opcion 1', 'opcion 2']}
-            // onSelectionChange={(selectedOptions) => {
-            //   field.onChange(selectedOptions);
-            //   handleCompetenciasChange(selectedOptions);
-            //   }}
-            // onClick={handleInputClick}
-            // onMouseDown={handleInputClick}
+            options={[ 'opcion 1', 'opcion 2', 'opcion 3' ]}
+            selectedOptions={[ 'opcion 1', 'opcion 2' ]}
+          // onSelectionChange={(selectedOptions) => {
+          //   field.onChange(selectedOptions);
+          //   handleCompetenciasChange(selectedOptions);
+          //   }}
+          // onClick={handleInputClick}
+          // onMouseDown={handleInputClick}
           />
         </div>
 
         {editMode && (
-        <button className="btn-primario-s mb-5" type="submit">
-          <i className="material-symbols-rounded me-2">save</i>
-          <p className="mb-0">Guardar</p>
-        </button>
+          <button className="btn-primario-s mb-5" type="submit">
+            <i className="material-symbols-rounded me-2">save</i>
+            <p className="mb-0">Guardar</p>
+          </button>
         )}
-       
+
       </form>
       {editUserLoading && <p>Cargando...</p>}
       {editUserError && <p>Error al editar el usuario: {editUserError.message}</p>}

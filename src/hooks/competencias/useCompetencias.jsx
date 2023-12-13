@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useState } from "react"
-import { apiTransferenciaCompentencia } from "../services/transferenciaCompetencia";
+import { apiTransferenciaCompentencia } from "../../services/transferenciaCompetencia";
 export const useCompetencia = (id) =>
 {
   const [ dataCompetencia, setDataCompetencia ] = useState([]);
   const [ dataListCompetencia, setDataListCompetencia ] = useState([]);
-  const [ competenciaDetails , setCompetenciaDetails] = useState([]); 
+  const [ competenciaDetails, setCompetenciaDetails ] = useState([]);
   const [ loadingCompetencia, setLoadingComptencia ] = useState(true);
   const [ errorCompetencia, setErrorCompetencia ] = useState(null);
   const [ paginationCompetencia, setPaginationCompeencia ] = useState({ count: 0, next: null, previous: null });
@@ -43,13 +43,13 @@ export const useCompetencia = (id) =>
     }
   }, []);
 
-  
+
   const updatePage = (newPage) =>
   {
     setCurrentPage(newPage);
   }
-  
-  
+
+
   const fetchCompetenciaDetails = useCallback(async (id) =>
   {
     setLoadingComptencia(true);
@@ -59,7 +59,6 @@ export const useCompetencia = (id) =>
       setCompetenciaDetails(response.data);
     } catch (err)
     {
-      console.log(err);
       setErrorCompetencia(err);
     } finally
     {
@@ -67,14 +66,17 @@ export const useCompetencia = (id) =>
     }
   }, []);
 
-  useEffect(() => {
-    if (id) {
+  useEffect(() =>
+  {
+    if (id)
+    {
       fetchCompetenciaDetails(id);
-    } else {
+    } else
+    {
       fetchCompetencias();
       fetchListaCompentencias();
     }
-  }, [id, fetchCompetencias, fetchListaCompentencias, fetchCompetenciaDetails]);
+  }, [ id, fetchCompetencias, fetchListaCompentencias, fetchCompetenciaDetails ]);
 
 
   return {

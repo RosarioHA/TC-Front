@@ -4,25 +4,27 @@ import { useAuth } from '../../context/AuthContext';
 import InputSearch from "../../components/forms/Input_search";
 import { TableCheckbox } from "../../components/tables/TableCheck";
 import { columnTitlesUser } from "../../Data/Usuarios";
-import { useUsers } from '../../hooks/useUsers';
+import { useUsers } from '../../hooks/usuarios/useUsers';
 
 const GestionUsuarios = () =>
 {
   const { userData } = useAuth();
   const { users, pagination, updateUrl } = useUsers();
   const [ searchQuery, setSearchQuery ] = useState('');
-  const [ filteredUsers, setFilteredUsers ] = useState([users]);
+  const [ filteredUsers, setFilteredUsers ] = useState([ users ]);
   const navigate = useNavigate();
 
   const userSubdere = userData?.perfil?.includes('SUBDERE');
 
   //mostrar  siempre a si mismo en primer lugar y eliminar checkbox 
 
-  useEffect(() => {
-    if (users) {
+  useEffect(() =>
+  {
+    if (users)
+    {
       setFilteredUsers(users);
     }
-  }, [users]);
+  }, [ users ]);
 
   const sortOptions = {
     Estado: (direction) => (a, b) =>
@@ -41,7 +43,7 @@ const GestionUsuarios = () =>
     },
   };
 
-   // Función de búsqueda
+  // Función de búsqueda
   const handleSearch = useCallback((query) =>
   {
     const lowerCaseQuery = query.toLowerCase();
@@ -64,7 +66,7 @@ const GestionUsuarios = () =>
     const pageNumber = new URL(pageUrl, window.location.origin).searchParams.get('page');
     updateUrl(`/users/?page=${pageNumber}`);
   };
-  
+
 
   // Modificar la función para renderizar botones de paginación
   const renderPaginationButtons = () =>

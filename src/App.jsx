@@ -1,6 +1,7 @@
 import React, { Suspense } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { ProtectedRoute } from './context/ProtectedRoute';
+import { FormularioProvider } from "./context/FormSectorial";
 import FormularioLayout from './layout/FormularioLayout';
 const Muestrario = React.lazy(() => import('./views/muestrario'));
 const MainLayout = React.lazy(() => import('./layout/mainLayout'));
@@ -53,18 +54,29 @@ function App()
             }
           />
           <Route path="listado_competencias" element={<GestionCompetencias />} />
-          <Route path="estado_competencia/:id" element={<EstadoCompentencia />}/>
+          <Route path="estado_competencia/:id" element={<EstadoCompentencia />} />
           <Route path="crear_competencia" element={<CreacionCompetencia />} />
           <Route path="editar_competencia/:id" element={<EditarCompetencia />} />
           <Route path="success" element={<Success />} />
-          <Route path="formulario_sectorial" element={<FormularioLayout />}>
-            <Route index element={<PasoUno />} /> 
+
+          <Route
+            path="formulario_sectorial/:id"
+            element={
+              <FormularioProvider>
+                <ProtectedRoute allowedProfiles={[ 'Usuario Sectorial' ]}>
+                  <FormularioLayout />
+                </ProtectedRoute>
+              </FormularioProvider>
+            }
+          >
+            <Route index element={<PasoUno />} />
             <Route path="paso_uno" element={<PasoUno />} />
-            <Route path="paso_dos" element={<PasoDos/>} />
-            <Route path="paso_tres" element={<PasoTres/>} />
+            <Route path="paso_dos" element={<PasoDos />} />
+            <Route path="paso_tres" element={<PasoTres />} />
             <Route path="paso_cuatro" element={<PasoCuatro />} />
             <Route path="paso_cinco" element={<PasoCinco />} />
           </Route>
+
           <Route path="ingresar_observaciones" element={<Observaciones />}></Route>
           <Route path="agregar_minuta" element={<Minuta />}></Route>
           <Route path="*" element={<Error404 />} />

@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export const HorizontalStepper = () =>
+
+export const HorizontalStepper = ({id}) =>
 {
+
   // Estado inicial de los pasos
-  const [ stepsState, setStepsState ] = useState([ 'default', 'active', 'warning', 'done', 'default' ]);
+  const [ stepsState, setStepsState ] = useState([ 'default', 'active', 'warning', 'done', ]);
   const navigate = useNavigate();
   // Títulos para cada paso
   const stepTitles = [
@@ -33,19 +35,19 @@ export const HorizontalStepper = () =>
     switch (stepNumber)
     {
       case 1:
-        navigate('/home/formulario_sectorial/paso_uno');
+        navigate(`/home/formulario_sectorial/${id}/paso_uno`);
         break;
       case 2:
-        navigate('/home/formulario_sectorial/paso_dos');
+        navigate(`/home/formulario_sectorial/${id}/paso_dos`);
         break;
       case 3:
-        navigate('/home/formulario_sectorial/paso_tres');
+        navigate(`/home/formulario_sectorial/${id}/paso_tres`);
         break;
       case 4:
-        navigate('/home/formulario_sectorial/paso_cuatro');
+        navigate(`/home/formulario_sectorial/${id}/paso_cuatro`);
         break;
       case 5:
-        navigate('/home/formulario_sectorial/paso_cinco');
+        navigate(`/home/formulario_sectorial/${id}/paso_cinco`);
         break;
     }
 

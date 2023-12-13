@@ -8,7 +8,6 @@ const Home = () =>
   const { dataCompetencia } = useContext(CompetenciasContext);
   const  navigate =  useNavigate(); 
 
-  console.log('home', dataCompetencia); 
 
   const handleDetailsCompetencia = (competencia) => {
     navigate(`/home/estado_competencia/${competencia.id}`, { state: { competencia } });

@@ -1,12 +1,11 @@
+export const Avance = ({ avance }) => {
+  if (!avance) {
+    // Manejar el caso en que avance no esté definido
+    return <div>Datos de avances No disponible</div>;
+  }
 
-export const Avance = () =>
-{
-
-  const completados = 16; 
-  const total = 16; 
+  const [completados, total] = avance.split('/').map(Number);
   const esCompleto = completados === total;
-
-  // Clase para avance-step basado en si está completo o no
   const claseAvanceStep = `avance-step py-1 px-1 mx-2 ${esCompleto ? '' : 'incompleto'}`;
 
 
@@ -22,5 +21,5 @@ export const Avance = () =>
         </span>
       </div>
     </div>
-  )
-}
+  );
+};

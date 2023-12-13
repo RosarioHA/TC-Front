@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useCompetencia } from "../../hooks/useCompetencias";
+import { useCompetencia } from "../../hooks/competencias/useCompetencias";
 import { useAuth } from "../../context/AuthContext";
 import InputSearch from "../../components/forms/Input_search";
 import { TableCheckbox } from "../../components/tables/TableCheck";
@@ -64,7 +64,8 @@ const GestionCompetencias = () =>
     setFilteredCompetencia(filtered);
   }, [ dataListCompetencia ]);
 
-  const handleDetailsCompetencia = (competencia) => {
+  const handleDetailsCompetencia = (competencia) =>
+  {
     console.log("Navegando a detalles con competencia:", competencia);
     navigate(`/home/estado_competencia/${competencia.id}`, { state: { competencia } });
   };
@@ -118,22 +119,22 @@ const GestionCompetencias = () =>
       <div className="text-sans-h2 mx-3">Listado de Competencias</div>
       {filteredCompetencia.length === 0 ? (
         <div className="container-home d-flex justify-content-center my-5 py-5 ">
-          {userSubdere? (
+          {userSubdere ? (
             <div className="flex-column my-5 py-5">
               <span className="text-sans-h2-tertiary"> Aún  no haz creado competencias</span>
               <div className="mx-5 px-5 my-2">
-              <Link className="btn-primario-l py-3 link-underline link-underline-opacity-0" to='home/crear_competencia'>
-                <u>Crear Competencia</u>
-                <span className="material-symbols-outlined mx-1">
-                  post_add
-                </span>
-              </Link>
+                <Link className="btn-primario-l py-3 link-underline link-underline-opacity-0" to='home/crear_competencia'>
+                  <u>Crear Competencia</u>
+                  <span className="material-symbols-outlined mx-1">
+                    post_add
+                  </span>
+                </Link>
               </div>
             </div>
-          ):(
-          <div className="align-self-center">
-            <span className="text-sans-h2-tertiary" > Aún no hay competencias creadas</span>
-          </div>
+          ) : (
+            <div className="align-self-center">
+              <span className="text-sans-h2-tertiary" > Aún no hay competencias creadas</span>
+            </div>
           )
           }
         </div>
