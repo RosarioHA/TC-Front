@@ -13,14 +13,12 @@ import { useRegion } from "../../hooks/useRegion";
 import { useSector } from "../../hooks/useSector";
 import { useCompetenciasList } from "../../hooks/useCompetenciasList";
 import { yupResolver } from '@hookform/resolvers/yup';
-import { esquemaEdicionUsuarioNUEVO } from "../../validaciones/esquemaEditarUsuario";
+import { esquemaEdicionUsuarios } from "../../validaciones/esquemaEditarUsuario";
 
 const EdicionUsuario = () => {
   const { id } = useParams();
   const history = useNavigate();
   const [editMode, setEditMode] = useState(false);
-  const [originalData, setOriginalData] = useState({});
-  const [currentPerfil, setCurrentPerfil] = useState("");
   const { editUser, isLoading: editUserLoading, error: editUserError } = useEditUser();
   const { dataGroups, loadingGroups } = useGroups();
   const { dataRegiones, loadingRegiones } = useRegion();
@@ -30,8 +28,8 @@ const EdicionUsuario = () => {
 
   const { control, handleSubmit, setValue, watch, formState: { errors } } = useForm({
     shouldUnregister: false,
-    mode: "manual",
-    resolver: yupResolver(esquemaEdicionUsuarioNUEVO),
+    mode: "onSubmit",
+    resolver: yupResolver(esquemaEdicionUsuarios),
     defaultValues: {
       nombre_completo: userDetails?.nombre_completo || "",
       email: userDetails?.email || "",
@@ -43,19 +41,16 @@ const EdicionUsuario = () => {
   });
 
   useEffect(() => {
-    // Inicializa datos originales al montar componente y al cambiar userDetails
-    if (userDetails) {
-      console.log("userDetails (antes de setOriginalData):", userDetails);
-      setOriginalData({
-        ...userDetails,
-        is_active: userDetails.is_active || false,
-      });
-
-      const is_activeValue = userDetails.is_active || false;
-      console.log("is_activeValue:", is_activeValue);
-      setValue("is_active", is_activeValue);
+    if (editMode) {
+      // En modo edicion, actualiza los valores iniciales con los valores actuales.
+      setValue('nombre_completo', userDetails?.nombre_completo || "");
+      setValue('email', userDetails?.email || "");
+      setValue('perfil', userDetails?.perfil || "");
+      setValue('region', userDetails?.region?.id || null);
+      setValue('sector', userDetails?.sector?.id || null);
+      setValue('is_active', userDetails?.is_active !== undefined ? userDetails.is_active === 'activo' : false);
     }
-  }, [userDetails, setValue]);
+  }, [editMode, userDetails, setValue]);
 
   useEffect(() => {
     // Verifica si las competencias se han cargado
@@ -64,48 +59,48 @@ const EdicionUsuario = () => {
     }
   }, [competenciasLoading, competenciasError, competencias]);
 
-  useEffect(() => {
-    // Define el conjunto de data a utilizar en renderizado condicional de campos Region y Sector.
-    if (editMode) {
-      setCurrentPerfil(originalData.perfil || '');
-    } else {
-      setCurrentPerfil(userDetails?.perfil || '');
-    }
-  }, [editMode, userDetails, originalData]);
+  // useEffect(() => {
+  //   // Define el conjunto de data a utilizar en renderizado condicional de campos Region y Sector.
+  //   if (editMode) {
+  //     setCurrentPerfil(originalData.perfil || '');
+  //   } else {
+  //     setCurrentPerfil(userDetails?.perfil || '');
+  //   }
+  // }, [editMode, userDetails, originalData]);
 
-  useEffect(() => {
-    console.log("editMode:", editMode);
-    console.log("userDetails (antes del segundo bloque):", userDetails);
-    // Establece valores iniciales en modo Edicion
-    if (editMode && userDetails) {
-      console.log("editMode y userDetails (antes de setOriginalData):", editMode, userDetails);
-      const rutValue = userDetails.rut || '';
-      const nombreValue = userDetails.nombre_completo || '';
-      const emailValue = userDetails.email || '';
-      const perfilValue = userDetails.perfil || '';
-      const regionValue = userDetails.region ? userDetails.region.id : null;
-      const sectorValue = userDetails.sector ? userDetails.sector.id : null;
-      const estadoValue = userDetails.is_active === true;
+  // useEffect(() => {
+  //   console.log("editMode:", editMode);
+  //   console.log("userDetails (antes del segundo bloque):", userDetails);
+  //   // Establece valores iniciales en modo Edicion
+  //   if (editMode && userDetails) {
+  //     console.log("editMode y userDetails (antes de setOriginalData):", editMode, userDetails);
+  //     const rutValue = userDetails.rut || '';
+  //     const nombreValue = userDetails.nombre_completo || '';
+  //     const emailValue = userDetails.email || '';
+  //     const perfilValue = userDetails.perfil || '';
+  //     const regionValue = userDetails.region ? userDetails.region.id : null;
+  //     const sectorValue = userDetails.sector ? userDetails.sector.id : null;
+  //     const estadoValue = userDetails.is_active === true;
       
-      setOriginalData({
-        rut: rutValue,
-        nombre_completo: nombreValue,
-        email: emailValue,
-        perfil: perfilValue,
-        region: regionValue,
-        sector: sectorValue,
-        is_active: estadoValue,
-      });
+  //     setOriginalData({
+  //       rut: rutValue,
+  //       nombre_completo: nombreValue,
+  //       email: emailValue,
+  //       perfil: perfilValue,
+  //       region: regionValue,
+  //       sector: sectorValue,
+  //       is_active: estadoValue,
+  //     });
 
-      setValue('rut', rutValue);
-      setValue('nombre_completo', nombreValue);
-      setValue('email', emailValue);
-      setValue('perfil', perfilValue);
-      setValue('region', regionValue);
-      setValue('sector', sectorValue);
-      setValue('is_active', estadoValue);
-    }
-  }, [editMode, setValue, userDetails, watch]);
+  //     setValue('rut', rutValue);
+  //     setValue('nombre_completo', nombreValue);
+  //     setValue('email', emailValue);
+  //     setValue('perfil', perfilValue);
+  //     setValue('region', regionValue);
+  //     setValue('sector', sectorValue);
+  //     setValue('is_active', estadoValue);
+  //   }
+  // }, [editMode, setValue, userDetails, watch]);
 
   const handleBackButtonClick = () => {
     history(-1);
@@ -115,12 +110,12 @@ const EdicionUsuario = () => {
     setEditMode((prevMode) => !prevMode);
   };
 
-  const handleInputChange = (fieldName, value) => {
-    setOriginalData((prevData) => ({
-      ...prevData,
-      [fieldName]: value,
-    }));
-  };
+  // const handleInputChange = (fieldName, value) => {
+  //   setOriginalData((prevData) => ({
+  //     ...prevData,
+  //     [fieldName]: value,
+  //   }));
+  // };
 
   //opciones de Perfil, Region y Sector 
   const  opcionesGroups = dataGroups.map(group => ({
@@ -136,70 +131,46 @@ const EdicionUsuario = () => {
     label:sector.nombre,
   }));
 
-  const handleDdSelectChange = async (fieldName, selectedOption) => {
+  const handleDdSelectChange = (fieldName, selectedOption) => {
     try {
       if (selectedOption && selectedOption.label) {
         setValue(fieldName, selectedOption.label);
-  
-        setOriginalData(prevData => {
-          const newData = {
-            ...prevData,
-            [fieldName]: selectedOption.label,
-            ...(selectedOption.label === 'Usuario Sectorial' ? { region: null } : {}),
-            ...(selectedOption.label === 'GORE' ? { sector: null } : {}),
-            ...(selectedOption.label === 'DIPRES' ? { sector: null, region: null } : {}),
-            ...(selectedOption.label === 'SUBDERE' ? { sector: null, region: null } : {}),
-            ...(selectedOption.label === 'Usuario Observador' ? { sector: null, region: null } : {}),
-          };
-          return newData;
-        });
       }
     } catch (error) {
-      console.error('Error en handleDropdownChange:', error);
+      console.error('Error en handleDdSelectChange:', error);
     }
   };
   
-  const handleDdSelectBuscadorChange = async (fieldName, selectedOption) => {
+  const handleDdSelectBuscadorChange = (fieldName, selectedOption) => {
     try {
       if (selectedOption && selectedOption.value) {
         setValue(fieldName, selectedOption.value);
-        // Actualiza el estado originalData con el ID del sector
-        setOriginalData((prevData) => ({
-          ...prevData,
-          [fieldName]: selectedOption.value,
-        }));
       }
     } catch (error) {
-      console.error('Error en handleDropdownChange:', error);
+      console.error('Error en handleDdSelectBuscadorChange:', error);
     }
   }; 
   
   const handleEstadoChange = (selectionName, nuevoEstado) => {
     const isActivo = nuevoEstado === "activo";
     setValue("is_active", isActivo);
-    setOriginalData((prevData) => ({
-      ...prevData,
-      is_active: isActivo,
-    }));
   };
 
   // const handleCompetenciasChange = (selectedCompetencias) => {
   //   setValue('competencias', selectedCompetencias);
   // }
 
-  const onSubmit = async () => {
+  const onSubmit = async (formData) => {
     try {
-      const updatedFormData = {
-        ...userDetails,
-        ...originalData,
-      };
-      await editUser(id, updatedFormData);
+      await editUser(id, formData);
       setEditMode(false);
       history('/home/success', { state: { origen: "editar_usuario" } });
     } catch (error) {
       console.error("Error al editar el usuario:", error);
     }
   };
+
+  console.log("watch perfil", watch('perfil'))
 
   return (
     <div className="container col-10 my-4">
@@ -242,12 +213,6 @@ const EdicionUsuario = () => {
                 id="nombre_completo"
                 readOnly={!editMode}
                 maxLength={null}
-                onChange={(newValue) => {
-                  setValue('nombre_completo', newValue);
-                  handleInputChange('nombre_completo', newValue);
-                }}
-                initialValue={userDetails ? userDetails.nombre_completo : ''}
-                error={errors.nombre_completo?.message}
                 {...field}
               />
             )}
@@ -256,25 +221,19 @@ const EdicionUsuario = () => {
 
         <div className="my-4">
           <Controller
-          name="email"
-          control={control}
-          render={({ field }) => (
-            <CustomInput
-              label="Correo electrónico"
-              placeholder={userDetails ? userDetails.email : ''}
-              id="email"
-              readOnly={!editMode}
-              maxLength={null}
-              onChange={(newValue) => {
-                setValue('email', newValue);
-                handleInputChange('email', newValue);
-              }}
-              initialValue={userDetails ? userDetails.email : ''}
-              error={errors.email?.message}
-              {...field}
-            />
-          )}
-        />
+            name="email"
+            control={control}
+            render={({ field }) => (
+              <CustomInput
+                label="Correo electrónico"
+                placeholder={userDetails ? userDetails.email : ''}
+                id="email"
+                readOnly={!editMode}
+                maxLength={null}
+                {...field}
+              />
+            )}
+          />
         </div>
 
         <div className="my-4">
@@ -285,14 +244,14 @@ const EdicionUsuario = () => {
             name="perfil"
             options={loadingGroups ? [] : opcionesGroups}
             readOnly={!editMode}
+            control={control}
             onSelectionChange={(selectedOption) => handleDdSelectChange('perfil', selectedOption)}
-            selectedOption={originalData.perfil}
             initialValue={userDetails ? userDetails.perfil : ''}
           />
         </div>
         
-        {/* Renderizan de manera condicional segun el Perfil de usuario */}
-        {currentPerfil === 'GORE' && (
+        {/* Renderizan de manera condicional según el Perfil de usuario */}
+        {watch('perfil') === 'GORE' && (
           <div className="my-4">
             <DropdownSelectBuscador
               label="Elige la región a la que representa (Obligatorio)"
@@ -301,12 +260,13 @@ const EdicionUsuario = () => {
               name="region"
               readOnly={!editMode}
               options={loadingRegiones ? [] : opcionesDeRegiones}
+              control={control}
               onSelectionChange={(selectedOption) => handleDdSelectBuscadorChange('region', selectedOption)}
               initialValue={userDetails ? userDetails.region : ''}
             />
           </div>
         )}
-        {currentPerfil === 'Usuario Sectorial' && (
+        {watch('perfil') === 'Usuario Sectorial' && (
           <div className="my-4">
             <DropdownSelectBuscador
               label="Elige el organismo al que pertenece (Obligatorio)"
@@ -315,6 +275,7 @@ const EdicionUsuario = () => {
               name="sector"
               readOnly={!editMode}
               options={loadingSector ? []: opcionesSector}
+              control={control}
               onSelectionChange={(selectedOption) => handleDdSelectBuscadorChange('sector', selectedOption)}
               initialValue={userDetails ? userDetails.sector : ''}
             />
@@ -330,7 +291,7 @@ const EdicionUsuario = () => {
                 className="btn-primario-s"
                 disabled
               >
-                {originalData.is_active ? 'Activo' : 'Inactivo'}
+                {watch('is_active') ? 'Activo' : 'Inactivo'}
               </button>
             </div>
           ) : (
@@ -342,7 +303,7 @@ const EdicionUsuario = () => {
                   <RadioButtons
                     readOnly={!editMode}
                     id="is_active"
-                    initialState={originalData.is_active}
+                    initialState={watch('is_active')}
                     handleEstadoChange={handleEstadoChange}
                     field={field}
                     errors={errors}
@@ -350,12 +311,13 @@ const EdicionUsuario = () => {
                   />
                 )}
               />
-              {errors.estado && (
-                <p className="text-sans-h6-darkred mt-2 mb-0">{errors.estado.message}</p>
+              {errors.is_active && (
+                <p className="text-sans-h6-darkred mt-2 mb-0">{errors.is_active.message}</p>
               )}
             </div>
           )}
         </div>
+
 
         <div className="my-4">
           <DropdownSinSecciones

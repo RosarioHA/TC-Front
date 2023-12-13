@@ -3,7 +3,7 @@ import * as yup from 'yup';
 // Expresiones regulares
 const nombreRegex = /^[A-Za-záéíóúüÜñÑ\s']+$/;
 
-export const esquemaEdicionUsuarioNUEVO = yup.object().shape({
+export const esquemaEdicionUsuarios = yup.object().shape({
     nombre_completo: yup
       .string()
       .matches(nombreRegex, 'Formato de nombre inválido')

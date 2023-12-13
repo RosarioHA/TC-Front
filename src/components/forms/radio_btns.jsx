@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
 
-const RadioButtons = ({ initialState, handleEstadoChange, field, errors, is_active }) => {
+const RadioButtons = ({ initialState, handleEstadoChange, errors }) => {
     const [activeButton, setActiveButton] = useState(initialState);
     console.log("activeButton en compo radio button". activeButton);
-    console.log("is_active en radio buttons", is_active);
   
     // Efecto para actualizar el estado interno cuando cambia la propiedad initialState
     useEffect(() => {
@@ -20,10 +19,9 @@ const RadioButtons = ({ initialState, handleEstadoChange, field, errors, is_acti
               type="button"
               className={` ${activeButton === 'activo' ? 'btn-primario-s' : 'btn-secundario-s'}`}
               onClick={() => {
-                handleEstadoChange('activo');
-                field.onChange('activo');
-                setActiveButton('activo'); // Actualizar estado interno
-              } }
+                handleEstadoChange('estado', 'activo'); 
+                setActiveButton('activo');
+              }}
               >
                 <p className="mb-0 text-decoration-underline">Activo</p>
                 {activeButton === 'activo' && <i className="material-symbols-rounded ms-2">check</i>}
@@ -32,10 +30,9 @@ const RadioButtons = ({ initialState, handleEstadoChange, field, errors, is_acti
               type="button"
               className={`ms-2 ${activeButton === 'inactivo' ? 'btn-primario-s' : 'btn-secundario-s'}`}
               onClick={() => {
-                handleEstadoChange('inactivo');
-                field.onChange('inactivo');
-                setActiveButton('inactivo'); // Actualizar estado interno
-              } }
+                handleEstadoChange('estado', 'inactivo'); 
+                setActiveButton('inactivo');
+              }}
               >
                 <p className="mb-0 text-decoration-underline">Inactivo</p>
                 {activeButton === 'inactivo' && <i className="material-symbols-rounded ms-2">check</i>}
