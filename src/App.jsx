@@ -12,7 +12,6 @@ const LoginLayout = React.lazy(() => import('./layout/LoginLayout'));
 const GestionUsuarios = React.lazy(() => import('./views/gestion_usuarios/gestion_usuarios'));
 const CrearUsuario = React.lazy(() => import('./views/gestion_usuarios/creacion_usuario'));
 const EditarUsuario = React.lazy(() => import('./views/gestion_usuarios/edicion_usuario'));
-const DetalleUsuario = React.lazy(() => import('./views/gestion_usuarios/detalleUsuario'));
 const GestionCompetencias = React.lazy(() => import('./views/gestion_competencias/gestion_competencias'));
 const CreacionCompetencia = React.lazy(() => import('./views/gestion_competencias/creacion_competencia'));
 const EditarCompetencia = React.lazy(() => import('./views/gestion_competencias/edicion_competencia'));
@@ -44,7 +43,6 @@ function App()
           <Route index element={<Home />} />
           <Route path="administrar_usuarios" element={<GestionUsuarios />} />
           <Route path="editar_usuario/:id" element={<EditarUsuario />} />
-          <Route path="detalle_usuario/:id" element={<DetalleUsuario />} />
           <Route
             path="crear_usuario"
             element={
