@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { apiTransferenciaCompentencia } from '../services/transferenciaCompetencia';
+import { apiTransferenciaCompentencia } from '../../services/transferenciaCompetencia';
 
 export const useUsers = () =>
 {
@@ -12,12 +12,14 @@ export const useUsers = () =>
   const fetchUsers = useCallback(async () =>
   {
     setLoading(true);
-    try {
+    try
+    {
       const response = await apiTransferenciaCompentencia.get(`/users/?page=${currentPage}`);
-      const { data, count, next, previous } = response; 
+      const { data, count, next, previous } = response;
       setUsers(data.results);
       setPagination({ count, next, previous });
-    } catch (err) {
+    } catch (err)
+    {
       console.error(err);
       setError(err);
     } finally

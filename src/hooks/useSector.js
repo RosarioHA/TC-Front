@@ -22,6 +22,5 @@ export const useSector = () => {
   fetchData();
   },[]); 
 
-  console.log(dataSector )
   return { dataSector, loadingSector, errorSector}; 
 }

@@ -10,9 +10,9 @@ import SubirArchivo from "../../components/forms/subir_archivo";
 
 
 import { esquemaCreacionCompetencia } from "../../validaciones/esquemaValidacion";
-import { useCrearCompetencia } from "../../hooks/useCrearCompetencia";
+import { useCrearCompetencia } from "../../hooks/competencias/useCrearCompetencia";
 import { useRegion } from "../../hooks/useRegion";
-import { useUsers } from "../../hooks/useUsers";
+import { useUsers } from "../../hooks/usuarios/useUsers";
 import { useGroups } from "../../hooks/useGroups";
 import { useSector } from "../../hooks/useSector";
 

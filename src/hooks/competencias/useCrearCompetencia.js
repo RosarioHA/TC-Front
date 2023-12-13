@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { apiTransferenciaCompentencia } from '../services/transferenciaCompetencia';
+import { apiTransferenciaCompentencia } from '../../services/transferenciaCompetencia';
 export const useCrearCompetencia = () =>
 {
   const [ isLoading, setIsLoading ] = useState(false);
@@ -14,12 +14,16 @@ export const useCrearCompetencia = () =>
     {
       const response = await apiTransferenciaCompentencia.post('competencias/', competenciaData);
       return response.data;
-    } catch (error) {
-      if (error.response) {
+    } catch (error)
+    {
+      if (error.response)
+      {
         setError(`Error del servidor: ${error.response.status}`);
-      } else if (error.request) {
+      } else if (error.request)
+      {
         setError("Error de red o servidor no disponible");
-      } else {
+      } else
+      {
         setError("Error al realizar la solicitud");
       }
       throw error;

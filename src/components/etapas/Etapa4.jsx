@@ -43,7 +43,6 @@ export const Etapa4 = ({ etapaCompetencia }) =>
       <Link to={path} className="btn-secundario-s text-decoration-none" id="btn">
         <span className="material-symbols-outlined me-1">{icon}</span>
         <u>{buttonText}</u>
-        {console.log(path)}
       </Link>
     );
   };

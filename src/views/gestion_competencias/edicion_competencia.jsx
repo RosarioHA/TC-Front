@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useCompetenciaDetails } from "../../hooks/useCompetenciaDetail";
+import { useCompetenciaDetails } from "../../hooks/competencias/useCompetenciaDetail";
 import CustomInput from "../../components/forms/custom_input";
 import DropdownSelect from "../../components/dropdown/select";
 import DropdownCheckbox from "../../components/dropdown/checkbox";
@@ -9,27 +9,33 @@ import SubirArchivo from "../../components/forms/subir_archivo";
 // temporales
 import { userData } from "../../Data/Usuarios";
 
-const EdicionCompetencia = () => {
+const EdicionCompetencia = () =>
+{
   const history = useNavigate();
-  const [editMode, setEditMode] = useState(false);
-  const [usuariosSeleccionados, setUsuariosSeleccionados] = useState([]);
+  const [ editMode, setEditMode ] = useState(false);
+  const [ usuariosSeleccionados, setUsuariosSeleccionados ] = useState([]);
   const { id } = useParams();
   const { competenciaDetails, loading, error } = useCompetenciaDetails(id);
 
-  const handleBackButtonClick = () => {
+  const handleBackButtonClick = () =>
+  {
     history(-1);
   };
 
-  const handleEditClick = () => {
+  const handleEditClick = () =>
+  {
     setEditMode((prevMode) => !prevMode);
   };
 
   const handleUsuariosChange = useCallback(
-    (selectedOptions) => {
+    (selectedOptions) =>
+    {
       const updatedUsuarios = {};
-      selectedOptions.forEach((usuario) => {
-        if (usuario && usuario.id) {
-          updatedUsuarios[usuario.id] = true;
+      selectedOptions.forEach((usuario) =>
+      {
+        if (usuario && usuario.id)
+        {
+          updatedUsuarios[ usuario.id ] = true;
         }
       });
       setUsuariosSeleccionados(updatedUsuarios);
@@ -37,15 +43,18 @@ const EdicionCompetencia = () => {
     []
   );
 
-  useEffect(() => {
+  useEffect(() =>
+  {
     setUsuariosSeleccionados({});
-  }, [competenciaDetails]);
+  }, [ competenciaDetails ]);
 
-  if (loading) {
+  if (loading)
+  {
     return <p>Cargando detalles de la competencia...</p>;
   }
 
-  if (error) {
+  if (error)
+  {
     return <p>Error al cargar detalles de la competencia: {error.message}</p>;
   }
 
@@ -63,12 +72,12 @@ const EdicionCompetencia = () => {
         <button className="btn-secundario-s" onClick={handleEditClick}>
           <i className="material-symbols-rounded me-2">edit</i>
           <p className="mb-0">{editMode ? 'Editando' : 'Editar'}</p>
-        </button> 
+        </button>
       </div>
 
       <form>
         <div className="mb-4">
-          < CustomInput 
+          < CustomInput
             label="Nombre de la Competencia (Obligatorio)"
             placeholder={competenciaDetails ? competenciaDetails.nombre : ''}
             id="nombre"
@@ -79,30 +88,30 @@ const EdicionCompetencia = () => {
 
         <div className="mb-4">
           <DropdownCheckbox
-            label="Región (Obligatorio)" 
-            placeholder="Elige la o las regiones donde se ejercerá la competencia" 
-            options={['opcion 1', 'opcion 2', 'opcion 3']}
+            label="Región (Obligatorio)"
+            placeholder="Elige la o las regiones donde se ejercerá la competencia"
+            options={[ 'opcion 1', 'opcion 2', 'opcion 3' ]}
             readOnly={!editMode}
-            // onSelectionChange={(selectedOption) => {
-            //   handleRegionesChange(selectedOption);
-            //   setValue('regiones', selectedOption, { shouldValidate: true });
-            // }}
-            // selected={regionesSeleccionadas} 
+          // onSelectionChange={(selectedOption) => {
+          //   handleRegionesChange(selectedOption);
+          //   setValue('regiones', selectedOption, { shouldValidate: true });
+          // }}
+          // selected={regionesSeleccionadas} 
           />
         </div>
 
         <div className="mb-4">
           <DropdownCheckbox
-            label="Elige el sector de la competencia (Obligatorio)" 
+            label="Elige el sector de la competencia (Obligatorio)"
             placeholder='Elige el sector de la competencia'
-            options={['opcion 1', 'opcion 2', 'opcion 3']}
+            options={[ 'opcion 1', 'opcion 2', 'opcion 3' ]}
             readOnly={!editMode}
-            // onSelectionChange={(selectedOption) => {
-            //   handleSectorChange(selectedOption);
-            //   setValue('sectores', selectedOption, { shouldValidate: true });
-            // }}
-            // selected={sectoresSeleccionados} 
-            />
+          // onSelectionChange={(selectedOption) => {
+          //   handleSectorChange(selectedOption);
+          //   setValue('sectores', selectedOption, { shouldValidate: true });
+          // }}
+          // selected={sectoresSeleccionados} 
+          />
         </div>
 
         <div className="mb-4">
@@ -110,37 +119,37 @@ const EdicionCompetencia = () => {
             label="Origen de la competencia (Obligatorio)"
             placeholder="Elige el origen de la competencia"
             readOnly={!editMode}
-            // options={origenCompetencia}
-            // onSelectionChange={(selectedOption) => {
-            //   handleOrigenChange(selectedOption);
-            //   setValue('origen', selectedOption, { shouldValidate: true });
-            // }}
-            // selected={origenSeleccionado}
-            />
+          // options={origenCompetencia}
+          // onSelectionChange={(selectedOption) => {
+          //   handleOrigenChange(selectedOption);
+          //   setValue('origen', selectedOption, { shouldValidate: true });
+          // }}
+          // selected={origenSeleccionado}
+          />
         </div>
 
         <div className="mb-4">
-          <DropdownSelect 
+          <DropdownSelect
             label="Elige el ámbito de la competencia (Obligatorio)"
             placeholder="Elige el ámbito de la competencia"
             readOnly={!editMode}
-            // options={ambitoCompetencia}
-            // onSelectionChange={(selectedOption) => {
-            //   handleAmbitoChange(selectedOption);
-            //   setValue('ambito', selectedOption, { shouldValidate : true})
-            // }}
-            // selected={ambitoSeleccionado} 
+          // options={ambitoCompetencia}
+          // onSelectionChange={(selectedOption) => {
+          //   handleAmbitoChange(selectedOption);
+          //   setValue('ambito', selectedOption, { shouldValidate : true})
+          // }}
+          // selected={ambitoSeleccionado} 
           />
         </div>
 
         <div className="my-4">
-          < DropdownConSecciones 
+          < DropdownConSecciones
             label="Asignar Usuarios (Opcional)"
             placeholder="Busca el nombre de la persona"
             readOnly={!editMode}
-            options={['opcion 1', 'opcion 2', 'opcion 3']}
+            options={[ 'opcion 1', 'opcion 2', 'opcion 3' ]}
             selectedOptions={Object.keys(usuariosSeleccionados)
-            .map(id => userData.find(user => user.id === id))}
+              .map(id => userData.find(user => user.id === id))}
             onSelectionChange={handleUsuariosChange}
           />
         </div>
@@ -158,19 +167,19 @@ const EdicionCompetencia = () => {
             <div className="d-flex mb-2">
               <div className="ms-4">#</div>
               <div className="ms-5">Documento</div>
-              </div>
-              <div className="me-5">Acción</div>
             </div>
-            <div className="row neutral-line align-items-center">
-              <SubirArchivo 
+            <div className="me-5">Acción</div>
+          </div>
+          <div className="row neutral-line align-items-center">
+            <SubirArchivo
               readOnly={!editMode}
               index="1"
-              fileType="No seleccionado"/>
+              fileType="No seleccionado" />
           </div>
         </div>
 
         <div className={editMode ? 'mb-3' : 'mb-4'}>
-          < CustomInput 
+          < CustomInput
             label="Plazo para formulario sectorial (Obligatorio)"
             placeholder="Escribe el número de días corridos"
             id="plazo"
@@ -185,12 +194,12 @@ const EdicionCompetencia = () => {
         )}
 
         <div className={editMode ? 'mb-3' : 'mb-4'}>
-        < CustomInput 
-          label="Plazo para formulario GORE (Obligatorio)"
-          placeholder="Escribe el número de días corridos"
-          id="plazoGORE"
-          maxLength={null}
-          readOnly={!editMode} />        
+          < CustomInput
+            label="Plazo para formulario GORE (Obligatorio)"
+            placeholder="Escribe el número de días corridos"
+            id="plazoGORE"
+            maxLength={null}
+            readOnly={!editMode} />
         </div>
         {editMode && (
           <div className="d-flex text-sans-h6-primary pb-4">

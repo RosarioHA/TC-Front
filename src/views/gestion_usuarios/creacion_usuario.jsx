@@ -9,7 +9,7 @@ import DropdownSinSecciones from "../../components/dropdown/checkbox_sinSeccione
 import RadioButtons from "../../components/forms/radio_btns";
 import { competencias } from "../../Data/Competencias";
 import { esquemaCreacionUsuario } from "../../validaciones/esquemaValidacion";
-import { useCreateUser } from "../../hooks/useCreateUser";
+import { useCreateUser } from "../../hooks/usuarios/useCreateUser";
 import { useRegion } from "../../hooks/useRegion";
 import { useGroups } from "../../hooks/useGroups";
 import { useSector } from "../../hooks/useSector";
@@ -28,7 +28,7 @@ const CreacionUsuario = () =>
 {
   const { createUser, isLoading, error } = useCreateUser();
   const { dataGroups, loadingGroups } = useGroups();
-  const { dataSector, loadingSector} = useSector(); 
+  const { dataSector, loadingSector } = useSector();
   const [ estado, setEstado ] = useState('inactivo');
   const [ activeButton, setActiveButton ] = useState(null);
   const [ competenciasSeleccionadas, setCompetenciasSeleccionadas ] = useState({});
@@ -38,16 +38,18 @@ const CreacionUsuario = () =>
   const [ submitClicked, setSubmitClicked ] = useState(false);
   const { dataRegiones, loadingRegiones } = useRegion();
 
-  console.log(dataSector); 
+  console.log(dataSector);
 
-  useEffect(() => {
+  useEffect(() =>
+  {
     console.log("competencias seleccionadas en vista", competenciasSeleccionadas);
-  }, [competenciasSeleccionadas]);
+  }, [ competenciasSeleccionadas ]);
 
 
   // Maneja boton de volver atras.
   const history = useNavigate();
-  const handleBackButtonClick = () => {
+  const handleBackButtonClick = () =>
+  {
     history(-1);
   };
 
@@ -63,13 +65,14 @@ const CreacionUsuario = () =>
     mode: 'manual',
   });
 
-  useEffect(() => {
+  useEffect(() =>
+  {
     console.log("competencias seleccionadas en vista", competenciasSeleccionadas);
-  }, [competenciasSeleccionadas]);
+  }, [ competenciasSeleccionadas ]);
 
   //opciones de perfil 
-  const  opcionesGroups = dataGroups.map(group => ({
-    value:group.id,
+  const opcionesGroups = dataGroups.map(group => ({
+    value: group.id,
     label: group.name
   }))
   
@@ -104,28 +107,31 @@ const CreacionUsuario = () =>
     label: region.region
   }));
 
-  const handleRegionChange = (region) => {
+  const handleRegionChange = (region) =>
+  {
     setRegionSeleccionada(region);
   }
 
   //opciones sector 
   const opcionesSector = dataSector.map(sector => ({
-    value:sector.id,
-    label:sector.nombre,
-  })); 
+    value: sector.id,
+    label: sector.nombre,
+  }));
 
-  console.log(opcionesSector); 
+  console.log(opcionesSector);
 
   const handleSectorChange = (sector) => {
     setSectorSeleccionado(sector.value);
   }
 
-  const handleEstadoChange = (nuevoEstado) => {
+  const handleEstadoChange = (nuevoEstado) =>
+  {
     setEstado(nuevoEstado);
     setActiveButton(nuevoEstado);
   };
 
-  const handleInputClick = (e) => {
+  const handleInputClick = (e) =>
+  {
     // Previene que el evento se propague al boton
     e.stopPropagation();
     console.log("propagacion detenida en vista Crear usuario")
@@ -133,20 +139,24 @@ const CreacionUsuario = () =>
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleCompetenciasChange = useCallback(
-    (selectedOptions) => {
+    (selectedOptions) =>
+    {
       const updatedCompetencias = {};
       selectedOptions.forEach((competencia) =>
       {
         updatedCompetencias[ competencia ] = true;
-      selectedOptions.forEach((competenciaId) => {
-        updatedCompetencias[competenciaId] = true;
-      });
-      setCompetenciasSeleccionadas(updatedCompetencias);
-    },[]);
-  });
+        selectedOptions.forEach((competenciaId) =>
+        {
+          updatedCompetencias[ competenciaId ] = true;
+        });
+        setCompetenciasSeleccionadas(updatedCompetencias);
+      }, []);
+    });
 
-  const onSubmit = async (data) => {
-    try {
+  const onSubmit = async (data) =>
+  {
+    try
+    {
       const userData = {
         ...data,
         nombre_completo: data.nombre,
@@ -157,20 +167,22 @@ const CreacionUsuario = () =>
         is_active: estado === 'activo',
         competencias: Object.keys(competenciasSeleccionadas)
       };
-  
+
       const isValid = await trigger();
       if (submitClicked && isValid)
       {
         await createUser(userData);
         console.log("Usuario creado con éxito");
         history('/home/success', { state: { origen: "crear_usuario" } });
-      } else {
-        console.log("El formulario no es válido o no se ha hecho click en 'Crear Usuario'");
-      }} catch (error)
+      } else
       {
-        console.error('Error al enviar el formulario:', error);
+        console.log("El formulario no es válido o no se ha hecho click en 'Crear Usuario'");
       }
-    };
+    } catch (error)
+    {
+      console.error('Error al enviar el formulario:', error);
+    }
+  };
   if (isLoading)
   {
     return <div>Cargando...</div>; // O tu componente personalizado de carga
@@ -204,7 +216,7 @@ const CreacionUsuario = () =>
                   maxLength={null}
                   error={errors.rut?.message}
                   ref={field.ref}
-                  onBlur={() => field.onBlur()} 
+                  onBlur={() => field.onBlur()}
                   {...field} />
               )} />
           </div>
@@ -268,7 +280,7 @@ const CreacionUsuario = () =>
                 <DropdownSelectBuscador
                   label="Elige el organismo al que pertenece (Obligatorio)"
                   placeholder="Elige un organismo"
-                  options={loadingSector ? []: opcionesSector}
+                  options={loadingSector ? [] : opcionesSector}
                   onSelectionChange={handleSectorChange} />
               </div>
             </>
@@ -327,27 +339,28 @@ const CreacionUsuario = () =>
 
           <div className="mb-5">
             <div className="my-3">
-            <Controller
-              name="competenciasSeleccionadas"
-              control={control}
-              //defaultValue={{}}
-              defaultValue={Object.keys(competenciasSeleccionadas)}
-              render={({ field }) => (
-                <DropdownSinSecciones
-                  label="Competencia Asignada (Opcional)"
-                  placeholder="Busca el nombre de la competencia"
-                  options={competencias}
-                  selectedOptions={field.value}
-                  onSelectionChange={(selectedOptions) => {
-                    field.onChange(selectedOptions);
-                    handleCompetenciasChange(selectedOptions);
-                  }}
-                  onClick={handleInputClick}
-                  onMouseDown={handleInputClick}
-                />
-              )}
-            />
-            </div> 
+              <Controller
+                name="competenciasSeleccionadas"
+                control={control}
+                //defaultValue={{}}
+                defaultValue={Object.keys(competenciasSeleccionadas)}
+                render={({ field }) => (
+                  <DropdownSinSecciones
+                    label="Competencia Asignada (Opcional)"
+                    placeholder="Busca el nombre de la competencia"
+                    options={competencias}
+                    selectedOptions={field.value}
+                    onSelectionChange={(selectedOptions) =>
+                    {
+                      field.onChange(selectedOptions);
+                      handleCompetenciasChange(selectedOptions);
+                    }}
+                    onClick={handleInputClick}
+                    onMouseDown={handleInputClick}
+                  />
+                )}
+              />
+            </div>
           </div>
 
           <button className="btn-primario-s mb-5" type="submit" onClick={() => setSubmitClicked(true)}>

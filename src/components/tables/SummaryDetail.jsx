@@ -1,9 +1,6 @@
 
 export const SummaryDetail = ({ competencia }) =>
 {
-
-  console.log('summary', competencia)
-
   const etapas_info = competencia.etapas_info || competencia.resumen_competencia?.etapas_info;
   const tiempo_transcurrido = competencia.tiempo_transcurrido || competencia.resumen_competencia?.tiempo_transcurrido;
 
@@ -19,7 +16,6 @@ export const SummaryDetail = ({ competencia }) =>
 
   // Calcula la cantidad de etapas finalizadas
   const etapasFinalizadas = etapasArray.filter(etapa => etapa.estado === 'Finalizada').length;
-
 
 
   const getBadgeDetails = (estado) =>

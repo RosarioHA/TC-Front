@@ -1,8 +1,7 @@
-import { Link } from 'react-router-dom';
+import { useNavigate} from 'react-router-dom';
 import { Counter } from "../tables/Counter";
 
-export const Etapa2 = ({ etapaCompetencia }) =>
-{
+export const Etapa2 = ({ etapaCompetencia }) => {
   const {
     nombre_etapa,
     estado,
@@ -11,45 +10,51 @@ export const Etapa2 = ({ etapaCompetencia }) =>
     usuarios_notificados,
     fecha_ultima_modificacion
   } = etapaCompetencia;
+  const navigate= useNavigate(); 
 
-const renderButtonForSubetapa = (subetapa) => {
-  const { estado, accion, nombre } = subetapa;
-  let buttonText = accion;
-  let icon = estado === "finalizada" ? "visibility" : "draft";
-  let path = "/";
+  const handleNavigation = (path, id) => {
+    navigate(path, { state: { data: { id } } });
+  };
 
-  if (nombre.startsWith("Notificar a") && estado === "finalizada") {
-    return <span className="badge-status-finish">{accion}</span>;
-  }
 
-  switch (true) {
-    case nombre.includes("Completar formulario Sectorial"):
-      path = estado === "finalizada" ? "/home/ver_minuta" : "/home/formulario_sectorial/";
-      break;
-    case nombre.includes("Observación del formulario sectorial"):
-      path = estado === "finalizada" ? "/home/ver_observaciones" : "/home/ingresar_observaciones";
-      break;
-    default:      // Manejo de otros casos o nombre por defecto
-      break;
-  }
-  
-  const isDisabled = estado === "pendiente" || estado === "revision";
+  const renderButtonForSubetapa = (subetapa) => {
+    const { estado, accion, nombre,  id } = subetapa;
+    let buttonText = accion;
+    let icon = estado === "finalizada" ? "visibility" : "draft";
+    let path = "/";
 
-  return isDisabled ? (
-    <button className={`btn-secundario-s ${estado === "pendiente" ? "disabled" : ""}`} id="btn">
-      <span className="material-symbols-outlined me-1">{icon}</span>
-      <u>{buttonText}</u>
-    </button>
-  ) : (
-    <Link to={path} className="btn-secundario-s text-decoration-none" id="btn">
-      <span className="material-symbols-outlined me-1">{icon}</span>
-      <u>{buttonText}</u>
-    </Link>
-  );
-};
+    if (nombre && nombre.startsWith("Notificar a") && estado === "finalizada") {
+      return <span className="badge-status-finish">{accion}</span>;
+    }
 
-  const renderSubetapas = (subetapas) =>
-  {
+    if (nombre) {
+      switch (true) {
+        case nombre.includes("Completar formulario Sectorial"):
+          path = estado === "finalizada" ? "/home/ver_minuta" : `/home/formulario_sectorial/${id}/`;
+          break;
+        case nombre.includes("Observación del formulario sectorial"):
+          path = estado === "finalizada" ? "/home/ver_observaciones" : "/home/ingresar_observaciones";
+          break;
+        default:
+          break;
+      }
+    }
+    const isDisabled = estado === "pendiente" ;
+
+    return isDisabled ? (
+      <button className={`btn-secundario-s ${estado === "pendiente" ? "disabled" : ""}`} id="btn">
+        <span className="material-symbols-outlined me-1">{icon}</span>
+        <u>{buttonText}</u>
+      </button>
+    ) : (
+      <button  onClick={() => handleNavigation(path, subetapa.id)} className="btn-secundario-s text-decoration-none" id="btn">
+        <span className="material-symbols-outlined me-1">{icon}</span>
+        <u>{buttonText}</u>
+      </button>
+    );
+  };
+
+  const renderSubetapas = (subetapas) => {
     return subetapas.map((subetapa, index) => (
       <div key={index} className="d-flex justify-content-between text-sans-p border-top border-bottom my-3 py-1">
         <div className="align-self-center">{subetapa.nombre}</div>

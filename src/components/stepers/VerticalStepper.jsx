@@ -1,12 +1,9 @@
 import { Etapa1, Etapa2, Etapa3, Etapa4, Etapa5 } from "../etapas";
 
-export const VerticalStepper = ({ etapas }) =>
+export const VerticalStepper = ({ etapas, id }) =>
 {
-
-  console.log('etapas',etapas)
   if (!etapas || etapas.length === 0)
   {
-    console.log('Etapas no definidas o vacías');
     return <div>Cargando...</div>;
   }
 
@@ -26,6 +23,7 @@ export const VerticalStepper = ({ etapas }) =>
         return null;
     }
   };
+
 
   return (
     <div className="wrapper d-flex justify-content-start mx-0">
@@ -47,7 +45,7 @@ export const VerticalStepper = ({ etapas }) =>
             <div className="stepperContent">
               <div className="d-flex justify-content-between "><h3 className="stepperTitle">{etapa.nombre_etapa}</h3><div>{renderBadge(etapa.estado)}</div></div>
               {index === 0 && <Etapa1 etapaCompetencia={etapas[ 0 ]} />}
-              {index === 1 && <Etapa2 etapaCompetencia={etapas[ 1 ]} />}
+              {index === 1 && <Etapa2 etapaCompetencia={etapas[ 1 ]} id={id}/>}
               {index === 2 && <Etapa3 etapaCompetencia={etapas[ 2 ]} />}
               {index === 3 && <Etapa4 etapaCompetencia={etapas[ 3 ]} />}
               {index === 4 && <Etapa5 etapaCompetencia={etapas[ 4 ]} />}

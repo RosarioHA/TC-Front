@@ -6,8 +6,8 @@ import DropdownSelect from "../../components/dropdown/select";
 import DropdownSelectBuscador from "../../components/dropdown/select_buscador";
 import DropdownSinSecciones from "../../components/dropdown/checkbox_sinSecciones_conTabla";
 import RadioButtons from "../../components/forms/radio_btns";
-import { useEditUser } from "../../hooks/useEditUser";
-import { useUserDetails } from "../../hooks/useUserDetail";
+import { useEditUser } from "../../hooks/usuarios/useEditUser";
+import { useUserDetails } from "../../hooks/usuarios/useUserDetail";
 import { useGroups } from "../../hooks/useGroups";
 import { useRegion } from "../../hooks/useRegion";
 import { useSector } from "../../hooks/useSector";
@@ -15,7 +15,8 @@ import { useCompetenciasList } from "../../hooks/useCompetenciasList";
 import { yupResolver } from '@hookform/resolvers/yup';
 import { esquemaEdicionUsuarios } from "../../validaciones/esquemaEditarUsuario";
 
-const EdicionUsuario = () => {
+const EdicionUsuario = () =>
+{
   const { id } = useParams();
   const history = useNavigate();
   const [editMode, setEditMode] = useState(false);
@@ -63,11 +64,13 @@ const EdicionUsuario = () => {
     }
   }, [competenciasLoading, competenciasError, competencias]);
 
-  const handleBackButtonClick = () => {
+  const handleBackButtonClick = () =>
+  {
     history(-1);
   };
 
-  const handleEditClick = () => {
+  const handleEditClick = () =>
+  {
     setEditMode((prevMode) => !prevMode);
   };
 
@@ -140,7 +143,7 @@ const EdicionUsuario = () => {
         <button className="btn-secundario-s" onClick={handleEditClick}>
           <i className="material-symbols-rounded me-2">edit</i>
           <p className="mb-0">{editMode ? 'Editando' : 'Editar'}</p>
-        </button> 
+        </button>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -295,12 +298,12 @@ const EdicionUsuario = () => {
         </div>
 
         {editMode && (
-        <button className="btn-primario-s mb-5" type="submit">
-          <i className="material-symbols-rounded me-2">save</i>
-          <p className="mb-0">Guardar</p>
-        </button>
+          <button className="btn-primario-s mb-5" type="submit">
+            <i className="material-symbols-rounded me-2">save</i>
+            <p className="mb-0">Guardar</p>
+          </button>
         )}
-       
+
       </form>
       {editUserLoading && <p>Cargando...</p>}
       {editUserError && <p>Error al editar el usuario: {editUserError.message}</p>}
