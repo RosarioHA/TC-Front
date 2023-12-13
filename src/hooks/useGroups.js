@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import { apiTransferenciaCompentencia } from "../services/transferenciaCompetencia.js";
 
-
-
 export const useGroups= () =>
 {
   const [ dataGroups, setDataGroups ] = useState([]);

@@ -57,7 +57,7 @@ const GestionUsuarios = () =>
 
   const handleDetailsUser = (user) =>
   {
-    navigate(`/home/detalle_usuario/${user.id}`, { state: { user } });
+    navigate(`/home/editar_usuario/${user.id}`, { state: { user } });
   };
 
   const handlePageChange = (pageUrl) =>

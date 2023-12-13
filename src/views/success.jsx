@@ -1,9 +1,15 @@
 import { useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import successIcon from '../static/icons/success.svg';
 
 const SuccessViews = () => {
+  const history = useNavigate();
   const location = useLocation();
   const origen = location.state?.origen;
+
+  const handleBackButtonClick = () => {
+    history('/home');
+  };
   
   var titulo = "";
   var subtitulo = "";
@@ -16,6 +22,10 @@ const SuccessViews = () => {
     titulo = "Administrar Competencias";
     subtitulo = "Crear Competencia";
     tituloRecuadro = "Creaste una competencia con éxito";
+  } else if (origen === "editar_usuario") {
+    titulo = "Administrar Usuario";
+    subtitulo = "Editar Usuario";
+    tituloRecuadro = "Editaste un usuario con éxito";
   } else {
     titulo = "Exito!";
     subtitulo = "Plataforma Transferencia de Competencias";
@@ -39,8 +49,14 @@ const SuccessViews = () => {
             <h2 className="text-sans-h2 mb-4">{tituloRecuadro}</h2>
             <p className="text-sans-p">Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus.</p>
           </div>
-        </div>
-          
+        </div>  
+      </div>
+
+      <div className="col-10 d-flex justify-content-center mt-5">
+        <button className="btn-secundario-s" onClick={handleBackButtonClick}>
+          <i className="material-symbols-rounded me-2">home</i>
+          <p className="mb-0 text-decoration-underline">Volver al inicio</p>
+        </button>
       </div>
     </div>   
   );

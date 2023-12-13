@@ -1,54 +1,68 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Controller, useForm } from 'react-hook-form';
-//import { yupResolver } from '@hookform/resolvers/yup';
-//import { esquemaCreacionUsuario } from "../../validaciones/esquemaValidacion";
-import { useEditUser } from "../../hooks/usuarios/useEditUser";
-import { useUserDetails } from "../../hooks/usuarios/useUserDetail";
 import CustomInput from "../../components/forms/custom_input";
 import DropdownSelect from "../../components/dropdown/select";
 import DropdownSelectBuscador from "../../components/dropdown/select_buscador";
 import DropdownSinSecciones from "../../components/dropdown/checkbox_sinSecciones_conTabla";
 import RadioButtons from "../../components/forms/radio_btns";
-
-const useFetchUserDetails = (id) =>
-{
-  const { userDetails, loading, error } = useUserDetails(id);
-  console.log("User Details Hook:", userDetails, loading, error);
-  return { details: userDetails, loading, error };
-};
+import { useEditUser } from "../../hooks/usuarios/useEditUser";
+import { useUserDetails } from "../../hooks/usuarios/useUserDetail";
+import { useGroups } from "../../hooks/useGroups";
+import { useRegion } from "../../hooks/useRegion";
+import { useSector } from "../../hooks/useSector";
+import { useCompetenciasList } from "../../hooks/useCompetenciasList";
+import { yupResolver } from '@hookform/resolvers/yup';
+import { esquemaEdicionUsuarios } from "../../validaciones/esquemaEditarUsuario";
 
 const EdicionUsuario = () =>
 {
   const { id } = useParams();
-  console.log("id de usuario en vista Editar usuario", id);
   const history = useNavigate();
-  const [ editMode, setEditMode ] = useState(false);
-  const [ activeButton, setActiveButton ] = useState(null);
-
+  const [editMode, setEditMode] = useState(false);
   const { editUser, isLoading: editUserLoading, error: editUserError } = useEditUser();
+  const { dataGroups, loadingGroups } = useGroups();
+  const { dataRegiones, loadingRegiones } = useRegion();
+  const { dataSector, loadingSector } = useSector();
+  const { competencias, loading: competenciasLoading, error: competenciasError } = useCompetenciasList();
+  const { userDetails } = useUserDetails(id);
+  //const [currentPerfil, setCurrentPerfil] = useState("");
 
-  const { details } = useFetchUserDetails(id);
-  console.log("details en vista Edicion usuario", details);
-
-  const { control, handleSubmit, setValue, formState: { errors } } = useForm({
+  const { control, handleSubmit, setValue, watch, formState: { errors } } = useForm({
     shouldUnregister: false,
-    mode: 'manual',
+    mode: "onSubmit",
+    resolver: yupResolver(esquemaEdicionUsuarios),
+    defaultValues: {
+      nombre_completo: userDetails?.nombre_completo || "",
+      email: userDetails?.email || "",
+      perfil: userDetails?.perfil || "",
+      region: userDetails?.region?.id || null,
+      sector: userDetails?.sector?.id || null,
+      is_active: userDetails?.is_active !== undefined ? userDetails.is_active === 'activo' : false,
+    },
   });
 
-  useEffect(() =>
-  {
-    if (editMode && details)
-    {
-      const rutValue = details.rut || '';
-      const nombreValue = details.nombre_completo || '';
-      setValue('rut', rutValue);
-      setValue('nombre', nombreValue);
-      // ... Establecer otros valores según sea necesario
+  const perfil = watch('perfil') || '';
+  const renderizadoCondicional = editMode ? perfil : userDetails?.perfil;
+
+  useEffect(() => {
+    if (editMode) {
+      // En modo edicion, actualiza los valores iniciales con los valores actuales.
+      setValue('nombre_completo', userDetails?.nombre_completo || "");
+      setValue('email', userDetails?.email || "");
+      setValue('perfil', userDetails?.perfil || "");
+      setValue('region', userDetails?.region?.id || null);
+      setValue('sector', userDetails?.sector?.id || null);
+      setValue('is_active', userDetails?.is_active !== undefined ? userDetails.is_active === 'activo' : false);
     }
-  }, [ editMode, setValue, details ]);
+  }, [editMode, userDetails, setValue]);
 
-
+  useEffect(() => {
+    // Verifica si las competencias se han cargado
+    if (!competenciasLoading && !competenciasError) {
+      console.log("Competencias en vista Editar usuario:", competencias);
+    }
+  }, [competenciasLoading, competenciasError, competencias]);
 
   const handleBackButtonClick = () =>
   {
@@ -60,22 +74,60 @@ const EdicionUsuario = () =>
     setEditMode((prevMode) => !prevMode);
   };
 
-  const handleEstadoChange = (nuevoEstado) =>
-  {
-    setActiveButton(nuevoEstado);
-  };
+  //opciones de Perfil, Region y Sector 
+  const  opcionesGroups = dataGroups.map(group => ({
+    value:group.id,
+    label: group.name
+  }))
+  const opcionesDeRegiones = dataRegiones.map(region => ({
+    value: region.id,
+    label: region.region
+  }));
+  const opcionesSector = dataSector.map(sector => ({
+    value:sector.id,
+    label:sector.nombre,
+  }));
 
-  const onSubmit = async (data) =>
-  {
-    try
-    {
-      await editUser(id, data); // Envia los datos actualizados al backend
-      setEditMode(false); // Desactiva el modo de edicion después de guardar
-    } catch (editUserError)
-    {
-      console.error("Error al editar el usuario:", editUserError);
+  const handleDdSelectChange = (fieldName, selectedOption) => {
+    try {
+      if (selectedOption && selectedOption.label) {
+        setValue(fieldName, selectedOption.label);
+      }
+    } catch (error) {
+      console.error('Error en handleDdSelectChange:', error);
     }
   };
+  
+  const handleDdSelectBuscadorChange = (fieldName, selectedOption) => {
+    try {
+      if (selectedOption && selectedOption.value) {
+        setValue(fieldName, selectedOption.value);
+      }
+    } catch (error) {
+      console.error('Error en handleDdSelectBuscadorChange:', error);
+    }
+  }; 
+  
+  const handleEstadoChange = (selectionName, nuevoEstado) => {
+    const isActivo = nuevoEstado === "activo";
+    setValue("is_active", isActivo);
+  };
+
+  // const handleCompetenciasChange = (selectedCompetencias) => {
+  //   setValue('competencias', selectedCompetencias);
+  // }
+
+  const onSubmit = async (formData) => {
+    try {
+      await editUser(id, formData);
+      setEditMode(false);
+      history('/home/success', { state: { origen: "editar_usuario" } });
+    } catch (error) {
+      console.error("Error al editar el usuario:", error);
+    }
+  };
+
+  console.log("watch perfil", watch('perfil'))
 
   return (
     <div className="container col-10 my-4">
@@ -95,103 +147,153 @@ const EdicionUsuario = () =>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="mb-4">
+        <div className="d-flex align-items-center mb-4">
           < CustomInput
             label="RUT (Obligatorio)"
-            placeholder={details ? details.rut : ''}
+            placeholder={userDetails ? userDetails.rut : ''}
             id="rut"
-            readOnly={!editMode}
+            name="rut"
+            readOnly={true}
             maxLength={null}
+          />
+          {editMode ? <i className="col material-symbols-rounded ms-2">lock</i> : '' }
+        </div>
+
+        <div className="my-4">
+          <Controller
+            name="nombre_completo"
+            control={control}
+            render={({ field }) => (
+              <CustomInput
+                label="Nombre Completo (Obligatorio)"
+                placeholder={userDetails ? userDetails.nombre_completo : ''}
+                id="nombre_completo"
+                readOnly={!editMode}
+                maxLength={null}
+                error={errors.nombre_completo?.message}
+                {...field}
+              />
+            )}
           />
         </div>
 
         <div className="my-4">
-          < CustomInput
-            label="Nombre Completo (Obligatorio)"
-            placeholder={details ? details.nombre_completo : ''}
-            id="nombre"
-            readOnly={!editMode}
-            maxLength={null}
-          />
-        </div>
-
-        <div className="my-4">
-          < CustomInput
-            label="Correo electrónico"
-            placeholder={details ? details.email : ''}
-            id="mail"
-            readOnly={!editMode}
-            maxLength={null}
+          <Controller
+            name="email"
+            control={control}
+            render={({ field }) => (
+              <CustomInput
+                label="Correo electrónico"
+                placeholder={userDetails ? userDetails.email : ''}
+                id="email"
+                readOnly={!editMode}
+                maxLength={null}
+                error={errors.email?.message}
+                {...field}
+              />
+            )}
           />
         </div>
 
         <div className="my-4">
           < DropdownSelect
             label="Elige el perfil de usuario (Obligatorio)"
-            placeholder={details ? details.perfil : ''}
-            options={[ 'opcion 1', 'opcion 2' ]}
+            placeholder={userDetails ? userDetails.perfil : ''}
+            id="perfil"
+            name="perfil"
+            options={loadingGroups ? [] : opcionesGroups}
             readOnly={!editMode}
+            control={control}
+            onSelectionChange={(selectedOption) => handleDdSelectChange('perfil', selectedOption)}
+            initialValue={userDetails ? userDetails.perfil : ''}
           />
         </div>
-
-        {/* Renderizan de manera condicional segun el tipo de usuario */}
-        {details && details.perfil === 'GORE' && (
+        
+        {/* Renderizan de manera condicional según el Perfil de usuario */}
+        {renderizadoCondicional === 'GORE' && (
           <div className="my-4">
             <DropdownSelectBuscador
               label="Elige la región a la que representa (Obligatorio)"
-              placeholder={details.region || ''}
+              placeholder={userDetails.region || ''}
+              id="region"
+              name="region"
               readOnly={!editMode}
-              options={[ 'opcion 1', 'opcion 2' ]}
-            //onSelectionChange={handleRegionChange}
+              options={loadingRegiones ? [] : opcionesDeRegiones}
+              control={control}
+              onSelectionChange={(selectedOption) => handleDdSelectBuscadorChange('region', selectedOption)}
+              initialValue={userDetails ? userDetails.region : ''}
             />
           </div>
         )}
-        {details && details.perfil === 'Usuario Sectorial' && (
+        {renderizadoCondicional === 'Usuario Sectorial' && (
           <div className="my-4">
             <DropdownSelectBuscador
               label="Elige el organismo al que pertenece (Obligatorio)"
-              placeholder={details.sector || ''}
+              placeholder={userDetails.sector || 'Selecciona un sector'}
+              id="sector"
+              name="sector"
               readOnly={!editMode}
-              options={[ 'opcion 1', 'opcion 2' ]}
-            // onSelectionChange={handleSectorChange}
+              options={loadingSector ? []: opcionesSector}
+              control={control}
+              onSelectionChange={(selectedOption) => handleDdSelectBuscadorChange('sector', selectedOption)}
+              initialValue={userDetails ? userDetails.sector : ''}
             />
           </div>
         )}
 
         <div className="my-4">
-          < Controller
-            name="estado"
-            control={control}
-            render={({ field }) => (
-              <>
-                <RadioButtons
-                  readOnly={!editMode}
-                  initialState={activeButton}
-                  handleEstadoChange={handleEstadoChange}
-                  field={field}
-                  errors={errors}
-                  is_active={details ? details.is_active : false}
-                />
-                {errors.estado && (
-                  <p className="text-sans-h6-darkred mt-2 mb-0">{errors.estado.message}</p>
+          {!editMode ? (
+            <div className="mb-5">
+              <h5 className="text-sans-h5">Estado</h5>
+              <button
+                type="button"
+                className="btn-primario-s"
+                disabled
+              >
+                {userDetails?.perfil ? 'Activo' : 'Inactivo'}
+              </button>
+            </div>
+          ) : (
+            <div className="mb-5">
+              <Controller
+                name="is_active"
+                control={control}
+                render={({ field }) => (
+                  <RadioButtons
+                    readOnly={!editMode}
+                    id="is_active"
+                    initialState={watch('is_active')}
+                    handleEstadoChange={handleEstadoChange}
+                    field={field}
+                    errors={errors}
+                    is_active={watch('is_active')}
+                  />
                 )}
-              </>
-            )} />
+              />
+              {errors.is_active && (
+                <p className="text-sans-h6-darkred mt-2 mb-0">{errors.is_active.message}</p>
+              )}
+            </div>
+          )}
         </div>
+
 
         <div className="my-4">
           <DropdownSinSecciones
             label="Competencia Asignada (Opcional)"
             placeholder="Busca el nombre de la competencia"
             readOnly={!editMode}
-            options={[ 'opcion 1', 'opcion 2', 'opcion 3' ]}
-            selectedOptions={[ 'opcion 1', 'opcion 2' ]}
-          // onSelectionChange={(selectedOptions) => {
-          //   field.onChange(selectedOptions);
-          //   handleCompetenciasChange(selectedOptions);
-          //   }}
-          // onClick={handleInputClick}
-          // onMouseDown={handleInputClick}
+            options={competencias.map((competencia) => ({
+              value: competencia.id,
+              label: competencia.nombre,
+            }))}
+            selectedOptions={['opcion 1', 'opcion 2']}
+            // onSelectionChange={(selectedOptions) => {
+            //   field.onChange(selectedOptions);
+            //   handleCompetenciasChange(selectedOptions);
+            //   }}
+            // onClick={handleInputClick}
+            // onMouseDown={handleInputClick}
           />
         </div>
 

@@ -75,20 +75,32 @@ const CreacionUsuario = () =>
     value: group.id,
     label: group.name
   }))
-
-
-  const handlePerfilChange = (selectedValue) =>
-  {
-    const selectedProfile = opcionesGroups.find(option => option.value === selectedValue)
-    if (selectedProfile)
-    {
-      setPerfilSeleccionado(selectedProfile.label);
-    } else
-    {
+  
+  // const handlePerfilChange = ( selectedValue) => {
+  //   console.log("selectedValue", selectedValue);
+  //   const selectedProfile = opcionesGroups.find(option => option.value === selectedValue.label)
+  //   console.log("selectedPRofile", selectedProfile);
+  //   if(selectedProfile) {
+  //     setPerfilSeleccionado(selectedProfile.label);
+  //   }else { 
+  //     setPerfilSeleccionado(null); 
+  // }}
+  // console.log("perfilSeleccionado", perfilSeleccionado)
+  const handlePerfilChange = (selectedValue) => {
+    console.log("selectedValue", selectedValue);
+    console.log("selectedValue.label", selectedValue.label);
+    const selectedProfile = opcionesGroups.find((option) => option.value === selectedValue.value);
+    console.log("selectedProfile", selectedProfile);
+  
+    if (selectedProfile) {
+      setPerfilSeleccionado(selectedProfile.label); // Cambiado a selectedProfile.label
+    } else {
       setPerfilSeleccionado(null);
     }
-  }
-
+  };
+  console.log("perfilSeleccionado", perfilSeleccionado)
+  
+  
   //opciones de regiones
   const opcionesDeRegiones = dataRegiones.map(region => ({
     value: region.id,
@@ -108,9 +120,8 @@ const CreacionUsuario = () =>
 
   console.log(opcionesSector);
 
-  const handleSectorChange = (sector) =>
-  {
-    setSectorSeleccionado(sector);
+  const handleSectorChange = (sector) => {
+    setSectorSeleccionado(sector.value);
   }
 
   const handleEstadoChange = (nuevoEstado) =>
@@ -250,7 +261,7 @@ const CreacionUsuario = () =>
                   options={loadingGroups ? [] : opcionesGroups}
                   onSelectionChange={(selectedOption) =>
                   {
-                    field.onChange(selectedOption);
+                    field.onChange(selectedOption.label);
                     handlePerfilChange(selectedOption);
                   }} />
               )} />
