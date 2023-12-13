@@ -25,6 +25,7 @@ const EdicionUsuario = () => {
   const { dataSector, loadingSector } = useSector();
   const { competencias, loading: competenciasLoading, error: competenciasError } = useCompetenciasList();
   const { userDetails } = useUserDetails(id);
+  //const [currentPerfil, setCurrentPerfil] = useState("");
 
   const { control, handleSubmit, setValue, watch, formState: { errors } } = useForm({
     shouldUnregister: false,
@@ -39,6 +40,9 @@ const EdicionUsuario = () => {
       is_active: userDetails?.is_active !== undefined ? userDetails.is_active === 'activo' : false,
     },
   });
+
+  const perfil = watch('perfil') || '';
+  const renderizadoCondicional = editMode ? perfil : userDetails?.perfil;
 
   useEffect(() => {
     if (editMode) {
@@ -59,49 +63,6 @@ const EdicionUsuario = () => {
     }
   }, [competenciasLoading, competenciasError, competencias]);
 
-  // useEffect(() => {
-  //   // Define el conjunto de data a utilizar en renderizado condicional de campos Region y Sector.
-  //   if (editMode) {
-  //     setCurrentPerfil(originalData.perfil || '');
-  //   } else {
-  //     setCurrentPerfil(userDetails?.perfil || '');
-  //   }
-  // }, [editMode, userDetails, originalData]);
-
-  // useEffect(() => {
-  //   console.log("editMode:", editMode);
-  //   console.log("userDetails (antes del segundo bloque):", userDetails);
-  //   // Establece valores iniciales en modo Edicion
-  //   if (editMode && userDetails) {
-  //     console.log("editMode y userDetails (antes de setOriginalData):", editMode, userDetails);
-  //     const rutValue = userDetails.rut || '';
-  //     const nombreValue = userDetails.nombre_completo || '';
-  //     const emailValue = userDetails.email || '';
-  //     const perfilValue = userDetails.perfil || '';
-  //     const regionValue = userDetails.region ? userDetails.region.id : null;
-  //     const sectorValue = userDetails.sector ? userDetails.sector.id : null;
-  //     const estadoValue = userDetails.is_active === true;
-      
-  //     setOriginalData({
-  //       rut: rutValue,
-  //       nombre_completo: nombreValue,
-  //       email: emailValue,
-  //       perfil: perfilValue,
-  //       region: regionValue,
-  //       sector: sectorValue,
-  //       is_active: estadoValue,
-  //     });
-
-  //     setValue('rut', rutValue);
-  //     setValue('nombre_completo', nombreValue);
-  //     setValue('email', emailValue);
-  //     setValue('perfil', perfilValue);
-  //     setValue('region', regionValue);
-  //     setValue('sector', sectorValue);
-  //     setValue('is_active', estadoValue);
-  //   }
-  // }, [editMode, setValue, userDetails, watch]);
-
   const handleBackButtonClick = () => {
     history(-1);
   };
@@ -109,13 +70,6 @@ const EdicionUsuario = () => {
   const handleEditClick = () => {
     setEditMode((prevMode) => !prevMode);
   };
-
-  // const handleInputChange = (fieldName, value) => {
-  //   setOriginalData((prevData) => ({
-  //     ...prevData,
-  //     [fieldName]: value,
-  //   }));
-  // };
 
   //opciones de Perfil, Region y Sector 
   const  opcionesGroups = dataGroups.map(group => ({
@@ -213,6 +167,7 @@ const EdicionUsuario = () => {
                 id="nombre_completo"
                 readOnly={!editMode}
                 maxLength={null}
+                error={errors.nombre_completo?.message}
                 {...field}
               />
             )}
@@ -230,6 +185,7 @@ const EdicionUsuario = () => {
                 id="email"
                 readOnly={!editMode}
                 maxLength={null}
+                error={errors.email?.message}
                 {...field}
               />
             )}
@@ -251,7 +207,7 @@ const EdicionUsuario = () => {
         </div>
         
         {/* Renderizan de manera condicional según el Perfil de usuario */}
-        {watch('perfil') === 'GORE' && (
+        {renderizadoCondicional === 'GORE' && (
           <div className="my-4">
             <DropdownSelectBuscador
               label="Elige la región a la que representa (Obligatorio)"
@@ -266,7 +222,7 @@ const EdicionUsuario = () => {
             />
           </div>
         )}
-        {watch('perfil') === 'Usuario Sectorial' && (
+        {renderizadoCondicional === 'Usuario Sectorial' && (
           <div className="my-4">
             <DropdownSelectBuscador
               label="Elige el organismo al que pertenece (Obligatorio)"
@@ -291,7 +247,7 @@ const EdicionUsuario = () => {
                 className="btn-primario-s"
                 disabled
               >
-                {watch('is_active') ? 'Activo' : 'Inactivo'}
+                {userDetails?.perfil ? 'Activo' : 'Inactivo'}
               </button>
             </div>
           ) : (

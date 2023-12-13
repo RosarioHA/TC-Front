@@ -11,8 +11,6 @@ const CustomInput = forwardRef (
       } else {
         setInputValue(value);
       }
-
-      // Llamar a la función de cambio directamente en el componente padre
       if (onChange) {
         onChange(value);
       }
