@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import { Avance } from "../../components/tables/Avance";
 import { FormularioContext } from '../../context/FormSectorial';
 import { Subpaso_uno } from '../../components/formSectorial/paso1/p1.1';
-// import { Subpaso_unopuntodos} from '../../components/formSectorial/paso1/p1.2'
+import { Subpaso_dos} from '../../components/formSectorial/paso1/p1.2'
 
 const PasoUno = () =>
 {
@@ -41,9 +41,10 @@ const PasoUno = () =>
       <div className="container-fluid me-5 pe-5">
         <Subpaso_uno pasoData= {p_1_1_ficha_descripcion_organizacional}/>
       </div>
-      {/* <div className="me-5 pe-5">
-        <Subpaso_unopuntodos/>
-      </div> */}
+      <div className="container-fluid me-5 pe-5">
+        <Subpaso_dos/>
+      </div>
+      
     </div>
   );
 };
