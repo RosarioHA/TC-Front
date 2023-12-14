@@ -24,7 +24,7 @@ export const Subpaso_uno = ({ pasoData }) =>
           <h6 className="mt-1">Corresponde a su naturaleza jurídica: centralizado o descentralizado, concentrado o desconcentrado.</h6>
         </div>
         </div>
-        <div> 
+        <div className="container-fluid"> 
           <DocumentsAditionals />
         </div>
         <div className="my-4">
