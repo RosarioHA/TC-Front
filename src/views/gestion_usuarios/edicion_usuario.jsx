@@ -15,8 +15,7 @@ import { useCompetenciasList } from "../../hooks/useCompetenciasList";
 import { yupResolver } from '@hookform/resolvers/yup';
 import { esquemaEdicionUsuarios } from "../../validaciones/esquemaEditarUsuario";
 
-const EdicionUsuario = () =>
-{
+const EdicionUsuario = () => {
   const { id } = useParams();
   const history = useNavigate();
   const [editMode, setEditMode] = useState(false);
@@ -46,14 +45,14 @@ const EdicionUsuario = () =>
   const renderizadoCondicional = editMode ? perfil : userDetails?.perfil;
 
   useEffect(() => {
-    if (editMode) {
-      // En modo edicion, actualiza los valores iniciales con los valores actuales.
-      setValue('nombre_completo', userDetails?.nombre_completo || "");
-      setValue('email', userDetails?.email || "");
-      setValue('perfil', userDetails?.perfil || "");
-      setValue('region', userDetails?.region?.id || null);
-      setValue('sector', userDetails?.sector?.id || null);
-      setValue('is_active', userDetails?.is_active !== undefined ? userDetails.is_active === 'activo' : false);
+    if (editMode && userDetails) {
+      // En modo edición, actualiza los valores iniciales con los valores actuales.
+      setValue('nombre_completo', userDetails.nombre_completo || "");
+      setValue('email', userDetails.email || "");
+      setValue('perfil', userDetails.perfil || "");
+      setValue('region', userDetails.region ? userDetails.region.id : null);
+      setValue('sector', userDetails.sector ? userDetails.sector.id : null);
+      setValue('is_active', userDetails.is_active !== undefined ? userDetails.is_active : false);
     }
   }, [editMode, userDetails, setValue]);
 
@@ -64,13 +63,11 @@ const EdicionUsuario = () =>
     }
   }, [competenciasLoading, competenciasError, competencias]);
 
-  const handleBackButtonClick = () =>
-  {
+  const handleBackButtonClick = () => {
     history(-1);
   };
 
-  const handleEditClick = () =>
-  {
+  const handleEditClick = () => {
     setEditMode((prevMode) => !prevMode);
   };
 
@@ -127,8 +124,6 @@ const EdicionUsuario = () =>
     }
   };
 
-  console.log("watch perfil", watch('perfil'))
-
   return (
     <div className="container col-10 my-4">
       <h2 className="text-sans-h2 mb-3">Administrar Usuarios</h2>
@@ -143,7 +138,7 @@ const EdicionUsuario = () =>
         <button className="btn-secundario-s" onClick={handleEditClick}>
           <i className="material-symbols-rounded me-2">edit</i>
           <p className="mb-0">{editMode ? 'Editando' : 'Editar'}</p>
-        </button>
+        </button> 
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -250,7 +245,7 @@ const EdicionUsuario = () =>
                 className="btn-primario-s"
                 disabled
               >
-                {userDetails?.perfil ? 'Activo' : 'Inactivo'}
+                {userDetails?.is_active ? 'Activo' : 'Inactivo'}
               </button>
             </div>
           ) : (
@@ -298,12 +293,12 @@ const EdicionUsuario = () =>
         </div>
 
         {editMode && (
-          <button className="btn-primario-s mb-5" type="submit">
-            <i className="material-symbols-rounded me-2">save</i>
-            <p className="mb-0">Guardar</p>
-          </button>
+        <button className="btn-primario-s mb-5" type="submit">
+          <i className="material-symbols-rounded me-2">save</i>
+          <p className="mb-0">Guardar</p>
+        </button>
         )}
-
+       
       </form>
       {editUserLoading && <p>Cargando...</p>}
       {editUserError && <p>Error al editar el usuario: {editUserError.message}</p>}
