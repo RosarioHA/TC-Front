@@ -31,13 +31,13 @@ const PasoUno = () =>
 
 
   return (
-    <div className="container vh-100">
+    <div className="container-fluid ">
       <div className="d-flex">
         <h3 className="mt-3">{nombre_paso}</h3>
         <Avance avance={avance} />
       </div>
       <span className="text-sans-h6-primary">Texto de apoyo</span>
-      <div className="me-5 pe-5">
+      <div className="container-fluid me-5 pe-5">
         <Subpaso_uno pasoData= {p_1_1_ficha_descripcion_organizacional}/>
       </div>
     </div>
