@@ -117,7 +117,6 @@
 }
 .text-sans-h6-darkblue{
     @include font-sans(14px, 400, $tertiary-color);
-    line-height: 18px;
     font-style: normal;
 }
 .text-sans-h6-grey{
@@ -130,7 +129,6 @@
 
 .text-sans-h6-bold-darkblue{
     @include font-sans(14px, 700, $tertiary-color);
-    line-height: 18px;
     font-style: normal;
 }
 

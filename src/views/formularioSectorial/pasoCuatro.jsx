@@ -1,4 +1,5 @@
-import { Avance } from "../../components/tables/Avance"
+import { Avance } from "../../components/tables/Avance"; 
+import { ButtonsNavigate } from "../../components/layout/ButtonsNavigate";
 const pasoCuatro = () => {
   return (
     <div className="container vh-100">
@@ -7,6 +8,10 @@ const pasoCuatro = () => {
     <Avance/>
     </div>
     <span className="text-sans-h6-primary">Texto de apoyo</span>
+    {/*Botones navegacion  */}
+  <div className="container me-5 pe-5">
+          <ButtonsNavigate step="" id=""/>
+      </div>
   </div> 
   )
 }
