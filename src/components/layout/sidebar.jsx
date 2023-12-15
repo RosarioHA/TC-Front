@@ -1,11 +1,13 @@
 import { NavLink } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext'; 
+import { useAuth } from '../../context/AuthContext';
 const Sidebar = () =>
 {
 
-  const { userData} = useAuth(); 
+  const { userData } = useAuth();
 
-  const userSubdere = userData?.perfil?.includes('SUBDERE'); 
+  const userSubdere = userData?.perfil?.includes('SUBDERE');
+  const userObservador = userData?.perfil?.includes('Observador');
+
 
   return (
     <div className="sidebar  fixed-top  d-flex flex-column flex-shrink-0  border-end ">
@@ -37,40 +39,53 @@ const Sidebar = () =>
             <i className="badge badge-notification mx-3">10</i>
           </NavLink>
         </li>
-        <hr className="w-85 mx-4" />
-        <span className="title-section  ms-4 my-1">Gestión de Usuarios</span>
-        { userSubdere && (
-        <li className="my-1">
-          <NavLink to="/home/crear_usuario" className="btn-sidebar my-1 mx-4" type="button">
-            <u>Crear Usuarios </u> <i className="material-symbols-outlined">
-              person_add
-            </i>
-          </NavLink>
-        </li>)}
-        <li className="my-1">
-          <NavLink to="/home/administrar_usuarios" className="mx-4 btn-link" type="button">
-            <i className="material-symbols-outlined mx-3">supervised_user_circle</i>
-            <u>Administrar Usuarios</u>
-          </NavLink>
-        </li>
-        <hr className="w-85 mx-4" />
-        <span className="title-section ms-4 my-2">Gestión de Competencias</span>
-        { userSubdere && (
-        <li>
-          <NavLink to="/home/crear_competencia" className="btn-sidebar my-1 mx-4" >
-            <u><strong>Crear Competencia</strong></u><i className="material-symbols-outlined">
-              post_add
-            </i>
-          </NavLink>
-        </li>
+        {(userSubdere || userObservador) && (
+          <>
+            <hr className="w-85 mx-4" />
+            <span className="title-section  ms-4 my-1">Gestión de Usuarios</span>
+          </>
         )}
-        <li className="my-1">
-          <NavLink to="/home/listado_competencias" className="mx-4 btn-link" type="button">
-            <i className="material-symbols-outlined mx-3">library_books</i>
-            <i className="badge badge-notification mx-3">99+</i>
-            <u>Listado de Competencias</u>
-          </NavLink>
-        </li>
+        {userSubdere && (
+          <li className="my-1">
+            <NavLink to="/home/crear_usuario" className="btn-sidebar my-1 mx-4" type="button">
+              <u>Crear Usuarios </u> <i className="material-symbols-outlined">
+                person_add
+              </i>
+            </NavLink>
+          </li>)}
+        {(userSubdere || userObservador) && (
+          <li className="my-1">
+            <NavLink to="/home/administrar_usuarios" className="mx-4 btn-link" type="button">
+              <i className="material-symbols-outlined mx-3">supervised_user_circle</i>
+              <u>Administrar Usuarios</u>
+            </NavLink>
+          </li>
+        )}
+        {(userSubdere || userObservador) && (
+          <>
+            <hr className="w-85 mx-4" />
+            <span className="title-section ms-4 my-2">Gestión de Competencias</span>
+          </>)}
+        {userSubdere && (
+          <>
+            <li>
+              <NavLink to="/home/crear_competencia" className="btn-sidebar my-1 mx-4" >
+                <u><strong>Crear Competencia</strong></u><i className="material-symbols-outlined">
+                  post_add
+                </i>
+              </NavLink>
+            </li>
+          </>
+        )}
+        {(userSubdere || userObservador) && (
+          <li className="my-1">
+            <NavLink to="/home/listado_competencias" className="mx-4 btn-link" type="button">
+              <i className="material-symbols-outlined mx-3">library_books</i>
+              <i className="badge badge-notification mx-3">99+</i>
+              <u>Listado de Competencias</u>
+            </NavLink>
+          </li>
+        )}
         <hr className="w-85 mx-4" />
 
       </ul >

@@ -2,7 +2,7 @@ import { useContext, useEffect } from "react";
 import { Outlet, useLocation } from 'react-router-dom';
 import { FormTitle } from "./../components/layout/FormTitle";
 import { MonoStepers } from "./../components/stepers/MonoStepers";
-import { ButtonsNavigate } from "../components/layout/ButtonsNavigate";
+
 import { HorizontalStepper } from "../components/stepers/HorizontalStepper";
 import { Timmer } from "../components/layout/Timmer";
 import { FormularioContext } from "../context/FormSectorial";
@@ -45,12 +45,8 @@ const FormularioLayout = () =>
           {pasoData &&<MonoStepers stepNumber={pasoData.numero_paso} />}
           </div>
           <div className="col-11">
-          <Outlet context={{ id, pasoData, stepNumber, loadingPaso,  errorPaso }} />
-          </div>
-        </div>
-        <div className="row">
-          <div className="col mx-5">
-            <ButtonsNavigate />
+          <Outlet context={{ id, pasoData, stepNumber, loadingPaso, errorPaso }} />
+          {console.log({ id, pasoData, stepNumber, loadingPaso, errorPaso })}
           </div>
         </div>
       </div>

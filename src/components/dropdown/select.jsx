@@ -4,6 +4,7 @@ const DropdownSelect = ({ label, placeholder, options, onSelectionChange, readOn
   const [ isOpen, setIsOpen ] = useState(false);
   const [ selectedOption, setSelectedOption ] = useState(null);
   const dropdownRef = useRef(null);
+  
 
   useEffect(() => {
     function handleClickOutside(event) {
