@@ -1,7 +1,7 @@
 import { useState } from "react";
 import UploadBtn from "../commons/uploadBtn";
 
-const SubirArchivo = ({ index, fileType, readOnly, archivoDescargaUrl }) => {
+const SubirArchivo = ({ index, fileType, tituloDocumento, readOnly, archivoDescargaUrl }) => {
   const [fileUploaded, setFileUploaded] = useState(false);
   const [fileName, setFileName] = useState('');
 
@@ -19,9 +19,7 @@ const SubirArchivo = ({ index, fileType, readOnly, archivoDescargaUrl }) => {
   };
 
   const handleDownload = () => {
-    // Agrega lógica para la descarga del archivo desde el backend
-    // Puedes utilizar 'archivoDescargaUrl' para obtener el enlace de descarga
-    // Por ahora, puedes simplemente abrir el enlace en una nueva ventana/tab
+    // Aqui la logica para descargar archivo
     window.open(archivoDescargaUrl, '_blank');
   };
 
@@ -30,6 +28,7 @@ const SubirArchivo = ({ index, fileType, readOnly, archivoDescargaUrl }) => {
       <div className="d-flex justify-content-between align-items-center">
         <div className="d-flex">
           <div className="p-3 ms-2">{index}</div>
+          {tituloDocumento && <div className="p-3 ms-2">{tituloDocumento}</div>}
           <div className="p-3 ms-4">{fileUploaded ? fileName : fileType}</div>
         </div>
         <div>
