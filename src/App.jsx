@@ -29,6 +29,17 @@ const PasoCuatro = React.lazy(() => import('./views/formularioSectorial/pasoCuat
 const PasoCinco = React.lazy(() => import('./views/formularioSectorial/pasoCinco'));
 
 
+const createProtectedRoute = (path, Component, allowedProfiles) => (
+  <Route
+    path={path}
+    element={
+      <ProtectedRoute allowedProfiles={allowedProfiles}>
+        <Component />
+      </ProtectedRoute>
+    }
+  />
+);
+
 function App()
 {
   return (
@@ -41,22 +52,14 @@ function App()
         </Route>
         <Route path="/home/*" element={<MainLayout />}>
           <Route index element={<Home />} />
-          <Route path="administrar_usuarios" element={<GestionUsuarios />} />
-          <Route path="editar_usuario/:id" element={<EditarUsuario />} />
-          <Route
-            path="crear_usuario"
-            element={
-              <ProtectedRoute allowedProfiles={[ 'SUBDERE' ]}>
-                <CrearUsuario />
-              </ProtectedRoute>
-            }
-          />
-          <Route path="listado_competencias" element={<GestionCompetencias />} />
-          <Route path="estado_competencia/:id" element={<EstadoCompentencia />} />
+          {createProtectedRoute("crear_usuario", CrearUsuario, [ 'SUBDERE' ])}
+          {createProtectedRoute("administrar_usuarios", GestionUsuarios, [ 'SUBDERE', 'Usuario Observador' ])}
+          {createProtectedRoute("editar_usuario/:id", EditarUsuario, [ 'SUBDERE', 'Usuario Observador' ])}
+          {createProtectedRoute("listado_competencias", GestionCompetencias, [ 'SUBDERE', 'Usuario Observador' ])}
           <Route path="crear_competencia" element={<CreacionCompetencia />} />
+          <Route path="estado_competencia/:id" element={<EstadoCompentencia />} />
           <Route path="editar_competencia/:id" element={<EditarCompetencia />} />
           <Route path="success" element={<Success />} />
-
           <Route
             path="formulario_sectorial/:id"
             element={
@@ -75,6 +78,7 @@ function App()
             <Route path="paso_cinco" element={<PasoCinco />} />
           </Route>
 
+
           <Route path="ingresar_observaciones" element={<Observaciones />}></Route>
           <Route path="agregar_minuta" element={<Minuta />}></Route>
           <Route path="*" element={<Error404 />} />
@@ -83,7 +87,7 @@ function App()
           <Route path="503" element={<Error503 />} />
         </Route>
       </Routes>
-    </Suspense>
+    </Suspense >
 
   );
 }

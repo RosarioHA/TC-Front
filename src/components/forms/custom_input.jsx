@@ -1,17 +1,22 @@
 import { useState, forwardRef } from "react";
 
-const CustomInput = forwardRef (
-  ({ label, placeholder, id, maxLength, error, readOnly, onChange, initialValue, ...props }, ref) => {
-    const [inputValue, setInputValue] = useState(initialValue || '');
+const CustomInput = forwardRef(
+  ({ label, placeholder, id, maxLength, error, readOnly, onChange, initialValue, ...props }, ref) =>
+  {
+    const [ inputValue, setInputValue ] = useState(initialValue || '');
 
-    const handleInputChange = (e) => {
+    const handleInputChange = (e) =>
+    {
       const value = e.target.value;
-      if (maxLength !== null && maxLength !== undefined && value.length > maxLength) {
+      if (maxLength !== null && maxLength !== undefined && value.length > maxLength)
+      {
         setInputValue(value.slice(0, maxLength));
-      } else {
+      } else
+      {
         setInputValue(value);
       }
-      if (onChange) {
+      if (onChange)
+      {
         onChange(value);
       }
     };
@@ -49,10 +54,10 @@ const CustomInput = forwardRef (
               {...props}
             />
             {maxLength !== null && maxLength !== undefined && (
-              <div className="d-flex justify-content-end mt-1">
-                <p className={counterClass}>
+              <div className="d-flex justify-content-end mb-0">
+                <span className={counterClass}>
                   {inputValue.length}/{maxLength} caracteres.
-                </p>
+                </span>
               </div>
             )}
             {error && (

@@ -11,14 +11,16 @@ import { useUserDetails } from "../../hooks/usuarios/useUserDetail";
 import { useGroups } from "../../hooks/useGroups";
 import { useRegion } from "../../hooks/useRegion";
 import { useSector } from "../../hooks/useSector";
-import { useCompetenciasList } from "../../hooks/useCompetenciasList";
+import { useCompetenciasList } from "../../hooks/competencias/useCompetenciasList";
 import { yupResolver } from '@hookform/resolvers/yup';
 import { esquemaEdicionUsuarios } from "../../validaciones/esquemaEditarUsuario";
+import { useAuth } from "../../context/AuthContext";
 
-const EdicionUsuario = () => {
+const EdicionUsuario = () =>
+{
   const { id } = useParams();
   const history = useNavigate();
-  const [editMode, setEditMode] = useState(false);
+  const [ editMode, setEditMode ] = useState(false);
   const { editUser, isLoading: editUserLoading, error: editUserError } = useEditUser();
   const { dataGroups, loadingGroups } = useGroups();
   const { dataRegiones, loadingRegiones } = useRegion();
@@ -26,6 +28,9 @@ const EdicionUsuario = () => {
   const { competencias, loading: competenciasLoading, error: competenciasError } = useCompetenciasList();
   const { userDetails } = useUserDetails(id);
   //const [currentPerfil, setCurrentPerfil] = useState("");
+
+  const { userData } = useAuth();
+  const userIsSubdere = userData?.perfil?.includes('SUBDERE');
 
   const { control, handleSubmit, setValue, watch, formState: { errors } } = useForm({
     shouldUnregister: false,
@@ -44,8 +49,10 @@ const EdicionUsuario = () => {
   const perfil = watch('perfil') || '';
   const renderizadoCondicional = editMode ? perfil : userDetails?.perfil;
 
-  useEffect(() => {
-    if (editMode && userDetails) {
+  useEffect(() =>
+  {
+    if (editMode && userDetails)
+    {
       // En modo edición, actualiza los valores iniciales con los valores actuales.
       setValue('nombre_completo', userDetails.nombre_completo || "");
       setValue('email', userDetails.email || "");
@@ -54,26 +61,30 @@ const EdicionUsuario = () => {
       setValue('sector', userDetails.sector ? userDetails.sector.id : null);
       setValue('is_active', userDetails.is_active !== undefined ? userDetails.is_active : false);
     }
-  }, [editMode, userDetails, setValue]);
+  }, [ editMode, userDetails, setValue ]);
 
-  useEffect(() => {
+  useEffect(() =>
+  {
     // Verifica si las competencias se han cargado
-    if (!competenciasLoading && !competenciasError) {
+    if (!competenciasLoading && !competenciasError)
+    {
       console.log("Competencias en vista Editar usuario:", competencias);
     }
-  }, [competenciasLoading, competenciasError, competencias]);
+  }, [ competenciasLoading, competenciasError, competencias ]);
 
-  const handleBackButtonClick = () => {
+  const handleBackButtonClick = () =>
+  {
     history(-1);
   };
 
-  const handleEditClick = () => {
+  const handleEditClick = () =>
+  {
     setEditMode((prevMode) => !prevMode);
   };
 
   //opciones de Perfil, Region y Sector 
-  const  opcionesGroups = dataGroups.map(group => ({
-    value:group.id,
+  const opcionesGroups = dataGroups.map(group => ({
+    value: group.id,
     label: group.name
   }))
   const opcionesDeRegiones = dataRegiones.map(region => ({
@@ -81,31 +92,40 @@ const EdicionUsuario = () => {
     label: region.region
   }));
   const opcionesSector = dataSector.map(sector => ({
-    value:sector.id,
-    label:sector.nombre,
+    value: sector.id,
+    label: sector.nombre,
   }));
 
-  const handleDdSelectChange = (fieldName, selectedOption) => {
-    try {
-      if (selectedOption && selectedOption.label) {
+  const handleDdSelectChange = (fieldName, selectedOption) =>
+  {
+    try
+    {
+      if (selectedOption && selectedOption.label)
+      {
         setValue(fieldName, selectedOption.label);
       }
-    } catch (error) {
+    } catch (error)
+    {
       console.error('Error en handleDdSelectChange:', error);
     }
   };
-  
-  const handleDdSelectBuscadorChange = (fieldName, selectedOption) => {
-    try {
-      if (selectedOption && selectedOption.value) {
+
+  const handleDdSelectBuscadorChange = (fieldName, selectedOption) =>
+  {
+    try
+    {
+      if (selectedOption && selectedOption.value)
+      {
         setValue(fieldName, selectedOption.value);
       }
-    } catch (error) {
+    } catch (error)
+    {
       console.error('Error en handleDdSelectBuscadorChange:', error);
     }
-  }; 
-  
-  const handleEstadoChange = (selectionName, nuevoEstado) => {
+  };
+
+  const handleEstadoChange = (selectionName, nuevoEstado) =>
+  {
     const isActivo = nuevoEstado === "activo";
     setValue("is_active", isActivo);
   };
@@ -114,12 +134,15 @@ const EdicionUsuario = () => {
   //   setValue('competencias', selectedCompetencias);
   // }
 
-  const onSubmit = async (formData) => {
-    try {
+  const onSubmit = async (formData) =>
+  {
+    try
+    {
       await editUser(id, formData);
       setEditMode(false);
       history('/home/success', { state: { origen: "editar_usuario" } });
-    } catch (error) {
+    } catch (error)
+    {
       console.error("Error al editar el usuario:", error);
     }
   };
@@ -133,12 +156,14 @@ const EdicionUsuario = () => {
             <i className="material-symbols-rounded me-2">arrow_back_ios</i>
             <p className="mb-0">Volver</p>
           </button>
-          <h3 className="text-sans-h3 ms-3 mb-0">Perfil de: $NombreUsuario</h3>
+          <h3 className="text-sans-h3 ms-3 mb-0">Perfil de: {userDetails?.nombre_completo} </h3>
         </div>
-        <button className="btn-secundario-s" onClick={handleEditClick}>
-          <i className="material-symbols-rounded me-2">edit</i>
-          <p className="mb-0">{editMode ? 'Editando' : 'Editar'}</p>
-        </button> 
+        {userIsSubdere && (
+          <button className="btn-secundario-s" onClick={handleEditClick}>
+            <i className="material-symbols-rounded me-2">edit</i>
+            <p className="mb-0">{editMode ? 'Editando' : 'Editar'}</p>
+          </button>
+        )}
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -151,7 +176,7 @@ const EdicionUsuario = () => {
             readOnly={true}
             maxLength={null}
           />
-          {editMode ? <i className="col material-symbols-rounded ms-2">lock</i> : '' }
+          {editMode ? <i className="col material-symbols-rounded ms-2">lock</i> : ''}
         </div>
 
         <div className="my-4">
@@ -203,7 +228,7 @@ const EdicionUsuario = () => {
             initialValue={userDetails ? userDetails.perfil : ''}
           />
         </div>
-        
+
         {/* Renderizan de manera condicional según el Perfil de usuario */}
         {renderizadoCondicional === 'GORE' && (
           <div className="my-4">
@@ -228,7 +253,7 @@ const EdicionUsuario = () => {
               id="sector"
               name="sector"
               readOnly={!editMode}
-              options={loadingSector ? []: opcionesSector}
+              options={loadingSector ? [] : opcionesSector}
               control={control}
               onSelectionChange={(selectedOption) => handleDdSelectBuscadorChange('sector', selectedOption)}
               initialValue={userDetails ? userDetails.sector : ''}
@@ -282,23 +307,23 @@ const EdicionUsuario = () => {
               value: competencia.id,
               label: competencia.nombre,
             }))}
-            selectedOptions={['opcion 1', 'opcion 2']}
-            // onSelectionChange={(selectedOptions) => {
-            //   field.onChange(selectedOptions);
-            //   handleCompetenciasChange(selectedOptions);
-            //   }}
-            // onClick={handleInputClick}
-            // onMouseDown={handleInputClick}
+            selectedOptions={[ 'opcion 1', 'opcion 2' ]}
+          // onSelectionChange={(selectedOptions) => {
+          //   field.onChange(selectedOptions);
+          //   handleCompetenciasChange(selectedOptions);
+          //   }}
+          // onClick={handleInputClick}
+          // onMouseDown={handleInputClick}
           />
         </div>
 
         {editMode && (
-        <button className="btn-primario-s mb-5" type="submit">
-          <i className="material-symbols-rounded me-2">save</i>
-          <p className="mb-0">Guardar</p>
-        </button>
+          <button className="btn-primario-s mb-5" type="submit">
+            <i className="material-symbols-rounded me-2">save</i>
+            <p className="mb-0">Guardar</p>
+          </button>
         )}
-       
+
       </form>
       {editUserLoading && <p>Cargando...</p>}
       {editUserError && <p>Error al editar el usuario: {editUserError.message}</p>}

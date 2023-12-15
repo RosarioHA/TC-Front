@@ -1,14 +1,18 @@
 import { useState, useEffect } from 'react';
-import { apiTransferenciaCompentencia } from '../services/transferenciaCompetencia';
+import { apiTransferenciaCompentencia } from '../../services/transferenciaCompetencia';
 
-const useCompetenciasList = () => {
-  const [competencias, setCompetencias] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+const useCompetenciasList = () =>
+{
+  const [ competencias, setCompetencias ] = useState([]);
+  const [ loading, setLoading ] = useState(true);
+  const [ error, setError ] = useState(null);
 
-  useEffect(() => {
-    const fetchCompetencias = async () => {
-      try {
+  useEffect(() =>
+  {
+    const fetchCompetencias = async () =>
+    {
+      try
+      {
         const response = await apiTransferenciaCompentencia.get('/competencias/');
         console.log('Complete API Response:', response);
 
@@ -17,10 +21,12 @@ const useCompetenciasList = () => {
 
         console.log('Competencias Data:', competenciasData);
         setCompetencias(competenciasData);
-      } catch (error) {
+      } catch (error)
+      {
         console.error('Error fetching competencias:', error);
         setError(error);
-      } finally {
+      } finally
+      {
         setLoading(false);
       }
     };

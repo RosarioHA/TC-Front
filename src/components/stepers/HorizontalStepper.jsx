@@ -6,7 +6,7 @@ export const HorizontalStepper = ({id}) =>
 {
 
   // Estado inicial de los pasos
-  const [ stepsState, setStepsState ] = useState([ 'default', 'active', 'warning', 'done', ]);
+  const [ stepsState, setStepsState ] = useState([ 'default', 'active', 'warning', 'done', 'default' ]);
   const navigate = useNavigate();
   // Títulos para cada paso
   const stepTitles = [

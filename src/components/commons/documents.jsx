@@ -1,35 +1,52 @@
 import { useState } from 'react';
 import { AdditionalDocs } from "../commons/aditionalDocs";
 
-export const DocumentsAditionals = () => {
-  const [files, setFiles] = useState([]);
+export const DocumentsAditionals = () =>
+{
+  const [ files, setFiles ] = useState([]);
+  const [ maxFilesReached, setMaxFilesReached ] = useState(false);
 
-  const handleFileChange = (event) => {
+
+  const handleFileChange = (event) =>
+  {
     const newFiles = Array.from(event.target.files);
-    if (files.length + newFiles.length <= 5) {
-      setFiles(prevFiles => [...prevFiles, ...newFiles.map(file => ({ file, title: file.name }))]);
-    } else {
-      alert("No puedes agregar más de 5 archivos.");
+    const updatedFiles = newFiles.map(file => ({
+      file,
+      title: file.name,
+      isTooLarge: file.size > 20 * 1024 * 1024 // 20 MB
+    }));
+
+    if (files.length + updatedFiles.length <= 5)
+    {
+      setFiles(prevFiles => [ ...prevFiles, ...updatedFiles ]);
+      setMaxFilesReached(false);
+    } else
+    {
+      setMaxFilesReached(true);
     }
   };
-
-  const handleDelete = (index) => {
-    const newFiles = [...files];
+  const handleDelete = (index) =>
+  {
+    const newFiles = [ ...files ];
     newFiles.splice(index, 1);
     setFiles(newFiles);
-  }
 
+    if (newFiles.length <= 5)
+    {
+      setMaxFilesReached(false);
+    }
+  }
   return (
     <>
-      <span className='text-sans-h3 mt-4'>Marco jurídico que lo rige (Obligatorio)</span>
-      <p>Mínimo 1 archivo, máximo 5 archivos, peso máximo 20MB, formato PDF</p>
+      <span className='text-sans-h5 mt-4'>Marco jurídico que lo rige (Obligatorio)</span>
+      <p className="text-sans-h6-grey">Mínimo 1 archivo, máximo 5 archivos, peso máximo 20MB, formato PDF</p>
       <input
         type="file"
         multiple
         accept="application/pdf"
         onChange={handleFileChange}
         id="fileInput"
-        style={{ display: "none" }} 
+        style={{ display: "none" }}
       />
       <button className="btn-secundario-s d-flex" onClick={() => document.getElementById('fileInput').click()}>
         <i className="material-symbols-outlined">upgrade</i>
@@ -40,6 +57,7 @@ export const DocumentsAditionals = () => {
         files={files}
         onDelete={handleDelete}
       />}
+      {maxFilesReached && <h6 className="text-sans-h6-primary">Alcanzaste el número máximo de archivos permitidos.</h6>}
     </>
   )
 }

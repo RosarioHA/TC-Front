@@ -29,10 +29,10 @@ const CustomTextarea = ({label, placeholder, id, maxLength}) => {
       />
       {/* si no se ha entregado un maxLength, no muestra el contador */}
       {maxLength !== null && maxLength !== undefined && (
-        <div className="d-flex justify-content-end mt-1">
-          <p className={counterClass}>
+        <div className="d-flex justify-content-end mb-0">
+          <span className={counterClass}>
             {inputValue.length}/{maxLength} caracteres.
-          </p>
+          </span>
         </div>
       )}
     </div>
