@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const CustomTextarea = ({label, placeholder, id, maxLength}) => {
+const CustomTextarea = ({label, placeholder, id, maxLength, rows}) => {
   const [inputValue, setInputValue] = useState('');
 
   const handleInputChange = (e) => {
@@ -17,15 +17,16 @@ const CustomTextarea = ({label, placeholder, id, maxLength}) => {
   const counterClass = inputValue.length === maxLength ? "text-sans-h6-darkred" : "text-sans-h6";
 
   return (
-    <div className="d-flex flex-column input-container">
+    <div className="d-flex flex-column textarea-container">
       <label className="text-sans-h5 input-label ms-3 ms-sm-0">{label}</label>
       <textarea 
-        className="input-s p-3"
+        className="input-textarea p-3"
         type="text"
         placeholder={placeholder}
         id={id}
         value={inputValue}
         onChange={handleInputChange}
+        rows={rows}
       />
       {/* si no se ha entregado un maxLength, no muestra el contador */}
       {maxLength !== null && maxLength !== undefined && (
