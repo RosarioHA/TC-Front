@@ -26,7 +26,6 @@ export const Subpaso_dosPuntoCinco = () => {
 
       <div className="mt-4">
         <CustomTextarea 
-          className="textarea-l"
           rows={15}
           label="Descripción cualitativa del ejercicio de la competencia en la región" 
           placeholder="Describe el ejercicio de la competencia " 

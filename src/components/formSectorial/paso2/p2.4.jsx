@@ -9,6 +9,7 @@ export const Subpaso_dosPuntoCuatro = () => {
         <button>
         Agregar ficha técnica
         </button>
+        {/* boton agregar ficha tecnica tambien genera otra ficha para agregar otro software/plataforma */}
 
       </div>
     )
