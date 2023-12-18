@@ -1,3 +1,4 @@
+import TablaIntervinentes from "../../tables/Intervinentes";
 
 export const Subpaso_dosPuntoUno = () => {
   return(
@@ -7,26 +8,7 @@ export const Subpaso_dosPuntoUno = () => {
       <h6 className="text-sans-h6-primary mt-3">Asegúrate de identificar correctamente los organismos intervinientes, ya que esta información será utilizada más adelante en tu formulario.</h6>
 
       <div className="my-4">
-        <div className="row border">
-          <div className="col-2">
-            <p>Ministerio o Servicio Público</p>
-          </div>
-          <div className="col-10 border">
-            <div className="row border p-3">
-              <div className="campo-container p-2">
-                <p className="ms-2 my-2">$SectorPreseleccionado</p>
-              </div>
-            </div>
-            <div className="row">
-              <div className="p-2">
-                <button className="btn-secundario-s">
-                  <i className="material-symbols-rounded me-2">add</i>
-                  <p className="mb-0 text-decoration-underline">Agregar Otro</p>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+        <TablaIntervinentes />
       </div>
 
       <button className="btn-secundario-s">
