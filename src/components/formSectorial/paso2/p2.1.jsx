@@ -13,9 +13,12 @@ export const Subpaso_dosPuntoUno = () => {
     const tablas = [];
     for (let i = 0; i < numTablasSelector; i++) {
       tablas.push(
-      <TablaEncabezadoSelector 
-      key={i} 
-      options={''} />
+        <div className="mb-4">
+          <TablaEncabezadoSelector 
+          key={i} 
+          options={''}
+          isEditable={true} />
+        </div>
       );
     }
     return tablas;

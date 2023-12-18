@@ -3,7 +3,7 @@ import { useState } from "react";
 import CustomInput from '../forms/custom_input'
 import DropdownSelect from '../dropdown/select'
 
-const TablaEncabezadoSelector = ({options}) => {
+const TablaEncabezadoSelector = ({options, isEditable, title}) => {
   const [filas, setFilas] = useState([1]);
 
   const agregarOtraFila = () => {
@@ -28,11 +28,14 @@ const TablaEncabezadoSelector = ({options}) => {
   // };
 
   return (
-    <div className="my-4">
+    <div className="">
       <div className="row border">
-        <div className="col p-3">
-          <DropdownSelect 
-          options={options}/>
+      <div className="col p-3">
+          {isEditable ? (
+            <DropdownSelect options={options} />
+          ) : (
+            <p className="ms-2 my-2">{title}</p>
+          )}
         </div>
 
         <div className="col-10 border p-2">
