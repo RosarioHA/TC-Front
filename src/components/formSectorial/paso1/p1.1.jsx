@@ -1,10 +1,16 @@
-import CustomTextarea from "../../forms/custom_textarea"; 
+import CustomTextarea from "../../forms/custom_textarea";
 import CustomInput from "../../forms/custom_input";
 import { DocumentsAditionals } from '../../commons/documents';
-export const Subpaso_uno = ({ pasoData, }) =>
+export const Subpaso_uno = ({ pasoData }) =>
 {
 
   console.log('1.1', pasoData)
+
+  if (!pasoData)
+  {
+    return <div>Cargando datos...</div>;
+  }
+
   return (
     <>
       <div className="pe-5 me-5 mt-4">
@@ -13,8 +19,8 @@ export const Subpaso_uno = ({ pasoData, }) =>
           <CustomInput
             label="Denominación del organismo"
             placeholder="Escriba la denominación del organismo"
-            id={pasoData.denominacion_organismo}
-            value={pasoData.denominacion_organismo}
+            id={pasoData?.denominacion_organismo}
+            value={pasoData?.denominacion_organismo}
             disabled={true}
           />
         </div>

@@ -8,29 +8,24 @@ export const usePasoForm = (id, stepNumber) =>
   const [ errorPaso, setErrorPaso ] = useState(null);
 
   useEffect(() =>
-  {
-    const fetchData = async () =>
     {
-      try
-      {
-        setLoadingPaso(true);
-        const response = await apiTransferenciaCompentencia.get(`/formulario-sectorial/${id}/paso-${stepNumber}/`);
-        const pasoKey = `paso${stepNumber}`;
-        setDataPaso(response.data[pasoKey]);
-      } catch (err)
-      {
-        setErrorPaso(err);
-      } finally
-      {
-        setLoadingPaso(false);
-      }
-    };
+      const fetchData = async () => {
+        try {
+          const response = await apiTransferenciaCompentencia.get(`/formulario-sectorial/${id}/paso-${stepNumber}/`);
+          setDataPaso(response.data);  // Aquí cambia a response.data
+        } catch (err) {
+          setErrorPaso(err);
+        } finally {
+          setLoadingPaso(false);
+        }
+      };
 
-    if (id && stepNumber)
-    {
+    if (id && stepNumber) {
       fetchData();
     }
-  }, [ id, stepNumber ]);
+  }, [id, stepNumber]);
+
+  console.log('data paso', dataPaso)
 
   return { dataPaso, loadingPaso, errorPaso };
 };

@@ -1,21 +1,31 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useCompetenciaDetails } from "../../hooks/competencias/useCompetenciaDetail";
+//import { CompetenciasContext } from "../../context/competencias";
 import CustomInput from "../../components/forms/custom_input";
 import DropdownSelect from "../../components/dropdown/select";
-import DropdownCheckbox from "../../components/dropdown/checkbox";
-import DropdownConSecciones from "../../components/dropdown/checkbox_conSecciones_conTabla";
+//import DropdownCheckbox from "../../components/dropdown/checkbox";
+//import DropdownConSecciones from "../../components/dropdown/checkbox_conSecciones_conTabla";
 import SubirArchivo from "../../components/forms/subir_archivo";
-// temporales
-import { userData } from "../../Data/Usuarios";
+import { useGroups } from "../../hooks/useGroups";
+import { useRegion } from "../../hooks/useRegion";
+import { useSector } from "../../hooks/useSector";
+import { useUserDetails } from "../../hooks/usuarios/useUserDetail";
+
 
 const EdicionCompetencia = () =>
 {
-  const history = useNavigate();
-  const [ editMode, setEditMode ] = useState(false);
-  const [ usuariosSeleccionados, setUsuariosSeleccionados ] = useState([]);
   const { id } = useParams();
-  const { competenciaDetails, loading, error } = useCompetenciaDetails(id);
+  const history = useNavigate();
+  //const { competenciaDetails, loadingCompetencia, errorCompetencia } = useContext(CompetenciasContext);
+  const [ editMode, setEditMode ] = useState(false);
+
+
+  const { userDetails } = useUserDetails(id);
+  const { dataGroups } = useGroups();
+  const { dataRegiones } = useRegion();
+  const { dataSector } = useSector();
+
+  console.log(dataGroups, dataRegiones, dataSector, userDetails)
 
   const handleBackButtonClick = () =>
   {
@@ -27,36 +37,8 @@ const EdicionCompetencia = () =>
     setEditMode((prevMode) => !prevMode);
   };
 
-  const handleUsuariosChange = useCallback(
-    (selectedOptions) =>
-    {
-      const updatedUsuarios = {};
-      selectedOptions.forEach((usuario) =>
-      {
-        if (usuario && usuario.id)
-        {
-          updatedUsuarios[ usuario.id ] = true;
-        }
-      });
-      setUsuariosSeleccionados(updatedUsuarios);
-    },
-    []
-  );
 
-  useEffect(() =>
-  {
-    setUsuariosSeleccionados({});
-  }, [ competenciaDetails ]);
 
-  if (loading)
-  {
-    return <p>Cargando detalles de la competencia...</p>;
-  }
-
-  if (error)
-  {
-    return <p>Error al cargar detalles de la competencia: {error.message}</p>;
-  }
 
   return (
     <div className="container col-10 my-4">
@@ -77,54 +59,54 @@ const EdicionCompetencia = () =>
 
       <form>
         <div className="mb-4">
-          < CustomInput
+          <CustomInput
             label="Nombre de la Competencia (Obligatorio)"
-            placeholder={competenciaDetails ? competenciaDetails.nombre : ''}
+            placeholder=''
             id="nombre"
-            readOnly={!editMode}
-            maxLength={null}
+            readOnly=''
           />
         </div>
 
         <div className="mb-4">
-          <DropdownCheckbox
+          {/*  <DropdownCheckbox
             label="Región (Obligatorio)"
             placeholder="Elige la o las regiones donde se ejercerá la competencia"
-            options={[ 'opcion 1', 'opcion 2', 'opcion 3' ]}
-            readOnly={!editMode}
-          // onSelectionChange={(selectedOption) => {
-          //   handleRegionesChange(selectedOption);
-          //   setValue('regiones', selectedOption, { shouldValidate: true });
-          // }}
-          // selected={regionesSeleccionadas} 
+            id="perfil"
+            name="perfil"
+            options=''
+            readOnly=''
+            control=''
+            onSelectionChange=''
+            initialValue=''
           />
         </div>
 
+
         <div className="mb-4">
-          <DropdownCheckbox
+          {/* <DropdownCheckbox
             label="Elige el sector de la competencia (Obligatorio)"
             placeholder='Elige el sector de la competencia'
-            options={[ 'opcion 1', 'opcion 2', 'opcion 3' ]}
-            readOnly={!editMode}
-          // onSelectionChange={(selectedOption) => {
-          //   handleSectorChange(selectedOption);
-          //   setValue('sectores', selectedOption, { shouldValidate: true });
-          // }}
-          // selected={sectoresSeleccionados} 
-          />
+            id="perfil"
+            name="perfil"
+            options=''
+            readOnly=''
+            control=''
+            onSelectionChange=''
+            initialValue=''
+          /> */}
         </div>
 
         <div className="mb-4">
           <DropdownSelect
             label="Origen de la competencia (Obligatorio)"
-            placeholder="Elige el origen de la competencia"
-            readOnly={!editMode}
-          // options={origenCompetencia}
-          // onSelectionChange={(selectedOption) => {
-          //   handleOrigenChange(selectedOption);
-          //   setValue('origen', selectedOption, { shouldValidate: true });
-          // }}
-          // selected={origenSeleccionado}
+            placeholder=''
+            id="perfil"
+            name="perfil"
+            options=''
+            readOnly=''
+            control=''
+            onSelectionChange=''
+            initialValue=''
           />
         </div>
 
@@ -132,26 +114,25 @@ const EdicionCompetencia = () =>
           <DropdownSelect
             label="Elige el ámbito de la competencia (Obligatorio)"
             placeholder="Elige el ámbito de la competencia"
-            readOnly={!editMode}
-          // options={ambitoCompetencia}
-          // onSelectionChange={(selectedOption) => {
-          //   handleAmbitoChange(selectedOption);
-          //   setValue('ambito', selectedOption, { shouldValidate : true})
-          // }}
-          // selected={ambitoSeleccionado} 
+            id=""
+            name=""
+            options=''
+            readOnly=''
+            control=''
+            onSelectionChange=''
+            initialValue=''
           />
         </div>
 
         <div className="my-4">
-          < DropdownConSecciones
+          {/*  < DropdownConSecciones
             label="Asignar Usuarios (Opcional)"
             placeholder="Busca el nombre de la persona"
-            readOnly={!editMode}
-            options={[ 'opcion 1', 'opcion 2', 'opcion 3' ]}
-            selectedOptions={Object.keys(usuariosSeleccionados)
-              .map(id => userData.find(user => user.id === id))}
-            onSelectionChange={handleUsuariosChange}
-          />
+            readOnly=''
+            options=''
+            selectedOptions=""
+            onSelectionChange=""
+        /> */}
         </div>
 
         <div className="mb-5">

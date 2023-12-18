@@ -6,7 +6,7 @@ import CustomInput from "../../components/forms/custom_input";
 import DropdownSelect from "../../components/dropdown/select";
 import DropdownSelectBuscador from "../../components/dropdown/select_buscador";
 import DropdownSinSecciones from "../../components/dropdown/checkbox_sinSecciones_conTabla";
-import RadioButtons from "../../components/forms/radio_btns";
+import { RadioButtons } from "../../components/forms/radio_btns";
 import { competencias } from "../../Data/Competencias";
 import { esquemaCreacionUsuario } from "../../validaciones/esquemaValidacion";
 import { useCreateUser } from "../../hooks/usuarios/useCreateUser";
@@ -75,7 +75,7 @@ const CreacionUsuario = () =>
     value: group.id,
     label: group.name
   }))
-  
+
   // const handlePerfilChange = ( selectedValue) => {
   //   console.log("selectedValue", selectedValue);
   //   const selectedProfile = opcionesGroups.find(option => option.value === selectedValue.label)
@@ -86,21 +86,24 @@ const CreacionUsuario = () =>
   //     setPerfilSeleccionado(null); 
   // }}
   // console.log("perfilSeleccionado", perfilSeleccionado)
-  const handlePerfilChange = (selectedValue) => {
+  const handlePerfilChange = (selectedValue) =>
+  {
     console.log("selectedValue", selectedValue);
     console.log("selectedValue.label", selectedValue.label);
     const selectedProfile = opcionesGroups.find((option) => option.value === selectedValue.value);
     console.log("selectedProfile", selectedProfile);
-  
-    if (selectedProfile) {
+
+    if (selectedProfile)
+    {
       setPerfilSeleccionado(selectedProfile.label); // Cambiado a selectedProfile.label
-    } else {
+    } else
+    {
       setPerfilSeleccionado(null);
     }
   };
   console.log("perfilSeleccionado", perfilSeleccionado)
-  
-  
+
+
   //opciones de regiones
   const opcionesDeRegiones = dataRegiones.map(region => ({
     value: region.id,
@@ -120,7 +123,8 @@ const CreacionUsuario = () =>
 
   console.log(opcionesSector);
 
-  const handleSectorChange = (sector) => {
+  const handleSectorChange = (sector) =>
+  {
     setSectorSeleccionado(sector.value);
   }
 

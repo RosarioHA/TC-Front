@@ -20,11 +20,15 @@ export const Etapa4 = ({ etapaCompetencia }) =>
     let path = "/";
 
 
-    if (nombre.startsWith("Notificar a") && estado === "finalizada")
-    {
-      return <span className="badge-status-finish">{accion}</span>;
+    if (nombre.startsWith("Notificar a") && estado === "finalizada") {
+      if (etapaCompetencia.estado === 'Aún no puede comenzar') {
+        // Cambiar el badge a pending si el estado general de la etapa es 'Aún no puede comenzar'
+        return <span className="badge-status-pending">{accion}</span>;
+      } else {
+        // Mantiene el badge como finish si la subetapa está finalizada
+        return <span className="badge-status-finish">{accion}</span>;
+      }
     }
-
     switch (nombre)
     {
       case "Completar formulario Sectorial":

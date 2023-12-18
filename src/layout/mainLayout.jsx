@@ -1,4 +1,4 @@
-import { CompetenciaProvider } from '../context/competenciasProvider';
+import { CompetenciaProvider } from '../context/competencias';
 import Sidebar from '../components/layout/sidebar';
 import Navbar from '../components/layout/navbar';
 import { Outlet } from 'react-router-dom';
