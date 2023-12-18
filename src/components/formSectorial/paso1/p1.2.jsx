@@ -35,7 +35,7 @@ export const Subpaso_dos = () => {
         maxLength={500}/>
     </div>
 
-    <h5 className="text-sans-h5">Organigrama Regional (Opcional)</h5>
+    <h5 className="text-sans-h5 mt-4">Organigrama Regional (Opcional)</h5>
     <h6 className="text-sans-h6 mb-3">Máximo 1 archivo, peso máximo 20MB, formato PDF</h6>
     <p className="text-sans-p-semibold">Regiones asociadas a la competencia:</p>
 
