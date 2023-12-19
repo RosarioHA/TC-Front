@@ -2,7 +2,7 @@ import { useState } from "react";
 import CustomInput from "../forms/custom_input";
 import DropdownSelect from "../dropdown/select";
 
-const EtapasYprocedimientos = () => {
+const EtapasYprocedimientos = ({index}) => {
   const [procedimientos, setProcedimientos] = useState([{ id: 1 }]);
 
   const agregarProcedimiento = () => {
@@ -20,7 +20,7 @@ const EtapasYprocedimientos = () => {
   return(
     <div className="row border my-4">
       <div className="col-1 border">
-        <p className="text-sans-p-bold mb-0">Etapa 1</p> 
+        <p className="text-sans-p-bold mb-0">Etapa {index}</p> 
       </div>
       <div className="col">
         <div className="row border">
