@@ -4,6 +4,7 @@ import { Avance } from "../../components/tables/Avance";
 import { ButtonsNavigate } from "../../components/layout/ButtonsNavigate";
 const pasoDos = () => {
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const { pasoData, loadingPaso, errorPaso } = useContext(FormularioContext); 
   console.log('data paso dos', pasoData);
 

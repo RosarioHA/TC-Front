@@ -13,18 +13,21 @@ export const Etapa2 = ({ etapaCompetencia }) =>
   } = etapaCompetencia;
   const navigate = useNavigate();
 
-  const handleNavigation = (path, id) =>
+  const handleNavigation = (path,id) =>
   {
-    navigate(path, { state: { data: { id } } });
+    navigate(path, { state: { id} });
   };
-
+  
+  console.log('data2',etapaCompetencia); 
 
   const renderButtonForSubetapa = (subetapa) =>
   {
-    const { estado, accion, nombre, id } = subetapa;
+
+    const { estado, accion, nombre } = subetapa;
     let buttonText = accion;
     let icon = estado === "finalizada" ? "visibility" : "draft";
     let path = "/";
+    let id = subetapa.id;
 
     if (nombre.startsWith("Notificar a") && estado === "finalizada")
     {
@@ -60,10 +63,10 @@ export const Etapa2 = ({ etapaCompetencia }) =>
         <u>{buttonText}</u>
       </button>
     ) : (
-      <button onClick={() => handleNavigation(path, subetapa.id)} className="btn-secundario-s text-decoration-none" id="btn">
-        <span className="material-symbols-outlined me-1">{icon}</span>
-        <u>{buttonText}</u>
-      </button>
+      <button onClick={() => handleNavigation(path, id)} className="btn-secundario-s text-decoration-none" id="btn">
+      <span className="material-symbols-outlined me-1">{icon}</span>
+      <u>{buttonText}</u>
+    </button>
     );
   };
 
