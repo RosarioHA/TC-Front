@@ -1,5 +1,5 @@
-// import { useContext } from 'react'; 
-// import { FormularioContext } from '../../context/FormSectorial';
+import { useContext } from 'react'; 
+import { FormularioContext } from '../../context/FormSectorial';
 import { Avance } from "../../components/tables/Avance";
 import { ButtonsNavigate } from "../../components/layout/ButtonsNavigate";
 import { Subpaso_dosPuntoUno } from "../../components/formSectorial/paso2/p2.1";
@@ -10,12 +10,15 @@ import { Subpaso_dosPuntoCinco } from "../../components/formSectorial/paso2/p2.5
 
 const pasoDos = () => {
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const { pasoData, loadingPaso, errorPaso } = useContext(FormularioContext); 
+  console.log('data paso dos', pasoData);
   // const { pasoData, loadingPaso, errorPaso } = useContext(FormularioContext); 
   // console.log('data paso dos', pasoData);
 
-  // if (loadingPaso) return <div>Cargando...</div>;
-  // if (errorPaso) return <div>Error: {errorPaso.message || "Error desconocido"}</div>;
-  // if (!pasoData) return <div>No hay datos disponibles para el Paso 1</div>;
+  if (loadingPaso) return <div>Cargando...</div>;
+  if (errorPaso) return <div>Error: {errorPaso.message || "Error desconocido"}</div>;
+  if (!pasoData) return <div>No hay datos disponibles para el Paso 1</div>;
 
   return (
   <div className="container vh-100">

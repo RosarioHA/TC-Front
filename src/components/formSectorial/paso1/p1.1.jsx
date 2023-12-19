@@ -4,8 +4,6 @@ import { DocumentsAditionals } from '../../commons/documents';
 export const Subpaso_uno = ({ pasoData }) =>
 {
 
-  console.log('1.1', pasoData)
-
   if (!pasoData)
   {
     return <div>Cargando datos...</div>;

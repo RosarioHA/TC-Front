@@ -1,51 +1,85 @@
-import { useContext , useState, useCallback} from "react";
+import { useContext, useState, useCallback } from "react";
 import CustomTextarea from "../../forms/custom_textarea";
 import SubirArchivo from "../../forms/subir_archivo";
 import { FormularioContext } from "../../../context/FormSectorial";
 
-export const Subpaso_dos = ({ pasoData, organigrama }) =>
+export const Subpaso_dos = ({ pasoData, organigrama }) => 
 {
-  const { updatePaso } = useContext(FormularioContext); // de aqui quite por mientras isUpdatingPaso y updatePasoError porque producian error al no estar en uso.
-  const [organigramaNacional, setOrganigramaNacional] = useState(pasoData.organigrama_nacional || '');
-  const [descripcionOrganigramaNacional, setDescripcionOrganigramaNacional] = useState('');
+  const {
+    updatePaso,
+    isUpdatingPaso,
+    updatePasoError,
+    id, 
+    stepNumber 
+  } = useContext(FormularioContext);
+  const [ organigramaNacional, setOrganigramaNacional ] = useState(pasoData.organigrama_nacional || '');
+  const [ descripcionOrganigramaNacional, setDescripcionOrganigramaNacional ] = useState('');
+  const [ organigramasRegionales, setOrganigramasRegionales ] = useState({});
 
 
-  const handleDescripcionChange = (event) => {
+  const handleDescripcionChange = (event) =>
+  {
     setDescripcionOrganigramaNacional(event.target.value);
   };
 
-  const handleDescripcionBlur = async () => {
+  const handleDescripcionBlur = async () =>
+  {
     await handleSubmit();
   };
 
-  const handleFileUpload = async (file, index) => {
-    if (index === 1) { // Por ejemplo, si es el organigrama nacional
+  const handleFileUploadRegional = (file, regionId) =>
+  {
+    setOrganigramasRegionales(prev => ({ ...prev, [ regionId ]: file }));
+  };
+
+  const handleFileUpload = async (file, index) =>
+  {
+    if (index === 1)
+    { // Por ejemplo, si es el organigrama nacional
       setOrganigramaNacional(file);
     }
     // Aquí puedes manejar otros casos para otros archivos
     await handleSubmit();
   };
 
-  const handleSubmit = useCallback(async () => {
-    const datosPaso = {
-      p_1_2_organizacion_institucional: {
-        organigrama_nacional: organigramaNacional,
-        descripcion_archivo_organigrama_regional: descripcionOrganigramaNacional,
-        // ... otros campos
-      },
-      // ... más datos de otros subpasos si es necesario
-    };
+  const handleSubmit = useCallback(async () =>
+  {
+    const formData = new FormData();
 
-    try {
-      await updatePaso(/* idDelFormulario, numeroDelPaso, */ datosPaso);
-      // Manejar respuesta exitosa
-    } catch (error) {
-      // Manejar errores
+    // Agrega los campos de texto y los archivos al objeto FormData
+    formData.append('descripcion_archivo_organigrama_regional', descripcionOrganigramaNacional);
+    if (organigramaNacional)
+    {
+      formData.append('organigrama_nacional', organigramaNacional);
     }
-  }, [organigramaNacional, descripcionOrganigramaNacional, updatePaso]);
 
-  if (!pasoData) {
+    // Incluye archivos regionales si son relevantes
+    Object.entries(organigramasRegionales).forEach(([ regionId, file ]) =>
+    {
+      if (file)
+      {
+        formData.append(`organigrama_regional_${regionId}`, file);
+      }
+    });
+
+    try
+    {
+      await updatePaso(id, stepNumber, formData);
+    } catch (error)
+    {
+      // Manejar los errores
+    }
+  }, [descripcionOrganigramaNacional, organigramaNacional, organigramasRegionales, updatePaso, id, stepNumber]);
+
+  if (!pasoData)
+  {
     return <div>Cargando datos...</div>;
+  }
+  if (isUpdatingPaso) {
+    return <div>Cargando...</div>;
+  }
+  if (updatePasoError) {
+    return <div>Error: {updatePasoError.message}</div>;
   }
 
   return (
@@ -69,23 +103,23 @@ export const Subpaso_dos = ({ pasoData, organigrama }) =>
         </div>
         <div className="row neutral-line align-items-center">
           <SubirArchivo
-          index="1"
-          fileType={organigramaNacional ? "Seleccionado" : "No seleccionado"}
-          onFileUpload={(file) => handleFileUpload(file, 1)}
+            index="1"
+            fileType={organigramaNacional ? "Seleccionado" : "No seleccionado"}
+            onFileUpload={(file) => handleFileUpload(file, 1)}
           />
         </div>
       </div>
 
       <div className="mt-4">
-      <CustomTextarea
-        label="Descripción del archivo adjunto (Opcional)"
-        placeholder="Describe el archivo adjunto"
-        id="descOrganigramaNacional"
-        value={descripcionOrganigramaNacional}
-        onChange={handleDescripcionChange}
-        onBlur={handleDescripcionBlur}
-        maxLength={500}
-      />
+        <CustomTextarea
+          label="Descripción del archivo adjunto (Opcional)"
+          placeholder="Describe el archivo adjunto"
+          id="descOrganigramaNacional"
+          value={descripcionOrganigramaNacional}
+          onChange={handleDescripcionChange}
+          onBlur={handleDescripcionBlur}
+          maxLength={500}
+        />
       </div>
 
     <h5 className="text-sans-h5 mt-4">Organigrama Regional (Opcional)</h5>
@@ -108,6 +142,7 @@ export const Subpaso_dos = ({ pasoData, organigrama }) =>
               index={index + 1}
               fileType={region.documento ? "Seleccionado" : "No seleccionado"}
               tituloDocumento={region.region}
+              onFileUpload={(file) => handleFileUploadRegional(file, region.pk)}
             />
           </div>
         ))}

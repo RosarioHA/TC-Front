@@ -10,7 +10,8 @@ export const FormTitle = ({ data, loading, error}) =>
   const handleBackButtonClick = () =>
   {
     navigate(-1);
-  };
+  }
+    console.log('datatitle',data)
 
   if (loading) return <div>Cargando...</div>;
   if (error) return <div>Error al cargar los datos: {error.message}</div>;
