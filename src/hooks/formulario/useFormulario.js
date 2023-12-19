@@ -1,41 +1,34 @@
 import { useCallback, useState, useEffect } from "react";
 import { apiTransferenciaCompentencia } from "../../services/transferenciaCompetencia";
 
-export const useFormSectorial = (id) =>
-{
-  const [ dataFormSectorial, setDataFormSectorial ] = useState(null);
-  const [ loadingFormSectorial, setLoadingFormSectorial ] = useState(true);
-  const [ errorFormSectorial, setErrorFormSectorial ] = useState(null);
+export const useFormSectorial = (id) => {
+  const [dataFormSectorial, setDataFormSectorial] = useState(null);
+  const [loadingFormSectorial, setLoadingFormSectorial] = useState(true);
+  const [errorFormSectorial, setErrorFormSectorial] = useState(null);
 
-  const fetchFormSectorial = useCallback(async () =>
-  {
-    if (!id)
-    {
-      setErrorFormSectorial(new Error("No formId provided"));
+  const fetchFormSectorial = useCallback(async () => {
+    // Si no hay un ID, simplemente salimos de la función sin hacer nada.
+    // Esto previene que se establezca un error cuando el ID aún no esté disponible.
+    if (!id) {
       setLoadingFormSectorial(false);
       return;
     }
 
-    try
-    {
+    try {
       setLoadingFormSectorial(true);
       const response = await apiTransferenciaCompentencia.get(`/formulario-sectorial/${id}/`);
       setDataFormSectorial(response.data);
-    } catch (err)
-    {
+    } catch (err) {
       console.error("Error fetching form data:", err);
       setErrorFormSectorial(err);
-    } finally
-    {
+    } finally {
       setLoadingFormSectorial(false);
     }
-  }, [ id ]);
+  }, [id]);
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     fetchFormSectorial();
-  }, [ fetchFormSectorial ]);
-
+  }, [fetchFormSectorial]);
 
   return { dataFormSectorial, loadingFormSectorial, errorFormSectorial };
 };
