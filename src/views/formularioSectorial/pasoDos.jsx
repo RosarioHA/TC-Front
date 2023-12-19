@@ -1,3 +1,5 @@
+// import { useContext } from 'react'; 
+// import { FormularioContext } from '../../context/FormSectorial';
 import { Avance } from "../../components/tables/Avance";
 import { ButtonsNavigate } from "../../components/layout/ButtonsNavigate";
 import { Subpaso_dosPuntoUno } from "../../components/formSectorial/paso2/p2.1";
@@ -7,6 +9,14 @@ import { Subpaso_dosPuntoCuatro } from "../../components/formSectorial/paso2/p2.
 import { Subpaso_dosPuntoCinco } from "../../components/formSectorial/paso2/p2.5";
 
 const pasoDos = () => {
+
+  // const { pasoData, loadingPaso, errorPaso } = useContext(FormularioContext); 
+  // console.log('data paso dos', pasoData);
+
+  // if (loadingPaso) return <div>Cargando...</div>;
+  // if (errorPaso) return <div>Error: {errorPaso.message || "Error desconocido"}</div>;
+  // if (!pasoData) return <div>No hay datos disponibles para el Paso 1</div>;
+
   return (
   <div className="container vh-100">
     <div className="d-flex">

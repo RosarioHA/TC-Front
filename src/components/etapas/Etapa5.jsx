@@ -20,9 +20,17 @@ export const Etapa5 = ({ etapaCompetencia }) =>
         const isDisabled = subetapa.estado === "pendiente";
         const isRevision = subetapa.estado === "revision";
 
-        if (subetapa.nombre.startsWith("Notificar a DIPRES") && isFinalizado)
+        if (subetapa.nombre.startsWith("Notificar a DIPRES"))
         {
-            return <span className="badge-status-finish">{subetapa.accion}</span>;
+            if (estado === 'Aún no puede comenzar')
+            {
+                // Cambia el badge a pending si el estado de la etapa es 'Aún no puede comenzar'
+                return <span className="badge-status-pending">{subetapa.accion}</span>;
+            } else if (isFinalizado)
+            {
+                // Mantiene el badge como finish si la subetapa está finalizada
+                return <span className="badge-status-finish">{subetapa.accion}</span>;
+            }
         }
         switch (subetapa.nombre)
         {

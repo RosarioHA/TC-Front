@@ -5,6 +5,7 @@ export const Etapa3 = ({ etapaCompetencia }) =>
 {
   const { nombre_etapa, estado, minuta_sectorial, observacion_minuta_sectorial, usuario_notificado, fecha_ultima_modificacion } = etapaCompetencia;
 
+  console.log('estado', estado);
   // Combina todas las subetapas en un solo arreglo
   const combinedSubetapas = [
     usuario_notificado,
@@ -12,15 +13,25 @@ export const Etapa3 = ({ etapaCompetencia }) =>
     observacion_minuta_sectorial ];
 
 
-  const renderButtonForSubetapa= (subetapa) =>
+  const renderButtonForSubetapa = (subetapa) =>
   {
     let buttonText, icon, path = "/";
     const isFinalizado = subetapa.estado === "finalizada";
     const isDisabled = subetapa.estado === "pendiente";
     const isRevision = subetapa.estado === "revision";
 
-    if (subetapa.nombre.startsWith("Notificar a DIPRES") && isFinalizado) {
-      return <span className="badge-status-finish">{subetapa.accion}</span>;
+
+    if (subetapa.nombre.startsWith("Notificar a DIPRES"))
+    {
+      if (estado === 'Aún no puede comenzar')
+      {
+        // Cambia el badge a pending si el estado de la etapa es 'Aún no puede comenzar'
+        return <span className="badge-status-pending">{subetapa.accion}</span>;
+      } else if (isFinalizado)
+      {
+        // Mantiene el badge como finish si la subetapa está finalizada
+        return <span className="badge-status-finish">{subetapa.accion}</span>;
+      }
     }
     switch (subetapa.nombre)
     {
@@ -79,7 +90,7 @@ export const Etapa3 = ({ etapaCompetencia }) =>
         Para completar {nombre_etapa} con éxito deben cumplirse estas condiciones:
       </div>
       <div>
-      {combinedSubetapas.map((subetapa, index) => (
+        {combinedSubetapas.map((subetapa, index) => (
           <div key={index} className="d-flex justify-content-between text-sans-p border-top border-bottom my-3 py-1">
             <div className="align-self-center">{subetapa.nombre}</div>
             {renderButtonForSubetapa(subetapa)}

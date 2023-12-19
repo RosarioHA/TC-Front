@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SummaryDetail } from '../components/tables/SummaryDetail';
-import { CompetenciasContext } from '../context/competenciasContext';
+import { CompetenciasContext } from '../context/competencias';
 
 const Home = () =>
 {

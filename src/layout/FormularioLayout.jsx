@@ -46,7 +46,6 @@ const FormularioLayout = () =>
           </div>
           <div className="col-11">
           <Outlet context={{ id, pasoData, stepNumber, loadingPaso, errorPaso }} />
-          {console.log({ id, pasoData, stepNumber, loadingPaso, errorPaso })}
           </div>
         </div>
       </div>
