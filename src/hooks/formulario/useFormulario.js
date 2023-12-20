@@ -7,8 +7,7 @@ export const useFormSectorial = (id) => {
   const [errorFormSectorial, setErrorFormSectorial] = useState(null);
 
   const fetchFormSectorial = useCallback(async () => {
-    // Si no hay un ID, simplemente salimos de la función sin hacer nada.
-    // Esto previene que se establezca un error cuando el ID aún no esté disponible.
+  
     if (!id) {
       setLoadingFormSectorial(false);
       return;

@@ -32,6 +32,7 @@ export const ButtonsNavigate = ({ step , id }) =>
       {/* El botón "Atrás" solo se muestra si no estamos en el primer paso */}
       {step > 1 ? (
         <button className="btn-secundario-s" onClick={() => navigate(getRouteForStep(step - 1))}>
+          <i className="material-symbols-rounded me-2">arrow_back_ios</i>
           Atrás
         </button>
       ) : <div></div> /* Elemento vacío para mantener el espacio */}
@@ -40,6 +41,7 @@ export const ButtonsNavigate = ({ step , id }) =>
       {step < 5 ? (
         <button className="btn-primario-s" onClick={handleNextButtonClick}>
           Siguiente
+          <i className="material-symbols-rounded me-2">arrow_forward_ios</i>
         </button>
       ) : (
         <button className="btn-primario-s" onClick={handleNextButtonClick}>

@@ -9,8 +9,8 @@ export const Subpaso_dos = ({ pasoData, organigrama }) =>
     updatePaso,
     isUpdatingPaso,
     updatePasoError,
-    id, 
-    stepNumber 
+    id,
+    stepNumber
   } = useContext(FormularioContext);
   const [ organigramaNacional, setOrganigramaNacional ] = useState(pasoData.organigrama_nacional || '');
   const [ descripcionOrganigramaNacional, setDescripcionOrganigramaNacional ] = useState('');
@@ -69,26 +69,31 @@ export const Subpaso_dos = ({ pasoData, organigrama }) =>
     {
       // Manejar los errores
     }
-  }, [descripcionOrganigramaNacional, organigramaNacional, organigramasRegionales, updatePaso, id, stepNumber]);
+  }, [ descripcionOrganigramaNacional, organigramaNacional, organigramasRegionales, updatePaso, id, stepNumber ]);
 
   if (!pasoData)
   {
     return <div>Cargando datos...</div>;
   }
-  if (isUpdatingPaso) {
+  if (isUpdatingPaso)
+  {
     return <div>Cargando...</div>;
   }
-  if (updatePasoError) {
+  if (updatePasoError)
+  {
     return <div>Error: {updatePasoError.message}</div>;
   }
 
   return (
     <div className="pe-5 me-5">
       <h4 className="text-sans-h4">1.2 Organización Institucional</h4>
-      <h6 className="text-sans-h6-primary mb-4">En esta sección se debe representar gráficamente la estructura orgánica
-        de la institución a nivel nacional y regional, incluyendo el numero de funcionarios en las unidades intervinientes
-        (departamento, division u otro) involucradas en el ejercicio de la competencia.
-      </h6>
+      <div className="text-sans-h6-primary mb-4">
+        <h6>
+          En esta sección se debe representar gráficamente la estructura orgánica
+          de la institución a nivel nacional y regional, incluyendo el numero de funcionarios en las unidades intervinientes
+          (departamento, division u otro) involucradas en el ejercicio de la competencia.
+        </h6>
+      </div>
 
       <h5 className="text-sans-h5">Organigrama Nacional (Obligatorio)</h5>
       <h6 className="text-sans-h6">Máximo 1 archivo, peso máximo 20MB, formato PDF</h6>
