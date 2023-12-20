@@ -3,7 +3,7 @@ import CustomTextarea from "../../forms/custom_textarea";
 import SubirArchivo from "../../forms/subir_archivo";
 import { FormularioContext } from "../../../context/FormSectorial";
 
-export const Subpaso_dos = ({ pasoData, organigrama }) =>
+export const Subpaso_dos = ({ pasoData, organigrama }) => 
 {
   const {
     updatePaso,
@@ -87,7 +87,8 @@ export const Subpaso_dos = ({ pasoData, organigrama }) =>
       <h4 className="text-sans-h4">1.2 Organización Institucional</h4>
       <h6 className="text-sans-h6-primary mb-4">En esta sección se debe representar gráficamente la estructura orgánica
         de la institución a nivel nacional y regional, incluyendo el numero de funcionarios en las unidades intervinientes
-        (departamento, division u otro) involucradas en el ejercicio de la competencia.</h6>
+        (departamento, division u otro) involucradas en el ejercicio de la competencia.
+      </h6>
 
       <h5 className="text-sans-h5">Organigrama Nacional (Obligatorio)</h5>
       <h6 className="text-sans-h6">Máximo 1 archivo, peso máximo 20MB, formato PDF</h6>
@@ -121,9 +122,9 @@ export const Subpaso_dos = ({ pasoData, organigrama }) =>
         />
       </div>
 
-      <h5 className="text-sans-h5">Organigrama Regional (Opcional)</h5>
-      <h6 className="text-sans-h6 mb-3">Máximo 1 archivo, peso máximo 20MB, formato PDF</h6>
-      <p className="text-sans-p-semibold">Regiones asociadas a la competencia:</p>
+    <h5 className="text-sans-h5 mt-4">Organigrama Regional (Opcional)</h5>
+    <h6 className="text-sans-h6 mb-3">Máximo 1 archivo, peso máximo 20MB, formato PDF</h6>
+    <p className="text-sans-p-semibold">Regiones asociadas a la competencia:</p>
 
       {/* por cada region asociada debe haber una fila para subir su organigrama, encabezada por el nombre de la region */}
       <div className="ps-3">

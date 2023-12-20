@@ -76,6 +76,13 @@
   font-weight: 700;
 }
 
+.text-sans-h2-grey {
+  font-family: "Roboto";
+  color: #656565;
+  font-size: 32px;
+  font-weight: 500;
+}
+
 .text-sans-25 {
   font-family: "Roboto";
   color: #21272A;
@@ -180,7 +187,6 @@
   color: #001C41;
   font-size: 14px;
   font-weight: 400;
-  line-height: 18px;
   font-style: normal;
 }
 
@@ -203,7 +209,6 @@
   color: #001C41;
   font-size: 14px;
   font-weight: 700;
-  line-height: 18px;
   font-style: normal;
 }
 
@@ -267,6 +272,14 @@
   color: #373737;
   font-size: 20px;
   font-weight: 700;
+  line-height: 22px;
+}
+
+.text-sans-p-semibold {
+  font-family: "Roboto";
+  color: #373737;
+  font-size: 16px;
+  font-weight: 600;
   line-height: 22px;
 }
 
@@ -378,12 +391,12 @@
   color: inherit;
 }
 
-.btn-secundario-s:disabled {
+.btn-secundario-s.disabled {
   background-color: #FFF;
   color: #656565;
   border: 2px solid #656565;
 }
-.btn-secundario-s:disabled span.material-symbols-outlined {
+.btn-secundario-s.disabled span.material-symbols-outlined {
   color: #656565;
 }
 
@@ -584,6 +597,29 @@ span.material-symbols-outlined {
   border: 1px solid #FFF;
 }
 
+.avance-bar {
+  width: 400px;
+  height: 45px;
+  background-color: rgba(207, 225, 243, 0.3);
+  border-radius: 4px;
+  text-align: center;
+}
+
+.avance-step {
+  background-color: rgba(0, 102, 54, 0.25);
+  border-radius: 4px;
+  position: relative;
+}
+
+.avance-step {
+  background-color: rgba(0, 102, 54, 0.25);
+  border-radius: 4px;
+  position: relative;
+}
+.avance-step.incompleto {
+  background-color: rgba(245, 107, 15, 0.25);
+}
+
 #icon-inputSearch i.material-symbols-outlined,
 #icon-inputClose i.material-symbols-outlined {
   font-size: 28px;
@@ -601,6 +637,7 @@ span.material-symbols-outlined {
 
 .input-container {
   position: relative;
+  width: 100%;
 }
 
 .input-label {
@@ -613,6 +650,10 @@ span.material-symbols-outlined {
 
 .input-s {
   height: 60px;
+  border: 1px solid #BBBBBB;
+}
+
+.input-textarea {
   border: 1px solid #BBBBBB;
 }
 
@@ -659,6 +700,31 @@ span.material-symbols-outlined {
 .input-search {
   border: 2px solid #363636;
   background: #FFF;
+}
+
+.btn-option {
+  display: flex;
+  padding: 17px;
+  background-color: #FFF;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid #BBBBBB;
+  height: 60px;
+  width: 100%;
+}
+
+.btn-option:hover:active {
+  background-color: #EEEEEE;
+}
+
+.textarea-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.textarea-l {
+  height: 600px;
 }
 
 .custom-pagination-btn {
@@ -1009,6 +1075,23 @@ a.btn-link:hover, a.btn-link:focus {
   line-height: 100%;
 }
 
+.badge-status-warning {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #F56B0F;
+  color: #FFF;
+  padding: 4px 8px 4px 8px;
+  border-radius: 5px;
+  text-align: center;
+  font-family: Roboto;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 100%;
+}
+
 .badge-percent {
   background: #F2F4F8;
   color: #21272A;
@@ -1121,6 +1204,96 @@ a.btn-link:hover, a.btn-link:focus {
 
 .stepperContent {
   padding-left: 40px;
+}
+
+.stepper-pasos {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0;
+}
+.stepper-pasos .step {
+  position: relative;
+  text-align: center;
+  width: 50%;
+}
+.stepper-pasos .step .step-text {
+  margin-top: 20px;
+  color: #373737;
+  font-size: 16px;
+  text-align: start;
+  font-weight: 400;
+  width: 130px;
+}
+.stepper-pasos .step:not(:first-child)::before {
+  content: "";
+  position: absolute;
+  top: 15.3333333333px;
+  right: 102%;
+  width: 80%;
+  height: 2px;
+  background-color: #0F69C4;
+  z-index: -1;
+}
+.stepper-pasos .step .step-button {
+  width: 32px;
+  height: 32px;
+  line-height: 32px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+}
+.stepper-pasos .step .step-button.default {
+  background-color: #FFF;
+  color: #0F69C4;
+  border: 4px solid #0F69C4;
+}
+.stepper-pasos .step .step-button.active {
+  background-color: #0F69C4;
+  color: #FFF;
+  border: #0F69C4;
+}
+.stepper-pasos .step .step-button.done {
+  background-color: #0F69C4;
+  color: #FFF;
+  border: #0F69C4;
+}
+.stepper-pasos .step .step-button.warning {
+  background-color: rgb(249, 213, 213);
+  color: #871a1a;
+  border: 2px solid #871a1a;
+}
+
+.mono-stepper {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+}
+
+.stepper-circle {
+  font-size: 20px;
+  font-weight: 700;
+  width: 48px;
+  height: 48px;
+  background-color: #0F69C4;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #FFF;
+}
+
+.vertical-line {
+  width: 4px;
+  height: 95.5%;
+  background-color: #0F69C4;
+  position: absolute;
+  top: 79%;
+  bottom: 40%;
+  left: 20%;
 }
 
 /* Grafico
