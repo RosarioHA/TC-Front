@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-export const RadioButtons = ({ initialState, handleEstadoChange, field }) => {
+export const RadioButtons = ({ initialState, handleEstadoChange, field, altA, altB }) => {
   const [activeButton, setActiveButton] = useState(initialState);
 
   useEffect(() => {
@@ -20,14 +20,14 @@ export const RadioButtons = ({ initialState, handleEstadoChange, field }) => {
           type="button"
           className={activeButton === 'activo' ? 'btn-primario-s' : 'btn-secundario-s'}
           onClick={() => handleClick('activo')}>
-          Activo
+          {altA}
           {activeButton === 'activo' && <i className="material-symbols-rounded ms-2">check</i>}
         </button>
         <button
           type="button"
           className={`ms-2 ${activeButton === 'inactivo' ? 'btn-primario-s' : 'btn-secundario-s'}`}
           onClick={() => handleClick('inactivo')}>
-          Inactivo
+          {altB}
           {activeButton === 'inactivo' && <i className="material-symbols-rounded ms-2">check</i>}
         </button>
       </div>
