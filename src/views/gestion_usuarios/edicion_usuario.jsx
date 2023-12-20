@@ -287,6 +287,8 @@ const EdicionUsuario = () =>
                     field={field}
                     errors={errors}
                     is_active={watch('is_active')}
+                    altA="Activo"
+                    altB="Inactivo"
                   />
                 )}
               />

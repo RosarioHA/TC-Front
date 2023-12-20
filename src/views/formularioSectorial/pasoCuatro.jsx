@@ -2,6 +2,7 @@ import { useEffect, useContext } from "react";
 import { Avance } from "../../components/tables/Avance"; 
 import { ButtonsNavigate } from "../../components/layout/ButtonsNavigate";
 import { FormularioContext } from "../../context/FormSectorial";
+import Subpaso_CuatroPuntoUno from "../../components/formSectorial/paso4/p4.1";
 
 const PasoCuatro = () => {
   const { updateStepNumber } = useContext(FormularioContext);
@@ -17,13 +18,17 @@ const PasoCuatro = () => {
         <h3 className="mt-3">Indicadores de Desempeño</h3>
         <Avance/>
       </div>
-      <span className="text-sans-h6-primary">Texto de apoyo</span>
+
+      <div className="">
+        <Subpaso_CuatroPuntoUno />
+      </div>
+
       {/*Botones navegacion*/}
       <div className="container me-5 pe-5">
         <ButtonsNavigate step="" id=""/>
       </div>
     </div> 
   )
-}
+};
 
 export default PasoCuatro;

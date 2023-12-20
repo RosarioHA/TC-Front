@@ -336,6 +336,8 @@ const CreacionUsuario = () =>
                     handleEstadoChange={handleEstadoChange}
                     field={field}
                     errors={errors}
+                    altA="Activo"
+                    altB="Inactivo"
                   />
                 </>
               )} />

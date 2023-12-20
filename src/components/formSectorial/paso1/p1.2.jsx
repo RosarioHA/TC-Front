@@ -3,7 +3,7 @@ import CustomTextarea from "../../forms/custom_textarea";
 import SubirArchivo from "../../forms/subir_archivo";
 import { FormularioContext } from "../../../context/FormSectorial";
 
-export const Subpaso_dos = ({ pasoData, organigrama }) =>
+export const Subpaso_dos = ({ pasoData, organigrama }) => 
 {
   const {
     updatePaso,
@@ -127,9 +127,9 @@ export const Subpaso_dos = ({ pasoData, organigrama }) =>
         />
       </div>
 
-      <h5 className="text-sans-h5">Organigrama Regional (Opcional)</h5>
-      <h6 className="text-sans-h6 mb-3">Máximo 1 archivo, peso máximo 20MB, formato PDF</h6>
-      <p className="text-sans-p-semibold">Regiones asociadas a la competencia:</p>
+    <h5 className="text-sans-h5 mt-4">Organigrama Regional (Opcional)</h5>
+    <h6 className="text-sans-h6 mb-3">Máximo 1 archivo, peso máximo 20MB, formato PDF</h6>
+    <p className="text-sans-p-semibold">Regiones asociadas a la competencia:</p>
 
       {/* por cada region asociada debe haber una fila para subir su organigrama, encabezada por el nombre de la region */}
       <div className="ps-3">
