@@ -9,11 +9,11 @@ export const Subpaso_tres = ({ pasoData, }) =>
   const { updatePaso, id, stepNumber } = useContext(FormularioContext);
 
   const [ identificacionCompetencia, setIdentificacionCompetencia ] = useState(pasoData.identificacion_competencia);
-  const [ fuentesNormativas, setFuentesNormativas] = useState(pasoData.fuentes_normativas);
-  const [ territorioCompetencia , setTerritorioCompetencia]= useState(pasoData.territorio_competencia); 
-  const [ enfoqueTerritorial, setEnfoqueTerritorial] = useState(pasoData.enfoque_territorial_competencia);
-  const [ posibilidadEjercio, setPosibilidadEjercicio] = useState(pasoData.posibilidad_ejercicio_por_gobierno_regional);
-  const [ organoActual , setOrganoActual] = useState(pasoData.organo_actual_competencia);
+  const [ fuentesNormativas, setFuentesNormativas ] = useState(pasoData.fuentes_normativas);
+  const [ territorioCompetencia, setTerritorioCompetencia ] = useState(pasoData.territorio_competencia);
+  const [ enfoqueTerritorial, setEnfoqueTerritorial ] = useState(pasoData.enfoque_territorial_competencia);
+  const [ posibilidadEjercio, setPosibilidadEjercicio ] = useState(pasoData.posibilidad_ejercicio_por_gobierno_regional);
+  const [ organoActual, setOrganoActual ] = useState(pasoData.organo_actual_competencia);
 
   const handleBlur = async () =>
   {
@@ -23,11 +23,11 @@ export const Subpaso_tres = ({ pasoData, }) =>
   const handleChange = (e) =>
   {
     setIdentificacionCompetencia(e.target.value);
-    setFuentesNormativas(e.target.value); 
-    setTerritorioCompetencia(e.target.value); 
-    setEnfoqueTerritorial(e.target.value); 
-    setPosibilidadEjercicio(e.target.value); 
-    setOrganoActual(e.target.value); 
+    setFuentesNormativas(e.target.value);
+    setTerritorioCompetencia(e.target.value);
+    setEnfoqueTerritorial(e.target.value);
+    setPosibilidadEjercicio(e.target.value);
+    setOrganoActual(e.target.value);
 
   };
 
@@ -37,7 +37,12 @@ export const Subpaso_tres = ({ pasoData, }) =>
     <>
       <div className="pe-5 me-5 mt-4">
         <span className="my-4 text-sans-h4">1.3 Marco Regulatorio y funcional de la competencia</span>
-        <h6 className=" text-sans-h6-primary">En esta sección se debe identificar la competencia en estudio y sus normas legales de origen.</h6>
+        <div className=" text-sans-h6-primary">
+          <h6>
+            En esta sección se debe identificar la competencia en estudio y
+            sus normas legales de origen.
+          </h6>
+        </div>
         <div className="my-4">
           <CustomTextarea
             label="Identificación de la competencia (Obligatorio)"
@@ -124,9 +129,9 @@ export const Subpaso_tres = ({ pasoData, }) =>
             label="Órgano que ejerce actualmente la competencia (Obligatorio)"
             placeholder="Indicar órgano que ejerce actualmente la competencia"
             id={organoActual}
-            maxLength={500} 
+            maxLength={500}
             onChange={handleChange}
-            onBlur={handleBlur}/>
+            onBlur={handleBlur} />
           <div className="d-flex mb-3 mt-1 text-sans-h6-primary">
             <i className="material-symbols-rounded me-2">info</i>
             <h6 className="mt-1">Analizar si la competencia es actualmente ejercida por los ministerios y de los servicios públicos a que se refiere el artículo 28 de la ley N° 18.575, orgánica constitucional de Bases Generales de la Administración del Estado.</h6>

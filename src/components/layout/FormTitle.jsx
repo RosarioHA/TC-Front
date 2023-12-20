@@ -1,7 +1,4 @@
-
 import { Link, useNavigate } from 'react-router-dom';
-
-
 
 export const FormTitle = ({ data, loading, error}) =>
 {
@@ -11,7 +8,6 @@ export const FormTitle = ({ data, loading, error}) =>
   {
     navigate(-1);
   }
-    console.log('datatitle',data)
 
   if (loading) return <div>Cargando...</div>;
   if (error) return <div>Error al cargar los datos: {error.message}</div>;

@@ -5,8 +5,6 @@ export const Etapa3 = ({ etapaCompetencia }) =>
 {
   const { nombre_etapa, estado, minuta_sectorial, observacion_minuta_sectorial, usuario_notificado, fecha_ultima_modificacion } = etapaCompetencia;
 
-  console.log('estado', estado);
-  // Combina todas las subetapas en un solo arreglo
   const combinedSubetapas = [
     usuario_notificado,
     minuta_sectorial,
