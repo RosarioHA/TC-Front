@@ -19,7 +19,7 @@ const PasoCuatro = () => {
         <Avance/>
       </div>
 
-      <div>
+      <div className="">
         <Subpaso_CuatroPuntoUno />
       </div>
 
