@@ -42,11 +42,12 @@ export const Etapa2 = ({ etapaCompetencia }) =>
       }
     }
     if (nombre)
+    
     {
       switch (true)
       {
         case nombre.includes("Completar formulario Sectorial"):
-          path = estado === "finalizada" ? "/home/ver_minuta" : `/home/formulario_sectorial/${id}/`;
+          path = estado === "finalizada" ? "/home/ver_minuta" : `/home/formulario_sectorial/${id}/paso_uno`;
           break;
         case nombre.includes("Observación del formulario sectorial"):
           path = estado === "finalizada" ? "/home/ver_observaciones" : "/home/ingresar_observaciones";

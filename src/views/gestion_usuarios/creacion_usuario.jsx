@@ -112,7 +112,7 @@ const CreacionUsuario = () =>
 
   const handleRegionChange = (region) =>
   {
-    setRegionSeleccionada(region);
+    setRegionSeleccionada(region.value);
   }
 
   //opciones sector 

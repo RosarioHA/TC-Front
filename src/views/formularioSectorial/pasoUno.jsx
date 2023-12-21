@@ -5,40 +5,48 @@ import { Subpaso_uno } from '../../components/formSectorial/paso1/p1.1';
 import { Subpaso_dos } from '../../components/formSectorial/paso1/p1.2';
 import { Subpaso_tres } from '../../components/formSectorial/paso1/p1.3';
 import { ButtonsNavigate } from "../../components/layout/ButtonsNavigate";
+import { MonoStepers } from '../../components/stepers/MonoStepers';
 
-const PasoUno = () => {
-  const { pasoData, loadingPaso, errorPaso, updateStepNumber } = useContext(FormularioContext);
+const PasoUno = () =>
+{
+  const { pasoData, loadingPaso, errorPaso, updateStepNumber,data } = useContext(FormularioContext);
   const stepNumber = 1;
 
-  useEffect(() => {
+  
+  useEffect(() =>
+  {
     updateStepNumber(stepNumber);
-  }, [updateStepNumber, stepNumber]);
+  }, [ updateStepNumber, stepNumber ]);
+
   if (loadingPaso) return <div>Cargando...</div>;
   if (errorPaso) return <div>Error: {errorPaso.message || "Error desconocido"}</div>;
-  if (!pasoData) return <div>No hay datos disponibles para el Paso 1</div>;
+  if (!pasoData || pasoData.length === 0) return <div>No hay datos disponibles para el Paso 1</div>;
 
-  const {
-    id,
-    nombre_paso,
-    avance,
-    p_1_1_ficha_descripcion_organizacional,
-    p_1_2_organizacion_institucional,
-    organigramaregional_set,
-    p_1_3_marco_regulatorio_y_funcional_competencia,
-  } = pasoData;
+  const { marcojuridico, organigramaregional, paso1 } = pasoData;
+
+  // Asegúrate de que paso1 tenga elementos y accede al primer elemento
+  const paso1Data = paso1 && paso1.length > 0 ? paso1[0] : null;
+  if (!paso1Data) return <div>No hay datos disponibles para el Paso 1</div>;
 
   return (
-    <div className="container-fluid ">
-      <div className="d-flex">
-        <h3 className="mt-3">{nombre_paso}</h3>
-        <Avance avance={avance} />
+    <>
+      <div className="col-1">
+        <MonoStepers stepNumber={paso1Data.numero_paso} />
       </div>
-      <span className="text-sans-h6-primary">Texto de apoyo</span>
-      <Subpaso_uno pasoData={p_1_1_ficha_descripcion_organizacional} />
-      <Subpaso_dos pasoData={p_1_2_organizacion_institucional} organigrama={organigramaregional_set} />
-      <Subpaso_tres pasoData={p_1_3_marco_regulatorio_y_funcional_competencia} />
-      <ButtonsNavigate step={stepNumber} id={id} />
-    </div>
+      <div className="col-11">
+        <div className="container-fluid ">
+          <div className="d-flex">
+            <h3 className="mt-3">{paso1Data.nombre_paso}</h3>
+            <Avance avance={paso1Data.avance} />
+          </div>
+          <span className="text-sans-h6-primary">Texto de apoyo</span>
+          <Subpaso_uno pasoData={paso1Data} />
+          <Subpaso_dos pasoData={paso1Data} organigrama={organigramaregional} />
+          <Subpaso_tres pasoData={marcojuridico} />
+          <ButtonsNavigate step={paso1Data.numero_paso} id={data.id} />
+        </div>
+      </div>
+    </>
   );
 };
 

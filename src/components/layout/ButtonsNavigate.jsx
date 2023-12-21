@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 export const ButtonsNavigate = ({ step , id }) =>
 {
   const navigate = useNavigate();
+  console.log(id)
 
   const getRouteForStep = (stepNumber) =>
   {
@@ -23,12 +24,11 @@ export const ButtonsNavigate = ({ step , id }) =>
       navigate(getRouteForStep(step + 1));
     } else
     {
-      navigate('/home/');
+      navigate( `/home/formulario_sectorial/${id}/resumen_formulario`);
     }
   };
 
-  return (
-    <div className={`border-top px-5 me-5 pt-3 pb-4 d-flex ${step === 1 ? "justify-content-end" : "justify-content-between"}`}>
+  return ( <div className={`border-top px-5 me-5 pt-3 pb-4 d-flex ${step === 1 ? "justify-content-end" : "justify-content-between"}`}>
       {/* El botón "Atrás" solo se muestra si no estamos en el primer paso */}
       {step > 1 ? (
         <button className="btn-secundario-s" onClick={() => navigate(getRouteForStep(step - 1))}>
@@ -50,4 +50,5 @@ export const ButtonsNavigate = ({ step , id }) =>
       )}
     </div>
   );
+   
 };

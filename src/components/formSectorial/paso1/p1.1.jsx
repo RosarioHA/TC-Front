@@ -3,7 +3,6 @@ import CustomInput from "../../forms/custom_input";
 import { DocumentsAditionals } from '../../commons/documents';
 export const Subpaso_uno = ({ pasoData }) =>
 {
-
   if (!pasoData)
   {
     return <div>Cargando datos...</div>;
@@ -27,7 +26,7 @@ export const Subpaso_uno = ({ pasoData }) =>
             label="Forma jurídica del organismo (Obligatorio)"
             placeholder="Debes llenar este campo para poder enviar el formulario."
             name="forma_juridica_organismo"
-            //value={pasoData.forma_juridica_organismo}
+            value={pasoData.forma_juridica_organismo}
             maxLength={500}
           />
           <div className="d-flex mb-3 mt-0 text-sans-h6-primary">
@@ -40,9 +39,10 @@ export const Subpaso_uno = ({ pasoData }) =>
         </div>
         <div className="my-4">
           <CustomTextarea
-            label="Descripción archivo(s) de marco jurídico (Opcional)"
-            placeholder="Descripción del marco jurídico"
-            id={pasoData.descripcion_archivo_marco_juridico}
+            label="Forma jurídica del organismo (Obligatorio)"
+            placeholder="Debes llenar este campo para poder enviar el formulario."
+            name="forma_juridica_organismo"
+            value={pasoData.forma_juridica_organismo}
             maxLength={500}
           />
 
@@ -51,7 +51,8 @@ export const Subpaso_uno = ({ pasoData }) =>
           <CustomTextarea
             label="Misión Institucional (Obligatorio)"
             placeholder="Misión que defina el propósito de ser del organismo"
-            id={pasoData.mision_institucional}
+            name="mision_institucional"
+            value={pasoData.mision_institucional}
             maxLength={500}
           />
         </div>
