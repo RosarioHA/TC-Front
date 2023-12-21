@@ -1,25 +1,23 @@
 import { useContext, useEffect } from "react";
-import { Outlet, useLocation } from 'react-router-dom';
+import { Outlet, useLocation, useParams } from 'react-router-dom';
 import { FormTitle } from "./../components/layout/FormTitle";
-import { MonoStepers } from "./../components/stepers/MonoStepers";
-
 import { HorizontalStepper } from "../components/stepers/HorizontalStepper";
 import { Timmer } from "../components/layout/Timmer";
 import { FormularioContext } from "../context/FormSectorial";
 
-
-const FormularioLayout = () =>
-{
+const FormularioLayout = () => {
   const { data, loading, error, updateFormId, pasoData, stepNumber, errorPaso, loadingPaso } = useContext(FormularioContext);
   const location = useLocation();
-  const id = location.state?.id;
-
+  const params = useParams();
 
   useEffect(() => {
-    if (id) {
-      updateFormId(id);
+    // Definición de la variable id directamente dentro de useEffect
+    let currentId = location.state?.id || params.id;
+
+    if (currentId) {
+      updateFormId(currentId);
     }
-  }, [id, updateFormId]);
+  }, [location.state, params.id, updateFormId]); 
 
   if (loading) {
     return <div>Loading...</div>;
@@ -28,30 +26,25 @@ const FormularioLayout = () =>
   if (error) {
     return <div>Error: {error.message}</div>;
   }
+
   return (
     <>
-
       <div className="container-fluid">
         <div className="row">
           <div className="col mb-2">
-            <FormTitle data={data} loading={loading} id={id} />
+            <FormTitle data={data} loading={loading} id={data?.id} />
             <div className="mx-5">
-            {data && <HorizontalStepper data={data} loading={loading} id={data.id} />}
-              <Timmer data={data} loading={loading} id={id}  />
+              {data && <HorizontalStepper data={data} loading={loading} id={data.id} />}
+              <Timmer data={data} loading={loading} id={data?.id} />
             </div>
           </div>
         </div>
         <div className="row">
-          <div className="col-1">
-          {pasoData &&<MonoStepers stepNumber={pasoData.numero_paso} />}
-          </div>
-          <div className="col-11">
-          <Outlet context={{ id, pasoData, stepNumber, loadingPaso, errorPaso }} />
-          </div>
+          <Outlet context={{ id: data?.id, pasoData, stepNumber, loadingPaso, errorPaso }} />
         </div>
       </div>
     </>
-  )
-}
+  );
+};
 
-export default FormularioLayout
+export default FormularioLayout;

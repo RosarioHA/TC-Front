@@ -7,16 +7,25 @@ export const FormularioContext = createContext();
 
 export const FormularioProvider = ({ children }) =>
 {
-  const [ id, setId ] = useState(null);
-  const [ stepNumber, setStepNumber ] = useState(null);
+  const initialId = localStorage.getItem('formId') || null;
+  const initialStepNumber = localStorage.getItem('stepNumber') || null;
 
+  const [id, setId] = useState(initialId);
+  const [stepNumber, setStepNumber] = useState(initialStepNumber);
 
   const { dataFormSectorial, loadingFormSectorial, errorFormSectorial } = useFormSectorial(id);
   const { dataPaso, loadingPaso, errorPaso } = usePasoForm(id, stepNumber);
   const { updatePaso, isUpdatingPaso, updatePasoError } = useUpdateForm();
 
-  const updateFormId = setId;
-  const updateStepNumber = setStepNumber;
+  const updateFormId = (newId) => {
+    setId(newId);
+    localStorage.setItem('formId', newId);
+  };
+
+  const updateStepNumber = (newStepNumber) => {
+    setStepNumber(newStepNumber);
+    localStorage.setItem('stepNumber', newStepNumber);
+  };
 
   const value = {
     data: dataFormSectorial,
@@ -32,6 +41,8 @@ export const FormularioProvider = ({ children }) =>
     isUpdatingPaso,
     updatePasoError
   };
+
+  console.log(dataFormSectorial);
 
   return (
     <FormularioContext.Provider value={value}>

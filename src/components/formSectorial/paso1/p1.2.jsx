@@ -3,8 +3,9 @@ import CustomTextarea from "../../forms/custom_textarea";
 import SubirArchivo from "../../forms/subir_archivo";
 import { FormularioContext } from "../../../context/FormSectorial";
 
-export const Subpaso_dos = ({ pasoData, organigrama }) => 
+export const Subpaso_dos = ({ pasoData , organigrama}) => 
 {
+
   const {
     updatePaso,
     isUpdatingPaso,

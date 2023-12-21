@@ -1,4 +1,4 @@
-import { useContext } from 'react'; 
+import { useContext, useEffect } from 'react';
 import { FormularioContext } from '../../context/FormSectorial';
 import { Avance } from "../../components/tables/Avance";
 import { ButtonsNavigate } from "../../components/layout/ButtonsNavigate";
@@ -7,47 +7,70 @@ import { Subpaso_dosPuntoDos } from "../../components/formSectorial/paso2/p2.2";
 import { Subpaso_dosPuntoTres } from "../../components/formSectorial/paso2/p2.3";
 import { Subpaso_dosPuntoCuatro } from "../../components/formSectorial/paso2/p2.4";
 import { Subpaso_dosPuntoCinco } from "../../components/formSectorial/paso2/p2.5";
+import { MonoStepers } from "../../components/stepers/MonoStepers";
 
-const pasoDos = () => {
+const PasoDos = () =>
+{
+  const { pasoData, loadingPaso, errorPaso, updateStepNumber ,data} = useContext(FormularioContext);
+  const stepNumber = 2;
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const { pasoData, loadingPaso, errorPaso } = useContext(FormularioContext); 
-  console.log('data paso dos', pasoData);
+  useEffect(() =>
+  {
+    updateStepNumber(stepNumber);
+  }, [ updateStepNumber, stepNumber ]);
 
   if (loadingPaso) return <div>Cargando...</div>;
   if (errorPaso) return <div>Error: {errorPaso.message || "Error desconocido"}</div>;
-  if (!pasoData) return <div>No hay datos disponibles para el Paso 1</div>;
+  if (!pasoData) return <div>No hay datos disponibles para el Paso 2</div>;
+
+  // Asegúrate de acceder al primer elemento del array 'encabezado'
+  const encabezado = pasoData.encabezado && pasoData.encabezado.length > 0 ? pasoData.encabezado[ 0 ] : null;
+
+  if (!encabezado) return <div>No hay información de encabezado disponible</div>;
+
+  const dataOrganismosIntervinientes = pasoData.p_2_1_organismos_intervinientes;
+  const dataUnidadesIntervinientes = pasoData.p_2_2_unidades_intervinientes;
+  const dataEtapasEjercicioCompetencia = pasoData.p_2_3_etapas_ejercicio_competencia;
+  const dataPlataformasYSoftwares = pasoData.p_2_4_plataformas_y_softwares;
+  const dataFlujogramaCompetencia = pasoData.p_2_5_flujograma_competencia;
 
   return (
-  <div className="container vh-100">
-    <div className="d-flex">
-      <h3 className="mt-3">Arquitectura del Proceso</h3>
-      <Avance/>
-    </div>
-    <span className="text-sans-h6-primary">Texto de apoyo</span>
+    <>
+      <div className="col-1">
+        <MonoStepers stepNumber={encabezado.numero_paso} />
+      </div>
+      <div className="col-11">
+        <div className="container vh-100">
+          <div className="d-flex">
+            <h3 className="mt-3">{encabezado.nombre_paso}</h3>
+            <Avance avance={encabezado.avance} />
+          </div>
+          <span className="text-sans-h6-primary">Texto de apoyo</span>
 
-    <div className="container-fluid me-5 pe-5 my-5">
-      <Subpaso_dosPuntoUno />
-    </div>
-    <div className="container-fluid me-5 pe-5 my-5">
-      <Subpaso_dosPuntoDos />
-    </div>
-    <div className="container-fluid me-5 pe-5 my-5">
-      <Subpaso_dosPuntoTres />
-    </div>
-    <div className="container-fluid me-5 pe-5 my-5">
-      <Subpaso_dosPuntoCuatro />
-    </div>
-    <div className="container-fluid me-5 pe-5 my-5">
-      <Subpaso_dosPuntoCinco />
-    </div>
+          <div className="container-fluid me-5 pe-5 my-5">
+            <Subpaso_dosPuntoUno data={dataOrganismosIntervinientes} />
+          </div>
+          <div className="container-fluid me-5 pe-5 my-5">
+            <Subpaso_dosPuntoDos data={dataUnidadesIntervinientes} />
+          </div>
+          <div className="container-fluid me-5 pe-5 my-5">
+            <Subpaso_dosPuntoTres data={dataEtapasEjercicioCompetencia} />
+          </div>
+          <div className="container-fluid me-5 pe-5 my-5">
+            <Subpaso_dosPuntoCuatro data={dataPlataformasYSoftwares} />
+          </div>
+          <div className="container-fluid me-5 pe-5 my-5">
+            <Subpaso_dosPuntoCinco data={dataFlujogramaCompetencia} />
+          </div>
 
-    {/*Botones navegacion  */}
-    <div className="container me-5 pe-5">
-      <ButtonsNavigate step="" id=""/>
-    </div>
-</div> 
+          {/*Botones navegacion  */}
+          <div className="container me-5 pe-5">
+            <ButtonsNavigate step={encabezado.numero_paso} id={data.id} />
+          </div>
+        </div>
+      </div>
+    </>
   )
 };
 
-export default pasoDos
+export default PasoDos
