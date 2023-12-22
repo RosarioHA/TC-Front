@@ -304,6 +304,7 @@ const EdicionUsuario = () =>
                     is_active={watch('is_active')}
                     altA="Activo"
                     altB="Inactivo"
+                    label="Estado"
                   />
                 )}
               />

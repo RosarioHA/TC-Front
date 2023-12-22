@@ -4,8 +4,10 @@ import { ButtonsNavigate } from "../../components/layout/ButtonsNavigate";
 import { FormularioContext } from "../../context/FormSectorial";
 import Subpaso_CuatroPuntoUno from "../../components/formSectorial/paso4/p4.1";
 import { MonoStepers } from "../../components/stepers/MonoStepers";
-const PasoCuatro = () =>
-{
+
+import Subpaso_CincoPuntoUno from "../../components/formSectorial/paso5/p5.1";
+
+const PasoCuatro = () => {
   const { 
     updateStepNumber,
     pasoData ,data} = useContext(FormularioContext);
@@ -39,12 +41,18 @@ const PasoCuatro = () =>
             <Subpaso_CuatroPuntoUno data={indicador_desempeno} listaData={lista_indicadores} />
           </div>
 
+          <div>
+            <Subpaso_CincoPuntoUno />
+          </div>
+
           {/*Botones navegacion*/}
           <div className="container me-5 pe-5">
             <ButtonsNavigate step={paso4Data.numero_paso} id={ data.id} />
           </div>
         </div>
       </div>
+
+      
     </>
   )
 };

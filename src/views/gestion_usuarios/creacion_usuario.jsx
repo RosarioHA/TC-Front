@@ -350,6 +350,7 @@ const CreacionUsuario = () =>
                     errors={errors}
                     altA="Activo"
                     altB="Inactivo"
+                    label="Estado"
                   />
                 </>
               )} />

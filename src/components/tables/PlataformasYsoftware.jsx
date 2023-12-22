@@ -91,7 +91,9 @@ const PlataformasYsoftware = () => {
           <p className="text-sans-p-bold ms-2 mb-0">¿El uso de la plataforma o software requirió capacitación?</p>
         </div>
         <div className="col ms-5">
-          <RadioButtons/>
+          <RadioButtons
+          altA="Si"
+          altB="No"/>
         </div>
       </div>
       
