@@ -13,7 +13,6 @@ import { esquemaCreacionCompetencia } from "../../validaciones/esquemaValidacion
 import { useCrearCompetencia } from "../../hooks/competencias/useCrearCompetencia";
 import { useRegion } from "../../hooks/useRegion";
 import { useUsers } from "../../hooks/usuarios/useUsers";
-import { useGroups } from "../../hooks/useGroups";
 import { useSector } from "../../hooks/useSector";
 
 
@@ -28,95 +27,65 @@ const initialValues = {
   plazoGore: undefined,
 };
 
-
-const groupUsersByType = (users) =>
-{
-  const grouped = users.reduce((acc, user) =>
-  {
-    acc[ user.perfil ] = acc[ user.perfil ] || [];
-    acc[ user.perfil ].push(user);
+const groupUsersByType = (users) => {
+  const grouped = users.reduce((acc, user) => {
+    acc[user.perfil] = acc[user.perfil] || [];
+    acc[user.perfil].push(user);
     return acc;
   }, {});
 
-  return Object.entries(grouped).map(([ perfil, users ]) => ({
+  return Object.entries(grouped).map(([perfil, users]) => ({
     label: perfil,
     options: users,
   }));
 };
 
-const CreacionCompetencia = () =>
-{
-
+const CreacionCompetencia = () => {
   const { createCompetencia } = useCrearCompetencia();
   const { dataRegiones } = useRegion();
   const { users } = useUsers();
-  const { dataGroups } = useGroups();
   const { dataSector } = useSector();
   const userOptions = groupUsersByType(users);
 
-
-
-  console.log('crear', createCompetencia);
-  console.log('regiones', dataRegiones);
-  console.log('user', users);
-  console.log('grupos', dataGroups);
-  console.log('sector', dataSector);
-
-
-  const [ regionesSeleccionadas, setRegionesSeleccionadas ] = useState(null);
-  const [ sectoresSeleccionados, setSectoresSeleccionados ] = useState([]);
-  const [ origenSeleccionado, setOrigenSeleccionado ] = useState('');
-  const [ ambitoSeleccionado, setAmbitoSeleccionado ] = useState('');
-  const [ usuariosSeleccionados, setUsuariosSeleccionados ] = useState([]);
-  const [ submitClicked, setSubmitClicked ] = useState(false);
+  const [regionesSeleccionadas, setRegionesSeleccionadas] = useState([]);
+  const [sectoresSeleccionados, setSectoresSeleccionados] = useState([]);
+  const [origenSeleccionado, setOrigenSeleccionado] = useState('');
+  const [ambitoSeleccionado, setAmbitoSeleccionado] = useState('');
+  const [usuariosSeleccionados, setUsuariosSeleccionados] = useState([]);
   const history = useNavigate();
 
-  // Maneja boton de volver atras.
-  const handleBackButtonClick = () =>
-  {
-    history(-1);
-  };
-
-
+    const handleBackButtonClick = () =>
+    {
+      history(-1);
+    };
 
   const {
     control,
     handleSubmit,
     setValue,
     formState: { errors },
-    trigger,
   } = useForm({
     resolver: yupResolver(esquemaCreacionCompetencia),
     defaultValues: initialValues,
     shouldUnregister: false,
-    mode: 'manual',// Desactiva la validacion automatica
+    mode: 'manual',
   });
 
-  const onSubmit = async (data) =>
-  {
-    // Mapear los datos del formulario al formato esperado por la API
+  const onSubmit = async (data) => {
     const competenciaData = {
-      nombre: data.nombre,
-      ambito: data.ambito,
-      origen: data.origen,
-      plazo_formulario_sectorial: data.plazoSectorial,
-      plazo_formulario_gore: data.plazoGore,
-      sectores: data.sectoresSeleccionados.map(s => s.id),
-      regiones: data.regionesSeleccionadas.map(r => r.id),
-      // Otros campos según sea necesario
+      ...data,
+      sectores: sectoresSeleccionados.map(s => s.value),
+      regiones: regionesSeleccionadas.map(r => r.value),
+      usuarios: Object.keys(usuariosSeleccionados),
     };
 
-    try
-    {
+    try {
       await createCompetencia(competenciaData);
       // Manejar la respuesta, redireccionar o mostrar un mensaje de éxito
-    } catch (error)
-    {
+    } catch (error) {
       // Manejar el error
     }
   };
-
-  // Callbacks que manejan la entrega de informacion desde los componentes del formulario
 
   //opciones regiones 
   const opcionesRegiones = dataRegiones.map(region => ({
@@ -124,10 +93,9 @@ const CreacionCompetencia = () =>
     value: region.id,
   }));
 
-  const handleRegionesChange = (selectedOptions) =>
-  {
+  const handleRegionesChange = (selectedOptions) => {
     setRegionesSeleccionadas(selectedOptions);
-    setValue('regiones', selectedOptions.map(option => option.value), { shouldValidate: true });
+    setValue('regiones', selectedOptions);
   };
 
   //opciones sector 
@@ -136,45 +104,29 @@ const CreacionCompetencia = () =>
     value: sector.id,
   }));
 
-  const handleSectorChange = (selectedOptions) =>
-  {
+  const handleSectorChange = (selectedOptions) => {
     setSectoresSeleccionados(selectedOptions);
-    setValue('sectores', selectedOptions.map(option => option.value), { shouldValidate: true });
+    setValue('sectores', selectedOptions);
   };
 
-  const handleOrigenChange = (origen) =>
-  {
-    setOrigenSeleccionado(origen);
-    setValue('origen', origen, { shouldValidate: true });
-    console.log("origen seleccionado", origenSeleccionado)
-  };
-  const handleAmbitoChange = (ambito) =>
-  {
-    setAmbitoSeleccionado(ambito);
-    setValue('ambito', ambito, { shouldValidate: true });
-    console.log("ambito seleccionado", ambitoSeleccionado)
+  const handleOrigenChange = (selectedOption) => {
+    setOrigenSeleccionado(selectedOption);
+    setValue('origen', selectedOption);
   };
 
-  const handleUsuariosChange = useCallback((selectedOptions) =>
-  {
-    const updatedUsuarios = {};
+  const handleAmbitoChange = (selectedOption) => {
+    setAmbitoSeleccionado(selectedOption);
+    setValue('ambito', selectedOption);
+  };
 
-    for (const perfil in selectedOptions)
-    {
-      // Verifica si el objeto selectedOptions tiene la propiedad perfil
-      if (Object.prototype.hasOwnProperty.call(selectedOptions, perfil))
-      {
-        selectedOptions[ perfil ].forEach((usuario) =>
-        {
-          updatedUsuarios[ usuario.id ] = usuario;
-        });
-      }
-    }
-
+  const handleUsuariosChange = useCallback((selectedOptions) => {
+    const updatedUsuarios = selectedOptions.reduce((acc, usuario) => {
+      acc[usuario.id] = usuario;
+      return acc;
+    }, {});
     setUsuariosSeleccionados(updatedUsuarios);
-  }, [ setUsuariosSeleccionados ]);
-
-  console.log("usuarios seleccionados:", usuariosSeleccionados)
+    setValue('usuarios', Object.keys(updatedUsuarios));
+  }, [setValue]);
 
   return (
     <div className="container col-10 my-4">
@@ -352,7 +304,7 @@ const CreacionCompetencia = () =>
           </div>
 
           <div className="d-flex justify-content-end">
-            <button className="btn-primario-s mb-5" type="submit" onClick={() => setSubmitClicked(true)}>
+            <button className="btn-primario-s mb-5" type="submit">
               <p className="mb-0">Crear Competencia</p>
               <i className="material-symbols-rounded ms-2">arrow_forward_ios</i>
             </button>
