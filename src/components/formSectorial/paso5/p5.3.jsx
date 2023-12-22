@@ -1,6 +1,33 @@
+import { useState } from "react";
 import CustomTextarea from "../../forms/custom_textarea";
+import Personal from "../../tables/Personal";
 
 const Subpaso_CincoPuntoTres = () => {
+  const [estamentosPdirecto, setEstamentosPdirecto] = useState([{ id: 1 }]);
+  const [estamentosPindirecto, setEstamentosPindirecto] = useState([{ id: 1 }]);
+
+  const agregarEstamentoPdirecto = () => {
+    const nuevoEstamento = { id: estamentosPdirecto.length + 1 };
+    setEstamentosPdirecto([...estamentosPdirecto, nuevoEstamento]);
+  };
+  // const eliminarEstamentoPdirecto = (id) => {
+  //   const estamentosActualizados = estamentosPdirecto.filter(
+  //     (proc) => proc.id !== id
+  //   );
+  //   setEstamentosPdirecto(estamentosActualizados);
+  // };
+
+  const agregarEstamentoPindirecto = () => {
+    const nuevoEstamento = { id: estamentosPindirecto.length + 1 };
+    setEstamentosPindirecto([...estamentosPindirecto, nuevoEstamento]);
+  };
+  // const eliminarEstamentoPondirecto = (id) => {
+  //   const estamentosActualizados = estamentosPindirecto.filter(
+  //     (proc) => proc.id !== id
+  //   );
+  //   setEstamentosPindirecto(estamentosActualizados);
+  // };
+
   return (
     <div className="my-4">
       <h4 className="text-sans-h4">5.3 Cálculo de personal asociado al ejercicio de la competencia</h4>
@@ -9,7 +36,19 @@ const Subpaso_CincoPuntoTres = () => {
       <p className="text-sans-m-semibold mt-4">a. Personal que ejerce directamente la competencia</p>
       <h6 className="text-sans-h6-primary mt-3">Por ejercicio directo se entenderán todas aquellas tareas y procedimientos específicos y exclusivos de la competencia. En la renta bruta se deben considerar aquellas asignaciones propias del cargo. </h6>
 
-      <div>COMPONENTE PERSONAL - DIRECTO</div>
+      {estamentosPdirecto.map((estamento) => (
+      <div key={estamento.id} className="my-4">
+        <Personal />
+      </div>
+      ))}
+      <button
+        className="btn-secundario-s m-2"
+        onClick={agregarEstamentoPdirecto}
+        >
+          <i className="material-symbols-rounded me-2">add</i>
+          <p className="mb-0 text-decoration-underline">Agregar Estamento</p>
+      </button>
+
 
       <div className="mt-3">
         <CustomTextarea 
@@ -25,7 +64,18 @@ const Subpaso_CincoPuntoTres = () => {
       <p className="text-sans-m-semibold mt-4">b. Personal de soporte</p>
       <h6 className="text-sans-h6-primary mt-3">Por personal de soporte se entenderán todas personas que realizan tareas y procedimientos indirectos a la competencia. </h6>
 
-      <div>COMPONENTE PERSONAL - INDIRECTO</div>
+      {estamentosPindirecto.map((estamento) => (
+      <div key={estamento.id} className="my-4">
+        <Personal />
+      </div>
+      ))}
+      <button
+        className="btn-secundario-s m-2"
+        onClick={agregarEstamentoPindirecto}
+        >
+          <i className="material-symbols-rounded me-2">add</i>
+          <p className="mb-0 text-decoration-underline">Agregar Estamento</p>
+      </button>
 
       <div className="mt-3">
         <CustomTextarea 

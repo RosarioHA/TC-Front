@@ -5,7 +5,7 @@ import { FormularioContext } from "../../context/FormSectorial";
 import Subpaso_CuatroPuntoUno from "../../components/formSectorial/paso4/p4.1";
 import { MonoStepers } from "../../components/stepers/MonoStepers";
 
-import Subpaso_CincoPuntoUno from "../../components/formSectorial/paso5/p5.1";
+import Subpaso_CincoPuntoTres from "../../components/formSectorial/paso5/p5.3";
 
 const PasoCuatro = () => {
   const { 
@@ -42,7 +42,7 @@ const PasoCuatro = () => {
           </div>
 
           <div>
-            <Subpaso_CincoPuntoUno />
+            <Subpaso_CincoPuntoTres />
           </div>
 
           {/*Botones navegacion*/}
