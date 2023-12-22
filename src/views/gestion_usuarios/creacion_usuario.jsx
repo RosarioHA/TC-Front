@@ -38,7 +38,6 @@ const CreacionUsuario = () =>
   const [ submitClicked, setSubmitClicked ] = useState(false);
   const { dataRegiones, loadingRegiones } = useRegion();
 
-  console.log(dataSector);
 
   useEffect(() =>
   {
@@ -65,10 +64,7 @@ const CreacionUsuario = () =>
     mode: 'manual',
   });
 
-  useEffect(() =>
-  {
-    console.log("competencias seleccionadas en vista", competenciasSeleccionadas);
-  }, [ competenciasSeleccionadas ]);
+
 
   //opciones de perfil 
   const opcionesGroups = dataGroups.map(group => ({
@@ -95,14 +91,12 @@ const CreacionUsuario = () =>
 
     if (selectedProfile)
     {
-      setPerfilSeleccionado(selectedProfile.label); // Cambiado a selectedProfile.label
+      setPerfilSeleccionado(selectedProfile.label);
     } else
     {
       setPerfilSeleccionado(null);
     }
   };
-  console.log("perfilSeleccionado", perfilSeleccionado)
-
 
   //opciones de regiones
   const opcionesDeRegiones = dataRegiones.map(region => ({
@@ -121,7 +115,6 @@ const CreacionUsuario = () =>
     label: sector.nombre,
   }));
 
-  console.log(opcionesSector);
 
   const handleSectorChange = (sector) =>
   {
@@ -138,7 +131,6 @@ const CreacionUsuario = () =>
   {
     // Previene que el evento se propague al boton
     e.stopPropagation();
-    console.log("propagacion detenida en vista Crear usuario")
   };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -176,7 +168,6 @@ const CreacionUsuario = () =>
       if (submitClicked && isValid)
       {
         await createUser(userData);
-        console.log("Usuario creado con éxito");
         history('/home/success', { state: { origen: "crear_usuario" } });
       } else
       {
@@ -189,7 +180,7 @@ const CreacionUsuario = () =>
   };
   if (isLoading)
   {
-    return <div>Cargando...</div>; // O tu componente personalizado de carga
+    return <div>Cargando...</div>;
   }
   { error && <div className="error-message">Error al crear el usuario: {error.message}</div> }
 
@@ -259,15 +250,23 @@ const CreacionUsuario = () =>
               name="perfil"
               control={control}
               render={({ field }) => (
-                < DropdownSelect
-                  label="Elige el perfil de usuario (Obligatorio)"
-                  placeholder="Elige el perfil de usuario"
-                  options={loadingGroups ? [] : opcionesGroups}
-                  onSelectionChange={(selectedOption) =>
-                  {
-                    field.onChange(selectedOption.label);
-                    handlePerfilChange(selectedOption);
-                  }} />
+                <>
+                  {loadingGroups ? (
+                    <div>Cargando perfiles...</div>
+                  ) : dataGroups && dataGroups.length > 0 ? (
+                    < DropdownSelect
+                      label="Elige el perfil de usuario (Obligatorio)"
+                      placeholder="Elige el perfil de usuario"
+                      options={loadingGroups ? [] : opcionesGroups}
+                      onSelectionChange={(selectedOption) =>
+                      {
+                        field.onChange(selectedOption.label);
+                        handlePerfilChange(selectedOption);
+                      }} />
+                  ) : (
+                    <input type="text" value="No hay perfiles para mostrar" readOnly />
+                  )}
+                </>
               )} />
             {errors.perfil && (
               <p className="text-sans-h6-darkred mt-2 mb-0">{errors.perfil.message}</p>
@@ -278,14 +277,21 @@ const CreacionUsuario = () =>
             <>
               <div className="d-flex mb-4 text-sans-h6-primary">
                 <i className="material-symbols-rounded me-2">info</i>
-                <h6 className="">Al usuario Sectorial debes asignarle un organismo. </h6>
+                <h6 className="">Al usuario Sectorial debes asignarle un organismo.</h6>
               </div>
               <div className="mb-4">
-                <DropdownSelectBuscador
-                  label="Elige el organismo al que pertenece (Obligatorio)"
-                  placeholder="Elige un organismo"
-                  options={loadingSector ? [] : opcionesSector}
-                  onSelectionChange={handleSectorChange} />
+                {loadingSector ? (
+                  <div>Cargando organismos...</div>
+                ) : dataSector && dataSector.length > 0 ? (
+                  <DropdownSelectBuscador
+                    label="Elige el organismo al que pertenece (Obligatorio)"
+                    placeholder="Elige un organismo"
+                    options={opcionesSector}
+                    onSelectionChange={handleSectorChange}
+                  />
+                ) : (
+                  <input type="text" value="No hay organismos para mostrar" readOnly />
+                )}
               </div>
             </>
           )}
@@ -293,15 +299,21 @@ const CreacionUsuario = () =>
             <>
               <div className="d-flex mb-4 text-sans-h6-primary">
                 <i className="material-symbols-rounded me-2">info</i>
-                <h6 className="">Al usuario GORE debes asignarle una región. </h6>
+                <h6 className="">Al usuario GORE debes asignarle una región.</h6>
               </div>
               <div className="mb-4">
-                <DropdownSelectBuscador
-                  label="Elige la región a la que representa (Obligatorio)"
-                  placeholder="Elige una región"
-                  options={loadingRegiones ? [] : opcionesDeRegiones}
-                  onSelectionChange={handleRegionChange}
-                />
+                {loadingRegiones ? (
+                  <div>Cargando regiones...</div>
+                ) : dataRegiones && dataRegiones.length > 0 ? (
+                  <DropdownSelectBuscador
+                    label="Elige la región a la que representa (Obligatorio)"
+                    placeholder="Elige una región"
+                    options={opcionesDeRegiones}
+                    onSelectionChange={handleRegionChange}
+                  />
+                ) : (
+                  <input type="text" value="No hay regiones para mostrar" readOnly />
+                )}
               </div>
             </>
           )}
@@ -348,26 +360,32 @@ const CreacionUsuario = () =>
               <Controller
                 name="competenciasSeleccionadas"
                 control={control}
-                //defaultValue={{}}
                 defaultValue={Object.keys(competenciasSeleccionadas)}
                 render={({ field }) => (
-                  <DropdownSinSecciones
-                    label="Competencia Asignada (Opcional)"
-                    placeholder="Busca el nombre de la competencia"
-                    options={competencias}
-                    selectedOptions={field.value}
-                    onSelectionChange={(selectedOptions) =>
-                    {
-                      field.onChange(selectedOptions);
-                      handleCompetenciasChange(selectedOptions);
-                    }}
-                    onClick={handleInputClick}
-                    onMouseDown={handleInputClick}
-                  />
+                  <>
+                    {competencias && competencias.length > 0 ? (
+                      <DropdownSinSecciones
+                        label="Competencia Asignada (Opcional)"
+                        placeholder="Busca el nombre de la competencia"
+                        options={competencias}
+                        selectedOptions={field.value}
+                        onSelectionChange={(selectedOptions) =>
+                        {
+                          field.onChange(selectedOptions);
+                          handleCompetenciasChange(selectedOptions);
+                        }}
+                        onClick={handleInputClick}
+                        onMouseDown={handleInputClick}
+                      />
+                    ) : (
+                      <input type="text" value="No hay competencias para mostrar" readOnly />
+                    )}
+                  </>
                 )}
               />
             </div>
           </div>
+
 
           <button className="btn-primario-s mb-5" type="submit" onClick={() => setSubmitClicked(true)}>
             <p className="mb-0">Crear Usuario</p>

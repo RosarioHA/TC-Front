@@ -5,7 +5,7 @@ import CustomInput from "../../components/forms/custom_input";
 import DropdownSelect from "../../components/dropdown/select";
 import DropdownSelectBuscador from "../../components/dropdown/select_buscador";
 import DropdownSinSecciones from "../../components/dropdown/checkbox_sinSecciones_conTabla";
-import {RadioButtons} from "../../components/forms/radio_btns";
+import { RadioButtons } from "../../components/forms/radio_btns";
 import { useEditUser } from "../../hooks/usuarios/useEditUser";
 import { useUserDetails } from "../../hooks/usuarios/useUserDetail";
 import { useGroups } from "../../hooks/useGroups";
@@ -216,22 +216,30 @@ const EdicionUsuario = () =>
         </div>
 
         <div className="my-4">
-          < DropdownSelect
-            label="Elige el perfil de usuario (Obligatorio)"
-            placeholder={userDetails ? userDetails.perfil : ''}
-            id="perfil"
-            name="perfil"
-            options={loadingGroups ? [] : opcionesGroups}
-            readOnly={!editMode}
-            control={control}
-            onSelectionChange={(selectedOption) => handleDdSelectChange('perfil', selectedOption)}
-            initialValue={userDetails ? userDetails.perfil : ''}
-          />
+          {loadingGroups ? (
+            <div>Cargando perfiles...</div>
+          ) : dataGroups && dataGroups.length > 0 ? (
+            < DropdownSelect
+              label="Elige el perfil de usuario (Obligatorio)"
+              placeholder={userDetails ? userDetails.perfil : ''}
+              id="perfil"
+              name="perfil"
+              options={loadingGroups ? [] : opcionesGroups}
+              readOnly={!editMode}
+              control={control}
+              onSelectionChange={(selectedOption) => handleDdSelectChange('perfil', selectedOption)}
+              initialValue={userDetails ? userDetails.perfil : ''}
+            />) : (
+            <input type="text" value="No hay perfiles para mostrar" readOnly />
+          )}
         </div>
 
         {/* Renderizan de manera condicional según el Perfil de usuario */}
         {renderizadoCondicional === 'GORE' && (
           <div className="my-4">
+            {loadingRegiones ? (
+                  <div>Cargando regiones...</div>
+                ) : dataRegiones && dataRegiones.length > 0 ? (
             <DropdownSelectBuscador
               label="Elige la región a la que representa (Obligatorio)"
               placeholder={userDetails.region || ''}
@@ -242,11 +250,16 @@ const EdicionUsuario = () =>
               control={control}
               onSelectionChange={(selectedOption) => handleDdSelectBuscadorChange('region', selectedOption)}
               initialValue={userDetails ? userDetails.region : ''}
-            />
+            />  ) : (
+              <input type="text" value="No hay regiones para mostrar" readOnly />
+            )}
           </div>
         )}
         {renderizadoCondicional === 'Usuario Sectorial' && (
           <div className="my-4">
+            {loadingSector ? (
+                  <div>Cargando organismos...</div>
+                ) : dataSector && dataSector.length > 0 ? (
             <DropdownSelectBuscador
               label="Elige el organismo al que pertenece (Obligatorio)"
               placeholder={userDetails.sector || 'Selecciona un sector'}
@@ -257,7 +270,9 @@ const EdicionUsuario = () =>
               control={control}
               onSelectionChange={(selectedOption) => handleDdSelectBuscadorChange('sector', selectedOption)}
               initialValue={userDetails ? userDetails.sector : ''}
-            />
+            />  ) : (
+              <input type="text" value="No hay organismos para mostrar" readOnly />
+            )}
           </div>
         )}
 
@@ -301,6 +316,7 @@ const EdicionUsuario = () =>
 
 
         <div className="my-4">
+        {competencias && competencias.length > 0 ? (
           <DropdownSinSecciones
             label="Competencia Asignada (Opcional)"
             placeholder="Busca el nombre de la competencia"
@@ -316,7 +332,9 @@ const EdicionUsuario = () =>
           //   }}
           // onClick={handleInputClick}
           // onMouseDown={handleInputClick}
-          />
+          /> ) : (
+            <input type="text" value="No hay competencias" readOnly />
+          )}
         </div>
 
         {editMode && (
