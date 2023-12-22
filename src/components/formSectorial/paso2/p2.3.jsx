@@ -1,5 +1,5 @@
 import { useState } from "react";
-import EtapasYprocedimientos from "../../tables/EtapasyProcedimientos";
+import EtapasYprocedimientos from "../../tables/EtapasYprocedimientos";
 
 export const Subpaso_dosPuntoTres = () => {
   const [cantidadEtapas, setCantidadEtapas] = useState(1);
