@@ -167,6 +167,10 @@
     @include font-sans(20px, 700, $grey-a-color);
     line-height: 22px;
 }
+.text-sans-m-semibold{
+    @include font-sans(20px, 600, $grey-a-color);
+    line-height: 22px;
+}
 .text-sans-p-semibold{
     @include font-sans(16px, 600, $grey-a-color);
     line-height: 22px;

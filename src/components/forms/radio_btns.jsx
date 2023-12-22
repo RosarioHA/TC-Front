@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-export const RadioButtons = ({ initialState, handleEstadoChange, field, altA, altB }) => {
+export const RadioButtons = ({ initialState, handleEstadoChange, field, altA, altB, label }) => {
   const [activeButton, setActiveButton] = useState(initialState);
 
   useEffect(() => {
@@ -14,7 +14,8 @@ export const RadioButtons = ({ initialState, handleEstadoChange, field, altA, al
 
   return (
     <div className="mb-5">
-      <h5 className="text-sans-h5">Estado</h5>
+      {label && <h5 className="text-sans-h5">{label}</h5>
+      }
       <div className="d-flex mb-2">
         <button
           type="button"
