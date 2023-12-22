@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Costos from "../../tables/Costos";
+import SumatoriaCostos from "../../tables/SumatoriaCostos";
 
 const Subpaso_CincoPuntoUno = () => {
   const [costosDirectos, setCostoDirecto] = useState([{ id: 1 }]);
@@ -38,8 +39,11 @@ const Subpaso_CincoPuntoUno = () => {
         <p className="mb-0 text-decoration-underline">Agregar indicador</p>
       </button>
 
-      <div>COMPONENTE SUMA</div>
-      <hr/>
+      <div className="row mt-5">
+        <p className="text-sans-p-bold mb-0 col-2">Costos Directos <br/> Totales Anual ($M)</p>
+        <p className="text-sans-p-blue col">(sumResult)</p>
+      </div>
+      <hr />
 
       <p className="text-sans-m-semibold mt-4">b. Costos indirectos</p>
       <h6 className="text-sans-h6-primary mt-3">Por costos indirectos se entenderán aquellos que no son imputables a los procedimientos específicos de la competencia analizada, pero que, al financiar unidades de soporte transversal en el Ministerio o Servicio de origen, hacen posible el ejercicio de la competencia. Los costos analizados responden al año n-1, es decir, al año anterior al inicio de estudio de transferencia de competencias.</h6>
@@ -59,12 +63,18 @@ const Subpaso_CincoPuntoUno = () => {
         <p className="mb-0 text-decoration-underline">Agregar indicador</p>
       </button>
 
-      <div>COMPONENTE SUMA</div>
-      <hr/>
+      <div className="row mt-5">
+        <p className="text-sans-p-bold mb-0 col-2">Costos Directos <br/> Totales Anual ($M)</p>
+        <p className="text-sans-p-blue col">(sumResult)</p>
+      </div>
+      <hr />
 
       <p className="text-sans-m-semibold mt-4">c. Sumatoria de costos anuales destinados al ejercicio de la competencia</p>
 
-      <div>COMPONENTE TABLA SUMATORIA</div>
+      <div>
+        <SumatoriaCostos 
+        numFilas={5}/>
+      </div>
 
     </div>
   )
