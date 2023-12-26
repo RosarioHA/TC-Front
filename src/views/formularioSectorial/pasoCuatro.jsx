@@ -5,8 +5,6 @@ import { FormularioContext } from "../../context/FormSectorial";
 import Subpaso_CuatroPuntoUno from "../../components/formSectorial/paso4/p4.1";
 import { MonoStepers } from "../../components/stepers/MonoStepers";
 
-import Subpaso_CincoPuntoTres from "../../components/formSectorial/paso5/p5.3";
-
 const PasoCuatro = () => {
   const { 
     updateStepNumber,
@@ -39,10 +37,6 @@ const PasoCuatro = () => {
 
           <div className="">
             <Subpaso_CuatroPuntoUno data={indicador_desempeno} listaData={lista_indicadores} />
-          </div>
-
-          <div>
-            <Subpaso_CincoPuntoTres />
           </div>
 
           {/*Botones navegacion*/}
