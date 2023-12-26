@@ -11,9 +11,12 @@ const SuccessViews = () => {
     history('/home');
   };
   
-  var titulo = "";
-  var subtitulo = "";
-  var tituloRecuadro = "";
+  let titulo = "";
+  let subtitulo = "";
+  let bajada = "";
+  let tituloRecuadro = "";
+  let contenidoP1 = "";
+  let contenidoP2 = "";
   if (origen === "crear_usuario") {
     titulo = "Administrar Usuarios";
     subtitulo = "Crear Usuario";
@@ -26,7 +29,14 @@ const SuccessViews = () => {
     titulo = "Administrar Usuario";
     subtitulo = "Editar Usuario";
     tituloRecuadro = "Editaste un usuario con éxito";
-  } else {
+  } else if (origen === "formulario_sectorial") {
+    titulo = "Formulario Sectorial";
+    subtitulo = "$NombreCompetencia";
+    bajada = "$NombreCompetencia"
+    tituloRecuadro = "Enviaste el formulario con éxito";
+    contenidoP1="Ahora deberás esperar a que SUBDERE realice las observaciones respecto a la información del formulario.      "
+    contenidoP2="En caso de que SUBDERE defina que necesita información adicional, te notificará y podrás hacer las modificaciones solicitadas.."
+  }else {
     titulo = "Exito!";
     subtitulo = "Plataforma Transferencia de Competencias";
     tituloRecuadro = "Esta es la vista de success";
@@ -39,6 +49,7 @@ const SuccessViews = () => {
       {/* Titulo deberia ser condicional, segun de donde venga el usuario */}
       <h2 className="text-sans-h2 mt-3">{titulo}</h2>
       <h3 className="text-sans-h3 mt-3 mb-5">{subtitulo}</h3>
+      <p className="text-sans-h2-grey">{bajada}</p>
   
       <div className="success-container col-7 p-3 px-5">
         <div className="row align-items-center">
@@ -47,7 +58,8 @@ const SuccessViews = () => {
           </div>
           <div className="col-9">
             <h2 className="text-sans-h2 mb-4">{tituloRecuadro}</h2>
-            <p className="text-sans-p">Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus.</p>
+            <p className="text-sans-p">{contenidoP1}</p>
+            <p className="text-sans-p">{contenidoP2}</p>
           </div>
         </div>  
       </div>
