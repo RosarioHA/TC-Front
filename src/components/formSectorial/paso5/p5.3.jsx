@@ -21,7 +21,7 @@ const Subpaso_CincoPuntoTres = () => {
     const nuevoEstamento = { id: estamentosPindirecto.length + 1 };
     setEstamentosPindirecto([...estamentosPindirecto, nuevoEstamento]);
   };
-  // const eliminarEstamentoPondirecto = (id) => {
+  // const eliminarEstamentoPindirecto = (id) => {
   //   const estamentosActualizados = estamentosPindirecto.filter(
   //     (proc) => proc.id !== id
   //   );
@@ -50,7 +50,7 @@ const Subpaso_CincoPuntoTres = () => {
       </button>
 
 
-      <div className="mt-3">
+      <div className="mt-5">
         <CustomTextarea 
         label="Descripción de funciones"
         placeholder="Describe las funciones asociadas a otras competencias"
@@ -77,7 +77,7 @@ const Subpaso_CincoPuntoTres = () => {
           <p className="mb-0 text-decoration-underline">Agregar Estamento</p>
       </button>
 
-      <div className="mt-3">
+      <div className="mt-5">
         <CustomTextarea 
         label="Descripción de funciones"
         placeholder="Describe las funciones asociadas a otras competencias"
