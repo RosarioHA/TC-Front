@@ -78,3 +78,12 @@
   border: solid 1px $grey-c-color;
   border-radius: 4px;
 }
+
+.relative-container{
+  position: relative;
+}
+.absolute-container{
+  position:absolute;
+  margin-left: 800px;
+  z-index: 1;
+}

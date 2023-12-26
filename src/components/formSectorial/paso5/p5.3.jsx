@@ -10,23 +10,23 @@ const Subpaso_CincoPuntoTres = () => {
     const nuevoEstamento = { id: estamentosPdirecto.length + 1 };
     setEstamentosPdirecto([...estamentosPdirecto, nuevoEstamento]);
   };
-  // const eliminarEstamentoPdirecto = (id) => {
-  //   const estamentosActualizados = estamentosPdirecto.filter(
-  //     (proc) => proc.id !== id
-  //   );
-  //   setEstamentosPdirecto(estamentosActualizados);
-  // };
+  const eliminarEstamentoPdirecto = (id) => {
+    const estamentosActualizados = estamentosPdirecto.filter(
+      (proc) => proc.id !== id
+    );
+    setEstamentosPdirecto(estamentosActualizados);
+  };
 
   const agregarEstamentoPindirecto = () => {
     const nuevoEstamento = { id: estamentosPindirecto.length + 1 };
     setEstamentosPindirecto([...estamentosPindirecto, nuevoEstamento]);
   };
-  // const eliminarEstamentoPindirecto = (id) => {
-  //   const estamentosActualizados = estamentosPindirecto.filter(
-  //     (proc) => proc.id !== id
-  //   );
-  //   setEstamentosPindirecto(estamentosActualizados);
-  // };
+  const eliminarEstamentoPindirecto = (id) => {
+    const estamentosActualizados = estamentosPindirecto.filter(
+      (proc) => proc.id !== id
+    );
+    setEstamentosPindirecto(estamentosActualizados);
+  };
 
   return (
     <div className="my-4">
@@ -37,10 +37,25 @@ const Subpaso_CincoPuntoTres = () => {
       <h6 className="text-sans-h6-primary mt-3">Por ejercicio directo se entenderán todas aquellas tareas y procedimientos específicos y exclusivos de la competencia. En la renta bruta se deben considerar aquellas asignaciones propias del cargo. </h6>
 
       {estamentosPdirecto.map((estamento) => (
-      <div key={estamento.id} className="my-4">
-        <Personal />
-      </div>
+        <div key={estamento.id}>
+          {estamentosPdirecto.length > 1 && (
+            <div className="d-flex justify-content-end absolute-container">
+              <button
+                type="button"
+                className="btn-terciario-ghost "
+                onClick={() => eliminarEstamentoPdirecto(estamento.id)}
+              >
+                <i className="material-symbols-rounded me-2">delete</i>
+                <p className="mb-0 text-decoration-underline">Borrar estamento</p>
+              </button> 
+            </div>
+          )}
+          <div className="my-4 relative-container">
+            <Personal />
+          </div>
+        </div>
       ))}
+
       <button
         className="btn-secundario-s m-2"
         onClick={agregarEstamentoPdirecto}
@@ -65,10 +80,25 @@ const Subpaso_CincoPuntoTres = () => {
       <h6 className="text-sans-h6-primary mt-3">Por personal de soporte se entenderán todas personas que realizan tareas y procedimientos indirectos a la competencia. </h6>
 
       {estamentosPindirecto.map((estamento) => (
-      <div key={estamento.id} className="my-4">
-        <Personal />
-      </div>
+        <div key={estamento.id}>
+          {estamentosPindirecto.length > 1 && (
+            <div className="absolute-container">
+              <button
+                type="button"
+                className="btn-terciario-ghost"
+                onClick={() => eliminarEstamentoPindirecto(estamento.id)}
+              >
+                <i className="material-symbols-rounded me-2">delete</i>
+                <p className="mb-0 text-decoration-underline">Borrar estamento</p>
+              </button> 
+            </div>
+          )}
+          <div className="my-4 relative-container">
+            <Personal />
+          </div>
+        </div>
       ))}
+
       <button
         className="btn-secundario-s m-2"
         onClick={agregarEstamentoPindirecto}
