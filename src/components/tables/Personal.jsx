@@ -3,6 +3,7 @@ import DropdownSelect from "../dropdown/select";
 
 const Personal = () => {
   const [personas, setPersonas] = useState([{ id: 1 }]);
+  const [estamento, setEstamento] = useState(null);
   const [mostrarSeccionDinamica, setMostrarSeccionDinamica] = useState(false);
 
   const agregarPersona = () => {
@@ -31,8 +32,8 @@ const Personal = () => {
                 { value: 'opcion2', label: 'Opción 2' },
                 { value: 'opcion3', label: 'Opción 3' },
               ]}
-              onSelectionChange={() => {
-                // Mostrar la sección dinámica al hacer una selección
+              onSelectionChange={(selectedOption) => {
+                setEstamento(selectedOption);
                 setMostrarSeccionDinamica(true);
               }}/>
           </div> 
@@ -88,7 +89,7 @@ const Personal = () => {
             onClick={agregarPersona}
           >
             <i className="material-symbols-rounded me-2">add</i>
-            <p className="mb-0 text-decoration-underline">Agregar $estamentoElegido</p>
+            <p className="mb-0 text-decoration-underline">Agregar {estamento ? estamento.label : 'Ninguna'}</p>
           </button>
         </div>
         )}
