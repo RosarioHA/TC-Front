@@ -2,7 +2,7 @@ import { useState } from "react";
 import CustomTextarea from "../../forms/custom_textarea";
 import Personal from "../../tables/Personal";
 
-const Subpaso_CincoPuntoTres = () => {
+export const Subpaso_CincoPuntoTres = () => {
   const [estamentosPdirecto, setEstamentosPdirecto] = useState([{ id: 1 }]);
   const [estamentosPindirecto, setEstamentosPindirecto] = useState([{ id: 1 }]);
 
@@ -121,5 +121,3 @@ const Subpaso_CincoPuntoTres = () => {
     </div>
   ) 
 }
-
-export default Subpaso_CincoPuntoTres;
