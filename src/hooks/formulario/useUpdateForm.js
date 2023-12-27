@@ -1,32 +1,32 @@
 import { useCallback, useState } from "react";
 import { apiTransferenciaCompentencia } from "../../services/transferenciaCompetencia";
 
-export const useUpdateForm = () =>
-{
-  const [ isUpdatingPaso, setIsUpdatingPaso ] = useState(false);
-  const [ updatePasoError, setUpdatePasoError ] = useState(null);
+export const useUpdateForm = () => {
+  const [isUpdatingPaso, setIsUpdatingPaso] = useState(false);
+  const [updatePasoError, setUpdatePasoError] = useState(null);
 
-  const updatePaso = useCallback(async (id, stepNumber, datosPaso, archivos = {}) =>
-  {
+  const updatePaso = useCallback(async (id, stepNumber, datosPaso, archivos = {}) => {
+    console.log('updatePaso llamado con:', { id, stepNumber, datosPaso, archivos });
+    if (!id || !stepNumber) {
+      console.error("Faltan el ID o el número de paso para actualizar.");
+      return;
+    }
+
     setIsUpdatingPaso(true);
     setUpdatePasoError(null);
 
-    try
-    {
-      const pasoKey = `paso${stepNumber}`;
+    try {
       const formData = new FormData();
 
-      // Agregar datos normales de forma individual
-      for (const [ key, value ] of Object.entries(datosPaso))
-      {
-        formData.append(`${pasoKey}[${key}]`, value);
-      }
+      // Agregar datos del paso
+      Object.entries(datosPaso).forEach(([key, value]) => {
+        formData.append(`paso${stepNumber}[${key}]`, value);
+      });
 
       // Agregar archivos
-      for (const [ key, file ] of Object.entries(archivos))
-      {
+      Object.entries(archivos).forEach(([key, file]) => {
         formData.append(key, file);
-      }
+      });
 
       const config = {
         headers: {
@@ -34,15 +34,15 @@ export const useUpdateForm = () =>
         }
       };
 
-      await apiTransferenciaCompentencia.patch(`/formulario-sectorial/${id}/paso-${stepNumber}/`,
-        formData,
-        config
-      );
-    } catch (error)
-    {
-      setUpdatePasoError(error);
-    } finally
-    {
+      const response = await apiTransferenciaCompentencia.patch(`/formulario-sectorial/${id}/paso-${stepNumber}/`, formData, config);
+      console.log("Respuesta de la API:", response);
+
+      // Aquí puedes manejar la respuesta de éxito
+    } catch (error) {
+      console.error("Error en handleUpdatePaso:", error);
+      setUpdatePasoError(error.response ? error.response.data : error);
+      console.error("Error en updatePaso:", error);
+    } finally {
       setIsUpdatingPaso(false);
     }
   }, []);

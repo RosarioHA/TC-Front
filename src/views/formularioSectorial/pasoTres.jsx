@@ -9,38 +9,51 @@ import { MonoStepers } from "../../components/stepers/MonoStepers";
 const PasoTres = () =>
 {
   const {
-    updatePaso,
+    handleUpdatePaso,
     updateStepNumber,
     data,
-    pasoData } = useContext(FormularioContext);
+    pasoData,
+    id } = useContext(FormularioContext);
 
-  const [ formData, setFormData ] = useState({});
-  const stepNumber = 3;
+  // Inicializa el estado local con los datos de paso3 si están disponibles
+  const initialFormData = {
+    universo_cobertura: pasoData?.paso3?.[ 0 ]?.universo_cobertura || '',
+    cobertura_efectivamente_abordada: pasoData?.paso3?.[ 0 ]?.cobertura_efectivamente_abordada || ''
+  };
+  console.log('initialFormData:', initialFormData);
 
-  console.log('id',data), 
+  const [ formData, setFormData ] = useState(initialFormData);
 
 
   useEffect(() =>
   {
-    updateStepNumber(stepNumber);
-  }, [ updateStepNumber, stepNumber ]);
+    updateStepNumber(3);
+  }, [ updateStepNumber ]);
+
+  useEffect(() => {
+    setFormData({
+      universo_cobertura: pasoData?.paso3?.[0]?.universo_cobertura || '',
+      cobertura_efectivamente_abordada: pasoData?.paso3?.[0]?.cobertura_efectivamente_abordada || ''
+    });
+  }, [pasoData]);
 
 
-  // Manejador para el evento onBlur
-  const handleBlur = (name, value) =>
+  const handleChange = (event) => {
+    setFormData({ ...formData, [event.target.name]: event.target.value });
+  };
+
+  const handleBlur = async (name, value) =>
   {
     // Actualizar el estado local con los nuevos datos
     const updatedData = { ...formData, [ name ]: value };
     setFormData(updatedData);
 
     // Enviar datos actualizados al servidor
-    updatePaso(updatedData);
-  };
-
-  // Manejador para cambios en los inputs
-  const handleChange = (event) =>
-  {
-    setFormData({ ...formData, [ event.target.name ]: event.target.value });
+    try {
+      await handleUpdatePaso(id, 3, { ...formData, [name]: value });
+    } catch (error) {
+      console.error("Error al guardar los datos:", error);
+    }
   };
 
   const { cobertura_anual, paso3 } = pasoData;
@@ -48,6 +61,8 @@ const PasoTres = () =>
   // Asegúrate de que paso1 tenga elementos y accede al primer elemento
   const paso3Data = paso3 && paso3.length > 0 ? paso3[ 0 ] : null;
   if (!paso3Data) return <div>No hay datos disponibles para el Paso 3</div>;
+
+  console.log(formData)
 
   return (
     <>
@@ -80,7 +95,7 @@ const PasoTres = () =>
                   placeholder="Describe el universo de cobertura"
                   name="universo_cobertura"
                   maxLength={800}
-                  value={formData.universo_cobertura || ''}
+                  value={formData.universo_cobertura}
                   onChange={handleChange}
                   onBlur={() => handleBlur('universo_cobertura', formData.universo_cobertura)}
                 />
@@ -93,8 +108,11 @@ const PasoTres = () =>
                 <CustomTextarea
                   label="Descripción de cobertura efectivamente abordada (Obligatorio)"
                   placeholder="Describe la cobertura efectivamente abordada"
-                  id=''
+                  name="cobertura_efectivamente_abordada"
                   maxLength={800}
+                  value={formData.cobertura_efectivamente_abordada}
+                  onChange={handleChange}
+                  onBlur={() => handleBlur('cobertura_efectivamente_abordada', formData.cobertura_efectivamente_abordada)}
                 />
                 <div className="d-flex mb-3 mt-0 text-sans-h6-primary">
                   <i className="material-symbols-rounded me-2">info</i>
@@ -113,7 +131,7 @@ const PasoTres = () =>
 
           {/*Botones navegacion  */}
           <div className="container me-5 pe-5">
-            <ButtonsNavigate step={paso3Data.numero_paso} id={data.id}/>
+            <ButtonsNavigate step={paso3Data.numero_paso} id={data.id} />
           </div>
         </div>
       </div>

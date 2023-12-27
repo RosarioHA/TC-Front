@@ -103,7 +103,7 @@ export const Subpaso_tres = ({ pasoData, }) =>
           < DropdownSelect
             label="Elige el ámbito de la competencia (Obligatorio)"
             placeholder="Elige el ámbito de la competencia"
-            name={pasoData.ambito}
+            name={pasoData.ambito_paso1}
             options=""
           />
           <div className="d-flex mb-3 mt-1 text-sans-h6-primary">

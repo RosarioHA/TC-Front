@@ -78,7 +78,6 @@ export const useCompetencia = (id) =>
     }
   }, [ id, fetchCompetencias, fetchListaCompentencias, fetchCompetenciaDetails ]);
 
-
   return {
     dataCompetencia,
     dataListCompetencia,

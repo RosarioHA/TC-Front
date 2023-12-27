@@ -11,6 +11,7 @@ const PasoUno = () =>
 {
   const { pasoData, loadingPaso, errorPaso, updateStepNumber,data } = useContext(FormularioContext);
   const stepNumber = 1;
+  
 
   
   useEffect(() =>
@@ -40,9 +41,9 @@ const PasoUno = () =>
             <Avance avance={paso1Data.avance} />
           </div>
           <span className="text-sans-h6-primary">Texto de apoyo</span>
-          <Subpaso_uno pasoData={paso1Data} />
+          <Subpaso_uno pasoData={paso1Data} marcojuridico={marcojuridico}/>
           <Subpaso_dos pasoData={paso1Data} organigrama={organigramaregional} />
-          <Subpaso_tres pasoData={marcojuridico} />
+          <Subpaso_tres pasoData={paso1Data} />
           <ButtonsNavigate step={paso1Data.numero_paso} id={data.id} />
         </div>
       </div>

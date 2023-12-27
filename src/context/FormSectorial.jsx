@@ -5,8 +5,7 @@ import { useUpdateForm } from '../hooks/formulario/useUpdateForm';
 
 export const FormularioContext = createContext();
 
-export const FormularioProvider = ({ children }) =>
-{
+export const FormularioProvider = ({ children }) => {
   const initialId = localStorage.getItem('formId') || null;
   const initialStepNumber = localStorage.getItem('stepNumber') || null;
 
@@ -27,6 +26,15 @@ export const FormularioProvider = ({ children }) =>
     localStorage.setItem('stepNumber', newStepNumber);
   };
 
+  const handleUpdatePaso = async (id, stepNumber, datosPaso, archivos = {}) => {
+    try {
+      await updatePaso(id, stepNumber, datosPaso, archivos);
+    } catch (error) {
+      // Manejar el error aquí
+      console.error("Error al guardar los datos:", error);
+    }
+  };
+
   const value = {
     data: dataFormSectorial,
     loading: loadingFormSectorial,
@@ -37,12 +45,11 @@ export const FormularioProvider = ({ children }) =>
     errorPaso,
     updateStepNumber,
     stepNumber,
-    updatePaso,
+    handleUpdatePaso,
     isUpdatingPaso,
     updatePasoError
   };
 
-  console.log(dataFormSectorial);
 
   return (
     <FormularioContext.Provider value={value}>

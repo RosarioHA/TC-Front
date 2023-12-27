@@ -1,12 +1,60 @@
+import { useContext, useState, useEffect } from 'react';
 import CustomTextarea from "../../forms/custom_textarea";
 import CustomInput from "../../forms/custom_input";
 import { DocumentsAditionals } from '../../commons/documents';
-export const Subpaso_uno = ({ pasoData }) =>
+import { FormularioContext } from "../../../context/FormSectorial";
+export const Subpaso_uno = ({ pasoData, marcojuridico }) =>
 {
+  const { handleUpdatePaso, } = useContext(FormularioContext);
+  const [ formaJuridica, setFormaJuridica ] = useState(pasoData?.forma_juridica_organismo);
+  const [ selectedFiles, setSelectedFiles ] = useState([]);
+
+  const handleFilesChange = (newFiles) =>
+  {
+    setSelectedFiles(newFiles);
+  };
+
+  useEffect(() =>
+  {
+    setFormaJuridica(pasoData?.forma_juridica_organismo);
+  }, [ pasoData ]);
+
+
+  const handleInputChange = (e) =>
+  {
+    setFormaJuridica(e.target.value);
+  };
+
+  const handleBlur = async () =>
+  {
+    console.log('handleBlur activado');
+    try
+    {
+      const datosPaso = { ...pasoData, forma_juridica_organismo: formaJuridica };
+      const archivos = {...marcojuridico};
+
+      selectedFiles.forEach((fileData, index) =>
+      {
+        if (!fileData.isTooLarge)
+        {
+          archivos[ `marcojuridico[documento_${index}]` ] = fileData.file;
+        }
+      });
+        console.log('Intentando enviar datos');
+        await handleUpdatePaso(pasoData?.id, 1, datosPaso, archivos);
+        console.log('handleUpdatePaso llamado');
+    } catch (error)
+    {
+      alert("Error al guardar los datos: " + error.message);
+    }
+  };
+
+
   if (!pasoData)
   {
     return <div>Cargando datos...</div>;
   }
+
 
   return (
     <>
@@ -26,8 +74,10 @@ export const Subpaso_uno = ({ pasoData }) =>
             label="Forma jurídica del organismo (Obligatorio)"
             placeholder="Debes llenar este campo para poder enviar el formulario."
             name="forma_juridica_organismo"
-            value={pasoData.forma_juridica_organismo}
+            value={formaJuridica}
             maxLength={500}
+            onChange={handleInputChange}
+            onBlur={handleBlur}
           />
           <div className="d-flex mb-3 mt-0 text-sans-h6-primary">
             <i className="material-symbols-rounded me-2">info</i>
@@ -35,7 +85,7 @@ export const Subpaso_uno = ({ pasoData }) =>
           </div>
         </div>
         <div className="container-fluid pb-3">
-          <DocumentsAditionals />
+          <DocumentsAditionals onFilesChanged={handleFilesChange} />
         </div>
         <div className="my-4">
           <CustomTextarea

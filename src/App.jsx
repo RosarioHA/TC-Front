@@ -72,11 +72,29 @@ function App()
             }
           >
             <Route index element={<PasoUno />} />
-            <Route path="paso_uno" element={<PasoUno />} />
-            <Route path="paso_dos" element={<PasoDos />} />
-            <Route path="paso_tres" element={<PasoTres />} />
-            <Route path="paso_cuatro" element={<PasoCuatro />} />
-            <Route path="paso_cinco" element={<PasoCinco />} />
+            <Route path="paso_1" element={<PasoUno />} />
+            <Route path="paso_2" element={<PasoDos />} />
+            <Route path="paso_3" element={<PasoTres />} />
+            <Route path="paso_4" element={<PasoCuatro />} />
+            <Route path="paso_5" element={<PasoCinco />} />
+            <Route path="Resumen_formulario" element={<Resumen/>}/>
+          </Route>
+          <Route
+            path="revision_formulario_sectorial/:id"
+            element={
+              <FormularioProvider>
+                <ProtectedRoute allowedProfiles={[ 'SUBDERE','Usuario Observador','Usuario Sectorial' ]}>
+                  <FormularioLayout />
+                </ProtectedRoute>
+              </FormularioProvider>
+            }
+          >
+            <Route index element={<PasoUno />} />
+            <Route path="paso_1" element={<PasoUno />} />
+            <Route path="paso_2" element={<PasoDos />} />
+            <Route path="paso_3" element={<PasoTres />} />
+            <Route path="paso_4" element={<PasoCuatro />} />
+            <Route path="paso_5" element={<PasoCinco />} />
             <Route path="Resumen_formulario" element={<Resumen/>}/>
           </Route>
 
