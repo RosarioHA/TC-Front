@@ -1,4 +1,3 @@
-
 import Costos from "../../tables/Costos";
 import SumatoriaCostos from "../../tables/SumatoriaCostos";
 
@@ -41,7 +40,7 @@ export const Subpaso_CincoPuntoUno = () =>
       <hr />
 
       <p className="text-sans-m-semibold mt-4">c. Sumatoria de costos anuales destinados al ejercicio de la competencia</p>
-
+      
       <div>
         <SumatoriaCostos
           numFilas={5} />
