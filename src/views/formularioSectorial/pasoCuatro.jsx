@@ -38,7 +38,6 @@ const PasoCuatro = () => {
           <div className="">
             <Subpaso_CuatroPuntoUno data={indicador_desempeno} listaData={lista_indicadores} />
           </div>
-
           {/*Botones navegacion*/}
           <div className="container me-5 pe-5">
             <ButtonsNavigate step={paso4Data.numero_paso} id={ data.id} />

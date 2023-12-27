@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Outlet, useLocation, useParams } from 'react-router-dom';
 import { FormTitle } from "./../components/layout/FormTitle";
 import { HorizontalStepper } from "../components/stepers/HorizontalStepper";
@@ -9,15 +9,21 @@ const FormularioLayout = () => {
   const { data, loading, error, updateFormId, pasoData, stepNumber, errorPaso, loadingPaso } = useContext(FormularioContext);
   const location = useLocation();
   const params = useParams();
+  const [baseUrl, setBaseUrl] = useState('');
 
   useEffect(() => {
-    // Definición de la variable id directamente dentro de useEffect
     let currentId = location.state?.id || params.id;
-
     if (currentId) {
       updateFormId(currentId);
     }
-  }, [location.state, params.id, updateFormId]); 
+
+    // Actualizar baseUrl basado en la ruta actual
+    if (location.pathname.includes('formulario_sectorial')) {
+      setBaseUrl(`/home/formulario_sectorial/${params.id}`);
+    } else if (location.pathname.includes('revision_formulario_sectorial')) {
+      setBaseUrl(`/home/revision_formulario_sectorial/${params.id}`);
+    }
+  }, [location, params.id, updateFormId]);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -34,7 +40,7 @@ const FormularioLayout = () => {
           <div className="col mb-2">
             <FormTitle data={data} loading={loading} id={data?.id} />
             <div className="mx-5">
-              {data && <HorizontalStepper data={data} loading={loading} id={data.id} />}
+              {data && <HorizontalStepper baseUrl={baseUrl} />}
               <Timmer data={data} loading={loading} id={data?.id} />
             </div>
           </div>

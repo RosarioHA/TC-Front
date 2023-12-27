@@ -47,7 +47,7 @@ export const Etapa2 = ({ etapaCompetencia }) =>
       switch (true)
       {
         case nombre.includes("Completar formulario Sectorial"):
-          path = estado === "finalizada" ? "/home/ver_minuta" : `/home/formulario_sectorial/${id}/paso_uno`;
+          path = estado === "finalizada" ? "/home/ver_minuta" : `/home/formulario_sectorial/${id}/paso_1`;
           break;
         case nombre.includes("Observación del formulario sectorial"):
           path = estado === "finalizada" ? "/home/ver_observaciones" : "/home/ingresar_observaciones";

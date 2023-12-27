@@ -1,27 +1,29 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { AdditionalDocs } from "../commons/aditionalDocs";
 
-export const DocumentsAditionals = () =>
+export const DocumentsAditionals = ({ onFilesChanged }) =>
 {
   const [ files, setFiles ] = useState([]);
   const [ maxFilesReached, setMaxFilesReached ] = useState(false);
 
-
-  const handleFileChange = (event) =>
+  useEffect(() =>
   {
+    onFilesChanged(files);
+  }, [ files, onFilesChanged ]);
+
+  const handleFileChange = (event) => {
     const newFiles = Array.from(event.target.files);
     const updatedFiles = newFiles.map(file => ({
       file,
       title: file.name,
       isTooLarge: file.size > 20 * 1024 * 1024 // 20 MB
     }));
-
-    if (files.length + updatedFiles.length <= 5)
-    {
-      setFiles(prevFiles => [ ...prevFiles, ...updatedFiles ]);
+  
+    // Verificar si el número total de archivos excede el máximo permitido
+    if (files.length + updatedFiles.length <= 5) {
+      setFiles(prevFiles => [...prevFiles, ...updatedFiles]);
       setMaxFilesReached(false);
-    } else
-    {
+    } else {
       setMaxFilesReached(true);
     }
   };
@@ -31,11 +33,13 @@ export const DocumentsAditionals = () =>
     newFiles.splice(index, 1);
     setFiles(newFiles);
 
+    // Revisar si la cantidad de archivos es menor al máximo después de la eliminación
     if (newFiles.length <= 5)
     {
       setMaxFilesReached(false);
     }
-  }
+  };
+
   return (
     <>
       <span className='text-sans-h5 mt-4'>Marco jurídico que lo rige (Obligatorio)</span>
@@ -59,5 +63,5 @@ export const DocumentsAditionals = () =>
       />}
       {maxFilesReached && <h6 className="text-sans-h6-primary">Alcanzaste el número máximo de archivos permitidos.</h6>}
     </>
-  )
-}
+  );
+};

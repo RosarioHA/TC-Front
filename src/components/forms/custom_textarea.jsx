@@ -1,15 +1,15 @@
-import { useState, useRef, useEffect } from "react";
+import { useRef, useEffect } from "react";
 
-const CustomTextarea = ({label, placeholder, id, maxLength, rows}) => {
-  const [inputValue, setInputValue] = useState('');
+const CustomTextarea = ({ label, placeholder, id, maxLength, rows, value, onChange }) => {
   const textareaRef = useRef(null);
+  const inputValue = value || '';  // Asegura que inputValue nunca sea undefined
 
   const handleInputChange = (e) => {
-    const value = e.target.value;
-    if (maxLength !== null && maxLength !== undefined && value.length > maxLength) {
-      setInputValue(value.slice(0, maxLength));
+    const newValue = e.target.value;
+    if (maxLength !== null && maxLength !== undefined && newValue.length > maxLength) {
+      onChange(newValue.slice(0, maxLength));
     } else {
-      setInputValue(value);
+      onChange(newValue);
     }
     adjustHeight();
   };
@@ -21,10 +21,10 @@ const CustomTextarea = ({label, placeholder, id, maxLength, rows}) => {
     }
   };
 
-  // Ajusta la altura inicialmente y cuando se cambie el valor
+  // Ajusta la altura inicialmente y cuando se cambie el valor externo
   useEffect(() => {
     adjustHeight();
-  }, [inputValue]);
+  }, [inputValue]);  // Usa inputValue aquí
 
   const counterClass = inputValue.length === maxLength ? "text-sans-h6-darkred" : "text-sans-h6";
 
@@ -34,10 +34,9 @@ const CustomTextarea = ({label, placeholder, id, maxLength, rows}) => {
       <textarea 
         ref={textareaRef}
         className="input-textarea p-3" 
-        type="text"
         placeholder={placeholder}
         id={id}
-        value={inputValue}
+        value={inputValue}  // Usa inputValue aquí
         onChange={handleInputChange}
         rows={rows}
         style={{ overflow: 'hidden' }}
@@ -45,7 +44,7 @@ const CustomTextarea = ({label, placeholder, id, maxLength, rows}) => {
       {maxLength !== null && maxLength !== undefined && (
         <div className="d-flex justify-content-end mb-0">
           <span className={counterClass}>
-            {inputValue.length}/{maxLength} caracteres.
+            {inputValue.length}/{maxLength} caracteres.  // Usa inputValue aquí
           </span>
         </div>
       )}

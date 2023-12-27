@@ -15,6 +15,7 @@ const GestionCompetencias = () =>
   const [ filteredCompetencia, setFilteredCompetencia ] = useState(dataListCompetencia);
   const navigate = useNavigate();
 
+  console.log(dataListCompetencia);
 
   const userSubdere = userData?.perfil?.includes('SUBDERE');
 
@@ -123,7 +124,7 @@ const GestionCompetencias = () =>
             <div className="flex-column my-5 py-5">
               <span className="text-sans-h2-tertiary"> Aún  no haz creado competencias</span>
               <div className="mx-5 px-5 my-2">
-                <Link className="btn-primario-l py-3 link-underline link-underline-opacity-0" to='home/crear_competencia'>
+                <Link className="btn-primario-l py-3 link-underline link-underline-opacity-0" to='/home/crear_competencia'>
                   <u>Crear Competencia</u>
                   <span className="material-symbols-outlined mx-1">
                     post_add

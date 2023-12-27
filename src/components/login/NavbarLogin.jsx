@@ -14,7 +14,7 @@ const NavbarLogin = () =>{
               <div id="lineBlue" />
               <div id="lineRed" />
             </div>
-            <p className="text-sans-m-bold mt-2 ">Subsecretaría de Desarrollo <br/> Administrativo y Regional</p>  
+            <p className="text-sans-m-bold mt-2 ">Subsecretaría de Desarrollo <br/> Regional y Administrativo </p>  
           </Link>
         </div>
       </div>

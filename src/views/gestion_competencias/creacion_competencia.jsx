@@ -27,37 +27,40 @@ const initialValues = {
   plazoGore: undefined,
 };
 
-const groupUsersByType = (users) => {
-  const grouped = users.reduce((acc, user) => {
-    acc[user.perfil] = acc[user.perfil] || [];
-    acc[user.perfil].push(user);
+const groupUsersByType = (users) =>
+{
+  const grouped = users.reduce((acc, user) =>
+  {
+    acc[ user.perfil ] = acc[ user.perfil ] || [];
+    acc[ user.perfil ].push(user);
     return acc;
   }, {});
 
-  return Object.entries(grouped).map(([perfil, users]) => ({
+  return Object.entries(grouped).map(([ perfil, users ]) => ({
     label: perfil,
     options: users,
   }));
 };
 
-const CreacionCompetencia = () => {
+const CreacionCompetencia = () =>
+{
   const { createCompetencia } = useCrearCompetencia();
   const { dataRegiones } = useRegion();
   const { users } = useUsers();
   const { dataSector } = useSector();
   const userOptions = groupUsersByType(users);
 
-  const [regionesSeleccionadas, setRegionesSeleccionadas] = useState([]);
-  const [sectoresSeleccionados, setSectoresSeleccionados] = useState([]);
-  const [origenSeleccionado, setOrigenSeleccionado] = useState('');
-  const [ambitoSeleccionado, setAmbitoSeleccionado] = useState('');
-  const [usuariosSeleccionados, setUsuariosSeleccionados] = useState([]);
+  const [ regionesSeleccionadas, setRegionesSeleccionadas ] = useState([]);
+  const [ sectoresSeleccionados, setSectoresSeleccionados ] = useState([]);
+  const [ origenSeleccionado, setOrigenSeleccionado ] = useState('');
+  const [ ambitoSeleccionado, setAmbitoSeleccionado ] = useState('');
+  const [ usuariosSeleccionados, setUsuariosSeleccionados ] = useState([]);
   const history = useNavigate();
 
-    const handleBackButtonClick = () =>
-    {
-      history(-1);
-    };
+  const handleBackButtonClick = () =>
+  {
+    history(-1);
+  };
 
   const {
     control,
@@ -71,7 +74,8 @@ const CreacionCompetencia = () => {
     mode: 'manual',
   });
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data) =>
+  {
     const competenciaData = {
       ...data,
       sectores: sectoresSeleccionados.map(s => s.value),
@@ -79,10 +83,12 @@ const CreacionCompetencia = () => {
       usuarios: Object.keys(usuariosSeleccionados),
     };
 
-    try {
+    try
+    {
       await createCompetencia(competenciaData);
       // Manejar la respuesta, redireccionar o mostrar un mensaje de éxito
-    } catch (error) {
+    } catch (error)
+    {
       // Manejar el error
     }
   };
@@ -93,7 +99,8 @@ const CreacionCompetencia = () => {
     value: region.id,
   }));
 
-  const handleRegionesChange = (selectedOptions) => {
+  const handleRegionesChange = (selectedOptions) =>
+  {
     setRegionesSeleccionadas(selectedOptions);
     setValue('regiones', selectedOptions);
   };
@@ -104,29 +111,34 @@ const CreacionCompetencia = () => {
     value: sector.id,
   }));
 
-  const handleSectorChange = (selectedOptions) => {
+  const handleSectorChange = (selectedOptions) =>
+  {
     setSectoresSeleccionados(selectedOptions);
     setValue('sectores', selectedOptions);
   };
 
-  const handleOrigenChange = (selectedOption) => {
+  const handleOrigenChange = (selectedOption) =>
+  {
     setOrigenSeleccionado(selectedOption);
     setValue('origen', selectedOption);
   };
 
-  const handleAmbitoChange = (selectedOption) => {
+  const handleAmbitoChange = (selectedOption) =>
+  {
     setAmbitoSeleccionado(selectedOption);
     setValue('ambito', selectedOption);
   };
 
-  const handleUsuariosChange = useCallback((selectedOptions) => {
-    const updatedUsuarios = selectedOptions.reduce((acc, usuario) => {
-      acc[usuario.id] = usuario;
+  const handleUsuariosChange = useCallback((selectedOptions) =>
+  {
+    const updatedUsuarios = selectedOptions.reduce((acc, usuario) =>
+    {
+      acc[ usuario.id ] = usuario;
       return acc;
     }, {});
     setUsuariosSeleccionados(updatedUsuarios);
     setValue('usuarios', Object.keys(updatedUsuarios));
-  }, [setValue]);
+  }, [ setValue ]);
 
   return (
     <div className="container col-10 my-4">
