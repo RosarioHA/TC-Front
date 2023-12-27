@@ -7,15 +7,11 @@ import { Subpaso_tres } from '../../components/formSectorial/paso1/p1.3';
 import { ButtonsNavigate } from "../../components/layout/ButtonsNavigate";
 import { MonoStepers } from '../../components/stepers/MonoStepers';
 
-const PasoUno = () =>
-{
+const PasoUno = () => {
   const { pasoData, loadingPaso, errorPaso, updateStepNumber,data } = useContext(FormularioContext);
   const stepNumber = 1;
   
-
-  
-  useEffect(() =>
-  {
+  useEffect(() => {
     updateStepNumber(stepNumber);
   }, [ updateStepNumber, stepNumber ]);
 

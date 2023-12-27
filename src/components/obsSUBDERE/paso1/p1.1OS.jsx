@@ -4,7 +4,7 @@ import CustomInput from "../../forms/custom_input";
 import { DocumentsAditionals } from '../../commons/documents';
 import { FormularioContext } from "../../../context/FormSectorial";
 
-export const Subpaso_uno = ({ pasoData, marcojuridico }) => {
+export const Subpaso_uno_OS = ({ pasoData, marcojuridico }) => {
   const { handleUpdatePaso, } = useContext(FormularioContext);
   const [ formaJuridica, setFormaJuridica ] = useState(pasoData?.forma_juridica_organismo);
   const [ selectedFiles, setSelectedFiles ] = useState([]);
