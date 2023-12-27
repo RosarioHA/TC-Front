@@ -3,7 +3,6 @@ import CustomTextarea from "../forms/custom_textarea";
 import DropdownSelect from "../dropdown/select";
 import {RadioButtons} from "../forms/radio_btns"
 
-
 const Costos = () => {
   const [costos, setCostos] = useState([{ id: 1 }]);
 
@@ -11,7 +10,6 @@ const Costos = () => {
     const nuevoCosto = { id: costos.length + 1 };
     setCostos([...costos, nuevoCosto]);
   };
-
   const eliminarCosto = (id) => {
     const costosActualizados = costos.filter(
       (proc) => proc.id !== id
