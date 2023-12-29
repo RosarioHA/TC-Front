@@ -1,20 +1,17 @@
 import { useState, forwardRef } from "react";
 
 const CustomInput = forwardRef(
-  ({ label, placeholder, id, maxLength, error, readOnly, onChange, initialValue, ...props }, ref) =>
-  {
+  ({ label, placeholder, id, maxLength, error, readOnly, onChange, initialValue, ...props }, ref) => {
     const [ inputValue, setInputValue ] = useState(initialValue || '');
 
-    const handleInputChange = (e) =>
-    {
+    const handleInputChange = (e) => {
       const value = e.target.value;
       if (maxLength !== null && maxLength !== undefined && value.length > maxLength)
       {
         setInputValue(value.slice(0, maxLength));
-      } else
-      {
+      } else {
         setInputValue(value);
-      }
+      } 
       if (onChange)
       {
         onChange(value);

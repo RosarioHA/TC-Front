@@ -1,13 +1,14 @@
 import { useContext, useEffect } from 'react';
 import { Avance } from "../../components/tables/Avance";
 import { FormularioContext } from '../../context/FormSectorial';
-import { Subpaso_uno } from '../../components/formSectorial/paso1/p1.1';
+import { Subpaso_uno_OS } from '../../components/obsSUBDERE/paso1/p1.1OS';
 import { Subpaso_dos } from '../../components/formSectorial/paso1/p1.2';
 import { Subpaso_tres } from '../../components/formSectorial/paso1/p1.3';
 import { ButtonsNavigate } from "../../components/layout/ButtonsNavigate";
 import { MonoStepers } from '../../components/stepers/MonoStepers';
 
-const PasoUno = () => {
+
+const PasoUnoOS = () => {
   const { pasoData, loadingPaso, errorPaso, updateStepNumber,data } = useContext(FormularioContext);
   const stepNumber = 1;
   
@@ -37,14 +38,15 @@ const PasoUno = () => {
             <Avance avance={paso1Data.avance} />
           </div>
           <span className="text-sans-h6-primary">Texto de apoyo</span>
-          <Subpaso_uno pasoData={paso1Data} marcojuridico={marcojuridico}/>
+          <Subpaso_uno_OS pasoData={paso1Data} marcojuridico={marcojuridico}/>
           <Subpaso_dos pasoData={paso1Data} organigrama={organigramaregional} />
           <Subpaso_tres pasoData={paso1Data} />
           <ButtonsNavigate step={paso1Data.numero_paso} id={data.id} />
         </div>
+        <Subpaso_uno_OS pasoData={paso1Data} marcojuridico={marcojuridico}/>
       </div>
     </>
   );
 };
 
-export default PasoUno;
+export default PasoUnoOS;
