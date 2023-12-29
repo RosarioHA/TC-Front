@@ -2,11 +2,10 @@ import { useContext, useEffect } from 'react';
 import { Avance } from "../../components/tables/Avance";
 import { FormularioContext } from '../../context/FormSectorial';
 import { Subpaso_uno_OS } from '../../components/obsSUBDERE/paso1/p1.1OS';
-import { Subpaso_dos } from '../../components/formSectorial/paso1/p1.2';
-import { Subpaso_tres } from '../../components/formSectorial/paso1/p1.3';
+import { Subpaso_dos_OS } from '../../components/obsSUBDERE/paso1/p1.2OS'; 
+import { Subpaso_tres_OS } from '../../components/obsSUBDERE/paso1/p1.3OS'; 
 import { ButtonsNavigate } from "../../components/layout/ButtonsNavigate";
 import { MonoStepers } from '../../components/stepers/MonoStepers';
-
 
 const PasoUnoOS = () => {
   const { pasoData, loadingPaso, errorPaso, updateStepNumber,data } = useContext(FormularioContext);
@@ -39,11 +38,10 @@ const PasoUnoOS = () => {
           </div>
           <span className="text-sans-h6-primary">Texto de apoyo</span>
           <Subpaso_uno_OS pasoData={paso1Data} marcojuridico={marcojuridico}/>
-          <Subpaso_dos pasoData={paso1Data} organigrama={organigramaregional} />
-          <Subpaso_tres pasoData={paso1Data} />
+          <Subpaso_dos_OS pasoData={paso1Data} organigrama={organigramaregional} />
+          <Subpaso_tres_OS pasoData={paso1Data} />
           <ButtonsNavigate step={paso1Data.numero_paso} id={data.id} />
         </div>
-        <Subpaso_uno_OS pasoData={paso1Data} marcojuridico={marcojuridico}/>
       </div>
     </>
   );

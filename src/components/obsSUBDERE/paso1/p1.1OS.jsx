@@ -70,7 +70,7 @@ export const Subpaso_uno_OS = ({ pasoData, marcojuridico }) => {
             readOnly={true}
             id={pasoData?.forma_juridica_organismo}
           />
-          <div className="d-flex mb-3 mt-0 text-sans-h6-primary">
+          <div className="d-flex mb-3 mt-2 text-sans-h6-primary">
             <i className="material-symbols-rounded me-2">info</i>
             <h6 className="mt-0">Corresponde a su naturaleza jurídica: centralizado o descentralizado, concentrado o desconcentrado.</h6>
           </div>
@@ -82,12 +82,12 @@ export const Subpaso_uno_OS = ({ pasoData, marcojuridico }) => {
         </div>
         <div className="my-4">
           <CustomTextarea
-            label="Forma jurídica del organismo (Obligatorio)"
+            label="Descripción archivo(s) de marco jurídico (Opcional)"
             placeholder="Debes llenar este campo para poder enviar el formulario."
-            name="forma_juridica_organismo"
-            value={pasoData.forma_juridica_organismo}
+            name="descr_archivo"
+            value={pasoData.descripcion_archivo_marco_juridico}
             maxLength={500}
-            disabled={true}
+            readOnly={true}
           />
 
         </div>
@@ -98,16 +98,16 @@ export const Subpaso_uno_OS = ({ pasoData, marcojuridico }) => {
             name="mision_institucional"
             value={pasoData.mision_institucional}
             maxLength={500}
-            disabled={true}
+            readOnly={true}
           />
         </div>
         <div className="my-4">
           <CustomTextarea
             label="Información adicional (Opcional)"
             placeholder="Escribe información adicional de ser necesario"
-            id={pasoData.informacion_adicional_marco_juridico}
+            value={pasoData.informacion_adicional_marco_juridico}
             maxLength={500}
-            disabled={true}
+            readOnly={true}
           />
           <div className="d-flex mb-3 mt-1 text-sans-h6-primary">
             <i className="material-symbols-rounded me-2">info</i>
