@@ -5,6 +5,7 @@ import { MonoStepers } from "../../components/stepers/MonoStepers";
 import { FormularioContext } from "../../context/FormSectorial";
 import { Subpaso_CincoPuntoUno } from '../../components/formSectorial/paso5/p5.1';
 import { Subpaso_CincoDos } from '../../components/formSectorial/paso5/p5.2';
+import { Subpaso_CincoPuntoTres } from "../../components/formSectorial/paso5/p5.3";
 const PasoCinco = () =>
 {
   const {
@@ -13,7 +14,7 @@ const PasoCinco = () =>
 
   const stepNumber = 5;
 
-  console.log("5",pasoData)
+  console.log("5", pasoData)
 
   useEffect(() =>
   {
@@ -42,7 +43,8 @@ const PasoCinco = () =>
           <span className="text-sans-h6-primary">Texto de apoyo</span>
           {/*Botones navegacion  */}
           <Subpaso_CincoPuntoUno />
-          <Subpaso_CincoDos data={pasoData}/>
+          <Subpaso_CincoDos data={pasoData} />
+          <Subpaso_CincoPuntoTres />
           <div className="container me-5 pe-5">
             <ButtonsNavigate step={paso5Data.numero_paso} id={data.id} />
           </div>
