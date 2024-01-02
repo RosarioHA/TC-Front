@@ -19,17 +19,46 @@ const TablaEncabezadoFijo = ({encabezado, readOnly}) => {
     setFilas(nuevasFilas);
   };
 
-  // const handleInputChange = (id, campo, valor) => {
-  //   const nuevasFilas = filas.map((fila) =>
-  //     fila.id === id ? { ...fila, [campo]: valor } : fila
-  //   );
-  //   setFilas(nuevasFilas);
-  // };
-
   return (
     <>
       {readOnly ? (
-        <h1>read only</h1>
+        <div className="my-4">
+          {/* Debe generar una tabla por cada organismo seleccionado */}
+          <div className="row border">
+            <div className="col p-3">
+              <p>{encabezado}</p>
+            </div>
+
+            <div className="col-10 border p-2">
+              <div className="col campo-container p-2 mb-4">
+                <p className="ms-2 my-2">$SectorPreseleccionado</p>
+              </div>
+
+              {/* Debe generar dinamicamente los secotres de cada organismo seleccionado */}
+              {filas.map((fila) => (
+                <div key={fila.id} className="border row">
+                  <div className="col-10 p-3">
+                    <div className="mt-2 mb-4">
+                      < CustomInput
+                        label="Nombre"
+                        placeholder="Nombre ministerio o servicio"
+                        readOnly={true}
+                      />
+                    </div>
+                    <div className="mb-2">
+                      < CustomInput 
+                        label="Descripción"
+                        placeholder="Descripción"
+                        readOnly={true}
+                      />
+                    </div> 
+                  </div>
+                </div>
+              ))}
+
+            </div>
+          </div>
+        </div>
       ) : (
       <div className="my-4">
         <div className="row border">
