@@ -46,8 +46,8 @@ const ResumenOS = () => {
         </div>
 
         <div className="mb-5 px-5 me-5">
-          <h2 className="text-sans-h2">Esta todo listo para que envies las observaciones</h2>
-          <h6 className="text-sans-h6">Asegurate que las observaciones que ingresaste son suficientes, ya que una vez que las envíes, no podrás editarlas.</h6>
+          <h2 className="text-sans-h2 ms-5">Esta todo listo para que envies las observaciones</h2>
+          <h6 className="text-sans-h6 ms-5">Asegurate que las observaciones que ingresaste son suficientes, ya que una vez que las envíes, no podrás editarlas.</h6>
         </div>
 
         {/*Botones navegacion  */}
