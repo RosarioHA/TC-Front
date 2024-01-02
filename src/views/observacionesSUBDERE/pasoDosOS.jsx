@@ -2,20 +2,19 @@ import { useContext, useEffect } from 'react';
 import { FormularioContext } from '../../context/FormSectorial';
 import { Avance } from "../../components/tables/Avance";
 import { ButtonsNavigate } from "../../components/layout/ButtonsNavigate";
-import { Subpaso_dosPuntoUno } from "../../components/formSectorial/paso2/p2.1";
+import { Subpaso_dosPuntoUnoOS } from '../../components/obsSUBDERE/paso2/p2.1OS';
 import { Subpaso_dosPuntoDos } from "../../components/formSectorial/paso2/p2.2";
 import { Subpaso_dosPuntoTres } from "../../components/formSectorial/paso2/p2.3";
 import { Subpaso_dosPuntoCuatro } from "../../components/formSectorial/paso2/p2.4";
 import { Subpaso_dosPuntoCinco } from "../../components/formSectorial/paso2/p2.5";
 import { MonoStepers } from "../../components/stepers/MonoStepers";
 
-const PasoDosOS = () =>
-{
+const PasoDosOS = () => {
   const { pasoData, loadingPaso, errorPaso, updateStepNumber ,data} = useContext(FormularioContext);
   const stepNumber = 2;
+  console.log("paso data", pasoData);
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     updateStepNumber(stepNumber);
   }, [ updateStepNumber, stepNumber ]);
 
@@ -48,7 +47,7 @@ const PasoDosOS = () =>
           <span className="text-sans-h6-primary">Texto de apoyo</span>
 
           <div className="container-fluid me-5 pe-5 my-5">
-            <Subpaso_dosPuntoUno data={dataOrganismosIntervinientes} />
+            <Subpaso_dosPuntoUnoOS data={dataOrganismosIntervinientes} />
           </div>
           <div className="container-fluid me-5 pe-5 my-5">
             <Subpaso_dosPuntoDos data={dataUnidadesIntervinientes} />
