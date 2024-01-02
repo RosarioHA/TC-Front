@@ -5,7 +5,7 @@ const Observacion = ({index, titulo, value}) => {
     <>
     <div className="d-flex justify-content-between p-3">
       <div className="d-flex">
-        <p className="mb-0 text-sans-p-semibold ms-3">Paso {index}:</p>
+        <p className="mb-0 text-sans-p-semibold ms-3 mt-1">Paso {index}:</p>
         <p className="ms-3 mb-0 text-sans-p">{titulo}</p>
       </div>
       {value && (
