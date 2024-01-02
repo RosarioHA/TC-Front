@@ -1,13 +1,29 @@
 import { Etapa1, Etapa2, Etapa3, Etapa4, Etapa5 } from "../etapas";
 
-export const VerticalStepper = ({ etapas, id }) =>
+const Etapa = ({ etapaInfo, index }) => {
+  switch (index) {
+    case 0: return <Etapa1 etapa={etapaInfo.etapa1} />;
+    case 1: return <Etapa2 etapa={etapaInfo.etapa2} />;
+    case 2: return <Etapa3 etapa={etapaInfo.etapa3} />;
+    case 3: return <Etapa4 etapa={etapaInfo.etapa4} />;
+    case 4: return <Etapa5 etapa={etapaInfo.etapa5} />;
+    default: return null;
+  }
+};
+
+export const VerticalStepper = ({ etapasObjeto, etapaDatos }) =>
 {
-  if (!etapas || etapas.length === 0)
+  if (!etapasObjeto)
   {
     return <div>Cargando...</div>;
   }
 
-  let lastCompletedIndex = etapas.findIndex(etapa => etapa && etapa.estado !== 'Finalizada');
+  const etapasInfo = etapasObjeto.etapas_info;
+  const etapasClaves = Object.keys(etapasInfo);
+
+  let lastCompletedIndex = etapasClaves.findIndex((key, index) =>
+    etapasInfo[ key ].estado !== 'Finalizada' && (index === 0 || etapasInfo[ etapasClaves[ index - 1 ] ].estado === 'Finalizada'));
+
 
   const renderBadge = (estado) =>
   {
@@ -24,34 +40,34 @@ export const VerticalStepper = ({ etapas, id }) =>
     }
   };
 
-
   return (
     <div className="wrapper d-flex justify-content-start mx-0">
       <ol className="stepper">
-        {etapas.map((etapa, index) => (
-          <li
-            className={`stepperItem ${etapa.estado === 'Finalizada' ? 'completed' : ''} ${index === lastCompletedIndex ? 'next-step' : ''}`}
-            key={etapa.id}
-          >
-            <div className="stepNumber" >
-              {etapa.estado === 'Finalizada' ? (
-                <i className="material-symbols-outlined" >done</i>
-              ) : etapa.estado === 'En Estudio' ? (
-                <span className="stepIndex">{index + 1}</span>
-              ) : (
-                <span className="stepIndex ">{index + 1}</span>
-              )}
-            </div>
-            <div className="stepperContent">
-              <div className="d-flex justify-content-between "><h3 className="stepperTitle">{etapa.nombre_etapa}</h3><div>{renderBadge(etapa.estado)}</div></div>
-              {index === 0 && <Etapa1 etapaCompetencia={etapas[ 0 ]} />}
-              {index === 1 && <Etapa2 etapaCompetencia={etapas[ 1 ]} id={id}/>}
-              {index === 2 && <Etapa3 etapaCompetencia={etapas[ 2 ]} />}
-              {index === 3 && <Etapa4 etapaCompetencia={etapas[ 3 ]} />}
-              {index === 4 && <Etapa5 etapaCompetencia={etapas[ 4 ]} />}
-            </div>
-          </li>
-        ))}
+        {etapasClaves.map((clave, index) =>
+        {
+          const etapa = etapasInfo[ clave ];
+          return (
+            <li
+              className={`stepperItem ${etapa.estado === 'Finalizada' ? 'completed' : ''} ${index === lastCompletedIndex ? 'next-step' : ''}`}
+              key={index} // Cambiar si tienes un identificador único para cada etapa
+            >
+              <div className="stepNumber">
+                {etapa.estado === 'Finalizada' ? (
+                  <i className="material-symbols-outlined">done</i>
+                ) : (
+                  <span className="stepIndex">{index + 1}</span>
+                )}
+              </div>
+              <div className="stepperContent">
+                <div className="d-flex justify-content-between">
+                  <h3 className="stepperTitle">{etapa.nombre}</h3>
+                  <div>{renderBadge(etapa.estado)}</div>
+                </div>
+                <Etapa etapaInfo={etapaDatos} index={index} />
+              </div>
+            </li>
+          );
+        })}
         <div className="stepper-line-end"></div>
       </ol>
     </div>

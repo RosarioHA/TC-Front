@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { Counter } from "../tables/Counter";
 
-export const Etapa2 = ({ etapaCompetencia }) =>
+export const Etapa2 = ({ etapa }) =>
 {
   const {
     nombre_etapa,
@@ -10,15 +10,19 @@ export const Etapa2 = ({ etapaCompetencia }) =>
     observaciones_sectorial,
     usuarios_notificados,
     fecha_ultima_modificacion
-  } = etapaCompetencia;
+  } = etapa;
   const navigate = useNavigate();
 
-  const handleNavigation = (path,id) =>
+  const handleNavigation = (path, id) =>
   {
-    navigate(path, { state: { id} });
+    navigate(path, { state: { id } });
   };
-  
-  console.log('data2',etapaCompetencia); 
+
+  if (!etapa || etapa.nombre_etapa === undefined) {
+    return <div>Data is loading or not available</div>;
+  }
+
+  console.log('data2', etapa);
 
   const renderButtonForSubetapa = (subetapa) =>
   {
@@ -31,7 +35,7 @@ export const Etapa2 = ({ etapaCompetencia }) =>
 
     if (nombre.startsWith("Notificar a") && estado === "finalizada")
     {
-      if (etapaCompetencia.estado === 'Aún no puede comenzar')
+      if (etapa.estado === 'Aún no puede comenzar')
       {
         // Cambiar el badge a pending si el estado general de la etapa es 'Aún no puede comenzar'
         return <span className="badge-status-pending">{accion}</span>;
@@ -42,8 +46,7 @@ export const Etapa2 = ({ etapaCompetencia }) =>
       }
     }
     if (nombre)
-    
-    {
+{
       switch (true)
       {
         case nombre.includes("Completar formulario Sectorial"):
@@ -65,9 +68,9 @@ export const Etapa2 = ({ etapaCompetencia }) =>
       </button>
     ) : (
       <button onClick={() => handleNavigation(path, id)} className="btn-secundario-s text-decoration-none" id="btn">
-      <span className="material-symbols-outlined me-1">{icon}</span>
-      <u>{buttonText}</u>
-    </button>
+        <span className="material-symbols-outlined me-1">{icon}</span>
+        <u>{buttonText}</u>
+      </button>
     );
   };
 
@@ -92,8 +95,8 @@ export const Etapa2 = ({ etapaCompetencia }) =>
         {observaciones_sectorial.length > 0 && renderSubetapas(observaciones_sectorial)}
         {estado === "En Estudio" && (
           <Counter
-            plazoDias={etapaCompetencia.plazo_dias}
-            tiempoTranscurrido={etapaCompetencia.calcular_tiempo_transcurrido}
+            plazoDias={etapa.plazo_dias}
+            tiempoTranscurrido={etapa.calcular_tiempo_transcurrido}
           />
         )}
         <div className="text-sans-p">Fecha última modificación: {fecha_ultima_modificacion}</div>
