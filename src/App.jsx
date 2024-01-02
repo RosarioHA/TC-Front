@@ -31,6 +31,7 @@ const Resumen = React.lazy(()=> import('./views/formularioSectorial/Resumen'));
 const PasoUnoOS = React.lazy(() => import('./views/observacionesSUBDERE/pasoUnoOS'));
 const PasoDosOS = React.lazy(() => import ('./views/observacionesSUBDERE/pasoDosOS'));
 const PasoCuatroOS = React.lazy(() => import ('./views/observacionesSUBDERE/pasoCuatroOS'));
+const ResumenOS = React.lazy(() => import ('./views/observacionesSUBDERE/ResumenOS'))
 
 const createProtectedRoute = (path, Component, allowedProfiles) => (
   <Route
@@ -96,7 +97,7 @@ function App() {
             <Route path="paso_3" element={<PasoTres />} />
             <Route path="paso_4" element={<PasoCuatroOS />} />
             <Route path="paso_5" element={<PasoCinco />} />
-            <Route path="Resumen_formulario" element={<Resumen/>}/>
+            <Route path="Resumen_observaciones" element={<ResumenOS/>}/>
           </Route>
 
 
