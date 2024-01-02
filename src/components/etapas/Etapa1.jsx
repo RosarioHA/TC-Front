@@ -1,20 +1,19 @@
-export const Etapa1 = ({ etapaCompetencia }) => {
-  const { estado, nombre_etapa, usuarios_vinculados, fecha_ultima_modificacion, ultimo_editor } = etapaCompetencia;
+export const Etapa1 = ({ etapa }) => {
+  const { nombre_etapa, estado, usuarios_vinculados, fecha_ultima_modificacion, ultimo_editor } = etapa;
 
-  // Determinar el texto del badge según el estado
-  const badgeText = estado === "Finalizada" ? "Finalizada" : "Sin Usuarios designados";
+console.log("etapa1",etapa);
+  const badgeText = estado === "Finalizada" ? "Finalizada" : "En Progreso";
 
-  // Si no hay usuarios vinculados o no es un arreglo, manejar adecuadamente
-  if (!Array.isArray(usuarios_vinculados)) {
-    return <div>Error: Datos de usuarios vinculados no disponibles</div>;
+  if (!Array.isArray(usuarios_vinculados) || usuarios_vinculados.length === 0) {
+    return <div>Error: No hay usuarios vinculados o datos no disponibles</div>;
   }
 
   return (
     <div className="my-3">
       <div className="d-flex justify-content-between my-2 text-sans-p">
-        Para completar {nombre_etapa} con éxito deben cumplirse estas condiciones:
+        {nombre_etapa} - {estado}
       </div>
-      <div className="">
+      <div>
         {usuarios_vinculados.map((usuario, index) => (
           <div key={index} className="d-flex justify-content-between text-sans-p border-top border-bottom my-3 py-1">
             <div className="align-self-center">{usuario.nombre}</div>
@@ -22,7 +21,7 @@ export const Etapa1 = ({ etapaCompetencia }) => {
           </div>
         ))}
         <div className="d-flex my-3">
-          <div className="text-sans-p me-5">Etapa completada por: {ultimo_editor.nombre_completo}</div>
+          <div className="text-sans-p me-5">Última modificación por: {ultimo_editor.nombre_completo}</div>
           <div className="text-sans-p ms-5 ps-5">Fecha última modificación: {fecha_ultima_modificacion}</div>
         </div>
       </div>

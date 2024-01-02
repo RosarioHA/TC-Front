@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Counter } from "../tables/Counter";
 
-export const Etapa4 = ({ etapaCompetencia }) =>
+export const Etapa4 = ({ etapa }) =>
 {
   const {
     nombre_etapa,
@@ -9,7 +9,7 @@ export const Etapa4 = ({ etapaCompetencia }) =>
     usuarios_gore,
     formularios_gore,
     fecha_ultima_modificacion
-  } = etapaCompetencia;
+  } = etapa;
 
 
   const renderButtonForSubetapa = (subetapa) =>
@@ -21,7 +21,7 @@ export const Etapa4 = ({ etapaCompetencia }) =>
 
 
     if (nombre.startsWith("Notificar a") && estado === "finalizada") {
-      if (etapaCompetencia.estado === 'Aún no puede comenzar') {
+      if (etapa.estado === 'Aún no puede comenzar') {
         // Cambiar el badge a pending si el estado general de la etapa es 'Aún no puede comenzar'
         return <span className="badge-status-pending">{accion}</span>;
       } else {
@@ -71,8 +71,8 @@ export const Etapa4 = ({ etapaCompetencia }) =>
         {formularios_gore.length > 0 && renderSubetapas(formularios_gore)}
         {estado === "En Estudio" && (
           <Counter
-            plazoDias={etapaCompetencia.plazo_dias}
-            tiempoTranscurrido={etapaCompetencia.calcular_tiempo_transcurrido}
+            plazoDias={etapa.plazo_dias}
+            tiempoTranscurrido={etapa.calcular_tiempo_transcurrido}
           />
         )}
         <div className="text-sans-p">Fecha última modificación: {fecha_ultima_modificacion}</div>
