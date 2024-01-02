@@ -5,7 +5,7 @@ import { ButtonsNavigate } from "../../components/layout/ButtonsNavigate";
 import { Subpaso_dosPuntoUnoOS } from '../../components/obsSUBDERE/paso2/p2.1OS';
 import { Subpaso_dosPuntoDosOS } from '../../components/obsSUBDERE/paso2/p2.2OS';
 import { Subpaso_dosPuntoTresOS } from '../../components/obsSUBDERE/paso2/p2.3OS';
-import { Subpaso_dosPuntoCuatro } from "../../components/formSectorial/paso2/p2.4";
+import { Subpaso_dosPuntoCuatroOS } from '../../components/obsSUBDERE/paso2/p2.4OS';
 import { Subpaso_dosPuntoCinco } from "../../components/formSectorial/paso2/p2.5";
 import { MonoStepers } from "../../components/stepers/MonoStepers";
 
@@ -56,7 +56,7 @@ const PasoDosOS = () => {
             <Subpaso_dosPuntoTresOS data={dataEtapasEjercicioCompetencia} />
           </div>
           <div className="container-fluid me-5 pe-5 my-5">
-            <Subpaso_dosPuntoCuatro data={dataPlataformasYSoftwares} />
+            <Subpaso_dosPuntoCuatroOS data={dataPlataformasYSoftwares} />
           </div>
           <div className="container-fluid me-5 pe-5 my-5">
             <Subpaso_dosPuntoCinco data={dataFlujogramaCompetencia} />
