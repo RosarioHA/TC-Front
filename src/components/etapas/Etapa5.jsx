@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom';
 import { Counter } from "../tables/Counter";
 
-export const Etapa5 = ({ etapaCompetencia }) =>
+export const Etapa5 = ({ etapa }) =>
 {
-    const { nombre_etapa, estado, minuta_sectorial, observacion_minuta_sectorial, usuario_notificado, fecha_ultima_modificacion } = etapaCompetencia;
+    const { nombre_etapa, estado, minuta_sectorial, observacion_minuta_sectorial, usuario_notificado, fecha_ultima_modificacion } = etapa;
 
 
     // Combina todas las subetapas en un solo arreglo
@@ -95,8 +95,8 @@ export const Etapa5 = ({ etapaCompetencia }) =>
                         {renderButtonForSubetapa(subetapa)}
                     </div>
                 ))}
-                {estado === "En Estudio" && <Counter plazoDias={etapaCompetencia.plazo_dias}
-                    tiempoTranscurrido={etapaCompetencia.calcular_tiempo_transcurrido} />}
+                {estado === "En Estudio" && <Counter plazoDias={etapa.plazo_dias}
+                    tiempoTranscurrido={etapa.calcular_tiempo_transcurrido} />}
                 <div className="text-sans-p">Fecha última modificación: {fecha_ultima_modificacion}</div>
             </div>
         </div>
