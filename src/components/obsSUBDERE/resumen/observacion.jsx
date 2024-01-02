@@ -10,7 +10,7 @@ const Observacion = ({index, titulo, value}) => {
       </div>
       {value && (
       <>
-        <p className="mb-0">check</p>
+        <img src="/public/check.svg" alt="Check" />
         <p className="text-sans-p-blue me-5 mb-0">Listo</p>
       </>
       )}
