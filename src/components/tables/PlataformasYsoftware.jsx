@@ -3,7 +3,7 @@ import CustomTextarea from "../forms/custom_textarea";
 import DropdownSelect from "../dropdown/select";
 import {RadioButtons} from "../forms/radio_btns"
 
-const PlataformasYsoftware = (readOnly) => {
+const PlataformasYsoftware = ({readOnly}) => {
   return(
     <>
     {readOnly ? (
