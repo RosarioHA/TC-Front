@@ -1,7 +1,7 @@
 // import { useContext, useState } from 'react';
 // import { FormularioContext } from "./../../../context/FormSectorial";
 import CustomTextarea from "../../forms/custom_textarea";
-import DropdownSelect from "../../dropdown/select";
+import CustomInput from "../../forms/custom_input";
 
 export const Subpaso_tres_OS = ({ pasoData, }) => {
   // const { updatePaso, id, stepNumber } = useContext(FormularioContext);
@@ -35,14 +35,14 @@ export const Subpaso_tres_OS = ({ pasoData, }) => {
             sus normas legales de origen.
           </h6>
         </div>
-        <div className="my-4">
+        <div className="my-5">
           <CustomTextarea
             label="Identificación de la competencia (Obligatorio)"
             placeholder="Describe la competencia a analizar."
             value={pasoData.identificacion_competencia}
             // onChange={handleChange}
             // onBlur={handleBlur}
-            maxLength={500}
+            // maxLength={500}
             readOnly={true}
           />
           <div className="d-flex mb-3 pt-0 text-sans-h6-primary">
@@ -50,7 +50,7 @@ export const Subpaso_tres_OS = ({ pasoData, }) => {
             <h6 className="mt-1">Descripción general de la competencia a analizar.</h6>
           </div>
         </div>
-        <div className="my-4">
+        <div className="my-5">
           <CustomTextarea
             label="Fuentes Normativas (Obligatorio)"
             placeholder="Identificar todas las normas e instrumentos que regulan el ejercicio de la competencia"
@@ -58,7 +58,7 @@ export const Subpaso_tres_OS = ({ pasoData, }) => {
             value={pasoData.fuentes_normativas}
             // onChange={handleChange}
             // onBlur={handleBlur}
-            maxLength={500}
+            // maxLength={500}
             readOnly={true}
           />
           <div className="d-flex mb-3 pt-0 text-sans-h6-primary">
@@ -66,7 +66,7 @@ export const Subpaso_tres_OS = ({ pasoData, }) => {
             <h6 className="mt-1">Identificar todas las normas e instrumentos que regulan el ejercicio de la competencia y su jerarquía: Ley, Decreto Ley, Decreto con Fuerza de Ley, Decreto o Resoluciones u otros instrumentos.</h6>
           </div>
         </div>
-        <div className="my-4">
+        <div className="my-5">
           <CustomTextarea
             label="Territorio sobre el cual se ejerce la competencia (Obligatorio)"
             placeholder="Describe la delimitación territorial del ejercicio de la competencia."
@@ -74,7 +74,7 @@ export const Subpaso_tres_OS = ({ pasoData, }) => {
             value={pasoData.territorio_competencia}
             // onChange={handleChange}
             // onBlur={handleBlur}
-            maxLength={500}
+            // maxLength={500}
             readOnly={true}
           />
           <div className="d-flex mb-3 mt-1 text-sans-h6-primary">
@@ -82,7 +82,7 @@ export const Subpaso_tres_OS = ({ pasoData, }) => {
             <h6 className="mt-1">Delimitación territorial del ejercicio de la competencia ya sea a nivel: nacional, regional, comunal u otra zona territorial, de corresponder.</h6>
           </div>
         </div>
-        <div className="my-4">
+        <div className="my-5">
           <CustomTextarea
             label="Existencia de enfoque territorial sobre la competencia (Obligatorio)"
             placeholder="Describe el enfoque territorial sobre la competencia"
@@ -90,7 +90,7 @@ export const Subpaso_tres_OS = ({ pasoData, }) => {
             value={pasoData.enfoque_territorial_competencia}
             // onChange={handleChange}
             // onBlur={handleBlur}
-            maxLength={500}
+            // maxLength={500}
             readOnly={true}
           />
           <div className="d-flex mb-3 mt-1 text-sans-h6-primary">
@@ -98,19 +98,19 @@ export const Subpaso_tres_OS = ({ pasoData, }) => {
             <h6 className="mt-1">Describir si la competencia genera un bien o servicio público estándar, o si tiene especifidades dependiendo del nivel territorial, identificando otros organismos públicos con los que se relaciona.</h6>
           </div>
         </div>
-        <div className="my-4">
-          < DropdownSelect
-            label="Elige el ámbito de la competencia (Obligatorio)"
-            placeholder="Elige el ámbito de la competencia"
-            name={pasoData.ambito_paso1}
-            options=""
+        <div className="my-5">
+          <CustomInput 
+          label="Elige el ámbito de la competencia (Obligatorio)"
+          placeholder="Elige el ámbito de la competencia"
+          initialValue={pasoData.ambito}
+          readOnly={true}
           />
           <div className="d-flex mb-3 mt-1 text-sans-h6-primary">
             <i className="material-symbols-rounded me-2">info</i>
             <h6 className="mt-1">El ámbito de la competencia se define al final del análisis de la competencia, este campo define la postura del sector.</h6>
           </div>
         </div>
-        <div className="my-4">
+        <div className="my-5">
           <CustomTextarea
             label="Posibilidad de ejercicio de la competencia por parte del Gobierno Regional (Obligatorio) "
             placeholder="Indicar posibilidad de ejercicio de la comeptencia por parte del Gobierno Regional"
@@ -125,7 +125,7 @@ export const Subpaso_tres_OS = ({ pasoData, }) => {
             <h6 className="mt-1">Indicar si se trata de un traspaso de competencias al “Gobierno Regional”, constituido tanto por el Gobernador como por el Consejo Regional, o se trata de un traspaso al “Gobernador Regional”, órgano ejecutivo del Gobierno Regional.</h6>
           </div>
         </div>
-        <div className="my-4">
+        <div className="my-5">
           <CustomTextarea
             label="Órgano que ejerce actualmente la competencia (Obligatorio)"
             placeholder="Indicar órgano que ejerce actualmente la competencia"

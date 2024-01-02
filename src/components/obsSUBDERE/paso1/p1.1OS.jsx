@@ -1,18 +1,19 @@
 import { useContext, useState, useEffect } from 'react';
 import CustomTextarea from "../../forms/custom_textarea";
 import CustomInput from "../../forms/custom_input";
-import { DocumentsAditionals } from '../../commons/documents';
+// import { DocumentsAditionals } from '../../commons/documents';
 import { FormularioContext } from "../../../context/FormSectorial";
+import DescargarArchivo from '../../forms/descargar_archivo';
 
 export const Subpaso_uno_OS = ({ pasoData, marcojuridico }) => {
   const { handleUpdatePaso, } = useContext(FormularioContext);
   const [ formaJuridica, setFormaJuridica ] = useState(pasoData?.forma_juridica_organismo);
-  const [ selectedFiles, setSelectedFiles ] = useState([]);
+  const [ selectedFiles ] = useState([]);
   console.log("paso data", pasoData)
 
-  const handleFilesChange = (newFiles) => {
-    setSelectedFiles(newFiles);
-  };
+  // const handleFilesChange = (newFiles) => {
+  //   setSelectedFiles(newFiles);
+  // };
 
   useEffect(() => {
     setFormaJuridica(pasoData?.forma_juridica_organismo);
@@ -58,7 +59,7 @@ export const Subpaso_uno_OS = ({ pasoData, marcojuridico }) => {
             readOnly={true}
           />
         </div>
-        <div className="my-4">
+        <div className="my-4 mt-5">
           <CustomTextarea
             label="Forma jurídica del organismo (Obligatorio)"
             placeholder="Debes llenar este campo para poder enviar el formulario."
@@ -76,11 +77,20 @@ export const Subpaso_uno_OS = ({ pasoData, marcojuridico }) => {
           </div>
         </div>
         <div className="container-fluid pb-3">
-          <DocumentsAditionals 
-          onFilesChanged={handleFilesChange}
-          disabled={true} />
+          <div className="d-flex justify-content-between py-3 fw-bold">
+            <div className="d-flex mb-2">
+              <div className="ms-4">#</div>
+              <div className="ms-5">Documento</div>
+            </div>
+            <div className="me-5">Acción</div>
+          </div>
+          <div className="neutral-line">
+            <DescargarArchivo 
+            index="1"
+            tituloDocumento="GAB.PRES. N° 1675, 14.09.2023 Transferencia de Competencias Ley 19.175 (2).pdf"/>
+          </div> 
         </div>
-        <div className="my-4">
+        <div className="my-5">
           <CustomTextarea
             label="Descripción archivo(s) de marco jurídico (Opcional)"
             placeholder="Debes llenar este campo para poder enviar el formulario."
@@ -91,7 +101,7 @@ export const Subpaso_uno_OS = ({ pasoData, marcojuridico }) => {
           />
 
         </div>
-        <div className="my-4">
+        <div className="my-5">
           <CustomTextarea
             label="Misión Institucional (Obligatorio)"
             placeholder="Misión que defina el propósito de ser del organismo"
@@ -101,7 +111,7 @@ export const Subpaso_uno_OS = ({ pasoData, marcojuridico }) => {
             readOnly={true}
           />
         </div>
-        <div className="my-4">
+        <div className="my-5">
           <CustomTextarea
             label="Información adicional (Opcional)"
             placeholder="Escribe información adicional de ser necesario"
