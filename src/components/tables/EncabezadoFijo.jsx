@@ -4,7 +4,7 @@ import { useState } from "react";
 import CustomInput from '../forms/custom_input'
 
 const TablaEncabezadoFijo = ({encabezado, readOnly}) => {
-  const [filas, setFilas] = useState([]);
+  const [filas, setFilas] = useState([1]);
 
   const agregarOtraFila = () => {
     const nuevaFila = {
@@ -23,22 +23,20 @@ const TablaEncabezadoFijo = ({encabezado, readOnly}) => {
   return (
     <>
       {readOnly ? (
-        <div className="my-4">
+        <div className="">
           {/* Debe generar una tabla por cada organismo seleccionado */}
           <div className="row border">
             <div className="col p-3">
-              <p>{encabezado}</p>
+              <p className="text-sans-p-bold">{encabezado}</p>
             </div>
 
             <div className="col-10 border p-2">
-              <div className="col campo-container p-2 mb-4">
-                <p className="ms-2 my-2">$SectorPreseleccionado</p>
-              </div>
-
+            
               {/* Debe generar dinamicamente los secotres de cada organismo seleccionado */}
-              {filas.map((fila) => (
+              {filas.map((fila, index) => (
                 <div key={fila.id} className="border row">
                   <div className="col-10 p-3">
+                    {index > 1 && (<p>{index+1}</p>)}
                     <div className="mt-2 mb-4">
                       < CustomInput
                         label="Nombre"
