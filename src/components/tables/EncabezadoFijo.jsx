@@ -1,4 +1,5 @@
 //Este componente es una tabla, donde la primera columna muestra un titulo y la segunda se divide en filas correspondientes a dicho titulo. Se pueden agregar filas con boton "Agregar otro"
+//Estado readOnly muestra la tabla sin los botones para agregar filas, y con sus input en estado disabled
 import { useState } from "react";
 import CustomInput from '../forms/custom_input'
 
