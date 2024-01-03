@@ -3,8 +3,7 @@ import CustomTextarea from "../../forms/custom_textarea";
 import SubirArchivo from "../../forms/subir_archivo";
 import { FormularioContext } from "../../../context/FormSectorial";
 
-export const Subpaso_dos = ({ pasoData , organigrama}) => 
-{
+export const Subpaso_dos = ({ pasoData , organigrama}) => {
 
   const {
     updatePaso,
@@ -18,23 +17,19 @@ export const Subpaso_dos = ({ pasoData , organigrama}) =>
   const [ organigramasRegionales, setOrganigramasRegionales ] = useState({});
 
 
-  const handleDescripcionChange = (event) =>
-  {
+  const handleDescripcionChange = (event) => {
     setDescripcionOrganigramaNacional(event.target.value);
   };
 
-  const handleDescripcionBlur = async () =>
-  {
+  const handleDescripcionBlur = async () => {
     await handleSubmit();
   };
 
-  const handleFileUploadRegional = (file, regionId) =>
-  {
+  const handleFileUploadRegional = (file, regionId) => {
     setOrganigramasRegionales(prev => ({ ...prev, [ regionId ]: file }));
   };
 
-  const handleFileUpload = async (file, index) =>
-  {
+  const handleFileUpload = async (file, index) => {
     if (index === 1)
     { // Por ejemplo, si es el organigrama nacional
       setOrganigramaNacional(file);
@@ -43,45 +38,36 @@ export const Subpaso_dos = ({ pasoData , organigrama}) =>
     await handleSubmit();
   };
 
-  const handleSubmit = useCallback(async () =>
-  {
+  const handleSubmit = useCallback(async () => {
     const formData = new FormData();
 
     // Agrega los campos de texto y los archivos al objeto FormData
     formData.append('descripcion_archivo_organigrama_regional', descripcionOrganigramaNacional);
-    if (organigramaNacional)
-    {
+    if (organigramaNacional) {
       formData.append('organigrama_nacional', organigramaNacional);
     }
 
     // Incluye archivos regionales si son relevantes
-    Object.entries(organigramasRegionales).forEach(([ regionId, file ]) =>
-    {
-      if (file)
-      {
+    Object.entries(organigramasRegionales).forEach(([ regionId, file ]) => {
+      if (file) {
         formData.append(`organigrama_regional_${regionId}`, file);
       }
     });
 
-    try
-    {
+    try {
       await updatePaso(id, stepNumber, formData);
-    } catch (error)
-    {
+    } catch (error) {
       // Manejar los errores
     }
   }, [ descripcionOrganigramaNacional, organigramaNacional, organigramasRegionales, updatePaso, id, stepNumber ]);
 
-  if (!pasoData)
-  {
+  if (!pasoData) {
     return <div>Cargando datos...</div>;
   }
-  if (isUpdatingPaso)
-  {
+  if (isUpdatingPaso) {
     return <div>Cargando...</div>;
   }
-  if (updatePasoError)
-  {
+  if (updatePasoError) {
     return <div>Error: {updatePasoError.message}</div>;
   }
 
@@ -129,7 +115,7 @@ export const Subpaso_dos = ({ pasoData , organigrama}) =>
       </div>
 
     <h5 className="text-sans-h5 mt-4">Organigrama Regional (Opcional)</h5>
-    <h6 className="text-sans-h6 mb-3">Máximo 1 archivo, peso máximo 20MB, formato PDF</h6>
+    <h6 className="text-sans-h6 mb-3">Máximo 1 archivo por región, peso máximo 20MB, formato PDF</h6>
     <p className="text-sans-p-semibold">Regiones asociadas a la competencia:</p>
 
       {/* por cada region asociada debe haber una fila para subir su organigrama, encabezada por el nombre de la region */}
