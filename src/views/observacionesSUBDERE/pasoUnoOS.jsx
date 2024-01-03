@@ -23,10 +23,11 @@ const PasoUnoOS = () => {
 
   const { marcojuridico, organigramaregional, paso1 } = pasoData;
 
-  // Asegúrate de que paso1 tenga elementos y accede al primer elemento
-  const paso1Data = paso1 && paso1.length > 0 ? paso1[0] : null;
-  if (!paso1Data) return <div>No hay datos disponibles para el Paso 1</div>;
+  const paso1Data = paso1;
 
+  if (!paso1Data) return <div>No hay datos disponibles para el Paso 1</div>;
+  
+  console.log('paso1', paso1Data);
   const handleObservacionChange = (observacion) => {
     setObservacionSubdere(observacion);
   };

@@ -28,16 +28,12 @@ const PasoDosOS = () => {
   if (errorPaso) return <div>Error: {errorPaso.message || "Error desconocido"}</div>;
   if (!pasoData) return <div>No hay datos disponibles para el Paso 2</div>;
 
-  const paso2 = pasoData.paso2 && pasoData.paso2.length > 0 ? pasoData.paso2[ 0 ] : null;
-
+  const paso2 = pasoData.paso2;
   if (!paso2) return <div>No hay información de paso2 disponible</div>;
 
-  const dataOrganismosIntervinientes = pasoData.p_2_1_organismos_intervinientes;
-  const dataUnidadesIntervinientes = pasoData.p_2_2_unidades_intervinientes;
-  const dataEtapasEjercicioCompetencia = pasoData.p_2_3_etapas_ejercicio_competencia;
-  const dataPlataformasYSoftwares = pasoData.p_2_4_plataformas_y_softwares;
-  const dataFlujogramaCompetencia = pasoData.p_2_5_flujograma_competencia;
+  const { p_2_1_organismos_intervinientes, p_2_2_unidades_intervinientes, p_2_3_etapas_ejercicio_competencia, p_2_4_plataformas_y_softwares, p_2_5_flujograma_competencia } = pasoData;
 
+ 
   return (
     <>
       <div className="col-1">
@@ -52,19 +48,19 @@ const PasoDosOS = () => {
           <span className="text-sans-h6-primary">Texto de apoyo</span>
 
           <div className="container-fluid me-5 pe-5 my-5">
-            <Subpaso_dosPuntoUnoOS data={dataOrganismosIntervinientes} />
+            <Subpaso_dosPuntoUnoOS data={p_2_1_organismos_intervinientes}/>
           </div>
           <div className="container-fluid me-5 pe-5 my-5">
-            <Subpaso_dosPuntoDosOS data={dataUnidadesIntervinientes} />
+            <Subpaso_dosPuntoDosOS data={p_2_2_unidades_intervinientes}/>
           </div>
           <div className="container-fluid me-5 pe-5 my-5">
-            <Subpaso_dosPuntoTresOS data={dataEtapasEjercicioCompetencia} />
+            <Subpaso_dosPuntoTresOS data={p_2_3_etapas_ejercicio_competencia} />
           </div>
           <div className="container-fluid me-5 pe-5 my-5">
-            <Subpaso_dosPuntoCuatroOS data={dataPlataformasYSoftwares} />
+            <Subpaso_dosPuntoCuatroOS data={p_2_4_plataformas_y_softwares} />
           </div>
           <div className="container-fluid me-5 pe-5 my-5">
-            <Subpaso_dosPuntoCincoOS data={dataFlujogramaCompetencia} />
+            <Subpaso_dosPuntoCincoOS data={p_2_5_flujograma_competencia} />
           </div>
 
           {/* Seccion observaciones SUBDERE */}

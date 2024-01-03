@@ -1,43 +1,60 @@
-import { useContext, useState, useEffect } from 'react';
+import { useContext, useState, useEffect, useCallback } from 'react';
 import CustomTextarea from "../../forms/custom_textarea";
+import { debounce } from 'lodash';
 import CustomInput from "../../forms/custom_input";
 import { DocumentsAditionals } from '../../commons/documents';
 import { FormularioContext } from "../../../context/FormSectorial";
 
-export const Subpaso_uno = ({ pasoData, marcojuridico }) => {
-  const { handleUpdatePaso, } = useContext(FormularioContext);
-  const [ formaJuridica, setFormaJuridica ] = useState(pasoData?.forma_juridica_organismo);
-  const [ selectedFiles, setSelectedFiles ] = useState([]);
+export const Subpaso_uno = ({ pasoData, id }) => {
+  const { handleUpdatePaso } = useContext(FormularioContext);
+  const [formData, setFormData] = useState({
+    paso1: {
+      forma_juridica_organismo: pasoData?.paso1?.forma_juridica_organismo || '',
+      mision_institucional: pasoData?.paso1?.mision_institucional || '',
+      // otros campos si los hay
+    }
+  });
+  // eslint-disable-next-line no-unused-vars
+  const [selectedFiles, setSelectedFiles] = useState([]);
+
+  useEffect(() => {
+    setFormData({
+      formaJuridica: pasoData?.forma_juridica_organismo || '',
+      formMision: pasoData?.mision_institucional || '',
+      // actualiza otros campos si los hay
+    });
+  }, [pasoData]);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const updateBackend = useCallback(debounce(async (updatedData) => {
+    try {
+      await handleUpdatePaso(id, 1, updatedData);
+    } catch (error) {
+      console.error("Error al actualizar datos:", error);
+    }
+  }, 2000), [id, handleUpdatePaso]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prevFormData => ({
+      ...prevFormData,
+      [name]: value,
+    }));
+    updateBackend({ ...formData, [name]: value });
+  };
+
+
+  const handleSave = async () => {
+    try {
+      // Asegúrate de que los datos estén estructurados como el backend espera
+      await handleUpdatePaso(id, 1, formData.paso1);
+    } catch (error) {
+      console.error("Error al guardar los datos:", error);
+    }
+  };
 
   const handleFilesChange = (newFiles) => {
     setSelectedFiles(newFiles);
-  };
-
-  useEffect(() => {
-    setFormaJuridica(pasoData?.forma_juridica_organismo);
-  }, [ pasoData ]);
-
-  const handleInputChange = (e) => {
-    setFormaJuridica(e.target.value);
-  };
-
-  const handleBlur = async () => {
-    console.log('handleBlur activado');
-    try {
-      const datosPaso = { ...pasoData, forma_juridica_organismo: formaJuridica };
-      const archivos = {...marcojuridico};
-
-      selectedFiles.forEach((fileData, index) => {
-        if (!fileData.isTooLarge) {
-          archivos[ `marcojuridico[documento_${index}]` ] = fileData.file;
-        }
-      });
-        console.log('Intentando enviar datos');
-        await handleUpdatePaso(pasoData?.id, 1, datosPaso, archivos);
-        console.log('handleUpdatePaso llamado');
-    } catch (error) {
-      alert("Error al guardar los datos: " + error.message);
-    }
   };
 
   if (!pasoData) {
@@ -55,6 +72,8 @@ export const Subpaso_uno = ({ pasoData, marcojuridico }) => {
             id={pasoData?.denominacion_organismo}
             value={pasoData?.denominacion_organismo}
             disabled={true}
+            readOnly={false}
+            name="denominacion_organismo"
           />
         </div>
         <div className="my-4">
@@ -62,10 +81,10 @@ export const Subpaso_uno = ({ pasoData, marcojuridico }) => {
             label="Forma jurídica del organismo (Obligatorio)"
             placeholder="Debes llenar este campo para poder enviar el formulario."
             name="forma_juridica_organismo"
-            value={formaJuridica}
+            value={formData.formaJuridica}
+            onChange={(e) => handleChange(e)}
+            onBlur={handleSave}
             maxLength={500}
-            onChange={handleInputChange}
-            onBlur={handleBlur}
           />
           <div className="d-flex mb-3 mt-0 text-sans-h6-primary">
             <i className="material-symbols-rounded me-2">info</i>
@@ -77,21 +96,22 @@ export const Subpaso_uno = ({ pasoData, marcojuridico }) => {
         </div>
         <div className="my-4">
           <CustomTextarea
-            label="Forma jurídica del organismo (Obligatorio)"
-            placeholder="Debes llenar este campo para poder enviar el formulario."
-            name="forma_juridica_organismo"
-            value={pasoData.forma_juridica_organismo}
-            maxLength={500}
+            label="Descripción archivo(s) de marco jurídico (Opcional)"
+            placeholder="Descripción del marco jurídico"
+            name="formMision"
+            value={formData.formMision}
+            onChange={handleChange}
+            onBlur={handleSave}
           />
-
         </div>
         <div className="my-4">
           <CustomTextarea
             label="Misión Institucional (Obligatorio)"
             placeholder="Misión que defina el propósito de ser del organismo"
-            name="mision_institucional"
-            value={pasoData.mision_institucional}
-            maxLength={500}
+            name="formMision"
+            value={formData.formMision}
+            onChange={handleChange}
+            onBlur={handleSave}
           />
         </div>
         <div className="my-4">
@@ -108,5 +128,5 @@ export const Subpaso_uno = ({ pasoData, marcojuridico }) => {
         </div>
       </div>
     </>
-  )
-}
+  );
+};

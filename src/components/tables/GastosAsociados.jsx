@@ -9,7 +9,7 @@ const inputNumberStyle = {
     WebkitAppearance: 'none',
     margin: 0,
   },
-  '&::-webkit-inner-spin-button': {
+  '&::WebkitOuterSpinButton': {
     WebkitAppearance: 'none',
     margin: 0,
   },

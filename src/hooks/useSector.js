@@ -11,7 +11,7 @@ export const useSector = () => {
   useEffect(()=> {
     const fetchData = async () => {
       try {
-        const response = await apiTransferenciaCompentencia.get('sector-gubernamental/v1');
+        const response = await apiTransferenciaCompentencia.get('sector-gubernamental/v1/');
         setdataSector(response.data);
         setLoadingSector(false);
       }catch(error){

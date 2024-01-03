@@ -6,16 +6,18 @@ import CustomInput from '../forms/custom_input'
 const TablaEncabezadoFijo = ({encabezado, readOnly}) => {
   const [filas, setFilas] = useState([1]);
 
-  const agregarOtraFila = () => {
+  const agregarOtraFila = () =>
+  {
     const nuevaFila = {
       id: filas.length + 1,
       nombre: "",
       descripcion: "",
     };
-    setFilas([...filas, nuevaFila]);
+    setFilas([ ...filas, nuevaFila ]);
   };
 
-  const eliminarFila = (id) => {
+  const eliminarFila = (id) =>
+  {
     const nuevasFilas = filas.filter((fila) => fila.id !== id);
     setFilas(nuevasFilas);
   };

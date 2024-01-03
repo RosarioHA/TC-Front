@@ -1,17 +1,22 @@
-import { useRef, useEffect } from "react";
+import { useState, useRef, useEffect} from "react";
 
-const CustomTextarea = ({ label, placeholder, id, maxLength, rows, value, onChange, readOnly }) => {
+const CustomTextarea = ({ label, placeholder, id, maxLength, rows, value = "", onChange, onBlur, readOnly, name }) =>
+{
+  const [ inputValue, setInputValue ] = useState(value); // Inicialización segura de inputValue
   const textareaRef = useRef(null);
-  const inputValue = value || '';
 
-  const handleInputChange = (e) => {
-    const newValue = e.target.value;
-    if (maxLength !== null && maxLength !== undefined && newValue.length > maxLength) {
-      onChange(newValue.slice(0, maxLength));
-    } else {
-      onChange(newValue);
-    }
+  useEffect(() =>
+  {
     adjustHeight();
+  }, [ inputValue ]);
+
+  const handleChange = (event) => {
+    setInputValue(event.target.value);
+    onChange(event); // Pasa el evento completo
+};
+  const handleBlur = (e) => {
+    console.log("Input Blurred");
+    if (onBlur) onBlur(e); // Propaga el evento onBlur al componente padre
   };
 
   const adjustHeight = () => {
@@ -20,56 +25,62 @@ const CustomTextarea = ({ label, placeholder, id, maxLength, rows, value, onChan
       textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
     }
   };
-
-  // Ajusta la altura inicialmente y cuando se cambie el valor externo
+  
   useEffect(() => {
     adjustHeight();
   }, [inputValue]); 
 
-  const counterClass = inputValue.length === maxLength ? "text-sans-h6-darkred" : "text-sans-h6";
+
+  useEffect(() => {
+    setInputValue(value); // Actualiza el inputValue cuando el prop 'value' cambia
+  }, [value]);
+
+  const counterClass = maxLength !== undefined && inputValue.length === maxLength
+    ? "text-sans-h6-darkred"
+    : "text-sans-h6";
 
   return (
     <div>
       {readOnly ? (
         <div className="d-flex flex-column textarea-container">
           <label className="text-sans-h5 input-label ms-3 ms-sm-0">{label}</label>
-          <textarea 
+          <textarea
             ref={textareaRef}
-            className="input-textarea p-3" 
+            className="input-textarea p-3"
             placeholder={placeholder}
             id={id}
             value={inputValue}
-            onChange={handleInputChange}
+            onChange={handleChange}
             rows={rows}
             style={{ overflow: 'hidden' }}
+            name={name}
           />
         </div>
       ) : (
-        <div className="d-flex flex-column textarea-container">
+        <div className="d-flex flex-column input-container">
           <label className="text-sans-h5 input-label ms-3 ms-sm-0">{label}</label>
-          <textarea 
+          <textarea
             ref={textareaRef}
-            className="input-textarea p-3" 
+            className="input-s p-3"
+            type="text"
             placeholder={placeholder}
             id={id}
             value={inputValue}
-            onChange={handleInputChange}
-            rows={rows}
+            onChange={handleChange}
+            onBlur={handleBlur}
             style={{ overflow: 'hidden' }}
+            name={name}
           />
           {maxLength !== null && maxLength !== undefined && (
             <div className="d-flex justify-content-end mb-0">
               <span className={counterClass}>
-                {inputValue.length}/{maxLength} caracteres.  
+                {inputValue.length}/{maxLength} caracteres.
               </span>
             </div>
           )}
         </div>
       )}
     </div>
-
-
-    
   );
 };
 

@@ -1,22 +1,9 @@
 import { useState, useEffect, useContext } from "react";
 import { FormularioContext } from "../../../context/FormSectorial";
 
-const inputNumberStyle = {
-  // Estilos para ocultar flechas en navegadores que usan Webkit y Mozilla
-  MozAppearance: 'textfield',
-  '&::-webkit-outer-spin-button': {
-    WebkitAppearance: 'none',
-    margin: 0,
-  },
-  '&::WebkitOuterSpinButton': {
-    WebkitAppearance: 'none',
-    margin: 0,
-  },
-
-};
 export const Subpaso_Tres = ({ esquemaDatos }) =>
 {
-  const { id, stepNumber, updatePaso } = useContext(FormularioContext);
+  const { id, stepNumber, handleUpdatePaso, pasoData } = useContext(FormularioContext);
   const [ datos, setDatos ] = useState([]);
   const [ showErrorMessage, setShowErrorMessage ] = useState(false);
 
@@ -46,32 +33,38 @@ export const Subpaso_Tres = ({ esquemaDatos }) =>
 
   const headers = datos.map(data => data.anio);
 
-  const handleBlur = async (index, tipo, value) =>
-  {
+  const handleBlur = async (index, tipo, value) => {
     const validatedValue = validateInput(value);
-    if (datos[ index ][ tipo ] !== validatedValue)
-    {
-      try
-      {
+  
+    if (datos[index][tipo] !== validatedValue) {
+      try {
         console.log(`Guardando: ${tipo} = ${value} para el ID: ${id}`);
-        await updatePaso(id, stepNumber, { [ tipo ]: value });
-        const newDatos = [ ...datos ];
-        newDatos[ index ][ tipo ] = validatedValue;
+  
+        // Preparar los datos actualizados
+        const newDatos = [...datos];
+        newDatos[index][tipo] = validatedValue;
+  
+        // Preparar la estructura de datos completa para enviar al backend
+        const updatedData = {
+          paso3: [...pasoData.paso3], // Asegúrate de mantener los datos existentes de paso3
+          cobertura_anual: newDatos   // Incluye los nuevos datos de cobertura_anual
+        };
+  
+        // Llamada para actualizar los datos en el backend
+        await handleUpdatePaso(id, stepNumber, updatedData);
+  
+        // Actualizar el estado local con los nuevos datos
         setDatos(newDatos);
-        if (!areAllFieldsFilled())
-        {
-          setShowErrorMessage(true);
-        } else
-        {
-          setShowErrorMessage(false);
-        }
-      } catch (error)
-      {
+  
+        // Verificar si todos los campos están llenos y actualizar el estado de error si es necesario
+        setShowErrorMessage(!areAllFieldsFilled());
+  
+      } catch (error) {
         console.error("Error al actualizar:", error);
+        // Aquí puedes manejar errores, como mostrar un mensaje al usuario
       }
     }
   };
-
   const getPlaceholder = (rowIndex) =>
   {
     switch (rowIndex)
@@ -86,13 +79,12 @@ export const Subpaso_Tres = ({ esquemaDatos }) =>
     }
   };
 
-  const handleInputChange = (index, tipo, value) =>
-  {
-    const validatedValue = validateInput(value);
-    const newDatos = [ ...datos ];
-    newDatos[ index ][ tipo ] = validatedValue;
-    setDatos(newDatos);
+  const handleInputChange = (index, campo, value) => {
+    const newDatos = [...datos];
+    newDatos[index][campo] = value; // Actualiza el valor específico
+    setDatos(newDatos); // Actualiza el estado
   };
+  
   const areAllFieldsFilled = () =>
   {
     return datos.every(data => Object.values(data).every(value => value !== ""));
@@ -136,7 +128,6 @@ export const Subpaso_Tres = ({ esquemaDatos }) =>
                   <td key={`${rowIndex}-${colIndex}`} className="border-start px-1">
                     <input
                       type="number"
-                      style={inputNumberStyle}
                       value={data[ item.toLowerCase().replace(/ /g, '_') ] || ""}
                       placeholder={getPlaceholder(rowIndex)}
                       onChange={(e) => handleInputChange(colIndex, item.toLowerCase().replace(/ /g, '_'), e.target.value)}

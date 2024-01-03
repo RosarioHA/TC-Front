@@ -14,7 +14,7 @@ export const FormularioProvider = ({ children }) => {
 
   const { dataFormSectorial, loadingFormSectorial, errorFormSectorial } = useFormSectorial(id);
   const { dataPaso, loadingPaso, errorPaso } = usePasoForm(id, stepNumber);
-  const { updatePaso, isUpdatingPaso, updatePasoError } = useUpdateForm();
+  const { patchStep, loading, error } = useUpdateForm();
 
   const updateFormId = (newId) => {
     setId(newId);
@@ -26,19 +26,26 @@ export const FormularioProvider = ({ children }) => {
     localStorage.setItem('stepNumber', newStepNumber);
   };
 
+  console.log("ID en FormularioProvider:", id);
+
   const handleUpdatePaso = async (id, stepNumber, datosPaso, archivos = {}) => {
     try {
-      await updatePaso(id, stepNumber, datosPaso, archivos);
+      if (!datosPaso || typeof datosPaso !== 'object' || Object.keys(datosPaso).length === 0) {
+        throw new Error("datosPaso es inválido");
+      }
+      // Llama a patchStep con los datos estructurados correctamente
+      await patchStep(id, stepNumber, datosPaso, archivos);
+      // Aquí puedes actualizar el estado del contexto si es necesario
     } catch (error) {
-      // Manejar el error aquí
       console.error("Error al guardar los datos:", error);
+      // Considera actualizar el estado del contexto para reflejar el error
     }
   };
 
   const value = {
     data: dataFormSectorial,
-    loading: loadingFormSectorial,
-    error: errorFormSectorial,
+    loading: loadingFormSectorial || loading, 
+    error: errorFormSectorial || error,      
     updateFormId,
     pasoData: dataPaso,
     loadingPaso,
@@ -46,8 +53,6 @@ export const FormularioProvider = ({ children }) => {
     updateStepNumber,
     stepNumber,
     handleUpdatePaso,
-    isUpdatingPaso,
-    updatePasoError
   };
 
 

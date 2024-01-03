@@ -6,22 +6,17 @@ import Subpaso_CuatroPuntoUno from "../../components/formSectorial/paso4/p4.1";
 import { MonoStepers } from "../../components/stepers/MonoStepers";
 
 const PasoCuatro = () => {
-  const { 
-    updateStepNumber,
-    pasoData ,data} = useContext(FormularioContext);
+  const { updateStepNumber, pasoData, data } = useContext(FormularioContext);
   const stepNumber = 4;
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     updateStepNumber(stepNumber);
-  }, [ updateStepNumber, stepNumber ]);
+  }, [updateStepNumber, stepNumber]);
 
-  const { indicador_desempeno, lista_indicadores, paso4 } = pasoData;
-
-  // Asegúrate de que paso1 tenga elementos y accede al primer elemento
-  const paso4Data = paso4 && paso4.length > 0 ? paso4[ 0 ] : null;
-  if (!paso4Data) return <div>No hay datos disponibles para el Paso 1</div>;
-
+  if (!pasoData) return <div>No hay datos disponibles para el Paso 4</div>;
+  
+  const { paso4: paso4Data, indicador_desempeno, lista_indicadores } = pasoData;
+  if (!paso4Data) return <div>No hay información de paso 4 disponible</div>;
 
   return (
     <>
