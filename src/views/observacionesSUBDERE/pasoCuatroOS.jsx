@@ -2,21 +2,25 @@ import { useEffect, useContext } from "react";
 import { Avance } from "../../components/tables/Avance";
 import { ButtonsNavigate } from "../../components/layout/ButtonsNavigate";
 import { FormularioContext } from "../../context/FormSectorial";
-import Subpaso_CuatroPuntoUno from "../../components/formSectorial/paso4/p4.1";
+import Subpaso_CuatroPuntoUnoOS from "../../components/obsSUBDERE/paso4/p4.1OS";
 import { MonoStepers } from "../../components/stepers/MonoStepers";
 
-const PasoCuatro = () => {
-  const { updateStepNumber, pasoData, data } = useContext(FormularioContext);
+const PasoCuatroOS = () => {
+  const { 
+    updateStepNumber,
+    pasoData ,data} = useContext(FormularioContext);
   const stepNumber = 4;
 
-  useEffect(() => {
+  useEffect(() =>
+  {
     updateStepNumber(stepNumber);
-  }, [updateStepNumber, stepNumber]);
+  }, [ updateStepNumber, stepNumber ]);
 
   if (!pasoData) return <div>No hay datos disponibles para el Paso 4</div>;
   
   const { paso4: paso4Data, indicador_desempeno, lista_indicadores } = pasoData;
   if (!paso4Data) return <div>No hay información de paso 4 disponible</div>;
+
 
   return (
     <>
@@ -31,7 +35,7 @@ const PasoCuatro = () => {
           </div>
 
           <div className="">
-            <Subpaso_CuatroPuntoUno data={indicador_desempeno} listaData={lista_indicadores} />
+            <Subpaso_CuatroPuntoUnoOS data={indicador_desempeno} listaData={lista_indicadores} />
           </div>
           {/*Botones navegacion*/}
           <div className="container me-5 pe-5">
@@ -45,4 +49,4 @@ const PasoCuatro = () => {
   )
 };
 
-export default PasoCuatro;
+export default PasoCuatroOS;

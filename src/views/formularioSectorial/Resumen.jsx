@@ -6,6 +6,7 @@ const ResumenSectorial = () =>
 {
   const navigate = useNavigate();
   const [ pasos, setPasos ] = useState([]);
+  const [ todosCompletos, setTodosCompletos ] = useState(false);
 
   useEffect(() =>
   {
@@ -20,6 +21,13 @@ const ResumenSectorial = () =>
     ];
     setPasos(datosSimulados);
   }, []);
+
+  useEffect(() =>
+  {
+    const todosPasosCompletos = pasos.every(paso => isStageComplete(paso.avance));
+    setTodosCompletos(todosPasosCompletos);
+  }, [ pasos ]);
+
 
   const handleBackButtonClick = () =>
   {
@@ -50,8 +58,8 @@ const ResumenSectorial = () =>
                 </div>
                 <div className="col-5 d-flex align-items-center">
                   <Avance avance={paso.avance} />
-                  </div>
-                  <div className="col">
+                </div>
+                <div className="col">
                   {isStageComplete(paso.avance) ?
                     <img src="/public/check.svg" alt="Check" /> :
                     <img src="/public/warning.svg" alt="Warning" />
@@ -75,8 +83,8 @@ const ResumenSectorial = () =>
             Atrás
           </button>
 
-          <button className="btn-primario-s">
-            Ir a resumen de formulario
+          <button className="btn-primario-s" disabled={!todosCompletos}>
+            <u>Enviar el formulario</u>
           </button>
         </div>
       </div >

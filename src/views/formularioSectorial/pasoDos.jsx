@@ -69,4 +69,4 @@ const PasoDos = () =>
   )
 };
 
-export default PasoDos
+export default PasoDos;

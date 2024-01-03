@@ -1,8 +1,9 @@
 import { useState } from "react";
 import DropdownSelect from "../dropdown/select";
 import CustomTextarea from "../forms/custom_textarea";
+import CustomInput from "../forms/custom_input";
 
-const IndicadoresDesempeno = () => {
+const IndicadoresDesempeno = ({readOnly}) => {
   const [indicadores, setIndicadores] = useState([{ id: 1 }]);
 
   const agregarIndicador = () => {
@@ -18,6 +19,60 @@ const IndicadoresDesempeno = () => {
   };
 
   return(
+    <>
+    {readOnly ? (
+      <div className="container">
+      <div className="d-flex mb-2">
+        <div className="ms-4">#</div>
+        <div className="col-3 ms-3">
+          <p className="text-sans-p-bold mb-0">Tipo de indicador </p>
+          <p className="text-sans-p-grayc">(Obligatorio)</p>
+        </div>
+        <div className="ms-4">
+          <p className="text-sans-p-bold mb-0">Fórmula de cálculo </p>
+          <p className="text-sans-p-grayc">(Obligatorio)</p>
+        </div>
+      </div>
+
+      {/* Se deben generar dinamicamente segun la cantidad de indicadores existentes en el backend     */}
+      {indicadores.map((indicador) => (
+        <div key={indicador.id}>
+        <div className="d-flex neutral-line p-2">
+          <p className="text-sans-p-bold mx-3 mt-4">{indicador.id}</p>
+          <div className="col-3 mt-2">
+            <CustomInput 
+            placeholder="Tipo de indicador"
+            readOnly={true}/>
+          </div>
+          <div className="col mx-4 mt-2">
+            <CustomTextarea 
+            placeholder="Formula de cálculo"
+            readOnly={true}/>
+          </div>
+        </div>
+
+        <div className="mt-4 mx-3">
+          <CustomTextarea 
+          label="Descripción (Obligatorio)"
+          placeholder="Describe el indicador de desempeño"
+          readOnly={true}/>
+        </div>
+        <div className="mt-4 mx-3">
+          <CustomTextarea 
+          label="Medios utilizados para su cálculo (Obligatorio)"
+          placeholder="Describe los medios utilizados para su cálculo"
+          readOnly={true}/>
+        </div>
+        <div className="mt-4 mx-3">
+          <CustomTextarea 
+          label="Verificador asociado al indicador (Obligatorio)"
+          placeholder="Describe los medios de verificación del indicador"
+          readOnly={true}/>
+        </div>
+      </div>
+      ))}
+    </div>
+    ) : (
     <div className="container">
       <div className="d-flex mb-2">
         <div className="ms-4">#</div>
@@ -78,10 +133,9 @@ const IndicadoresDesempeno = () => {
           maxLength={300}/>
         </div>
         
-        
       </div>
       ))}
-    
+
       <button 
       className="btn-secundario-s m-2"
       onClick={agregarIndicador}>
@@ -89,6 +143,8 @@ const IndicadoresDesempeno = () => {
         <p className="mb-0 text-decoration-underline">Agregar indicador</p>
       </button>
     </div>
+    )}
+    </>
   )
 };
 

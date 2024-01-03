@@ -1,51 +1,43 @@
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import { apiTransferenciaCompentencia } from "../../services/transferenciaCompetencia";
 
 export const useUpdateForm = () => {
-  const [isUpdatingPaso, setIsUpdatingPaso] = useState(false);
-  const [updatePasoError, setUpdatePasoError] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  const updatePaso = useCallback(async (id, stepNumber, datosPaso, archivos = {}) => {
-    console.log('updatePaso llamado con:', { id, stepNumber, datosPaso, archivos });
-    if (!id || !stepNumber) {
-      console.error("Faltan el ID o el número de paso para actualizar.");
-      return;
+  const patchStep = async (id, stepNumber, datosPaso, archivos = {}) => {
+    setLoading(true);
+    setError(null);
+
+    if (!datosPaso || typeof datosPaso !== 'object') {
+      setError(new Error("Datos inválidos"));
+      setLoading(false);
+      throw new Error("Datos inválidos");
     }
-
-    setIsUpdatingPaso(true);
-    setUpdatePasoError(null);
 
     try {
-      const formData = new FormData();
+      let payload;
 
-      // Agregar datos del paso
-      Object.entries(datosPaso).forEach(([key, value]) => {
-        formData.append(`paso${stepNumber}[${key}]`, value);
-      });
+      // Si se están enviando archivos, usa FormData.
+      if (archivos.file) {
+        payload = new FormData();
+        payload.append('file', archivos.file);
+        // Añade los demás datos como JSON
+        payload.append('datos', JSON.stringify(datosPaso));
+      } else {
+        // Si no hay archivos, envía los datos directamente como JSON.
+        payload = datosPaso;
+      }
 
-      // Agregar archivos
-      Object.entries(archivos).forEach(([key, file]) => {
-        formData.append(key, file);
-      });
-
-      const config = {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      };
-
-      const response = await apiTransferenciaCompentencia.patch(`/formulario-sectorial/${id}/paso-${stepNumber}/`, formData, config);
-      console.log("Respuesta de la API:", response);
-
-      // Aquí puedes manejar la respuesta de éxito
-    } catch (error) {
-      console.error("Error en handleUpdatePaso:", error);
-      setUpdatePasoError(error.response ? error.response.data : error);
-      console.error("Error en updatePaso:", error);
-    } finally {
-      setIsUpdatingPaso(false);
+      const response = await apiTransferenciaCompentencia.patch(`/formulario-sectorial/${id}/paso-${stepNumber}/`, payload);
+      setLoading(false);
+      return response.data;
+    } catch (err) {
+      setLoading(false);
+      setError(err);
+      throw err;
     }
-  }, []);
+  };
 
-  return { updatePaso, isUpdatingPaso, updatePasoError };
+  return { patchStep, loading, error };
 };

@@ -3,6 +3,8 @@ import { useState } from "react";
 import CustomInput from '../forms/custom_input'
 import DropdownSelect from '../dropdown/select'
 
+
+
 const TablaEncabezadoSelector = ({options, isEditable, title}) => {
   const [filas, setFilas] = useState([1]);
 

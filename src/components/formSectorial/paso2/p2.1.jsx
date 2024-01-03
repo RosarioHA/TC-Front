@@ -2,8 +2,9 @@ import { useState } from "react";
 import TablaEncabezadoFijo from "../../tables/EncabezadoFijo";
 import TablaEncabezadoSelector from "../../tables/EncabezadoSelector";
 
-export const Subpaso_dosPuntoUno = () => {
+export const Subpaso_dosPuntoUno = ({data}) => {
   const [numTablasSelector, setNumTablasSelector] = useState(0);
+  console.log('data2',data)
 
   const agregarOrganismo = () => {
     setNumTablasSelector(numTablasSelector + 1);
@@ -32,7 +33,8 @@ export const Subpaso_dosPuntoUno = () => {
 
       <div className="my-4">
         <TablaEncabezadoFijo 
-        encabezado="Ministerio o Servicio Público"/>
+        encabezado={data[0].organismo_display}
+        data={data}/>
       </div>
 
       {renderTablasSelector()}
