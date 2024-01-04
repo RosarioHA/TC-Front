@@ -1,7 +1,7 @@
 import { useState } from "react";
 import DropdownSelect from "../dropdown/select";
 
-const Personal = () => {
+const Personal = ({readOnly}) => {
   const [personas, setPersonas] = useState([{ id: 1 }]);
   const [estamento, setEstamento] = useState(null);
   const [mostrarSeccionDinamica, setMostrarSeccionDinamica] = useState(false);
@@ -18,6 +18,61 @@ const Personal = () => {
   };
 
   return (
+    <>
+    {readOnly ? (
+      <div className="my-4">
+        <div className="col my-4">
+          <div className="row">
+            <div className="col-1">
+              <p className="text-sans-p-bold mt-3">Estamento</p>
+            </div>
+            <div className="col-2">
+              <DropdownSelect 
+                placeholder="Estamento"
+                readOnly={true}/>
+            </div> 
+          </div>
+
+          <div>
+            <div className="row">
+              <div className="col-1"> <p className="text-sans-p-bold mt-3">N°</p> </div>
+              <div className="col"> <p className="text-sans-p-bold mt-3">Calidad jurídica</p> </div>
+              <div className="col"> <p className="text-sans-p-bold mt-3">Renta bruta mensual</p> </div>
+              <div className="col"> <p className="text-sans-p-bold mt-3">Grado <br/> (Si corresponde)</p> </div>
+              <div className="col"> <p className="text-sans-p-bold mt-3"></p> </div>
+            </div>
+
+            {personas.map((persona) => (
+              <div 
+              key={persona.id} 
+              className={`row py-3 ${persona.id % 2 === 0 ? 'white-line' : 'neutral-line'} align-items-center me-3`}>
+                <div className="col-1"> <p className="text-sans-p-bold mt-3">{persona.id}</p> </div>
+                <div className="col">
+                  <DropdownSelect 
+                  placeholder="Calidad jurídica"
+                  readOnly={true}/>
+                </div>
+                <div className="col pt-3"> 
+                  <input 
+                  className="form-control mx-auto px-0 mb-2 text-center"
+                  disabled>
+                  </input> 
+                </div>
+                <div className="col pt-3"> 
+                  <input 
+                  className="form-control mx-auto px-0 mb-2 text-center"
+                  disabled>
+                  </input> 
+                </div>
+                <div className="col">
+                </div>
+              </div>
+            ))}
+          </div>  
+          
+        </div> 
+      </div>
+    ): (
     <div className="my-4">
       <div className="col my-4">
         <div className="row">
@@ -69,8 +124,12 @@ const Personal = () => {
                 }}/>
               </div>
               {/* ajustar segun estilos creados por Vero para campos de input en 5.2 */}
-              <div className="col pt-3"> <input></input> </div>
-              <div className="col pt-3"> <input></input> </div>
+              <div className="col pt-3"> 
+                <input className="form-control mx-auto px-0 mb-2 text-center"></input> 
+              </div>
+              <div className="col pt-3"> 
+                <input className="form-control mx-auto px-0 mb-2 text-center"></input> 
+              </div>
               <div className="col">
                 {personas.length > 1 && (
                 <button
@@ -95,6 +154,8 @@ const Personal = () => {
         )}
       </div> 
     </div>
+    )}
+    </>
   )
 }
 

@@ -5,7 +5,7 @@ import { MonoStepers } from "../../components/stepers/MonoStepers";
 import { FormularioContext } from "../../context/FormSectorial";
 import { Subpaso_CincoPuntoUnoOS } from '../../components/obsSUBDERE/paso5/p5.1OS';
 import { Subpaso_CincoDosOS } from '../../components/obsSUBDERE/paso5/p5.2OS';
-import { Subpaso_CincoPuntoTres } from "../../components/formSectorial/paso5/p5.3";
+import { Subpaso_CincoPuntoTresOS } from '../../components/obsSUBDERE/paso5/p5.3OS';
 
 const PasoCincoOS = () => {
   const { updateStepNumber, pasoData, data } = useContext(FormularioContext);
@@ -35,7 +35,7 @@ const PasoCincoOS = () => {
           <span className="text-sans-h6-primary">Texto de apoyo</span>
           <Subpaso_CincoPuntoUnoOS data={p_5_1_a_costos_directos} listado_subtitulos={listado_subtitulos} listado_item_subtitulos={listado_item_subtitulos} />
           <Subpaso_CincoDosOS data={p_5_2_evolucion_gasto_asociado} variacion_promedio={p_5_2_variacion_promedio} />
-          <Subpaso_CincoPuntoTres data_personal_directo={p_5_3_a_personal_directo} data_personal_indirecto={p_5_3_b_personal_indirecto} listado_estamentos={listado_estamentos} listado_calidades_juridicas={listado_calidades_juridicas} />
+          <Subpaso_CincoPuntoTresOS data_personal_directo={p_5_3_a_personal_directo} data_personal_indirecto={p_5_3_b_personal_indirecto} listado_estamentos={listado_estamentos} listado_calidades_juridicas={listado_calidades_juridicas} />
           <div className="container me-5 pe-5">
             <ButtonsNavigate step={paso5.numero_paso} id={data.id} />
           </div>
