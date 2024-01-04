@@ -1,6 +1,6 @@
 import CustomTextarea from "../forms/custom_textarea";
 
-const SumatoriaCostos = ({numFilas}) => {
+const SumatoriaCostos = ({numFilas, readOnly}) => {
   const filas = Array.from({length: numFilas}, (_, index) => index + 1)
   return (
     <div>
@@ -36,7 +36,8 @@ const SumatoriaCostos = ({numFilas}) => {
               <div className="col-7 ps-2 d-flex">
                 <CustomTextarea
                 placeholder="Describe el costo por subtítulo."
-                maxLength={300}/>
+                maxLength={300}
+                readOnly={readOnly}/>
               </div> 
             </div>
           </div>
@@ -56,7 +57,8 @@ const SumatoriaCostos = ({numFilas}) => {
             <div className="col-7 ps-2 d-flex">
               <CustomTextarea
               placeholder="Describe el costo total."
-              maxLength={300} />
+              maxLength={300}
+              readOnly={readOnly} />
             </div> 
           </div>
         </div>

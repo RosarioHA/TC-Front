@@ -14,13 +14,13 @@ const PasoDosOS = () => {
   const { pasoData, loadingPaso, errorPaso, updateStepNumber ,data} = useContext(FormularioContext);
   const [ observacionSubdere, setObservacionSubdere ] = useState('');
   const stepNumber = 2;
-  console.log("paso data", pasoData);
 
   useEffect(() => {
     updateStepNumber(stepNumber);
   }, [ updateStepNumber, stepNumber ]);
 
-  const handleObservacionChange = (observacion) => {
+  const handleObservacionChange = (event) => {
+    const observacion = event.target.value;
     setObservacionSubdere(observacion);
   };
 
@@ -33,7 +33,6 @@ const PasoDosOS = () => {
 
   const { p_2_1_organismos_intervinientes, p_2_2_unidades_intervinientes, p_2_3_etapas_ejercicio_competencia, p_2_4_plataformas_y_softwares, p_2_5_flujograma_competencia } = pasoData;
 
- 
   return (
     <>
       <div className="col-1">
