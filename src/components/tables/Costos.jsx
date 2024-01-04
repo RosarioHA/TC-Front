@@ -40,6 +40,7 @@ const Costos = ({readOnly, esTransversal}) => {
             <p>($M)</p>
             {/* Ponerle la misma clase que Vero haya creado para los otros campos de Costos (subpaso 5.2) */}
             <input
+            className="form-control mx-auto px-0 mb-2 text-center"
             disabled>
 
             </input>

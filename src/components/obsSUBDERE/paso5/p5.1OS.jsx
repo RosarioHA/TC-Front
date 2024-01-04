@@ -44,10 +44,10 @@ export const Subpaso_CincoPuntoUnoOS = () => {
       <hr />
 
       <p className="text-sans-m-semibold mt-4">c. Sumatoria de costos anuales destinados al ejercicio de la competencia</p>
-      
       <div>
         <SumatoriaCostos
-          numFilas={5} />
+          numFilas={5}
+          readOnly={true} />
       </div>
 
     </div>
