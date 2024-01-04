@@ -1,5 +1,4 @@
-import { useContext, useEffect } from "react";
-// import { debounce } from "lodash";
+import { useContext, useEffect, useState } from "react";
 import { Avance } from "../../components/tables/Avance";
 import { ButtonsNavigate } from "../../components/layout/ButtonsNavigate";
 import CustomTextarea from "../../components/forms/custom_textarea";
@@ -7,85 +6,31 @@ import { Subpaso_TresOS } from "../../components/obsSUBDERE/paso3/p3.1OS";
 import { FormularioContext } from "../../context/FormSectorial";
 import { MonoStepers } from "../../components/stepers/MonoStepers";
 
-//rosario: solo copia las secciones marcadas con GET en el clon del paso 3//
-//GET//
 const PasoTresOS = () => {
+  const [ observacionSubdere, setObservacionSubdere ] = useState('');
   const {
-    // handleUpdatePaso,
     updateStepNumber,
     data,
     pasoData
   } = useContext(FormularioContext);
   const stepNumber = 3;
 
-  //PATCH
-  // const [formData, setFormData] = useState({
-  //   universo_cobertura: '',
-  //   descripcion_cobertura: '',
-  // });
-
-
-  //GET
   useEffect(() => {
     console.log("pasoData:", pasoData);
     updateStepNumber(stepNumber);
   }, [updateStepNumber, stepNumber, pasoData]);
 
-  //PATCH
-  // useEffect(() => {
-  //   if (pasoData?.paso3) {
-  //     setFormData({
-  //       universo_cobertura: pasoData.paso3.universo_cobertura || '',
-  //       descripcion_cobertura: pasoData.paso3.descripcion_cobertura || '',
-  //     });
-  //   }
-  // }, [pasoData]);
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  // const updateBackend = useCallback(debounce(async (updatedData) => {
-  //   try {
-  //     await handleUpdatePaso(data.id, stepNumber, updatedData);
-  //   } catch (error) {
-  //     console.error("Error al actualizar datos:", error);
-  //   }
-  // }, 2000), [data.id, stepNumber]);
-
-  // const handleChange = (e) => {
-  //   e.preventDefault();
-  //   const { name, value } = e.target;
-  //   setFormData(prevFormData => ({
-  //     ...prevFormData,
-  //     [name]: value,
-  //   }));
-
-  //   updateBackend({
-  //     universo_cobertura: formData.universo_cobertura,
-  //     descripcion_cobertura: formData.descripcion_cobertura,
-  //   });
-  // };
-
-  // const handleSave = () => {
-  //   handleUpdatePaso(data.id, stepNumber, formData);
-  // };
-
-  // const handleSubmit = (e) => {
-  //   e.preventDefault(); 
-  //   handleSave(); 
-  // };
-
-  // useEffect(() => {
-  //   return () => {
-  //     updateBackend.cancel();
-  //   };
-  // }, [updateBackend]);
-
- //GET 
   if (!pasoData || !pasoData.paso3) {
     console.log("No hay datos disponibles para el Paso 3", pasoData);
     return <div>No hay datos disponibles para el Paso 3</div>;
   }
 
   const { cobertura_anual, paso3 } = pasoData;
+
+  const handleObservacionChange = (event) => {
+    const observacion = event.target.value;
+    setObservacionSubdere(observacion);
+  };
 
   return (
     <>
@@ -138,7 +83,6 @@ const PasoTresOS = () => {
                   label="Descripción de cobertura efectivamente abordada (Obligatorio)"
                   placeholder="Describe la cobertura efectivamente abordada"
                   name="descripcion_cobertura" 
-                  maxLength={800}
                   readOnly={true}
                 />
                 <div className="d-flex mb-3 mt-0 text-sans-h6-primary">
@@ -154,6 +98,22 @@ const PasoTresOS = () => {
               </div>
             </div>
           </div>
+
+          <div className="col-11">
+            <CustomTextarea 
+            label="Observaciones (Opcional)"
+            placeholder="Escribe tus observaciones de este paso del formulario"
+            maxLength={500}
+            rows={10}
+            readOnly={false}
+            value={observacionSubdere}
+            onChange={handleObservacionChange}/>
+            <div className="d-flex mb-3 text-sans-h6-primary">
+              <i className="material-symbols-rounded me-2">info</i>
+              <h6 className="mt-1">Texto de apoyo Texto de apoyo Texto de apoyo Texto de apoyo Texto de apoyo Texto de apoyo Texto de apoyo Texto de apoyo </h6>
+            </div>
+          </div>
+
           {/* Botones navegación */}
           <div className="container me-5 pe-5">
             <ButtonsNavigate step={paso3.numero_paso} id={data.id} />
