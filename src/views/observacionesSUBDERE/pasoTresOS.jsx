@@ -3,7 +3,7 @@ import { useContext, useEffect } from "react";
 import { Avance } from "../../components/tables/Avance";
 import { ButtonsNavigate } from "../../components/layout/ButtonsNavigate";
 import CustomTextarea from "../../components/forms/custom_textarea";
-import { Subpaso_Tres } from "../../components/formSectorial/paso3/p3.1";
+import { Subpaso_TresOS } from "../../components/obsSUBDERE/paso3/p3.1OS";
 import { FormularioContext } from "../../context/FormSectorial";
 import { MonoStepers } from "../../components/stepers/MonoStepers";
 
@@ -123,11 +123,7 @@ const PasoTresOS = () => {
                   label="Descripción de universo de cobertura (Obligatorio)"
                   placeholder="Describe el universo de cobertura"
                   name="universo_cobertura"
-                  // value={formData.universo_cobertura}
-                  // onChange={handleChange}
-                  // maxLength={800}
-                  // onBlur={handleSave}
-                  // onSubmit={handleSubmit}
+                  readOnly={true}
                 />
                 <div className="d-flex mb-3 mt-0 text-sans-h6-primary">
                   <i className="material-symbols-rounded me-2">info</i>
@@ -143,10 +139,7 @@ const PasoTresOS = () => {
                   placeholder="Describe la cobertura efectivamente abordada"
                   name="descripcion_cobertura" 
                   maxLength={800}
-                  // value={formData.descripcion_cobertura}
-                  // onChange={handleChange}
-                  // onBlur={handleSave}
-                  // onSubmit={handleSubmit}
+                  readOnly={true}
                 />
                 <div className="d-flex mb-3 mt-0 text-sans-h6-primary">
                   <i className="material-symbols-rounded me-2">info</i>
@@ -157,7 +150,7 @@ const PasoTresOS = () => {
                 </div>
               </div>
               <div className="container-fluid me-5 pe-5">
-                <Subpaso_Tres esquemaDatos={cobertura_anual} />
+                <Subpaso_TresOS esquemaDatos={cobertura_anual} />
               </div>
             </div>
           </div>

@@ -54,6 +54,7 @@ const CustomTextarea = ({ label, placeholder, id, maxLength, rows, value = "", o
             rows={rows}
             style={{ overflow: 'hidden' }}
             name={name}
+            disabled
           />
         </div>
       ) : (
