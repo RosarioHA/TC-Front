@@ -14,6 +14,7 @@ const CustomTextarea = ({ label, placeholder, id, maxLength, rows, value = "", o
     setInputValue(event.target.value);
     onChange(event); // Pasa el evento completo
 };
+
   const handleBlur = (e) => {
     console.log("Input Blurred");
     if (onBlur) onBlur(e); // Propaga el evento onBlur al componente padre

@@ -275,6 +275,14 @@
   line-height: 22px;
 }
 
+.text-sans-m-semibold {
+  font-family: "Roboto";
+  color: #373737;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 22px;
+}
+
 .text-sans-p-semibold {
   font-family: "Roboto";
   color: #373737;
@@ -343,6 +351,12 @@
   background-color: #FFF;
   color: #0F69C4;
   border: 2px solid #0F69C4;
+}
+
+.btn-primario-s:disabled {
+  background-color: #FFF;
+  color: #656565;
+  border: 2px solid #656565;
 }
 
 .btn-primario-l {
@@ -561,6 +575,10 @@ span.material-symbols-outlined {
   margin-left: 10%;
 }
 
+.margin-container {
+  margin-left: 10%;
+}
+
 .container-home {
   background-color: rgba(207, 225, 243, 0.35);
   width: 83.2%;
@@ -618,6 +636,21 @@ span.material-symbols-outlined {
 }
 .avance-step.incompleto {
   background-color: rgba(245, 107, 15, 0.25);
+}
+
+.campo-container {
+  border: solid 1px #656565;
+  border-radius: 4px;
+}
+
+.relative-container {
+  position: relative;
+}
+
+.absolute-container {
+  position: absolute;
+  margin-left: 800px;
+  z-index: 1;
 }
 
 #icon-inputSearch i.material-symbols-outlined,
@@ -723,10 +756,6 @@ span.material-symbols-outlined {
   height: 100%;
 }
 
-.textarea-l {
-  height: 600px;
-}
-
 .custom-pagination-btn {
   border: none;
   background-color: transparent;
@@ -747,6 +776,14 @@ span.material-symbols-outlined {
 .nav-link-active:hover {
   color: #006FB3;
   border-bottom: 2px solid #006FB3;
+}
+
+.bg-color-even {
+  background-color: #f8f9fa;
+}
+
+.bg-color-odd {
+  background-color: #fff;
 }
 
 .line-container {
@@ -893,6 +930,14 @@ a.btn-link:hover, a.btn-link:focus {
 .nav-link-active:hover {
   color: #006FB3;
   border-bottom: 2px solid #006FB3;
+}
+
+.bg-color-even {
+  background-color: #f8f9fa;
+}
+
+.bg-color-odd {
+  background-color: #fff;
 }
 
 .line-reference {

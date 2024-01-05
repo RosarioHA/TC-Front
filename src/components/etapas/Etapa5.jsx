@@ -3,14 +3,16 @@ import { Counter } from "../tables/Counter";
 
 export const Etapa5 = ({ etapa }) =>
 {
-    const { nombre_etapa, estado, minuta_sectorial, observacion_minuta_sectorial, usuario_notificado, fecha_ultima_modificacion } = etapa;
+    const { nombre_etapa, estado, minuta_gore, observacion_minuta_gore
+        , usuario_notificado, fecha_ultima_modificacion } = etapa;
 
 
     // Combina todas las subetapas en un solo arreglo
     const combinedSubetapas = [
         usuario_notificado,
-        minuta_sectorial,
-        observacion_minuta_sectorial ];
+        minuta_gore,
+        observacion_minuta_gore
+    ];
 
 
     const renderButtonForSubetapa = (subetapa) =>
