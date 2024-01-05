@@ -2,9 +2,15 @@ import { useState } from "react";
 import TablaEncabezadoFijo from "../../tables/EncabezadoFijo";
 import TablaEncabezadoSelector from "../../tables/EncabezadoSelector";
 
-export const Subpaso_dosPuntoUno = ({data}) => {
+export const Subpaso_dosPuntoUno = ({ data, lista }) => {
   const [numTablasSelector, setNumTablasSelector] = useState(0);
-  console.log('data2',data)
+
+
+ //convertir estrcutura para el select
+  const transformarEnOpciones = (datos) => {
+    return Object.entries(datos).map(([value, label]) => ({ label, value }));
+  };
+  const opcionesDeSelector = transformarEnOpciones(lista);
 
   const agregarOrganismo = () => {
     setNumTablasSelector(numTablasSelector + 1);
@@ -14,11 +20,11 @@ export const Subpaso_dosPuntoUno = ({data}) => {
     const tablas = [];
     for (let i = 0; i < numTablasSelector; i++) {
       tablas.push(
-        <div className="mb-4">
-          <TablaEncabezadoSelector 
-          key={i} 
-          options={''}
-          isEditable={true} />
+        <div className="mb-4" key={i}>
+          <TablaEncabezadoSelector
+            options={opcionesDeSelector}
+            isEditable={true}
+          />
         </div>
       );
     }
@@ -32,9 +38,9 @@ export const Subpaso_dosPuntoUno = ({data}) => {
       <h6 className="text-sans-h6-primary mt-3">Asegúrate de identificar correctamente los organismos intervinientes, ya que esta información será utilizada más adelante en tu formulario.</h6>
 
       <div className="my-4">
-        <TablaEncabezadoFijo 
-        encabezado={data[0].organismo_display}
-        data={data}/>
+        <TablaEncabezadoFijo
+          encabezado={data[ 0 ].organismo_display}
+          data={data[ 0 ]} />
       </div>
 
       {renderTablasSelector()}

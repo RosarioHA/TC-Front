@@ -14,10 +14,9 @@ const PasoUno = () =>
 
 
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     updateStepNumber(stepNumber);
-  }, [ updateStepNumber, stepNumber ]);
+  }, [updateStepNumber, stepNumber]);
 
   if (loadingPaso) return <div>Cargando...</div>;
   if (errorPaso) return <div>Error: {errorPaso.message || "Error desconocido"}</div>;
@@ -43,7 +42,7 @@ const PasoUno = () =>
             <Avance avance={paso1Data.avance} />
           </div>
           <span className="text-sans-h6-primary">Texto de apoyo</span>
-          <Subpaso_uno pasoData={paso1Data} marcojuridico={marcojuridico} id={data.id} />
+          <Subpaso_uno pasoData={paso1Data} marcojuridico={marcojuridico} id={data.id}  stepNumber={stepNumber} />
           <Subpaso_dos pasoData={paso1Data} organigrama={organigramaregional} />
           <Subpaso_tres pasoData={paso1Data} />
           <ButtonsNavigate step={paso1Data.numero_paso} id={data.id} />

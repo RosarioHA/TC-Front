@@ -1,63 +1,75 @@
-import { useContext, useState, useEffect, useCallback } from 'react';
+import { useContext, useState, useEffect} from 'react';
 import CustomTextarea from "../../forms/custom_textarea";
-import { debounce } from 'lodash';
 import CustomInput from "../../forms/custom_input";
-import { DocumentsAditionals } from '../../commons/documents';
+//import { DocumentsAditionals } from '../../commons/documents';
 import { FormularioContext } from "../../../context/FormSectorial";
 
-export const Subpaso_uno = ({ pasoData, id }) => {
+export const Subpaso_uno = ({ pasoData, id , stepNumber}) =>
+{
   const { handleUpdatePaso } = useContext(FormularioContext);
-  const [formData, setFormData] = useState({
-    paso1: {
-      forma_juridica_organismo: pasoData?.paso1?.forma_juridica_organismo || '',
-      mision_institucional: pasoData?.paso1?.mision_institucional || '',
-      // otros campos si los hay
+  const [ formData, setFormData ] = useState({
+    paso1: pasoData.paso1 || {
+      forma_juridica_organismo: '',
+      mision_institucional: '',
     }
   });
-  // eslint-disable-next-line no-unused-vars
-  const [selectedFiles, setSelectedFiles] = useState([]);
 
-  useEffect(() => {
-    setFormData({
-      formaJuridica: pasoData?.forma_juridica_organismo || '',
-      formMision: pasoData?.mision_institucional || '',
-      // actualiza otros campos si los hay
-    });
-  }, [pasoData]);
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const updateBackend = useCallback(debounce(async (updatedData) => {
-    try {
-      await handleUpdatePaso(id, 1, updatedData);
-    } catch (error) {
-      console.error("Error al actualizar datos:", error);
+  useEffect(() =>
+  {
+    if (pasoData && pasoData.paso1)
+    {
+      setFormData({ paso1: pasoData.paso1 });
     }
-  }, 2000), [id, handleUpdatePaso]);
+  }, [ pasoData ]);
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prevFormData => ({
       ...prevFormData,
-      [name]: value,
+      paso1: {
+        ...prevFormData.paso1,
+        [name]: value,
+      }
     }));
-    updateBackend({ ...formData, [name]: value });
   };
-
-
+  
   const handleSave = async () => {
     try {
-      // Asegúrate de que los datos estén estructurados como el backend espera
-      await handleUpdatePaso(id, 1, formData.paso1);
+      // Crear una copia de formData.paso1 para manipular
+      const updatedData = { ...formData.paso1 };
+  
+      // Eliminar campos vacíos del objeto updatedData
+      Object.keys(updatedData).forEach(key => {
+        if (updatedData[key] === '') {
+          delete updatedData[key];
+        }
+      });
+  
+      // Asegúrate de que la estructura de la carga útil coincida con lo que espera el servidor
+      const payload = {
+        id: id, // Asumiendo que 'id' es necesario
+        paso1: updatedData,
+        // Incluye aquí otros campos como 'marcojuridico', 'organigramaregional', etc., si son necesarios
+      };
+  
+      const response = await handleUpdatePaso(id, stepNumber, payload);
+    
+    
+    // Actualiza el estado local con los datos actualizados
+    if (response && response.paso1) {
+      setFormData({ paso1: response.paso1 });
+    }
+
+  
     } catch (error) {
       console.error("Error al guardar los datos:", error);
     }
   };
+  
 
-  const handleFilesChange = (newFiles) => {
-    setSelectedFiles(newFiles);
-  };
-
-  if (!pasoData) {
+  if (!pasoData)
+  {
     return <div>Cargando datos...</div>;
   }
 
@@ -81,8 +93,8 @@ export const Subpaso_uno = ({ pasoData, id }) => {
             label="Forma jurídica del organismo (Obligatorio)"
             placeholder="Debes llenar este campo para poder enviar el formulario."
             name="forma_juridica_organismo"
-            value={formData.formaJuridica}
-            onChange={(e) => handleChange(e)}
+            value={pasoData?.forma_juridica_organismo}
+            onChange={handleChange}
             onBlur={handleSave}
             maxLength={500}
           />
@@ -92,7 +104,7 @@ export const Subpaso_uno = ({ pasoData, id }) => {
           </div>
         </div>
         <div className="container-fluid pb-3">
-          <DocumentsAditionals onFilesChanged={handleFilesChange} />
+          {/*<DocumentsAditionals onFilesChanged="" />*/}
         </div>
         <div className="my-4">
           <CustomTextarea
@@ -108,8 +120,8 @@ export const Subpaso_uno = ({ pasoData, id }) => {
           <CustomTextarea
             label="Misión Institucional (Obligatorio)"
             placeholder="Misión que defina el propósito de ser del organismo"
-            name="formMision"
-            value={formData.formMision}
+            name="mision_institucional"
+            value={pasoData?.mision_institucional}
             onChange={handleChange}
             onBlur={handleSave}
           />

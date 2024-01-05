@@ -5,19 +5,24 @@ import DropdownSelect from '../dropdown/select'
 
 
 
-const TablaEncabezadoSelector = ({options, isEditable, title}) => {
-  const [filas, setFilas] = useState([1]);
+const TablaEncabezadoSelector = ({ options, isEditable, title }) =>
+{
+  const [ filas, setFilas ] = useState([ 1 ]);
 
-  const agregarOtraFila = () => {
+  console.log('ops',options)
+
+  const agregarOtraFila = () =>
+  {
     const nuevaFila = {
       id: filas.length + 1,
       nombre: "",
       descripcion: "",
     };
-    setFilas([...filas, nuevaFila]);
+    setFilas([ ...filas, nuevaFila ]);
   };
 
-  const eliminarFila = (id) => {
+  const eliminarFila = (id) =>
+  {
     const nuevasFilas = filas.filter((fila) => fila.id !== id);
     setFilas(nuevasFilas);
   };
@@ -32,7 +37,7 @@ const TablaEncabezadoSelector = ({options, isEditable, title}) => {
   return (
     <div className="">
       <div className="row border">
-      <div className="col p-3">
+        <div className="col p-3">
           {isEditable ? (
             <DropdownSelect options={options} />
           ) : (
@@ -41,7 +46,7 @@ const TablaEncabezadoSelector = ({options, isEditable, title}) => {
         </div>
 
         <div className="col-10 border p-2">
-          
+
           {filas.map((fila) => (
             <div key={fila.id} className="border row">
               <div className="col-10 p-3">
@@ -54,24 +59,24 @@ const TablaEncabezadoSelector = ({options, isEditable, title}) => {
                   />
                 </div>
                 <div className="mb-2">
-                  < CustomInput 
+                  < CustomInput
                     label="Descripción"
                     placeholder="Descripción"
                     disabled={false}
                     maxLength={300}
                   />
-                </div> 
+                </div>
               </div>
 
               <div className="col d-flex align-items-center">
-                <button 
-                className="btn-terciario-ghost"
-                onClick={() => eliminarFila(fila.id)}>
+                <button
+                  className="btn-terciario-ghost"
+                  onClick={() => eliminarFila(fila.id)}>
                   <i className="material-symbols-rounded me-2">delete</i>
                   <p className="mb-0 text-decoration-underline">Borrar</p>
                 </button>
-              </div> 
-              
+              </div>
+
             </div>
           ))}
           <div className="row">

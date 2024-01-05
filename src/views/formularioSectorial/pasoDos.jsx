@@ -26,9 +26,8 @@ const PasoDos = () =>
   const paso2 = pasoData.paso2;
   if (!paso2) return <div>No hay información de paso2 disponible</div>;
 
-  const { p_2_1_organismos_intervinientes, p_2_2_unidades_intervinientes, p_2_3_etapas_ejercicio_competencia, p_2_4_plataformas_y_softwares, p_2_5_flujograma_competencia } = pasoData;
+  const { p_2_1_organismos_intervinientes,listado_organismos, p_2_2_unidades_intervinientes, p_2_3_etapas_ejercicio_competencia, p_2_4_plataformas_y_softwares, p_2_5_flujograma_competencia } = pasoData;
 
-  console.log('Lista de Organismos', pasoData.listado_organismos)
 
   return (
     <>
@@ -44,7 +43,7 @@ const PasoDos = () =>
           <span className="text-sans-h6-primary">Texto de apoyo</span>
 
           <div className="container-fluid me-5 pe-5 my-5">
-            <Subpaso_dosPuntoUno data={p_2_1_organismos_intervinientes} />
+            <Subpaso_dosPuntoUno data={p_2_1_organismos_intervinientes} lista={listado_organismos} />
           </div>
           <div className="container-fluid me-5 pe-5 my-5">
             <Subpaso_dosPuntoDos data={p_2_2_unidades_intervinientes} />
