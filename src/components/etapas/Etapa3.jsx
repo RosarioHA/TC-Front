@@ -3,78 +3,51 @@ import { Counter } from "../tables/Counter";
 
 export const Etapa3 = ({ etapa }) =>
 {
-  const { nombre_etapa, estado, minuta_sectorial, observacion_minuta_sectorial, usuario_notificado, fecha_ultima_modificacion } = etapa;
+  const { nombre_etapa, estado, minuta_sectorial, observacion_minuta_sectorial, usuario_notificado, fecha_ultima_modificacion, oficio_inicio_dipres } = etapa;
 
   const combinedSubetapas = [
     usuario_notificado,
+    oficio_inicio_dipres,
     minuta_sectorial,
-    observacion_minuta_sectorial ];
+    observacion_minuta_sectorial,
+  ];
 
-    if (!etapa) {
-      return <div>Loading...</div>;
-    }
+  if (!etapa)
+  {
+    return <div>Loading...</div>;
+  }
 
   const renderButtonForSubetapa = (subetapa) =>
   {
+    // Añadir chequeo para el estado general de la etapa
+    const etapaInactiva = estado === "Aún no puede comenzar";
     let buttonText, icon, path = "/";
     const isFinalizado = subetapa.estado === "finalizada";
     const isDisabled = subetapa.estado === "pendiente";
     const isRevision = subetapa.estado === "revision";
 
+    buttonText = subetapa.accion; // Texto por defecto
+    icon = isFinalizado ? "visibility" : "draft"; // Icono por defecto
 
-    if (subetapa.nombre.startsWith("Notificar a DIPRES"))
-    {
-      if (estado === 'Aún no puede comenzar')
-      {
-        // Cambia el badge a pending si el estado de la etapa es 'Aún no puede comenzar'
-        return <span className="badge-status-pending">{subetapa.accion}</span>;
-      } else if (isFinalizado)
-      {
-        // Mantiene el badge como finish si la subetapa está finalizada
-        return <span className="badge-status-finish">{subetapa.accion}</span>;
-      }
-    }
-    switch (subetapa.nombre)
-    {
-      case "Notificar a DIPRES":
-        if (isFinalizado)
-        {
-          buttonText = subetapa.accion;
 
-        } else if (isRevision)
-        {
-          buttonText = subetapa.accion;
-          icon = "draft";
-        } else
-        {
-          buttonText = subetapa.accion;
-          icon = "draft";
-        }
-        break;
-      case "Subir minuta":
-        buttonText = isFinalizado ? subetapa.accion : subetapa.accion;
-        path = isFinalizado ? "/home/ver_minuta" : "/home/agregar_minuta";
-        icon = isFinalizado ? "visibility" : "draft"
-        break;
-      case "Subir Observaciones":
-        buttonText = isFinalizado ? subetapa.accion : subetapa.accion;
-        path = isFinalizado ? "/home/ver_observaciones" : "/home/ingresar_observaciones";
-        icon = isFinalizado ? "visibility" : "draft"
-        break;
-    }
-
-    // Aquí puedes ajustar el comportamiento del botón basado en si está en revisión
-    if (isDisabled || isRevision)
+    if (etapaInactiva)
     {
+      // Si la etapa en general está inactiva, todos los botones se deshabilitan
       return (
-        <button className={`btn-secundario-s ${isDisabled ? "disabled" : ""}`} id="btn">
+        <button className="btn-secundario-s disabled" id="btn">
           <span className="material-symbols-outlined me-1">{icon}</span>
           <u>{buttonText}</u>
         </button>
       );
     } else
     {
-      return (
+      // Lógica existente para manejar el estado individual de cada subetapa
+      return isDisabled || isRevision ? (
+        <button className={`btn-secundario-s ${isDisabled ? "disabled" : ""}`} id="btn">
+          <span className="material-symbols-outlined me-1">{icon}</span>
+          <u>{buttonText}</u>
+        </button>
+      ) : (
         <Link to={path} className="btn-secundario-s text-decoration-none" id="btn">
           <span className="material-symbols-outlined me-1">{icon}</span>
           <u>{buttonText}</u>

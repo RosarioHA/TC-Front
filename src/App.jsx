@@ -16,7 +16,7 @@ const GestionCompetencias = React.lazy(() => import('./views/gestion_competencia
 const CreacionCompetencia = React.lazy(() => import('./views/gestion_competencias/creacion_competencia'));
 const EditarCompetencia = React.lazy(() => import('./views/gestion_competencias/edicion_competencia'));
 const EstadoCompentencia = React.lazy(() => import('./views/gestion_competencias/Estado_compentencia'));
-const Observaciones = React.lazy(() => import('./views/gestion_competencias/Observaciones'));
+const SubirOficio = React.lazy(() => import('./views/gestion_competencias/Subir_oficio'));
 const Minuta = React.lazy(() => import('./views/gestion_competencias/Minuta'));
 const Error404 = React.lazy(() => import('./views/Errors/Error404'));
 const Error500 = React.lazy(() => import('./views/Errors/Error500'));
@@ -27,7 +27,7 @@ const PasoDos = React.lazy(() => import('./views/formularioSectorial/pasoDos'));
 const PasoTres = React.lazy(() => import('./views/formularioSectorial/pasoTres'));
 const PasoCuatro = React.lazy(() => import('./views/formularioSectorial/pasoCuatro'));
 const PasoCinco = React.lazy(() => import('./views/formularioSectorial/pasoCinco'));
-const Resumen = React.lazy(()=> import('./views/formularioSectorial/Resumen'));
+const Resumen = React.lazy(() => import('./views/formularioSectorial/Resumen'));
 const PasoUnoOS = React.lazy(() => import('./views/observacionesSUBDERE/pasoUnoOS'));
 const PasoDosOS = React.lazy(() => import ('./views/observacionesSUBDERE/pasoDosOS'));
 const PasoTresOS = React.lazy(() => import ('./views/observacionesSUBDERE/pasoTresOS'))
@@ -46,7 +46,8 @@ const createProtectedRoute = (path, Component, allowedProfiles) => (
   />
 );
 
-function App() {
+function App()
+{
   return (
     <Suspense fallback={<div>Cargando página...</div>}>
       <Routes>
@@ -62,7 +63,8 @@ function App() {
           {createProtectedRoute("editar_usuario/:id", EditarUsuario, [ 'SUBDERE', 'Usuario Observador' ])}
           {createProtectedRoute("listado_competencias", GestionCompetencias, [ 'SUBDERE', 'Usuario Observador' ])}
           <Route path="crear_competencia" element={<CreacionCompetencia />} />
-          <Route path="estado_competencia/:id" element={<EstadoCompentencia />} />
+          <Route path="estado_competencia/:id/" element={<EstadoCompentencia />} />
+          <Route path="estado_competencia/:id/subir_oficio" element={<SubirOficio />} />
           <Route path="editar_competencia/:id" element={<EditarCompetencia />} />
           <Route path="success" element={<Success />} />
           <Route
@@ -81,13 +83,13 @@ function App() {
             <Route path="paso_3" element={<PasoTres />} />
             <Route path="paso_4" element={<PasoCuatro />} />
             <Route path="paso_5" element={<PasoCinco />} />
-            <Route path="Resumen_formulario" element={<Resumen/>}/>
+            <Route path="Resumen_formulario" element={<Resumen />} />
           </Route>
           <Route
             path="revision_formulario_sectorial/:id"
             element={
               <FormularioProvider>
-                <ProtectedRoute allowedProfiles={[ 'SUBDERE','Usuario Observador','Usuario Sectorial' ]}>
+                <ProtectedRoute allowedProfiles={[ 'SUBDERE', 'Usuario Observador', 'Usuario Sectorial' ]}>
                   <FormularioLayout />
                 </ProtectedRoute>
               </FormularioProvider>
@@ -103,7 +105,6 @@ function App() {
           </Route>
 
 
-          <Route path="ingresar_observaciones" element={<Observaciones />}></Route>
           <Route path="agregar_minuta" element={<Minuta />}></Route>
           <Route path="*" element={<Error404 />} />
           <Route path="404" element={<Error404 />} />

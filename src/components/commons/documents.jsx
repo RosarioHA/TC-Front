@@ -42,8 +42,6 @@ export const DocumentsAditionals = ({ onFilesChanged }) =>
 
   return (
     <>
-      <span className='text-sans-h5 mt-4'>Marco jurídico que lo rige (Obligatorio)</span>
-      <p className="text-sans-h6-grey">Mínimo 1 archivo, máximo 5 archivos, peso máximo 20MB, formato PDF</p>
       <input
         type="file"
         multiple

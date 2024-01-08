@@ -3,86 +3,70 @@ import { Counter } from "../tables/Counter";
 
 export const Etapa5 = ({ etapa }) =>
 {
-    const { nombre_etapa, estado, minuta_gore, observacion_minuta_gore
-        , usuario_notificado, fecha_ultima_modificacion } = etapa;
+    const {
+        nombre_etapa,
+        estado,
+        usuario_notificado,
+        oficio_inicio_dipres,
+        minuta_gore,
+        observacion_minuta_gore,
+        fecha_ultima_modificacion
+    } = etapa;
 
-
-    // Combina todas las subetapas en un solo arreglo
     const combinedSubetapas = [
         usuario_notificado,
+        oficio_inicio_dipres,
         minuta_gore,
         observacion_minuta_gore
     ];
 
+    if (!etapa)
+    {
+        return <div>Loading...</div>;
+    }
 
     const renderButtonForSubetapa = (subetapa) =>
     {
+        const etapaActivada = estado === "Finalizada" || estado === "En Estudio";
         let buttonText, icon, path = "/";
         const isFinalizado = subetapa.estado === "finalizada";
         const isDisabled = subetapa.estado === "pendiente";
         const isRevision = subetapa.estado === "revision";
 
-        if (subetapa.nombre.startsWith("Notificar a DIPRES"))
-        {
-            if (estado === 'Aún no puede comenzar')
-            {
-                // Cambia el badge a pending si el estado de la etapa es 'Aún no puede comenzar'
-                return <span className="badge-status-pending">{subetapa.accion}</span>;
-            } else if (isFinalizado)
-            {
-                // Mantiene el badge como finish si la subetapa está finalizada
-                return <span className="badge-status-finish">{subetapa.accion}</span>;
-            }
-        }
+        buttonText = subetapa.accion; // Texto por defecto
+        icon = isFinalizado ? "visibility" : "draft"; // Icono por defecto
+
         switch (subetapa.nombre)
         {
-            case "Notificar a DIPRES":
-                if (isFinalizado)
-                {
-                    buttonText = subetapa.accion;
-
-                } else if (isRevision)
-                {
-                    buttonText = subetapa.accion;
-                    icon = "draft";
-                } else
-                {
-                    buttonText = subetapa.accion;
-                    icon = "draft";
-                }
+            case "Notificar a Juan Carlos Santiago (juan@gmail.com)":
+                path = isFinalizado ? "/home/ver_oficio" : "/"; // Ajusta según necesites
+                break;
+            case "Subir oficio y su fecha para habilitar minuta DIPRES":
+                path = isRevision ? "/home/subir_oficio" : "/home/ver_oficio";
                 break;
             case "Subir minuta":
-                buttonText = isFinalizado ? subetapa.accion : subetapa.accion;
-                path = isFinalizado ? "/home/ver_minuta" : "/home/agregar_minuta";
-                icon = isFinalizado ? "visibility" : "draft"
+                path = isDisabled ? "/home/agregar_minuta" : "/home/ver_minuta";
                 break;
-            case "Subir Observaciones":
-                buttonText = isFinalizado ? subetapa.accion : subetapa.accion;
-                path = isFinalizado ? "/home/ver_observaciones" : "/home/ingresar_observaciones";
-                icon = isFinalizado ? "visibility" : "draft"
+            case "Revisión SUBDERE":
+                path = isDisabled ? "/home/ingresar_observaciones" : "/home/ver_observaciones";
                 break;
+            // Agrega más casos según sea necesario
         }
 
-        // Aquí puedes ajustar el comportamiento del botón basado en si está en revisión
-        if (isDisabled || isRevision)
-        {
-            return (
-                <button className={`btn-secundario-s ${isDisabled ? "disabled" : ""}`} id="btn">
-                    <span className="material-symbols-outlined me-1">{icon}</span>
-                    <u>{buttonText}</u>
-                </button>
-            );
-        } else
-        {
-            return (
-                <Link to={path} className="btn-secundario-s text-decoration-none" id="btn">
-                    <span className="material-symbols-outlined me-1">{icon}</span>
-                    <u>{buttonText}</u>
-                </Link>
-            );
-        }
+        return etapaActivada ? (
+            // Si la etapa está activa, mostramos los botones según su estado individual
+            <Link to={path} className="btn-secundario-s text-decoration-none" id="btn">
+                <span className="material-symbols-outlined me-1">{icon}</span>
+                <u>{buttonText}</u>
+            </Link>
+        ) : (
+            // Si la etapa no está activa, todos los botones se deshabilitan
+            <button className="btn-secundario-s disabled" id="btn">
+                <span className="material-symbols-outlined me-1">{icon}</span>
+                <u>{buttonText}</u>
+            </button>
+        );
     };
-
 
 
     return (
