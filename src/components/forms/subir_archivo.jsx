@@ -54,6 +54,6 @@ const SubirArchivo = ({ index, fileType, tituloDocumento, readOnly, archivoDesca
       </div>
     </>
   );
-};
+}
 
 export default SubirArchivo;

@@ -6,6 +6,7 @@ export const Etapa4 = ({ etapa }) =>
   const {
     nombre_etapa,
     estado,
+    oficio_inicio_gore,
     usuarios_gore,
     formularios_gore,
     fecha_ultima_modificacion
@@ -31,6 +32,9 @@ export const Etapa4 = ({ etapa }) =>
     }
     switch (nombre)
     {
+      case "Subir oficio y su fecha para habilitar formulario GORE":
+        path = estado === "finalizada" ? "/home/ver_minuta" : "subir_oficio";
+        break;
       case "Completar formulario Sectorial":
         path = estado === "finalizada" ? "/home/ver_minuta" : "/home/formulario_sectorial/";
         break;
@@ -68,6 +72,12 @@ export const Etapa4 = ({ etapa }) =>
       </div>
       <div>
         {usuarios_gore.length > 0 && renderSubetapas(usuarios_gore)}
+        { oficio_inicio_gore && (
+          <div className="d-flex justify-content-between text-sans-p border-top border-bottom my-3 py-1">
+            <div className="align-self-center">{ oficio_inicio_gore.nombre}</div>
+            {renderButtonForSubetapa( oficio_inicio_gore,)}
+          </div>
+        )}
         {formularios_gore.length > 0 && renderSubetapas(formularios_gore)}
         {estado === "En Estudio" && (
           <Counter

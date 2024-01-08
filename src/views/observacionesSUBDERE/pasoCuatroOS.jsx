@@ -1,11 +1,13 @@
-import { useEffect, useContext } from "react";
+import { useEffect, useContext, useState } from "react";
 import { Avance } from "../../components/tables/Avance";
 import { ButtonsNavigate } from "../../components/layout/ButtonsNavigate";
 import { FormularioContext } from "../../context/FormSectorial";
 import Subpaso_CuatroPuntoUnoOS from "../../components/obsSUBDERE/paso4/p4.1OS";
 import { MonoStepers } from "../../components/stepers/MonoStepers";
+import CustomTextarea from "../../components/forms/custom_textarea";
 
 const PasoCuatroOS = () => {
+  const [ observacionSubdere, setObservacionSubdere ] = useState('');
   const { 
     updateStepNumber,
     pasoData ,data} = useContext(FormularioContext);
@@ -21,6 +23,10 @@ const PasoCuatroOS = () => {
   const { paso4: paso4Data, indicador_desempeno, lista_indicadores } = pasoData;
   if (!paso4Data) return <div>No hay información de paso 4 disponible</div>;
 
+  const handleObservacionChange = (event) => {
+    const observacion = event.target.value;
+    setObservacionSubdere(observacion);
+  };
 
   return (
     <>
@@ -37,14 +43,29 @@ const PasoCuatroOS = () => {
           <div className="">
             <Subpaso_CuatroPuntoUnoOS data={indicador_desempeno} listaData={lista_indicadores} />
           </div>
+
+          <div className="col-11">
+            <CustomTextarea 
+            label="Observaciones (Opcional)"
+            placeholder="Escribe tus observaciones de este paso del formulario"
+            maxLength={500}
+            rows={10}
+            readOnly={false}
+            value={observacionSubdere}
+            onChange={handleObservacionChange}
+            />
+            <div className="d-flex mb-3 text-sans-h6-primary">
+              <i className="material-symbols-rounded me-2">info</i>
+              <h6 className="mt-1">Texto de apoyo Texto de apoyo Texto de apoyo Texto de apoyo Texto de apoyo Texto de apoyo Texto de apoyo Texto de apoyo </h6>
+            </div>
+          </div>
+
           {/*Botones navegacion*/}
           <div className="container me-5 pe-5">
             <ButtonsNavigate step={paso4Data.numero_paso} id={ data.id} />
           </div>
         </div>
       </div>
-
-      
     </>
   )
 };

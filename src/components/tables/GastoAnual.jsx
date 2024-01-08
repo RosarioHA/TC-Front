@@ -7,82 +7,62 @@ const datosGastos = [
   { 'id': 2, 'subtitulo': 'Sub. 22', 'descripcion': '' },
   { 'id': 3, 'subtitulo': 'Sub. 23', 'descripcion': '' },
 ]
-export const GastosAnuales = () =>
-{
-
+export const GastosAnuales = ({readOnly}) => {
   const { id, stepNumber, updatePaso } = useContext(FormularioContext);
   const [ datos, setDatos ] = useState([]);
   const [ showErrorMessage, setShowErrorMessage ] = useState(false);
 
-
-  useEffect(() =>
-  {
-    if (datosGastos)
-    {
+  useEffect(() => {
+    if (datosGastos) {
       setDatos(datosGastos);
     }
   }, [ id ]);
 
-  if (!datosGastos)
-  {
+  if (!datosGastos) {
     return <div>Cargando datos...</div>;
   }
 
-  if (!datos || datos.length === 0)
-  {
+  if (!datos || datos.length === 0) {
     return <div>No hay datos para mostrar.</div>;
   }
-  const validateInput = (value) =>
-  {
+  const validateInput = (value) => {
     return value.replace(/[-+.e-]/g, '');
   };
 
   const headers = datos.map(data => data.anio);
 
-  const handleBlur = async (index, tipo, value) =>
-  {
+  const handleBlur = async (index, tipo, value) => {
     const validatedValue = validateInput(value);
-    if (datos[ index ][ tipo ] !== validatedValue)
-    {
-      try
-      {
+    if (datos[ index ][ tipo ] !== validatedValue) {
+      try {
         console.log(`Guardando: ${tipo} = ${value} para el ID: ${id}`);
         await updatePaso(id, stepNumber, { [ tipo ]: value });
         const newDatos = [ ...datos ];
         newDatos[ index ][ tipo ] = validatedValue;
         setDatos(newDatos);
-        if (!areAllFieldsFilled())
-        {
+        if (!areAllFieldsFilled()) {
           setShowErrorMessage(true);
-        } else
-        {
+        } else {
           setShowErrorMessage(false);
         }
-      } catch (error)
-      {
+      } catch (error) {
         console.error("Error al actualizar:", error);
       }
     }
   };
 
-
-  const handleInputChange = (index, tipo, value) =>
-  {
+  const handleInputChange = (index, tipo, value) => {
     const validatedValue = validateInput(value);
     const newDatos = [ ...datos ];
     newDatos[ index ][ tipo ] = validatedValue;
     setDatos(newDatos);
   };
-  const areAllFieldsFilled = () =>
-  {
+  const areAllFieldsFilled = () => {
     return datos.every(data => Object.values(data).every(value => value !== ""));
   };
 
   const currentYear = new Date().getFullYear();
   const yearDifferences = headers.map(year => currentYear - year);
-
-
-
 
   return (
     <div className="mt-4">
@@ -118,6 +98,7 @@ export const GastosAnuales = () =>
                 </tr>
                 <tr>
                   <td colSpan={headers.length + 1} className="px-0">
+                    <div className="mt-2">
                     <CustomTextarea
                       label="Descripción"
                       placeholder="Describe la evolución del gasto por subtitulo"
@@ -126,7 +107,9 @@ export const GastosAnuales = () =>
                       onChange={(e) => handleInputChange(rowIndex, 'descripcion', e.target.value)}
                       onBlur={(e) => handleBlur(rowIndex, 'descripcion', e.target.value)}
                       className={`form-control ${rowIndex % 2 === 0 ? "bg-color-even" : "bg-color-odd"}`}
+                      readOnly={readOnly}
                     />
+                    </div>
                   </td>
                 </tr>
               </React.Fragment >

@@ -27,11 +27,11 @@ const PasoUnoOS = () => {
 
   if (!paso1Data) return <div>No hay datos disponibles para el Paso 1</div>;
   
-  console.log('paso1', paso1Data);
-  const handleObservacionChange = (observacion) => {
+  const handleObservacionChange = (event) => {
+    const observacion = event.target.value;
     setObservacionSubdere(observacion);
   };
-
+  
   return (
     <>
       <div className="col-1">
@@ -56,7 +56,8 @@ const PasoUnoOS = () => {
             rows={10}
             readOnly={false}
             value={observacionSubdere}
-            onChange={handleObservacionChange}/>
+            onChange={handleObservacionChange}
+            />
             <div className="d-flex mb-3 text-sans-h6-primary">
               <i className="material-symbols-rounded me-2">info</i>
               <h6 className="mt-1">Texto de apoyo Texto de apoyo Texto de apoyo Texto de apoyo Texto de apoyo Texto de apoyo Texto de apoyo Texto de apoyo </h6>
