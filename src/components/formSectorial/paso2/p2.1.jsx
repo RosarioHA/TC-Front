@@ -1,35 +1,19 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import TablaEncabezadoFijo from "../../tables/EncabezadoFijo";
 import TablaEncabezadoSelector from "../../tables/EncabezadoSelector";
+import { FormularioContext } from "../../../context/FormSectorial";
 
 export const Subpaso_dosPuntoUno = ({ data, lista }) => {
+
+  const { handleUpdatePaso } = useContext(FormularioContext);
   const [numTablasSelector, setNumTablasSelector] = useState(0);
 
 
- //convertir estrcutura para el select
+ //convertir estructura para el select
   const transformarEnOpciones = (datos) => {
     return Object.entries(datos).map(([value, label]) => ({ label, value }));
   };
   const opcionesDeSelector = transformarEnOpciones(lista);
-
-  const agregarOrganismo = () => {
-    setNumTablasSelector(numTablasSelector + 1);
-  };
-
-  const renderTablasSelector = () => {
-    const tablas = [];
-    for (let i = 0; i < numTablasSelector; i++) {
-      tablas.push(
-        <div className="mb-4" key={i}>
-          <TablaEncabezadoSelector
-            options={opcionesDeSelector}
-            isEditable={true}
-          />
-        </div>
-      );
-    }
-    return tablas;
-  };
 
   return (
     <div>
@@ -38,17 +22,13 @@ export const Subpaso_dosPuntoUno = ({ data, lista }) => {
       <h6 className="text-sans-h6-primary mt-3">Asegúrate de identificar correctamente los organismos intervinientes, ya que esta información será utilizada más adelante en tu formulario.</h6>
 
       <div className="my-4">
-        <TablaEncabezadoFijo
-          encabezado={data[ 0 ].organismo_display}
-          data={data[ 0 ]} />
+        {data && data.length > 0 && (
+          <TablaEncabezadoFijo 
+          data={data} 
+          options={ opcionesDeSelector }
+          />
+        )}
       </div>
-
-      {renderTablasSelector()}
-
-      <button className="btn-secundario-s" onClick={agregarOrganismo}>
-        <i className="material-symbols-rounded me-2">add</i>
-        <p className="mb-0 text-decoration-underline">Agregar Organismo</p>
-      </button>
     </div>
   )
 };
