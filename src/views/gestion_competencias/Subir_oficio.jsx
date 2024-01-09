@@ -1,21 +1,20 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useCompetencia } from "../../hooks/competencias/useCompetencias";
-
-
+import { useUpdateEtapa } from "../../hooks/competencias/useOficio";
 
 const SubirOficio = () =>
 {
-  const { id } = useParams();
+  const updateEtapa = useUpdateEtapa();
+  const { etapaNum, id } = useParams();
   const { competenciaDetails } = useCompetencia(id);
   const navigate = useNavigate();
   const [ competencia, setCompetencia ] = useState(null);
   const [ selectedFile, setSelectedFile ] = useState(null);
   const [ buttonText, setButtonText ] = useState('Subir archivo');
-  const [ selectedDate, setSelectedDate ] = useState('');
+  const [ fechaInicio, setFechaInicio ] = useState('');
+  const [ errorMessage, setErrorMessage ] = useState("");
 
-
-  console.log('id', id);
 
   useEffect(() =>
   {
@@ -25,34 +24,90 @@ const SubirOficio = () =>
     }
   }, [ competenciaDetails ]);
 
-  const handleBackButtonClick = () =>
-  {
-    navigate(-1);
-  };
 
   const handleFileChange = (event) =>
   {
     const file = event.target.files[ 0 ];
     if (file)
     {
-      setSelectedFile(file);
-      setButtonText('Modificar');
+      if (file.size > 20971520)
+      { // 20 MB en bytes
+        setErrorMessage("Archivo no cumple con el peso permitido");
+        setSelectedFile(null);
+      } else
+      {
+        setSelectedFile(file);
+        setButtonText('Modificar');
+        setErrorMessage(""); // Limpiar el mensaje de error si el archivo es válido
+      }
     }
   };
 
-  const handleDateChange = (event) =>
-  {
-    setSelectedDate(event.target.value);
-  };
 
+  const handleDelete = () =>
+  {
+    setSelectedFile(null);
+    setButtonText('Subir archivo');
+  };
 
   const handleUploadClick = () =>
   {
     document.getElementById('fileUploadInput').click();
   };
+
+  const handleFechaInicioChange = (event) =>
+  {
+    setFechaInicio(event.target.value);
+  };
+
+  const prepareDataForSubmission = () =>
+  {
+    const formData = new FormData();
+
+    // Agregar el archivo cargado solo si existe
+    if (selectedFile)
+    {
+      formData.append('oficio_origen', selectedFile, selectedFile.name);
+    }
+
+    // Agregar la fecha de inicio
+    formData.append('fecha_inicio', fechaInicio);
+
+    return formData;
+  };
+
+
+
+  const handleSubmission = async () =>
+  {
+    const formData = prepareDataForSubmission();
+
+    if (!etapaNum || !id)
+    {
+      console.error("etapaNum o competenciaId están indefinidos o son nulos");
+      return; // No continuar si los parámetros son inválidos
+    }
+
+    try
+    {
+      await updateEtapa(etapaNum, id, formData);
+      // Lógica post actualización...
+    } catch (error)
+    {
+      console.error('Error al realizar la solicitud:', error);
+      // Manejar errores...
+    }
+  };
+
+
+  const handleBackButtonClick = () =>
+  {
+    navigate(-1);
+  };
+
+
   if (!competencia)
   {
-    // Puedes mostrar un mensaje de carga o retornar null si prefieres no renderizar nada
     return <div>Cargando datos de la competencia...</div>;
   }
 
@@ -81,19 +136,20 @@ const SubirOficio = () =>
             <p className="text-sans-h6-grey">Máximo 1 archivo, peso máximo 20MB, formato PDF</p>
           </div>
           <div className="col-9 mt-3">
-            <table className="table table-striped table align-middle" >
+            <table className="table table-striped table align-middle">
               <thead>
                 <tr>
                   <th scope="col">#</th>
-                  <th scope="col" htmlFor="fileUploadInput" className="form-label" >Documento</th>
+                  <th scope="col" htmlFor="fileUploadInput" className="form-label">Documento</th>
+                  <th scope="col"></th>
                   <th scope="col">Acción</th>
-
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <th scope="row">1</th>
-                  <td>  {selectedFile ? selectedFile.name : "No seleccionado"}</td>
+                  <td>{selectedFile ? selectedFile.name : "No seleccionado"}</td>
+                  <td className="w-20 px-0 mx-0">{errorMessage && <div className="text-sans-h6-darkred">{errorMessage}</div>}</td>
                   <td>
                     <div className="d-flex">
                       <input
@@ -104,20 +160,21 @@ const SubirOficio = () =>
                         style={{ display: 'none' }}
                         accept=".pdf"
                       />
-
                       <button className="btn-secundario-s d-flex" onClick={handleUploadClick}>
                         <i className="material-symbols-outlined">upgrade</i>
                         <u className="align-self-center text-sans-b-white">{buttonText}</u>
                       </button>
-                      <button onClick="" className="btn-terciario-ghost px-2 d-flex align-items-center mx-1">
-                        <span className="text-sans-b-red">Borrar</span>
-                        <i className="material-symbols-rounded">delete</i>
-                      </button>
+                      {selectedFile && (
+                        <button onClick={handleDelete} className="btn-terciario-ghost px-2 d-flex align-items-center mx-1">
+                          <span className="text-sans-b-red">Borrar</span>
+                          <i className="material-symbols-rounded">delete</i>
+                        </button>
+                      )}
                     </div>
                   </td>
                 </tr>
               </tbody>
-            </table >
+            </table>
           </div>
           <div className="mt-4 col-9">
             <span className="text-sans-h5">Elige la fecha del oficio (Obligatorio)</span>
@@ -126,8 +183,8 @@ const SubirOficio = () =>
                 id="dateInput"
                 type="date"
                 className="form-control"
-                onChange={handleDateChange}
-                value={selectedDate}
+                onChange={handleFechaInicioChange}
+                value={fechaInicio}
               />
             </div>
             <div className="d-flex mb-3 mt-1 text-sans-h6-primary">
@@ -137,7 +194,7 @@ const SubirOficio = () =>
                 para el<br /> llenado de la minuta comienzan a correr.</h6>
             </div>
             <div className="d-flex justify-content-end">
-              <button className="btn-primario-s ps-3" onClick="">
+              <button className="btn-primario-s ps-3" onClick={handleSubmission}>
                 <u>Subir oficio</u>
                 <i className="material-symbols-rounded mx-1">arrow_forward_ios</i>
               </button>
