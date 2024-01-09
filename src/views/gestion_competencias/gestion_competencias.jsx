@@ -6,9 +6,7 @@ import InputSearch from "../../components/forms/Input_search";
 import { TableCheckbox } from "../../components/tables/TableCheck";
 import { columnTitleCompetencias } from "../../Data/Usuarios";
 
-const GestionCompetencias = () =>
-{
-
+const GestionCompetencias = () => {
   const { userData } = useAuth();
   const { dataListCompetencia, paginationCompetencia, updatePage } = useCompetencia();
   const [ searchQuery, setSearchQuery ] = useState('');
@@ -19,19 +17,15 @@ const GestionCompetencias = () =>
 
   const userSubdere = userData?.perfil?.includes('SUBDERE');
 
-  useEffect(() =>
-  {
-    if (dataListCompetencia)
-    {
+  useEffect(() => {
+    if (dataListCompetencia) {
       setFilteredCompetencia(dataListCompetencia);
     }
   }, [ dataListCompetencia ]);
 
   const sortOptions = {
-    Estado: (direction) => (a, b) =>
-    {
-      if (direction === 'asc')
-      {
+    Estado: (direction) => (a, b) => {
+      if (direction === 'asc') {
         return a.estado.localeCompare(b.estado);
       }
       // Orden descendente
@@ -39,10 +33,8 @@ const GestionCompetencias = () =>
     }
   };
 
-  const getBadgeClass = (estado) =>
-  {
-    switch (estado)
-    {
+  const getBadgeClass = (estado) => {
+    switch (estado) {
       case 'En Estudio': return 'badge-status-review';
       case 'Finalizada': return 'badge-status-finish';
       case 'Sin usuario sectorial': return ' badge-status-warning';
@@ -50,10 +42,8 @@ const GestionCompetencias = () =>
     }
   };
 
-
   // Función de búsqueda
-  const handleSearch = useCallback((query) =>
-  {
+  const handleSearch = useCallback((query) => {
     const lowerCaseQuery = query.toLowerCase();
     const filtered = dataListCompetencia.filter(competencia =>
       competencia.nombre.toLowerCase().includes(lowerCaseQuery) ||
@@ -65,14 +55,16 @@ const GestionCompetencias = () =>
     setFilteredCompetencia(filtered);
   }, [ dataListCompetencia ]);
 
-  const handleDetailsCompetencia = (competencia) =>
-  {
+  const handleVerEstado = (competencia) => {
     console.log("Navegando a detalles con competencia:", competencia);
     navigate(`/home/estado_competencia/${competencia.id}`, { state: { competencia } });
   };
+  const handleVerDetalle = (competencia) => {
+    console.log("Navegando a detalles competencia:", competencia);
+    navigate(`/home/editar_competencia/${competencia.id}`, { state: { competencia } });
+  };
 
-  const handlePageChange = (pageUrl) =>
-  {
+  const handlePageChange = (pageUrl) => {
     // Extrae el número de página de la URL
     const pageNumber = new URL(pageUrl, window.location.origin).searchParams.get('page');
     updatePage(`/competencias/?page=${pageNumber}`);
@@ -80,10 +72,8 @@ const GestionCompetencias = () =>
 
 
   // Modificar la función para renderizar botones de paginación
-  const renderPaginationButtons = () =>
-  {
-    if (!paginationCompetencia || (!paginationCompetencia.next && !paginationCompetencia.previous))
-    {
+  const renderPaginationButtons = () => {
+    if (!paginationCompetencia || (!paginationCompetencia.next && !paginationCompetencia.previous)) {
       return null;
     }
     return (
@@ -184,9 +174,13 @@ const GestionCompetencias = () =>
                     {competencia.origen}
                   </span>
                 </td>
-                <td className="py-3">
+                <td className="py-3 d-flex">
                   <button className="btn-secundario-s btn-sm align-self-center"
-                    onClick={() => handleDetailsCompetencia(competencia)}>
+                    onClick={() => handleVerEstado(competencia)}>
+                    <u>Ver estado</u>
+                  </button>
+                  <button className="btn-secundario-s btn-sm align-self-center ms-2"
+                    onClick={() => handleVerDetalle(competencia)}>
                     <u>Ver detalle</u>
                   </button>
                 </td>
