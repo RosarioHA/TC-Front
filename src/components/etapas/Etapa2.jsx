@@ -14,9 +14,11 @@ export const Etapa2 = ({ etapa }) =>
   } = etapa;
   const navigate = useNavigate();
 
-  const handleNavigation = (path, id) =>
-  {
-    navigate(path, { state: { id } });
+  const etapaNum = 2;
+
+  const handleNavigation = (path) => {
+    console.log("Navegando a:", path);
+    navigate(path);
   };
 
   if (!etapa || etapa.nombre_etapa === undefined)
@@ -26,42 +28,39 @@ export const Etapa2 = ({ etapa }) =>
 
   const renderButtonForSubetapa = (subetapa) =>
   {
-
-    const { estado, accion, nombre } = subetapa;
+    const { estado, accion, nombre, id: subetapaId } = subetapa;
     let buttonText = accion;
     let icon = estado === "finalizada" ? "visibility" : "draft";
     let path = "/";
-    let id = subetapa.id;
 
-    if (nombre.startsWith("Notificar a") && estado === "finalizada")
+    switch (true)
     {
-      if (etapa.estado === 'Aún no puede comenzar')
-      {
-        // Cambiar el badge a pending si el estado general de la etapa es 'Aún no puede comenzar'
-        return <span className="badge-status-pending">{accion}</span>;
-      } else
-      {
-        // Mantiene el badge como finish si la subetapa está finalizada
-        return <span className="badge-status-finish">{accion}</span>;
-      }
+      case nombre.startsWith("Notificar a") && estado === "finalizada":
+        if (etapa.estado === 'Aún no puede comenzar')
+        {
+          return <span className="badge-status-pending">{accion}</span>;
+        } else
+        {
+          return <span className="badge-status-finish">{accion}</span>;
+        }
+
+      case nombre.includes("Subir oficio y su fecha para habilitar formulario sectorial"):
+        path = estado === "finalizada" ? "/home/ver_minuta" : `/home/estado_competencia/${etapa.id}/subir_oficio/${etapaNum}/${subetapaId}`;
+        break;
+
+      case nombre.includes("Completar formulario Sectorial"):
+        path = estado === "finalizada" ? "/home/ver_minuta" : `/home/formulario_sectorial/${etapa.id}/paso_1`;
+        break;
+
+      case nombre.includes("Observación del formulario sectorial"):
+        path = estado === "finalizada" ? "/home/ver_observaciones" : "/home/ingresar_observaciones";
+        break;
+
+      // Puedes agregar más casos según sea necesario
+      default:
+        break;
     }
-    if (nombre)
-    {
-      switch (true)
-      {
-        case nombre.includes("Subir oficio y su fecha para habilitar formulario sectorial"):
-          path = estado === "finalizada" ? "/home/ver_minuta" : "subir_oficio";
-          break;
-        case nombre.includes("Completar formulario Sectorial"):
-          path = estado === "finalizada" ? "/home/ver_minuta" : `/home/formulario_sectorial/${id}/paso_1`;
-          break;
-        case nombre.includes("Observación del formulario sectorial"):
-          path = estado === "finalizada" ? "/home/ver_observaciones" : "/home/ingresar_observaciones";
-          break;
-        default:
-          break;
-      }
-    }
+
     const isDisabled = estado === "pendiente";
 
     return isDisabled ? (
@@ -70,7 +69,7 @@ export const Etapa2 = ({ etapa }) =>
         <u>{buttonText}</u>
       </button>
     ) : (
-      <button onClick={() => handleNavigation(path, id)} className="btn-secundario-s text-decoration-none" id="btn">
+      <button onClick={() => handleNavigation(path)} className="btn-secundario-s text-decoration-none" id="btn">
         <span className="material-symbols-outlined me-1">{icon}</span>
         <u>{buttonText}</u>
       </button>
