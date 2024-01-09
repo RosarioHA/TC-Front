@@ -22,7 +22,10 @@ export const Subpaso_dosPuntoCincoOS = () => {
           </div> 
         </div>
 
-      <div className="my-4">COMPONENTE VISOR PDF</div>
+      {/* se muestra solo si hay PDF subido?? mostrar archivo subido en componente SubirArchivo*/}
+      <div className="my-4">
+        <iframe id="visorPDF" src="https://pdfobject.com/pdf/sample.pdf"> </iframe>
+      </div>
 
       <div className="mt-4">
         <CustomTextarea 
