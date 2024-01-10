@@ -6,8 +6,7 @@ import { TableCheckbox } from "../../components/tables/TableCheck";
 import { columnTitlesUser } from "../../Data/Usuarios";
 import { useUsers } from '../../hooks/usuarios/useUsers';
 
-const GestionUsuarios = () =>
-{
+const GestionUsuarios = () => {
   const { userData } = useAuth();
   const { users, pagination, updateUrl } = useUsers();
   const [ searchQuery, setSearchQuery ] = useState('');
@@ -15,27 +14,24 @@ const GestionUsuarios = () =>
   const navigate = useNavigate();
 
   const userSubdere = userData?.perfil?.includes('SUBDERE');
+  console.log("pagination", pagination)
 
   //mostrar  siempre a si mismo en primer lugar y eliminar checkbox 
 
-  useEffect(() =>
-  {
-    if (users)
-    {
+  useEffect(() => {
+    if (users) {
       setFilteredUsers(users);
     }
   }, [ users ]);
 
   const sortOptions = {
-    Estado: (direction) => (a, b) =>
-    {
+    Estado: (direction) => (a, b) => {
       // Convertir booleanos a números para la comparación
       const firstValue = a.is_active ? 1 : 0;
       const secondValue = b.is_active ? 1 : 0;
 
       // Orden ascendente
-      if (direction === 'asc')
-      {
+      if (direction === 'asc') {
         return firstValue - secondValue;
       }
       // Orden descendente
@@ -44,8 +40,7 @@ const GestionUsuarios = () =>
   };
 
   // Función de búsqueda
-  const handleSearch = useCallback((query) =>
-  {
+  const handleSearch = useCallback((query) => {
     const lowerCaseQuery = query.toLowerCase();
     const filtered = users.filter(user =>
       user.nombre_completo.toLowerCase().includes(lowerCaseQuery) ||
@@ -55,46 +50,44 @@ const GestionUsuarios = () =>
     setFilteredUsers(filtered);
   }, [ users ]);
 
-  const handleDetailsUser = (user) =>
-  {
+  const handleDetailsUser = (user) => {
     navigate(`/home/editar_usuario/${user.id}`, { state: { user } });
   };
 
-  const handlePageChange = (pageUrl) =>
-  {
+  const handlePageChange = (pageUrl) => {
     // Extrae el número de página de la URL
     const pageNumber = new URL(pageUrl, window.location.origin).searchParams.get('page');
     updateUrl(`/users/?page=${pageNumber}`);
   };
 
-
   // Modificar la función para renderizar botones de paginación
-  const renderPaginationButtons = () =>
-  {
-    if (!pagination || (!pagination.next && !pagination.previous))
-    {
+  const renderPaginationButtons = () => {
+    console.log("Rendering pagination buttons", pagination);
+    if (!pagination) {
       return null;
     }
+    const { next, previous } = pagination;
+    console.log("pagination", pagination)
 
     return (
       <nav>
         <ul className="pagination ms-md-5">
-          {pagination.previous && (
+          {previous && (
             <li className="page-item">
               <button
                 className="custom-pagination-btn mx-3"
-                onClick={() => handlePageChange(pagination.previous)}
+                onClick={() => handlePageChange(previous)}
               >
                 &lt;
               </button>
             </li>
           )}
           {/* Aquí podrías agregar botones para páginas específicas si es necesario */}
-          {pagination.next && (
+          {next && (
             <li className="page-item">
               <button
                 className="custom-pagination-btn mx-3"
-                onClick={() => handlePageChange(pagination.next)}
+                onClick={() => handlePageChange(next)}
               >
                 &gt;
               </button>
@@ -104,9 +97,6 @@ const GestionUsuarios = () =>
       </nav>
     );
   };
-
-
-
 
   return (
     <div className="container-fluid mt-2">
@@ -167,7 +157,7 @@ const GestionUsuarios = () =>
         )}
         sortOptions={sortOptions}
       />
-      <div className="pagination-container d-flex justify-content-center">
+      <div className="pagination-container d-flex justify-content-center border">
         {renderPaginationButtons()}
       </div>
     </div>
