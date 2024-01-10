@@ -7,11 +7,11 @@ export const ButtonsNavigate = ({ step , id }) =>
   const getRouteForStep = (stepNumber) =>
   {
     const stepToRouteMap = {
-      1: `/home/formulario_sectorial/${id}/paso_uno`,
-      2: `/home/formulario_sectorial/${id}/paso_dos`,
-      3: `/home/formulario_sectorial/${id}/paso_tres`,
-      4: `/home/formulario_sectorial/${id}/paso_cuatro`,
-      5: `/home/formulario_sectorial/${id}/paso_cinco`,
+      1: `/home/formulario_sectorial/${id}/paso_1`,
+      2: `/home/formulario_sectorial/${id}/paso_2`,
+      3: `/home/formulario_sectorial/${id}/paso_3`,
+      4: `/home/formulario_sectorial/${id}/paso_4`,
+      5: `/home/formulario_sectorial/${id}/paso_5`,
     };
     return stepToRouteMap[ stepNumber ];
   };

@@ -11,9 +11,9 @@ const SuccessViews = () => {
     history('/home');
   };
   
-  var titulo = "";
-  var subtitulo = "";
-  var tituloRecuadro = "";
+  let titulo = "";
+  let subtitulo = "";
+  let tituloRecuadro = "";
   if (origen === "crear_usuario") {
     titulo = "Administrar Usuarios";
     subtitulo = "Crear Usuario";

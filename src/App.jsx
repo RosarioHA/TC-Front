@@ -64,7 +64,7 @@ function App()
           {createProtectedRoute("listado_competencias", GestionCompetencias, [ 'SUBDERE', 'Usuario Observador' ])}
           <Route path="crear_competencia" element={<CreacionCompetencia />} />
           <Route path="estado_competencia/:id/" element={<EstadoCompentencia />} />
-          <Route path="estado_competencia/:id/subir_oficio" element={<SubirOficio />} />
+          <Route path="estado_competencia/:id/subir_oficio/:etapaNum/:subetapaId" element={<SubirOficio />} />
           <Route path="editar_competencia/:id" element={<EditarCompetencia />} />
           <Route path="success" element={<Success />} />
           <Route

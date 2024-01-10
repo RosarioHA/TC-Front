@@ -6,14 +6,12 @@ const CustomInput = forwardRef(
 
     const handleInputChange = (e) => {
       const value = e.target.value;
-      if (maxLength !== null && maxLength !== undefined && value.length > maxLength)
-      {
+      if (maxLength !== null && maxLength !== undefined && value.length > maxLength) {
         setInputValue(value.slice(0, maxLength));
       } else {
         setInputValue(value);
       } 
-      if (onChange)
-      {
+      if (onChange) {
         onChange(value);
       }
     };
@@ -26,7 +24,7 @@ const CustomInput = forwardRef(
           <>
             <label className="text-sans-h5 input-label ms-3 ms-sm-0">{label}</label>
             <input
-              className={`input-s p-3 text-sans-p ${error ? 'input-error' : ''}`}
+              className={`input-s p-3 input-textarea ${error ? 'input-error' : ''}`}
               type="text"
               placeholder={placeholder}
               id={id}
@@ -41,7 +39,7 @@ const CustomInput = forwardRef(
           <>
             <label className="text-sans-h5 input-label ms-3 ms-sm-0">{label}</label>
             <input
-              className={`input-s p-3 text-sans-p ${error ? 'input-error' : ''}`}
+              className={`input-s p-3 input-textarea ${error ? 'input-error' : ''}`}
               type="text"
               placeholder={placeholder}
               id={id}

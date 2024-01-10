@@ -47,7 +47,7 @@ const CustomTextarea = ({ label, placeholder, id, maxLength, rows, value = "", o
           <label className="text-sans-h5 input-label ms-3 ms-sm-0">{label}</label>
           <textarea
             ref={textareaRef}
-            className="input-textarea p-3"
+            className="teaxtarea-text input-textarea p-3"
             placeholder={placeholder}
             id={id}
             value={inputValue}
@@ -63,7 +63,7 @@ const CustomTextarea = ({ label, placeholder, id, maxLength, rows, value = "", o
           <label className="text-sans-h5 input-label ms-3 ms-sm-0">{label}</label>
           <textarea
             ref={textareaRef}
-            className="input-s p-3"
+            className="input-textarea input-s p-3"
             type="text"
             placeholder={placeholder}
             id={id}
