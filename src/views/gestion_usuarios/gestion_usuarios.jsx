@@ -9,20 +9,25 @@ import { useUsers } from '../../hooks/usuarios/useUsers';
 const GestionUsuarios = () => {
   const { userData } = useAuth();
   const { users, pagination, updateUrl } = useUsers();
-  const [ searchQuery, setSearchQuery ] = useState('');
-  const [ filteredUsers, setFilteredUsers ] = useState([ users ]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filteredUsers, setFilteredUsers] = useState([]);
   const navigate = useNavigate();
 
   const userSubdere = userData?.perfil?.includes('SUBDERE');
-  console.log("pagination", pagination)
-
-  //mostrar  siempre a si mismo en primer lugar y eliminar checkbox 
 
   useEffect(() => {
     if (users) {
-      setFilteredUsers(users);
+      // Si hay información de paginación, filtra los usuarios según la página actual
+      if (pagination && pagination.results) {
+        const startIndex = (pagination.current_page - 1) * pagination.page_size;
+        const endIndex = startIndex + pagination.results.length;
+        setFilteredUsers(users.slice(startIndex, endIndex));
+      } else {
+        // Si no hay información de paginación, muestra todos los usuarios
+        setFilteredUsers(users);
+      }
     }
-  }, [ users ]);
+  }, [users, pagination]);
 
   const sortOptions = {
     Estado: (direction) => (a, b) => {
@@ -56,18 +61,18 @@ const GestionUsuarios = () => {
 
   const handlePageChange = (pageUrl) => {
     // Extrae el número de página de la URL
+    console.log("page URL", pageUrl)
     const pageNumber = new URL(pageUrl, window.location.origin).searchParams.get('page');
-    updateUrl(`/users/?page=${pageNumber}`);
+    updateUrl(pageNumber);
+    console.log("filtered users al hacer click en flecha", filteredUsers)
   };
 
   // Modificar la función para renderizar botones de paginación
   const renderPaginationButtons = () => {
-    console.log("Rendering pagination buttons", pagination);
     if (!pagination) {
       return null;
     }
     const { next, previous } = pagination;
-    console.log("pagination", pagination)
 
     return (
       <nav>

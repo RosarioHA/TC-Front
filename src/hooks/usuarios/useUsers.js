@@ -18,7 +18,7 @@ export const useUsers = () => {
       setPagination({
         count: data.count,
         next: data.next,
-        previous: data.previous
+        previous: data.previous,
       });
     } catch (err) {
       console.error(err);
@@ -34,6 +34,7 @@ export const useUsers = () => {
 
   // Función para actualizar la página actual
   const updatePage = (newPage) => {
+    console.log("Updating page:", newPage);
     setCurrentPage(newPage);
   };
 
@@ -41,6 +42,7 @@ export const useUsers = () => {
   const updateUrl = (url) => {
     // Lógica para actualizar la URL si es necesario
     console.log("Updating URL:", url);
+    setCurrentPage(url);
   };
 
   return { users, loading, error, pagination, updatePage, updateUrl };
