@@ -1,80 +1,106 @@
-import { useContext, useState, useCallback } from "react";
+import { useContext, useState, useEffect } from "react";
 import CustomTextarea from "../../forms/custom_textarea";
 import SubirArchivo from "../../forms/subir_archivo";
 import { FormularioContext } from "../../../context/FormSectorial";
 
-export const Subpaso_dos = ({ pasoData , organigrama}) => {
+export const Subpaso_dos = ({ pasoData, organigrama ,id, stepNumber}) =>
+{
 
   const {
-    updatePaso,
-    isUpdatingPaso,
     updatePasoError,
-    id,
-    stepNumber
+    handleUpdatePaso
   } = useContext(FormularioContext);
-  const [ organigramaNacional, setOrganigramaNacional ] = useState(pasoData.organigrama_nacional || '');
   const [ descripcionOrganigramaNacional, setDescripcionOrganigramaNacional ] = useState('');
-  const [ organigramasRegionales, setOrganigramasRegionales ] = useState({});
+  const [ formData, setFormData ] = useState({
+    paso1: pasoData.paso1 || {
+      descripcion_archivo_organigrama_regional: pasoData.descripcion_archivo_organigrama_regional,
+
+    }
+  });
+  const [ inputStatus, setInputStatus ] = useState({
+    descripcion_archivo_organigrama_regional: { loading: false, saved: false },
+    // Agrega aquí los demás campos necesarios
+  });
+
+  useEffect(() =>
+  {
+    if (pasoData && pasoData.paso1)
+    {
+      setFormData({ paso1: pasoData.paso1 });
+    }
+  }, [ pasoData ]);
+
+  useEffect(() =>
+  {
+    const savedData = localStorage.getItem('formData');
+    if (savedData)
+    {
+      setFormData(JSON.parse(savedData));
+    }
+  }, []);
+  useEffect(() =>
+  {
+    localStorage.setItem('formData', JSON.stringify(formData));
+  }, [ formData ]);
+
+  const handleChange = (inputName, e) =>
+  {
+    const { value } = e.target;
+    setFormData(prevFormData => ({
+      ...prevFormData,
+      paso1: {
+        ...prevFormData.paso1,
+        [ inputName ]: value,
+      }
+    }));
+    setInputStatus(prevStatus => ({
+      ...prevStatus,
+      [ inputName ]: { loading: false, saved: false }
+    }));
+  };
+
+  const handleSave = async (inputName) =>
+  {
+    setInputStatus(prevStatus => ({
+      ...prevStatus,
+      [ inputName ]: { ...prevStatus[ inputName ], loading: true }
+    }));
+
+    const success = await handleUpdatePaso(id, stepNumber, formData);
+    if (success)
+    {
+      setInputStatus(prevStatus => ({
+        ...prevStatus,
+        [ inputName ]: { loading: false, saved: true }
+      }));
+    } else
+    {
+      setInputStatus(prevStatus => ({
+        ...prevStatus,
+        [ inputName ]: { loading: false, saved: false }
+      }));
+    }
+  };
 
 
-  const handleDescripcionChange = (event) => {
+  const handleDescripcionChange = (event) =>
+  {
     setDescripcionOrganigramaNacional(event.target.value);
   };
 
-  const handleDescripcionBlur = async () => {
-    await handleSubmit();
-  };
 
-  const handleFileUploadRegional = (file, regionId) => {
-    setOrganigramasRegionales(prev => ({ ...prev, [ regionId ]: file }));
-  };
 
-  const handleFileUpload = async (file, index) => {
-    if (index === 1)
-    { // Por ejemplo, si es el organigrama nacional
-      setOrganigramaNacional(file);
-    }
-    // Aquí puedes manejar otros casos para otros archivos
-    await handleSubmit();
-  };
 
-  const handleSubmit = useCallback(async () => {
-    const formData = new FormData();
 
-    // Agrega los campos de texto y los archivos al objeto FormData
-    formData.append('descripcion_archivo_organigrama_regional', descripcionOrganigramaNacional);
-    if (organigramaNacional) {
-      formData.append('organigrama_nacional', organigramaNacional);
-    }
-
-    // Incluye archivos regionales si son relevantes
-    Object.entries(organigramasRegionales).forEach(([ regionId, file ]) => {
-      if (file) {
-        formData.append(`organigrama_regional_${regionId}`, file);
-      }
-    });
-
-    try {
-      await updatePaso(id, stepNumber, formData);
-    } catch (error) {
-      // Manejar los errores
-    }
-  }, [ descripcionOrganigramaNacional, organigramaNacional, organigramasRegionales, updatePaso, id, stepNumber ]);
-
-  if (!pasoData) {
-    return <div>Cargando datos...</div>;
-  }
-  if (isUpdatingPaso) {
-    return <div>Cargando...</div>;
-  }
-  if (updatePasoError) {
+  if (updatePasoError)
+  {
     return <div>Error: {updatePasoError.message}</div>;
   }
 
   return (
-    <div className="pe-5 me-5">
+    <div className="pe-5 me-5 mt-4 col-12">
       <h4 className="text-sans-h4">1.2 Organización Institucional</h4>
-      <div className="text-sans-h6-primary mb-4">
+      <div className="text-sans-h6-primary mb-4 col-11">
         <h6>
           En esta sección se debe representar gráficamente la estructura orgánica
           de la institución a nivel nacional y regional, incluyendo el numero de funcionarios en las unidades intervinientes
@@ -85,7 +111,7 @@ export const Subpaso_dos = ({ pasoData , organigrama}) => {
       <h5 className="text-sans-h5">Organigrama Nacional (Obligatorio)</h5>
       <h6 className="text-sans-h6">Máximo 1 archivo, peso máximo 20MB, formato PDF</h6>
 
-      <div className="ps-3">
+      <div className="col-11">
         <div className="d-flex justify-content-between py-3 fw-bold">
           <div className="d-flex mb-2">
             <div className="ms-4">#</div>
@@ -96,30 +122,31 @@ export const Subpaso_dos = ({ pasoData , organigrama}) => {
         <div className="row neutral-line align-items-center">
           <SubirArchivo
             index="1"
-            fileType={organigramaNacional ? "Seleccionado" : "No seleccionado"}
-            onFileUpload={(file) => handleFileUpload(file, 1)}
+            //fileType={''? "Seleccionado" : "No seleccionado"}
+            onFileUpload=""
           />
         </div>
       </div>
 
-      <div className="mt-4">
+      <div className="mt-4 col-12">
         <CustomTextarea
           label="Descripción del archivo adjunto (Opcional)"
           placeholder="Describe el archivo adjunto"
-          id="descOrganigramaNacional"
+          id="descripcion_archivo_organigrama_regional"
+          name="descripcion_archivo_organigrama_regional"
           value={descripcionOrganigramaNacional}
           onChange={handleDescripcionChange}
-          onBlur={handleDescripcionBlur}
+          onBlur=""
           maxLength={500}
         />
       </div>
 
-    <h5 className="text-sans-h5 mt-4">Organigrama Regional (Opcional)</h5>
-    <h6 className="text-sans-h6 mb-3">Máximo 1 archivo por región, peso máximo 20MB, formato PDF</h6>
-    <p className="text-sans-p-semibold">Regiones asociadas a la competencia:</p>
+      <h5 className="text-sans-h5 mt-4">Organigrama Regional (Opcional)</h5>
+      <h6 className="text-sans-h6 mb-3">Máximo 1 archivo por región, peso máximo 20MB, formato PDF</h6>
+      <p className="text-sans-p-semibold">Regiones asociadas a la competencia:</p>
 
       {/* por cada region asociada debe haber una fila para subir su organigrama, encabezada por el nombre de la region */}
-      <div className="ps-3">
+      <div className="col-11">
         <div className="d-flex justify-content-between py-3 fw-bold">
           <div className="d-flex mb-2">
             <div className="ms-4">#</div>
@@ -134,7 +161,7 @@ export const Subpaso_dos = ({ pasoData , organigrama}) => {
               index={index + 1}
               fileType={region.documento ? "Seleccionado" : "No seleccionado"}
               tituloDocumento={region.region}
-              onFileUpload={(file) => handleFileUploadRegional(file, region.pk)}
+              onFileUpload=""
             />
           </div>
         ))}
@@ -142,9 +169,15 @@ export const Subpaso_dos = ({ pasoData , organigrama}) => {
 
       <div className="my-4">
         <CustomTextarea
-          label="Descripción del archivo(s) adjunto(s) (Opcional)"
+          label="Descripción del archivo adjunto (Opcional)"
           placeholder="Describe el archivo adjunto"
-          id="descOrganigramaRegional"
+          id="descripcion_archivo_organigrama_regional"
+          name="descripcion_archivo_organigrama_regional"
+          value={pasoData?.descripcion_archivo_organigrama_regional}
+          onChange={(e) => handleChange('descripcion_archivo_organigrama_regional', e)}
+          onBlur={() => handleSave('descripcion_archivo_organigrama_regional')}
+          loading={inputStatus.descripcion_archivo_organigrama_regional.loading}
+          saved={inputStatus.descripcion_archivo_organigrama_regional.saved}
           maxLength={500} />
       </div>
 

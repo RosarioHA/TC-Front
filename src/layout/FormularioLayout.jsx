@@ -6,7 +6,7 @@ import { Timmer } from "../components/layout/Timmer";
 import { FormularioContext } from "../context/FormSectorial";
 
 const FormularioLayout = () => {
-  const { data, loading, error, updateFormId, pasoData, stepNumber, errorPaso, loadingPaso } = useContext(FormularioContext);
+  const { data, loading, error, updateFormId, pasoData, stepNumber, errorPaso, loadingPaso} = useContext(FormularioContext);
   const location = useLocation();
   const params = useParams();
   const [baseUrl, setBaseUrl] = useState('');
@@ -24,10 +24,6 @@ const FormularioLayout = () => {
       setBaseUrl(`/home/revision_formulario_sectorial/${params.id}`);
     }
   }, [location, params.id, updateFormId]);
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
 
   if (error) {
     return <div>Error: {error.message}</div>;
