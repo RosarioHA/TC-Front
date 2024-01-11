@@ -17,5 +17,5 @@ export const useAmbitos = () => {
     fetchAmbitos();
   }, []);
 
-  return ambitos;
+  return {ambitos};
 };

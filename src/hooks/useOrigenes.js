@@ -17,5 +17,5 @@ export const useOrigenes = () => {
     fetchOrigenes();
   }, []);
 
-  return origenes;
+  return {origenes};
 };

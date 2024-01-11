@@ -44,6 +44,8 @@ const CreacionCompetencia = () => {
   const { dataRegiones } = useRegion();
   const { users } = useUsers();
   const { dataSector } = useSector();
+  const { origenes } = useOrigenes();
+  const { ambitos } = useAmbitos();
   const userOptions = groupUsersByType(users);
   const [ regionesSeleccionadas, setRegionesSeleccionadas ] = useState([]);
   const [ sectoresSeleccionados, setSectoresSeleccionados ] = useState([]);
@@ -74,6 +76,8 @@ const CreacionCompetencia = () => {
       sectores: sectoresSeleccionados.map(s => s.value),
       regiones: regionesSeleccionadas.map(r => r.value),
       usuarios: Object.keys(usuariosSeleccionados),
+      ambito: ambitoSeleccionado,
+      origen: origenSeleccionado,
     };
 
     try {
@@ -109,7 +113,12 @@ const CreacionCompetencia = () => {
   };
 
   //opciones origen
-  const origenes = useOrigenes();
+  //const origenes = useOrigenes();
+  //aqui hay que especificar el dato igual como en opciones sector
+  const opcionesOrigen = origenes.map(origen => ({
+    label: origen.descripcion,
+    value: origen.clave,
+  }));
 
   const handleOrigenChange = (selectedOption) => {
     console.log(selectedOption)
@@ -118,7 +127,11 @@ const CreacionCompetencia = () => {
   };
   
   //opciones ambito
-  const ambitos = useAmbitos();
+  // const ambitos = useAmbitos();
+  const opcionesAmbito = ambitos.map(ambito => ({
+    label: ambito.nombre,
+    value: ambito.id,
+  }));
 
   const handleAmbitoChange = (selectedOption) => {
     console.log(selectedOption)
@@ -196,12 +209,8 @@ const CreacionCompetencia = () => {
             <DropdownSelect
               label="Origen de la competencia (Obligatorio)"
               placeholder="Elige el origen de la competencia"
-              options={origenes.map(origen => ({ label: origen.descripcion, value: origen.clave }))}
-              onSelectionChange={(selectedOption) =>
-              {
-                handleOrigenChange(selectedOption);
-                setValue('origen', selectedOption, { shouldValidate: true });
-              }}
+              options={opcionesOrigen}
+              onSelectionChange={handleOrigenChange}
               selected={origenSeleccionado}
             />
             {errors.origen && (
@@ -213,12 +222,13 @@ const CreacionCompetencia = () => {
             <DropdownSelect
               label="Elige el ámbito de la competencia (Obligatorio)"
               placeholder="Elige el ámbito de la competencia"
-              options={ambitos.map(ambito => ({ label: ambito.nombre, value: ambito.id }))}
-              onSelectionChange={(selectedOption) =>
-              {
-                handleAmbitoChange(selectedOption);
-                setValue('ambito', selectedOption, { shouldValidate: true })
-              }}
+              options={opcionesAmbito}
+              // onSelectionChange={(selectedOption) =>
+              // {
+              //   handleAmbitoChange(selectedOption);
+              //   setValue('ambito', selectedOption, { shouldValidate: true })
+              // }}
+              onSelectionChange={handleAmbitoChange}
               selected={ambitoSeleccionado}
             />
             {errors.ambito && (
@@ -312,7 +322,7 @@ const CreacionCompetencia = () => {
           </div>
 
           <div className="d-flex justify-content-end">
-            <button className="btn-primario-s mb-5" type="submit">
+            <button className="btn-primario-s mb-5" type="submit" onClick>
               <p className="mb-0">Crear Competencia</p>
               <i className="material-symbols-rounded ms-2">arrow_forward_ios</i>
             </button>

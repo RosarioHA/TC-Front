@@ -1,19 +1,20 @@
 import { useState, useCallback, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useUsers } from '../../hooks/usuarios/useUsers';
 import { useAuth } from '../../context/AuthContext';
 import InputSearch from "../../components/forms/Input_search";
 import { TableCheckbox } from "../../components/tables/TableCheck";
 import { columnTitlesUser } from "../../Data/Usuarios";
-import { useUsers } from '../../hooks/usuarios/useUsers';
 
 const GestionUsuarios = () => {
   const { userData } = useAuth();
-  const { users, pagination, updateUrl } = useUsers();
+  const { users, pagination, setPagination, metadata } = useUsers();
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredUsers, setFilteredUsers] = useState([]);
   const navigate = useNavigate();
 
   const userSubdere = userData?.perfil?.includes('SUBDERE');
+  console.log("users 1", users) //trae 10 usuarios segun paginacion
 
   useEffect(() => {
     if (users) {
@@ -59,12 +60,24 @@ const GestionUsuarios = () => {
     navigate(`/home/editar_usuario/${user.id}`, { state: { user } });
   };
 
-  const handlePageChange = (pageUrl) => {
-    // Extrae el número de página de la URL
-    console.log("page URL", pageUrl)
-    const pageNumber = new URL(pageUrl, window.location.origin).searchParams.get('page');
-    updateUrl(pageNumber);
-    console.log("filtered users al hacer click en flecha", filteredUsers)
+  // const handlePageChange = (pageUrl) => {
+  //   // Extrae el número de página de la URL
+  //   console.log("page URL", pageUrl)
+  //   const pageNumber = new URL(pageUrl, window.location.origin).searchParams.get('page');
+  //   updateUrl(pageNumber);
+  //   console.log("filtered users al hacer click en flecha", filteredUsers)
+  // };
+
+
+
+
+
+  const projectsPerPage = 10;
+
+  const totalPages = Math.ceil(metadata.count / projectsPerPage);
+
+  const handlePageChange = (pageNumber) => {
+    setPagination(pageNumber);
   };
 
   // Modificar la función para renderizar botones de paginación
@@ -72,36 +85,44 @@ const GestionUsuarios = () => {
     if (!pagination) {
       return null;
     }
-    const { next, previous } = pagination;
 
     return (
-      <nav>
-        <ul className="pagination ms-md-5">
-          {previous && (
-            <li className="page-item">
-              <button
-                className="custom-pagination-btn mx-3"
-                onClick={() => handlePageChange(previous)}
-              >
+      <div className="d-flex flex-column flex-md-row my-5">
+        {/* Índice */}
+        <p className="text-sans-h5 mx-5 text-center">
+          {`Mostrando ${(pagination - 1) * projectsPerPage + 1}- ${Math.min(pagination * projectsPerPage, metadata.count)} de ${metadata.count} proyectos`}
+        </p>
+        {/* Paginación */}
+        <nav className="pagination-container mx-auto mx-md-0">
+          <ul className="pagination ms-md-5">
+            <li className={`page-item ${pagination === 1 ? 'disabled' : ''}`}>
+              <button className="custom-pagination-btn mx-3" onClick={() => handlePageChange(pagination - 1)} disabled={pagination === 1}>
                 &lt;
               </button>
             </li>
-          )}
-          {/* Aquí podrías agregar botones para páginas específicas si es necesario */}
-          {next && (
-            <li className="page-item">
-              <button
-                className="custom-pagination-btn mx-3"
-                onClick={() => handlePageChange(next)}
-              >
+            {Array.from({ length: totalPages }, (_, i) => (
+              <li key={i} className="page-item">
+                <button className={`custom-pagination-btn text-decoration-underline px-2 mx-2 ${pagination === i + 1 ? 'active' : ''}`} onClick={() => handlePageChange(i + 1)}>
+                  {i + 1}
+                </button>
+              </li>
+            ))}
+            <li className={`page-item ${pagination === totalPages ? 'disabled' : ''}`}>
+              <button className="custom-pagination-btn mx-3" onClick={() => handlePageChange(pagination + 1)} disabled={pagination === totalPages}>
                 &gt;
               </button>
             </li>
-          )}
-        </ul>
-      </nav>
+          </ul>
+        </nav>
+      </div>
     );
   };
+
+
+
+
+
+
 
   return (
     <div className="container-fluid mt-2">

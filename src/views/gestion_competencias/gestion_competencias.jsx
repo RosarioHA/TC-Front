@@ -10,18 +10,27 @@ const GestionCompetencias = () => {
   const { userData } = useAuth();
   const { dataListCompetencia, paginationCompetencia, updatePage } = useCompetencia();
   const [ searchQuery, setSearchQuery ] = useState('');
-  const [ filteredCompetencia, setFilteredCompetencia ] = useState(dataListCompetencia);
+  const [ filteredCompetencia, setFilteredCompetencia ] = useState([]);
   const navigate = useNavigate();
 
-  console.log(dataListCompetencia);
+  console.log("Data de competencias en GestionCompetencias:", dataListCompetencia); //trae la lista completa de competencias, sin paginacion
+  console.log("Datos de paginacion en GestionCompetencias:", paginationCompetencia); // null
 
   const userSubdere = userData?.perfil?.includes('SUBDERE');
 
   useEffect(() => {
     if (dataListCompetencia) {
-      setFilteredCompetencia(dataListCompetencia);
+      // Si hay información de paginación, filtra las competencias según la página actual
+      if (paginationCompetencia.results) {
+        const startIndex = (paginationCompetencia.current_page - 1) * paginationCompetencia.page_size;
+        const endIndex = startIndex + paginationCompetencia.results.length;
+        setFilteredCompetencia(dataListCompetencia.slice(startIndex, endIndex));
+      } else {
+        // Si no hay información de paginación, muestra todas las competencias
+        setFilteredCompetencia(dataListCompetencia);
+      }
     }
-  }, [ dataListCompetencia ]);
+  }, [dataListCompetencia, paginationCompetencia]);
 
   const sortOptions = {
     Estado: (direction) => (a, b) => {
@@ -66,35 +75,40 @@ const GestionCompetencias = () => {
 
   const handlePageChange = (pageUrl) => {
     // Extrae el número de página de la URL
+    console.log("page URL", pageUrl)
     const pageNumber = new URL(pageUrl, window.location.origin).searchParams.get('page');
-    updatePage(`/competencias/?page=${pageNumber}`);
+    updatePage(pageNumber);
+    console.log("filtered competencia al hacer click en flecha", filteredCompetencia)
   };
 
 
   // Modificar la función para renderizar botones de paginación
   const renderPaginationButtons = () => {
-    if (!paginationCompetencia || (!paginationCompetencia.next && !paginationCompetencia.previous)) {
+    if (!paginationCompetencia) {
+      console.log("pagination competencia", paginationCompetencia)
       return null;
     }
+    const { next, previous } = paginationCompetencia;
+
     return (
       <nav>
         <ul className="pagination ms-md-5">
-          {paginationCompetencia.previous && (
+          {previous && (
             <li className="page-item">
               <button
                 className="custom-pagination-btn mx-3"
-                onClick={() => handlePageChange(paginationCompetencia.previous)}
+                onClick={() => handlePageChange(previous)}
               >
                 &lt;
               </button>
             </li>
           )}
           {/* Aquí podrías agregar botones para páginas específicas si es necesario */}
-          {paginationCompetencia.next && (
+          {next && (
             <li className="page-item">
               <button
                 className="custom-pagination-btn mx-3"
-                onClick={() => handlePageChange(paginationCompetencia.next)}
+                onClick={() => handlePageChange(next)}
               >
                 &gt;
               </button>
@@ -135,7 +149,7 @@ const GestionCompetencias = () => {
           <InputSearch
             value={searchQuery}
             onChange={setSearchQuery}
-            placeholder="Buscar usuarios"
+            placeholder="Buscar competencias"
             onSearch={handleSearch} />
           {userSubdere && (
             <div>
@@ -186,9 +200,12 @@ const GestionCompetencias = () => {
                 </td>
               </tr>
             )}
-            sortOptions={sortOptions} /><div className="pagination-container d-flex justify-content-center">
-            {renderPaginationButtons()}
-          </div>
+            sortOptions={sortOptions} 
+            />
+            
+            <div className="pagination-container d-flex justify-content-center border">
+              {renderPaginationButtons()}
+            </div>
         </>
       )}
     </div >
