@@ -1,23 +1,43 @@
-import TablaEncabezadoSelector from "../../tables/EncabezadoSelector";
+import React, {useState, useEffect, useContext} from "react";
 import CustomInput from "../../forms/custom_input_prueba";
+import { FormularioContext } from "../../../context/FormSectorial";
 
 export const Subpaso_dosPuntoDos = ({id, data, stepNumber}) => {
 
-  const agrupadosPorOrganismo = data.reduce((acc, unidad) => {
-    const { organismo_display, nombre_ministerio_servicio } = unidad.organismo;
-  
-    if (!acc[organismo_display]) {
-      acc[organismo_display] = {};
+  const {  refreshSubpasoDos, setRefreshSubpasoDos, recargarDatos } = useContext(FormularioContext);
+
+
+  // Definición de la función 'agrupadosPorOrganismo'
+  const agrupadosPorOrganismo = () => {
+    return data.reduce((acc, unidad) => {
+      const { organismo_display, nombre_ministerio_servicio } = unidad.organismo;
+      if (!acc[organismo_display]) {
+        acc[organismo_display] = {};
+      }
+      if (!acc[organismo_display][nombre_ministerio_servicio]) {
+        acc[organismo_display][nombre_ministerio_servicio] = [];
+      }
+      acc[organismo_display][nombre_ministerio_servicio].push(unidad);
+      return acc;
+    }, {});
+  };
+
+  const [agrupados, setAgrupados] = useState({});
+
+  useEffect(() => {
+    if (refreshSubpasoDos) {
+      console.log('Recibida la instrucción desde Paso 1:', refreshSubpasoDos);
+
+      const nuevosAgrupados = agrupadosPorOrganismo();
+      setAgrupados(nuevosAgrupados); // Actualiza el estado con los nuevos agrupados
+
+      recargarDatos();
+
+      setRefreshSubpasoDos(false); // Reestablece el estado de refresco
+      console.log('Estado final Refresh:', refreshSubpasoDos);
     }
-  
-    if (!acc[organismo_display][nombre_ministerio_servicio]) {
-      acc[organismo_display][nombre_ministerio_servicio] = [];
-    }
-  
-    acc[organismo_display][nombre_ministerio_servicio].push(unidad);
-  
-    return acc;
-  }, {});
+  }, [refreshSubpasoDos, setRefreshSubpasoDos, recargarDatos]); // Asegúrate de que 'data' esté en las dependencias
+
   
     return(
       <div>
@@ -26,7 +46,7 @@ export const Subpaso_dosPuntoDos = ({id, data, stepNumber}) => {
         <h6 className="text-sans-h6-primary mt-3">  Asegúrate de identificar correctamente las unidades de cada organismo que participan en el ejercicio de la competencia, ya que esta información será utilizada más adelante en tu formulario.</h6>
         
         <div className="my-4">
-            {Object.entries(agrupadosPorOrganismo).map(([organismoDisplay, ministerios]) => (
+            {Object.entries(agrupados).map(([organismoDisplay, ministerios]) => (
               <div key={organismoDisplay} className="tabla-organismo">
                 <div className="row border">
                   <div className="col-2 border">

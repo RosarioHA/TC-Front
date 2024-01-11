@@ -2,7 +2,6 @@ import { createContext, useState , useCallback} from 'react';
 import { useFormSectorial } from '../hooks/formulario/useFormulario';
 import { usePasoForm } from '../hooks/formulario/usePasoForm';
 import { useUpdateForm } from '../hooks/formulario/useUpdateForm';
-import { useUpdateFormRefresh } from '../hooks/formulario/useUpdateFormRefresh';
 
 export const FormularioContext = createContext();
 
@@ -16,7 +15,8 @@ export const FormularioProvider = ({ children }) => {
   const { dataFormSectorial, loadingFormSectorial, errorFormSectorial } = useFormSectorial(id);
   const { dataPaso, loadingPaso, errorPaso } = usePasoForm(id, stepNumber);
   const { patchStep, loading, error } = useUpdateForm();
-  const { refreshStep, loadingRefresh, errorRefresh } = useUpdateFormRefresh();
+  const [refreshSubpasoDos, setRefreshSubpasoDos] = useState(false);
+
 
 
   const updateFormId = (newId) => {
@@ -59,20 +59,6 @@ export const FormularioProvider = ({ children }) => {
       }
     }, [id, stepNumber]);
 
-    const handleRefreshUpdate = async (id, stepNumber, datosPaso, archivos = {}) => {
-      try {
-        if (!datosPaso || typeof datosPaso !== 'object' || Object.keys(datosPaso).length === 0) {
-          throw new Error("datosPaso es inválido");
-        }
-        // Llama a refreshStep con los datos estructurados correctamente
-        await refreshStep(id, stepNumber, datosPaso, archivos);
-        // Aquí puedes recargar los datos o realizar acciones adicionales si es necesario
-        recargarDatos();
-      } catch (error) {
-        console.error("Error al refrescar y actualizar los datos:", error);
-      }
-    };
-    
 
   const value = {
     data: dataFormSectorial,
@@ -86,9 +72,8 @@ export const FormularioProvider = ({ children }) => {
     updateStepNumber,
     stepNumber,
     handleUpdatePaso,
-    handleRefreshUpdate,
-    loadingRefresh,
-    errorRefresh
+    refreshSubpasoDos, 
+    setRefreshSubpasoDos
   };
 
 
