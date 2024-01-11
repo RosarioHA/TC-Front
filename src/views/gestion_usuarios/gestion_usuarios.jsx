@@ -60,18 +60,6 @@ const GestionUsuarios = () => {
     navigate(`/home/editar_usuario/${user.id}`, { state: { user } });
   };
 
-  // const handlePageChange = (pageUrl) => {
-  //   // Extrae el número de página de la URL
-  //   console.log("page URL", pageUrl)
-  //   const pageNumber = new URL(pageUrl, window.location.origin).searchParams.get('page');
-  //   updateUrl(pageNumber);
-  //   console.log("filtered users al hacer click en flecha", filteredUsers)
-  // };
-
-
-
-
-
   const projectsPerPage = 10;
 
   const totalPages = Math.ceil(metadata.count / projectsPerPage);
@@ -90,7 +78,7 @@ const GestionUsuarios = () => {
       <div className="d-flex flex-column flex-md-row my-5">
         {/* Índice */}
         <p className="text-sans-h5 mx-5 text-center">
-          {`Mostrando ${(pagination - 1) * projectsPerPage + 1}- ${Math.min(pagination * projectsPerPage, metadata.count)} de ${metadata.count} proyectos`}
+          {`${(pagination - 1) * projectsPerPage + 1}- ${Math.min(pagination * projectsPerPage, metadata.count)} de ${metadata.count} usuarios`}
         </p>
         {/* Paginación */}
         <nav className="pagination-container mx-auto mx-md-0">
@@ -117,12 +105,6 @@ const GestionUsuarios = () => {
       </div>
     );
   };
-
-
-
-
-
-
 
   return (
     <div className="container-fluid mt-2">

@@ -8,7 +8,7 @@ import { columnTitleCompetencias } from "../../Data/Usuarios";
 
 const GestionCompetencias = () => {
   const { userData } = useAuth();
-  const { dataListCompetencia, paginationCompetencia, updatePage } = useCompetencia();
+  const { dataListCompetencia, paginationCompetencia, updatePage, currentPage } = useCompetencia();
   const [ searchQuery, setSearchQuery ] = useState('');
   const [ filteredCompetencia, setFilteredCompetencia ] = useState([]);
   const navigate = useNavigate();
@@ -73,6 +73,10 @@ const GestionCompetencias = () => {
     navigate(`/home/editar_competencia/${competencia.id}`, { state: { competencia } });
   };
 
+  const projectsPerPage = 10;
+
+  const totalPages = Math.ceil(paginationCompetencia.count / projectsPerPage);
+
   const handlePageChange = (pageUrl) => {
     // Extrae el número de página de la URL
     console.log("page URL", pageUrl)
@@ -88,34 +92,36 @@ const GestionCompetencias = () => {
       console.log("pagination competencia", paginationCompetencia)
       return null;
     }
-    const { next, previous } = paginationCompetencia;
 
     return (
-      <nav>
-        <ul className="pagination ms-md-5">
-          {previous && (
-            <li className="page-item">
-              <button
-                className="custom-pagination-btn mx-3"
-                onClick={() => handlePageChange(previous)}
-              >
+      <div className="d-flex flex-column flex-md-row my-5">
+        {/* Índice */}
+        <p className="text-sans-h5 mx-5 text-center">
+          {`${(currentPage - 1) * projectsPerPage + 1}- ${Math.min(currentPage * projectsPerPage, paginationCompetencia.count)} de ${paginationCompetencia.count} competencias`}
+        </p>
+        {/* Paginación */}
+        <nav className="pagination-container mx-auto mx-md-0">
+          <ul className="pagination ms-md-5">
+            <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
+              <button className="custom-pagination-btn mx-3" onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
                 &lt;
               </button>
             </li>
-          )}
-          {/* Aquí podrías agregar botones para páginas específicas si es necesario */}
-          {next && (
-            <li className="page-item">
-              <button
-                className="custom-pagination-btn mx-3"
-                onClick={() => handlePageChange(next)}
-              >
+            {Array.from({ length: totalPages }, (_, i) => (
+              <li key={i} className="page-item">
+                <button className={`custom-pagination-btn text-decoration-underline px-2 mx-2 ${currentPage === i + 1 ? 'active' : ''}`} onClick={() => handlePageChange(i + 1)}>
+                  {i + 1}
+                </button>
+              </li>
+            ))}
+            <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
+              <button className="custom-pagination-btn mx-3" onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>
                 &gt;
               </button>
             </li>
-          )}
-        </ul>
-      </nav>
+          </ul>
+        </nav>
+      </div>
     );
   };
 
