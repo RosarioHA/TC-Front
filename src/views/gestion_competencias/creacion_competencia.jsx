@@ -96,6 +96,7 @@ const CreacionCompetencia = () => {
       const isValid = await trigger();
       if (isValid) {
         await onSubmit(data); // Invoca la función onSubmit que ya tiene la lógica para enviar la información al backend
+        history('/home/success', { state: { origen: "crear_competencia" } });
       } else {
         console.log("El formulario no es válido");
       }
