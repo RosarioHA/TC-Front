@@ -3,11 +3,7 @@ import TablaEncabezadoFijo from "../../tables/EncabezadoFijo";
 import TablaEncabezadoSelector from "../../tables/EncabezadoSelector";
 import { FormularioContext } from "../../../context/FormSectorial";
 
-export const Subpaso_dosPuntoUno = ({ data, lista }) => {
-
-  const { handleUpdatePaso } = useContext(FormularioContext);
-  const [numTablasSelector, setNumTablasSelector] = useState(0);
-
+export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber }) => {
 
  //convertir estructura para el select
   const transformarEnOpciones = (datos) => {
@@ -23,9 +19,11 @@ export const Subpaso_dosPuntoUno = ({ data, lista }) => {
 
       <div className="my-4">
         {data && data.length > 0 && (
-          <TablaEncabezadoFijo 
+          <TablaEncabezadoFijo
+          id = {id} 
           data={data} 
           options={ opcionesDeSelector }
+          stepNumber = {stepNumber}
           />
         )}
       </div>

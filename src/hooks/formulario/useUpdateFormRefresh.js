@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { apiTransferenciaCompentencia } from "../../services/transferenciaCompetencia";
 
-export const useUpdateForm = () => {
+export const useUpdateFormRefresh = (onSuccess) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -31,8 +31,12 @@ export const useUpdateForm = () => {
 
       const response = await apiTransferenciaCompentencia.patch(`/formulario-sectorial/${id}/paso-${stepNumber}/`, payload);
       setLoading(false);
-      return response.data;
-      
+
+
+      if (onSuccess) {
+        onSuccess(response.data); // Llamar al callback con los datos de la respuesta
+      }
+
     } catch (err) {
       setLoading(false);
       setError(err);

@@ -51,7 +51,7 @@ const TablaEncabezadoSelector = ({ options, isEditable, title }) =>
             <div key={fila.id} className="border row">
               <div className="col-10 p-3">
                 <div className="mt-2 mb-4">
-                  < CustomInput
+                  <CustomInput
                     label="Nombre"
                     placeholder="Nombre ministerio o servicio"
                     disabled={false}
@@ -59,7 +59,7 @@ const TablaEncabezadoSelector = ({ options, isEditable, title }) =>
                   />
                 </div>
                 <div className="mb-2">
-                  < CustomInput
+                  <CustomInput
                     label="Descripción"
                     placeholder="Descripción"
                     disabled={false}
