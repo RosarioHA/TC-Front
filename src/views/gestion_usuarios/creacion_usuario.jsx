@@ -14,7 +14,6 @@ import { useRegion } from "../../hooks/useRegion";
 import { useGroups } from "../../hooks/useGroups";
 import { useSector } from "../../hooks/useSector";
 
-
 const initialValues = {
   rut: '',
   nombre: '',
@@ -24,8 +23,7 @@ const initialValues = {
   password: '',
 };
 
-const CreacionUsuario = () =>
-{
+const CreacionUsuario = () => {
   const { createUser, isLoading, error } = useCreateUser();
   const { dataGroups, loadingGroups } = useGroups();
   const { dataSector, loadingSector } = useSector();
@@ -38,17 +36,14 @@ const CreacionUsuario = () =>
   const [ submitClicked, setSubmitClicked ] = useState(false);
   const { dataRegiones, loadingRegiones } = useRegion();
 
-
-  useEffect(() =>
-  {
+  useEffect(() => {
     console.log("competencias seleccionadas en vista", competenciasSeleccionadas);
   }, [ competenciasSeleccionadas ]);
 
 
   // Maneja boton de volver atras.
   const history = useNavigate();
-  const handleBackButtonClick = () =>
-  {
+  const handleBackButtonClick = () => {
     history(-1);
   };
 
@@ -64,36 +59,19 @@ const CreacionUsuario = () =>
     mode: 'manual',
   });
 
-
-
   //opciones de perfil 
   const opcionesGroups = dataGroups.map(group => ({
     value: group.id,
     label: group.name
   }))
-
-  // const handlePerfilChange = ( selectedValue) => {
-  //   console.log("selectedValue", selectedValue);
-  //   const selectedProfile = opcionesGroups.find(option => option.value === selectedValue.label)
-  //   console.log("selectedPRofile", selectedProfile);
-  //   if(selectedProfile) {
-  //     setPerfilSeleccionado(selectedProfile.label);
-  //   }else { 
-  //     setPerfilSeleccionado(null); 
-  // }}
-  // console.log("perfilSeleccionado", perfilSeleccionado)
-  const handlePerfilChange = (selectedValue) =>
-  {
+  const handlePerfilChange = (selectedValue) => {
     console.log("selectedValue", selectedValue);
     console.log("selectedValue.label", selectedValue.label);
     const selectedProfile = opcionesGroups.find((option) => option.value === selectedValue.value);
     console.log("selectedProfile", selectedProfile);
-
-    if (selectedProfile)
-    {
+    if (selectedProfile) {
       setPerfilSeleccionado(selectedProfile.label);
-    } else
-    {
+    } else {
       setPerfilSeleccionado(null);
     }
   };
@@ -103,9 +81,7 @@ const CreacionUsuario = () =>
     value: region.id,
     label: region.region
   }));
-
-  const handleRegionChange = (region) =>
-  {
+  const handleRegionChange = (region) => {
     setRegionSeleccionada(region.value);
   }
 
@@ -114,45 +90,34 @@ const CreacionUsuario = () =>
     value: sector.id,
     label: sector.nombre,
   }));
-
-
-  const handleSectorChange = (sector) =>
-  {
+  const handleSectorChange = (sector) => {
     setSectorSeleccionado(sector.value);
   }
 
-  const handleEstadoChange = (nuevoEstado) =>
-  {
+  const handleEstadoChange = (nuevoEstado) => {
     setEstado(nuevoEstado);
     setActiveButton(nuevoEstado);
   };
 
-  const handleInputClick = (e) =>
-  {
+  const handleInputClick = (e) => {
     // Previene que el evento se propague al boton
     e.stopPropagation();
   };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const handleCompetenciasChange = useCallback(
-    (selectedOptions) =>
-    {
+  const handleCompetenciasChange = useCallback((selectedOptions) => {
       const updatedCompetencias = {};
-      selectedOptions.forEach((competencia) =>
-      {
+      selectedOptions.forEach((competencia) => {
         updatedCompetencias[ competencia ] = true;
-        selectedOptions.forEach((competenciaId) =>
-        {
+        selectedOptions.forEach((competenciaId) => {
           updatedCompetencias[ competenciaId ] = true;
         });
         setCompetenciasSeleccionadas(updatedCompetencias);
       }, []);
     });
 
-  const onSubmit = async (data) =>
-  {
-    try
-    {
+  const onSubmit = async (data) => {
+    try {
       const userData = {
         ...data,
         nombre_completo: data.nombre,
@@ -165,26 +130,20 @@ const CreacionUsuario = () =>
       };
 
       const isValid = await trigger();
-      if (submitClicked && isValid)
-      {
+      if (submitClicked && isValid) {
         await createUser(userData);
         history('/home/success', { state: { origen: "crear_usuario" } });
-      } else
-      {
+      } else {
         console.log("El formulario no es válido o no se ha hecho click en 'Crear Usuario'");
       }
-    } catch (error)
-    {
+    } catch (error) {
       console.error('Error al enviar el formulario:', error);
     }
   };
-  if (isLoading)
-  {
+  if (isLoading) {
     return <div>Cargando...</div>;
   }
   { error && <div className="error-message">Error al crear el usuario: {error.message}</div> }
-
-
 
   return (
     <div className="container col-10 my-4">
@@ -386,7 +345,6 @@ const CreacionUsuario = () =>
               />
             </div>
           </div>
-
 
           <button className="btn-primario-s mb-5" type="submit" onClick={() => setSubmitClicked(true)}>
             <p className="mb-0">Crear Usuario</p>

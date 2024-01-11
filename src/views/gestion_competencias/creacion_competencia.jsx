@@ -22,8 +22,8 @@ const initialValues = {
   origen: '',
   ambito: '',
   usuarios: '',
-  plazoSectorial: undefined,
-  plazoGore: undefined,
+  plazo_formulario_sectorial: undefined,
+  plazo_formulario_gore: undefined,
 };
 
 const groupUsersByType = (users) => {
@@ -63,6 +63,7 @@ const CreacionCompetencia = () => {
     handleSubmit,
     setValue,
     formState: { errors },
+    trigger,
   } = useForm({
     resolver: yupResolver(esquemaCreacionCompetencia),
     defaultValues: initialValues,
@@ -78,14 +79,28 @@ const CreacionCompetencia = () => {
       usuarios: Object.keys(usuariosSeleccionados),
       ambito: ambitoSeleccionado,
       origen: origenSeleccionado,
+      plazo_formulario_sectorial: data.plazo_formulario_sectorial,
+      plazo_formulario_gore: data.plazo_formulario_gore,
     };
 
     try {
       await createCompetencia(competenciaData);
       // Manejar la respuesta, redireccionar o mostrar un mensaje de éxito
-    } catch (error)
-    {
+    } catch (error) {
       // Manejar el error
+    }
+  };
+
+  const handleCrearCompetenciaClick = async (data) => {
+    try {
+      const isValid = await trigger();
+      if (isValid) {
+        await onSubmit(data); // Invoca la función onSubmit que ya tiene la lógica para enviar la información al backend
+      } else {
+        console.log("El formulario no es válido");
+      }
+    } catch (error) {
+      console.error('Error al crear competencia:', error);
     }
   };
 
@@ -94,7 +109,6 @@ const CreacionCompetencia = () => {
     label: region.region,
     value: region.id,
   }));
-
   const handleRegionesChange = (selectedOptions) => {
     console.log(selectedOptions);
     setRegionesSeleccionadas(selectedOptions);
@@ -106,20 +120,16 @@ const CreacionCompetencia = () => {
     label: sector.nombre,
     value: sector.id,
   }));
-
   const handleSectorChange = (selectedOptions) => {
     setSectoresSeleccionados(selectedOptions);
     setValue('sectores', selectedOptions);
   };
 
   //opciones origen
-  //const origenes = useOrigenes();
-  //aqui hay que especificar el dato igual como en opciones sector
   const opcionesOrigen = origenes.map(origen => ({
     label: origen.descripcion,
     value: origen.clave,
   }));
-
   const handleOrigenChange = (selectedOption) => {
     console.log(selectedOption)
     setOrigenSeleccionado(selectedOption.value);
@@ -127,12 +137,10 @@ const CreacionCompetencia = () => {
   };
   
   //opciones ambito
-  // const ambitos = useAmbitos();
   const opcionesAmbito = ambitos.map(ambito => ({
     label: ambito.nombre,
     value: ambito.id,
   }));
-
   const handleAmbitoChange = (selectedOption) => {
     console.log(selectedOption)
     setAmbitoSeleccionado(selectedOption);
@@ -171,7 +179,7 @@ const CreacionCompetencia = () => {
                   label="Nombre de la Competencia (Obligatorio)"
                   placeholder="Escribe el nombre de la competencia"
                   id="nombre"
-                  maxLength={200} // Configura el maxLength según la API
+                  maxLength={30}
                   error={errors.nombre?.message}
                   ref={field.ref}
                   {...field} />
@@ -223,11 +231,6 @@ const CreacionCompetencia = () => {
               label="Elige el ámbito de la competencia (Obligatorio)"
               placeholder="Elige el ámbito de la competencia"
               options={opcionesAmbito}
-              // onSelectionChange={(selectedOption) =>
-              // {
-              //   handleAmbitoChange(selectedOption);
-              //   setValue('ambito', selectedOption, { shouldValidate: true })
-              // }}
               onSelectionChange={handleAmbitoChange}
               selected={ambitoSeleccionado}
             />
@@ -277,13 +280,13 @@ const CreacionCompetencia = () => {
 
           <div className="mb-4">
             < Controller
-              name="plazoSectorial"
+              name="plazo_formulario_sectorial"
               control={control}
               render={({ field }) => (
                 < CustomInput
                   label="Plazo para formulario sectorial (Obligatorio)"
                   placeholder="Escribe el número de días corridos"
-                  id="plazoSectorial"
+                  id="plazo_formulario_sectorial"
                   maxLength={null}
                   error={errors.plazoSecorial?.message}
                   ref={field.ref}
@@ -300,13 +303,13 @@ const CreacionCompetencia = () => {
 
           <div className="mb-4">
             < Controller
-              name="plazoGORE"
+              name="plazo_formulario_gore"
               control={control}
               render={({ field }) => (
                 < CustomInput
                   label="Plazo para formulario GORE (Obligatorio)"
                   placeholder="Escribe el número de días corridos"
-                  id="plazoGORE"
+                  id="plazo_formulario_gore"
                   maxLength={null}
                   error={errors.plazoGORE?.message}
                   ref={field.ref}
@@ -322,7 +325,7 @@ const CreacionCompetencia = () => {
           </div>
 
           <div className="d-flex justify-content-end">
-            <button className="btn-primario-s mb-5" type="submit" onClick>
+            <button className="btn-primario-s mb-5" type="submit" onClick={handleCrearCompetenciaClick}>
               <p className="mb-0">Crear Competencia</p>
               <i className="material-symbols-rounded ms-2">arrow_forward_ios</i>
             </button>
