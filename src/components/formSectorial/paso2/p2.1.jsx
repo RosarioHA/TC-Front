@@ -1,7 +1,4 @@
-import { useState, useContext } from "react";
 import TablaEncabezadoFijo from "../../tables/EncabezadoFijo";
-import TablaEncabezadoSelector from "../../tables/EncabezadoSelector";
-import { FormularioContext } from "../../../context/FormSectorial";
 
 export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber }) => {
 

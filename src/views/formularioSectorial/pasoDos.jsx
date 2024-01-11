@@ -47,7 +47,7 @@ const PasoDos = () =>
             <Subpaso_dosPuntoUno data={p_2_1_organismos_intervinientes} lista={listado_organismos} stepNumber={stepNumber} id={data.id}/>
           </div>
           <div className="container-fluid me-5 pe-5 my-5">
-            <Subpaso_dosPuntoDos data={p_2_2_unidades_intervinientes} />
+            <Subpaso_dosPuntoDos data={p_2_2_unidades_intervinientes} stepNumber={stepNumber} id={data.id}/>
           </div>
           <div className="container-fluid me-5 pe-5 my-5">
             <Subpaso_dosPuntoTres data={p_2_3_etapas_ejercicio_competencia} />

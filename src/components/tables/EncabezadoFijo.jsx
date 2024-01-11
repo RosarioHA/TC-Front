@@ -215,6 +215,7 @@ const TablaEncabezadoFijo = ({ id, data, options, stepNumber }) => {
             <div className="col p-3">
               <p>{organismoDisplay}</p>
             </div>
+            
             <div className="col-10 border p-2">
             {filas.map((fila, filaIndex) => (
               <div key={fila.id} className="border row">
