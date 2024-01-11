@@ -1,18 +1,28 @@
-import { useContext, useState, useEffect} from 'react';
+import { useContext, useState, useEffect } from 'react';
 import CustomTextarea from "../../forms/custom_textarea";
 import CustomInput from "../../forms/custom_input";
-//import { DocumentsAditionals } from '../../commons/documents';
+import { DocumentsAditionals } from '../../commons/documents';
 import { FormularioContext } from "../../../context/FormSectorial";
 
-export const Subpaso_uno = ({ pasoData, id , stepNumber}) =>
+export const Subpaso_uno = ({ pasoData, id, stepNumber }) =>
 {
   const { handleUpdatePaso } = useContext(FormularioContext);
   const [ formData, setFormData ] = useState({
     paso1: pasoData.paso1 || {
-      forma_juridica_organismo: '',
-      mision_institucional: '',
+      forma_juridica_organismo: pasoData.forma_juridica_organismo,
+      mision_institucional: pasoData.mision_institucional,
+      descripcion_archivo_marco_juridico: pasoData.descripcion_archivo_marco_juridico,
+      informacion_adicional_marco_juridico: pasoData.informacion_adicional_marco_juridico,
     }
   });
+  const [ inputStatus, setInputStatus ] = useState({
+    forma_juridica_organismo: { loading: false, saved: false },
+    mision_institucional: { loading: false, saved: false },
+    descripcion_archivo_marco_juridico: { loading: false, saved: false },
+    informacion_adicional_marco_juridico: { loading: false, saved: false },
+    // Agrega aquí los demás campos necesarios
+  });
+
 
   useEffect(() =>
   {
@@ -22,62 +32,83 @@ export const Subpaso_uno = ({ pasoData, id , stepNumber}) =>
     }
   }, [ pasoData ]);
 
+  useEffect(() =>
+  {
+    // Recuperar los datos del localStorage y establecerlos en el estado
+    const savedData = localStorage.getItem('formData');
+    if (savedData)
+    {
+      setFormData(JSON.parse(savedData));
+    }
+  }, []);
+  useEffect(() =>
+  {
+    console.log("formData ha cambiado", formData);
+    localStorage.setItem('formData', JSON.stringify(formData));
+  }, [ formData ]);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
+  const handleChange = (inputName, e) =>
+  {
+    const { value } = e.target;
     setFormData(prevFormData => ({
       ...prevFormData,
       paso1: {
         ...prevFormData.paso1,
-        [name]: value,
+        [ inputName ]: value,
+      }
+    }));
+    setInputStatus(prevStatus => ({
+      ...prevStatus,
+      [ inputName ]: { loading: false, saved: false }
+    }));
+  };
+
+  const handleFilesChange = (newFiles) => {
+    // Mapear los archivos a tu esquema 'marcojuridico'
+    const updatedMarcoJuridico = newFiles.map((file, index) => ({
+      id: index + 1, // Asumiendo que el ID es secuencial y comienza en 1
+      documento: file, // Almacena el archivo directamente
+      documento_url: null // URL será actualizada después de la carga
+    }));
+  
+    setFormData(prevFormData => ({
+      ...prevFormData,
+      paso1: {
+        ...prevFormData.paso1,
+        marcojuridico: updatedMarcoJuridico
       }
     }));
   };
-  
-  const handleSave = async () => {
-    try {
-      // Crear una copia de formData.paso1 para manipular
-      const updatedData = { ...formData.paso1 };
-  
-      // Eliminar campos vacíos del objeto updatedData
-      Object.keys(updatedData).forEach(key => {
-        if (updatedData[key] === '') {
-          delete updatedData[key];
-        }
-      });
-  
-      // Asegúrate de que la estructura de la carga útil coincida con lo que espera el servidor
-      const payload = {
-        id: id, // Asumiendo que 'id' es necesario
-        paso1: updatedData,
-        // Incluye aquí otros campos como 'marcojuridico', 'organigramaregional', etc., si son necesarios
-      };
-  
-      const response = await handleUpdatePaso(id, stepNumber, payload);
-    
-    
-    // Actualiza el estado local con los datos actualizados
-    if (response && response.paso1) {
-      setFormData({ paso1: response.paso1 });
-    }
 
-  
-    } catch (error) {
-      console.error("Error al guardar los datos:", error);
+  const handleSave = async (inputName) =>
+  {
+    setInputStatus(prevStatus => ({
+      ...prevStatus,
+      [ inputName ]: { ...prevStatus[ inputName ], loading: true }
+    }));
+
+    const success = await handleUpdatePaso(id, stepNumber, formData);
+    if (success)
+    {
+      setInputStatus(prevStatus => ({
+        ...prevStatus,
+        [ inputName ]: { loading: false, saved: true }
+      }));
+    } else
+    {
+      setInputStatus(prevStatus => ({
+        ...prevStatus,
+        [ inputName ]: { loading: false, saved: false }
+      }));
     }
   };
-  
 
-  if (!pasoData)
-  {
-    return <div>Cargando datos...</div>;
-  }
 
   return (
     <>
-      <div className="pe-5 me-5 mt-4">
+      <div className="pe-5 me-5 mt-4 col-12">
         <span className="my-4 text-sans-h4">1.1 Ficha de descripción organizacional</span>
-        <div className="my-4">
+        <div className="my-4 ">
           <CustomInput
             label="Denominación del organismo"
             placeholder="Escriba la denominación del organismo"
@@ -94,8 +125,10 @@ export const Subpaso_uno = ({ pasoData, id , stepNumber}) =>
             placeholder="Debes llenar este campo para poder enviar el formulario."
             name="forma_juridica_organismo"
             value={pasoData?.forma_juridica_organismo}
-            onChange={handleChange}
-            onBlur={handleSave}
+            onChange={(e) => handleChange('forma_juridica_organismo', e)}
+            onBlur={() => handleSave('forma_juridica_organismo')}
+            loading={inputStatus.forma_juridica_organismo.loading}
+            saved={inputStatus.forma_juridica_organismo.saved}
             maxLength={500}
           />
           <div className="d-flex mb-3 mt-0 text-sans-h6-primary">
@@ -103,17 +136,24 @@ export const Subpaso_uno = ({ pasoData, id , stepNumber}) =>
             <h6 className="mt-0">Corresponde a su naturaleza jurídica: centralizado o descentralizado, concentrado o desconcentrado.</h6>
           </div>
         </div>
-        <div className="container-fluid pb-3">
-          {/*<DocumentsAditionals onFilesChanged="" />*/}
+        <div className="container-fluid pb-3 col-12">
+          <div className="mb-3 ">
+            <span className="text-sans-h5">Marco jurídico que lo rige (Obligatorio)</span>
+            <p className="text-sans-h6-grey">Mínimo 1 archivo, máximo 5 archivos, peso máximo 20MB, formato PDF)</p>
+          </div>
+          <DocumentsAditionals onFilesChanged={handleFilesChange} />
         </div>
         <div className="my-4">
           <CustomTextarea
             label="Descripción archivo(s) de marco jurídico (Opcional)"
             placeholder="Descripción del marco jurídico"
-            name="formMision"
-            value={formData.formMision}
-            onChange={handleChange}
-            onBlur={handleSave}
+            name="descripcion_archivo_marco_juridico"
+            value={pasoData?.descripcion_archivo_marco_juridico}
+            onChange={(e) => handleChange('descripcion_archivo_marco_juridico', e)}
+            onBlur={() => handleSave('descripcion_archivo_marco_juridico')}
+            loading={inputStatus.descripcion_archivo_marco_juridico.loading}
+            saved={inputStatus.descripcion_archivo_marco_juridico.saved}
+            maxLength={500}
           />
         </div>
         <div className="my-4">
@@ -122,18 +162,26 @@ export const Subpaso_uno = ({ pasoData, id , stepNumber}) =>
             placeholder="Misión que defina el propósito de ser del organismo"
             name="mision_institucional"
             value={pasoData?.mision_institucional}
-            onChange={handleChange}
-            onBlur={handleSave}
+            onChange={(e) => handleChange('mision_institucional', e)}
+            onBlur={() => handleSave('mision_institucional')}
+            loading={inputStatus.mision_institucional.loading}
+            saved={inputStatus.mision_institucional.saved}
+            maxLength={500}
           />
         </div>
         <div className="my-4">
           <CustomTextarea
             label="Información adicional (Opcional)"
             placeholder="Escribe información adicional de ser necesario"
-            id={pasoData.informacion_adicional_marco_juridico}
+            name="informacion_adicional_marco_juridico"
+            value={pasoData?.informacion_adicional_marco_juridico}
+            onChange={(e) => handleChange('informacion_adicional_marco_juridico', e)}
+            onBlur={() => handleSave('informacion_adicional_marco_juridico')}
+            loading={inputStatus.informacion_adicional_marco_juridico.loading}
+            saved={inputStatus.informacion_adicional_marco_juridico.saved}
             maxLength={500}
           />
-          <div className="d-flex mb-3 mt-1 text-sans-h6-primary">
+          <div className="d-flex mb-3 mt-1 text-sans-h6-primary col-11">
             <i className="material-symbols-rounded me-2">info</i>
             <h6 className="mt-1">Llenar en caso de existir información que no sea posible clasificar en alguna de las categorías anteriores y que responda a particularidades propias del organismos.</h6>
           </div>
