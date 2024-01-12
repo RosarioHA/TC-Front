@@ -13,8 +13,7 @@ export const Subpaso_dosPuntoDos = ({id, data, stepNumber}) => {
   const fetchDataDirectly = async () => {
     try {
       const response = await apiTransferenciaCompentencia.get(`/formulario-sectorial/${id}/paso-${stepNumber}/`);
-      setDataDirecta(response.data); // Almacenar los datos obtenidos
-      console.log('Datos obtenidos directamente:', data);
+      setDataDirecta(response.data);
     } catch (error) {
       console.error('Error al obtener datos directamente:', error);
     }
@@ -48,7 +47,7 @@ export const Subpaso_dosPuntoDos = ({id, data, stepNumber}) => {
 
       setRefreshSubpasoDos(false); // Reestablece el estado de refresco
     }
-  }, [refreshSubpasoDos, setRefreshSubpasoDos, id, stepNumber ]); // Asegúrate de que 'data' esté en las dependencias
+  }, [refreshSubpasoDos, setRefreshSubpasoDos, id, stepNumber ]);
 
   useEffect(() => {
     // Carga inicial con 'data'
@@ -59,14 +58,13 @@ export const Subpaso_dosPuntoDos = ({id, data, stepNumber}) => {
   }, [data]);
   
   useEffect(() => {
+    // Carga con 'dataDirecta' tras editar paso 2.1
     if (dataDirecta) {
   
       const { p_2_2_unidades_intervinientes } = dataDirecta;
-      console.log('p_2_2_unidades_intervinientes:', p_2_2_unidades_intervinientes);
   
       if (p_2_2_unidades_intervinientes) {
         const nuevosAgrupados = agrupadosPorOrganismo(p_2_2_unidades_intervinientes);
-        console.log('nuevosAgrupados:', nuevosAgrupados);
   
         setAgrupados(nuevosAgrupados);
       }

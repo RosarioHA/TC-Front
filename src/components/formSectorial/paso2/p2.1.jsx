@@ -2,8 +2,13 @@ import React, { useState, useEffect, useContext } from 'react';
 import CustomInput from '../../forms/custom_input_prueba';
 import DropdownSelect from '../../dropdown/select';
 import { FormularioContext } from '../../../context/FormSectorial';
+import useRecargaDirecta from '../../../hooks/formulario/useRecargaDirecta';
 
 export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber }) => {
+
+  const { dataDirecta, isLoading, error } = useRecargaDirecta(id, stepNumber);
+
+  
 
  //convertir estructura para el select
   const transformarEnOpciones = (datos) => {
@@ -104,6 +109,8 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber }) => {
           [organismoDisplay]: filasActualizadas
         };
       });
+
+      setRefreshSubpasoDos(true);
   
     } catch (error) {
       console.error("Error al eliminar la fila:", error);
@@ -123,9 +130,8 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber }) => {
   };
 
   const agregarNuevoOrganismo = async () => {
-    const scrollPosition = window.scrollY;
 
-    if (!nuevoOrganismo || !nuevoOrganismoNombre) {
+    if (!nuevoOrganismo || !nuevoOrganismoNombre || !nuevoOrganismoDescripcion) {
       console.error("Faltan datos para agregar el organismo");
       return;
     }
@@ -149,13 +155,14 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber }) => {
         nuevosOrganismos[nuevoOrganismo].push(nuevoOrganismoDatos);
         return nuevosOrganismos;
       });
-
-      window.scrollTo(0, scrollPosition);
   
       // Limpiar los campos del formulario
       setNuevoOrganismo('');
       setNuevoOrganismoNombre('');
       setNuevoOrganismoDescripcion('');
+      
+      setMostrarFormularioNuevoOrganismo(false);
+      setRefreshSubpasoDos(true);
       
     } catch (error) {
       console.error("Error al agregar el organismo:", error);
@@ -206,6 +213,7 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber }) => {
       const response = await handleUpdatePaso(id, stepNumber, payload);
 
       setRefreshSubpasoDos(true);
+      console.log('DataPaso actualizada:',dataDirecta)
   
     } catch (error) {
       console.error("Error al guardar los datos:", error);
