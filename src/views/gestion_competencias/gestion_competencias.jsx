@@ -6,32 +6,35 @@ import InputSearch from "../../components/forms/Input_search";
 import { TableCheckbox } from "../../components/tables/TableCheck";
 import { columnTitleCompetencias } from "../../Data/Usuarios";
 
-const GestionCompetencias = () =>
-{
-
+const GestionCompetencias = () => {
   const { userData } = useAuth();
-  const { dataListCompetencia, paginationCompetencia, updatePage } = useCompetencia();
+  const { dataListCompetencia, paginationCompetencia, updatePage, currentPage } = useCompetencia();
   const [ searchQuery, setSearchQuery ] = useState('');
-  const [ filteredCompetencia, setFilteredCompetencia ] = useState(dataListCompetencia);
+  const [ filteredCompetencia, setFilteredCompetencia ] = useState([]);
   const navigate = useNavigate();
 
-  console.log(dataListCompetencia);
+  console.log("Data de competencias en GestionCompetencias:", dataListCompetencia); //trae la lista completa de competencias, sin paginacion
+  console.log("Datos de paginacion en GestionCompetencias:", paginationCompetencia); // null
 
   const userSubdere = userData?.perfil?.includes('SUBDERE');
 
-  useEffect(() =>
-  {
-    if (dataListCompetencia)
-    {
-      setFilteredCompetencia(dataListCompetencia);
+  useEffect(() => {
+    if (dataListCompetencia) {
+      // Si hay información de paginación, filtra las competencias según la página actual
+      if (paginationCompetencia.results) {
+        const startIndex = (paginationCompetencia.current_page - 1) * paginationCompetencia.page_size;
+        const endIndex = startIndex + paginationCompetencia.results.length;
+        setFilteredCompetencia(dataListCompetencia.slice(startIndex, endIndex));
+      } else {
+        // Si no hay información de paginación, muestra todas las competencias
+        setFilteredCompetencia(dataListCompetencia);
+      }
     }
-  }, [ dataListCompetencia ]);
+  }, [dataListCompetencia, paginationCompetencia]);
 
   const sortOptions = {
-    Estado: (direction) => (a, b) =>
-    {
-      if (direction === 'asc')
-      {
+    Estado: (direction) => (a, b) => {
+      if (direction === 'asc') {
         return a.estado.localeCompare(b.estado);
       }
       // Orden descendente
@@ -39,10 +42,8 @@ const GestionCompetencias = () =>
     }
   };
 
-  const getBadgeClass = (estado) =>
-  {
-    switch (estado)
-    {
+  const getBadgeClass = (estado) => {
+    switch (estado) {
       case 'En Estudio': return 'badge-status-review';
       case 'Finalizada': return 'badge-status-finish';
       case 'Sin usuario sectorial': return ' badge-status-warning';
@@ -50,10 +51,8 @@ const GestionCompetencias = () =>
     }
   };
 
-
   // Función de búsqueda
-  const handleSearch = useCallback((query) =>
-  {
+  const handleSearch = useCallback((query) => {
     const lowerCaseQuery = query.toLowerCase();
     const filtered = dataListCompetencia.filter(competencia =>
       competencia.nombre.toLowerCase().includes(lowerCaseQuery) ||
@@ -65,53 +64,64 @@ const GestionCompetencias = () =>
     setFilteredCompetencia(filtered);
   }, [ dataListCompetencia ]);
 
-  const handleDetailsCompetencia = (competencia) =>
-  {
+  const handleVerEstado = (competencia) => {
     console.log("Navegando a detalles con competencia:", competencia);
     navigate(`/home/estado_competencia/${competencia.id}`, { state: { competencia } });
   };
+  const handleVerDetalle = (competencia) => {
+    console.log("Navegando a detalles competencia:", competencia);
+    navigate(`/home/editar_competencia/${competencia.id}`, { state: { competencia } });
+  };
 
-  const handlePageChange = (pageUrl) =>
-  {
+  const projectsPerPage = 10;
+
+  const totalPages = Math.ceil(paginationCompetencia.count / projectsPerPage);
+
+  const handlePageChange = (pageUrl) => {
     // Extrae el número de página de la URL
+    console.log("page URL", pageUrl)
     const pageNumber = new URL(pageUrl, window.location.origin).searchParams.get('page');
-    updatePage(`/competencias/?page=${pageNumber}`);
+    updatePage(pageNumber);
+    console.log("filtered competencia al hacer click en flecha", filteredCompetencia)
   };
 
 
   // Modificar la función para renderizar botones de paginación
-  const renderPaginationButtons = () =>
-  {
-    if (!paginationCompetencia || (!paginationCompetencia.next && !paginationCompetencia.previous))
-    {
+  const renderPaginationButtons = () => {
+    if (!paginationCompetencia) {
+      console.log("pagination competencia", paginationCompetencia)
       return null;
     }
+
     return (
-      <nav>
-        <ul className="pagination ms-md-5">
-          {paginationCompetencia.previous && (
-            <li className="page-item">
-              <button
-                className="custom-pagination-btn mx-3"
-                onClick={() => handlePageChange(paginationCompetencia.previous)}
-              >
+      <div className="d-flex flex-column flex-md-row my-5">
+        {/* Índice */}
+        <p className="text-sans-h5 mx-5 text-center">
+          {`${(currentPage - 1) * projectsPerPage + 1}- ${Math.min(currentPage * projectsPerPage, paginationCompetencia.count)} de ${paginationCompetencia.count} competencias`}
+        </p>
+        {/* Paginación */}
+        <nav className="pagination-container mx-auto mx-md-0">
+          <ul className="pagination ms-md-5">
+            <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
+              <button className="custom-pagination-btn mx-3" onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
                 &lt;
               </button>
             </li>
-          )}
-          {/* Aquí podrías agregar botones para páginas específicas si es necesario */}
-          {paginationCompetencia.next && (
-            <li className="page-item">
-              <button
-                className="custom-pagination-btn mx-3"
-                onClick={() => handlePageChange(paginationCompetencia.next)}
-              >
+            {Array.from({ length: totalPages }, (_, i) => (
+              <li key={i} className="page-item">
+                <button className={`custom-pagination-btn text-decoration-underline px-2 mx-2 ${currentPage === i + 1 ? 'active' : ''}`} onClick={() => handlePageChange(i + 1)}>
+                  {i + 1}
+                </button>
+              </li>
+            ))}
+            <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
+              <button className="custom-pagination-btn mx-3" onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>
                 &gt;
               </button>
             </li>
-          )}
-        </ul>
-      </nav>
+          </ul>
+        </nav>
+      </div>
     );
   };
 
@@ -145,7 +155,7 @@ const GestionCompetencias = () =>
           <InputSearch
             value={searchQuery}
             onChange={setSearchQuery}
-            placeholder="Buscar usuarios"
+            placeholder="Buscar competencias"
             onSearch={handleSearch} />
           {userSubdere && (
             <div>
@@ -184,17 +194,24 @@ const GestionCompetencias = () =>
                     {competencia.origen}
                   </span>
                 </td>
-                <td className="py-3">
+                <td className="py-3 d-flex">
                   <button className="btn-secundario-s btn-sm align-self-center"
-                    onClick={() => handleDetailsCompetencia(competencia)}>
+                    onClick={() => handleVerEstado(competencia)}>
+                    <u>Ver estado</u>
+                  </button>
+                  <button className="btn-secundario-s btn-sm align-self-center ms-2"
+                    onClick={() => handleVerDetalle(competencia)}>
                     <u>Ver detalle</u>
                   </button>
                 </td>
               </tr>
             )}
-            sortOptions={sortOptions} /><div className="pagination-container d-flex justify-content-center">
-            {renderPaginationButtons()}
-          </div>
+            sortOptions={sortOptions} 
+            />
+            
+            <div className="pagination-container d-flex justify-content-center border">
+              {renderPaginationButtons()}
+            </div>
         </>
       )}
     </div >
