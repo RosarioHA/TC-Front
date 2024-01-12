@@ -15,6 +15,9 @@ export const FormularioProvider = ({ children }) => {
   const { dataFormSectorial, loadingFormSectorial, errorFormSectorial } = useFormSectorial(id);
   const { dataPaso, loadingPaso, errorPaso } = usePasoForm(id, stepNumber);
   const { patchStep, loading, error } = useUpdateForm();
+  const [refreshSubpasoDos, setRefreshSubpasoDos] = useState(false);
+
+
 
   const updateFormId = (newId) => {
     setId(newId);
@@ -71,6 +74,8 @@ export const FormularioProvider = ({ children }) => {
     updateStepNumber,
     stepNumber,
     handleUpdatePaso,
+    refreshSubpasoDos, 
+    setRefreshSubpasoDos
   };
 
 
