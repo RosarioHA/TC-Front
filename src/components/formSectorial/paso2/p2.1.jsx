@@ -2,19 +2,42 @@ import React, { useState, useEffect, useContext } from 'react';
 import CustomInput from '../../forms/custom_input_prueba';
 import DropdownSelect from '../../dropdown/select';
 import { FormularioContext } from '../../../context/FormSectorial';
-import useRecargaDirecta from '../../../hooks/formulario/useRecargaDirecta';
+import { apiTransferenciaCompentencia } from '../../../services/transferenciaCompetencia';
 
 export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber }) => {
+ 
+  const [dataDirecta, setDataDirecta] = useState(null);
+  const [opciones, setOpciones] = useState([]);
 
-  const { dataDirecta, isLoading, error } = useRecargaDirecta(id, stepNumber);
-
-  
+  const fetchDataDirecta = async () => {
+    try {
+      const response = await apiTransferenciaCompentencia.get(`/formulario-sectorial/${id}/paso-${stepNumber}/`);
+      setDataDirecta(response.data);
+    } catch (error) {
+      console.error('Error al obtener datos directamente:', error);
+    }
+  };
 
  //convertir estructura para el select
   const transformarEnOpciones = (datos) => {
     return Object.entries(datos).map(([value, label]) => ({ label, value }));
   };
-  const opcionesDeSelector = transformarEnOpciones(lista);
+
+  useEffect(() => {
+    // Carga inicial con 'lista'
+    if (lista) {
+      const listaInicial = transformarEnOpciones(lista);
+      setOpciones(listaInicial);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    // Carga con 'dataDirecta' tras editar paso 2.1
+    if (dataDirecta?.listado_organismos) {
+      const nuevasOpciones = transformarEnOpciones(dataDirecta.listado_organismos);
+      setOpciones(nuevasOpciones);
+    }
+  }, [dataDirecta]);
 
   const { handleUpdatePaso, refreshSubpasoDos, setRefreshSubpasoDos } = useContext(FormularioContext);
 
@@ -23,6 +46,7 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber }) => {
 
   // Estado para manejar los input
   const [nuevoOrganismo, setNuevoOrganismo] = useState('');
+  const [nuevoOrganismoDisplay, setNuevoOrganismoDisplay] = useState('');
   const [nuevoOrganismoNombre, setNuevoOrganismoNombre] = useState('');
   const [nuevoOrganismoDescripcion, setNuevoOrganismoDescripcion] = useState('');
 
@@ -111,6 +135,7 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber }) => {
       });
 
       setRefreshSubpasoDos(true);
+      fetchDataDirecta();
   
     } catch (error) {
       console.error("Error al eliminar la fila:", error);
@@ -122,7 +147,9 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber }) => {
   const manejarCambioDropdown = (opcionSeleccionada) => {
     // Asumiendo que opcionSeleccionada es un objeto con las propiedades 'label' y 'value'
     const valorSeleccionado = opcionSeleccionada.value;
+    const labelSeleccionado = opcionSeleccionada.label;
     setNuevoOrganismo(valorSeleccionado);
+    setNuevoOrganismoDisplay(labelSeleccionado);
   };
 
   const mostrarFormulario = () => {
@@ -160,9 +187,11 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber }) => {
       setNuevoOrganismo('');
       setNuevoOrganismoNombre('');
       setNuevoOrganismoDescripcion('');
+      setNuevoOrganismoDisplay('');
       
       setMostrarFormularioNuevoOrganismo(false);
       setRefreshSubpasoDos(true);
+      fetchDataDirecta();
       
     } catch (error) {
       console.error("Error al agregar el organismo:", error);
@@ -174,6 +203,7 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber }) => {
     setNuevoOrganismo('');
     setNuevoOrganismoNombre('');
     setNuevoOrganismoDescripcion('');
+    setNuevoOrganismoDisplay('');
   };
 
   const handleInputChange = (organismoDisplay, id, campo, valor) => {
@@ -213,7 +243,6 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber }) => {
       const response = await handleUpdatePaso(id, stepNumber, payload);
 
       setRefreshSubpasoDos(true);
-      console.log('DataPaso actualizada:',dataDirecta)
   
     } catch (error) {
       console.error("Error al guardar los datos:", error);
@@ -293,8 +322,8 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber }) => {
             <div className="col p-3">
               <p>
                 <DropdownSelect
-                  options={opcionesDeSelector}
-                  value={nuevoOrganismo}
+                  options={opciones}
+                  value={nuevoOrganismoDisplay}
                   onSelectionChange={manejarCambioDropdown}
                 />
               </p>
@@ -343,7 +372,7 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber }) => {
       )}
 
       {
-        opcionesDeSelector.length > 0 && (
+        opciones.length > 0 && (
           <button className="btn-secundario-s" onClick={mostrarFormulario}>
             <i className="material-symbols-rounded me-2">add</i>
             <p className="mb-0 text-decoration-underline">Agregar Organismo</p>
