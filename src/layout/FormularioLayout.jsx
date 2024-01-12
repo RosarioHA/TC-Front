@@ -6,7 +6,7 @@ import { Timmer } from "../components/layout/Timmer";
 import { FormularioContext } from "../context/FormSectorial";
 
 const FormularioLayout = () => {
-  const { data, loading, error, updateFormId, pasoData, stepNumber, errorPaso, loadingPaso } = useContext(FormularioContext);
+  const { data, loading, error, updateFormId, pasoData, stepNumber, errorPaso, loadingPaso} = useContext(FormularioContext);
   const location = useLocation();
   const params = useParams();
   const [baseUrl, setBaseUrl] = useState('');

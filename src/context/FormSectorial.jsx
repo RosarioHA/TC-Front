@@ -36,16 +36,16 @@ export const FormularioProvider = ({ children }) => {
       if (!datosPaso || typeof datosPaso !== 'object' || Object.keys(datosPaso).length === 0) {
         throw new Error("datosPaso es inválido");
       }
+  
       // Llama a patchStep con los datos estructurados correctamente
       await patchStep(id, stepNumber, datosPaso, archivos);
       // Aquí puedes actualizar el estado del contexto si es necesario
-      
     } catch (error) {
       console.error("Error al guardar los datos:", error);
       // Considera actualizar el estado del contexto para reflejar el error
+      return false; // Indica fracaso
     }
   };
-
     // Función para recargar los datos actualizados
     const recargarDatos = useCallback(async () => {
       try {

@@ -1,8 +1,7 @@
 import { Counter } from "../tables/Counter";
-export const Timmer = ({data, loading, error }) =>
+export const Timmer = ({data, error }) =>
 {
 
-  if (loading) return <div>Cargando...</div>;
   if (error) return <div>Error al cargar los datos: {error.message}</div>;
   if (!data) return <div>No hay datos disponibles</div>;
 
