@@ -27,8 +27,6 @@ const PasoDos = () => {
 
   const { p_2_1_organismos_intervinientes,listado_organismos, p_2_2_unidades_intervinientes, p_2_3_etapas_ejercicio_competencia, p_2_4_plataformas_y_softwares, p_2_5_flujograma_competencia } = pasoData;
 
-  console.log('pasodata', pasoData)
-
   return (
     <>
       <div className="col-1">
@@ -46,7 +44,7 @@ const PasoDos = () => {
             <Subpaso_dosPuntoUno data={p_2_1_organismos_intervinientes} lista={listado_organismos} stepNumber={stepNumber} id={data.id}/>
           </div>
           <div className="container-fluid me-5 pe-5 my-5">
-            <Subpaso_dosPuntoDos data={p_2_2_unidades_intervinientes} />
+            <Subpaso_dosPuntoDos data={p_2_2_unidades_intervinientes} stepNumber={stepNumber} id={data.id}/>
           </div>
           <div className="container-fluid me-5 pe-5 my-5">
             <Subpaso_dosPuntoTres data={p_2_3_etapas_ejercicio_competencia} />

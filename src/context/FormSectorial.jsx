@@ -39,7 +39,10 @@ export const FormularioProvider = ({ children }) => {
   
       // Llama a patchStep con los datos estructurados correctamente
       await patchStep(id, stepNumber, datosPaso, archivos);
-      // Aquí puedes actualizar el estado del contexto si es necesario
+  
+      // Si llega a este punto, asumimos que el guardado fue exitoso
+      recargarDatos();
+      return true; // Indica éxito
     } catch (error) {
       console.error("Error al guardar los datos:", error);
       // Considera actualizar el estado del contexto para reflejar el error
@@ -58,7 +61,6 @@ export const FormularioProvider = ({ children }) => {
         console.error("Error al recargar datos:", error);
       }
     }, [id, stepNumber]);
-
 
   const value = {
     data: dataFormSectorial,

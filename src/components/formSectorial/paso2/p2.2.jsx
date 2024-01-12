@@ -1,42 +1,78 @@
 import React, {useState, useEffect, useContext} from "react";
 import CustomInput from "../../forms/custom_input_prueba";
 import { FormularioContext } from "../../../context/FormSectorial";
+import { usePasoForm } from "../../../hooks/formulario/usePasoForm";
+import { apiTransferenciaCompentencia } from "../../../services/transferenciaCompetencia";
 
 export const Subpaso_dosPuntoDos = ({id, data, stepNumber}) => {
 
-  const {  refreshSubpasoDos, setRefreshSubpasoDos, recargarDatos } = useContext(FormularioContext);
+  const { refreshSubpasoDos, setRefreshSubpasoDos } = useContext(FormularioContext);
+  const [agrupados, setAgrupados] = useState({});
+  const [dataDirecta, setDataDirecta] = useState(null);
 
-
-  // Definición de la función 'agrupadosPorOrganismo'
-  const agrupadosPorOrganismo = () => {
-    return data.reduce((acc, unidad) => {
-      const { organismo_display, nombre_ministerio_servicio } = unidad.organismo;
-      if (!acc[organismo_display]) {
-        acc[organismo_display] = {};
-      }
-      if (!acc[organismo_display][nombre_ministerio_servicio]) {
-        acc[organismo_display][nombre_ministerio_servicio] = [];
-      }
-      acc[organismo_display][nombre_ministerio_servicio].push(unidad);
-      return acc;
-    }, {});
+  const fetchDataDirectly = async () => {
+    try {
+      const response = await apiTransferenciaCompentencia.get(`/formulario-sectorial/${id}/paso-${stepNumber}/`);
+      setDataDirecta(response.data); // Almacenar los datos obtenidos
+      console.log('Datos obtenidos directamente:', data);
+    } catch (error) {
+      console.error('Error al obtener datos directamente:', error);
+    }
   };
 
-  const [agrupados, setAgrupados] = useState({});
+  // Definición de la función 'agrupadosPorOrganismo'
+  const agrupadosPorOrganismo = (datos) => {
+    if (!Array.isArray(datos)) {
+      return {}; // Retorna un objeto vacío si 'datos' no es un array
+    }
+    return datos.reduce((acc, unidad) => {
+      const { organismo_display, nombre_ministerio_servicio } = unidad.organismo;
+        if (!acc[organismo_display]) {
+          acc[organismo_display] = {};
+        }
+        if (!acc[organismo_display][nombre_ministerio_servicio]) {
+          acc[organismo_display][nombre_ministerio_servicio] = [];
+        }
+        acc[organismo_display][nombre_ministerio_servicio].push(unidad);
+        return acc;
+      }, {});
+    };
 
   useEffect(() => {
     if (refreshSubpasoDos) {
-      console.log('Recibida la instrucción desde Paso 1:', refreshSubpasoDos);
+
+      fetchDataDirectly();
 
       const nuevosAgrupados = agrupadosPorOrganismo();
       setAgrupados(nuevosAgrupados); // Actualiza el estado con los nuevos agrupados
 
-      recargarDatos();
-
       setRefreshSubpasoDos(false); // Reestablece el estado de refresco
-      console.log('Estado final Refresh:', refreshSubpasoDos);
     }
-  }, [refreshSubpasoDos, setRefreshSubpasoDos, recargarDatos]); // Asegúrate de que 'data' esté en las dependencias
+  }, [refreshSubpasoDos, setRefreshSubpasoDos, id, stepNumber ]); // Asegúrate de que 'data' esté en las dependencias
+
+  useEffect(() => {
+    // Carga inicial con 'data'
+    if (data) {
+      const inicialesAgrupados = agrupadosPorOrganismo(data);
+      setAgrupados(inicialesAgrupados);
+    }
+  }, [data]);
+  
+  useEffect(() => {
+    if (dataDirecta) {
+  
+      const { p_2_2_unidades_intervinientes } = dataDirecta;
+      console.log('p_2_2_unidades_intervinientes:', p_2_2_unidades_intervinientes);
+  
+      if (p_2_2_unidades_intervinientes) {
+        const nuevosAgrupados = agrupadosPorOrganismo(p_2_2_unidades_intervinientes);
+        console.log('nuevosAgrupados:', nuevosAgrupados);
+  
+        setAgrupados(nuevosAgrupados);
+      }
+    }
+  }, [dataDirecta]);
+  
 
   
     return(
@@ -46,8 +82,8 @@ export const Subpaso_dosPuntoDos = ({id, data, stepNumber}) => {
         <h6 className="text-sans-h6-primary mt-3">  Asegúrate de identificar correctamente las unidades de cada organismo que participan en el ejercicio de la competencia, ya que esta información será utilizada más adelante en tu formulario.</h6>
         
         <div className="my-4">
-            {Object.entries(agrupados).map(([organismoDisplay, ministerios]) => (
-              <div key={organismoDisplay} className="tabla-organismo">
+        {Object.entries(agrupados).map(([organismoDisplay, ministerios]) => (
+          <div key={organismoDisplay} className="tabla-organismo">
                 <div className="row border">
                   <div className="col-2 border">
                     <p>{organismoDisplay}</p>
