@@ -1,78 +1,70 @@
 import { useCallback, useEffect, useState } from "react"
 import { apiTransferenciaCompentencia } from "../../services/transferenciaCompetencia";
-export const useCompetencia = (id) =>
-{
+
+export const useCompetencia = (id) => {
   const [ dataCompetencia, setDataCompetencia ] = useState([]);
   const [ dataListCompetencia, setDataListCompetencia ] = useState([]);
   const [ competenciaDetails, setCompetenciaDetails ] = useState([]);
   const [ loadingCompetencia, setLoadingComptencia ] = useState(true);
   const [ errorCompetencia, setErrorCompetencia ] = useState(null);
-  const [ paginationCompetencia, setPaginationCompeencia ] = useState({ count: 0, next: null, previous: null });
+  const [ paginationCompetencia, setPaginationCompetencia ] = useState({ count: 0, next: null, previous: null });
   const [ currentPage, setCurrentPage ] = useState(1);
 
-
-  const fetchCompetencias = useCallback(async () =>
-  {
+  const fetchCompetencias = useCallback(async () => {
     setLoadingComptencia(true);
-    try
-    {
+    try {
       const response = await apiTransferenciaCompentencia.get(`/competencias/lista-home/?page=${currentPage}`);
-      const { data, count, next, previous } = response
+      const { data } = response
+      
       setDataCompetencia(data.results);
-      setPaginationCompeencia({ count, next, previous });
-    } catch (err)
-    {
+      setPaginationCompetencia({ 
+        count: data.count, 
+        next: data.next, 
+        previous: data.previous, 
+      });
+    } catch (err) {
       console.error(err)
       setErrorCompetencia(err);
-    } finally
-    {
+    } finally {
       setLoadingComptencia(false);
     }
   }, [ currentPage ]);
 
-
-  const fetchListaCompentencias = useCallback(async () =>
-  {
-    try
-    {
-      const response = await apiTransferenciaCompentencia.get('competencias/');
+  const fetchListaCompentencias = useCallback(async () => {
+    try {
+      const response = await apiTransferenciaCompentencia.get(`/competencias/?page=${currentPage}`);
       setDataListCompetencia(response.data);
-    } catch (err)
-    {
+      setPaginationCompetencia({
+        count: response.data.count,
+        next: response.data.next,
+        previous: response.data.previous,
+      });
+    } catch (err) {
       console.error(err);
+      setErrorCompetencia(err);
     }
-  }, []);
+  }, [currentPage]);
 
-
-  const updatePage = (newPage) =>
-  {
+  const updatePage = (newPage) => {
     setCurrentPage(newPage);
-  }
+  };
 
-
-  const fetchCompetenciaDetails = useCallback(async (id) =>
-  {
+  const fetchCompetenciaDetails = useCallback(async (id) => {
     setLoadingComptencia(true);
-    try
-    {
+    try {
       const response = await apiTransferenciaCompentencia.get(`competencias/${id}/`);
       setCompetenciaDetails(response.data);
-    } catch (err)
-    {
+    } catch (err) {
       setErrorCompetencia(err);
-    } finally
-    {
+    } finally {
       setLoadingComptencia(false);
     }
   }, []);
 
-  useEffect(() =>
-  {
-    if (id)
-    {
+  useEffect(() => {
+    if (id) {
       fetchCompetenciaDetails(id);
-    } else
-    {
+    } else {
       fetchCompetencias();
       fetchListaCompentencias();
     }
@@ -87,5 +79,4 @@ export const useCompetencia = (id) =>
     paginationCompetencia,
     updatePage
   };
-
 }
