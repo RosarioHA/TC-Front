@@ -88,6 +88,12 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber }) => {
   };
 
   // Lógica para agregar una nueva fila a un organismo
+  // Generador de ID único
+  const generarIdUnico = () => {
+    // Implementa tu lógica para generar un ID único
+    return Math.floor(Date.now() / 1000); // Ejemplo simple
+  };
+
   const [isFieldsValid, setIsFieldsValid] = useState({});
 
   const validarCampos = (filas) => {
@@ -100,7 +106,12 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber }) => {
 
   const agregarFila = (organismoDisplay) => {
     const organismo = mapeoOrganismos[organismoDisplay] || "ValorPorDefectoSiNoExiste";
-    const nuevaFila = { organismo: organismo, nombre_ministerio_servicio: '', descripcion: '' };
+    const nuevaFila = { 
+      id: generarIdUnico(),
+      organismo: organismo, 
+      nombre_ministerio_servicio: '', 
+      descripcion: '' 
+    };
     setOrganismosAgrupados(prevOrganismos => ({
       ...prevOrganismos,
       [organismoDisplay]: [...prevOrganismos[organismoDisplay], nuevaFila]
@@ -108,18 +119,15 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber }) => {
   };
 
   // Lógica para eliminar una fila de un organismo
-  const eliminarFila = async (organismoDisplay, idFila, indiceFila) => {
-    if (idFila) {
-      // Caso para filas existentes con un id
-      const payload = {
-        'p_2_1_organismos_intervinientes': [{
-          id: idFila,
-          DELETE: true
-        }]
-      };
+  const eliminarFila = async (organismoDisplay, idFila) => {
+    const payload = {
+      'p_2_1_organismos_intervinientes': [{
+        id: idFila,
+        DELETE: true
+      }]
+    };
   
-      try {
-        await handleUpdatePaso(id, stepNumber, payload);
+    try {
       // Llamar a la API para actualizar los datos
       await handleUpdatePaso(id, stepNumber, payload);
   
@@ -139,24 +147,15 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber }) => {
           [organismoDisplay]: filasActualizadas
         };
       });
-
+  
       setRefreshSubpasoDos(true);
       fetchDataDirecta();
   
-      } catch (error) {
-        console.error("Error al eliminar la fila:", error);
-      }
-      } else {
-        // Caso para filas en desarrollo sin un id
-        setOrganismosAgrupados(prevOrganismos => {
-          const filasActualizadas = prevOrganismos[organismoDisplay].filter((_, indice) => indice !== indiceFila);
-          return {
-            ...prevOrganismos,
-            [organismoDisplay]: filasActualizadas
-          };
-        });
-      }
-    };
+    } catch (error) {
+      console.error("Error al eliminar la fila:", error);
+    }
+  };
+  
   
   // Lógica para agregar Nuevos Organismos
   const [mostrarFormularioNuevoOrganismo, setMostrarFormularioNuevoOrganismo] = useState(false);
@@ -329,12 +328,12 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber }) => {
                 </div>
                 {index !== 0 || filaIndex !== 0 ? (
                   <div className="col d-flex align-items-center">
-                  <button
-    className="btn-terciario-ghost"
-    onClick={() => eliminarFila(organismoDisplay, fila.id, filaIndex)}>
-    <i className="material-symbols-rounded me-2">delete</i>
-    <p className="mb-0 text-decoration-underline">Borrar</p>
-  </button>
+                    <button
+                      className="btn-terciario-ghost"
+                      onClick={() => eliminarFila(organismoDisplay, fila.id)}>
+                      <i className="material-symbols-rounded me-2">delete</i>
+                      <p className="mb-0 text-decoration-underline">Borrar</p>
+                    </button>
                   </div>
                 ) : null}
               </div>
