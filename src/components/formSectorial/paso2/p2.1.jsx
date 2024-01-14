@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import CustomInput from '../../forms/custom_input_prueba';
+import CustomInput from '../../forms/custom_input';
 import DropdownSelect from '../../dropdown/select';
 import { FormularioContext } from '../../../context/FormSectorial';
 import { apiTransferenciaCompentencia } from '../../../services/transferenciaCompetencia';
@@ -312,7 +312,7 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber }) => {
                     placeholder="Nombre ministerio o servicio"
                     maxLength={index === 0 && filaIndex === 0 ? undefined : 300}
                     disabled={index === 0 && filaIndex === 0}
-                    onChange={(e) => handleInputChange(organismoDisplay, fila.id, 'nombre_ministerio_servicio', e.target.value)}
+                    onChange={(valor) => handleInputChange(organismoDisplay, fila.id, 'nombre_ministerio_servicio', valor)}
                     onBlur={() => handleSave(fila.id, organismoDisplay)}
                   />
                   {!(index === 0 && filaIndex === 0) && (
@@ -321,7 +321,7 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber }) => {
                       value={fila.descripcion || ''}
                       placeholder="Descripción"
                       maxLength={300}
-                      onChange={(e) => handleInputChange(organismoDisplay, fila.id, 'descripcion', e.target.value)}
+                      onChange={(valor) => handleInputChange(organismoDisplay, fila.id, 'descripcion', valor)}
                       onBlur={() => handleSave(fila.id, organismoDisplay)}
                     />
                   )}

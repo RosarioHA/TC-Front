@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useContext} from "react";
-import CustomInput from "../../forms/custom_input_prueba";
+import CustomInput from "../../forms/custom_input";
 import { FormularioContext } from "../../../context/FormSectorial";
 import { usePasoForm } from "../../../hooks/formulario/usePasoForm";
 import { apiTransferenciaCompentencia } from "../../../services/transferenciaCompetencia";
@@ -105,7 +105,7 @@ export const Subpaso_dosPuntoDos = ({id, data, stepNumber}) => {
                                     value={unidad.nombre_unidad || ''}
                                     placeholder="Nombre ministerio o servicio"
                                     maxLength={300}
-                                    onChange={(e) => handleInputChange(organismoDisplay, unidad.id, 'nombre_unidad', e.target.value)}
+                                    onChange={(valor) => handleInputChange(organismoDisplay, unidad.id, 'nombre_unidad', valor)}
                                     onBlur={() => handleSave(unidad.id, organismoDisplay)}
                                   />                                  
                                     <CustomInput
@@ -113,7 +113,7 @@ export const Subpaso_dosPuntoDos = ({id, data, stepNumber}) => {
                                       value={unidad.descripcion_unidad || ''}
                                       placeholder="Descripción"
                                       maxLength={300}
-                                      onChange={(e) => handleInputChange(organismoDisplay, unidad.id, 'descripcion_unidad', e.target.value)}
+                                      onChange={(valor) => handleInputChange(organismoDisplay, unidad.id, 'descripcion_unidad', valor)}
                                       onBlur={() => handleSave(unidad.id, organismoDisplay)}
                                     />
                                 </div>
