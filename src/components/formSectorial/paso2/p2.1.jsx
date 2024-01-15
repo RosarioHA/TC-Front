@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import CustomInput from '../../forms/custom_input_prueba';
 import DropdownSelect from '../../dropdown/select';
 import { FormularioContext } from '../../../context/FormSectorial';

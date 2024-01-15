@@ -3,13 +3,18 @@ import { apiTransferenciaCompentencia } from "../services/transferenciaCompetenc
 
 export const useAmbitos = () => {
     const [ambitos, setAmbitos] = useState([]);
+    const [loadingAmbitos,setLoadingAmbitos]= useState(true); 
+    const [ errorAmbitos, setErrorAmbitos] = useState(null); 
 
   useEffect(() => {
     const fetchAmbitos = async () => {
       try {
         const responseAmbitos = await apiTransferenciaCompentencia.get('ambitos/');
         setAmbitos(responseAmbitos.data)
+        setLoadingAmbitos(false);
       } catch (error) {
+        setErrorAmbitos(error);
+        setLoadingAmbitos(false)
         console.error('Error al obtener datos de Ambitos:', error);
       }
     };
@@ -17,5 +22,5 @@ export const useAmbitos = () => {
     fetchAmbitos();
   }, []);
 
-  return {ambitos};
+  return {ambitos, loadingAmbitos, errorAmbitos};
 };

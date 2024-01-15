@@ -3,23 +3,22 @@ import CustomTextarea from "../../forms/custom_textarea";
 import SubirArchivo from "../../forms/subir_archivo";
 import { FormularioContext } from "../../../context/FormSectorial";
 
-export const Subpaso_dos = ({ pasoData, organigrama ,id, stepNumber}) =>
+export const Subpaso_dos = ({ pasoData, organigrama, id, stepNumber }) =>
 {
+  const { updatePasoError, handleUpdatePaso, handleUploadFiles } = useContext(FormularioContext);
 
-  const {
-    updatePasoError,
-    handleUpdatePaso
-  } = useContext(FormularioContext);
-  const [ descripcionOrganigramaNacional, setDescripcionOrganigramaNacional ] = useState('');
   const [ formData, setFormData ] = useState({
     paso1: pasoData.paso1 || {
       descripcion_archivo_organigrama_regional: pasoData.descripcion_archivo_organigrama_regional,
-
+      descripcion_archivo_organigrama_nacional: pasoData.descripcion_archivo_organigrama_nacional,
+      organigrama_nacional: pasoData.organigrama_nacional,
+      organigramaregional: pasoData.organigramaregional
     }
   });
+
   const [ inputStatus, setInputStatus ] = useState({
     descripcion_archivo_organigrama_regional: { loading: false, saved: false },
-    // Agrega aquí los demás campos necesarios
+    descripcion_archivo_organigrama_nacional: { loading: false, saved: false },
   });
 
   useEffect(() =>
@@ -38,6 +37,7 @@ export const Subpaso_dos = ({ pasoData, organigrama ,id, stepNumber}) =>
       setFormData(JSON.parse(savedData));
     }
   }, []);
+
   useEffect(() =>
   {
     localStorage.setItem('formData', JSON.stringify(formData));
@@ -82,13 +82,39 @@ export const Subpaso_dos = ({ pasoData, organigrama ,id, stepNumber}) =>
     }
   };
 
-
-  const handleDescripcionChange = (event) =>
+  const handleFileUpload = async (event, fieldName) =>
   {
-    setDescripcionOrganigramaNacional(event.target.value);
+    if (event.target.files && event.target.files[ 0 ])
+    {
+      const file = event.target.files[ 0 ];
+      const archivos = new FormData();
+      archivos.append(fieldName, file);
+
+      if (archivos.has(fieldName))
+      {
+        try
+        {
+          await handleUploadFiles(id, stepNumber, archivos);
+          // Resto del código
+        } catch (error)
+        {
+          console.error("Error al subir el archivo:", error);
+        }
+      } else
+      {
+        console.log("El campo de archivos no está presente en el objeto FormData.");
+      }
+    } else
+    {
+      console.log("No se ha seleccionado ningún archivo para subir.");
+    }
   };
 
-
+  const handleFileSelect = (event, fieldName) =>
+  {
+    // Resto del código
+    handleFileUpload(event, fieldName);
+  };
 
 
 
@@ -96,6 +122,7 @@ export const Subpaso_dos = ({ pasoData, organigrama ,id, stepNumber}) =>
   {
     return <div>Error: {updatePasoError.message}</div>;
   }
+
 
   return (
     <div className="pe-5 me-5 mt-4 col-12">
@@ -122,9 +149,10 @@ export const Subpaso_dos = ({ pasoData, organigrama ,id, stepNumber}) =>
         <div className="row neutral-line align-items-center">
           <SubirArchivo
             index="1"
-            //fileType={''? "Seleccionado" : "No seleccionado"}
-            onFileUpload=""
+            fileType={formData.paso1.organigrama_nacional ? "Seleccionado" : "No seleccionado"}
+            handleFileSelect={(e) => handleFileSelect(e, 'organigrama_nacional')}
           />
+
         </div>
       </div>
 
@@ -132,11 +160,13 @@ export const Subpaso_dos = ({ pasoData, organigrama ,id, stepNumber}) =>
         <CustomTextarea
           label="Descripción del archivo adjunto (Opcional)"
           placeholder="Describe el archivo adjunto"
-          id="descripcion_archivo_organigrama_regional"
-          name="descripcion_archivo_organigrama_regional"
-          value={descripcionOrganigramaNacional}
-          onChange={handleDescripcionChange}
-          onBlur=""
+          id="descripcion_archivo_organigrama_nacional"
+          name="descripcion_archivo_organigrama_nacional"
+          value={pasoData?.descripcion_archivo_organigrama_nacional}
+          onChange={(e) => handleChange('descripcion_archivo_organigrama_nacional', e)}
+          onBlur={() => handleSave('descripcion_archivo_organigrama_nacional')}
+          loading={inputStatus.descripcion_archivo_organigrama_nacional.loading}
+          saved={inputStatus.descripcion_archivo_organigrama_nacional.saved}
           maxLength={500}
         />
       </div>
@@ -155,16 +185,16 @@ export const Subpaso_dos = ({ pasoData, organigrama ,id, stepNumber}) =>
           </div>
           <div className="me-5">Acción</div>
         </div>
-        {organigrama.map((region, index) => (
-          <div key={region.pk} className="row neutral-line align-items-center">
-            <SubirArchivo
-              index={index + 1}
-              fileType={region.documento ? "Seleccionado" : "No seleccionado"}
-              tituloDocumento={region.region}
-              onFileUpload=""
-            />
-          </div>
+        {organigrama.map((region) => (
+          <SubirArchivo
+            key={region.id}
+            index={region.id}
+            tituloDocumento={region.region}
+            fileType={formData.paso1.organigramaregional && formData.paso1.organigramaregional[ region.id ] ? "Archivo Seleccionado: " + formData.paso1.organigramaregional[ region.id ].name : "No seleccionado"}
+            handleFileSelect={(e) => handleFileUpload(e, `organigramaregional_${region.id}`)}
+          />
         ))}
+
       </div>
 
       <div className="my-4">

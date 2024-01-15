@@ -1,42 +1,74 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { AdditionalDocs } from "../commons/aditionalDocs";
 
-export const DocumentsAditionals = ({ onFilesChanged }) =>
+export const DocumentsAditionals = ({ handleUpdatePaso, id, stepNumber }) =>
 {
   const [ files, setFiles ] = useState([]);
   const [ maxFilesReached, setMaxFilesReached ] = useState(false);
+  const [ isUploading, setIsUploading ] = useState(false);
+  const maxFileSize = 20 * 1024 * 1024; // 20 MB
+  const maxFileCount = 5; // Límite máximo de archivos
 
-  useEffect(() =>
-  {
-    onFilesChanged(files);
-  }, [ files, onFilesChanged ]);
-
-  const handleFileChange = (event) => {
-    const newFiles = Array.from(event.target.files);
-    const updatedFiles = newFiles.map(file => ({
-      file,
-      title: file.name,
-      isTooLarge: file.size > 20 * 1024 * 1024 // 20 MB
-    }));
-  
-    // Verificar si el número total de archivos excede el máximo permitido
-    if (files.length + updatedFiles.length <= 5) {
-      setFiles(prevFiles => [...prevFiles, ...updatedFiles]);
-      setMaxFilesReached(false);
-    } else {
-      setMaxFilesReached(true);
+  const handleFileChange = async (event) => {
+    const selectedFiles = Array.from(event.target.files);
+    if (files.length + selectedFiles.length > maxFileCount) {
+        alert("Se ha superado el límite máximo de archivos permitidos.");
+        setMaxFilesReached(true);
+        return;
     }
-  };
-  const handleDelete = (index) =>
-  {
-    const newFiles = [ ...files ];
-    newFiles.splice(index, 1);
-    setFiles(newFiles);
 
-    // Revisar si la cantidad de archivos es menor al máximo después de la eliminación
-    if (newFiles.length <= 5)
+    const validFiles = selectedFiles.filter(file => file.size <= maxFileSize);
+    if (validFiles.length < selectedFiles.length) {
+        alert("Algunos archivos son demasiado grandes y no se cargarán.");
+    }
+
+    setFiles(prev => [...prev, ...validFiles.map(file => ({
+        documento: file, // Aquí pasas el objeto File directamente
+        documento_url: null, // Si necesitas una URL, puedes crearla aquí
+        title: file.name
+    }))]);
+
+    if (validFiles.length > 0) {
+        await uploadFiles(validFiles);
+    }
+};
+
+const uploadFiles = async (filesToUpload) => {
+  setIsUploading(true);
+
+  try {
+      const archivos = {
+          'marcojuridico': filesToUpload.map(fileObj => fileObj.documento)
+      };
+
+      const datosPaso = {}; // Aquí agregarías los demás datos del paso si son necesarios
+
+      const success = await handleUpdatePaso(id, stepNumber, datosPaso, archivos);
+
+      if (success) {
+          console.log('Archivos subidos con éxito');
+          setFiles([]);
+      } else {
+          console.error('Error al subir archivos');
+      }
+  } catch (error) {
+      console.error('Error durante la subida de archivos:', error);
+  }
+
+  setIsUploading(false);
+};
+
+
+  const handleDelete = async (index) =>
+  {
+    const updatedFiles = files.filter((_, i) => i !== index);
+    setFiles(updatedFiles);
+
+    if (updatedFiles.length === 0)
     {
-      setMaxFilesReached(false);
+      const formDataToSend = new FormData();
+      formDataToSend.append('marcojuridico', JSON.stringify([]));
+      await handleUpdatePaso(id, stepNumber, formDataToSend);
     }
   };
 
@@ -50,16 +82,24 @@ export const DocumentsAditionals = ({ onFilesChanged }) =>
         id="fileInput"
         style={{ display: "none" }}
       />
+
       <button className="btn-secundario-s d-flex" onClick={() => document.getElementById('fileInput').click()}>
         <i className="material-symbols-outlined">upgrade</i>
         <u className="align-self-center text-sans-b-white">Subir Archivo</u>
+        {isUploading && <div className="spinner-border text-primary my-4 mx-3" role="status"></div>}
       </button>
-      {files.length > 0 && <AdditionalDocs
-        key={Date.now()}
-        files={files}
-        onDelete={handleDelete}
-      />}
-      {maxFilesReached && <h6 className="text-sans-h6-primary">Alcanzaste el número máximo de archivos permitidos.</h6>}
+
+      {files.length > 0 && !isUploading && (
+        <AdditionalDocs
+          key={Date.now()}
+          files={files}
+          onDelete={handleDelete}
+        />
+      )}
+
+      {maxFilesReached && (
+        <h6 className="text-sans-h6-primary">Alcanzaste el número máximo de archivos permitidos.</h6>
+      )}
     </>
   );
 };
