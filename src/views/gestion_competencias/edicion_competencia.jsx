@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-//import { CompetenciasContext } from "../../context/competencias";
 import CustomInput from "../../components/forms/custom_input";
 import DropdownSelect from "../../components/dropdown/select";
 import DropdownCheckbox from "../../components/dropdown/checkbox";
@@ -11,8 +10,6 @@ import { useRegion } from "../../hooks/useRegion";
 import { useSector } from "../../hooks/useSector";
 import { useAmbitos } from "../../hooks/useAmbitos";
 import { useUsers } from "../../hooks/usuarios/useUsers";
-// import { useUserDetails } from "../../hooks/usuarios/useUserDetail";
-// import { useGroups } from "../../hooks/useGroups";
 
 const groupUsersByType = (users) => {
   const grouped = users.reduce((acc, user) => {
@@ -20,7 +17,6 @@ const groupUsersByType = (users) => {
     acc[ user.perfil ].push(user);
     return acc;
   }, {});
-
   return Object.entries(grouped).map(([ perfil, users ]) => ({
     label: perfil,
     options: users,
@@ -28,9 +24,7 @@ const groupUsersByType = (users) => {
 };
 
 const EdicionCompetencia = () => {
-  //const { id } = useParams();
   const history = useNavigate();
-  //const { competenciaDetails, loadingCompetencia, errorCompetencia } = useContext(CompetenciasContext);
   const [ editMode, setEditMode ] = useState(false);
   const { dataRegiones } = useRegion();
   const { dataSector } = useSector();
@@ -38,11 +32,7 @@ const EdicionCompetencia = () => {
   const { ambitos } = useAmbitos();
   const { users } = useUsers();
   const userOptions = groupUsersByType(users);
-  // const { userDetails } = useUserDetails(id);
-  // const { dataGroups } = useGroups();
   
-  
-
   const handleBackButtonClick = () => {
     history(-1);
   };
@@ -135,7 +125,6 @@ const EdicionCompetencia = () => {
           />
         </div>
 
-
         <div className="mb-4">
           <DropdownCheckbox
             label="Elige el sector de la competencia (Obligatorio)"
@@ -206,8 +195,9 @@ const EdicionCompetencia = () => {
             <div className="me-5">Acción</div>
           </div>
           <div className="row neutral-line align-items-center">
+            {/* ESTE CAMPO NO ES EDITABLE, SOLO DEBE PERMITIR DESCARGAR  */}
             <SubirArchivo
-              readOnly={!editMode}
+              readOnly={true}
               index="1"
               fileType="No seleccionado" />
           </div>
