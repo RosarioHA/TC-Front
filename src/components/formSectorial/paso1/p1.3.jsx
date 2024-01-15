@@ -2,11 +2,14 @@ import { useContext, useState, useEffect } from 'react';
 import { FormularioContext } from "./../../../context/FormSectorial";
 import CustomTextarea from "../../forms/custom_textarea";
 import DropdownSelect from "../../dropdown/select";
+import { useAmbitos } from '../../../hooks/useAmbitos';
 
 
-export const Subpaso_tres = ({ pasoData, id, stepNumber}) =>
+export const Subpaso_tres = ({ pasoData, id, stepNumber }) =>
 {
   const { handleUpdatePaso } = useContext(FormularioContext);
+  const { ambitos } = useAmbitos()
+  const [ ambitoSeleccionado, setAmbitoSeleccionado ] = useState(null);
 
   const [ formData, setFormData ] = useState({
     paso1: pasoData.paso1 || {
@@ -14,21 +17,19 @@ export const Subpaso_tres = ({ pasoData, id, stepNumber}) =>
       fuentes_normativas: pasoData.fuentes_normativas,
       territorio_competencia: pasoData.territorio_competencia,
       enfoque_territorial_competencia: pasoData.enfoque_territorial_competencia,
-      posibilidad_ejercicio_por_gobierno_regional:pasoData.posibilidad_ejercicio_por_gobierno_regional, 
-      organo_actual_competencia:pasoData.organo_actual_competencia,
+      posibilidad_ejercicio_por_gobierno_regional: pasoData.posibilidad_ejercicio_por_gobierno_regional,
+      organo_actual_competencia: pasoData.organo_actual_competencia,
     }
   });
 
   const [ inputStatus, setInputStatus ] = useState({
     identificacion_competencia: { loading: false, saved: false },
     fuentes_normativas: { loading: false, saved: false },
-    territorio_competencia:  { loading: false, saved: false },
+    territorio_competencia: { loading: false, saved: false },
     enfoque_territorial_competencia: { loading: false, saved: false },
     posibilidad_ejercicio_por_gobierno_regional: { loading: false, saved: false },
-    organo_actual_competencia:{ loading: false, saved: false },
+    organo_actual_competencia: { loading: false, saved: false },
   });
-
-
 
   useEffect(() =>
   {
@@ -51,44 +52,81 @@ export const Subpaso_tres = ({ pasoData, id, stepNumber}) =>
     localStorage.setItem('formData', JSON.stringify(formData));
   }, [ formData ]);
 
-  const handleChange = (inputName, e) =>
-  {
+  const handleChange = (inputName, e) => {
     const { value } = e.target;
     setFormData(prevFormData => ({
       ...prevFormData,
       paso1: {
         ...prevFormData.paso1,
-        [ inputName ]: value,
+        [inputName]: value,
       }
     }));
     setInputStatus(prevStatus => ({
       ...prevStatus,
-      [ inputName ]: { loading: false, saved: false }
+      [inputName]: { loading: false, saved: false }
     }));
   };
-
-  const handleSave = async (inputName) =>
-  {
+  
+  
+  const handleSave = async (inputName) => {
     setInputStatus(prevStatus => ({
       ...prevStatus,
-      [ inputName ]: { ...prevStatus[ inputName ], loading: true }
+      [inputName]: { loading: true, saved: false }
     }));
-
-    const success = await handleUpdatePaso(id, stepNumber, formData);
-    if (success)
-    {
+  
+    const updatedFormData = {
+      ...formData,
+      paso1: {
+        ...formData.paso1,
+        // Asegúrate de incluir el ámbito seleccionado si es relevante para este input
+        ambito_paso1: ambitoSeleccionado ? ambitoSeleccionado.value : formData.paso1.ambito_paso1
+      }
+    };
+  
+    const success = await handleUpdatePaso(id, stepNumber, updatedFormData);
+    if (success) {
       setInputStatus(prevStatus => ({
         ...prevStatus,
-        [ inputName ]: { loading: false, saved: true }
+        [inputName]: { loading: false, saved: true }
       }));
-    } else
-    {
+    } else {
       setInputStatus(prevStatus => ({
         ...prevStatus,
-        [ inputName ]: { loading: false, saved: false }
+        [inputName]: { loading: false, saved: false }
       }));
     }
   };
+
+  const opcionesAmbito = ambitos.map(ambito => ({
+    label: ambito.nombre,
+    value: ambito.id,
+  }));
+
+  const handleAmbitoChange = async (selectedOption) => {
+    setAmbitoSeleccionado(selectedOption);
+    localStorage.setItem('ambitoSeleccionado', JSON.stringify(selectedOption)); // Guardar en localStorage
+  
+  
+    // Actualizar formData con la nueva selección de ámbito
+    const updatedFormData = {
+      ...formData,
+      paso1: {
+        ...formData.paso1,
+        ambito_paso1: selectedOption.value,
+      },
+    };
+  
+    // Llamar a handleSave para enviar los datos actualizados
+    await handleSave('ambito_paso1', updatedFormData);
+  };
+
+  useEffect(() => {
+    // Recuperar la selección guardada al cargar el componente
+    const savedSelection = localStorage.getItem('ambitoSeleccionado');
+    if (savedSelection) {
+      setAmbitoSeleccionado(JSON.parse(savedSelection));
+    }
+  }, []);
 
   return (
     <>
@@ -173,11 +211,12 @@ export const Subpaso_tres = ({ pasoData, id, stepNumber}) =>
           </div>
         </div>
         <div className="my-4 col-11">
-          < DropdownSelect
+          <DropdownSelect
             label="Elige el ámbito de la competencia (Obligatorio)"
             placeholder="Elige el ámbito de la competencia"
-            name={pasoData.ambito_paso1}
-            options=""
+            options={opcionesAmbito}
+            onSelectionChange={handleAmbitoChange}
+            selected={ambitoSeleccionado}
           />
           <div className="d-flex mb-3 mt-1 text-sans-h6-primary">
             <i className="material-symbols-rounded me-2">info</i>
@@ -195,7 +234,7 @@ export const Subpaso_tres = ({ pasoData, id, stepNumber}) =>
             onBlur={() => handleSave('posibilidad_ejercicio_por_gobierno_regional')}
             loading={inputStatus.posibilidad_ejercicio_por_gobierno_regional.loading}
             saved={inputStatus.posibilidad_ejercicio_por_gobierno_regional.saved}
-            maxLength={500}/>
+            maxLength={500} />
           <div className="d-flex mb-3 mt-1 text-sans-h6-primary">
             <i className="material-symbols-rounded me-2">info</i>
             <h6 className="mt-1">Indicar si se trata de un traspaso de competencias al “Gobierno Regional”, constituido tanto por el Gobernador como por el Consejo Regional, o se trata de un traspaso al “Gobernador Regional”, órgano ejecutivo del Gobierno Regional.</h6>

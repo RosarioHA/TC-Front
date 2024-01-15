@@ -24,6 +24,7 @@ export const Subpaso_uno = ({ pasoData, id, stepNumber }) =>
   });
 
 
+
   useEffect(() =>
   {
     if (pasoData && pasoData.paso1)
@@ -43,7 +44,6 @@ export const Subpaso_uno = ({ pasoData, id, stepNumber }) =>
   }, []);
   useEffect(() =>
   {
-    console.log("formData ha cambiado", formData);
     localStorage.setItem('formData', JSON.stringify(formData));
   }, [ formData ]);
 
@@ -63,22 +63,6 @@ export const Subpaso_uno = ({ pasoData, id, stepNumber }) =>
     }));
   };
 
-  const handleFilesChange = (newFiles) => {
-    // Mapear los archivos a tu esquema 'marcojuridico'
-    const updatedMarcoJuridico = newFiles.map((file, index) => ({
-      id: index + 1, // Asumiendo que el ID es secuencial y comienza en 1
-      documento: file, // Almacena el archivo directamente
-      documento_url: null // URL será actualizada después de la carga
-    }));
-  
-    setFormData(prevFormData => ({
-      ...prevFormData,
-      paso1: {
-        ...prevFormData.paso1,
-        marcojuridico: updatedMarcoJuridico
-      }
-    }));
-  };
 
   const handleSave = async (inputName) =>
   {
@@ -141,7 +125,7 @@ export const Subpaso_uno = ({ pasoData, id, stepNumber }) =>
             <span className="text-sans-h5">Marco jurídico que lo rige (Obligatorio)</span>
             <p className="text-sans-h6-grey">Mínimo 1 archivo, máximo 5 archivos, peso máximo 20MB, formato PDF)</p>
           </div>
-          <DocumentsAditionals onFilesChanged={handleFilesChange} />
+          <DocumentsAditionals handleUpdatePaso={handleUpdatePaso} id={id} stepNumber={stepNumber} />
         </div>
         <div className="my-4">
           <CustomTextarea
