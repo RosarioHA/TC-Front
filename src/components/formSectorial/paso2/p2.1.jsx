@@ -91,7 +91,7 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber }) => {
   // Generador de ID único
   const generarIdUnico = () => {
     // Implementa tu lógica para generar un ID único
-    return Math.floor(Date.now() / 1000); // Ejemplo simple
+    return Math.floor(Date.now() / 1000);
   };
 
   const [isFieldsValid, setIsFieldsValid] = useState({});
