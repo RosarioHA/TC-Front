@@ -1,12 +1,11 @@
 import React, {useState, useEffect, useContext} from "react";
-import CustomInput from "../../forms/custom_input_prueba";
+import CustomInput from "../../forms/custom_input";
 import { FormularioContext } from "../../../context/FormSectorial";
-import { usePasoForm } from "../../../hooks/formulario/usePasoForm";
 import { apiTransferenciaCompentencia } from "../../../services/transferenciaCompetencia";
 
 export const Subpaso_dosPuntoDos = ({id, data, stepNumber}) => {
 
-  const { refreshSubpasoDos, setRefreshSubpasoDos } = useContext(FormularioContext);
+  const { handleUpdatePaso, refreshSubpasoDos, setRefreshSubpasoDos } = useContext(FormularioContext);
   const [agrupados, setAgrupados] = useState({});
   const [dataDirecta, setDataDirecta] = useState(null);
 
@@ -70,8 +69,162 @@ export const Subpaso_dosPuntoDos = ({id, data, stepNumber}) => {
       }
     }
   }, [dataDirecta]);
+
+
+  // Lógica para agregar una nueva fila a un organismo
+  // Generador de ID único
+  const generarIdUnico = () => {
+    // Implementa tu lógica para generar un ID único
+    return Math.floor(Date.now() / 1000); // Ejemplo simple
+  };
+
+  const [isFieldsValid, setIsFieldsValid] = useState({});
+
+  const validarCampos = (ministerio) => {
+    const validaciones = {};
+    ministerio.forEach(ministerio => {
+      validaciones[ministerio.id] = ministerio.nombre_unidad && ministerio.descripcion_unidad;
+    });
+    setIsFieldsValid(validaciones);
+  };
+
+  // Función para obtener el ministerioId desde dataDirecta o data
+  const obtenerMinisterioIdDesdeDataDirecta = (nombreMinisterio) => {
+    if (dataDirecta) {
+      const { p_2_2_unidades_intervinientes } = dataDirecta;
+      const unidadDirecta = p_2_2_unidades_intervinientes.find(item => item.organismo.nombre_ministerio_servicio === nombreMinisterio);
+      if (unidadDirecta && unidadDirecta.organismo && unidadDirecta.organismo.id) {
+        return unidadDirecta.organismo.id;
+      }
+    }
+
+    if (data) {
+      const unidad = data.find(item => item.organismo.nombre_ministerio_servicio === nombreMinisterio);
+      if (unidad && unidad.organismo && unidad.organismo.id) {
+        return unidad.organismo.id;
+      }
+    }
+    
+    // Si no se encuentra el ministerio en dataDirecta ni en data, puedes devolver un valor por defecto o manejarlo según tu lógica.
+    return null; // Cambia esto según tu necesidad.
+  };
+
+
+  const agregarFila = (organismoDisplay, nombreMinisterio) => {
+    setAgrupados(prevAgrupados => {
+      // Crear una copia profunda del estado previo
+      const nuevoEstado = JSON.parse(JSON.stringify(prevAgrupados));
+
+      // Crear una nueva fila
+      const nuevaFila = {
+        id: generarIdUnico(),
+        organismo_id: obtenerMinisterioIdDesdeDataDirecta(nombreMinisterio),
+        nombre_unidad: '',
+        descripcion_unidad: ''
+      };
+
+      console.log('Nueva fila:', nuevaFila)
+  
+      // Asegurarse de que existan el organismo y el ministerio
+      if (!nuevoEstado[organismoDisplay]) {
+        nuevoEstado[organismoDisplay] = {};
+      }
+      if (!nuevoEstado[organismoDisplay][nombreMinisterio]) {
+        nuevoEstado[organismoDisplay][nombreMinisterio] = [];
+      }
+  
+      // Agregar la nueva fila
+      nuevoEstado[organismoDisplay][nombreMinisterio].push(nuevaFila);
+  
+      return nuevoEstado;
+    });
+  };
+  
+  
+  // Lógica para eliminar una fila de un organismo
+  const eliminarFila = async (organismoDisplay, nombreMinisterio, idFila) => {
+    const payload = {
+      'p_2_2_unidades_intervinientes': [{
+        id: idFila,
+        DELETE: true
+      }]
+    };
+  
+    try {
+      // Llamar a la API para actualizar los datos
+      await handleUpdatePaso(id, stepNumber, payload);
+  
+      // Actualizar el estado para reflejar la eliminación
+      setAgrupados(prevAgrupados => {
+        // Crear una copia profunda del estado previo
+        const nuevoEstado = JSON.parse(JSON.stringify(prevAgrupados));
+
+        // Filtrar para eliminar la fila específica
+        nuevoEstado[organismoDisplay][nombreMinisterio] = nuevoEstado[organismoDisplay][nombreMinisterio].filter(fila => fila.id !== idFila);
+
+        return nuevoEstado;
+      });
+  
+    } catch (error) {
+      console.error("Error al eliminar la fila:", error);
+    }
+  };
+
+
+  // Lógica para editar unidades existentes
+  const handleInputChange = (organismoDisplay, nombreMinisterio, idFila, campo, valor) => {
+    setAgrupados(prevAgrupados => {
+      // Verificar que existen el organismo y el ministerio
+      if (prevAgrupados[organismoDisplay] && prevAgrupados[organismoDisplay][nombreMinisterio]) {
+        const nuevoEstado = JSON.parse(JSON.stringify(prevAgrupados));
+        const filaEditada = nuevoEstado[organismoDisplay][nombreMinisterio].find(fila => fila.id === idFila);
+        if (filaEditada) {
+          filaEditada[campo] = valor;
+        }
+        return nuevoEstado;
+      }
+      return prevAgrupados;
+    });
+  };
   
 
+  // Lógica para guardar unidades existentes y nuevas
+  const handleSave = async (organismoDisplay, nombreMinisterio, idFila) => {
+    if (!agrupados[organismoDisplay] || !agrupados[organismoDisplay][nombreMinisterio]) {
+      console.error("No se encontró el organismo o el ministerio especificado.");
+      return;
+    }
+  
+    const filaEditada = agrupados[organismoDisplay][nombreMinisterio].find(fila => fila.id === idFila);
+    if (!filaEditada) {
+      console.error("Fila no encontrada para ID:", idFila);
+      return;
+    }
+  
+    // Verificar que nombre_unidad y descripcion_unidad existen
+    if (!filaEditada.nombre_unidad || !filaEditada.descripcion_unidad) {
+      console.error("nombre_unidad y descripcion_unidad deben estar definidos.");
+      return;
+    }
+
+    try {
+      const payload = {
+        'p_2_2_unidades_intervinientes': [{
+          id: filaEditada.id,
+          nombre_unidad: filaEditada.nombre_unidad,
+          descripcion_unidad: filaEditada.descripcion_unidad,
+          organismo_id: obtenerMinisterioIdDesdeDataDirecta(nombreMinisterio),
+        }]
+      };
+
+      // Llamar a la API para actualizar los datos
+      await handleUpdatePaso(id, stepNumber, payload);
+
+    } catch (error) {
+      console.error("Error al guardar los datos:", error);
+    }
+  };
+  
   
     return(
       <div>
@@ -105,32 +258,36 @@ export const Subpaso_dosPuntoDos = ({id, data, stepNumber}) => {
                                     value={unidad.nombre_unidad || ''}
                                     placeholder="Nombre ministerio o servicio"
                                     maxLength={300}
-                                    onChange={(e) => handleInputChange(organismoDisplay, unidad.id, 'nombre_unidad', e.target.value)}
-                                    onBlur={() => handleSave(unidad.id, organismoDisplay)}
+                                    onChange={(valor) => handleInputChange(organismoDisplay, ministerio, unidad.id, 'nombre_unidad', valor)}
+                                    onBlur={() => handleSave(organismoDisplay, ministerio, unidad.id)}
                                   />                                  
                                     <CustomInput
                                       label="Descripción"
                                       value={unidad.descripcion_unidad || ''}
                                       placeholder="Descripción"
                                       maxLength={300}
-                                      onChange={(e) => handleInputChange(organismoDisplay, unidad.id, 'descripcion_unidad', e.target.value)}
-                                      onBlur={() => handleSave(unidad.id, organismoDisplay)}
+                                      onChange={(valor) => handleInputChange(organismoDisplay, ministerio, unidad.id, 'descripcion_unidad', valor)}
+                                      onBlur={() => handleSave(organismoDisplay, ministerio, unidad.id)}
                                     />
                                 </div>
                                 
                                   <div className="col d-flex align-items-center">
+                                  {unidades.length > 1 && (
                                     <button
-                                      className="btn-terciario-ghost">
-                                      <i className="material-symbols-rounded me-2">delete</i>
-                                      <p className="mb-0 text-decoration-underline">Borrar</p>
+                                    className="btn-terciario-ghost"
+                                    onClick={() => eliminarFila(organismoDisplay, ministerio, unidad.id)}>
+                                    <i className="material-symbols-rounded me-2">delete</i>
+                                    <p className="mb-0 text-decoration-underline">Borrar</p>
                                     </button>
+                                    )}
                                   </div>
                               </div>
                             ))}
                               <div className="row">
                                 <div className="p-2">
                                   <button
-                                    className="btn-secundario-s m-2">
+                                    className="btn-secundario-s m-2"
+                                    onClick={() => agregarFila(organismoDisplay, ministerio)}>
                                     <i className="material-symbols-rounded me-2">add</i>
                                     <p className="mb-0 text-decoration-underline">Agregar Otro</p>
                                   </button>

@@ -1,20 +1,43 @@
 import React, { useState, useEffect, useContext } from 'react';
-import CustomInput from '../../forms/custom_input_prueba';
+import CustomInput from '../../forms/custom_input';
 import DropdownSelect from '../../dropdown/select';
 import { FormularioContext } from '../../../context/FormSectorial';
-import useRecargaDirecta from '../../../hooks/formulario/useRecargaDirecta';
+import { apiTransferenciaCompentencia } from '../../../services/transferenciaCompetencia';
 
 export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber }) => {
+ 
+  const [dataDirecta, setDataDirecta] = useState(null);
+  const [opciones, setOpciones] = useState([]);
 
-  const { dataDirecta, isLoading, error } = useRecargaDirecta(id, stepNumber);
-
-  
+  const fetchDataDirecta = async () => {
+    try {
+      const response = await apiTransferenciaCompentencia.get(`/formulario-sectorial/${id}/paso-${stepNumber}/`);
+      setDataDirecta(response.data);
+    } catch (error) {
+      console.error('Error al obtener datos directamente:', error);
+    }
+  };
 
  //convertir estructura para el select
   const transformarEnOpciones = (datos) => {
     return Object.entries(datos).map(([value, label]) => ({ label, value }));
   };
-  const opcionesDeSelector = transformarEnOpciones(lista);
+
+  useEffect(() => {
+    // Carga inicial con 'lista'
+    if (lista) {
+      const listaInicial = transformarEnOpciones(lista);
+      setOpciones(listaInicial);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    // Carga con 'dataDirecta' tras editar paso 2.1
+    if (dataDirecta?.listado_organismos) {
+      const nuevasOpciones = transformarEnOpciones(dataDirecta.listado_organismos);
+      setOpciones(nuevasOpciones);
+    }
+  }, [dataDirecta]);
 
   const { handleUpdatePaso, refreshSubpasoDos, setRefreshSubpasoDos } = useContext(FormularioContext);
 
@@ -23,21 +46,15 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber }) => {
 
   // Estado para manejar los input
   const [nuevoOrganismo, setNuevoOrganismo] = useState('');
+  const [nuevoOrganismoDisplay, setNuevoOrganismoDisplay] = useState('');
   const [nuevoOrganismoNombre, setNuevoOrganismoNombre] = useState('');
   const [nuevoOrganismoDescripcion, setNuevoOrganismoDescripcion] = useState('');
 
-  // Actualiza el estado cuando los campos cambian
-  const handleNombreChange = (event) => {
-    setNuevoOrganismoNombre(event.target.value);
-  };
-
-  const handleDescripcionChange = (event) => {
-    setNuevoOrganismoDescripcion(event.target.value);
-  };
-
+  
   // Efecto para agrupar datos cada vez que 'data' cambia
   useEffect(() => {
     agruparOrganismos(data);
+    validarCampos(data); 
   }, [data]);
 
   // Función para agrupar los datos por organismo_display
@@ -70,17 +87,38 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber }) => {
     'Otro': 'OTRO'
   };
 
-  // Función para agregar una nueva fila a un organismo
+  // Lógica para agregar una nueva fila a un organismo
+  // Generador de ID único
+  const generarIdUnico = () => {
+    // Implementa tu lógica para generar un ID único
+    return Math.floor(Date.now() / 1000);
+  };
+
+  const [isFieldsValid, setIsFieldsValid] = useState({});
+
+  const validarCampos = (filas) => {
+    const validaciones = {};
+    filas.forEach(fila => {
+      validaciones[fila.id] = fila.nombre_ministerio_servicio && fila.descripcion;
+    });
+    setIsFieldsValid(validaciones);
+  };
+
   const agregarFila = (organismoDisplay) => {
     const organismo = mapeoOrganismos[organismoDisplay] || "ValorPorDefectoSiNoExiste";
-    const nuevaFila = { organismo: organismo, nombre_ministerio_servicio: '', descripcion: '' };
+    const nuevaFila = { 
+      id: generarIdUnico(),
+      organismo: organismo, 
+      nombre_ministerio_servicio: '', 
+      descripcion: '' 
+    };
     setOrganismosAgrupados(prevOrganismos => ({
       ...prevOrganismos,
       [organismoDisplay]: [...prevOrganismos[organismoDisplay], nuevaFila]
     }));
   };
 
-  // Función para eliminar una fila de un organismo
+  // Lógica para eliminar una fila de un organismo
   const eliminarFila = async (organismoDisplay, idFila) => {
     const payload = {
       'p_2_1_organismos_intervinientes': [{
@@ -109,20 +147,25 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber }) => {
           [organismoDisplay]: filasActualizadas
         };
       });
-
+  
       setRefreshSubpasoDos(true);
+      fetchDataDirecta();
   
     } catch (error) {
       console.error("Error al eliminar la fila:", error);
     }
-  };    
-
+  };
+  
+  
+  // Lógica para agregar Nuevos Organismos
   const [mostrarFormularioNuevoOrganismo, setMostrarFormularioNuevoOrganismo] = useState(false);
-
+  
   const manejarCambioDropdown = (opcionSeleccionada) => {
     // Asumiendo que opcionSeleccionada es un objeto con las propiedades 'label' y 'value'
     const valorSeleccionado = opcionSeleccionada.value;
+    const labelSeleccionado = opcionSeleccionada.label;
     setNuevoOrganismo(valorSeleccionado);
+    setNuevoOrganismoDisplay(labelSeleccionado);
   };
 
   const mostrarFormulario = () => {
@@ -160,9 +203,11 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber }) => {
       setNuevoOrganismo('');
       setNuevoOrganismoNombre('');
       setNuevoOrganismoDescripcion('');
+      setNuevoOrganismoDisplay('');
       
       setMostrarFormularioNuevoOrganismo(false);
       setRefreshSubpasoDos(true);
+      fetchDataDirecta();
       
     } catch (error) {
       console.error("Error al agregar el organismo:", error);
@@ -174,11 +219,24 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber }) => {
     setNuevoOrganismo('');
     setNuevoOrganismoNombre('');
     setNuevoOrganismoDescripcion('');
+    setNuevoOrganismoDisplay('');
+  };
+
+
+  // Lógica para editar sectores existentes
+
+  // Actualiza el estado cuando los campos cambian
+  const handleNombreChange = (event) => {
+    setNuevoOrganismoNombre(event.target.value);
+  };
+
+  const handleDescripcionChange = (event) => {
+    setNuevoOrganismoDescripcion(event.target.value);
   };
 
   const handleInputChange = (organismoDisplay, id, campo, valor) => {
     setOrganismosAgrupados(prevOrganismos => {
-      return {
+      const organismosActualizados = {
         ...prevOrganismos,
         [organismoDisplay]: prevOrganismos[organismoDisplay].map(fila => {
           if (fila.id === id) {
@@ -187,10 +245,19 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber }) => {
           return fila;
         })
       };
+  
+      // Validar campos después de actualizar
+      validarCampos(organismosActualizados[organismoDisplay]);
+      return organismosActualizados;
     });
   };
   
   const handleSave = async (idFila, organismoDisplay) => {
+    // Solo guardar si los campos son válidos
+    if (!isFieldsValid[idFila]) {
+      console.error("Campos requeridos no completados");
+      return;
+    }
     try {
       // Encontrar la fila específica que se está editando
       const filaEditada = organismosAgrupados[organismoDisplay].find(fila => fila.id === idFila);
@@ -213,7 +280,6 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber }) => {
       const response = await handleUpdatePaso(id, stepNumber, payload);
 
       setRefreshSubpasoDos(true);
-      console.log('DataPaso actualizada:',dataDirecta)
   
     } catch (error) {
       console.error("Error al guardar los datos:", error);
@@ -246,7 +312,7 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber }) => {
                     placeholder="Nombre ministerio o servicio"
                     maxLength={index === 0 && filaIndex === 0 ? undefined : 300}
                     disabled={index === 0 && filaIndex === 0}
-                    onChange={(e) => handleInputChange(organismoDisplay, fila.id, 'nombre_ministerio_servicio', e.target.value)}
+                    onChange={(valor) => handleInputChange(organismoDisplay, fila.id, 'nombre_ministerio_servicio', valor)}
                     onBlur={() => handleSave(fila.id, organismoDisplay)}
                   />
                   {!(index === 0 && filaIndex === 0) && (
@@ -255,7 +321,7 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber }) => {
                       value={fila.descripcion || ''}
                       placeholder="Descripción"
                       maxLength={300}
-                      onChange={(e) => handleInputChange(organismoDisplay, fila.id, 'descripcion', e.target.value)}
+                      onChange={(valor) => handleInputChange(organismoDisplay, fila.id, 'descripcion', valor)}
                       onBlur={() => handleSave(fila.id, organismoDisplay)}
                     />
                   )}
@@ -293,8 +359,8 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber }) => {
             <div className="col p-3">
               <p>
                 <DropdownSelect
-                  options={opcionesDeSelector}
-                  value={nuevoOrganismo}
+                  options={opciones}
+                  value={nuevoOrganismoDisplay}
                   onSelectionChange={manejarCambioDropdown}
                 />
               </p>
@@ -343,7 +409,7 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber }) => {
       )}
 
       {
-        opcionesDeSelector.length > 0 && (
+        opciones.length > 0 && (
           <button className="btn-secundario-s" onClick={mostrarFormulario}>
             <i className="material-symbols-rounded me-2">add</i>
             <p className="mb-0 text-decoration-underline">Agregar Organismo</p>
