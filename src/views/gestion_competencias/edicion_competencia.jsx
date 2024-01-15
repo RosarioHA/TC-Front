@@ -1,44 +1,98 @@
 import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 //import { CompetenciasContext } from "../../context/competencias";
 import CustomInput from "../../components/forms/custom_input";
 import DropdownSelect from "../../components/dropdown/select";
-//import DropdownCheckbox from "../../components/dropdown/checkbox";
-//import DropdownConSecciones from "../../components/dropdown/checkbox_conSecciones_conTabla";
+import DropdownCheckbox from "../../components/dropdown/checkbox";
+import DropdownConSecciones from "../../components/dropdown/checkbox_conSecciones_conTabla";
 import SubirArchivo from "../../components/forms/subir_archivo";
-import { useGroups } from "../../hooks/useGroups";
+import { useOrigenes } from "../../hooks/useOrigenes";
 import { useRegion } from "../../hooks/useRegion";
 import { useSector } from "../../hooks/useSector";
-import { useUserDetails } from "../../hooks/usuarios/useUserDetail";
+import { useAmbitos } from "../../hooks/useAmbitos";
+import { useUsers } from "../../hooks/usuarios/useUsers";
+// import { useUserDetails } from "../../hooks/usuarios/useUserDetail";
+// import { useGroups } from "../../hooks/useGroups";
 
+const groupUsersByType = (users) => {
+  const grouped = users.reduce((acc, user) => {
+    acc[ user.perfil ] = acc[ user.perfil ] || [];
+    acc[ user.perfil ].push(user);
+    return acc;
+  }, {});
 
-const EdicionCompetencia = () =>
-{
-  const { id } = useParams();
+  return Object.entries(grouped).map(([ perfil, users ]) => ({
+    label: perfil,
+    options: users,
+  }));
+};
+
+const EdicionCompetencia = () => {
+  //const { id } = useParams();
   const history = useNavigate();
   //const { competenciaDetails, loadingCompetencia, errorCompetencia } = useContext(CompetenciasContext);
   const [ editMode, setEditMode ] = useState(false);
-
-
-  const { userDetails } = useUserDetails(id);
-  const { dataGroups } = useGroups();
   const { dataRegiones } = useRegion();
   const { dataSector } = useSector();
+  const { origenes } = useOrigenes();
+  const { ambitos } = useAmbitos();
+  const { users } = useUsers();
+  const userOptions = groupUsersByType(users);
+  // const { userDetails } = useUserDetails(id);
+  // const { dataGroups } = useGroups();
+  
+  
 
-  console.log(dataGroups, dataRegiones, dataSector, userDetails)
-
-  const handleBackButtonClick = () =>
-  {
+  const handleBackButtonClick = () => {
     history(-1);
   };
-
-  const handleEditClick = () =>
-  {
+  const handleEditClick = () => {
     setEditMode((prevMode) => !prevMode);
   };
 
+  //Region
+  const opcionesRegiones = dataRegiones.map(region => ({
+    label: region.region,
+    value: region.id,
+  }));
+  // const handleRegionesChange = (selectedOptions) => {
+  //   console.log(selectedOptions);
+  //   setRegionesSeleccionadas(selectedOptions);
+  //   setValue('regiones', selectedOptions);
+  // };
 
+  //Sector
+  const opcionesSectores = dataSector.map(sector => ({
+    label: sector.nombre,
+    value: sector.id,
+  }));
+  // const handleSectorChange = (selectedOptions) => {
+  //   setSectoresSeleccionados(selectedOptions);
+  //   setValue('sectores', selectedOptions);
+  // };
 
+  //Origen
+  const opcionesOrigen = origenes.map(origen => ({
+    label: origen.descripcion,
+    value: origen.clave,
+  }));
+  // const handleOrigenChange = (selectedOption) => {
+  //   console.log(selectedOption)
+  //   setOrigenSeleccionado(selectedOption.value);
+  //   setValue('origen', selectedOption.value);
+  // };
+
+  //Ambito
+  const opcionesAmbito = ambitos.map(ambito => ({
+    label: ambito.nombre,
+    value: ambito.id,
+  }));
+  // const handleAmbitoChange = (selectedOption) => {
+  //   console.log(selectedOption)
+  //   setAmbitoSeleccionado(selectedOption);
+  //   const ambitoValue = selectedOption ? Number(selectedOption.value) : null;
+  //   setValue('ambito', ambitoValue, { shouldValidate: true });
+  // };
 
   return (
     <div className="container col-10 my-4">
@@ -68,12 +122,12 @@ const EdicionCompetencia = () =>
         </div>
 
         <div className="mb-4">
-          {/*  <DropdownCheckbox
+            <DropdownCheckbox
             label="Región (Obligatorio)"
             placeholder="Elige la o las regiones donde se ejercerá la competencia"
             id="perfil"
             name="perfil"
-            options=''
+            options={opcionesRegiones}
             readOnly=''
             control=''
             onSelectionChange=''
@@ -83,17 +137,17 @@ const EdicionCompetencia = () =>
 
 
         <div className="mb-4">
-          {/* <DropdownCheckbox
+          <DropdownCheckbox
             label="Elige el sector de la competencia (Obligatorio)"
             placeholder='Elige el sector de la competencia'
             id="perfil"
             name="perfil"
-            options=''
+            options={opcionesSectores}
             readOnly=''
             control=''
             onSelectionChange=''
             initialValue=''
-          /> */}
+          /> 
         </div>
 
         <div className="mb-4">
@@ -102,7 +156,7 @@ const EdicionCompetencia = () =>
             placeholder=''
             id="perfil"
             name="perfil"
-            options=''
+            options={opcionesOrigen}
             readOnly=''
             control=''
             onSelectionChange=''
@@ -116,7 +170,7 @@ const EdicionCompetencia = () =>
             placeholder="Elige el ámbito de la competencia"
             id=""
             name=""
-            options=''
+            options={opcionesAmbito}
             readOnly=''
             control=''
             onSelectionChange=''
@@ -125,14 +179,14 @@ const EdicionCompetencia = () =>
         </div>
 
         <div className="my-4">
-          {/*  < DropdownConSecciones
+           < DropdownConSecciones
             label="Asignar Usuarios (Opcional)"
             placeholder="Busca el nombre de la persona"
             readOnly=''
-            options=''
+            options={userOptions}
             selectedOptions=""
             onSelectionChange=""
-        /> */}
+        />
         </div>
 
         <div className="mb-5">
