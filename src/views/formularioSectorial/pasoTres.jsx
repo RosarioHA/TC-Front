@@ -1,5 +1,4 @@
-import { useContext, useEffect, useState, useCallback } from "react";
-import { debounce } from "lodash";
+import { useContext, useEffect, useState } from "react";
 import { Avance } from "../../components/tables/Avance";
 import { ButtonsNavigate } from "../../components/layout/ButtonsNavigate";
 import CustomTextarea from "../../components/forms/custom_textarea";
@@ -7,79 +6,79 @@ import { Subpaso_Tres } from "../../components/formSectorial/paso3/p3.1";
 import { FormularioContext } from "../../context/FormSectorial";
 import { MonoStepers } from "../../components/stepers/MonoStepers";
 
-//rosario: solo copia las secciones marcadas con GET en el clon del paso 3//
-//GET//
 const PasoTres = () => {
   const {
     handleUpdatePaso,
     updateStepNumber,
-    data,
-    pasoData
+    pasoData,
+    data
   } = useContext(FormularioContext);
-  const stepNumber = 3;
 
-  //PATCH
+  const stepNumber = 3;
+  const id= data.id; 
+
+  // Estado inicial basado en los datos existentes
   const [formData, setFormData] = useState({
-    universo_cobertura: '',
-    descripcion_cobertura: '',
+    universo_cobertura: pasoData.paso3?.universo_cobertura || "",
+    descripcion_cobertura: pasoData.paso3?.descripcion_cobertura || ""
   });
 
+  const [inputStatus, setInputStatus] = useState({
+    universo_cobertura: { loading: false, saved: false },
+    descripcion_cobertura: { loading: false, saved: false },
+  });
 
-  //GET
+  // Efecto para actualizar el número de paso actual
   useEffect(() => {
     updateStepNumber(stepNumber);
   }, [updateStepNumber, stepNumber]);
 
-  //PATCH
-  useEffect(() => {
-    if (pasoData?.paso3) {
-      setFormData({
-        universo_cobertura: pasoData.paso3.universo_cobertura || '',
-        descripcion_cobertura: pasoData.paso3.descripcion_cobertura || '',
-      });
-    }
-  }, [pasoData]);
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const updateBackend = useCallback(debounce(async (updatedData) => {
-    try {
-      await handleUpdatePaso(data.id, stepNumber, updatedData);
-    } catch (error) {
-      console.error("Error al actualizar datos:", error);
-    }
-  }, 2000), [data.id, stepNumber]);
-
-  const handleChange = (e) => {
-    e.preventDefault();
-    const { name, value } = e.target;
+  const handleChange = (inputName, e) =>
+  {
+    const { value } = e.target;
     setFormData(prevFormData => ({
       ...prevFormData,
-      [name]: value,
+        [ inputName ]: value,
     }));
-
-    updateBackend({
-      universo_cobertura: formData.universo_cobertura,
-      descripcion_cobertura: formData.descripcion_cobertura,
-    });
+    setInputStatus(prevStatus => ({
+      ...prevStatus,
+      [ inputName ]: { loading: false, saved: false }
+    }));
   };
 
-  const handleSave = () => {
-    handleUpdatePaso(data.id, stepNumber, formData);
-  };
+  // Manejador de guardado
 
-  const handleSubmit = (e) => {
-    e.preventDefault(); 
-    handleSave(); 
-  };
-
-  useEffect(() => {
-    return () => {
-      updateBackend.cancel();
+  const handleSave = async (inputName) => {
+    setInputStatus(prevStatus => ({
+      ...prevStatus,
+      [inputName]: { ...prevStatus[inputName], loading: true }
+    }));
+  
+    // Preparar la estructura de datos esperada por el backend
+    const datosParaEnviar = {
+      paso3: {
+        ...pasoData.paso3, // Mantener los datos existentes de paso3
+        ...formData // Actualizar los datos específicos de los inputs
+      }
     };
-  }, [updateBackend]);
+  
+    // Llamada a la función de actualización del contexto con los datos estructurados
+    const success = await handleUpdatePaso(id, stepNumber, datosParaEnviar);
+    if (success) {
+      setInputStatus(prevStatus => ({
+        ...prevStatus,
+        [inputName]: { loading: false, saved: true }
+      }));
+    } else {
+      setInputStatus(prevStatus => ({
+        ...prevStatus,
+        [inputName]: { loading: false, saved: false }
+      }));
+    }
+  };
+  // Si no hay datos para el paso 3, mostrar un mensaje
+  if (!pasoData.paso3) return <div>No hay datos disponibles para el Paso 3</div>;
 
- //GET 
-  if (!pasoData || !pasoData.paso3) return <div>No hay datos disponibles para el Paso 3</div>;
 
   const { cobertura_anual, paso3 } = pasoData;
 
@@ -119,11 +118,14 @@ const PasoTres = () => {
                   label="Descripción de universo de cobertura (Obligatorio)"
                   placeholder="Describe el universo de cobertura"
                   name="universo_cobertura"
-                  value={formData.universo_cobertura}
-                  onChange={handleChange}
+                  id="universo_cobertura"
+                  value={paso3?.universo_cobertura}
+                  onChange={(e) => handleChange('universo_cobertura', e)}
+                  onBlur={() => handleSave('universo_cobertura')}
+                  loading={inputStatus.universo_cobertura.loading}
+                  saved={inputStatus.universo_cobertura.saved}
                   maxLength={800}
-                  onBlur={handleSave}
-                  onSubmit={handleSubmit}
+
                 />
                 <div className="d-flex mb-3 mt-0 text-sans-h6-primary">
                   <i className="material-symbols-rounded me-2">info</i>
@@ -137,12 +139,14 @@ const PasoTres = () => {
                 <CustomTextarea
                   label="Descripción de cobertura efectivamente abordada (Obligatorio)"
                   placeholder="Describe la cobertura efectivamente abordada"
-                  name="descripcion_cobertura" 
+                  id="descripcion_cobertura"
+                  name="descripcion_coberturaa"
+                  value={paso3?.descripcion_cobertura}
+                  onChange={(e) => handleChange('descripcion_cobertura', e)}
+                  onBlur={() => handleSave('descripcion_cobertura')}
+                  loading={inputStatus.descripcion_cobertura.loading}
+                  saved={inputStatus.descripcion_cobertura.saved}
                   maxLength={800}
-                  value={formData.descripcion_cobertura}
-                  onChange={handleChange}
-                  onBlur={handleSave}
-                  onSubmit={handleSubmit}
                 />
                 <div className="d-flex mb-3 mt-0 text-sans-h6-primary">
                   <i className="material-symbols-rounded me-2">info</i>
@@ -159,7 +163,7 @@ const PasoTres = () => {
           </div>
           {/* Botones navegación */}
           <div className="container me-5 pe-5">
-            <ButtonsNavigate step={paso3.numero_paso} id={data.id} />
+            <ButtonsNavigate step={paso3.numero_paso} id={id} />
           </div>
         </div>
       </div>

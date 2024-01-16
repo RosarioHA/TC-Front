@@ -43,8 +43,7 @@ const CustomTextarea = ({ loading, saved, label, placeholder, id, maxLength, row
     : "text-sans-h6";
 
   const renderSpinnerOrCheck = () =>
-  {
-    console.log(`loading: ${loading}, saved: ${saved}`); // Agrega esta línea para depurar
+  {// Agrega esta línea para depurar
     if (loading)
     {
       return <div className="spinner-border text-primary my-4 mx-3" role="status"></div>;
@@ -89,17 +88,17 @@ const CustomTextarea = ({ loading, saved, label, placeholder, id, maxLength, row
               style={{ overflow: 'hidden' }}
               name={name}
             />
-          <div className=" d-flex align-self-end align-items-center">
-            {renderSpinnerOrCheck()}
+            <div className=" d-flex align-self-end align-items-center">
+              {renderSpinnerOrCheck()}
+            </div>
           </div>
-          </div>
-            {maxLength !== null && maxLength !== undefined && (
-              <div className="d-flex justify-content-end mb-0 col-11">
-                <span className={counterClass}>
-                  {inputValue.length}/{maxLength} caracteres.
-                </span>
-              </div>
-            )}
+          {maxLength !== null && maxLength !== undefined && (
+            <div className="d-flex justify-content-end mb-0 col-11">
+              <span className={counterClass}>
+                {inputValue.length}/{maxLength} caracteres.
+              </span>
+            </div>
+          )}
         </>
       )}
     </div>
@@ -107,3 +106,4 @@ const CustomTextarea = ({ loading, saved, label, placeholder, id, maxLength, row
 };
 
 export default CustomTextarea;
+

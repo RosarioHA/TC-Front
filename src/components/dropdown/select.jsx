@@ -1,30 +1,43 @@
 import { useState, useRef, useEffect } from 'react';
 
-const DropdownSelect = ({ label, placeholder, options, onSelectionChange, readOnly }) => {
+const DropdownSelect = ({ label, placeholder, options, onSelectionChange, selected, readOnly }) =>
+{
   const [ isOpen, setIsOpen ] = useState(false);
-  const [ selectedOption, setSelectedOption ] = useState(null);
+  const [ selectedOption, setSelectedOption ] = useState(selected); // Usa el prop 'selected' para establecer la opción seleccionada
   const dropdownRef = useRef(null);
-  
 
   useEffect(() => {
-    function handleClickOutside(event) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+    if (selected) {
+      setSelectedOption(selected); // Actualizar la opción seleccionada si el prop 'selected' cambia
+    }
+  }, [selected]);
+
+  useEffect(() =>
+  {
+    function handleClickOutside(event)
+    {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target))
+      {
         setIsOpen(false);
       }
     }
 
-    if (isOpen) {
+    if (isOpen)
+    {
       document.addEventListener('mousedown', handleClickOutside);
-    } else {
+    } else
+    {
       document.removeEventListener('mousedown', handleClickOutside);
     }
 
-    return () => {
+    return () =>
+    {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [ isOpen ]);
 
-  const toggleDropdown = () => {
+  const toggleDropdown = () =>
+  {
     setIsOpen(!isOpen);
   };
 
@@ -33,14 +46,13 @@ const DropdownSelect = ({ label, placeholder, options, onSelectionChange, readOn
     setIsOpen(false);
     onSelectionChange(option); 
   };
-
   return (
     <div className={`input-container ${readOnly ? 'readonly' : ''}`}>
       <label className="text-sans-h5 input-label">{label}</label>
-      <button 
-      type="button" 
-      onClick={toggleDropdown} 
-      className={`text-sans-p dropdown-btn ${readOnly ? "disabled" : ""}`}
+      <button
+        type="button"
+        onClick={toggleDropdown}
+        className={`text-sans-p dropdown-btn ${readOnly ? "disabled" : ""}`}
       >
         {selectedOption ? selectedOption.label : placeholder}
         {!readOnly && <i className="material-symbols-rounded ms-2">{isOpen ? 'expand_less' : 'expand_more'}</i>}

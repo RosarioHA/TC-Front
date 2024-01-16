@@ -22,7 +22,6 @@ const PasoUno = () => {
   const { marcojuridico, organigramaregional, paso1 } = pasoData;
   const paso1Data = paso1;
 
-  if (!paso1Data || !data || !data.id) return <div>No hay datos suficientes para renderizar el Paso 1</div>;
 
 
   return (
