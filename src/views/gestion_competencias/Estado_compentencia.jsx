@@ -12,13 +12,11 @@ const EstadoCompetencia = () =>
   const navigate = useNavigate();
   const [ competencia, setCompetencia ] = useState(null);
 
-  useEffect(() =>
-  {
-    if (competenciaDetails)
-    {
+  useEffect(() => {
+    if (competenciaDetails) {
       setCompetencia(competenciaDetails);
     }
-  }, [ competenciaDetails ]);
+  }, [competenciaDetails]);
 
   const handleBackButtonClick = () =>
   {
@@ -40,9 +38,6 @@ const EstadoCompetencia = () =>
     return <div>No se encontraron detalles de la competencia</div>;
   }
 
-  const etapas = Object.keys(competencia)
-    .filter(key => key.startsWith('etapa') && Array.isArray(competencia[ key ]))
-    .reduce((acc, key) => acc.concat(competencia[ key ]), []);
 
   return (
     <>
@@ -75,7 +70,7 @@ const EstadoCompetencia = () =>
         </div>
         <div className="mt-5 mx-0">
           <div className="text-sans-h2 my-3">Etapas de levantamiento de información</div>
-          <VerticalStepper etapas={etapas} id={id} />
+          <VerticalStepper etapasObjeto={competencia.resumen_competencia}  etapaDatos={competencia} id={id} />
         </div>
       </div>
     </>

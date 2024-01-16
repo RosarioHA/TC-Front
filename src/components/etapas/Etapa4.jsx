@@ -1,15 +1,16 @@
 import { Link } from 'react-router-dom';
 import { Counter } from "../tables/Counter";
 
-export const Etapa4 = ({ etapaCompetencia }) =>
+export const Etapa4 = ({ etapa }) =>
 {
   const {
     nombre_etapa,
     estado,
+    oficio_inicio_gore,
     usuarios_gore,
     formularios_gore,
     fecha_ultima_modificacion
-  } = etapaCompetencia;
+  } = etapa;
 
 
   const renderButtonForSubetapa = (subetapa) =>
@@ -21,7 +22,7 @@ export const Etapa4 = ({ etapaCompetencia }) =>
 
 
     if (nombre.startsWith("Notificar a") && estado === "finalizada") {
-      if (etapaCompetencia.estado === 'Aún no puede comenzar') {
+      if (etapa.estado === 'Aún no puede comenzar') {
         // Cambiar el badge a pending si el estado general de la etapa es 'Aún no puede comenzar'
         return <span className="badge-status-pending">{accion}</span>;
       } else {
@@ -31,6 +32,9 @@ export const Etapa4 = ({ etapaCompetencia }) =>
     }
     switch (nombre)
     {
+      case "Subir oficio y su fecha para habilitar formulario GORE":
+        path = estado === "finalizada" ? "/home/ver_minuta" : "subir_oficio";
+        break;
       case "Completar formulario Sectorial":
         path = estado === "finalizada" ? "/home/ver_minuta" : "/home/formulario_sectorial/";
         break;
@@ -68,11 +72,17 @@ export const Etapa4 = ({ etapaCompetencia }) =>
       </div>
       <div>
         {usuarios_gore.length > 0 && renderSubetapas(usuarios_gore)}
+        { oficio_inicio_gore && (
+          <div className="d-flex justify-content-between text-sans-p border-top border-bottom my-3 py-1">
+            <div className="align-self-center">{ oficio_inicio_gore.nombre}</div>
+            {renderButtonForSubetapa( oficio_inicio_gore,)}
+          </div>
+        )}
         {formularios_gore.length > 0 && renderSubetapas(formularios_gore)}
         {estado === "En Estudio" && (
           <Counter
-            plazoDias={etapaCompetencia.plazo_dias}
-            tiempoTranscurrido={etapaCompetencia.calcular_tiempo_transcurrido}
+            plazoDias={etapa.plazo_dias}
+            tiempoTranscurrido={etapa.calcular_tiempo_transcurrido}
           />
         )}
         <div className="text-sans-p">Fecha última modificación: {fecha_ultima_modificacion}</div>

@@ -1,60 +1,50 @@
 import { useState, useRef, useEffect } from 'react';
 
-const DropdownCheckbox = ({ label, placeholder, options, onSelectionChange, readOnly }) =>
-{
+const DropdownCheckbox = ({ label, placeholder, options, onSelectionChange, readOnly }) => {
   const [ isOpen, setIsOpen ] = useState(false);
   const [ selectedOptions, setSelectedOptions ] = useState([]);
   const dropdownRef = useRef(null);
 
-  useEffect(() =>
-  {
-    function handleClickOutside(event)
-    {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target))
-      {
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsOpen(false);
         onSelectionChange(selectedOptions);
       }
     }
 
-    if (isOpen)
-    {
+    if (isOpen) {
       document.addEventListener('mousedown', handleClickOutside);
-    } else
-    {
+    } else {
       document.removeEventListener('mousedown', handleClickOutside);
     }
 
-    return () =>
-    {
+    return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [ isOpen, selectedOptions, onSelectionChange ]);
 
-  const toggleDropdown = () =>
-  {
+  const toggleDropdown = () => {
     setIsOpen(!isOpen);
-    if (isOpen)
-    {
+    if (isOpen) {
       setIsOpen(false);
       onSelectionChange(selectedOptions);
     }
   };
 
-  const handleCheckboxChange = (option) =>
-  {
-    if (option.value === 'Todas')
-    {
-      setSelectedOptions(selectedOptions.length === options.length ? [] : [ ...options ]);
-    } else if (option.value === 'Eliminar Selección')
-    {
+  const handleCheckboxChange = (option) => {
+    if (option === 'Todas') {
+      // Seleccionar todas las opciones disponibles
+      setSelectedOptions(options);
+    } else if (option === 'Eliminar Selección') {
+      // Deseleccionar todas las opciones
       setSelectedOptions([]);
-    } else
-    {
-      const updatedOptions = selectedOptions.find(opt => opt.value === option.value)
-        ? selectedOptions.filter((item) => item.value !== option.value)
-        : [ ...selectedOptions, option ];
-
+    } else {
+      // Resto de la lógica para opciones individuales
+      const updatedOptions = selectedOptions.includes(option)
+        ? selectedOptions.filter((item) => item !== option)
+        : [...selectedOptions, option];
+  
       setSelectedOptions(updatedOptions);
     }
   };

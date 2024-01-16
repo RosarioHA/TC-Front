@@ -161,7 +161,6 @@
     line-height: 22px;
 }
 
-
 // p bold
 .text-sans-m-bold{
     @include font-sans(20px, 700, $grey-a-color);
@@ -195,5 +194,15 @@
     @include font-sans(16px, 700, $dark-red);
     line-height: 24px;
     text-decoration-line: underline;
+}
+
+.teaxtarea-text{
+    @include font-sans(16px, 400, $grey-a-color);
+}
+.teaxtarea-text:disabled{
+    @include font-sans(16px, 400, $grey-c-color);
+}
+.teaxtarea-text::placeholder{
+    @include font-sans(16px, 400, $grey-c-color);
 }
 
