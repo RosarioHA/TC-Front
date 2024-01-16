@@ -110,11 +110,10 @@ const CreacionUsuario = () =>
   }
 
   //opciones sector 
-  const opcionesSector = dataSector.map(sector => ({
-    value: sector.id,
-    label: sector.nombre,
-  }));
-
+  const opcionesSector = Array.isArray(dataSector) ? dataSector.map(sector => ({
+  value: sector.id, 
+  label: sector.nombre
+   })) : [];
 
   const handleSectorChange = (sector) =>
   {
