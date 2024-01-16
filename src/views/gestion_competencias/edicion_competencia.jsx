@@ -67,6 +67,8 @@ const EdicionCompetencia = () => {
     label: sector.nombre,
     value: sector.id,
   })) : [];
+  const ambitoSeleccionado = ambitos.find(ambito => ambito.id === competencia?.ambito_competencia);
+  const origenSeleccionado = origenes.find(origen => origen.clave === competencia?.origen)
 
   const { control, handleSubmit, setValue, formState: { errors } } = useForm({
     mode: "onSubmit",
@@ -74,7 +76,7 @@ const EdicionCompetencia = () => {
       nombre:  "",
       regiones: regionesSeleccionadas,
       sectores: sectoresSeleccionados,
-      ambito_competencia:  null,
+      ambito_competencia: null,
       origen:  null,
       plazo_formulario_sectorial:  "",
       plazo_formulario_gore:  "",
@@ -219,31 +221,42 @@ const EdicionCompetencia = () => {
         </div>
 
         <div className="mb-4">
-          <DropdownSelect
-            label="Origen de la competencia (Obligatorio)"
-            placeholder={competencia ? competencia.origen : ''}
-            id="origen"
-            name="origen"
-            options={opcionesOrigen}
-            readOnly={!editMode}
-            control={control}
-            onSelectionChange=''
-            initialValue={competencia ? competencia.origen : ''}
-          />
+          <Controller 
+          name="origen"
+          control={control}
+          render={() => (
+            <DropdownSelect
+              label="Origen de la competencia (Obligatorio)"
+              placeholder={competencia ? origenSeleccionado?.descripcion || '' : ''}
+              id="origen"
+              name="origen"
+              options={opcionesOrigen}
+              readOnly={!editMode}
+              control={control}
+              onSelectionChange=''
+              initialValue={origenSeleccionado}
+            />
+          )}/>
         </div>
 
         <div className="mb-4">
-          <DropdownSelect
-            label="Elige el ámbito de la competencia (Obligatorio)"
-            placeholder={competencia ? competencia.ambito_competencia : ''}
-            id="ambito_competencia"
-            name="ambito_competencia"
-            options={opcionesAmbito}
-            readOnly={!editMode}
-            control={control}
-            onSelectionChange=''
-            initialValue={competencia ? competencia.ambito_competencia : ''}
-          />
+          <Controller 
+          name="ambito_competencia"
+          control={control}
+          render={() =>(
+            <DropdownSelect
+              label="Elige el ámbito de la competencia (Obligatorio)"
+              placeholder={competencia ? ambitoSeleccionado?.nombre || '' : ''}
+              id="ambito_competencia"
+              name="ambito_competencia"
+              options={opcionesAmbito}
+              readOnly={!editMode}
+              control={control}
+              onSelectionChange=''
+              initialValue={ambitoSeleccionado}
+              
+            />
+          )}/>
         </div>
 
         <div className="my-4">
