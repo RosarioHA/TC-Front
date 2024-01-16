@@ -16,17 +16,17 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { esquemaEdicionUsuarios } from "../../validaciones/esquemaEditarUsuario";
 import { useAuth } from "../../context/AuthContext";
 
-const EdicionUsuario = () =>
-{
+const EdicionUsuario = () => {
   const { id } = useParams();
   const history = useNavigate();
   const [ editMode, setEditMode ] = useState(false);
+  const { userDetails } = useUserDetails(id);
   const { editUser, isLoading: editUserLoading, error: editUserError } = useEditUser();
   const { dataGroups, loadingGroups } = useGroups();
   const { dataRegiones, loadingRegiones } = useRegion();
   const { dataSector, loadingSector } = useSector();
   const { dataListCompetencia, loadingCompetencia, errorCompetencia } = useCompetencia();
-  const { userDetails } = useUserDetails(id);
+  
   //const [currentPerfil, setCurrentPerfil] = useState("");
 
   const { userData } = useAuth();
@@ -49,10 +49,8 @@ const EdicionUsuario = () =>
   const perfil = watch('perfil') || '';
   const renderizadoCondicional = editMode ? perfil : userDetails?.perfil;
 
-  useEffect(() =>
-  {
-    if (editMode && userDetails)
-    {
+  useEffect(() => {
+    if (editMode && userDetails) {
       // En modo edición, actualiza los valores iniciales con los valores actuales.
       setValue('nombre_completo', userDetails.nombre_completo || "");
       setValue('email', userDetails.email || "");
@@ -63,22 +61,17 @@ const EdicionUsuario = () =>
     }
   }, [ editMode, userDetails, setValue ]);
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     // Verifica si las competencias se han cargado
-    if (!loadingCompetencia && !errorCompetencia)
-    {
+    if (!loadingCompetencia && !errorCompetencia) {
       console.log("Competencias en vista Editar usuario:", dataListCompetencia);
     }
   }, [ loadingCompetencia, errorCompetencia, dataListCompetencia ]);
 
-  const handleBackButtonClick = () =>
-  {
+  const handleBackButtonClick = () => {
     history(-1);
   };
-
-  const handleEditClick = () =>
-  {
+  const handleEditClick = () => {
     setEditMode((prevMode) => !prevMode);
   };
 
@@ -87,7 +80,6 @@ const EdicionUsuario = () =>
     value: group.id,
     label: group.name
   })) : [];
-  
   const opcionesDeRegiones = dataRegiones.map(region => ({
     value: region.id,
     label: region.region
@@ -97,36 +89,28 @@ const EdicionUsuario = () =>
     label: sector.nombre,
   }));
 
-  const handleDdSelectChange = (fieldName, selectedOption) =>
-  {
-    try
-    {
+  const handleDdSelectChange = (fieldName, selectedOption) => {
+    try {
       if (selectedOption && selectedOption.label)
       {
         setValue(fieldName, selectedOption.label);
       }
-    } catch (error)
-    {
+    } catch (error) {
       console.error('Error en handleDdSelectChange:', error);
     }
   };
 
-  const handleDdSelectBuscadorChange = (fieldName, selectedOption) =>
-  {
-    try
-    {
-      if (selectedOption && selectedOption.value)
-      {
+  const handleDdSelectBuscadorChange = (fieldName, selectedOption) => {
+    try {
+      if (selectedOption && selectedOption.value) {
         setValue(fieldName, selectedOption.value);
       }
-    } catch (error)
-    {
+    } catch (error) {
       console.error('Error en handleDdSelectBuscadorChange:', error);
     }
   };
 
-  const handleEstadoChange = (selectionName, nuevoEstado) =>
-  {
+  const handleEstadoChange = (selectionName, nuevoEstado) => {
     const isActivo = nuevoEstado === "activo";
     setValue("is_active", isActivo);
   };
@@ -135,15 +119,12 @@ const EdicionUsuario = () =>
   //   setValue('competencias', selectedCompetencias);
   // }
 
-  const onSubmit = async (formData) =>
-  {
-    try
-    {
+  const onSubmit = async (formData) => {
+    try {
       await editUser(id, formData);
       setEditMode(false);
       history('/home/success', { state: { origen: "editar_usuario" } });
-    } catch (error)
-    {
+    } catch (error) {
       console.error("Error al editar el usuario:", error);
     }
   };
