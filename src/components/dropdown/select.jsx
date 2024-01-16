@@ -3,14 +3,25 @@ import { useState, useRef, useEffect } from 'react';
 const DropdownSelect = ({ label, placeholder, options, onSelectionChange, selected, readOnly }) =>
 {
   const [ isOpen, setIsOpen ] = useState(false);
-  const [ selectedOption, setSelectedOption ] = useState(selected); // Usa el prop 'selected' para establecer la opción seleccionada
+  const [ selectedOption, setSelectedOption ] = useState(null);
   const dropdownRef = useRef(null);
 
-  useEffect(() => {
-    if (selected) {
-      setSelectedOption(selected); // Actualizar la opción seleccionada si el prop 'selected' cambia
+  // Inicialización y actualización de selectedOption
+  useEffect(() =>
+  {
+    // Si 'selected' es un objeto (como en CreacionUsuario)
+    if (selected && typeof selected === 'object')
+    {
+      setSelectedOption(selected);
     }
-  }, [selected]);
+    // Si 'selected' es un valor simple (como en Subpaso_CuatroUno)
+    else if (selected)
+    {
+      const option = options.find(o => o.value === selected);
+      setSelectedOption(option || null);
+    }
+  }, [ selected, options ]);
+
 
   useEffect(() =>
   {
@@ -41,10 +52,11 @@ const DropdownSelect = ({ label, placeholder, options, onSelectionChange, select
     setIsOpen(!isOpen);
   };
 
-  const handleOptionClick = (option) => {
+  const handleOptionClick = (option) =>
+  {
     setSelectedOption(option);
     setIsOpen(false);
-    onSelectionChange(option); 
+    onSelectionChange(option);
   };
   return (
     <div className={`input-container ${readOnly ? 'readonly' : ''}`}>
