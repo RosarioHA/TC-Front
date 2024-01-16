@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import CustomInput from '../../forms/custom_input';
 import DropdownSelect from '../../dropdown/select';
 import { FormularioContext } from '../../../context/FormSectorial';
@@ -6,8 +6,8 @@ import { apiTransferenciaCompentencia } from '../../../services/transferenciaCom
 
 export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber }) => {
  
-  const [dataDirecta, setDataDirecta] = useState(null);
-  const [opciones, setOpciones] = useState([]);
+  const [ dataDirecta, setDataDirecta ] = useState(null);
+  const [ opciones, setOpciones ] = useState([]);
 
   const fetchDataDirecta = async () => {
     try {
@@ -39,7 +39,7 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber }) => {
     }
   }, [dataDirecta]);
 
-  const { handleUpdatePaso, refreshSubpasoDos, setRefreshSubpasoDos } = useContext(FormularioContext);
+  const { handleUpdatePaso, setRefreshSubpasoDos } = useContext(FormularioContext);
 
   // Estado para mantener los datos agrupados por organismo
   const [organismosAgrupados, setOrganismosAgrupados] = useState({});
@@ -54,7 +54,6 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber }) => {
   // Efecto para agrupar datos cada vez que 'data' cambia
   useEffect(() => {
     agruparOrganismos(data);
-    validarCampos(data); 
   }, [data]);
 
   // Función para agrupar los datos por organismo_display
@@ -93,21 +92,20 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber }) => {
     // Implementa tu lógica para generar un ID único
     return Math.floor(Date.now() / 1000);
   };
+  
+  const [ultimaFilaId, setUltimaFilaId] = useState(null);
+  const [mostrarBotonGuardar, setMostrarBotonGuardar] = useState(false);
 
-  const [isFieldsValid, setIsFieldsValid] = useState({});
-
-  const validarCampos = (filas) => {
-    const validaciones = {};
-    filas.forEach(fila => {
-      validaciones[fila.id] = fila.nombre_ministerio_servicio && fila.descripcion;
-    });
-    setIsFieldsValid(validaciones);
-  };
 
   const agregarFila = (organismoDisplay) => {
+    const nuevaFilaId = generarIdUnico();
+
+    setMostrarBotonGuardar(true);
     const organismo = mapeoOrganismos[organismoDisplay] || "ValorPorDefectoSiNoExiste";
+    
+    setUltimaFilaId(nuevaFilaId);
     const nuevaFila = { 
-      id: generarIdUnico(),
+      id: nuevaFilaId,
       organismo: organismo, 
       nombre_ministerio_servicio: '', 
       descripcion: '' 
@@ -150,6 +148,7 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber }) => {
   
       setRefreshSubpasoDos(true);
       fetchDataDirecta();
+      setMostrarBotonGuardar(false);
   
     } catch (error) {
       console.error("Error al eliminar la fila:", error);
@@ -226,15 +225,20 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber }) => {
   // Lógica para editar sectores existentes
 
   // Actualiza el estado cuando los campos cambian
-  const handleNombreChange = (event) => {
-    setNuevoOrganismoNombre(event.target.value);
+  const handleNombreChange = (nuevoValor) => {
+    setNuevoOrganismoNombre(nuevoValor);
   };
 
-  const handleDescripcionChange = (event) => {
-    setNuevoOrganismoDescripcion(event.target.value);
+  const handleDescripcionChange = (nuevoValor) => {
+      setNuevoOrganismoDescripcion(nuevoValor);
   };
+
+  const [filaEnEdicionId, setFilaEnEdicionId] = useState(null);
+  
 
   const handleInputChange = (organismoDisplay, id, campo, valor) => {
+    setFilaEnEdicionId(id);
+
     setOrganismosAgrupados(prevOrganismos => {
       const organismosActualizados = {
         ...prevOrganismos,
@@ -245,19 +249,29 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber }) => {
           return fila;
         })
       };
-  
-      // Validar campos después de actualizar
-      validarCampos(organismosActualizados[organismoDisplay]);
       return organismosActualizados;
     });
   };
+
+  const [loadingState, setLoadingState] = useState({});
+  const [savedState, setSavedState] = useState({});
   
-  const handleSave = async (idFila, organismoDisplay) => {
-    // Solo guardar si los campos son válidos
-    if (!isFieldsValid[idFila]) {
+  const handleSave = async (idFila, organismoDisplay, esGuardadoPorBlur) => {
+    if (!esGuardadoPorBlur) {
+      setMostrarBotonGuardar(false);
+    }
+  
+    // Encuentra la fila específica que se está editando
+    const filaEditada = organismosAgrupados[organismoDisplay]?.find(fila => fila.id === idFila);
+  
+    // Verifica si la fila existe y si ambos campos están completos
+    const camposCompletos = filaEditada && filaEditada.nombre_ministerio_servicio && filaEditada.descripcion;
+  
+    if (!camposCompletos) {
       console.error("Campos requeridos no completados");
       return;
     }
+  
     try {
       // Encontrar la fila específica que se está editando
       const filaEditada = organismosAgrupados[organismoDisplay].find(fila => fila.id === idFila);
@@ -278,13 +292,23 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber }) => {
   
       // Llamar a la API para actualizar los datos
       const response = await handleUpdatePaso(id, stepNumber, payload);
-
+  
+      // Usar una función de callback para actualizar los estados después de la actualización exitosa
+      setSavedState(prevState => ({ ...prevState, [id]: true }), () => {
+        setLoadingState(prevState => ({ ...prevState, [id]: false }));
+      });
+  
       setRefreshSubpasoDos(true);
+      setMostrarBotonGuardar(false);
   
     } catch (error) {
       console.error("Error al guardar los datos:", error);
+      // En caso de error, asegúrate de actualizar el estado de carga
+      setLoadingState(prevState => ({ ...prevState, [id]: false }));
+      setSavedState(prevState => ({ ...prevState, [id]: false }));
     }
   };
+  
 
   return (
     <div>
@@ -307,22 +331,26 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber }) => {
                 <div className="col-10 p-3">
                   <div className="conteo">{filaIndex + 1}</div>
                   <CustomInput
-                    label="Nombre"
+                    label="Nombre (Obligatorio)"
                     value={fila.nombre_ministerio_servicio || ''}
                     placeholder="Nombre ministerio o servicio"
                     maxLength={index === 0 && filaIndex === 0 ? undefined : 300}
                     disabled={index === 0 && filaIndex === 0}
                     onChange={(valor) => handleInputChange(organismoDisplay, fila.id, 'nombre_ministerio_servicio', valor)}
-                    onBlur={() => handleSave(fila.id, organismoDisplay)}
+                    onBlur={fila.id !== ultimaFilaId ? () => handleSave(fila.id, organismoDisplay, true) : null}
+                    loading={loadingState[fila.id]}
+                    saved={savedState[fila.id]}
                   />
                   {!(index === 0 && filaIndex === 0) && (
                     <CustomInput
-                      label="Descripción"
+                      label="Descripción (Obligatorio)"
                       value={fila.descripcion || ''}
                       placeholder="Descripción"
                       maxLength={300}
                       onChange={(valor) => handleInputChange(organismoDisplay, fila.id, 'descripcion', valor)}
-                      onBlur={() => handleSave(fila.id, organismoDisplay)}
+                      onBlur={fila.id !== ultimaFilaId ? () => handleSave(fila.id, organismoDisplay, true) : null}
+                      loading={loadingState[fila.id]}
+                      saved={savedState[fila.id]}
                     />
                   )}
                 </div>
@@ -340,12 +368,17 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber }) => {
             ))}
               <div className="row">
                 <div className="p-2">
-                  <button
-                    className="btn-secundario-s m-2"
-                    onClick={() => agregarFila(organismoDisplay)}>
+                {mostrarBotonGuardar ? (
+                  <button className="btn-secundario-s m-2" onClick={() => handleSave(filaEnEdicionId, organismoDisplay, true)}>
+                    <i className="material-symbols-rounded me-2">save</i>
+                    <p className="mb-0 text-decoration-underline">Guardar</p>
+                  </button>
+                  ) : (
+                  <button className="btn-secundario-s" onClick={() => agregarFila(organismoDisplay)}>
                     <i className="material-symbols-rounded me-2">add</i>
                     <p className="mb-0 text-decoration-underline">Agregar Otro</p>
                   </button>
+                  )}
                 </div>
               </div>
             </div>
