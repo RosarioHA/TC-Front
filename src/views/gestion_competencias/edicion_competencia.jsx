@@ -101,6 +101,14 @@ const EdicionCompetencia = () => {
     console.log("competencia en useEffect", competencia )
   }, [editMode, competencia, setValue]);
 
+  const handleAmbitoChange = (selectedAmbito) => {
+    setValue("ambito_competencia", selectedAmbito)
+  };
+
+  const handleOrigenChange = (selectedOrigen) => {
+    setValue("origen", selectedOrigen)
+  };
+
   const onSubmit = async (formData) => {
     try {
       await updateCompetencia(formData);
@@ -233,7 +241,7 @@ const EdicionCompetencia = () => {
               options={opcionesOrigen}
               readOnly={!editMode}
               control={control}
-              onSelectionChange=''
+              onSelectionChange={handleOrigenChange}
               initialValue={origenSeleccionado}
             />
           )}/>
@@ -252,7 +260,7 @@ const EdicionCompetencia = () => {
               options={opcionesAmbito}
               readOnly={!editMode}
               control={control}
-              onSelectionChange=''
+              onSelectionChange={handleAmbitoChange}
               initialValue={ambitoSeleccionado}
               
             />
