@@ -101,12 +101,20 @@ const EdicionCompetencia = () => {
     console.log("competencia en useEffect", competencia )
   }, [editMode, competencia, setValue]);
 
-  const handleAmbitoChange = (selectedAmbito) => {
-    setValue("ambito_competencia", selectedAmbito)
+  //manejo de cambios en campos editables
+  const handleSectoresChange = (selectedSectores) => {
+    const selectedSectoresValues = selectedSectores ? selectedSectores.map(sector => sector.value) : [];
+    setValue("sectores", selectedSectoresValues);
+  };  
+  const handleRegionesChange = (selectedRegiones) => {
+    const selectedRegionesValues = selectedRegiones.map(region => region.value);
+    setValue("regiones", selectedRegionesValues);
   };
-
+  const handleAmbitoChange = (selectedAmbito) => {
+    setValue("ambito_competencia", selectedAmbito.value)
+  };
   const handleOrigenChange = (selectedOrigen) => {
-    setValue("origen", selectedOrigen)
+    setValue("origen", selectedOrigen.value)
   };
 
   const onSubmit = async (formData) => {
@@ -125,31 +133,6 @@ const EdicionCompetencia = () => {
   const handleEditClick = () => {
     setEditMode((prevMode) => !prevMode);
   };
-
-  // const handleInputChange = (event) => {
-  //   if (!event || !event.target) {
-  //     console.error('Evento o event.target es indefinido:', event);
-  //     return;
-  //   }
-  //   const { name, value } = event.target;
-  //   setValue(name, value);
-  //   setCompetenciaData((prevData) => ({
-  //     ...prevData,
-  //     [name]: value,
-  //   }));
-  // };
-  // const handleSaveClick = async () => {
-  //   try {
-  //     // Llama a la función de edición solo en modo de edición
-  //     if (editMode) {
-  //       await editCompetencia(id, competenciaData);
-  //       setEditMode(false);
-  //     }
-  //   } catch (error) {
-  //     // Manejar errores
-  //     console.error("Error al guardar la competencia:", error);
-  //   }
-  // };
 
   return (
     <div className="container col-10 my-4">
@@ -201,7 +184,7 @@ const EdicionCompetencia = () => {
               options={opcionesRegiones}
               readOnly={!editMode}
               prevSelection={regionesSeleccionadas}
-              onSelectionChange={(selectedOptions) => field.onChange(selectedOptions)}
+              onSelectionChange={handleRegionesChange}
               selectedOptions={field.value}
             />
           )}/>
@@ -221,7 +204,7 @@ const EdicionCompetencia = () => {
               options={opcionesSectores}
               readOnly={!editMode}
               prevSelection={sectoresSeleccionados}
-              onSelectionChange={(selectedOptions) => field.onChange(selectedOptions)}
+              onSelectionChange={handleSectoresChange}
               selectedOptions={field.value}
             /> 
           )}/>
