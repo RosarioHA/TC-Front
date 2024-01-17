@@ -18,16 +18,15 @@ const PasoUno = () => {
   if (loadingPaso) return <div>Cargando...</div>;
   if (errorPaso) return <div>Error: {errorPaso.message || "Error desconocido"}</div>;
   if (!pasoData || pasoData.length === 0) return <div>No hay datos disponibles para el Paso 1</div>;
-
+  
   const { marcojuridico, organigramaregional, paso1 } = pasoData;
-  const paso1Data = paso1;
-
+  const paso1Data = paso1 || {}; 
 
 
   return (
     <>
       <div className="col-1">
-        <MonoStepers stepNumber={paso1Data.numero_paso} />
+      {paso1Data.numero_paso && <MonoStepers stepNumber={paso1Data.numero_paso} />}
       </div>
       <div className="col-11">
         <div className="container-fluid ">
