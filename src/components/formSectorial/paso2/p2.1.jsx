@@ -4,7 +4,7 @@ import DropdownSelect from '../../dropdown/select';
 import { FormularioContext } from '../../../context/FormSectorial';
 import { apiTransferenciaCompentencia } from '../../../services/transferenciaCompetencia';
 
-export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber }) => {
+export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSubpasoDos_dos }) => {
  
   const [ dataDirecta, setDataDirecta ] = useState(null);
   const [ opciones, setOpciones ] = useState([]);
@@ -39,7 +39,7 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber }) => {
     }
   }, [dataDirecta]);
 
-  const { handleUpdatePaso, setRefreshSubpasoDos } = useContext(FormularioContext);
+  const { handleUpdatePaso } = useContext(FormularioContext);
 
   // Estado para mantener los datos agrupados por organismo
   const [organismosAgrupados, setOrganismosAgrupados] = useState({});
@@ -146,7 +146,7 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber }) => {
         };
       });
   
-      setRefreshSubpasoDos(true);
+      setRefreshSubpasoDos_dos(true);
       fetchDataDirecta();
       setMostrarBotonGuardar(false);
   
@@ -157,6 +157,15 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber }) => {
   
   
   // Lógica para agregar Nuevos Organismos
+  
+  const handleNombreChange = (nuevoValor) => {
+    setNuevoOrganismoNombre(nuevoValor);
+  };
+
+  const handleDescripcionChange = (nuevoValor) => {
+      setNuevoOrganismoDescripcion(nuevoValor);
+  };
+
   const [mostrarFormularioNuevoOrganismo, setMostrarFormularioNuevoOrganismo] = useState(false);
   
   const manejarCambioDropdown = (opcionSeleccionada) => {
@@ -205,7 +214,7 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber }) => {
       setNuevoOrganismoDisplay('');
       
       setMostrarFormularioNuevoOrganismo(false);
-      setRefreshSubpasoDos(true);
+      setRefreshSubpasoDos_dos(true);
       fetchDataDirecta();
       
     } catch (error) {
@@ -225,13 +234,6 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber }) => {
   // Lógica para editar sectores existentes
 
   // Actualiza el estado cuando los campos cambian
-  const handleNombreChange = (nuevoValor) => {
-    setNuevoOrganismoNombre(nuevoValor);
-  };
-
-  const handleDescripcionChange = (nuevoValor) => {
-      setNuevoOrganismoDescripcion(nuevoValor);
-  };
 
   const [filaEnEdicionId, setFilaEnEdicionId] = useState(null);
   
@@ -293,19 +295,11 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber }) => {
       // Llamar a la API para actualizar los datos
       const response = await handleUpdatePaso(id, stepNumber, payload);
   
-      // Usar una función de callback para actualizar los estados después de la actualización exitosa
-      setSavedState(prevState => ({ ...prevState, [id]: true }), () => {
-        setLoadingState(prevState => ({ ...prevState, [id]: false }));
-      });
-  
-      setRefreshSubpasoDos(true);
+      setRefreshSubpasoDos_dos(true);
       setMostrarBotonGuardar(false);
   
     } catch (error) {
       console.error("Error al guardar los datos:", error);
-      // En caso de error, asegúrate de actualizar el estado de carga
-      setLoadingState(prevState => ({ ...prevState, [id]: false }));
-      setSavedState(prevState => ({ ...prevState, [id]: false }));
     }
   };
   

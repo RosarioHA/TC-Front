@@ -3,12 +3,20 @@ import CustomInput from "../../forms/custom_input";
 import { FormularioContext } from "../../../context/FormSectorial";
 import { apiTransferenciaCompentencia } from "../../../services/transferenciaCompetencia";
 
-export const Subpaso_dosPuntoDos = ({id, data, stepNumber}) => {
+export const Subpaso_dosPuntoDos = ({
+    id, 
+    data, 
+    stepNumber, 
+    refreshSubpasoDos_dos, 
+    setRefreshSubpasoDos_dos,
+    refreshSubpasoDos_tres,
+    setRefreshSubpasoDos_tres
+  }) => {
 
-  const { handleUpdatePaso, refreshSubpasoDos, setRefreshSubpasoDos } = useContext(FormularioContext);
+  const { handleUpdatePaso } = useContext(FormularioContext);
   const [ agrupados, setAgrupados ] = useState({});
   const [ dataDirecta, setDataDirecta ] = useState(null);
-
+  
   const fetchDataDirectly = async () => {
     try {
       const response = await apiTransferenciaCompentencia.get(`/formulario-sectorial/${id}/paso-${stepNumber}/`);
@@ -37,16 +45,16 @@ export const Subpaso_dosPuntoDos = ({id, data, stepNumber}) => {
     };
 
   useEffect(() => {
-    if (refreshSubpasoDos) {
+    if (refreshSubpasoDos_dos) {
 
       fetchDataDirectly();
 
       const nuevosAgrupados = agrupadosPorOrganismo();
       setAgrupados(nuevosAgrupados); // Actualiza el estado con los nuevos agrupados
 
-      setRefreshSubpasoDos(false); // Reestablece el estado de refresco
+      setRefreshSubpasoDos_dos(false); // Reestablece el estado de refresco
     }
-  }, [refreshSubpasoDos, setRefreshSubpasoDos, id, stepNumber ]);
+  }, [refreshSubpasoDos_dos, setRefreshSubpasoDos_dos, id, stepNumber ]);
 
   useEffect(() => {
     // Carga inicial con 'data'
@@ -162,7 +170,7 @@ export const Subpaso_dosPuntoDos = ({id, data, stepNumber}) => {
         return nuevoEstado;
       });
 
-      setRefreshSubpasoDos(true);
+      setRefreshSubpasoDos_tres(true);
       setMostrarBotonGuardar(false);
   
     } catch (error) {
@@ -228,7 +236,7 @@ export const Subpaso_dosPuntoDos = ({id, data, stepNumber}) => {
       // Llamar a la API para actualizar los datos
       await handleUpdatePaso(id, stepNumber, payload);
 
-      setRefreshSubpasoDos(true);
+      setRefreshSubpasoDos_tres(true);
       setMostrarBotonGuardar(false);
 
     } catch (error) {

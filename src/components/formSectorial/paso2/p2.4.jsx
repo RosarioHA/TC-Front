@@ -1,6 +1,9 @@
 import PlataformasYsoftware from "../../tables/PlataformasYsoftware";
 
-export const Subpaso_dosPuntoCuatro = () => {
+export const Subpaso_dosPuntoCuatro = ({data}) => {
+
+  console.log('Estructura data 2.4:', data )
+
     return(
       <div>
         <h4 className="text-sans-h4">2.4 Plataformas y softwares utilizados en el ejercicio de la competencia</h4>

@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { FormularioContext } from '../../context/FormSectorial';
 import { Avance } from "../../components/tables/Avance";
 import { ButtonsNavigate } from "../../components/layout/ButtonsNavigate";
@@ -12,6 +12,8 @@ import { MonoStepers } from "../../components/stepers/MonoStepers";
 const PasoDos = () => {
   const { pasoData, loadingPaso, errorPaso, updateStepNumber, data } = useContext(FormularioContext);
   const stepNumber = 2;
+  const [refreshSubpasoDos_dos, setRefreshSubpasoDos_dos] = useState(false);
+  const [refreshSubpasoDos_tres, setRefreshSubpasoDos_tres] = useState(false);
 
   useEffect(() =>
   {
@@ -25,7 +27,7 @@ const PasoDos = () => {
   const paso2 = pasoData.paso2;
   if (!paso2) return <div>No hay información de paso2 disponible</div>;
 
-  const { p_2_1_organismos_intervinientes,listado_organismos, p_2_2_unidades_intervinientes, p_2_3_etapas_ejercicio_competencia, p_2_4_plataformas_y_softwares, p_2_5_flujograma_competencia } = pasoData;
+  const { p_2_1_organismos_intervinientes,listado_organismos, p_2_2_unidades_intervinientes, p_2_3_etapas_ejercicio_competencia, listado_unidades, p_2_4_plataformas_y_softwares, p_2_5_flujograma_competencia } = pasoData;
 
   return (
     <>
@@ -41,13 +43,33 @@ const PasoDos = () => {
           <span className="text-sans-h6-primary">Texto de apoyo</span>
 
           <div className="container-fluid me-5 pe-5 my-5">
-            <Subpaso_dosPuntoUno data={p_2_1_organismos_intervinientes} lista={listado_organismos} stepNumber={stepNumber} id={data.id}/>
+            <Subpaso_dosPuntoUno 
+              data={p_2_1_organismos_intervinientes} 
+              lista={listado_organismos} 
+              stepNumber={stepNumber} 
+              id={data.id} 
+              setRefreshSubpasoDos_dos={setRefreshSubpasoDos_dos}
+            />
           </div>
           <div className="container-fluid me-5 pe-5 my-5">
-            <Subpaso_dosPuntoDos data={p_2_2_unidades_intervinientes} stepNumber={stepNumber} id={data.id}/>
+            <Subpaso_dosPuntoDos 
+              data={p_2_2_unidades_intervinientes} 
+              stepNumber={stepNumber} id={data.id} 
+              refreshSubpasoDos_dos={refreshSubpasoDos_dos} 
+              setRefreshSubpasoDos_dos={setRefreshSubpasoDos_dos}
+              refreshSubpasoDos_tres={refreshSubpasoDos_tres}
+              setRefreshSubpasoDos_tres={setRefreshSubpasoDos_tres}
+            />
           </div>
           <div className="container-fluid me-5 pe-5 my-5">
-            <Subpaso_dosPuntoTres data={p_2_3_etapas_ejercicio_competencia} />
+            <Subpaso_dosPuntoTres 
+              data={p_2_3_etapas_ejercicio_competencia} 
+              listado_unidades={listado_unidades} 
+              stepNumber={stepNumber} 
+              id={data.id}
+              refreshSubpasoDos_tres={refreshSubpasoDos_tres}
+              setRefreshSubpasoDos_tres={setRefreshSubpasoDos_tres}
+            />
           </div>
           <div className="container-fluid me-5 pe-5 my-5">
             <Subpaso_dosPuntoCuatro data={p_2_4_plataformas_y_softwares} />
