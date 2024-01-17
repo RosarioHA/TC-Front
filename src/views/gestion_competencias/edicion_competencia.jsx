@@ -63,10 +63,12 @@ const EdicionCompetencia = () => {
       value: region.id,
     };
   }) : [];
+  const sectoresMap = new Map(dataSector.map(sector => [sector.nombre, sector.id]));
   const sectoresSeleccionados = competencia ? competencia.sectores.map(sector => ({
     label: sector.nombre,
-    value: sector.id,
-  })) : [];
+    value: sectoresMap.get(sector.nombre), // Obtiene el ID correspondiente al nombre
+  })) : [];  
+  console.log("sectores seleccionados", sectoresSeleccionados)
   const ambitoSeleccionado = ambitos.find(ambito => ambito.id === competencia?.ambito_competencia);
   const origenSeleccionado = origenes.find(origen => origen.clave === competencia?.origen)
 
@@ -89,6 +91,7 @@ const EdicionCompetencia = () => {
       // Inicializar el formulario con los detalles de la competencia
       setValue("nombre", competencia.nombre || "");
       setValue("regiones", competencia.regiones || null);
+      // setValue("sectores", competencia.sectores || null);
       setValue("sectores", competencia.sectores.map(sector => ({
         label: sector.nombre,
         value: sector.id,
@@ -98,12 +101,11 @@ const EdicionCompetencia = () => {
       setValue("plazo_formulario_sectorial", competencia.plazo_formulario_sectorial || "");
       setValue("plazo_formulario_gore", competencia.plazo_formulario_gore || "");
     }
-    console.log("competencia en useEffect", competencia )
   }, [editMode, competencia, setValue]);
 
   //manejo de cambios en campos editables
   const handleSectoresChange = (selectedSectores) => {
-    const selectedSectoresValues = selectedSectores ? selectedSectores.map(sector => sector.value) : [];
+    const selectedSectoresValues = selectedSectores.map(sector => sector.value);
     setValue("sectores", selectedSectoresValues);
   };  
   const handleRegionesChange = (selectedRegiones) => {
@@ -121,7 +123,6 @@ const EdicionCompetencia = () => {
     try {
       await updateCompetencia(formData);
       setEditMode(false);
-      // Resto del código...
     } catch (error) {
       console.error("Error al guardar la competencia:", error);
     }
@@ -163,8 +164,6 @@ const EdicionCompetencia = () => {
               id="nombre"
               name="nombre"
               readOnly={!editMode}
-              //value={field.value}
-              //onChange={(e) => field.onChange(e.target.value)}
               error={errors.nombre_completo?.message}
                 {...field}
             />
