@@ -52,28 +52,30 @@ export const Subpaso_tres = ({ pasoData, id, stepNumber }) =>
     localStorage.setItem('formData', JSON.stringify(formData));
   }, [ formData ]);
 
-  const handleChange = (inputName, e) => {
+  const handleChange = (inputName, e) =>
+  {
     const { value } = e.target;
     setFormData(prevFormData => ({
       ...prevFormData,
       paso1: {
         ...prevFormData.paso1,
-        [inputName]: value,
+        [ inputName ]: value,
       }
     }));
     setInputStatus(prevStatus => ({
       ...prevStatus,
-      [inputName]: { loading: false, saved: false }
+      [ inputName ]: { loading: false, saved: false }
     }));
   };
-  
-  
-  const handleSave = async (inputName) => {
+
+
+  const handleSave = async (inputName) =>
+  {
     setInputStatus(prevStatus => ({
       ...prevStatus,
-      [inputName]: { loading: true, saved: false }
+      [ inputName ]: { loading: true, saved: false }
     }));
-  
+
     const updatedFormData = {
       ...formData,
       paso1: {
@@ -82,17 +84,19 @@ export const Subpaso_tres = ({ pasoData, id, stepNumber }) =>
         ambito_paso1: ambitoSeleccionado ? ambitoSeleccionado.value : formData.paso1.ambito_paso1
       }
     };
-  
+
     const success = await handleUpdatePaso(id, stepNumber, updatedFormData);
-    if (success) {
+    if (success)
+    {
       setInputStatus(prevStatus => ({
         ...prevStatus,
-        [inputName]: { loading: false, saved: true }
+        [ inputName ]: { loading: false, saved: true }
       }));
-    } else {
+    } else
+    {
       setInputStatus(prevStatus => ({
         ...prevStatus,
-        [inputName]: { loading: false, saved: false }
+        [ inputName ]: { loading: false, saved: false }
       }));
     }
   };
@@ -102,11 +106,12 @@ export const Subpaso_tres = ({ pasoData, id, stepNumber }) =>
     value: ambito.id,
   }));
 
-  const handleAmbitoChange = async (selectedOption) => {
+  const handleAmbitoChange = async (selectedOption) =>
+  {
     setAmbitoSeleccionado(selectedOption);
     localStorage.setItem('ambitoSeleccionado', JSON.stringify(selectedOption)); // Guardar en localStorage
-  
-  
+
+
     // Actualizar formData con la nueva selección de ámbito
     const updatedFormData = {
       ...formData,
@@ -115,15 +120,17 @@ export const Subpaso_tres = ({ pasoData, id, stepNumber }) =>
         ambito_paso1: selectedOption.value,
       },
     };
-  
+
     // Llamar a handleSave para enviar los datos actualizados
     await handleSave('ambito_paso1', updatedFormData);
   };
 
-  useEffect(() => {
+  useEffect(() =>
+  {
     // Recuperar la selección guardada al cargar el componente
     const savedSelection = localStorage.getItem('ambitoSeleccionado');
-    if (savedSelection) {
+    if (savedSelection)
+    {
       setAmbitoSeleccionado(JSON.parse(savedSelection));
     }
   }, []);
