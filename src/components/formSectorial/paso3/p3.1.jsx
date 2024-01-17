@@ -1,13 +1,17 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useCallback } from "react";
 import { FormularioContext } from "../../../context/FormSectorial";
 
-export const Subpaso_Tres = ({ esquemaDatos }) =>
+export const Subpaso_Tres = ({ esquemaDatos, id, stepNumber }) =>
 {
-  const { id, stepNumber, handleUpdatePaso, pasoData } = useContext(FormularioContext);
-  const [ datos, setDatos ] = useState([]);
+  const { handleUpdatePaso } = useContext(FormularioContext);
+  const [ datos, setDatos ] = useState(esquemaDatos || []);
   const [ showErrorMessage, setShowErrorMessage ] = useState(false);
-
-
+  const currentYear = new Date().getFullYear();
+  const yearDifferences = datos.map(data => currentYear - data.anio);
+  const [guardadoConExito, setGuardadoConExito] = useState(Array(datos.length).fill(false));
+  
+console.log('datos',datos )
+console.log('esquema', esquemaDatos)
 
   useEffect(() =>
   {
@@ -15,56 +19,59 @@ export const Subpaso_Tres = ({ esquemaDatos }) =>
     {
       setDatos(esquemaDatos);
     }
-  }, [ esquemaDatos, id ]);
+  }, [ esquemaDatos ]);
 
-  if (!esquemaDatos)
+  const handleInputChange = useCallback((index, campo, value) =>
   {
-    return <div>Cargando datos...</div>;
-  }
-
-  if (!datos || datos.length === 0)
-  {
-    return <div>No hay datos para mostrar.</div>;
-  }
-  const validateInput = (value) =>
-  {
-    return value.replace(/[-+.e-]/g, '');
-  };
-
-  const headers = datos.map(data => data.anio);
-
-  const handleBlur = async (index, tipo, value) => {
-    const validatedValue = validateInput(value);
-  
-    if (datos[index][tipo] !== validatedValue) {
-      try {
-        console.log(`Guardando: ${tipo} = ${value} para el ID: ${id}`);
-  
-        // Preparar los datos actualizados
-        const newDatos = [...datos];
-        newDatos[index][tipo] = validatedValue;
-  
-        // Preparar la estructura de datos completa para enviar al backend
-        const updatedData = {
-          paso3: [...pasoData.paso3], // Asegúrate de mantener los datos existentes de paso3
-          cobertura_anual: newDatos   // Incluye los nuevos datos de cobertura_anual
-        };
-  
-        // Llamada para actualizar los datos en el backend
-        await handleUpdatePaso(id, stepNumber, updatedData);
-  
-        // Actualizar el estado local con los nuevos datos
-        setDatos(newDatos);
-  
-        // Verificar si todos los campos están llenos y actualizar el estado de error si es necesario
-        setShowErrorMessage(!areAllFieldsFilled());
-  
-      } catch (error) {
-        console.error("Error al actualizar:", error);
-        // Aquí puedes manejar errores, como mostrar un mensaje al usuario
-      }
+    const newDatos = [ ...datos ];
+    const numericValue = value === '' ? null : Number(value);
+    if (isNaN(numericValue))
+    {
+      setShowErrorMessage("Por favor, ingrese un número válido.");
+      return;
     }
-  };
+    newDatos[ index ][ campo ] = numericValue;
+    setDatos(newDatos);
+  }, [ datos ]);
+
+  const handleBlur = useCallback(async (index, campo, value) =>
+  {
+    setShowErrorMessage('');
+
+    const numericValue = value === '' ? null : Number(value);
+
+    if (numericValue !== null && !isNaN(numericValue))
+    {
+      const idDelDato = datos[ index ].id;
+      const payload = {
+        id: idDelDato,
+        [ campo ]: numericValue,
+      };
+
+      try
+      {
+        await handleUpdatePaso(id, stepNumber, payload);
+        setDatos((datosAnteriores) =>
+          datosAnteriores.map((dato, i) =>
+            i === index ? { ...dato, [ campo ]: numericValue } : dato
+          )
+        );   
+        setGuardadoConExito((exitosAnteriores) =>
+        exitosAnteriores.map((exito, i) => i === index ? true : exito)
+      );
+      } catch (error)
+      {
+        // Maneja los errores y muestra un mensaje adecuado.
+        console.error("Error al actualizar:", error);
+        setShowErrorMessage("Error al guardar los cambios. Intente de nuevo.");
+      }
+    } else
+    {
+      // Muestra un mensaje de error si el valor no es un número válido.
+      setShowErrorMessage("Por favor, ingrese un número válido.");
+    }
+  }, [ datos, handleUpdatePaso, id, stepNumber, setShowErrorMessage ]);
+
   const getPlaceholder = (rowIndex) =>
   {
     switch (rowIndex)
@@ -73,28 +80,10 @@ export const Subpaso_Tres = ({ esquemaDatos }) =>
       case 1:
         return "Unidades";
       case 2:
-        return "Recursos (M$)";
-      default:
+        return "Recursos (M$)"; default:
         return "";
     }
   };
-
-  const handleInputChange = (index, campo, value) => {
-    const newDatos = [...datos];
-    newDatos[index][campo] = value; // Actualiza el valor específico
-    setDatos(newDatos); // Actualiza el estado
-  };
-  
-  const areAllFieldsFilled = () =>
-  {
-    return datos.every(data => Object.values(data).every(value => value !== ""));
-  };
-
-  const currentYear = new Date().getFullYear();
-  const yearDifferences = headers.map(year => currentYear - year);
-
-
-
 
   return (
     <div className="mt-4">
@@ -111,34 +100,33 @@ export const Subpaso_Tres = ({ esquemaDatos }) =>
             <tr>
               <th scope="col" className="text-sans-p-bold px-2 pb-5">#</th>
               <th scope="col" className="text-sans-p-bold px-2 pb-5 ">Año de ejercicio</th>
-              {headers.map((year, index) => (
-                <th key={index} scope="col" className="text-sans-p text-center border-start ">
-                  <u>{year}</u>
+              {datos.map((data, index) => (
+                <th key={index} scope="col" className="text-sans-p text-center border-start">
+                  <u>{data.anio}</u>
                   <p className="text-sans-h6-grey">(año n-{yearDifferences[ index ]})</p>
                 </th>
               ))}
             </tr>
           </thead>
           <tbody>
-            {[ 'Universo de cobertura', 'Cobertura efectivamente abordada', 'Recursos ejecutados anualmente en M$' ].map((item, rowIndex) => (
+          {[ 'universo_cobertura', 'cobertura_efectivamente_abordada', 'recursos_ejecutados' ].map((item, rowIndex) => (
               <tr key={rowIndex} className="mt-2">
                 <th scope="row" className="text-sans-p-bold align-self-center">{rowIndex + 1}</th>
-                <th scope="row" className="text-sans-p-bold pt-2">{item}</th>
+                <th scope="row" className="text-sans-p-bold pt-2">{item.replace(/_/g, ' ')}</th>
                 {datos.map((data, colIndex) => (
-                  <td key={`${rowIndex}-${colIndex}`} className="border-start px-1">
+                  <td key={`${rowIndex}- ${colIndex}`} className="border-start px-1">
                     <input
                       type="number"
-                      value={data[ item.toLowerCase().replace(/ /g, '_') ] || ""}
+                      value={data[ item ] || ""}
                       placeholder={getPlaceholder(rowIndex)}
-                      onChange={(e) => handleInputChange(colIndex, item.toLowerCase().replace(/ /g, '_'), e.target.value)}
-                      onBlur={(e) => handleBlur(colIndex, item.toLowerCase().replace(/ /g, '_'), e.target.value)}
-                      className="form-control mx-auto px-0 mb-4 text-center"
+                      onChange={(e) => handleInputChange(colIndex, item, e.target.value)}
+                      onBlur={(e) => handleBlur(colIndex, item, e.target.value)}
+                      className={`form-control mx-auto px-0 mb-4 text-center ${guardadoConExito[colIndex] ? 'input-success' : ''}`}
                     />
                   </td>
                 ))}
               </tr>
             ))}
-            {/* Última fila que muestra resultados en lugar de inputs */}
             <tr >
               <th scope="row">4</th>
               <th scope="row" className="text-sans-p-bold">Total<br />M$/Cobertura <br />efectiva</th>
@@ -154,6 +142,6 @@ export const Subpaso_Tres = ({ esquemaDatos }) =>
           </div>
         )}
       </div>
-    </div>
+    </div >
   );
-};
+}
