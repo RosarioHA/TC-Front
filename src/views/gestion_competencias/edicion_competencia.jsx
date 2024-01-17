@@ -1,44 +1,139 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useForm, Controller } from 'react-hook-form';
 import { useNavigate, useParams } from "react-router-dom";
-//import { CompetenciasContext } from "../../context/competencias";
 import CustomInput from "../../components/forms/custom_input";
 import DropdownSelect from "../../components/dropdown/select";
-//import DropdownCheckbox from "../../components/dropdown/checkbox";
-//import DropdownConSecciones from "../../components/dropdown/checkbox_conSecciones_conTabla";
+import DropdownCheckbox from "../../components/dropdown/checkbox";
+import DropdownConSecciones from "../../components/dropdown/checkbox_conSecciones_conTabla";
 import SubirArchivo from "../../components/forms/subir_archivo";
-import { useGroups } from "../../hooks/useGroups";
+import { useOrigenes } from "../../hooks/useOrigenes";
 import { useRegion } from "../../hooks/useRegion";
 import { useSector } from "../../hooks/useSector";
-import { useUserDetails } from "../../hooks/usuarios/useUserDetail";
+import { useAmbitos } from "../../hooks/useAmbitos";
+import {useEditCompetencia } from "../../hooks/competencias/useEditCompetencia"
+import { useUsers } from "../../hooks/usuarios/useUsers";
 
+const groupUsersByType = (users) => {
+  const grouped = users.reduce((acc, user) => {
+    acc[ user.perfil ] = acc[ user.perfil ] || [];
+    acc[ user.perfil ].push(user);
+    return acc;
+  }, {});
+  return Object.entries(grouped).map(([ perfil, users ]) => ({
+    label: perfil,
+    options: users,
+  }));
+};
 
-const EdicionCompetencia = () =>
-{
+const EdicionCompetencia = () => {
   const { id } = useParams();
   const history = useNavigate();
-  //const { competenciaDetails, loadingCompetencia, errorCompetencia } = useContext(CompetenciasContext);
   const [ editMode, setEditMode ] = useState(false);
-
-
-  const { userDetails } = useUserDetails(id);
-  const { dataGroups } = useGroups();
   const { dataRegiones } = useRegion();
   const { dataSector } = useSector();
+  const { origenes } = useOrigenes();
+  const { ambitos } = useAmbitos();
+  const { users } = useUsers();
+  const userOptions = groupUsersByType(users);
+  const { competencia,  updateCompetencia } = useEditCompetencia(id);
 
-  console.log(dataGroups, dataRegiones, dataSector, userDetails)
+  //opciones selectores
+  const opcionesRegiones = dataRegiones.map(region => ({
+    label: region.region,
+    value: region.id,
+  }));
+  const opcionesSectores = dataSector.map(sector => ({
+    label: sector.nombre,
+    value: sector.id,
+  }));
+  const opcionesOrigen = origenes.map(origen => ({
+    label: origen.descripcion,
+    value: origen.clave,
+  }));
+  const opcionesAmbito = ambitos.map(ambito => ({
+    label: ambito.nombre,
+    value: ambito.id,
+  }));
 
-  const handleBackButtonClick = () =>
-  {
+  //data competencia
+  const regionesSeleccionadas = competencia ? competencia.regiones.map(regionId => {
+    const region = dataRegiones.find(region => region.id === regionId);
+    return {
+      label: region.region,
+      value: region.id,
+    };
+  }) : [];
+  const sectoresMap = new Map(dataSector.map(sector => [sector.nombre, sector.id]));
+  const sectoresSeleccionados = competencia ? competencia.sectores.map(sector => ({
+    label: sector.nombre,
+    value: sectoresMap.get(sector.nombre), // Obtiene el ID correspondiente al nombre
+  })) : [];  
+  console.log("sectores seleccionados", sectoresSeleccionados)
+  const ambitoSeleccionado = ambitos.find(ambito => ambito.id === competencia?.ambito_competencia);
+  const origenSeleccionado = origenes.find(origen => origen.clave === competencia?.origen)
+
+  const { control, handleSubmit, setValue, formState: { errors } } = useForm({
+    mode: "onSubmit",
+    defaultValues: {
+      nombre:  "",
+      regiones: regionesSeleccionadas,
+      sectores: sectoresSeleccionados,
+      ambito_competencia: null,
+      origen:  null,
+      plazo_formulario_sectorial:  "",
+      plazo_formulario_gore:  "",
+      //faltaria campo usuarios
+    },
+  });
+  
+  useEffect(() => {
+    if (editMode && competencia) {
+      // Inicializar el formulario con los detalles de la competencia
+      setValue("nombre", competencia.nombre || "");
+      setValue("regiones", competencia.regiones || null);
+      // setValue("sectores", competencia.sectores || null);
+      setValue("sectores", competencia.sectores.map(sector => ({
+        label: sector.nombre,
+        value: sector.id,
+      })) || null);
+      setValue("ambito_competencia", competencia.ambito_competencia || null);
+      setValue("origen", competencia.origen || null);
+      setValue("plazo_formulario_sectorial", competencia.plazo_formulario_sectorial || "");
+      setValue("plazo_formulario_gore", competencia.plazo_formulario_gore || "");
+    }
+  }, [editMode, competencia, setValue]);
+
+  //manejo de cambios en campos editables
+  const handleSectoresChange = (selectedSectores) => {
+    const selectedSectoresValues = selectedSectores.map(sector => sector.value);
+    setValue("sectores", selectedSectoresValues);
+  };  
+  const handleRegionesChange = (selectedRegiones) => {
+    const selectedRegionesValues = selectedRegiones.map(region => region.value);
+    setValue("regiones", selectedRegionesValues);
+  };
+  const handleAmbitoChange = (selectedAmbito) => {
+    setValue("ambito_competencia", selectedAmbito.value)
+  };
+  const handleOrigenChange = (selectedOrigen) => {
+    setValue("origen", selectedOrigen.value)
+  };
+
+  const onSubmit = async (formData) => {
+    try {
+      await updateCompetencia(formData);
+      setEditMode(false);
+    } catch (error) {
+      console.error("Error al guardar la competencia:", error);
+    }
+  };
+  
+  const handleBackButtonClick = () => {
     history(-1);
   };
-
-  const handleEditClick = () =>
-  {
+  const handleEditClick = () => {
     setEditMode((prevMode) => !prevMode);
   };
-
-
-
 
   return (
     <div className="container col-10 my-4">
@@ -49,7 +144,7 @@ const EdicionCompetencia = () =>
             <i className="material-symbols-rounded me-2">arrow_back_ios</i>
             <p className="mb-0">Volver</p>
           </button>
-          <h3 className="text-sans-h3 ms-3 mb-0">Competencia: $NombreCompetencia</h3>
+          <h3 className="text-sans-h3 ms-3 mb-0">Competencia: {competencia?.nombre}</h3>
         </div>
         <button className="btn-secundario-s" onClick={handleEditClick}>
           <i className="material-symbols-rounded me-2">edit</i>
@@ -57,82 +152,112 @@ const EdicionCompetencia = () =>
         </button>
       </div>
 
-      <form>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <div className="mb-4">
-          <CustomInput
-            label="Nombre de la Competencia (Obligatorio)"
-            placeholder=''
-            id="nombre"
-            readOnly=''
-          />
+          <Controller 
+          name="nombre"
+          control={control}
+          render={({ field }) => (
+            <CustomInput
+              label="Nombre de la Competencia (Obligatorio)"
+              placeholder={competencia ? competencia.nombre : ''}
+              id="nombre"
+              name="nombre"
+              readOnly={!editMode}
+              error={errors.nombre_completo?.message}
+                {...field}
+            />
+          )}/>
         </div>
 
         <div className="mb-4">
-          {/*  <DropdownCheckbox
-            label="Región (Obligatorio)"
-            placeholder="Elige la o las regiones donde se ejercerá la competencia"
-            id="perfil"
-            name="perfil"
-            options=''
-            readOnly=''
-            control=''
-            onSelectionChange=''
-            initialValue=''
-          />
-        </div>
-
-
-        <div className="mb-4">
-          {/* <DropdownCheckbox
-            label="Elige el sector de la competencia (Obligatorio)"
-            placeholder='Elige el sector de la competencia'
-            id="perfil"
-            name="perfil"
-            options=''
-            readOnly=''
-            control=''
-            onSelectionChange=''
-            initialValue=''
-          /> */}
+          <Controller 
+          name="regiones"
+          control={control}
+          render={({ field }) => (
+            <DropdownCheckbox
+              label="Región (Obligatorio)"
+              placeholder="Elige la o las regiones donde se ejercerá la competencia"
+              id="regiones"
+              name="regiones"
+              options={opcionesRegiones}
+              readOnly={!editMode}
+              prevSelection={regionesSeleccionadas}
+              onSelectionChange={handleRegionesChange}
+              selectedOptions={field.value}
+            />
+          )}/>
+            
         </div>
 
         <div className="mb-4">
-          <DropdownSelect
-            label="Origen de la competencia (Obligatorio)"
-            placeholder=''
-            id="perfil"
-            name="perfil"
-            options=''
-            readOnly=''
-            control=''
-            onSelectionChange=''
-            initialValue=''
-          />
+          <Controller 
+          name="sectores"
+          control={control}
+          render={({ field }) => (
+            <DropdownCheckbox
+              label="Elige el sector de la competencia (Obligatorio)"
+              placeholder='Elige el sector de la competencia'
+              id="sectores"
+              name="sectores"
+              options={opcionesSectores}
+              readOnly={!editMode}
+              prevSelection={sectoresSeleccionados}
+              onSelectionChange={handleSectoresChange}
+              selectedOptions={field.value}
+            /> 
+          )}/>
+          
         </div>
 
         <div className="mb-4">
-          <DropdownSelect
-            label="Elige el ámbito de la competencia (Obligatorio)"
-            placeholder="Elige el ámbito de la competencia"
-            id=""
-            name=""
-            options=''
-            readOnly=''
-            control=''
-            onSelectionChange=''
-            initialValue=''
-          />
+          <Controller 
+          name="origen"
+          control={control}
+          render={() => (
+            <DropdownSelect
+              label="Origen de la competencia (Obligatorio)"
+              placeholder={competencia ? origenSeleccionado?.descripcion || '' : ''}
+              id="origen"
+              name="origen"
+              options={opcionesOrigen}
+              readOnly={!editMode}
+              control={control}
+              onSelectionChange={handleOrigenChange}
+              initialValue={origenSeleccionado}
+            />
+          )}/>
+        </div>
+
+        <div className="mb-4">
+          <Controller 
+          name="ambito_competencia"
+          control={control}
+          render={() =>(
+            <DropdownSelect
+              label="Elige el ámbito de la competencia (Obligatorio)"
+              placeholder={competencia ? ambitoSeleccionado?.nombre || '' : ''}
+              id="ambito_competencia"
+              name="ambito_competencia"
+              options={opcionesAmbito}
+              readOnly={!editMode}
+              control={control}
+              onSelectionChange={handleAmbitoChange}
+              initialValue={ambitoSeleccionado}
+              
+            />
+          )}/>
         </div>
 
         <div className="my-4">
-          {/*  < DropdownConSecciones
+           < DropdownConSecciones
             label="Asignar Usuarios (Opcional)"
             placeholder="Busca el nombre de la persona"
             readOnly=''
-            options=''
+            options={userOptions}
             selectedOptions=""
             onSelectionChange=""
-        /> */}
+        />
         </div>
 
         <div className="mb-5">
@@ -152,20 +277,29 @@ const EdicionCompetencia = () =>
             <div className="me-5">Acción</div>
           </div>
           <div className="row neutral-line align-items-center">
+            {/* ESTE CAMPO NO ES EDITABLE, SOLO DEBE PERMITIR DESCARGAR  */}
             <SubirArchivo
-              readOnly={!editMode}
+              readOnly={true}
               index="1"
               fileType="No seleccionado" />
           </div>
         </div>
 
         <div className={editMode ? 'mb-3' : 'mb-4'}>
-          < CustomInput
-            label="Plazo para formulario sectorial (Obligatorio)"
-            placeholder="Escribe el número de días corridos"
-            id="plazo"
-            maxLength={null}
-            readOnly={!editMode} />
+          <Controller 
+          name="plazo_formulario_sectorial"
+          control={control}
+          render={({ field }) => (
+            < CustomInput
+              label="Plazo para formulario sectorial (Obligatorio)"
+              placeholder={competencia ? competencia.plazo_formulario_sectorial : ''}
+              id="plazo_formulario_sectorial"
+              maxLength={null}
+              readOnly={!editMode}
+              error={errors.plazo_formulario_gore?.message}
+              {...field} />
+          )}
+          />
         </div>
         {editMode && (
           <div className="d-flex text-sans-h6-primary pb-4">
@@ -175,12 +309,19 @@ const EdicionCompetencia = () =>
         )}
 
         <div className={editMode ? 'mb-3' : 'mb-4'}>
-          < CustomInput
-            label="Plazo para formulario GORE (Obligatorio)"
-            placeholder="Escribe el número de días corridos"
-            id="plazoGORE"
-            maxLength={null}
-            readOnly={!editMode} />
+          <Controller 
+          name="plazo_formulario_gore"
+          control={control}
+          render={({ field }) => (
+            < CustomInput
+              label="Plazo para formulario GORE (Obligatorio)"
+              placeholder={competencia ? competencia.plazo_formulario_gore : ''}
+              id="plazo_formulario_gore"
+              maxLength={null}
+              readOnly={!editMode}
+              error={errors.plazo_formulario_gore?.message}
+              {...field} />
+          )}/>
         </div>
         {editMode && (
           <div className="d-flex text-sans-h6-primary pb-4">
