@@ -13,21 +13,20 @@ const DropdownCheckbox = ({ label, placeholder, options, onSelectionChange, read
   }, [prevSelection]);  
 
   useEffect(() => {
-    function handleClickOutside(event) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+    function handleDocumentClick(event) {
+      // Si el clic ocurre fuera del dropdown y del boton, cerrar el dropdown
+      if (!dropdownRef.current.contains(event.target) && event.target.id !== 'abreDropdownCheckbox') {
         setIsOpen(false);
         onSelectionChange(selectedOptions);
       }
     }
-    if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-    } else {
-      document.removeEventListener('mousedown', handleClickOutside);
-    }
+    // Agregar un event listener al documento para el clic fuera del dropdown
+    document.addEventListener('mousedown', handleDocumentClick);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      // Remover el event listener al desmontar el componente
+      document.removeEventListener('mousedown', handleDocumentClick);
     };
-  }, [ isOpen, selectedOptions, onSelectionChange ]);
+  }, [selectedOptions, onSelectionChange]);
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -39,7 +38,6 @@ const DropdownCheckbox = ({ label, placeholder, options, onSelectionChange, read
 
   const handleCheckboxChange = (option) => {
     let updatedOptions;
-  
     if (option === 'Todas') {
       // Seleccionar todas las opciones disponibles
       updatedOptions = options;
@@ -52,7 +50,6 @@ const DropdownCheckbox = ({ label, placeholder, options, onSelectionChange, read
         ? selectedOptions.filter((item) => item.value !== option.value)
         : [...selectedOptions, option];
     }
-  
     // Filtramos duplicados y notificamos al componente padre
     onSelectionChange([...new Map(updatedOptions.map((item) => [item.value, item])).values()]);
     setSelectedOptions(updatedOptions);
@@ -65,6 +62,7 @@ const DropdownCheckbox = ({ label, placeholder, options, onSelectionChange, read
       <label className="text-sans-h5 input-label">{label}</label>
       <button
         type="button"
+        id="abreDropdownCheckbox"
         onClick={toggleDropdown}
         className={`text-sans-p dropdown-btn ${readOnly ? 'disabled' : ''}`}
       >
