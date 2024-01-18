@@ -9,7 +9,6 @@ export const Subpaso_dosPuntoDos = ({
     stepNumber, 
     refreshSubpasoDos_dos, 
     setRefreshSubpasoDos_dos,
-    refreshSubpasoDos_tres,
     setRefreshSubpasoDos_tres
   }) => {
 

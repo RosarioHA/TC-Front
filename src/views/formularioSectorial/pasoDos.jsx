@@ -14,6 +14,7 @@ const PasoDos = () => {
   const stepNumber = 2;
   const [refreshSubpasoDos_dos, setRefreshSubpasoDos_dos] = useState(false);
   const [refreshSubpasoDos_tres, setRefreshSubpasoDos_tres] = useState(false);
+  const [refreshSubpasoDos_cuatro, setRefreshSubpasoDos_cuatro] = useState(false);
 
   useEffect(() =>
   {
@@ -54,7 +55,8 @@ const PasoDos = () => {
           <div className="container-fluid me-5 pe-5 my-5">
             <Subpaso_dosPuntoDos 
               data={p_2_2_unidades_intervinientes} 
-              stepNumber={stepNumber} id={data.id} 
+              stepNumber={stepNumber} 
+              id={data.id} 
               refreshSubpasoDos_dos={refreshSubpasoDos_dos} 
               setRefreshSubpasoDos_dos={setRefreshSubpasoDos_dos}
               refreshSubpasoDos_tres={refreshSubpasoDos_tres}
@@ -69,10 +71,20 @@ const PasoDos = () => {
               id={data.id}
               refreshSubpasoDos_tres={refreshSubpasoDos_tres}
               setRefreshSubpasoDos_tres={setRefreshSubpasoDos_tres}
+              refreshSubpasoDos_cuatro={refreshSubpasoDos_cuatro}
+              setRefreshSubpasoDos_cuatro={setRefreshSubpasoDos_cuatro}
             />
           </div>
           <div className="container-fluid me-5 pe-5 my-5">
-            <Subpaso_dosPuntoCuatro data={p_2_4_plataformas_y_softwares} />
+            <Subpaso_dosPuntoCuatro 
+              data={p_2_4_plataformas_y_softwares}
+              stepNumber={stepNumber} 
+              id={data.id}
+              refreshSubpasoDos_tres={refreshSubpasoDos_tres}
+              setRefreshSubpasoDos_tres={setRefreshSubpasoDos_tres}
+              refreshSubpasoDos_cuatro={refreshSubpasoDos_cuatro}
+              setRefreshSubpasoDos_cuatro={setRefreshSubpasoDos_cuatro}
+              />
           </div>
           <div className="container-fluid me-5 pe-5 my-5">
             <Subpaso_dosPuntoCinco data={p_2_5_flujograma_competencia} />

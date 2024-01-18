@@ -1,6 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import CustomInput from "../../forms/custom_input";
 import DropdownSelect from "../../dropdown/select";
+import DropdownSinSecciones from "../../dropdown/checkbox_sinSecciones_conTabla";
 import { FormularioContext } from "../../../context/FormSectorial";
 import { apiTransferenciaCompentencia } from "../../../services/transferenciaCompetencia";
 
@@ -10,7 +11,8 @@ export const Subpaso_dosPuntoTres = ({
     stepNumber, 
     listado_unidades, 
     refreshSubpasoDos_tres,
-    setRefreshSubpasoDos_tres
+    setRefreshSubpasoDos_tres,
+    setRefreshSubpasoDos_cuatro
   }) => {
 
   const [ dataDirecta, setDataDirecta ] = useState(null);
@@ -58,14 +60,11 @@ export const Subpaso_dosPuntoTres = ({
   }, [listado_unidades]);
 
   const [nuevaUnidadId, setNuevaUnidadId] = useState('');
-  const [nuevaUnidadNombre, setNuevaUnidadNombre] = useState('');
 
   const manejarCambioDropdown = (opcionSeleccionada) => {
     // Asumiendo que opcionSeleccionada es un objeto con las propiedades 'label' y 'value'
     const idSeleccionado = opcionSeleccionada.value; // El ID es el 'value'
-    const nombreSeleccionado = opcionSeleccionada.label; // El nombre es el 'label'
     setNuevaUnidadId(idSeleccionado);
-    setNuevaUnidadNombre(nombreSeleccionado);
   };
 
   const { handleUpdatePaso } = useContext(FormularioContext);
@@ -163,6 +162,7 @@ export const Subpaso_dosPuntoTres = ({
 
     setMostrarBotonGuardarEtapa(false);
     setMostrarBotonGuardarProcedimiento(false);
+    setRefreshSubpasoDos_cuatro(true);
 
     } catch (error) {
       console.error("Error al eliminar:", error);
@@ -204,7 +204,7 @@ export const Subpaso_dosPuntoTres = ({
   };
   
   
-  const handleSave = async (etapaId, procedimientoId = null, esGuardadoPorBlur) => {
+  const handleSave = async (etapaId, procedimientoId, esGuardadoPorBlur) => {
     if (!esGuardadoPorBlur) {
       setMostrarBotonGuardarEtapa(false);
     }
@@ -221,7 +221,8 @@ export const Subpaso_dosPuntoTres = ({
           'procedimientos':[{
             id: procedimientoId,
             descripcion_procedimiento: procedimiento.descripcion_procedimiento,
-            unidades_intervinientes: procedimiento.unidadSeleccionada
+            'unidades_intervinientes': 
+                [nuevaUnidadId]
 
           }]
         }]
@@ -244,6 +245,7 @@ export const Subpaso_dosPuntoTres = ({
 
     setMostrarBotonGuardarEtapa(false);
     setMostrarBotonGuardarProcedimiento(false);
+    setRefreshSubpasoDos_cuatro(true);
 
     } catch (error) {
       console.error("Error al guardar los datos:", error);
@@ -277,7 +279,7 @@ export const Subpaso_dosPuntoTres = ({
                   placeholder="Escribe el nombre de la etapa"
                   maxLength={500}
                   onChange={(valor) => handleInputChange(etapa.id, null, 'nombre_etapa', valor)}
-                  onBlur={etapa.id !== ultimaEtapaId ? () => handleSave(etapa.id, true) : null}
+                  onBlur={etapa.id !== ultimaEtapaId ? () => handleSave(etapa.id, null, true) : null}
                 />
               </div>
             </div>
@@ -294,7 +296,7 @@ export const Subpaso_dosPuntoTres = ({
                     placeholder="Describe la etapa"
                     maxLength={500}
                     onChange={(valor) => handleInputChange(etapa.id, null, 'descripcion_etapa', valor)}
-                    onBlur={etapa.id !== ultimaEtapaId ? () => handleSave(etapa.id, true) : null}
+                    onBlur={etapa.id !== ultimaEtapaId ? () => handleSave(etapa.id, null, true) : null}
                 />
               </div>
             </div>
@@ -326,7 +328,7 @@ export const Subpaso_dosPuntoTres = ({
                         placeholder="Unidades"
                         options={opciones}
                         value={procedimiento.unidadSeleccionada || ''}
-                        onSelectionChange={(opcionSeleccionada) => manejarCambioDropdown(etapa.id, procedimiento.id, opcionSeleccionada)}
+                        onSelectionChange={(opcionSeleccionada) => manejarCambioDropdown(opcionSeleccionada)}
                       />
                     </div>
                     <div className="col d-flex align-items-center">
