@@ -218,7 +218,7 @@ const EdicionUsuario = () => {
 
         {/* Renderizan de manera condicional según el Perfil de usuario */}
         {renderizadoCondicional === 'GORE' && (
-          <div className="my-4">
+          <div className="my-4 col-11">
             {loadingRegiones ? (
               <div>Cargando regiones...</div>
             ) : dataRegiones && dataRegiones.length > 0 ? (
@@ -238,7 +238,7 @@ const EdicionUsuario = () => {
           </div>
         )}
         {renderizadoCondicional === 'Usuario Sectorial' && (
-          <div className="my-4">
+          <div className="my-4 col-11">
             {loadingSector ? (
               <div>Cargando organismos...</div>
             ) : dataSector && dataSector.length > 0 ? (

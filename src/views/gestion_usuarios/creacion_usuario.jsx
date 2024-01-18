@@ -238,7 +238,7 @@ const CreacionUsuario = () => {
                 <i className="material-symbols-rounded me-2">info</i>
                 <h6 className="">Al usuario Sectorial debes asignarle un organismo.</h6>
               </div>
-              <div className="mb-4">
+              <div className="mb-4 col-11">
                 {loadingSector ? (
                   <div>Cargando organismos...</div>
                 ) : dataSector && dataSector.length > 0 ? (
@@ -260,7 +260,7 @@ const CreacionUsuario = () => {
                 <i className="material-symbols-rounded me-2">info</i>
                 <h6 className="">Al usuario GORE debes asignarle una región.</h6>
               </div>
-              <div className="mb-4">
+              <div className="mb-4 col-11">
                 {loadingRegiones ? (
                   <div>Cargando regiones...</div>
                 ) : dataRegiones && dataRegiones.length > 0 ? (
