@@ -165,9 +165,12 @@ const GestionUsuarios = () => {
         )}
         sortOptions={sortOptions}
       />
-      <div className="pagination-container d-flex justify-content-center">
-        {renderPaginationButtons()}
-      </div>
+      
+      {metadata.count > projectsPerPage && (
+        <div className="pagination-container d-flex justify-content-center">
+          {renderPaginationButtons()}
+        </div>
+      )}
     </div>
   );
 };

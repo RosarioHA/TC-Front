@@ -211,9 +211,11 @@ const GestionCompetencias = () => {
             sortOptions={sortOptions} 
             />
             
-            <div className="pagination-container d-flex justify-content-center">
-              {renderPaginationButtons()}
-            </div>
+            {paginationCompetencia.count > projectsPerPage && (
+              <div className="pagination-container d-flex justify-content-center">
+                {renderPaginationButtons()}
+              </div>
+            )}
         </>
       )}
     </div >
