@@ -1,15 +1,15 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useUsers } from '../../hooks/usuarios/useUsers';
 import { useAuth } from '../../context/AuthContext';
-import InputSearch from "../../components/forms/Input_search";
+//import InputSearch from "../../components/forms/Input_search";
 import { TableCheckbox } from "../../components/tables/TableCheck";
 import { columnTitlesUser } from "../../Data/Usuarios";
 
 const GestionUsuarios = () => {
   const { userData } = useAuth();
   const { users, pagination, setPagination, metadata } = useUsers();
-  const [searchQuery, setSearchQuery] = useState('');
+  //const [searchQuery, setSearchQuery] = useState('');
   const [filteredUsers, setFilteredUsers] = useState([]);
   const navigate = useNavigate();
 
@@ -46,15 +46,15 @@ const GestionUsuarios = () => {
   };
 
   // Función de búsqueda
-  const handleSearch = useCallback((query) => {
-    const lowerCaseQuery = query.toLowerCase();
-    const filtered = users.filter(user =>
-      user.nombre_completo.toLowerCase().includes(lowerCaseQuery) ||
-      (user.is_active ? 'activo' : 'inactivo').includes(lowerCaseQuery) ||
-      user.perfil.toLowerCase().includes(lowerCaseQuery)
-    );
-    setFilteredUsers(filtered);
-  }, [ users ]);
+  // const handleSearch = useCallback((query) => {
+  //   const lowerCaseQuery = query.toLowerCase();
+  //   const filtered = users.filter(user =>
+  //     user.nombre_completo.toLowerCase().includes(lowerCaseQuery) ||
+  //     (user.is_active ? 'activo' : 'inactivo').includes(lowerCaseQuery) ||
+  //     user.perfil.toLowerCase().includes(lowerCaseQuery)
+  //   );
+  //   setFilteredUsers(filtered);
+  // }, [ users ]);
 
   const handleDetailsUser = (user) => {
     navigate(`/home/editar_usuario/${user.id}`, { state: { user } });
@@ -109,16 +109,16 @@ const GestionUsuarios = () => {
   return (
     <div className="container-fluid mt-2">
       <div className="text-sans-h2 mx-3">Administrar Usuarios</div>
-      <div className="d-flex flex-row px-4 mb-5">
+      <div className="d-flex flex-row px-4 mb-5 justify-content-between">
         <div className="w-50 pl-2 text-sans-24 align-self-center">Todos los usuarios</div>
-        <InputSearch
+        {/* <InputSearch
           value={searchQuery}
           onChange={setSearchQuery}
           placeholder="Buscar usuarios"
           onSearch={handleSearch}
-        />
+        /> */}
         {userSubdere && (
-          <div>
+          <div className="d-flex justify-content-end">
             <Link className="btn-primario-l mx-4 py-3 link-underline link-underline-opacity-0" to='/home/crear_usuario'>
               <u>Crear Usuario</u>
               <span className="material-symbols-outlined mx-1">
