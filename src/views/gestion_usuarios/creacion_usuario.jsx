@@ -204,7 +204,7 @@ const CreacionUsuario = () => {
                   {...field} />
               )} />
           </div>
-          <div className="mb-4">
+          <div className="mb-4 col-11">
             < Controller
               name="perfil"
               control={control}
@@ -316,7 +316,7 @@ const CreacionUsuario = () => {
           </div>
 
           <div className="mb-5">
-            <div className="my-3">
+            <div className="my-3 col-11">
               <Controller
                 name="competenciasSeleccionadas"
                 control={control}

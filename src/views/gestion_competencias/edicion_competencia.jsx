@@ -171,7 +171,7 @@ const EdicionCompetencia = () => {
           )}/>
         </div>
 
-        <div className="mb-4">
+        <div className="mb-4 col-11">
           <Controller 
           name="regiones"
           control={control}
@@ -191,7 +191,7 @@ const EdicionCompetencia = () => {
             
         </div>
 
-        <div className="mb-4">
+        <div className="mb-4 col-11">
           <Controller 
           name="sectores"
           control={control}
@@ -211,7 +211,7 @@ const EdicionCompetencia = () => {
           
         </div>
 
-        <div className="mb-4">
+        <div className="mb-4 col-11">
           <Controller 
           name="origen"
           control={control}
@@ -230,7 +230,7 @@ const EdicionCompetencia = () => {
           )}/>
         </div>
 
-        <div className="mb-4">
+        <div className="mb-4 col-11">
           <Controller 
           name="ambito_competencia"
           control={control}
@@ -250,7 +250,7 @@ const EdicionCompetencia = () => {
           )}/>
         </div>
 
-        <div className="my-4">
+        <div className="my-4 col-11">
            < DropdownConSecciones
             label="Asignar Usuarios (Opcional)"
             placeholder="Busca el nombre de la persona"
@@ -261,7 +261,7 @@ const EdicionCompetencia = () => {
         />
         </div>
 
-        <div className="mb-5">
+        <div className="mb-5 col-11">
           {editMode ? (
             <div>
               <h5 className="text-sans-h5">Adjunta el oficio correspondiente a la competencia</h5>

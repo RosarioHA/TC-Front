@@ -197,7 +197,7 @@ const EdicionUsuario = () => {
           />
         </div>
 
-        <div className="my-4">
+        <div className="my-4 col-11">
           {loadingGroups ? (
             <div>Cargando perfiles...</div>
           ) : dataGroups && dataGroups.length > 0 ? (
@@ -298,7 +298,7 @@ const EdicionUsuario = () => {
         </div>
 
 
-        <div className="my-4">
+        <div className="my-4 col-11">
           {dataListCompetencia && dataListCompetencia.length > 0 ? (
             <DropdownSinSecciones
               label="Competencias disponibles para asignar (Opcional)"
