@@ -15,6 +15,14 @@ export const esquemaCreacionUsuario = yup.object().shape({
   email: yup.string().email('Formato de correo electrónico inválido').required('El correo electrónico es obligatorio'),
   perfil: yup.string().required('El perfil es obligatorio'),
   estado: yup.string().required('Debes seleccionar un estado para el usuario'),
+  password: yup
+    .string()
+    .required('La contraseña es obligatoria')
+    .min(6, 'La contraseña debe tener al menos 6 caracteres') ,
+  password2: yup
+    .string()
+    .oneOf([yup.ref('password'), null], 'Las contraseñas deben coincidir')
+    .required('Es necesario reingresar la contraseña'),
 });
 
 export const esquemaCreacionCompetencia = yup.object().shape({

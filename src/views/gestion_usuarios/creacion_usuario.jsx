@@ -21,6 +21,7 @@ const initialValues = {
   perfil: '',
   estado: '',
   password: '',
+  password2: '',
 };
 
 const CreacionUsuario = () => {
@@ -65,10 +66,7 @@ const CreacionUsuario = () => {
     label: group.name
   }))
   const handlePerfilChange = (selectedValue) => {
-    console.log("selectedValue", selectedValue);
-    console.log("selectedValue.label", selectedValue.label);
     const selectedProfile = opcionesGroups.find((option) => option.value === selectedValue.value);
-    console.log("selectedProfile", selectedProfile);
     if (selectedProfile) {
       setPerfilSeleccionado(selectedProfile.label);
     } else {
@@ -295,7 +293,26 @@ const CreacionUsuario = () => {
               )}
             />
           </div>
+          <div className="mb-4">
+            <Controller
+              name="password2"
+              control={control}
+              render={({ field }) => (
+                <CustomInput
+                  type="password"
+                  label="Reingresar Contraseña (Obligatorio)"
+                  placeholder="Reingresa la contraseña."
+                  id="password2"
+                  maxLength={null}
+                  error={errors.password2?.message}
+                  ref={field.ref}
+                  {...field}
+                />
+              )}
+            />
+          </div>
 
+          {/* input estado */}
           <div className="mb-5">
             < Controller
               name="estado"

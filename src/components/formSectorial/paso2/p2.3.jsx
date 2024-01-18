@@ -71,7 +71,7 @@ export const Subpaso_dosPuntoTres = ({
 
   const [etapas, setEtapas] = useState(data);
 
-  // Lógica para agregar una nueva fila a un organismo
+  // Lógica para agregar una nueva Etapa
   // Generador de ID único
   const generarIdUnico = () => {
     // Implementa tu lógica para generar un ID único

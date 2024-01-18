@@ -28,7 +28,16 @@ const PasoDos = () => {
   const paso2 = pasoData.paso2;
   if (!paso2) return <div>No hay información de paso2 disponible</div>;
 
-  const { p_2_1_organismos_intervinientes,listado_organismos, p_2_2_unidades_intervinientes, p_2_3_etapas_ejercicio_competencia, listado_unidades, p_2_4_plataformas_y_softwares, p_2_5_flujograma_competencia } = pasoData;
+  const { 
+    p_2_1_organismos_intervinientes,
+    listado_organismos, 
+    p_2_2_unidades_intervinientes, 
+    p_2_3_etapas_ejercicio_competencia, 
+    listado_unidades, 
+    p_2_4_plataformas_y_softwares,
+    listado_etapas, 
+    p_2_5_flujograma_competencia 
+  } = pasoData;
 
   return (
     <>
@@ -78,6 +87,7 @@ const PasoDos = () => {
           <div className="container-fluid me-5 pe-5 my-5">
             <Subpaso_dosPuntoCuatro 
               data={p_2_4_plataformas_y_softwares}
+              listado_etapas={listado_etapas}
               stepNumber={stepNumber} 
               id={data.id}
               refreshSubpasoDos_tres={refreshSubpasoDos_tres}
