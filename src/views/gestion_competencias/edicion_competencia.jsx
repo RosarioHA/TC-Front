@@ -123,6 +123,7 @@ const EdicionCompetencia = () => {
     try {
       await updateCompetencia(formData);
       setEditMode(false);
+      history('/home/success', { state: { origen: "editar_competencia" } });
     } catch (error) {
       console.error("Error al guardar la competencia:", error);
     }
