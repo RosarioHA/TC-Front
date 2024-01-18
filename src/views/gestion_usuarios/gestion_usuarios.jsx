@@ -109,7 +109,7 @@ const GestionUsuarios = () => {
   return (
     <div className="container-fluid mt-2">
       <div className="text-sans-h2 mx-3">Administrar Usuarios</div>
-      <div className="d-flex flex-row px-4">
+      <div className="d-flex flex-row px-4 mb-5">
         <div className="w-50 pl-2 text-sans-24 align-self-center">Todos los usuarios</div>
         <InputSearch
           value={searchQuery}
@@ -132,15 +132,15 @@ const GestionUsuarios = () => {
         columnTitles={columnTitlesUser}
         data={filteredUsers}
         sortableColumns={[ 'Estado' ]}
-        renderRow={(user, isChecked, handleCheckboxChange) => (
+        renderRow={(user) => (
           <tr key={user.id}>
             <th scope="row">
-              <input
+              {/* <input
                 type="checkbox"
                 className="check my-3"
                 checked={isChecked}
                 onChange={() => handleCheckboxChange(user.id)}
-              />
+              /> */}
             </th>
             <td className="pt-3"><u className="text-sans-p my-4">{user.nombre_completo}</u></td>
             <td className="text-primary pt-4">
@@ -165,7 +165,7 @@ const GestionUsuarios = () => {
         )}
         sortOptions={sortOptions}
       />
-      <div className="pagination-container d-flex justify-content-center border">
+      <div className="pagination-container d-flex justify-content-center">
         {renderPaginationButtons()}
       </div>
     </div>

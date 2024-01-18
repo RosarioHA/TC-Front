@@ -151,7 +151,7 @@ const GestionCompetencias = () => {
           }
         </div>
       ) : (
-        <><div className="d-flex flex-row mx-5">
+        <><div className="d-flex flex-row mx-5 mb-5">
           <div className="w-50 pl-2 text-sans-24 align-self-center">Todas las competencias</div>
           <InputSearch
             value={searchQuery}
@@ -168,18 +168,20 @@ const GestionCompetencias = () => {
               </Link>
             </div>
           )}
-        </div><TableCheckbox
+        </div>
+          <TableCheckbox
             columnTitles={columnTitleCompetencias}
             data={filteredCompetencia}
             sortableColumns={[ 'Etapa' ]}
-            renderRow={(competencia, isChecked, handleCheckboxChange) => (
+            renderRow={(competencia) => (
               <tr key={competencia.id}>
                 <th scope="row">
-                  <input
+                  {/* <input
                     type="checkbox"
                     className="check my-3"
                     checked={isChecked}
-                    onChange={() => handleCheckboxChange(competencia.id)} />
+                    onChange={() => handleCheckboxChange(competencia.id)} 
+                  /> */}
                 </th>
                 <td className="pt-3"><u className="text-sans-p my-4">{competencia.nombre}</u></td>
                 <td className="text-primary pt-4">
@@ -210,7 +212,7 @@ const GestionCompetencias = () => {
             sortOptions={sortOptions} 
             />
             
-            <div className="pagination-container d-flex justify-content-center border">
+            <div className="pagination-container d-flex justify-content-center">
               {renderPaginationButtons()}
             </div>
         </>
