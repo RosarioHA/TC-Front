@@ -325,7 +325,7 @@ const CreacionUsuario = () => {
                   <>
                     {competencias && competencias.length > 0 ? (
                       <DropdownSinSecciones
-                        label="Competencia Asignada (Opcional)"
+                        label="Competencias disponibles para asignar (Opcional)"
                         placeholder="Busca el nombre de la competencia"
                         options={competencias}
                         selectedOptions={field.value}

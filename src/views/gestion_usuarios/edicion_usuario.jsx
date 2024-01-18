@@ -301,7 +301,7 @@ const EdicionUsuario = () => {
         <div className="my-4">
           {dataListCompetencia && dataListCompetencia.length > 0 ? (
             <DropdownSinSecciones
-              label="Competencia Asignada (Opcional)"
+              label="Competencias disponibles para asignar (Opcional)"
               placeholder="Busca el nombre de la competencia"
               readOnly={!editMode}
               options={dataListCompetencia.map((competencia) => ({
