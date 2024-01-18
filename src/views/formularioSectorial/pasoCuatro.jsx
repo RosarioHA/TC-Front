@@ -20,6 +20,7 @@ const PasoCuatro = () =>
   const { paso4: paso4Data, indicador_desempeno, lista_indicadores } = pasoData;
   if (!paso4Data) return <div>No hay información de paso 4 disponible</div>;
 
+  const id = data?.id;
 
   return (
     <>
@@ -38,35 +39,12 @@ const PasoCuatro = () =>
             <h6 className="text-sans-h6-primary mt-3">Si el ejercicio de la competencia tiene mas de un indicador de desempeño, se deben añadir las tablas correspondientes.</h6>
             <div className="my-5">
               <div className="">
-                {indicador_desempeno && indicador_desempeno.length > 0 ? (
-                  indicador_desempeno.map((indicador) => (
-                    <Subpaso_CuatroUno
-                      key={indicador.id}
-                      id={data.id}
-                      stepNumber={stepNumber}
-                      pasoData={pasoData}
-                      data={indicador}
-                      listaIndicadores={lista_indicadores}
-                      readOnly={false}
-                    />
-                  ))
-                ) : (
-                  <Subpaso_CuatroUno
-                    id={data.id}
-                    stepNumber={stepNumber}
-                    pasoData={pasoData}
-                    data={{}}
-                    listaIndicadores={lista_indicadores}
-                    readOnly={false}
-                  />
-                )}
                 {/* Componente adicional en blanco para un nuevo indicador */}
-                {indicador_desempeno && indicador_desempeno.length > 0 && (
+                {indicador_desempeno  && (
                   <Subpaso_CuatroUno
-                    id={data.id}
+                    data={pasoData}
+                    id={id}
                     stepNumber={stepNumber}
-                    pasoData={pasoData}
-                    data={{}}
                     listaIndicadores={lista_indicadores}
                     readOnly={false}
                   />
@@ -76,7 +54,7 @@ const PasoCuatro = () =>
           </div>
           {/*Botones navegacion*/}
           <div className="container me-5 pe-5">
-            <ButtonsNavigate step={paso4Data.numero_paso} id={data.id} />
+            <ButtonsNavigate step={paso4Data.numero_paso} id={id} />
           </div>
         </div>
       </div>

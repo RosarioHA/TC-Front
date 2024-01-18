@@ -157,7 +157,7 @@ const PasoTres = () => {
                 </div>
               </div>
               <div className="container-fluid me-5 pe-5">
-                <Subpaso_Tres esquemaDatos={cobertura_anual} />
+                <Subpaso_Tres esquemaDatos={cobertura_anual} id={id} stepNumber={stepNumber}/>
               </div>
             </div>
           </div>

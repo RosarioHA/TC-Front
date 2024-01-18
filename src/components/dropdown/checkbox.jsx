@@ -1,9 +1,16 @@
 import { useState, useRef, useEffect } from 'react';
 
-const DropdownCheckbox = ({ label, placeholder, options, onSelectionChange, readOnly }) => {
+const DropdownCheckbox = ({ label, placeholder, options, onSelectionChange, readOnly, prevSelection }) => {
   const [ isOpen, setIsOpen ] = useState(false);
   const [ selectedOptions, setSelectedOptions ] = useState([]);
   const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    if (prevSelection && prevSelection.length > 0) {
+      // Si hay opciones preseleccionadas, establecerlas como opciones seleccionadas
+      setSelectedOptions(prevSelection);
+    }
+  }, [prevSelection]);  
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -12,13 +19,11 @@ const DropdownCheckbox = ({ label, placeholder, options, onSelectionChange, read
         onSelectionChange(selectedOptions);
       }
     }
-
     if (isOpen) {
       document.addEventListener('mousedown', handleClickOutside);
     } else {
       document.removeEventListener('mousedown', handleClickOutside);
     }
-
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
@@ -33,21 +38,27 @@ const DropdownCheckbox = ({ label, placeholder, options, onSelectionChange, read
   };
 
   const handleCheckboxChange = (option) => {
+    let updatedOptions;
+  
     if (option === 'Todas') {
       // Seleccionar todas las opciones disponibles
-      setSelectedOptions(options);
+      updatedOptions = options;
     } else if (option === 'Eliminar Selección') {
       // Deseleccionar todas las opciones
-      setSelectedOptions([]);
+      updatedOptions = [];
     } else {
       // Resto de la lógica para opciones individuales
-      const updatedOptions = selectedOptions.includes(option)
-        ? selectedOptions.filter((item) => item !== option)
+      updatedOptions = selectedOptions.includes(option)
+        ? selectedOptions.filter((item) => item.value !== option.value)
         : [...selectedOptions, option];
-  
-      setSelectedOptions(updatedOptions);
     }
+  
+    // Filtramos duplicados y notificamos al componente padre
+    onSelectionChange([...new Map(updatedOptions.map((item) => [item.value, item])).values()]);
+    setSelectedOptions(updatedOptions);
   };
+  
+  console.log("selected options", selectedOptions)
 
   return (
     <div className={`input-container ${readOnly ? 'readonly' : ''}`}>
@@ -93,7 +104,7 @@ const DropdownCheckbox = ({ label, placeholder, options, onSelectionChange, read
                 className="ms-2 me-2 my-3"
                 type="checkbox"
                 value={option.value}
-                checked={selectedOptions.find(opt => opt.value === option.value)}
+                checked={selectedOptions.some(opt => opt.value === option.value)}
                 onChange={() => handleCheckboxChange(option)}
               />
               {option.label}

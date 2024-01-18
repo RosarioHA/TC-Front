@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect } from 'react';
+import { useContext, useState, useEffect, useCallback } from 'react';
 import CustomTextarea from "../../forms/custom_textarea";
 import CustomInput from "../../forms/custom_input";
 import { DocumentsAditionals } from '../../commons/documents';
@@ -9,10 +9,10 @@ export const Subpaso_uno = ({ pasoData, id, stepNumber }) =>
   const { handleUpdatePaso } = useContext(FormularioContext);
   const [ formData, setFormData ] = useState({
     paso1: pasoData.paso1 || {
-      forma_juridica_organismo: pasoData.forma_juridica_organismo,
-      mision_institucional: pasoData.mision_institucional,
-      descripcion_archivo_marco_juridico: pasoData.descripcion_archivo_marco_juridico,
-      informacion_adicional_marco_juridico: pasoData.informacion_adicional_marco_juridico,
+      forma_juridica_organismo: '',
+      mision_institucional: '',
+      descripcion_archivo_marco_juridico: '',
+      informacion_adicional_marco_juridico: '',
     }
   });
   const [ inputStatus, setInputStatus ] = useState({
@@ -20,32 +20,23 @@ export const Subpaso_uno = ({ pasoData, id, stepNumber }) =>
     mision_institucional: { loading: false, saved: false },
     descripcion_archivo_marco_juridico: { loading: false, saved: false },
     informacion_adicional_marco_juridico: { loading: false, saved: false },
-    // Agrega aquí los demás campos necesarios
   });
-
-
-
-  useEffect(() =>
-  {
-    if (pasoData && pasoData.paso1)
-    {
-      setFormData({ paso1: pasoData.paso1 });
-    }
-  }, [ pasoData ]);
+  const [ files, setFiles ] = useState([]);
 
   useEffect(() =>
   {
-    // Recuperar los datos del localStorage y establecerlos en el estado
     const savedData = localStorage.getItem('formData');
     if (savedData)
     {
       setFormData(JSON.parse(savedData));
     }
-  }, []);
+  }, []); // Dependencia vacía para que se ejecute solo una vez al montar el componente
+
   useEffect(() =>
   {
     localStorage.setItem('formData', JSON.stringify(formData));
   }, [ formData ]);
+
 
   const handleChange = (inputName, e) =>
   {
@@ -63,7 +54,6 @@ export const Subpaso_uno = ({ pasoData, id, stepNumber }) =>
     }));
   };
 
-
   const handleSave = async (inputName) =>
   {
     setInputStatus(prevStatus => ({
@@ -71,21 +61,59 @@ export const Subpaso_uno = ({ pasoData, id, stepNumber }) =>
       [ inputName ]: { ...prevStatus[ inputName ], loading: true }
     }));
 
-    const success = await handleUpdatePaso(id, stepNumber, formData);
-    if (success)
+    try
     {
+      const success = await handleUpdatePaso(id, stepNumber, formData);
       setInputStatus(prevStatus => ({
         ...prevStatus,
-        [ inputName ]: { loading: false, saved: true }
+        [ inputName ]: { loading: false, saved: success }
       }));
-    } else
+    } catch (error)
     {
+      console.error('Error al guardar:', error);
       setInputStatus(prevStatus => ({
         ...prevStatus,
         [ inputName ]: { loading: false, saved: false }
       }));
     }
   };
+
+  const handleFileChange = useCallback((newFiles) =>
+  {
+    setFiles(currentFiles => [ ...currentFiles, ...newFiles ]);
+  }, []);
+
+
+
+  const uploadFiles = useCallback(async () => {
+    if (files.length === 0) {
+      console.log("No hay archivos para subir.");
+      return;
+    }
+  
+    const formDataWithFiles = new FormData();
+    files.forEach(file => {
+      formDataWithFiles.append('marcojuridico', file);
+    });
+  
+    // Agregar el resto de los campos de paso1 al formData
+    Object.entries(formData.paso1).forEach(([key, value]) => {
+      formDataWithFiles.append(key, value);
+    });
+  
+    try {
+      const success = await handleUpdatePaso(id, stepNumber, formDataWithFiles);
+      if (success) {
+        console.log('Datos y archivos actualizados con éxito');
+        setFiles([]); // Limpieza del estado de archivos
+      } else {
+        console.error('Error al actualizar datos y archivos');
+      }
+    } catch (error) {
+      console.error('Error en la actualización:', error);
+    }
+  }, [files, formData.paso1, id, stepNumber, handleUpdatePaso]);
+
 
 
   return (
@@ -125,7 +153,10 @@ export const Subpaso_uno = ({ pasoData, id, stepNumber }) =>
             <span className="text-sans-h5">Marco jurídico que lo rige (Obligatorio)</span>
             <p className="text-sans-h6-grey">Mínimo 1 archivo, máximo 5 archivos, peso máximo 20MB, formato PDF)</p>
           </div>
-          <DocumentsAditionals handleUpdatePaso={handleUpdatePaso} id={id} stepNumber={stepNumber} />
+          <DocumentsAditionals
+            onFilesChanged={handleFileChange}
+            onUpload={uploadFiles}
+          />
         </div>
         <div className="my-4">
           <CustomTextarea

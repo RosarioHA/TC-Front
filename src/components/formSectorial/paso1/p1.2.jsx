@@ -185,7 +185,7 @@ export const Subpaso_dos = ({ pasoData, organigrama, id, stepNumber }) =>
           </div>
           <div className="me-5">Acción</div>
         </div>
-        {organigrama.map((region) => (
+        {organigrama?.map((region) => (
           <SubirArchivo
             key={region.id}
             index={region.id}

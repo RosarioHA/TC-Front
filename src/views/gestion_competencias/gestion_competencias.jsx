@@ -63,6 +63,7 @@ const GestionCompetencias = () => {
     );
     setFilteredCompetencia(filtered);
   }, [ dataListCompetencia ]);
+  console.log("datalistcompetencia", dataListCompetencia)
 
   const handleVerEstado = (competencia) => {
     console.log("Navegando a detalles con competencia:", competencia);
