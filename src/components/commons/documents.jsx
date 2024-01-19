@@ -25,7 +25,7 @@ export const DocumentsAditionals = ({ onFilesChanged }) => {
 
   useEffect(() => {
     onFilesChanged(files);
-  }, [files, onFilesChanged]); // Eliminado onFilesChanged de las dependencias para evitar ciclos de render
+  }, [files, onFilesChanged]); 
 
   const handleDelete = (index) => {
     const updatedFiles = [...files];

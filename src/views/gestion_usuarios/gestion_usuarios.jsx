@@ -1,15 +1,15 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useUsers } from '../../hooks/usuarios/useUsers';
 import { useAuth } from '../../context/AuthContext';
-import InputSearch from "../../components/forms/Input_search";
+//import InputSearch from "../../components/forms/Input_search";
 import { TableCheckbox } from "../../components/tables/TableCheck";
 import { columnTitlesUser } from "../../Data/Usuarios";
 
 const GestionUsuarios = () => {
   const { userData } = useAuth();
   const { users, pagination, setPagination, metadata } = useUsers();
-  const [searchQuery, setSearchQuery] = useState('');
+  //const [searchQuery, setSearchQuery] = useState('');
   const [filteredUsers, setFilteredUsers] = useState([]);
   const navigate = useNavigate();
 
@@ -125,16 +125,16 @@ const GestionUsuarios = () => {
   return (
     <div className="container-fluid mt-2">
       <div className="text-sans-h2 mx-3">Administrar Usuarios</div>
-      <div className="d-flex flex-row px-4">
+      <div className="d-flex flex-row px-4 mb-5 justify-content-between">
         <div className="w-50 pl-2 text-sans-24 align-self-center">Todos los usuarios</div>
-        <InputSearch
+        {/* <InputSearch
           value={searchQuery}
           onChange={setSearchQuery}
           placeholder="Buscar usuarios"
           onSearch={handleSearch}
-        />
+        /> */}
         {userSubdere && (
-          <div>
+          <div className="d-flex justify-content-end">
             <Link className="btn-primario-l mx-4 py-3 link-underline link-underline-opacity-0" to='/home/crear_usuario'>
               <u>Crear Usuario</u>
               <span className="material-symbols-outlined mx-1">
@@ -148,15 +148,15 @@ const GestionUsuarios = () => {
         columnTitles={columnTitlesUser}
         data={filteredUsers}
         sortableColumns={[ 'Estado' ]}
-        renderRow={(user, isChecked, handleCheckboxChange) => (
+        renderRow={(user) => (
           <tr key={user.id}>
             <th scope="row">
-              <input
+              {/* <input
                 type="checkbox"
                 className="check my-3"
                 checked={isChecked}
                 onChange={() => handleCheckboxChange(user.id)}
-              />
+              /> */}
             </th>
             <td className="pt-3"><u className="text-sans-p my-4">{user.nombre_completo}</u></td>
             <td className="text-primary pt-4">
@@ -181,9 +181,12 @@ const GestionUsuarios = () => {
         )}
         sortOptions={sortOptions}
       />
-      <div className="pagination-container d-flex justify-content-center border">
-        {renderPaginationButtons()}
-      </div>
+      
+      {metadata.count > projectsPerPage && (
+        <div className="pagination-container d-flex justify-content-center">
+          {renderPaginationButtons()}
+        </div>
+      )}
     </div>
   );
 };

@@ -16,7 +16,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { esquemaEdicionUsuarios } from "../../validaciones/esquemaEditarUsuario";
 import { useAuth } from "../../context/AuthContext";
 
-const EdicionUsuario = () => {
+const EdicionUsuario = () =>
+{
   const { id } = useParams();
   const history = useNavigate();
   const [ editMode, setEditMode ] = useState(false);
@@ -26,7 +27,7 @@ const EdicionUsuario = () => {
   const { dataRegiones, loadingRegiones } = useRegion();
   const { dataSector, loadingSector } = useSector();
   const { dataListCompetencia, loadingCompetencia, errorCompetencia } = useCompetencia();
-  
+
   //const [currentPerfil, setCurrentPerfil] = useState("");
 
   const { userData } = useAuth();
@@ -49,8 +50,10 @@ const EdicionUsuario = () => {
   const perfil = watch('perfil') || '';
   const renderizadoCondicional = editMode ? perfil : userDetails?.perfil;
 
-  useEffect(() => {
-    if (editMode && userDetails) {
+  useEffect(() =>
+  {
+    if (editMode && userDetails)
+    {
       // En modo edición, actualiza los valores iniciales con los valores actuales.
       setValue('nombre_completo', userDetails.nombre_completo || "");
       setValue('email', userDetails.email || "");
@@ -61,17 +64,21 @@ const EdicionUsuario = () => {
     }
   }, [ editMode, userDetails, setValue ]);
 
-  useEffect(() => {
+  useEffect(() =>
+  {
     // Verifica si las competencias se han cargado
-    if (!loadingCompetencia && !errorCompetencia) {
+    if (!loadingCompetencia && !errorCompetencia)
+    {
       console.log("Competencias en vista Editar usuario:", dataListCompetencia);
     }
   }, [ loadingCompetencia, errorCompetencia, dataListCompetencia ]);
 
-  const handleBackButtonClick = () => {
+  const handleBackButtonClick = () =>
+  {
     history(-1);
   };
-  const handleEditClick = () => {
+  const handleEditClick = () =>
+  {
     setEditMode((prevMode) => !prevMode);
   };
 
@@ -89,28 +96,36 @@ const EdicionUsuario = () => {
     label: sector.nombre,
   }));
 
-  const handleDdSelectChange = (fieldName, selectedOption) => {
-    try {
+  const handleDdSelectChange = (fieldName, selectedOption) =>
+  {
+    try
+    {
       if (selectedOption && selectedOption.label)
       {
         setValue(fieldName, selectedOption.label);
       }
-    } catch (error) {
+    } catch (error)
+    {
       console.error('Error en handleDdSelectChange:', error);
     }
   };
 
-  const handleDdSelectBuscadorChange = (fieldName, selectedOption) => {
-    try {
-      if (selectedOption && selectedOption.value) {
+  const handleDdSelectBuscadorChange = (fieldName, selectedOption) =>
+  {
+    try
+    {
+      if (selectedOption && selectedOption.value)
+      {
         setValue(fieldName, selectedOption.value);
       }
-    } catch (error) {
+    } catch (error)
+    {
       console.error('Error en handleDdSelectBuscadorChange:', error);
     }
   };
 
-  const handleEstadoChange = (selectionName, nuevoEstado) => {
+  const handleEstadoChange = (selectionName, nuevoEstado) =>
+  {
     const isActivo = nuevoEstado === "activo";
     setValue("is_active", isActivo);
   };
@@ -119,12 +134,15 @@ const EdicionUsuario = () => {
   //   setValue('competencias', selectedCompetencias);
   // }
 
-  const onSubmit = async (formData) => {
-    try {
+  const onSubmit = async (formData) =>
+  {
+    try
+    {
       await editUser(id, formData);
       setEditMode(false);
       history('/home/success', { state: { origen: "editar_usuario" } });
-    } catch (error) {
+    } catch (error)
+    {
       console.error("Error al editar el usuario:", error);
     }
   };
@@ -149,7 +167,7 @@ const EdicionUsuario = () => {
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="d-flex align-items-center mb-4">
+        <div className="d-flex align-items-center mb-4 col-11">
           < CustomInput
             label="RUT (Obligatorio)"
             placeholder={userDetails ? userDetails.rut : ''}
@@ -161,7 +179,7 @@ const EdicionUsuario = () => {
           {editMode ? <i className="col material-symbols-rounded ms-2">lock</i> : ''}
         </div>
 
-        <div className="my-4">
+        <div className="my-4 col-11">
           <Controller
             name="nombre_completo"
             control={control}
@@ -179,7 +197,7 @@ const EdicionUsuario = () => {
           />
         </div>
 
-        <div className="my-4">
+        <div className="my-4 col-11">
           <Controller
             name="email"
             control={control}
@@ -197,7 +215,7 @@ const EdicionUsuario = () => {
           />
         </div>
 
-        <div className="my-4">
+        <div className="my-4 col-11">
           {loadingGroups ? (
             <div>Cargando perfiles...</div>
           ) : dataGroups && dataGroups.length > 0 ? (
@@ -215,50 +233,51 @@ const EdicionUsuario = () => {
             <input type="text" value="No hay perfiles para mostrar" readOnly />
           )}
         </div>
+        <div className="my-4 col-11">
+          {/* Renderizan de manera condicional según el Perfil de usuario */}
+          {renderizadoCondicional === 'GORE' && (
+            <div className="my-4 col-11 ">
+              {loadingRegiones ? (
+                <div>Cargando regiones...</div>
+              ) : dataRegiones && dataRegiones.length > 0 ? (
+                <DropdownSelectBuscador
+                  label="Elige la región a la que representa (Obligatorio)"
+                  placeholder={userDetails.region || ''}
+                  id="region"
+                  name="region"
+                  readOnly={!editMode}
+                  options={loadingRegiones ? [] : opcionesDeRegiones}
+                  control={control}
+                  onSelectionChange={(selectedOption) => handleDdSelectBuscadorChange('region', selectedOption)}
+                  initialValue={userDetails ? userDetails.region : ''}
+                />) : (
+                <input type="text" value="No hay regiones para mostrar" readOnly />
+              )}
+            </div>
+          )}
+          {renderizadoCondicional === 'Usuario Sectorial' && (
+            <div className="my-4 col-11 ">
+              {loadingSector ? (
+                <div>Cargando organismos...</div>
+              ) : dataSector && dataSector.length > 0 ? (
+                <DropdownSelectBuscador
+                  label="Elige el organismo al que pertenece (Obligatorio)"
+                  placeholder={userDetails.sector || 'Selecciona un sector'}
+                  id="sector"
+                  name="sector"
+                  readOnly={!editMode}
+                  options={loadingSector ? [] : opcionesSector}
+                  control={control}
+                  onSelectionChange={(selectedOption) => handleDdSelectBuscadorChange('sector', selectedOption)}
+                  initialValue={userDetails ? userDetails.sector : ''}
+                />) : (
+                <input type="text" value="No hay organismos para mostrar" readOnly />
+              )}
+            </div>
+          )}
 
-        {/* Renderizan de manera condicional según el Perfil de usuario */}
-        {renderizadoCondicional === 'GORE' && (
-          <div className="my-4">
-            {loadingRegiones ? (
-              <div>Cargando regiones...</div>
-            ) : dataRegiones && dataRegiones.length > 0 ? (
-              <DropdownSelectBuscador
-                label="Elige la región a la que representa (Obligatorio)"
-                placeholder={userDetails.region || ''}
-                id="region"
-                name="region"
-                readOnly={!editMode}
-                options={loadingRegiones ? [] : opcionesDeRegiones}
-                control={control}
-                onSelectionChange={(selectedOption) => handleDdSelectBuscadorChange('region', selectedOption)}
-                initialValue={userDetails ? userDetails.region : ''}
-              />) : (
-              <input type="text" value="No hay regiones para mostrar" readOnly />
-            )}
-          </div>
-        )}
-        {renderizadoCondicional === 'Usuario Sectorial' && (
-          <div className="my-4">
-            {loadingSector ? (
-              <div>Cargando organismos...</div>
-            ) : dataSector && dataSector.length > 0 ? (
-              <DropdownSelectBuscador
-                label="Elige el organismo al que pertenece (Obligatorio)"
-                placeholder={userDetails.sector || 'Selecciona un sector'}
-                id="sector"
-                name="sector"
-                readOnly={!editMode}
-                options={loadingSector ? [] : opcionesSector}
-                control={control}
-                onSelectionChange={(selectedOption) => handleDdSelectBuscadorChange('sector', selectedOption)}
-                initialValue={userDetails ? userDetails.sector : ''}
-              />) : (
-              <input type="text" value="No hay organismos para mostrar" readOnly />
-            )}
-          </div>
-        )}
-
-        <div className="my-4">
+        </div>
+        <div className="my-4 col-11">
           {!editMode ? (
             <div className="mb-5">
               <h5 className="text-sans-h5">Estado</h5>
@@ -298,10 +317,10 @@ const EdicionUsuario = () => {
         </div>
 
 
-        <div className="my-4">
+        <div className="my-4 col-11">
           {dataListCompetencia && dataListCompetencia.length > 0 ? (
             <DropdownSinSecciones
-              label="Competencia Asignada (Opcional)"
+              label="Competencias disponibles para asignar (Opcional)"
               placeholder="Busca el nombre de la competencia"
               readOnly={!editMode}
               options={dataListCompetencia.map((competencia) => ({

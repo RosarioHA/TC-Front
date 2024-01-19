@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useCompetencia } from "../../hooks/competencias/useCompetencias";
 import { useUpdateEtapa } from "../../hooks/competencias/useOficio";
+import { SuccessSOficio } from "../../components/success/oficio";
 
 const SubirOficio = () =>
 {
@@ -14,6 +15,7 @@ const SubirOficio = () =>
   const [ buttonText, setButtonText ] = useState('Subir archivo');
   const [ fechaInicio, setFechaInicio ] = useState('');
   const [ errorMessage, setErrorMessage ] = useState("");
+  const [isSubmitSuccessful, setIsSubmitSuccessful] = useState(false);
 
 
   useEffect(() =>
@@ -80,6 +82,13 @@ const SubirOficio = () =>
 
   const handleSubmission = async () =>
   {
+    // Verificar si el archivo y la fecha han sido seleccionados
+    if (!selectedFile || fechaInicio === '')
+    {
+      setErrorMessage("Por favor, selecciona un archivo y una fecha.");
+      return; // No continuar si falta alguno de los dos
+    }
+
     const formData = prepareDataForSubmission();
 
     if (!etapaNum || !id)
@@ -91,14 +100,13 @@ const SubirOficio = () =>
     try
     {
       await updateEtapa(etapaNum, id, formData);
-      // Lógica post actualización...
+      setIsSubmitSuccessful(true);
     } catch (error)
     {
       console.error('Error al realizar la solicitud:', error);
       // Manejar errores...
     }
   };
-
 
   const handleBackButtonClick = () =>
   {
@@ -130,6 +138,7 @@ const SubirOficio = () =>
         <div className="my-3 col-9">
           <div className="text-sans-h1 mb-4">{competencia.nombre}</div>
         </div>
+        {!isSubmitSuccessful ? (
         <div>
           <div className="mt-3">
             <span className="text-sans-24">Subir oficio (Obligatorio)</span>
@@ -194,6 +203,7 @@ const SubirOficio = () =>
                 para el<br /> llenado de la minuta comienzan a correr.</h6>
             </div>
             <div className="d-flex justify-content-end">
+              {errorMessage && <div className="text-sans-h6-darkred me-4">{errorMessage}</div>}
               <button className="btn-primario-s ps-3" onClick={handleSubmission}>
                 <u>Subir oficio</u>
                 <i className="material-symbols-rounded mx-1">arrow_forward_ios</i>
@@ -201,6 +211,9 @@ const SubirOficio = () =>
             </div>
           </div>
         </div>
+          ) : (
+            <SuccessSOficio idCompetencia={id} />
+          )}
       </div >
     </>
   )

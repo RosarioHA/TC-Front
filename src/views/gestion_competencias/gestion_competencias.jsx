@@ -1,15 +1,15 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useCompetencia } from "../../hooks/competencias/useCompetencias";
 import { useAuth } from "../../context/AuthContext";
-import InputSearch from "../../components/forms/Input_search";
+//import InputSearch from "../../components/forms/Input_search";
 import { TableCheckbox } from "../../components/tables/TableCheck";
 import { columnTitleCompetencias } from "../../Data/Usuarios";
 
 const GestionCompetencias = () => {
   const { userData } = useAuth();
   const { dataListCompetencia, paginationCompetencia, updatePage, currentPage } = useCompetencia();
-  const [ searchQuery, setSearchQuery ] = useState('');
+  //const [ searchQuery, setSearchQuery ] = useState('');
   const [ filteredCompetencia, setFilteredCompetencia ] = useState([]);
   const navigate = useNavigate();
 
@@ -52,18 +52,17 @@ const GestionCompetencias = () => {
   };
 
   // Función de búsqueda
-  const handleSearch = useCallback((query) => {
-    const lowerCaseQuery = query.toLowerCase();
-    const filtered = dataListCompetencia.filter(competencia =>
-      competencia.nombre.toLowerCase().includes(lowerCaseQuery) ||
-      competencia.ambito.toLowerCase().includes(lowerCaseQuery) ||
-      (competencia.estado ? 'activo' : 'inactivo').includes(lowerCaseQuery) ||
-      competencia.origen.toLowerCase().includes(lowerCaseQuery)
+  // const handleSearch = useCallback((query) => {
+  //   const lowerCaseQuery = query.toLowerCase();
+  //   const filtered = dataListCompetencia.filter(competencia =>
+  //     competencia.nombre.toLowerCase().includes(lowerCaseQuery) ||
+  //     competencia.ambito.toLowerCase().includes(lowerCaseQuery) ||
+  //     (competencia.estado ? 'activo' : 'inactivo').includes(lowerCaseQuery) ||
+  //     competencia.origen.toLowerCase().includes(lowerCaseQuery)
 
-    );
-    setFilteredCompetencia(filtered);
-  }, [ dataListCompetencia ]);
-  console.log("datalistcompetencia", dataListCompetencia)
+  //   );
+  //   setFilteredCompetencia(filtered);
+  // }, [ dataListCompetencia ]);
 
   const handleVerEstado = (competencia) => {
     console.log("Navegando a detalles con competencia:", competencia);
@@ -135,7 +134,7 @@ const GestionCompetencias = () => {
             <div className="flex-column my-5 py-5">
               <span className="text-sans-h2-tertiary"> Aún  no haz creado competencias</span>
               <div className="mx-5 px-5 my-2">
-                <Link className="btn-primario-l py-3 link-underline link-underline-opacity-0" to='/home/crear_competencia'>
+                <Link className="btn-primario-l py-3 link-underline link-underline-opacity-0" to='home/crear_competencia'>
                   <u>Crear Competencia</u>
                   <span className="material-symbols-outlined mx-1">
                     post_add
@@ -151,16 +150,16 @@ const GestionCompetencias = () => {
           }
         </div>
       ) : (
-        <><div className="d-flex flex-row mx-5">
+        <><div className="d-flex flex-row mx-5 mb-5 justify-content-between">
           <div className="w-50 pl-2 text-sans-24 align-self-center">Todas las competencias</div>
-          <InputSearch
+          {/* <InputSearch
             value={searchQuery}
             onChange={setSearchQuery}
             placeholder="Buscar competencias"
-            onSearch={handleSearch} />
+            onSearch={handleSearch} /> */}
           {userSubdere && (
             <div>
-              <Link className="btn-primario-l mx-4 py-3 link-underline link-underline-opacity-0" to='/home/crear_usuario'>
+              <Link className="btn-primario-l mx-4 py-3 link-underline link-underline-opacity-0" to='/home/crear_competencia'>
                 <u>Crear Competencia</u>
                 <span className="material-symbols-outlined mx-1">
                   post_add
@@ -168,18 +167,20 @@ const GestionCompetencias = () => {
               </Link>
             </div>
           )}
-        </div><TableCheckbox
+        </div>
+          <TableCheckbox
             columnTitles={columnTitleCompetencias}
             data={filteredCompetencia}
             sortableColumns={[ 'Etapa' ]}
-            renderRow={(competencia, isChecked, handleCheckboxChange) => (
+            renderRow={(competencia) => (
               <tr key={competencia.id}>
                 <th scope="row">
-                  <input
+                  {/* <input
                     type="checkbox"
                     className="check my-3"
                     checked={isChecked}
-                    onChange={() => handleCheckboxChange(competencia.id)} />
+                    onChange={() => handleCheckboxChange(competencia.id)} 
+                  /> */}
                 </th>
                 <td className="pt-3"><u className="text-sans-p my-4">{competencia.nombre}</u></td>
                 <td className="text-primary pt-4">
@@ -210,9 +211,11 @@ const GestionCompetencias = () => {
             sortOptions={sortOptions} 
             />
             
-            <div className="pagination-container d-flex justify-content-center border">
-              {renderPaginationButtons()}
-            </div>
+            {paginationCompetencia.count > projectsPerPage && (
+              <div className="pagination-container d-flex justify-content-center">
+                {renderPaginationButtons()}
+              </div>
+            )}
         </>
       )}
     </div >

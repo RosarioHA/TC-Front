@@ -15,21 +15,17 @@ const DropdownSelectBuscador = ({ label, placeholder, options, onSelectionChange
         searchInput.focus();
       }
     }
-
-    function handleClickOutside(event) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+    function handleDocumentClick(event) {
+      // Si el clic ocurre fuera del dropdown y del botón, cerrar el dropdown
+      if (!dropdownRef.current.contains(event.target) && event.target.id !== 'abreDropdownSelect') {
         setIsOpen(false);
       }
     }
-
-    if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-    } else {
-      document.removeEventListener('mousedown', handleClickOutside);
-    }
-
+    // Agregar un event listener al documento para el clic fuera del dropdown
+    document.addEventListener('mousedown', handleDocumentClick);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      // Remover el event listener al desmontar el componente
+      document.removeEventListener('mousedown', handleDocumentClick);
     };
   }, [isOpen, hasOpened]);
 
@@ -68,7 +64,8 @@ const DropdownSelectBuscador = ({ label, placeholder, options, onSelectionChange
             />
           ) : (
             <button
-              type="button" 
+              type="button"
+              id="abreDropdownSelectBuscador" 
               onClick={toggleDropdown} 
               className={`text-sans-p dropdown-btn ${readOnly ? "disabled" : ""}`}
             >
