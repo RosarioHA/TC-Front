@@ -1,11 +1,14 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect , useMemo, useCallback} from 'react';
+import { debounce } from 'lodash';
 
-const DropdownConSecciones = ({ label, placeholder, options, readOnly }) =>
+
+const DropdownConSecciones = ({ label, placeholder, options, readOnly,  onUsuariosTransformed}) =>
 {
   const [ isOpen, setIsOpen ] = useState(false);
   const [ searchTerm, setSearchTerm ] = useState('');
   const [ selectedOptions, setSelectedOptions ] = useState({});
   const dropdownRef = useRef(null);
+
 
   useEffect(() =>
   {
@@ -61,6 +64,8 @@ const DropdownConSecciones = ({ label, placeholder, options, readOnly }) =>
     setSelectedOptions(updatedSelection);
   };
 
+  console.log(selectedOptions)
+
   const filteredOptions = options.filter((optionGroup) =>
   {
     const searchTextLower = searchTerm.toLowerCase();
@@ -68,6 +73,48 @@ const DropdownConSecciones = ({ label, placeholder, options, readOnly }) =>
     return optionGroup.label.toLowerCase().includes(searchTextLower) ||
       optionGroup.options.some(option => option.nombre.toLowerCase().includes(searchTextLower));
   });
+
+  const transformSelectedOptionsForProfiles = (selectedOptions) => {
+    let transformed = {
+      usuarios_subdere: [],
+      usuarios_dipres: [],
+      usuarios_sectoriales: [],
+      usuarios_gore: []
+    };
+  
+    // Recorre cada grupo de opciones y llena los arrays correspondientes
+    for (let perfil in selectedOptions) {
+      selectedOptions[perfil].forEach(option => {
+        // Maneja el caso especial para "Usuario Sectorial"
+        let key;
+        if (perfil === "Usuario Sectorial") {
+          key = "usuarios_sectoriales";
+        } else {
+          key = `usuarios_${perfil.toLowerCase()}`;
+        }
+  
+        if (transformed[key] !== undefined) {
+          transformed[key].push(option.id);
+        }
+      });
+    }
+  
+    return transformed;
+  };
+  
+  const transformedOptions = useMemo(() => {
+    return transformSelectedOptionsForProfiles(selectedOptions);
+  }, [selectedOptions]);
+  
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const debouncedOnUsuariosTransformed = useCallback(debounce(onUsuariosTransformed, 500), []);
+  
+  useEffect(() => {
+    if (typeof onUsuariosTransformed === 'function') {
+      debouncedOnUsuariosTransformed(transformedOptions);
+    }
+  }, [transformedOptions, debouncedOnUsuariosTransformed, onUsuariosTransformed]);
+
   const renderTablaResumen = (users, tipoUsuario) =>
   {
     return (
@@ -107,7 +154,7 @@ const DropdownConSecciones = ({ label, placeholder, options, readOnly }) =>
   };
 
   return (
-    <div className={`input-container ${readOnly ? 'readonly' : ''}`}>
+    <div className={`input-container  col-11 ${readOnly ? 'readonly' : ''}`}>
       {readOnly ? (
         <>
           <label className="text-sans-h5 input-label">Usuario(s) Asignado(s):</label>

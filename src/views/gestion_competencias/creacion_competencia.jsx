@@ -6,7 +6,6 @@ import CustomInput from "../../components/forms/custom_input";
 import DropdownCheckbox from "../../components/dropdown/checkbox";
 import DropdownSelect from "../../components/dropdown/select";
 import DropdownConSecciones from "../../components/dropdown/checkbox_conSecciones_conTabla";
-import SubirArchivo from "../../components/forms/subir_archivo";
 import { esquemaCreacionCompetencia } from "../../validaciones/esquemaValidacion";
 import { useCrearCompetencia } from "../../hooks/competencias/useCrearCompetencia";
 import { useRegion } from "../../hooks/useRegion";
@@ -20,14 +19,19 @@ const initialValues = {
   regiones: [],
   sectores: [],
   origen: '',
-  ambito: '',
-  usuarios: '',
+  ambito_competencia: '',
+  usuarios_subdere: [],
+  usuarios_dipres: [],
+  usuarios_sectoriales: [],
+  usuarios_gore: [],
   plazo_formulario_sectorial: undefined,
   plazo_formulario_gore: undefined,
 };
 
-const groupUsersByType = (users) => {
-  const grouped = users.reduce((acc, user) => {
+const groupUsersByType = (users) =>
+{
+  const grouped = users.reduce((acc, user) =>
+  {
     acc[ user.perfil ] = acc[ user.perfil ] || [];
     acc[ user.perfil ].push(user);
     return acc;
@@ -39,7 +43,8 @@ const groupUsersByType = (users) => {
   }));
 };
 
-const CreacionCompetencia = () => {
+const CreacionCompetencia = () =>
+{
   const { createCompetencia } = useCrearCompetencia();
   const { dataRegiones } = useRegion();
   const { users } = useUsers();
@@ -47,14 +52,22 @@ const CreacionCompetencia = () => {
   const { origenes } = useOrigenes();
   const { ambitos } = useAmbitos();
   const userOptions = groupUsersByType(users);
+  const [ errorGeneral, setErrorGeneral ] = useState('');
   const [ regionesSeleccionadas, setRegionesSeleccionadas ] = useState([]);
   const [ sectoresSeleccionados, setSectoresSeleccionados ] = useState([]);
   const [ origenSeleccionado, setOrigenSeleccionado ] = useState('');
   const [ ambitoSeleccionado, setAmbitoSeleccionado ] = useState('');
-  const [ usuariosSeleccionados, setUsuariosSeleccionados ] = useState([]);
+  const [ usuariosSeleccionados, setUsuariosSeleccionados ] = useState(initialValues);
+  const [ selectedFile, setSelectedFile ] = useState(null);
+  const [ buttonText, setButtonText ] = useState('Subir archivo');
+  const [ fechaInicio, setFechaInicio ] = useState('');
+  const [ errorMessage, setErrorMessage ] = useState("");
+
+
   const history = useNavigate();
 
-  const handleBackButtonClick = () => {
+  const handleBackButtonClick = () =>
+  {
     history(-1);
   };
 
@@ -63,55 +76,59 @@ const CreacionCompetencia = () => {
     handleSubmit,
     setValue,
     formState: { errors },
-    trigger,
   } = useForm({
     resolver: yupResolver(esquemaCreacionCompetencia),
     defaultValues: initialValues,
-    shouldUnregister: false,
-    mode: 'manual',
+    mode: 'onBlur',
   });
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data) =>
+  {
+
+
     const competenciaData = {
       ...data,
       sectores: sectoresSeleccionados.map(s => s.value),
       regiones: regionesSeleccionadas.map(r => r.value),
-      usuarios: Object.keys(usuariosSeleccionados),
-      ambito: ambitoSeleccionado,
+      ambito_competencia: ambitoSeleccionado,
       origen: origenSeleccionado,
+      usuarios_subdere: usuariosSeleccionados.usuarios_subdere,
+      usuarios_dipres: usuariosSeleccionados.usuarios_dipres,
+      usuarios_sectoriales: usuariosSeleccionados.usuarios_sectoriales,
+      usuarios_gore: usuariosSeleccionados.usuarios_gore,
       plazo_formulario_sectorial: data.plazo_formulario_sectorial,
       plazo_formulario_gore: data.plazo_formulario_gore,
+      fecha_inicio: formatFechaInicio(),
+      oficio_origen: selectedFile 
     };
-
-    try {
+    try
+    {
       await createCompetencia(competenciaData);
-      // Manejar la respuesta, redireccionar o mostrar un mensaje de éxito
-    } catch (error) {
-      // Manejar el error
+      history('/home/success', { state: { origen: "crear_competencia" } });
+      setErrorGeneral('');
+    } catch (error)
+    {
+      if (error.response && error.response.data)
+      {
+        const errores = error.response.data;
+        const primerCampoError = Object.keys(errores)[ 0 ];
+        const primerMensajeError = errores[ primerCampoError ][ 0 ];
+        setErrorGeneral(primerMensajeError);
+      } else
+      {
+        setErrorGeneral('Error al conectarse con el servidor.');
+      }
     }
   };
 
-  const handleCrearCompetenciaClick = async (data) => {
-    try {
-      const isValid = await trigger();
-      if (isValid) {
-        await onSubmit(data); // Invoca la función onSubmit que ya tiene la lógica para enviar la información al backend
-        history('/home/success', { state: { origen: "crear_competencia" } });
-      } else {
-        console.log("El formulario no es válido");
-      }
-    } catch (error) {
-      console.error('Error al crear competencia:', error);
-    }
-  };
 
   //opciones regiones 
   const opcionesRegiones = dataRegiones.map(region => ({
     label: region.region,
     value: region.id,
   }));
-  const handleRegionesChange = (selectedOptions) => {
-    console.log(selectedOptions);
+  const handleRegionesChange = (selectedOptions) =>
+  {
     setRegionesSeleccionadas(selectedOptions);
     setValue('regiones', selectedOptions);
   };
@@ -121,7 +138,8 @@ const CreacionCompetencia = () => {
     label: sector.nombre,
     value: sector.id,
   }));
-  const handleSectorChange = (selectedOptions) => {
+  const handleSectorChange = (selectedOptions) =>
+  {
     setSectoresSeleccionados(selectedOptions);
     setValue('sectores', selectedOptions);
   };
@@ -131,32 +149,75 @@ const CreacionCompetencia = () => {
     label: origen.descripcion,
     value: origen.clave,
   }));
-  const handleOrigenChange = (selectedOption) => {
-    console.log(selectedOption)
+  const handleOrigenChange = (selectedOption) =>
+  {
     setOrigenSeleccionado(selectedOption.value);
     setValue('origen', selectedOption.value);
   };
-  
+
   //opciones ambito
   const opcionesAmbito = ambitos.map(ambito => ({
     label: ambito.nombre,
     value: ambito.id,
   }));
-  const handleAmbitoChange = (selectedOption) => {
-    console.log(selectedOption)
-    setAmbitoSeleccionado(selectedOption);
-    const ambitoValue = selectedOption ? Number(selectedOption.value) : null;
-    setValue('ambito', ambitoValue, { shouldValidate: true });
+  const handleAmbitoChange = (selectedOption) =>
+  {
+    const ambitoId = selectedOption ? selectedOption.value : null;
+    setAmbitoSeleccionado(ambitoId);
+    setValue('ambito_competencia', ambitoId, { shouldValidate: true });
   };
 
-  const handleUsuariosChange = useCallback((selectedOptions) => {
-    const updatedUsuarios = selectedOptions.reduce((acc, usuario) => {
-      acc[ usuario.id ] = usuario;
-      return acc;
-    }, {});
-    setUsuariosSeleccionados(updatedUsuarios);
-    setValue('usuarios', Object.keys(updatedUsuarios));
-  }, [ setValue ]);
+  const handleUsuariosTransformed = useCallback((nuevosUsuarios) =>
+  {
+    setUsuariosSeleccionados(nuevosUsuarios);
+  }, []);
+  console.log('com', usuariosSeleccionados)
+
+
+  const handleFileChange = (event) =>
+  {
+    const file = event.target.files[ 0 ];
+    if (file)
+    {
+      if (file.size > 20971520)
+      { // 20 MB en bytes
+        setErrorMessage("Archivo no cumple con el peso permitido");
+        setSelectedFile(null);
+      } else
+      {
+        setSelectedFile(file);
+        setButtonText('Modificar');
+        setErrorMessage(""); // Limpiar el mensaje de error si el archivo es válido
+      }
+    }
+  };
+
+
+  const handleDelete = () =>
+  {
+    setSelectedFile(null);
+    setButtonText('Subir archivo');
+  };
+
+  const handleUploadClick = () =>
+  {
+    document.getElementById('fileUploadInput').click();
+  };
+
+  const handleFechaInicioChange = (event) =>
+  {
+    setFechaInicio(event.target.value);
+  };
+
+  const formatFechaInicio = () =>
+  {
+    if (!fechaInicio) return '';
+
+    return new Date(fechaInicio).toISOString();
+  };
+
+
+
 
   return (
     <div className="container col-10 my-4">
@@ -182,13 +243,13 @@ const CreacionCompetencia = () => {
                   id="nombre"
                   maxLength={30}
                   error={errors.nombre?.message}
-                  ref={field.ref}
-                  {...field} />
+                  {...field}
+                />
               )}
             />
           </div>
 
-          <div className="mb-4 col-11">
+          <div className="mb-4 ">
             <DropdownCheckbox
               label="Región (Obligatorio)"
               placeholder="Elige la o las regiones donde se ejercerá la competencia"
@@ -201,7 +262,7 @@ const CreacionCompetencia = () => {
             )}
           </div>
 
-          <div className="mb-4 col-11">
+          <div className="mb-4 ">
             <DropdownCheckbox
               label="Elige el sector de la competencia (Obligatorio)"
               placeholder="Elige el sector de la competencia"
@@ -214,7 +275,7 @@ const CreacionCompetencia = () => {
             )}
           </div>
 
-          <div className="mb-4 col-11">
+          <div className="mb-4">
             <DropdownSelect
               label="Origen de la competencia (Obligatorio)"
               placeholder="Elige el origen de la competencia"
@@ -227,73 +288,112 @@ const CreacionCompetencia = () => {
             )}
           </div>
 
-          <div className="mb-4 col-11">
+          <div className="mb-4">
             <DropdownSelect
               label="Elige el ámbito de la competencia (Obligatorio)"
               placeholder="Elige el ámbito de la competencia"
+              name="ambito_competencia"
               options={opcionesAmbito}
               onSelectionChange={handleAmbitoChange}
               selected={ambitoSeleccionado}
+              error={errors.ambito?.message}
             />
-            {errors.ambito && (
-              <p className="text-sans-h6-darkred mt-2 mb-0">{errors.ambito.message}</p>
+            {errors.ambito_competencia && (
+              <p className="text-sans-h6-darkred mt-2 mb-0">{errors.ambito_competencia.message}</p>
             )}
             <div className="d-flex mt-2 text-sans-h6-primary">
               <i className="material-symbols-rounded me-2">info</i>
               <h6> editable </h6>
             </div>
           </div>
-          <div className="mb-4 col-11">
+          <div className="mb-4">
             <div className="">
               <DropdownConSecciones
                 label="Asignar Usuarios (Opcional)"
                 placeholder="Busca el nombre de la persona"
                 options={userOptions}
-                selectedOptions={Object.keys(usuariosSeleccionados)
-                  .map(id => users.find(user => user.id === id))}
-                onSelectionChange={handleUsuariosChange}
+                onUsuariosTransformed={handleUsuariosTransformed}
               />
             </div>
           </div>
 
-          <div className="mb-5">
+          <div className="mb-5 col-12">
             <div>
               <h5 className="text-sans-h5">Adjunta el oficio correspondiente a la competencia</h5>
               <h6 className="text-sans-h6 mb-4">(Máximo 1 archivo, peso máximo 20 MB, formato PDF)</h6>
             </div>
 
-            <div className="ps-3 col-11">
-              <div className="d-flex justify-content-between py-3 fw-bold">
-                <div className="d-flex mb-2">
-                  <div className="ms-4">#</div>
-                  <div className="ms-5">Documento</div>
+            <div className="col-11 mt-3">
+              <table className="table table-striped table align-middle">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col" htmlFor="fileUploadInput" className="form-label">Documento</th>
+                    <th scope="col"></th>
+                    <th scope="col">Acción</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row">1</th>
+                    <td>{selectedFile ? selectedFile.name : "No seleccionado"}</td>
+                    <td className="w-20 px-0 mx-0">{errorMessage && <div className="text-sans-h6-darkred">{errorMessage}</div>}</td>
+                    <td>
+                      <div className="d-flex">
+                        <input
+                          id="fileUploadInput"
+                          type="file"
+                          className="form-control"
+                          onChange={handleFileChange}
+                          style={{ display: 'none' }}
+                          accept=".pdf"
+                        />
+                        <button className="btn-secundario-s d-flex" onClick={handleUploadClick}>
+                          <i className="material-symbols-outlined">upgrade</i>
+                          <u className="align-self-center text-sans-b-white">{buttonText}</u>
+                        </button>
+                        {selectedFile && (
+                          <button onClick={handleDelete} className="btn-terciario-ghost px-2 d-flex align-items-center mx-1">
+                            <span className="text-sans-b-red">Borrar</span>
+                            <i className="material-symbols-rounded">delete</i>
+                          </button>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <div className="my-4 py-3 col-12">
+                <span className="text-sans-h5 ">Elige la fecha del oficio (Obligatorio)</span>
+                <input
+                  id="dateInput"
+                  type="datetime-local"
+                  className="form-control py-3 my-2  border rounded-0 border-dark-subtle "
+                  onChange={handleFechaInicioChange}
+                  value={fechaInicio}
+                />
+                <div className="d-flex text-sans-h6-primary">
+                  <i className="material-symbols-rounded me-2">info</i>
+                  <h6>La fecha del oficio debe coincidir con la fecha en que el sector recibió la información, así los plazos previamente establecidos para el llenado del formulario sectorial  </h6>
                 </div>
-                <div className="me-5">Acción</div>
-              </div>
-              <div className="row neutral-line align-items-center">
-                <SubirArchivo
-                  index="1"
-                  fileType="No seleccionado" />
               </div>
             </div>
-
           </div>
-
           <div className="mb-4">
-            < Controller
+            <Controller
               name="plazo_formulario_sectorial"
               control={control}
               render={({ field }) => (
-                < CustomInput
+                <CustomInput
                   label="Plazo para formulario sectorial (Obligatorio)"
                   placeholder="Escribe el número de días corridos"
                   id="plazo_formulario_sectorial"
                   maxLength={null}
-                  error={errors.plazoSecorial?.message}
-                  ref={field.ref}
+                  error={errors.plazo_formulario_sectorial?.message}
                   {...field} />
-              )} />
-            <div className="d-flex justify-content-end">
+              )}
+            />
+            <div className="d-flex justify-content-end col-11">
               <h6 className="text-sans-h6-grey mt-1 me-4">Número entre 15 y 30</h6>
             </div>
             <div className="d-flex text-sans-h6-primary">
@@ -302,7 +402,7 @@ const CreacionCompetencia = () => {
             </div>
           </div>
 
-          <div className="mb-4">
+          <div className="my-4">
             < Controller
               name="plazo_formulario_gore"
               control={control}
@@ -312,26 +412,27 @@ const CreacionCompetencia = () => {
                   placeholder="Escribe el número de días corridos"
                   id="plazo_formulario_gore"
                   maxLength={null}
-                  error={errors.plazoGORE?.message}
+                  error={errors.plazo_formulario_gore?.message}
                   ref={field.ref}
                   {...field} />
               )} />
-            <div className="d-flex justify-content-end">
-              <h6 className="text-sans-h6-grey mt-1 me-4">Número entre 15 y 30</h6>
+            <div className="d-flex justify-content-end col-11">
+              <h6 className="text-sans-h6-grey mt-1 me-4 ">Número entre 15 y 30</h6>
             </div>
             <div className="d-flex text-sans-h6-primary">
               <i className="material-symbols-rounded me-2">info</i>
               <h6> El plazo debe ser de 15 a 30 días corridos y se contará desde el día en que asocies un usuario GORE a la competencia. </h6>
             </div>
           </div>
-
-          <div className="d-flex justify-content-end">
-            <button className="btn-primario-s mb-5" type="submit" onClick={handleCrearCompetenciaClick}>
+          {errorGeneral && (
+            <p className="text-sans-h6-darkred mt-2 mb-0">{errorGeneral}</p>
+          )}
+          <div className="d-flex justify-content-end col-11">
+            <button className="btn-primario-s mb-5" type="submit">
               <p className="mb-0">Crear Competencia</p>
               <i className="material-symbols-rounded ms-2">arrow_forward_ios</i>
             </button>
           </div>
-
         </form>
       </div>
     </div>

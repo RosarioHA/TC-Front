@@ -140,6 +140,7 @@ const CreacionUsuario = () => {
       console.error('Error al enviar el formulario:', error);
     }
   };
+
   if (isLoading) {
     return <div>Cargando...</div>;
   }
@@ -345,7 +346,7 @@ const CreacionUsuario = () => {
               />
             </div>
           </div>
-
+            <div>{error.message}</div>
           <button className="btn-primario-s mb-5" type="submit" onClick={() => setSubmitClicked(true)}>
             <p className="mb-0">Crear Usuario</p>
             <i className="material-symbols-rounded ms-2">arrow_forward_ios</i>

@@ -14,7 +14,7 @@ const SuccessViews = () => {
         history('/home/administrar_usuarios');
         break;
       case "crear_competencia":
-        history('/home/administrar_competencias');
+        history('/home/listado_competencias');
         break;
       case "editar_usuario":
         history('/home/administrar_usuarios'); // Cambia a la vista deseada
