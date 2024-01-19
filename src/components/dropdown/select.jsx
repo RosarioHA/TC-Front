@@ -45,7 +45,7 @@ const DropdownSelect = ({ label, placeholder, options, onSelectionChange, select
     onSelectionChange(option);
   };
   return (
-    <div className={`input-container ${readOnly ? 'readonly' : ''}`}>
+    <div className={`input-container col-11 ${readOnly ? 'readonly' : ''}`}>
       <label className="text-sans-h5 input-label">{label}</label>
       <button
         type="button"

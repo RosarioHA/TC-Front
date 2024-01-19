@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useForm, Controller } from 'react-hook-form';
 import { useNavigate, useParams } from "react-router-dom";
 import CustomInput from "../../components/forms/custom_input";
@@ -10,11 +10,13 @@ import { useOrigenes } from "../../hooks/useOrigenes";
 import { useRegion } from "../../hooks/useRegion";
 import { useSector } from "../../hooks/useSector";
 import { useAmbitos } from "../../hooks/useAmbitos";
-import {useEditCompetencia } from "../../hooks/competencias/useEditCompetencia"
+import { useEditCompetencia } from "../../hooks/competencias/useEditCompetencia"
 import { useUsers } from "../../hooks/usuarios/useUsers";
 
-const groupUsersByType = (users) => {
-  const grouped = users.reduce((acc, user) => {
+const groupUsersByType = (users) =>
+{
+  const grouped = users.reduce((acc, user) =>
+  {
     acc[ user.perfil ] = acc[ user.perfil ] || [];
     acc[ user.perfil ].push(user);
     return acc;
@@ -25,7 +27,8 @@ const groupUsersByType = (users) => {
   }));
 };
 
-const EdicionCompetencia = () => {
+const EdicionCompetencia = () =>
+{
   const { id } = useParams();
   const history = useNavigate();
   const [ editMode, setEditMode ] = useState(false);
@@ -35,7 +38,8 @@ const EdicionCompetencia = () => {
   const { ambitos } = useAmbitos();
   const { users } = useUsers();
   const userOptions = groupUsersByType(users);
-  const { competencia,  updateCompetencia } = useEditCompetencia(id);
+  const { competencia, updateCompetencia } = useEditCompetencia(id);
+  const [ usuariosSeleccionados, setUsuariosSeleccionados ] = useState();
 
   //opciones selectores
   const opcionesRegiones = dataRegiones.map(region => ({
@@ -56,18 +60,19 @@ const EdicionCompetencia = () => {
   }));
 
   //data competencia
-  const regionesSeleccionadas = competencia ? competencia.regiones.map(regionId => {
+  const regionesSeleccionadas = competencia ? competencia.regiones.map(regionId =>
+  {
     const region = dataRegiones.find(region => region.id === regionId);
     return {
       label: region.region,
       value: region.id,
     };
   }) : [];
-  const sectoresMap = new Map(dataSector.map(sector => [sector.nombre, sector.id]));
+  const sectoresMap = new Map(dataSector.map(sector => [ sector.nombre, sector.id ]));
   const sectoresSeleccionados = competencia ? competencia.sectores.map(sector => ({
     label: sector.nombre,
     value: sectoresMap.get(sector.nombre), // Obtiene el ID correspondiente al nombre
-  })) : [];  
+  })) : [];
   console.log("sectores seleccionados", sectoresSeleccionados)
   const ambitoSeleccionado = ambitos.find(ambito => ambito.id === competencia?.ambito_competencia);
   const origenSeleccionado = origenes.find(origen => origen.clave === competencia?.origen)
@@ -75,19 +80,24 @@ const EdicionCompetencia = () => {
   const { control, handleSubmit, setValue, formState: { errors } } = useForm({
     mode: "onSubmit",
     defaultValues: {
-      nombre:  "",
+      nombre: "",
       regiones: regionesSeleccionadas,
       sectores: sectoresSeleccionados,
       ambito_competencia: null,
-      origen:  null,
-      plazo_formulario_sectorial:  "",
-      plazo_formulario_gore:  "",
-      //faltaria campo usuarios
+      origen: null,
+      plazo_formulario_sectorial: "",
+      plazo_formulario_gore: "",
+      usuarios_subdere: [],
+      usuarios_dipres: [],
+      usuarios_sectoriales: [],
+      usuarios_gore: [],
     },
   });
-  
-  useEffect(() => {
-    if (editMode && competencia) {
+
+  useEffect(() =>
+  {
+    if (editMode && competencia)
+    {
       // Inicializar el formulario con los detalles de la competencia
       setValue("nombre", competencia.nombre || "");
       setValue("regiones", competencia.regiones || null);
@@ -101,26 +111,37 @@ const EdicionCompetencia = () => {
       setValue("plazo_formulario_sectorial", competencia.plazo_formulario_sectorial || "");
       setValue("plazo_formulario_gore", competencia.plazo_formulario_gore || "");
     }
-  }, [editMode, competencia, setValue]);
+  }, [ editMode, competencia, setValue ]);
 
   //manejo de cambios en campos editables
-  const handleSectoresChange = (selectedSectores) => {
+  const handleSectoresChange = (selectedSectores) =>
+  {
     const selectedSectoresValues = selectedSectores.map(sector => sector.value);
     setValue("sectores", selectedSectoresValues);
-  };  
-  const handleRegionesChange = (selectedRegiones) => {
+  };
+
+  const handleRegionesChange = (selectedRegiones) =>
+  {
     const selectedRegionesValues = selectedRegiones.map(region => region.value);
     setValue("regiones", selectedRegionesValues);
   };
-  const handleAmbitoChange = (selectedAmbito) => {
+
+
+  const handleAmbitoChange = (selectedAmbito) =>
+  {
     setValue("ambito_competencia", selectedAmbito.value)
   };
-  const handleOrigenChange = (selectedOrigen) => {
+
+
+  const handleOrigenChange = (selectedOrigen) =>
+  {
     setValue("origen", selectedOrigen.value)
   };
 
-  const onSubmit = async (formData) => {
-    try {
+  const onSubmit = async (formData) =>
+  {
+    try
+    {
       await updateCompetencia(formData);
       setEditMode(false);
       history('/home/success', { state: { origen: "editar_competencia" } });
@@ -128,11 +149,20 @@ const EdicionCompetencia = () => {
       console.error("Error al guardar la competencia:", error);
     }
   };
-  
-  const handleBackButtonClick = () => {
+
+  const handleUsuariosTransformed = useCallback((nuevosUsuarios) =>
+  {
+    setUsuariosSeleccionados(nuevosUsuarios);
+  }, []);
+  console.log('com', usuariosSeleccionados)
+
+
+  const handleBackButtonClick = () =>
+  {
     history(-1);
   };
-  const handleEditClick = () => {
+  const handleEditClick = () =>
+  {
     setEditMode((prevMode) => !prevMode);
   };
 
@@ -155,20 +185,20 @@ const EdicionCompetencia = () => {
 
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="mb-4">
-          <Controller 
-          name="nombre"
-          control={control}
-          render={({ field }) => (
-            <CustomInput
-              label="Nombre de la Competencia (Obligatorio)"
-              placeholder={competencia ? competencia.nombre : ''}
-              id="nombre"
-              name="nombre"
-              readOnly={!editMode}
-              error={errors.nombre_completo?.message}
+          <Controller
+            name="nombre"
+            control={control}
+            render={({ field }) => (
+              <CustomInput
+                label="Nombre de la Competencia (Obligatorio)"
+                placeholder={competencia ? competencia.nombre : ''}
+                id="nombre"
+                name="nombre"
+                readOnly={!editMode}
+                error={errors.nombre_completo?.message}
                 {...field}
-            />
-          )}/>
+              />
+            )} />
         </div>
 
         <div className="mb-4 col-11">
@@ -254,11 +284,9 @@ const EdicionCompetencia = () => {
            < DropdownConSecciones
             label="Asignar Usuarios (Opcional)"
             placeholder="Busca el nombre de la persona"
-            readOnly=''
             options={userOptions}
-            selectedOptions=""
-            onSelectionChange=""
-        />
+            onUsuariosTransformed={handleUsuariosTransformed}
+          />
         </div>
 
         <div className="mb-5 col-11">
@@ -287,19 +315,19 @@ const EdicionCompetencia = () => {
         </div>
 
         <div className={editMode ? 'mb-3' : 'mb-4'}>
-          <Controller 
-          name="plazo_formulario_sectorial"
-          control={control}
-          render={({ field }) => (
-            < CustomInput
-              label="Plazo para formulario sectorial (Obligatorio)"
-              placeholder={competencia ? competencia.plazo_formulario_sectorial : ''}
-              id="plazo_formulario_sectorial"
-              maxLength={null}
-              readOnly={!editMode}
-              error={errors.plazo_formulario_gore?.message}
-              {...field} />
-          )}
+          <Controller
+            name="plazo_formulario_sectorial"
+            control={control}
+            render={({ field }) => (
+              < CustomInput
+                label="Plazo para formulario sectorial (Obligatorio)"
+                placeholder={competencia ? competencia.plazo_formulario_sectorial : ''}
+                id="plazo_formulario_sectorial"
+                maxLength={null}
+                readOnly={!editMode}
+                error={errors.plazo_formulario_gore?.message}
+                {...field} />
+            )}
           />
         </div>
         {editMode && (
@@ -310,19 +338,19 @@ const EdicionCompetencia = () => {
         )}
 
         <div className={editMode ? 'mb-3' : 'mb-4'}>
-          <Controller 
-          name="plazo_formulario_gore"
-          control={control}
-          render={({ field }) => (
-            < CustomInput
-              label="Plazo para formulario GORE (Obligatorio)"
-              placeholder={competencia ? competencia.plazo_formulario_gore : ''}
-              id="plazo_formulario_gore"
-              maxLength={null}
-              readOnly={!editMode}
-              error={errors.plazo_formulario_gore?.message}
-              {...field} />
-          )}/>
+          <Controller
+            name="plazo_formulario_gore"
+            control={control}
+            render={({ field }) => (
+              < CustomInput
+                label="Plazo para formulario GORE (Obligatorio)"
+                placeholder={competencia ? competencia.plazo_formulario_gore : ''}
+                id="plazo_formulario_gore"
+                maxLength={null}
+                readOnly={!editMode}
+                error={errors.plazo_formulario_gore?.message}
+                {...field} />
+            )} />
         </div>
         {editMode && (
           <div className="d-flex text-sans-h6-primary pb-4">
@@ -330,6 +358,8 @@ const EdicionCompetencia = () => {
             <h6> El plazo debe ser de 15 a 30 días corridos y se contará desde el día en que asocies un usuario GORE a la competencia. </h6>
           </div>
         )}
+
+        <div className="py-2">
 
         {editMode ? (
           <button className="btn-primario-s my-4" type="submit">

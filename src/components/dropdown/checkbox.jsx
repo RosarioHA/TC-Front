@@ -54,11 +54,9 @@ const DropdownCheckbox = ({ label, placeholder, options, onSelectionChange, read
     onSelectionChange([...new Map(updatedOptions.map((item) => [item.value, item])).values()]);
     setSelectedOptions(updatedOptions);
   };
-  
-  console.log("selected options", selectedOptions)
 
   return (
-    <div className={`input-container ${readOnly ? 'readonly' : ''}`}>
+    <div className={`input-container col-11 ${readOnly ? 'readonly' : ''}`}>
       <label className="text-sans-h5 input-label">{label}</label>
       <button
         type="button"
