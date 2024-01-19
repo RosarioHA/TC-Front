@@ -145,7 +145,8 @@ const EdicionCompetencia = () =>
       await updateCompetencia(formData);
       setEditMode(false);
       history('/home/success', { state: { origen: "editar_competencia" } });
-    } catch (error) {
+    } catch (error)
+    {
       console.error("Error al guardar la competencia:", error);
     }
   };
@@ -202,86 +203,86 @@ const EdicionCompetencia = () =>
         </div>
 
         <div className="mb-4 col-11">
-          <Controller 
-          name="regiones"
-          control={control}
-          render={({ field }) => (
-            <DropdownCheckbox
-              label="Región (Obligatorio)"
-              placeholder="Elige la o las regiones donde se ejercerá la competencia"
-              id="regiones"
-              name="regiones"
-              options={opcionesRegiones}
-              readOnly={!editMode}
-              prevSelection={regionesSeleccionadas}
-              onSelectionChange={handleRegionesChange}
-              selectedOptions={field.value}
-            />
-          )}/>
-            
+          <Controller
+            name="regiones"
+            control={control}
+            render={({ field }) => (
+              <DropdownCheckbox
+                label="Región (Obligatorio)"
+                placeholder="Elige la o las regiones donde se ejercerá la competencia"
+                id="regiones"
+                name="regiones"
+                options={opcionesRegiones}
+                readOnly={!editMode}
+                prevSelection={regionesSeleccionadas}
+                onSelectionChange={handleRegionesChange}
+                selectedOptions={field.value}
+              />
+            )} />
+
         </div>
 
         <div className="mb-4 col-11">
-          <Controller 
-          name="sectores"
-          control={control}
-          render={({ field }) => (
-            <DropdownCheckbox
-              label="Elige el sector de la competencia (Obligatorio)"
-              placeholder='Elige el sector de la competencia'
-              id="sectores"
-              name="sectores"
-              options={opcionesSectores}
-              readOnly={!editMode}
-              prevSelection={sectoresSeleccionados}
-              onSelectionChange={handleSectoresChange}
-              selectedOptions={field.value}
-            /> 
-          )}/>
-          
+          <Controller
+            name="sectores"
+            control={control}
+            render={({ field }) => (
+              <DropdownCheckbox
+                label="Elige el sector de la competencia (Obligatorio)"
+                placeholder='Elige el sector de la competencia'
+                id="sectores"
+                name="sectores"
+                options={opcionesSectores}
+                readOnly={!editMode}
+                prevSelection={sectoresSeleccionados}
+                onSelectionChange={handleSectoresChange}
+                selectedOptions={field.value}
+              />
+            )} />
+
         </div>
 
         <div className="mb-4 col-11">
-          <Controller 
-          name="origen"
-          control={control}
-          render={() => (
-            <DropdownSelect
-              label="Origen de la competencia (Obligatorio)"
-              placeholder={competencia ? origenSeleccionado?.descripcion || '' : ''}
-              id="origen"
-              name="origen"
-              options={opcionesOrigen}
-              readOnly={!editMode}
-              control={control}
-              onSelectionChange={handleOrigenChange}
-              initialValue={origenSeleccionado}
-            />
-          )}/>
+          <Controller
+            name="origen"
+            control={control}
+            render={() => (
+              <DropdownSelect
+                label="Origen de la competencia (Obligatorio)"
+                placeholder={competencia ? origenSeleccionado?.descripcion || '' : ''}
+                id="origen"
+                name="origen"
+                options={opcionesOrigen}
+                readOnly={!editMode}
+                control={control}
+                onSelectionChange={handleOrigenChange}
+                initialValue={origenSeleccionado}
+              />
+            )} />
         </div>
 
         <div className="mb-4 col-11">
-          <Controller 
-          name="ambito_competencia"
-          control={control}
-          render={() =>(
-            <DropdownSelect
-              label="Elige el ámbito de la competencia (Obligatorio)"
-              placeholder={competencia ? ambitoSeleccionado?.nombre || '' : ''}
-              id="ambito_competencia"
-              name="ambito_competencia"
-              options={opcionesAmbito}
-              readOnly={!editMode}
-              control={control}
-              onSelectionChange={handleAmbitoChange}
-              initialValue={ambitoSeleccionado}
-              
-            />
-          )}/>
+          <Controller
+            name="ambito_competencia"
+            control={control}
+            render={() => (
+              <DropdownSelect
+                label="Elige el ámbito de la competencia (Obligatorio)"
+                placeholder={competencia ? ambitoSeleccionado?.nombre || '' : ''}
+                id="ambito_competencia"
+                name="ambito_competencia"
+                options={opcionesAmbito}
+                readOnly={!editMode}
+                control={control}
+                onSelectionChange={handleAmbitoChange}
+                initialValue={ambitoSeleccionado}
+
+              />
+            )} />
         </div>
 
         <div className="my-4 col-11">
-           < DropdownConSecciones
+          < DropdownConSecciones
             label="Asignar Usuarios (Opcional)"
             placeholder="Busca el nombre de la persona"
             options={userOptions}
@@ -361,15 +362,15 @@ const EdicionCompetencia = () =>
 
         <div className="py-2">
 
-        {editMode ? (
-          <button className="btn-primario-s my-4" type="submit">
-            <i className="material-symbols-rounded me-2">save</i>
-            <p className="mb-0">Guardar</p>
-          </button>
-        ) : (
-          <div></div>
-        )}
-
+          {editMode ? (
+            <button className="btn-primario-s my-4" type="submit">
+              <i className="material-symbols-rounded me-2">save</i>
+              <p className="mb-0">Guardar</p>
+            </button>
+          ) : (
+            <div></div>
+          )}
+          </div>
       </form>
     </div>
   );
