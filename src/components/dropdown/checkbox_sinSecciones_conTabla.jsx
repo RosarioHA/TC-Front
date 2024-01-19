@@ -27,21 +27,20 @@ const DropdownSinSecciones = ({ label, placeholder, options, onSelectionChange, 
 
   const handleCheckboxChange = (option) => {
     let updatedOptions = [...selectedOptions];
-    console.log("option desde componente dropdown", option)
   
-    if (option === 'Todas') {
+    if (option === 'string') {
       updatedOptions.length === options.length
         ? updatedOptions.splice(0, options.length)
         : (updatedOptions = options.map((option) => option.id.toString())); // Convertir a cadena
     } else if (option === 'Eliminar Selección') {
       updatedOptions.length > 0 && updatedOptions.splice(0, updatedOptions.length);
     } else {
-      const optionIndex = updatedOptions.indexOf(option.toString()); // Convertir a cadena
-      if (optionIndex !== -1) {
-        updatedOptions.splice(optionIndex, 1);
-      } else {
-        updatedOptions.push(option.toString()); // Convertir a cadena
-      }
+      const optionIndex = updatedOptions.indexOf(option);
+        if (optionIndex !== -1) {
+            updatedOptions.splice(optionIndex, 1);
+        } else {
+            updatedOptions.push(option);
+        }
     }
     onSelectionChange(updatedOptions);
   };
@@ -168,7 +167,7 @@ return (
                 <p className="ms-4">#</p>
               </th>
               <th className="col-5">
-                <p>Competencia</p>
+                <p>Competencias</p>
               </th>
               <th className="col-1">
                 <p className="ms-2">Acción</p>
@@ -177,8 +176,8 @@ return (
           </thead>
           <tbody>
             {selectedOptions.map((competenciaId, index) => {
-              const competencia = options.find(comp => comp.id === parseInt(competenciaId));
-              const competenciaNombre = competencia ? competencia.nombre : `Competencia ${competenciaId}`;
+              const competencia = options.find(comp => comp.value === parseInt(competenciaId, 10));
+              const competenciaNombre = competencia ? competencia.label : `Competencia ${competenciaId}`;
 
               return (
                 <tr key={competenciaId} className={index % 2 === 0 ? 'neutral-line' : 'white-line'}>

@@ -15,7 +15,9 @@ const PasoTres = () => {
   } = useContext(FormularioContext);
 
   const stepNumber = 3;
-  const id= data.id; 
+  const id= data.id;
+
+  console.log('Data paso tres:', pasoData)
 
   // Estado inicial basado en los datos existentes
   const [formData, setFormData] = useState({

@@ -20,7 +20,7 @@ export const useSector = () => {
       }
   }
   fetchData();
-  },[]); 
+  },[]);
 
   return { dataSector, loadingSector, errorSector}; 
 }
