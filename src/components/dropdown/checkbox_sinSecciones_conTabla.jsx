@@ -167,7 +167,7 @@ return (
                 <p className="ms-4">#</p>
               </th>
               <th className="col-5">
-                <p>Competencia</p>
+                <p>Competencias</p>
               </th>
               <th className="col-1">
                 <p className="ms-2">Acción</p>
@@ -176,8 +176,8 @@ return (
           </thead>
           <tbody>
             {selectedOptions.map((competenciaId, index) => {
-              const competencia = options.find(comp => comp.id === parseInt(competenciaId));
-              const competenciaNombre = competencia ? competencia.nombre : `Competencia ${competenciaId}`;
+              const competencia = options.find(comp => comp.value === parseInt(competenciaId, 10));
+              const competenciaNombre = competencia ? competencia.label : `Competencia ${competenciaId}`;
 
               return (
                 <tr key={competenciaId} className={index % 2 === 0 ? 'neutral-line' : 'white-line'}>
