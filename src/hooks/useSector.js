@@ -20,9 +20,7 @@ export const useSector = () => {
       }
   }
   fetchData();
-  },[]); 
-
-  console.log("data sector en hook", dataSector)
+  },[]);
 
   return { dataSector, loadingSector, errorSector}; 
 }

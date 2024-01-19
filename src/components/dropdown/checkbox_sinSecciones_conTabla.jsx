@@ -27,21 +27,20 @@ const DropdownSinSecciones = ({ label, placeholder, options, onSelectionChange, 
 
   const handleCheckboxChange = (option) => {
     let updatedOptions = [...selectedOptions];
-    console.log("option desde componente dropdown", option)
   
-    if (option === 'Todas') {
+    if (option === 'string') {
       updatedOptions.length === options.length
         ? updatedOptions.splice(0, options.length)
         : (updatedOptions = options.map((option) => option.id.toString())); // Convertir a cadena
     } else if (option === 'Eliminar Selección') {
       updatedOptions.length > 0 && updatedOptions.splice(0, updatedOptions.length);
     } else {
-      const optionIndex = updatedOptions.indexOf(option.toString()); // Convertir a cadena
-      if (optionIndex !== -1) {
-        updatedOptions.splice(optionIndex, 1);
-      } else {
-        updatedOptions.push(option.toString()); // Convertir a cadena
-      }
+      const optionIndex = updatedOptions.indexOf(option);
+        if (optionIndex !== -1) {
+            updatedOptions.splice(optionIndex, 1);
+        } else {
+            updatedOptions.push(option);
+        }
     }
     onSelectionChange(updatedOptions);
   };

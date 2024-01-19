@@ -13,6 +13,7 @@ import { useCreateUser } from "../../hooks/usuarios/useCreateUser";
 import { useRegion } from "../../hooks/useRegion";
 import { useGroups } from "../../hooks/useGroups";
 import { useSector } from "../../hooks/useSector";
+import { useFiltroCompetencias } from "../../hooks/useFiltrarCompetencias";
 
 const initialValues = {
   rut: '',
@@ -30,12 +31,15 @@ const CreacionUsuario = () => {
   const { dataSector, loadingSector } = useSector();
   const [ estado, setEstado ] = useState('inactivo');
   const [ activeButton, setActiveButton ] = useState(null);
-  const [ competenciasSeleccionadas, setCompetenciasSeleccionadas ] = useState({});
+  const [ competenciasSeleccionadas, setCompetenciasSeleccionadas ] = useState([]);
   const [ perfilSeleccionado, setPerfilSeleccionado ] = useState(null);
   const [ sectorSeleccionado, setSectorSeleccionado ] = useState(null);
   const [ regionSeleccionada, setRegionSeleccionada ] = useState(null);
   const [ submitClicked, setSubmitClicked ] = useState(false);
   const { dataRegiones, loadingRegiones } = useRegion();
+  const [ regionId, setRegionId ] = useState(null);
+  const [ sectorId, setSectorId ] = useState(null);
+  const { dataFiltroCompetencias, loadingFiltroCompetencias } = useFiltroCompetencias(regionId, sectorId);
 
   useEffect(() => {
     console.log("competencias seleccionadas en vista", competenciasSeleccionadas);
@@ -81,6 +85,8 @@ const CreacionUsuario = () => {
   }));
   const handleRegionChange = (region) => {
     setRegionSeleccionada(region.value);
+    setRegionId(region.value);
+    setSectorId(null);
   }
 
   //opciones sector 
@@ -90,6 +96,8 @@ const CreacionUsuario = () => {
   }));
   const handleSectorChange = (sector) => {
     setSectorSeleccionado(sector.value);
+    setSectorId(sector.value);
+    setRegionId(null);
   }
 
   const handleEstadoChange = (nuevoEstado) => {
@@ -97,26 +105,33 @@ const CreacionUsuario = () => {
     setActiveButton(nuevoEstado);
   };
 
+  //opciones Filtro Competencias
+  const opcionesFiltroCompetencias = dataFiltroCompetencias.map(competencia => ({
+    value: competencia.id,
+    label: competencia.nombre,
+  }));
+
+  const handleCompetenciasChange = (selectedOptions) => {
+    setCompetenciasSeleccionadas(selectedOptions);
+  }; 
+
+  
+
   const handleInputClick = (e) => {
     // Previene que el evento se propague al boton
     e.stopPropagation();
   };
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const handleCompetenciasChange = useCallback((selectedOptions) => {
-      const updatedCompetencias = {};
-      selectedOptions.forEach((competencia) => {
-        updatedCompetencias[ competencia ] = true;
-        selectedOptions.forEach((competenciaId) => {
-          updatedCompetencias[ competenciaId ] = true;
-        });
-        setCompetenciasSeleccionadas(updatedCompetencias);
-      }, []);
-    });
-
   const onSubmit = async (data) => {
     try {
-      const userData = {
+      // Transformar competenciasSeleccionadas
+      const competenciasModificar = competenciasSeleccionadas.map(id => ({
+        id: parseInt(id, 10),
+        action: 'add'
+      }));
+
+      // Construir el payload con el nuevo campo
+      const payload = {
         ...data,
         nombre_completo: data.nombre,
         perfil: perfilSeleccionado,
@@ -124,12 +139,16 @@ const CreacionUsuario = () => {
         region: regionSeleccionada,
         password: data.password,
         is_active: estado === 'activo',
-        competencias: Object.keys(competenciasSeleccionadas)
+        competencias_modificar: competenciasModificar,
       };
-
+  
+      // Eliminar campos que no se necesitan enviar
+      delete payload.competenciasSeleccionadas;
+  
+      // Realizar la solicitud de creación de usuario con el payload actualizado
       const isValid = await trigger();
       if (submitClicked && isValid) {
-        await createUser(userData);
+        await createUser(payload);
         history('/home/success', { state: { origen: "crear_usuario" } });
       } else {
         console.log("El formulario no es válido o no se ha hecho click en 'Crear Usuario'");
@@ -138,6 +157,7 @@ const CreacionUsuario = () => {
       console.error('Error al enviar el formulario:', error);
     }
   };
+
   if (isLoading) {
     return <div>Cargando...</div>;
   }
@@ -193,7 +213,7 @@ const CreacionUsuario = () => {
               control={control}
               render={({ field }) => (
                 < CustomInput
-                  label="Correo electrónico"
+                  label="Correo electrónico (Obligatorio)"
                   placeholder="Escribe el correo electrónico del usuario."
                   id="mail"
                   maxLength={null}
@@ -332,22 +352,24 @@ const CreacionUsuario = () => {
               )} />
           </div>
 
+          {/* input Filtro Competencias */}
           <div className="mb-5">
             <div className="my-3">
               <Controller
                 name="competenciasSeleccionadas"
                 control={control}
-                defaultValue={Object.keys(competenciasSeleccionadas)}
+                defaultValue={[]}
                 render={({ field }) => (
                   <>
-                    {competencias && competencias.length > 0 ? (
+                    {loadingFiltroCompetencias ? (
+                      <div>Cargando competencias...</div>
+                    ) : dataFiltroCompetencias && dataFiltroCompetencias.length > 0 ? (
                       <DropdownSinSecciones
                         label="Competencia Asignada (Opcional)"
                         placeholder="Busca el nombre de la competencia"
-                        options={competencias}
-                        selectedOptions={field.value}
-                        onSelectionChange={(selectedOptions) =>
-                        {
+                        options={opcionesFiltroCompetencias}
+                        selectedOptions={field.value.map(val => parseInt(val, 10))}
+                        onSelectionChange={(selectedOptions) => {
                           field.onChange(selectedOptions);
                           handleCompetenciasChange(selectedOptions);
                         }}
