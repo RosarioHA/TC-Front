@@ -188,7 +188,7 @@ const CreacionCompetencia = () => {
             />
           </div>
 
-          <div className="mb-4">
+          <div className="mb-4 col-11">
             <DropdownCheckbox
               label="Región (Obligatorio)"
               placeholder="Elige la o las regiones donde se ejercerá la competencia"
@@ -201,7 +201,7 @@ const CreacionCompetencia = () => {
             )}
           </div>
 
-          <div className="mb-4">
+          <div className="mb-4 col-11">
             <DropdownCheckbox
               label="Elige el sector de la competencia (Obligatorio)"
               placeholder="Elige el sector de la competencia"
@@ -214,7 +214,7 @@ const CreacionCompetencia = () => {
             )}
           </div>
 
-          <div className="mb-4">
+          <div className="mb-4 col-11">
             <DropdownSelect
               label="Origen de la competencia (Obligatorio)"
               placeholder="Elige el origen de la competencia"
@@ -227,7 +227,7 @@ const CreacionCompetencia = () => {
             )}
           </div>
 
-          <div className="mb-4">
+          <div className="mb-4 col-11">
             <DropdownSelect
               label="Elige el ámbito de la competencia (Obligatorio)"
               placeholder="Elige el ámbito de la competencia"
@@ -243,7 +243,7 @@ const CreacionCompetencia = () => {
               <h6> editable </h6>
             </div>
           </div>
-          <div className="mb-4">
+          <div className="mb-4 col-11">
             <div className="">
               <DropdownConSecciones
                 label="Asignar Usuarios (Opcional)"
@@ -262,7 +262,7 @@ const CreacionCompetencia = () => {
               <h6 className="text-sans-h6 mb-4">(Máximo 1 archivo, peso máximo 20 MB, formato PDF)</h6>
             </div>
 
-            <div className="ps-3">
+            <div className="ps-3 col-11">
               <div className="d-flex justify-content-between py-3 fw-bold">
                 <div className="d-flex mb-2">
                   <div className="ms-4">#</div>

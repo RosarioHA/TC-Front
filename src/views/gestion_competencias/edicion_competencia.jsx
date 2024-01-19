@@ -123,6 +123,7 @@ const EdicionCompetencia = () => {
     try {
       await updateCompetencia(formData);
       setEditMode(false);
+      history('/home/success', { state: { origen: "editar_competencia" } });
     } catch (error) {
       console.error("Error al guardar la competencia:", error);
     }
@@ -170,7 +171,7 @@ const EdicionCompetencia = () => {
           )}/>
         </div>
 
-        <div className="mb-4">
+        <div className="mb-4 col-11">
           <Controller 
           name="regiones"
           control={control}
@@ -190,7 +191,7 @@ const EdicionCompetencia = () => {
             
         </div>
 
-        <div className="mb-4">
+        <div className="mb-4 col-11">
           <Controller 
           name="sectores"
           control={control}
@@ -210,7 +211,7 @@ const EdicionCompetencia = () => {
           
         </div>
 
-        <div className="mb-4">
+        <div className="mb-4 col-11">
           <Controller 
           name="origen"
           control={control}
@@ -229,7 +230,7 @@ const EdicionCompetencia = () => {
           )}/>
         </div>
 
-        <div className="mb-4">
+        <div className="mb-4 col-11">
           <Controller 
           name="ambito_competencia"
           control={control}
@@ -249,7 +250,7 @@ const EdicionCompetencia = () => {
           )}/>
         </div>
 
-        <div className="my-4">
+        <div className="my-4 col-11">
            < DropdownConSecciones
             label="Asignar Usuarios (Opcional)"
             placeholder="Busca el nombre de la persona"
@@ -260,7 +261,7 @@ const EdicionCompetencia = () => {
         />
         </div>
 
-        <div className="mb-5">
+        <div className="mb-5 col-11">
           {editMode ? (
             <div>
               <h5 className="text-sans-h5">Adjunta el oficio correspondiente a la competencia</h5>
@@ -331,15 +332,12 @@ const EdicionCompetencia = () => {
         )}
 
         {editMode ? (
-          <button className="btn-primario-s my-5" type="submit">
+          <button className="btn-primario-s my-4" type="submit">
             <i className="material-symbols-rounded me-2">save</i>
             <p className="mb-0">Guardar</p>
           </button>
         ) : (
-          <button className="btn-secundario-s my-5" type="button">
-            <p className="mb-0 text-decoration-underline">Ver historial de usuario</p>
-            <i className="material-symbols-rounded ms-2">history</i>
-          </button>
+          <div></div>
         )}
 
       </form>

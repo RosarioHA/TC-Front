@@ -1,30 +1,30 @@
 import { useState } from 'react';
+
 export const TableCheckbox = ({ columnTitles, renderRow, data = [], sortableColumns, sortOptions }) => {
-  const [selectAll, setSelectAll] = useState(false);
-  const [selectedItems, setSelectedItems] = useState(new Set());
+  // const [selectAll, setSelectAll] = useState(false);
+  //const [selectedItems, setSelectedItems] = useState(new Set());
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'original' });
 
+  // const handleSelectAllChange = () => {
+  //   if (selectAll) {
+  //     setSelectedItems(new Set());
+  //   } else {
+  //     const newSelectedIds = new Set(data.map(item => item.id));
+  //     setSelectedItems(newSelectedIds);
+  //   }
+  //   setSelectAll(!selectAll);
+  // };
 
-  const handleSelectAllChange = () => {
-    if (selectAll) {
-      setSelectedItems(new Set());
-    } else {
-      const newSelectedIds = new Set(data.map(item => item.id));
-      setSelectedItems(newSelectedIds);
-    }
-    setSelectAll(!selectAll);
-  };
-
-  const handleRowCheckboxChange = (id) => {
-    const newSelectedItems = new Set(selectedItems);
-    if (selectedItems.has(id)) {
-      newSelectedItems.delete(id);
-    } else {
-      newSelectedItems.add(id);
-    }
-    setSelectedItems(newSelectedItems);
-    setSelectAll(newSelectedItems.size === data.length);
-  };
+  // const handleRowCheckboxChange = (id) => {
+  //   const newSelectedItems = new Set(selectedItems);
+  //   if (selectedItems.has(id)) {
+  //     newSelectedItems.delete(id);
+  //   } else {
+  //     newSelectedItems.add(id);
+  //   }
+  //   setSelectedItems(newSelectedItems);
+  //   setSelectAll(newSelectedItems.size === data.length);
+  // };
 
   const sortedData = () => {
     let sorted = data;
@@ -49,14 +49,14 @@ export const TableCheckbox = ({ columnTitles, renderRow, data = [], sortableColu
     <>
       <table className="table table-striped">
         <thead>
-          <tr>
+          <tr className="p-5">
             <th scope="col">
-              <input
+              {/* <input
                 type="checkbox"
                 className="check"
                 checked={selectAll}
                 onChange={handleSelectAllChange}
-              />
+              /> */}
             </th>
             {columnTitles.map((title, index) =>
             {
@@ -91,7 +91,7 @@ export const TableCheckbox = ({ columnTitles, renderRow, data = [], sortableColu
           </tr>
         </thead>
         <tbody>
-        {sortedData().map(item => renderRow(item, selectedItems.has(item.id), handleRowCheckboxChange))}
+        {sortedData().map(item => renderRow(item))}
 
         </tbody>
       </table>

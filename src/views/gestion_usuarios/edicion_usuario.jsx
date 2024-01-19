@@ -197,7 +197,7 @@ const EdicionUsuario = () => {
           />
         </div>
 
-        <div className="my-4">
+        <div className="my-4 col-11">
           {loadingGroups ? (
             <div>Cargando perfiles...</div>
           ) : dataGroups && dataGroups.length > 0 ? (
@@ -218,7 +218,7 @@ const EdicionUsuario = () => {
 
         {/* Renderizan de manera condicional según el Perfil de usuario */}
         {renderizadoCondicional === 'GORE' && (
-          <div className="my-4">
+          <div className="my-4 col-11">
             {loadingRegiones ? (
               <div>Cargando regiones...</div>
             ) : dataRegiones && dataRegiones.length > 0 ? (
@@ -238,7 +238,7 @@ const EdicionUsuario = () => {
           </div>
         )}
         {renderizadoCondicional === 'Usuario Sectorial' && (
-          <div className="my-4">
+          <div className="my-4 col-11">
             {loadingSector ? (
               <div>Cargando organismos...</div>
             ) : dataSector && dataSector.length > 0 ? (
@@ -298,10 +298,10 @@ const EdicionUsuario = () => {
         </div>
 
 
-        <div className="my-4">
+        <div className="my-4 col-11">
           {dataListCompetencia && dataListCompetencia.length > 0 ? (
             <DropdownSinSecciones
-              label="Competencia Asignada (Opcional)"
+              label="Competencias disponibles para asignar (Opcional)"
               placeholder="Busca el nombre de la competencia"
               readOnly={!editMode}
               options={dataListCompetencia.map((competencia) => ({

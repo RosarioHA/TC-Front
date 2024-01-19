@@ -204,7 +204,7 @@ const CreacionUsuario = () => {
                   {...field} />
               )} />
           </div>
-          <div className="mb-4">
+          <div className="mb-4 col-11">
             < Controller
               name="perfil"
               control={control}
@@ -238,7 +238,7 @@ const CreacionUsuario = () => {
                 <i className="material-symbols-rounded me-2">info</i>
                 <h6 className="">Al usuario Sectorial debes asignarle un organismo.</h6>
               </div>
-              <div className="mb-4">
+              <div className="mb-4 col-11">
                 {loadingSector ? (
                   <div>Cargando organismos...</div>
                 ) : dataSector && dataSector.length > 0 ? (
@@ -260,7 +260,7 @@ const CreacionUsuario = () => {
                 <i className="material-symbols-rounded me-2">info</i>
                 <h6 className="">Al usuario GORE debes asignarle una región.</h6>
               </div>
-              <div className="mb-4">
+              <div className="mb-4 col-11">
                 {loadingRegiones ? (
                   <div>Cargando regiones...</div>
                 ) : dataRegiones && dataRegiones.length > 0 ? (
@@ -316,7 +316,7 @@ const CreacionUsuario = () => {
           </div>
 
           <div className="mb-5">
-            <div className="my-3">
+            <div className="my-3 col-11">
               <Controller
                 name="competenciasSeleccionadas"
                 control={control}
@@ -325,7 +325,7 @@ const CreacionUsuario = () => {
                   <>
                     {competencias && competencias.length > 0 ? (
                       <DropdownSinSecciones
-                        label="Competencia Asignada (Opcional)"
+                        label="Competencias disponibles para asignar (Opcional)"
                         placeholder="Busca el nombre de la competencia"
                         options={competencias}
                         selectedOptions={field.value}
