@@ -12,6 +12,7 @@ const LoginLayout = React.lazy(() => import('./layout/LoginLayout'));
 const GestionUsuarios = React.lazy(() => import('./views/gestion_usuarios/gestion_usuarios'));
 const CrearUsuario = React.lazy(() => import('./views/gestion_usuarios/creacion_usuario'));
 const EditarUsuario = React.lazy(() => import('./views/gestion_usuarios/edicion_usuario'));
+const UserSuccess = React.lazy(() => import('./views/gestion_usuarios/user_success'));
 const GestionCompetencias = React.lazy(() => import('./views/gestion_competencias/gestion_competencias'));
 const CreacionCompetencia = React.lazy(() => import('./views/gestion_competencias/creacion_competencia'));
 const EditarCompetencia = React.lazy(() => import('./views/gestion_competencias/edicion_competencia'));
@@ -61,6 +62,7 @@ function App()
           {createProtectedRoute("crear_usuario", CrearUsuario, [ 'SUBDERE' ])}
           {createProtectedRoute("administrar_usuarios", GestionUsuarios, [ 'SUBDERE', 'Usuario Observador' ])}
           {createProtectedRoute("editar_usuario/:id", EditarUsuario, [ 'SUBDERE', 'Usuario Observador' ])}
+          {createProtectedRoute("success", UserSuccess, [ 'SUBDERE', 'Usuario Observador' ])}
           {createProtectedRoute("listado_competencias", GestionCompetencias, [ 'SUBDERE', 'Usuario Observador' ])}
           <Route path="crear_competencia" element={<CreacionCompetencia />} />
           <Route path="estado_competencia/:id/" element={<EstadoCompentencia />} />
