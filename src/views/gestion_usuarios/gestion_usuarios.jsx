@@ -14,7 +14,6 @@ const GestionUsuarios = () => {
   const navigate = useNavigate();
 
   const userSubdere = userData?.perfil?.includes('SUBDERE');
-  console.log("users 1", users) //trae 10 usuarios segun paginacion
 
   useEffect(() => {
     if (users) {
@@ -45,13 +44,30 @@ const GestionUsuarios = () => {
     },
   };
 
+  // Muestra las competencias por usuario
+  const renderCompetenciasAsignadas = (competencias) => {
+    const cantidad = competencias.length;
+  
+    switch (cantidad) {
+      case 0:
+        // Si no hay competencias asignadas
+        return 'No asociada';
+      case 1:
+        // Si hay exactamente una competencia asignada
+        return competencias[0].nombre;
+      default:
+        // Si hay más de una competencia asignada
+        return `${cantidad} Competencias`;
+    }
+  };
+
   // Función de búsqueda
   const handleSearch = useCallback((query) => {
     const lowerCaseQuery = query.toLowerCase();
     const filtered = users.filter(user =>
       user.nombre_completo.toLowerCase().includes(lowerCaseQuery) ||
       (user.is_active ? 'activo' : 'inactivo').includes(lowerCaseQuery) ||
-      user.perfil.toLowerCase().includes(lowerCaseQuery)
+      user.perfil.toLowerCase().includes(lowerCaseQuery) 
     );
     setFilteredUsers(filtered);
   }, [ users ]);
@@ -144,7 +160,7 @@ const GestionUsuarios = () => {
             </th>
             <td className="pt-3"><u className="text-sans-p my-4">{user.nombre_completo}</u></td>
             <td className="text-primary pt-4">
-              {user.competenciaAsociada ? (user.competenciaAsociada.length === 0 ? 'No asociada' : user.competenciaAsociada.length > 2 ? '+3 Competencias' : user.competenciaAsociada.join(', ')) : 'No asociada'}
+              {renderCompetenciasAsignadas(user.competencias_asignadas)}
             </td>
             <td>
               <span className={`badge my-3 ${user.is_active ? 'badge-activo' : 'badge-inactivo'}`}>
