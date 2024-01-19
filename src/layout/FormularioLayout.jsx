@@ -11,19 +11,20 @@ const FormularioLayout = () => {
   const params = useParams();
   const [baseUrl, setBaseUrl] = useState('');
 
+  const id = data.id; 
+
   useEffect(() => {
     let currentId = location.state?.id || params.id;
-    if (currentId) {
+    if (currentId && currentId !== id) {
       updateFormId(currentId);
     }
-
     // Actualizar baseUrl basado en la ruta actual
     if (location.pathname.includes('formulario_sectorial')) {
       setBaseUrl(`/home/formulario_sectorial/${params.id}`);
     } else if (location.pathname.includes('revision_formulario_sectorial')) {
       setBaseUrl(`/home/revision_formulario_sectorial/${params.id}`);
     }
-  }, [location, params.id, updateFormId]);
+  }, [location, params.id, id, updateFormId]);
 
   if (error) {
     return <div>Error: {error.message}</div>;

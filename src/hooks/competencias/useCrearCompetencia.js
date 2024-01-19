@@ -2,15 +2,32 @@ import { useState } from 'react';
 import { apiTransferenciaCompentencia } from '../../services/transferenciaCompetencia';
 
 export const useCrearCompetencia = () => {
-  const [ isLoading, setIsLoading ] = useState(false);
-  const [ error, setError ] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  const createCompetencia = async (competenciaData) => {
+  const createCompetencia = async (competenciaData, file) => {
     setIsLoading(true);
     setError(null);
 
+    // Crear un objeto FormData
+    const formData = new FormData();
+
+    // Agregar todos los campos de competenciaData al formData
+    Object.keys(competenciaData).forEach(key => {
+      formData.append(key, competenciaData[key]);
+    });
+
+    // Agregar el archivo si está presente
+    if (file) {
+      formData.append('oficio_origen', file);
+    }
+
     try {
-      const response = await apiTransferenciaCompentencia.post('competencias/', competenciaData);
+      const response = await apiTransferenciaCompentencia.post('competencias/', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
       return response.data;
     } catch (error) {
       if (error.response) {
@@ -26,4 +43,4 @@ export const useCrearCompetencia = () => {
     }
   }
   return { createCompetencia, isLoading, error }
-}; 
+};
