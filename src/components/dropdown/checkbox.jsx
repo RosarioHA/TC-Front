@@ -62,7 +62,7 @@ const DropdownCheckbox = ({ label, placeholder, options, onSelectionChange, read
         type="button"
         id="abreDropdownCheckbox"
         onClick={toggleDropdown}
-        className={`text-sans-p dropdown-btn ${readOnly ? 'disabled' : ''}`}
+        className={`text-sans-p dropdown-btn ${isOpen ? 'dropdown-btn-abierto' : ''}${readOnly ? 'disabled' : ''}`}
       >
         {selectedOptions.length > 0
           ? selectedOptions.length === 1
@@ -75,7 +75,7 @@ const DropdownCheckbox = ({ label, placeholder, options, onSelectionChange, read
       </button>
 
       {isOpen && !readOnly && (
-        <div className="dropdown d-flex flex-column" ref={dropdownRef}>
+        <div className="dropdown d-flex flex-column p-2 dropdown-container" ref={dropdownRef}>
           <button
             type="button"
             className={`text-sans-p btn-option ${selectedOptions.length > 0 ? 'active' : ''}`}
