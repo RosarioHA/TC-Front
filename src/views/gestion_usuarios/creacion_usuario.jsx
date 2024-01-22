@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useForm, Controller } from 'react-hook-form';
 import { useNavigate } from "react-router-dom";
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -7,7 +7,7 @@ import DropdownSelect from "../../components/dropdown/select";
 import DropdownSelectBuscador from "../../components/dropdown/select_buscador";
 import DropdownSinSecciones from "../../components/dropdown/checkbox_sinSecciones_conTabla";
 import { RadioButtons } from "../../components/forms/radio_btns";
-import { competencias } from "../../Data/Competencias";
+//import { competencias } from "../../Data/Competencias";
 import { esquemaCreacionUsuario } from "../../validaciones/esquemaValidacion";
 import { useCreateUser } from "../../hooks/usuarios/useCreateUser";
 import { useRegion } from "../../hooks/useRegion";
@@ -115,8 +115,6 @@ const CreacionUsuario = () => {
     setCompetenciasSeleccionadas(selectedOptions);
   }; 
 
-  
-
   const handleInputClick = (e) => {
     // Previene que el evento se propague al boton
     e.stopPropagation();
@@ -222,7 +220,7 @@ const CreacionUsuario = () => {
                   {...field} />
               )} />
           </div>
-          <div className="mb-4 col-11">
+          <div className="mb-4">
             < Controller
               name="perfil"
               control={control}
@@ -384,7 +382,7 @@ const CreacionUsuario = () => {
               />
             </div>
           </div>
-            <div>{error.message}</div>
+          {error && <div className="error-message">Error al crear el usuario: {error.message}</div>}
           <button className="btn-primario-s mb-5" type="submit" onClick={() => setSubmitClicked(true)}>
             <p className="mb-0">Crear Usuario</p>
             <i className="material-symbols-rounded ms-2">arrow_forward_ios</i>
