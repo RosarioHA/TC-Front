@@ -24,9 +24,32 @@
     align-items: center;
     justify-content:space-between;
     border: 1px solid $grey-light-color;
+    border-radius: 5px;
     height: 60px;
     width: 100%;  
 }
+.dropdown-btn-abierto{
+    border: 1px solid $blue-color;
+    box-shadow: 0px 0px 5px $grey-light-color;
+}
+.dropdown-container{
+    border: 1px solid $blue-color;
+    box-shadow: 0px 0px 5px $grey-light-color;
+    border-radius: 5px;
+    margin-top: 15px;
+}
+.dropdown-option{
+    background-color: $white-color;
+}
+.dropdown-option:hover{
+    background-color: $blue-color;
+    color:$white-color;
+}
+.selected-dropdown-option{
+    background-color: $blue-color;
+}
+
+
 .selected-option{
     border: 1px solid $grey-light-color;
     background-color: $neutral-color;
@@ -35,6 +58,8 @@
     border: 1px solid $grey-light-color;
     background-color: $white-color; 
 }
+
+
 .selected-option-ghost{
     border: 1px solid $grey-light-color;
     border-bottom: none;
