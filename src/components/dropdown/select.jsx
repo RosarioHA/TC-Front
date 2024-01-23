@@ -51,18 +51,19 @@ const DropdownSelect = ({ label, placeholder, options, onSelectionChange, select
         type="button"
         id="abreDropdownSelect"
         onClick={toggleDropdown}
-        className={`text-sans-p dropdown-btn ${readOnly ? "disabled" : ""}`}
+        className={`text-sans-p dropdown-btn ${isOpen ? 'dropdown-btn-abierto' : ''} ${readOnly ? "disabled" : ""}`}
       >
         {selectedOption ? selectedOption.label : placeholder}
         {!readOnly && <i className="material-symbols-rounded ms-2">{isOpen ? 'expand_less' : 'expand_more'}</i>}
       </button>
+
       {isOpen && !readOnly && (
-        <div className="dropdown d-flex flex-column" ref={dropdownRef}>
+        <div className="dropdown d-flex flex-column p-2 dropdown-container" ref={dropdownRef}>
           {options.map((option) => (
             <div
               key={option.value}
               onClick={() => handleOptionClick(option)}
-              className={`p-3 ${option.value === selectedOption?.value ? 'selected-option' : 'unselected-option'}`}
+              className={`p-3 dropdown-option text-sans-p ${option.value === selectedOption?.value ? 'selected-dropdown-option' : ''}`}
             >
               {option.label}
             </div>

@@ -97,7 +97,11 @@ return (
     ) : (
       <>
         <label className="text-sans-h5 input-label">{label}</label>
-        <button type="button" onClick={toggleDropdown} className="text-sans-p dropdown-btn">
+        <button 
+        type="button" 
+        onClick={toggleDropdown} 
+        className={`text-sans-p dropdown-btn ${isOpen ? 'dropdown-btn-abierto' : ''} ${readOnly ? "disabled" : ""}`}
+        >
           {isOpen ? (
             <input
               className="ghost-input"
@@ -123,7 +127,7 @@ return (
     )}
     
     {isOpen && (
-      <div className="dropdown d-flex flex-column" ref={dropdownRef}>
+      <div className="dropdown d-flex flex-column p-2 dropdown-container" ref={dropdownRef}>
         <button
           type="button"
           className={`text-sans-p btn-option ${selectedOptions.length > 0 ? 'active' : ''}`}

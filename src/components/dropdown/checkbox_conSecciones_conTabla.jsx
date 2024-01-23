@@ -171,7 +171,10 @@ const DropdownConSecciones = ({ label, placeholder, options, readOnly,  onUsuari
       ) : (
         <>
           <label className="text-sans-h5 input-label">{label}</label>
-          <button type="button" onClick={toggleDropdown} className="text-sans-p dropdown-btn">
+          <button 
+          type="button" 
+          onClick={toggleDropdown} 
+          className={`text-sans-p dropdown-btn ${isOpen ? 'dropdown-btn-abierto' : ''} ${readOnly ? "disabled" : ""}`}>
             {isOpen ? (
               <input
                 className="ghost-input"
@@ -194,7 +197,7 @@ const DropdownConSecciones = ({ label, placeholder, options, readOnly,  onUsuari
 
       {isOpen && (
         <div
-          className="dropdown d-flex flex-column unselected-option"
+          className="dropdown d-flex flex-column p-2 dropdown-container"
           ref={dropdownRef}
         >
           {filteredOptions.map((optionGroup, index) => (
