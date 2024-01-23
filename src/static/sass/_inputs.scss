@@ -11,10 +11,12 @@
 }
 .input-s{
     height: 60px;
-    border: 1px solid $grey-light-color;  
+    border: 1px solid $grey-light-color;
+    border-radius: 5px;
 }
 .input-textarea{
-    border: 1px solid $grey-light-color;  
+    border: 1px solid $grey-light-color;
+    border-radius: 5px; 
 }
 
 .dropdown-btn{
