@@ -1,13 +1,13 @@
 import { NavLink } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-const Sidebar = () =>
-{
+import { useFormContext } from '../../context/FormAlert';
 
+const Sidebar = () => {
   const { userData } = useAuth();
-
+  const { hasChanged } = useFormContext(); // detecta si hay cambios sin guardar en las vistas de formularios, para evitar redireccion sin guardar
   const userSubdere = userData?.perfil?.includes('SUBDERE');
   const userObservador = userData?.perfil?.includes('Observador');
-
+  console.log("hasChanged dentro de Sidebar", hasChanged)
 
   return (
     <div className="sidebar  fixed-top  d-flex flex-column flex-shrink-0  border-end ">

@@ -14,6 +14,7 @@ import { useRegion } from "../../hooks/useRegion";
 import { useGroups } from "../../hooks/useGroups";
 import { useSector } from "../../hooks/useSector";
 import { useFiltroCompetencias } from "../../hooks/useFiltrarCompetencias";
+import { useFormContext } from "../../context/FormAlert";
 
 const initialValues = {
   rut: '',
@@ -27,6 +28,7 @@ const initialValues = {
 
 const CreacionUsuario = () => {
   const { createUser, isLoading, error } = useCreateUser();
+  const { updateHasChanged } = useFormContext();
   const { dataGroups, loadingGroups } = useGroups();
   const { dataSector, loadingSector } = useSector();
   const [ estado, setEstado ] = useState('inactivo');
@@ -40,11 +42,12 @@ const CreacionUsuario = () => {
   const [ regionId, setRegionId ] = useState(null);
   const [ sectorId, setSectorId ] = useState(null);
   const { dataFiltroCompetencias, loadingFiltroCompetencias } = useFiltroCompetencias(regionId, sectorId);
+  const [ hasChanged, setHasChanged ] = useState(false);
+
 
   useEffect(() => {
     console.log("competencias seleccionadas en vista", competenciasSeleccionadas);
   }, [ competenciasSeleccionadas ]);
-
 
   // Maneja boton de volver atras.
   const history = useNavigate();
@@ -63,6 +66,20 @@ const CreacionUsuario = () => {
     shouldUnregister: false,
     mode: 'manual',
   });
+
+  //detecta cambios sin guardar en el formulario
+  function handleOnChange(event) {
+    const data = new FormData(event.currentTarget);
+    // Verifica si hay cambios respecto al valor inicial
+    const formHasChanged = Array.from(data.entries()).some(([name, value]) => {
+      const initialValue = initialValues[name];
+      return value !== String(initialValue);
+    });
+    setHasChanged(formHasChanged);
+    // Actualiza el valor de hasChanged en el contexto
+    updateHasChanged(formHasChanged);
+  }
+  console.log("hasChanged", hasChanged)
 
   //opciones de perfil 
   const opcionesGroups = dataGroups.map(group => ({
@@ -173,7 +190,7 @@ const CreacionUsuario = () => {
       </div>
 
       <div className="col-10 ms-5">
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)} onChange={handleOnChange}>
           <div className="mb-4">
             <Controller
               name="rut"
