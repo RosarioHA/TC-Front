@@ -101,7 +101,6 @@ const EdicionUsuario = () => {
     // Actualiza el valor de hasChanged en el contexto
     updateHasChanged(formHasChanged);
   }
-  console.log("hasChanged", hasChanged)
 
   const handleBackButtonClick = () => {
     if (hasChanged) {
