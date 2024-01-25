@@ -110,11 +110,17 @@ const EdicionUsuario = () =>
     value: sector.id,
     label: sector.nombre,
   }));
-  //opciones Filtro Competencias
-  const opcionesFiltroCompetencias = dataFiltroCompetencias.map(competencia => ({
+  //opciones Filtro Competencias por Asignar
+  const opcionesFiltroCompetencias = competenciasPorAsignar.map(competencia => ({
     value: competencia.id,
     label: competencia.nombre,
   }));
+  //Competencias Asignadas
+  const CompetenciasAsignadas = competenciasAsignadas.map(competencia => ({
+    value: competencia.id,
+    label: competencia.nombre,
+  }));
+
 
   const handleCompetenciasChange = (selectedOptions) => {
     setCompetenciasSeleccionadas(selectedOptions);
@@ -164,9 +170,6 @@ const EdicionUsuario = () =>
     setValue("is_active", isActivo);
   };
 
-  // const handleCompetenciasChange = (selectedCompetencias) => {
-  //   setValue('competencias', selectedCompetencias);
-  // }
 
   const onSubmit = async (formData) =>
   {
@@ -350,17 +353,41 @@ const EdicionUsuario = () =>
           )}
         </div>
 
-
         {!editMode && (
-          <div className="my-4 col-11">
-            <h5 className="text-sans-h5">Competencias Asignadas</h5>
-            <ul>
-              {competenciasAsignadas.map((competencia) => (
-                <li key={competencia.id}>{competencia.nombre}</li>
-              ))}
-            </ul>
+          <div className="mb-5 mt-5">
+            {competenciasAsignadas.length > 0 ? (
+              <table>
+                <thead className="">
+                  <tr className="">
+                    <th className="col-1">
+                      <p className="ms-4">#</p>
+                    </th>
+                    <th className="col-5">
+                      <p>{competenciasAsignadas.length > 1 ? "Competencias Asignadas" : "Competencia Asignada"}</p>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {competenciasAsignadas.map((competencia, index) => (
+                    <tr key={competencia.id} className={index % 2 === 0 ? 'neutral-line' : 'white-line'}>
+                      <td>
+                        <p className="ms-4 my-3">{index + 1}</p>
+                      </td>
+                      <td>
+                        <p className="my-3">{competencia.nombre}</p>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <div>
+                <p>No hay Competencias asignadas</p>
+              </div>
+            )}
           </div>
         )}
+
 
         {/* input Filtro Competencias */}
         <div className="mb-5">
@@ -373,7 +400,7 @@ const EdicionUsuario = () =>
                   <>
                     {loadingFiltroCompetencias ? (
                       <div>Cargando competencias...</div>
-                    ) : dataFiltroCompetencias && dataFiltroCompetencias.length > 0 ? (
+                    ) : editMode && dataFiltroCompetencias && dataFiltroCompetencias.length > 0 ? (
                       <DropdownSinSecciones
                         label="Competencias disponibles para asignar (Opcional)"
                         placeholder="Busca el nombre de la competencia"
@@ -386,7 +413,7 @@ const EdicionUsuario = () =>
                         onClick={handleInputClick}
                         onMouseDown={handleInputClick}
                       />
-                    ) : (
+                    ) : editMode && (
                       <>
                         <label className="text-sans-h5 input-label ms-3 ms-sm-0">Competencia</label>
                         <input
