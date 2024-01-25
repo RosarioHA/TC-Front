@@ -15,7 +15,6 @@ import { useCompetencia } from "../../hooks/competencias/useCompetencias";
 import { yupResolver } from '@hookform/resolvers/yup';
 import { esquemaEdicionUsuarios } from "../../validaciones/esquemaEditarUsuario";
 import { useAuth } from "../../context/AuthContext";
-import { useFiltroCompetencias } from "../../hooks/useFiltrarCompetencias";
 
 const EdicionUsuario = () =>
 {
@@ -28,15 +27,8 @@ const EdicionUsuario = () =>
   const { dataRegiones, loadingRegiones } = useRegion();
   const { dataSector, loadingSector } = useSector();
   const { dataListCompetencia, loadingCompetencia, errorCompetencia } = useCompetencia();
-  const [ competenciasSeleccionadas, setCompetenciasSeleccionadas ] = useState([]);
-  const [ regionId, setRegionId ] = useState(null);
-  const [ sectorId, setSectorId ] = useState(null);
-  const { dataFiltroCompetencias, loadingFiltroCompetencias } = useFiltroCompetencias(regionId, sectorId);
-  const [competenciasPorAsignar, setCompetenciasPorAsignar] = useState([]);
-  const [competenciasAsignadas, setCompetenciasAsignadas] = useState([]);
 
-  useEffect(() => {
-  }, [ competenciasSeleccionadas ])
+  //const [currentPerfil, setCurrentPerfil] = useState("");
 
   const { userData } = useAuth();
   const userIsSubdere = userData?.perfil?.includes('SUBDERE');
@@ -54,13 +46,6 @@ const EdicionUsuario = () =>
       is_active: userDetails?.is_active !== undefined ? userDetails.is_active === 'activo' : false,
     },
   });
-
-  useEffect(() => {
-    if (userDetails) {
-      setCompetenciasPorAsignar(userDetails.competencias_por_asignar || []);
-      setCompetenciasAsignadas(userDetails.competencias_asignadas || []);
-    }
-  }, [userDetails]);
 
   const perfil = watch('perfil') || '';
   const renderizadoCondicional = editMode ? perfil : userDetails?.perfil;
@@ -110,26 +95,6 @@ const EdicionUsuario = () =>
     value: sector.id,
     label: sector.nombre,
   }));
-  //opciones Filtro Competencias por Asignar
-  const opcionesFiltroCompetencias = competenciasPorAsignar.map(competencia => ({
-    value: competencia.id,
-    label: competencia.nombre,
-  }));
-  //Competencias Asignadas
-  const CompetenciasAsignadas = competenciasAsignadas.map(competencia => ({
-    value: competencia.id,
-    label: competencia.nombre,
-  }));
-
-
-  const handleCompetenciasChange = (selectedOptions) => {
-    setCompetenciasSeleccionadas(selectedOptions);
-  }; 
-
-  const handleInputClick = (e) => {
-    // Previene que el evento se propague al boton
-    e.stopPropagation();
-  }
 
   const handleDdSelectChange = (fieldName, selectedOption) =>
   {
@@ -138,8 +103,6 @@ const EdicionUsuario = () =>
       if (selectedOption && selectedOption.label)
       {
         setValue(fieldName, selectedOption.label);
-        setSectorId('');
-        setRegionId('');
       }
     } catch (error)
     {
@@ -147,19 +110,16 @@ const EdicionUsuario = () =>
     }
   };
 
-  const handleDdSelectBuscadorChange = (fieldName, selectedOption) => {
-    try {
-      if (selectedOption && selectedOption.value) {
+  const handleDdSelectBuscadorChange = (fieldName, selectedOption) =>
+  {
+    try
+    {
+      if (selectedOption && selectedOption.value)
+      {
         setValue(fieldName, selectedOption.value);
-        if (fieldName === 'region') {
-          setRegionId(selectedOption.value); // Actualiza regionId cuando se selecciona una nueva región
-        }
-        if (fieldName === 'sector') {
-          setSectorId(selectedOption.value); // Actualiza sectorId cuando se selecciona un nuevo sector
-        }
-        
       }
-    } catch (error) {
+    } catch (error)
+    {
       console.error('Error en handleDdSelectBuscadorChange:', error);
     }
   };
@@ -170,6 +130,9 @@ const EdicionUsuario = () =>
     setValue("is_active", isActivo);
   };
 
+  // const handleCompetenciasChange = (selectedCompetencias) => {
+  //   setValue('competencias', selectedCompetencias);
+  // }
 
   const onSubmit = async (formData) =>
   {
@@ -225,7 +188,7 @@ const EdicionUsuario = () =>
                 label="Nombre Completo (Obligatorio)"
                 placeholder={userDetails ? userDetails.nombre_completo : ''}
                 id="nombre_completo"
-                readOnly={editMode}
+                readOnly={!editMode}
                 maxLength={null}
                 error={errors.nombre_completo?.message}
                 {...field}
@@ -353,82 +316,28 @@ const EdicionUsuario = () =>
           )}
         </div>
 
-        {!editMode && (
-          <div className="mb-5 mt-5">
-            {competenciasAsignadas.length > 0 ? (
-              <table>
-                <thead className="">
-                  <tr className="">
-                    <th className="col-1">
-                      <p className="ms-4">#</p>
-                    </th>
-                    <th className="col-5">
-                      <p>{competenciasAsignadas.length > 1 ? "Competencias Asignadas" : "Competencia Asignada"}</p>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {competenciasAsignadas.map((competencia, index) => (
-                    <tr key={competencia.id} className={index % 2 === 0 ? 'neutral-line' : 'white-line'}>
-                      <td>
-                        <p className="ms-4 my-3">{index + 1}</p>
-                      </td>
-                      <td>
-                        <p className="my-3">{competencia.nombre}</p>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            ) : (
-              <div>
-                <p>No hay Competencias asignadas</p>
-              </div>
-            )}
-          </div>
-        )}
 
-
-        {/* input Filtro Competencias */}
-        <div className="mb-5">
-            <div className="my-3 col-11">
-              <Controller
-                name="competenciasSeleccionadas"
-                control={control}
-                defaultValue={[]}
-                render={({ field }) => (
-                  <>
-                    {loadingFiltroCompetencias ? (
-                      <div>Cargando competencias...</div>
-                    ) : editMode && dataFiltroCompetencias && dataFiltroCompetencias.length > 0 ? (
-                      <DropdownSinSecciones
-                        label="Competencias disponibles para asignar (Opcional)"
-                        placeholder="Busca el nombre de la competencia"
-                        options={opcionesFiltroCompetencias}
-                        selectedOptions={field.value.map(val => parseInt(val, 10))}
-                        onSelectionChange={(selectedOptions) => {
-                          field.onChange(selectedOptions);
-                          handleCompetenciasChange(selectedOptions);
-                        }}
-                        onClick={handleInputClick}
-                        onMouseDown={handleInputClick}
-                      />
-                    ) : editMode && (
-                      <>
-                        <label className="text-sans-h5 input-label ms-3 ms-sm-0">Competencia</label>
-                        <input
-                          className="input-s p-3 input-textarea"
-                          type="text" 
-                          value="No hay Competencias para mostrar" 
-                          readOnly 
-                        />
-                      </>
-                    )}
-                  </>
-                )}
-              />
-            </div>
-          </div>
+        <div className="my-4 col-11">
+          {dataListCompetencia && dataListCompetencia.length > 0 ? (
+            <DropdownSinSecciones
+              label="Competencias disponibles para asignar (Opcional)"
+              placeholder="Busca el nombre de la competencia"
+              readOnly={!editMode}
+              options={dataListCompetencia.map((competencia) => ({
+                value: competencia.id,
+                label: competencia.nombre,
+              }))}
+              selectedOptions={[ 'opcion 1', 'opcion 2' ]}
+            // onSelectionChange={(selectedOptions) => {
+            //   field.onChange(selectedOptions);
+            //   handleCompetenciasChange(selectedOptions);
+            //   }}
+            // onClick={handleInputClick}
+            // onMouseDown={handleInputClick}
+            />) : (
+            <input type="text" value="No hay competencias" readOnly />
+          )}
+        </div>
 
         {editMode && (
           <button className="btn-primario-s mb-5" type="submit">

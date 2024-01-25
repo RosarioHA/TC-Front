@@ -15,10 +15,15 @@ export const useCreateUser = () =>
     {
       const response = await apiTransferenciaCompentencia.post('users/', userData);
       return response.data;
-    } catch (error)
-    {
-      setError(error);
-      throw error;
+    } catch (error) {
+      let errorMsg = 'Ocurrió un error al crear el usuario';     
+      // Verifica si el error tiene una respuesta y extrae la información relevante
+      if (error.response && error.response.data) {
+        errorMsg = error.response.data.errors || errorMsg;
+      }
+    
+      setError({ message: errorMsg || {} });
+      throw { message: errorMsg || {} };
     } finally
     {
       setIsLoading(false);
