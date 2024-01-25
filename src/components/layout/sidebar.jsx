@@ -1,23 +1,66 @@
 import { NavLink } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
-//import { useFormContext } from '../../context/FormAlert';
 import { useState } from 'react';
+import { useAuth } from '../../context/AuthContext';
+import { useFormContext } from '../../context/FormAlert';
 import ModalAbandonoFormulario from '../commons/modalAbandonoFormulario';
+
+const SidebarLink = ({ to, icon, text, badgeCount, onClick }) => {
+  const { hasChanged } = useFormContext();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+  const handleLinkClick = (e) => {
+    if (hasChanged) {
+      e.preventDefault();
+      handleOpenModal();
+    } else {
+      onClick && onClick(e);
+    }
+  };
+  return (
+    <>
+    {!hasChanged ? (
+      <NavLink to={to} className="mx-4 btn-link" onClick={handleLinkClick}>
+        <i className="material-symbols-outlined mx-3">{icon}</i>
+        {badgeCount && <i className="badge badge-notification mx-3">{badgeCount}</i>}
+        <u>{text}</u>
+      </NavLink>
+    ) : (
+      <>
+        {/* <button className="mx-4 btn-link" onClick={handleOpenModal}>
+          <i className="material-symbols-outlined mx-3">{icon}</i>
+          <p>{text}</p>
+        </button> */}
+        <NavLink  className="mx-4 btn-link" onClick={handleOpenModal}>
+          <i className="material-symbols-outlined mx-3">{icon}</i>
+          {badgeCount && <i className="badge badge-notification mx-3">{badgeCount}</i>}
+          <u>{text}</u>
+        </NavLink>
+
+        {isModalOpen && <ModalAbandonoFormulario onClose={handleCloseModal} isOpen={isModalOpen} direction={to}/>}
+      </>
+    )}
+    </>
+  );
+};
 
 const Sidebar = () => {
   const { userData } = useAuth();
-  //const { hasChanged } = useFormContext(); // detecta si hay cambios sin guardar en las vistas de formularios, para evitar redireccion sin guardar
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const userSubdere = userData?.perfil?.includes('SUBDERE');
   const userObservador = userData?.perfil?.includes('Observador');
-  
-  const handleOpenModal = () => {
-    console.log('handleOpenModal activado')
-    setIsModalOpen(true);
-    console.log(isModalOpen)
+
+  const handleItemClick = (e) => {
+    // Puedes personalizar esta función según tus necesidades
+    console.log('Item clicked', e);
   };
 
   return (
+    <>
     <div className="sidebar  fixed-top  d-flex flex-column flex-shrink-0  border-end ">
       <div className="my-0 text-start">
         <div className="line-container row ">
@@ -30,30 +73,24 @@ const Sidebar = () => {
         <hr className="w-100 mt-0" />
       </div>
       <ul className="nav nav-pills flex-column mb-auto mt-0">
-
-        <li>
-          <button type='button' onClick={handleOpenModal} className="ms-5">
-            Abrir Modal
-          </button>
-        </li>
-
-
         <li className="my-1">
-          <NavLink to="/home" className="mx-4 btn-link" aria-current="page" type="button" >
+          {/* <NavLink to="/home" className="mx-4 btn-link" aria-current="page" type="button" >
             <i className="material-symbols-outlined mx-3 ">
               home
             </i> <span className="text-link">Inicio</span>
-          </NavLink>
+          </NavLink> */}
+          <SidebarLink to="/home" icon="home" text="Inicio" onClick={handleItemClick} />
         </li>
         <li className="my-1">
-          <NavLink to="#" className="mx-4 btn-link">
+          {/* <NavLink to="#" className="mx-4 btn-link">
             <i className="material-symbols-outlined mx-3">
               mail
             </i><u>Notificaciones</u>
 
             <i className="material-symbols-outlined mx-3"></i>
             <i className="badge badge-notification mx-3">10</i>
-          </NavLink>
+          </NavLink> */}
+          <SidebarLink to="#" icon="mail" text="Notificaciones" badgeCount={10} onClick={handleItemClick} />
         </li>
         {(userSubdere || userObservador) && (
           <>
@@ -61,28 +98,34 @@ const Sidebar = () => {
             <span className="title-section  ms-4 my-1">Gestión de Usuarios</span>
           </>
         )}
-        {userSubdere && (
+        {/* {userSubdere && (
           <li className="my-1">
             <NavLink to="/home/crear_usuario" className="btn-sidebar my-1 mx-4" type="button">
               <u>Crear Usuarios </u> <i className="material-symbols-outlined">
                 person_add
               </i>
             </NavLink>
-          </li>)}
-        {(userSubdere || userObservador) && (
+          </li>)} */}
+          {userSubdere && (
+          <SidebarLink to="/home/crear_usuario" icon="person_add" text="Crear Usuarios" onClick={handleItemClick} />
+        )}
+        {/* {(userSubdere || userObservador) && (
           <li className="my-1">
             <NavLink to="/home/administrar_usuarios" className="mx-4 btn-link" type="button">
               <i className="material-symbols-outlined mx-3">supervised_user_circle</i>
               <u>Administrar Usuarios</u>
             </NavLink>
           </li>
+        )} */}
+        {(userSubdere || userObservador) && (
+          <SidebarLink to="/home/administrar_usuarios" icon="supervised_user_circle" text="Administrar Usuarios" onClick={handleItemClick} />
         )}
         {(userSubdere || userObservador) && (
           <>
             <hr className="w-85 mx-4" />
             <span className="title-section ms-4 my-2">Gestión de Competencias</span>
           </>)}
-        {userSubdere && (
+        {/* {userSubdere && (
           <>
             <li>
               <NavLink to="/home/crear_competencia" className="btn-sidebar my-1 mx-4" >
@@ -92,8 +135,11 @@ const Sidebar = () => {
               </NavLink>
             </li>
           </>
+        )} */}
+        {userSubdere && (
+          <SidebarLink to="/home/crear_competencia" icon="post_add" text="Crear Competencia" onClick={handleItemClick} />
         )}
-        {(userSubdere || userObservador) && (
+        {/* {(userSubdere || userObservador) && (
           <li className="my-1">
             <NavLink to="/home/listado_competencias" className="mx-4 btn-link" type="button">
               <i className="material-symbols-outlined mx-3">library_books</i>
@@ -101,6 +147,9 @@ const Sidebar = () => {
               <u>Listado de Competencias</u>
             </NavLink>
           </li>
+        )} */}
+        {(userSubdere || userObservador) && (
+          <SidebarLink to="/home/listado_competencias" icon="library_books" text="Listado de Competencias" badgeCount={99} onClick={handleItemClick} />
         )}
         <hr className="w-85 mx-4" />
 
@@ -126,10 +175,9 @@ const Sidebar = () => {
           </ul>
         </div>
       </div>
-
-      {/* Renderizar el modal si isModalOpen es true */}
-      {isModalOpen && <ModalAbandonoFormulario isOpen= {isModalOpen} onClose={() => setIsModalOpen(false)} />}
     </div >
+    {/* {isModalOpen && <ModalAbandonoFormulario ref={modalRef} onClose={handleCloseModal} />} */}
+    </>
   );
 };
 
