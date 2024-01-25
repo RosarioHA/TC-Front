@@ -1,13 +1,21 @@
 import { NavLink } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { useFormContext } from '../../context/FormAlert';
+//import { useFormContext } from '../../context/FormAlert';
+import { useState } from 'react';
+import ModalAbandonoFormulario from '../commons/modalAbandonoFormulario';
 
 const Sidebar = () => {
   const { userData } = useAuth();
-  const { hasChanged } = useFormContext(); // detecta si hay cambios sin guardar en las vistas de formularios, para evitar redireccion sin guardar
+  //const { hasChanged } = useFormContext(); // detecta si hay cambios sin guardar en las vistas de formularios, para evitar redireccion sin guardar
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const userSubdere = userData?.perfil?.includes('SUBDERE');
   const userObservador = userData?.perfil?.includes('Observador');
-  console.log("hasChanged dentro de Sidebar", hasChanged)
+  
+  const handleOpenModal = () => {
+    console.log('handleOpenModal activado')
+    setIsModalOpen(true);
+    console.log(isModalOpen)
+  };
 
   return (
     <div className="sidebar  fixed-top  d-flex flex-column flex-shrink-0  border-end ">
@@ -22,6 +30,14 @@ const Sidebar = () => {
         <hr className="w-100 mt-0" />
       </div>
       <ul className="nav nav-pills flex-column mb-auto mt-0">
+
+        <li>
+          <button type='button' onClick={handleOpenModal} className="ms-5">
+            Abrir Modal
+          </button>
+        </li>
+
+
         <li className="my-1">
           <NavLink to="/home" className="mx-4 btn-link" aria-current="page" type="button" >
             <i className="material-symbols-outlined mx-3 ">
@@ -110,6 +126,9 @@ const Sidebar = () => {
           </ul>
         </div>
       </div>
+
+      {/* Renderizar el modal si isModalOpen es true */}
+      {isModalOpen && <ModalAbandonoFormulario isOpen= {isModalOpen} onClose={() => setIsModalOpen(false)} />}
     </div >
   );
 };
