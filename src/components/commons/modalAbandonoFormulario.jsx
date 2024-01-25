@@ -38,7 +38,7 @@ const ModalAbandonoFormulario = forwardRef(function ModalAbandonoFormulario({ is
         <p className="text-sans-p mb-0 ms-3">--**** mensaje con las consecuencias de salir *****---</p>
         <hr/>
         <div className="d-flex justify-content-between">
-          {!goBack && <NavLink to={direction} className="mx-4 btn-link" onClick={handleLinkClick}>
+          {!goBack && <NavLink to={direction} className="mx-4 btn-link-fit px-3" onClick={handleLinkClick}>
             <u>Salir del formulario</u>
           </NavLink>}
           {goBack && <button className="btn-secundario-ghost" onClick={handleBackButtonClick}> Salir del formulario</button>}
