@@ -368,7 +368,7 @@ const CreacionCompetencia = () =>
                 <input
                   id="dateInput"
                   type="datetime-local"
-                  className="form-control py-3 my-2  border rounded-0 border-dark-subtle "
+                  className="form-control py-3 my-2 input-textarea border-dark-subtle"
                   onChange={handleFechaInicioChange}
                   value={fechaInicio}
                 />

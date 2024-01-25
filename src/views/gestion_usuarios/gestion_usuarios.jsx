@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useUsers } from '../../hooks/usuarios/useUsers';
 import { useAuth } from '../../context/AuthContext';
@@ -62,15 +62,15 @@ const GestionUsuarios = () => {
   };
 
   // Función de búsqueda
-  const handleSearch = useCallback((query) => {
-    const lowerCaseQuery = query.toLowerCase();
-    const filtered = users.filter(user =>
-      user.nombre_completo.toLowerCase().includes(lowerCaseQuery) ||
-      (user.is_active ? 'activo' : 'inactivo').includes(lowerCaseQuery) ||
-      user.perfil.toLowerCase().includes(lowerCaseQuery) 
-    );
-    setFilteredUsers(filtered);
-  }, [ users ]);
+  // const handleSearch = useCallback((query) => {
+  //   const lowerCaseQuery = query.toLowerCase();
+  //   const filtered = users.filter(user =>
+  //     user.nombre_completo.toLowerCase().includes(lowerCaseQuery) ||
+  //     (user.is_active ? 'activo' : 'inactivo').includes(lowerCaseQuery) ||
+  //     user.perfil.toLowerCase().includes(lowerCaseQuery) 
+  //   );
+  //   setFilteredUsers(filtered);
+  // }, [ users ]);
 
   const handleDetailsUser = (user) => {
     navigate(`/home/editar_usuario/${user.id}`, { state: { user } });

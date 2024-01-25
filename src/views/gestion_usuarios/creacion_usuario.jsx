@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useForm, Controller } from 'react-hook-form';
 import { useNavigate } from "react-router-dom";
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -7,13 +7,13 @@ import DropdownSelect from "../../components/dropdown/select";
 import DropdownSelectBuscador from "../../components/dropdown/select_buscador";
 import DropdownSinSecciones from "../../components/dropdown/checkbox_sinSecciones_conTabla";
 import { RadioButtons } from "../../components/forms/radio_btns";
-import { competencias } from "../../Data/Competencias";
 import { esquemaCreacionUsuario } from "../../validaciones/esquemaValidacion";
 import { useCreateUser } from "../../hooks/usuarios/useCreateUser";
 import { useRegion } from "../../hooks/useRegion";
 import { useGroups } from "../../hooks/useGroups";
 import { useSector } from "../../hooks/useSector";
 import { useFiltroCompetencias } from "../../hooks/useFiltrarCompetencias";
+import { object } from "yup";
 
 const initialValues = {
   rut: '',
@@ -40,6 +40,7 @@ const CreacionUsuario = () => {
   const [ regionId, setRegionId ] = useState(null);
   const [ sectorId, setSectorId ] = useState(null);
   const { dataFiltroCompetencias, loadingFiltroCompetencias } = useFiltroCompetencias(regionId, sectorId);
+  const [ errorGeneral, setErrorGeneral ] = useState('');
 
   useEffect(() => {
     console.log("competencias seleccionadas en vista", competenciasSeleccionadas);
@@ -56,6 +57,7 @@ const CreacionUsuario = () => {
     control,
     handleSubmit,
     formState: { errors },
+    setError,
     trigger,
   } = useForm({
     resolver: yupResolver(esquemaCreacionUsuario),
@@ -117,8 +119,6 @@ const CreacionUsuario = () => {
     setCompetenciasSeleccionadas(selectedOptions);
   }; 
 
-  
-
   const handleInputClick = (e) => {
     // Previene que el evento se propague al boton
     e.stopPropagation();
@@ -155,15 +155,20 @@ const CreacionUsuario = () => {
       } else {
         console.log("El formulario no es válido o no se ha hecho click en 'Crear Usuario'");
       }
+      setErrorGeneral('');
     } catch (error) {
-      console.error('Error al enviar el formulario:', error);
+      // Verifica si el error es debido a un problema en el campo 'rut'
+      if (error.message && error.message.rut && error.message.rut.length > 0) {
+        // Utiliza el primer mensaje de error para el campo 'rut'
+        const mensajeErrorRut = error.message.rut[0];
+        setError('rut', { type: 'manual', message: mensajeErrorRut });
+      }
     }
   };
 
   if (isLoading) {
     return <div>Cargando...</div>;
   }
-  { error && <div className="error-message">Error al crear el usuario: {error.message}</div> }
 
   return (
     <div className="container col-10 my-4">
@@ -185,7 +190,7 @@ const CreacionUsuario = () => {
               render={({ field }) => (
                 < CustomInput
                   label="RUT (Obligatorio)"
-                  placeholder="Escribe el RUT con guión sin puntos."
+                  placeholder="Escribe el RUT con guión y sin puntos."
                   id="rut"
                   maxLength={null}
                   error={errors.rut?.message}
@@ -224,8 +229,8 @@ const CreacionUsuario = () => {
                   {...field} />
               )} />
           </div>
-          <div className="mb-4 col-11">
-            < Controller
+          <div className="mb-4">
+            <Controller
               name="perfil"
               control={control}
               render={({ field }) => (
@@ -336,7 +341,7 @@ const CreacionUsuario = () => {
 
           {/* input estado */}
           <div className="mb-5">
-            < Controller
+            <Controller
               name="estado"
               control={control}
               render={({ field }) => (
@@ -379,14 +384,21 @@ const CreacionUsuario = () => {
                         onMouseDown={handleInputClick}
                       />
                     ) : (
-                      <input type="text" value="No hay competencias para mostrar" readOnly />
+                      <>
+                        <label className="text-sans-h5 input-label ms-3 ms-sm-0">Competencia</label>
+                        <input
+                          className="input-s p-3 input-textarea"
+                          type="text" 
+                          value="No hay Competencias para mostrar" 
+                          readOnly 
+                        />
+                      </>
                     )}
                   </>
                 )}
               />
             </div>
           </div>
-            <div>{error.message}</div>
           <button className="btn-primario-s mb-5" type="submit" onClick={() => setSubmitClicked(true)}>
             <p className="mb-0">Crear Usuario</p>
             <i className="material-symbols-rounded ms-2">arrow_forward_ios</i>

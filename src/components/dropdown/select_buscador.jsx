@@ -54,7 +54,7 @@ const DropdownSelectBuscador = ({ label, placeholder, options, onSelectionChange
       <label className="text-sans-h5 input-label">{label}</label>
           {isOpen ? (
             <input
-              className="ghost-input dropdown-btn"
+              className={`ghost-input dropdown-btn ${isOpen ? "dropdown-btn-abierto" : ""}`}
               type="text"
               placeholder="Buscar..."
               value={searchTerm}
@@ -67,7 +67,7 @@ const DropdownSelectBuscador = ({ label, placeholder, options, onSelectionChange
               type="button"
               id="abreDropdownSelectBuscador" 
               onClick={toggleDropdown} 
-              className={`text-sans-p dropdown-btn ${readOnly ? "disabled" : ""}`}
+              className={`text-sans-p dropdown-btn ${isOpen ? "dropdown-btn-abierto": ""} ${readOnly ? "disabled" : ""}`}
             >
               <span>{selectedOption ? selectedOption.label : placeholder}</span>
               {!readOnly && <i className="material-symbols-rounded ms-2">{isOpen ? 'expand_less' : 'expand_more'}</i>}
@@ -75,15 +75,16 @@ const DropdownSelectBuscador = ({ label, placeholder, options, onSelectionChange
           )}
 
       {isOpen && (
-        <div className="dropdown d-flex flex-column" ref={dropdownRef}>
+        <div className="dropdown d-flex flex-column p-2 dropdown-container" ref={dropdownRef}>
           {filteredOptions.map((option) => (
             <label
-              className={selectedOption && selectedOption.value === option.value ? 'selected-option' : 'unselected-option'}
+              
               key={option.value}
             >
               <div
-                className="ms-2 me-2 my-3"
+                //className="ms-2 me-2 my-3"
                 onClick={() => handleOptionClick(option)}
+                className={`p-3 dropdown-option text-sans-p ${option.value === selectedOption?.value ? 'selected-dropdown-option text-sans-p-white' : ''}`}
               >
                 {option.label}
               </div>
