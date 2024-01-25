@@ -2,18 +2,15 @@
 const InputSearch = ({ value, onChange, placeholder, onSearch }) =>
 {
 
-  const handleInputChange = (event) =>
-  {
+  const handleInputChange = (event) => {
     const query = event.target.value;
     onChange(query);
-    if (query === '')
-    {
+    if (query === '') {
       onSearch('');
     }
   }
-
-  const handleSearchClick = () =>
-  {
+  
+  const handleSearchClick = () => {
     onSearch(value);
   };
 
@@ -26,7 +23,7 @@ const InputSearch = ({ value, onChange, placeholder, onSearch }) =>
 
 
   return (
-    <div className="search-bar input-group border border-2 d-flex">
+    <div className="search-bar input-group border border-2 rounded d-flex">
       <input
         className="form-control border-0 input-search"
         type="text"

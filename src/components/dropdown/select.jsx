@@ -1,54 +1,68 @@
 import { useState, useRef, useEffect } from 'react';
 
-const DropdownSelect = ({ label, placeholder, options, onSelectionChange, selected, readOnly }) => {
+const DropdownSelect = ({ label, placeholder, options, onSelectionChange, selected, readOnly }) =>
+{
   const [ isOpen, setIsOpen ] = useState(false);
   const [ selectedOption, setSelectedOption ] = useState(null);
   const dropdownRef = useRef(null);
 
   // Inicialización y actualización de selectedOption
-  useEffect(() => {
+  useEffect(() =>
+  {
     // Si 'selected' es un objeto (como en CreacionUsuario)
-    if (selected && typeof selected === 'object') {
+    if (selected && typeof selected === 'object')
+    {
       setSelectedOption(selected);
     }
     // Si 'selected' es un valor simple (como en Subpaso_CuatroUno)
-    else if (selected) {
+    else if (selected)
+    {
       const option = options.find(o => o.value === selected);
       setSelectedOption(option || null);
     }
   }, [ selected, options ]);
 
-  useEffect(() => {
-    function handleDocumentClick(event) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target) && event.target.id !== 'abreDropdownSelect') {
+
+  useEffect(() =>
+  {
+    function handleClickOutside(event)
+    {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target))
+      {
         setIsOpen(false);
       }
     }
 
-    // Agregar un event listener al documento para el clic fuera del dropdown
-    document.addEventListener('mousedown', handleDocumentClick);
+    if (isOpen)
+    {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else
+    {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
 
-    return () => {
-      // Remover el event listener al desmontar el componente
-      document.removeEventListener('mousedown', handleDocumentClick);
+    return () =>
+    {
+      document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, []);
+  }, [ isOpen ]);
 
-  const toggleDropdown = () => {
+  const toggleDropdown = () =>
+  {
     setIsOpen(!isOpen);
   };
 
-  const handleOptionClick = (option) => {
+  const handleOptionClick = (option) =>
+  {
     setSelectedOption(option);
     setIsOpen(false);
     onSelectionChange(option);
   };
   return (
-    <div className={`input-container col-11 ${readOnly ? 'readonly' : ''}`}>
+    <div className={`input-container ${readOnly ? 'readonly' : ''}`}>
       <label className="text-sans-h5 input-label">{label}</label>
       <button
         type="button"
-        id="abreDropdownSelect"
         onClick={toggleDropdown}
         className={`text-sans-p dropdown-btn ${isOpen ? 'dropdown-btn-abierto' : ''} ${readOnly ? "disabled" : ""}`}
       >

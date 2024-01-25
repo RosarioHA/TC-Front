@@ -1,73 +1,69 @@
 import { useState, useRef, useEffect } from 'react';
 
-const DropdownCheckbox = ({ label, placeholder, options, onSelectionChange, readOnly, prevSelection }) => {
+const DropdownCheckbox = ({ label, placeholder, options, onSelectionChange, readOnly }) =>
+{
   const [ isOpen, setIsOpen ] = useState(false);
   const [ selectedOptions, setSelectedOptions ] = useState([]);
   const dropdownRef = useRef(null);
+  const toggleRef = useRef(null);
 
   useEffect(() => {
-    if (prevSelection && prevSelection.length > 0) {
-      // Si hay opciones preseleccionadas, establecerlas como opciones seleccionadas
-      setSelectedOptions(prevSelection);
-    }
-  }, [prevSelection]);  
-
-  useEffect(() => {
-    function handleDocumentClick(event) {
-      // Si el clic ocurre fuera del dropdown y del boton, cerrar el dropdown
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target) && event.target.id !== 'abreDropdownCheckbox') {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target) &&
+          toggleRef.current && !toggleRef.current.contains(event.target)) {
         setIsOpen(false);
         onSelectionChange(selectedOptions);
       }
     }
-    // Agregar un event listener al documento para el clic fuera del dropdown
-    document.addEventListener('mousedown', handleDocumentClick);
+
+    document.addEventListener('mousedown', handleClickOutside);
     return () => {
-      // Remover el event listener al desmontar el componente
-      document.removeEventListener('mousedown', handleDocumentClick);
+      document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [selectedOptions, onSelectionChange]);
 
-  const toggleDropdown = () => {
-    setIsOpen(!isOpen);
-    if (isOpen) {
-      setIsOpen(false);
-      onSelectionChange(selectedOptions);
-    }
+
+  const handleDropdownClick = () =>
+  {
+    setIsOpen(current => !current);
   };
 
-  const handleCheckboxChange = (option) => {
-    let updatedOptions;
-    if (option === 'Todas') {
-      // Seleccionar todas las opciones disponibles
-      updatedOptions = options;
-    } else if (option === 'Eliminar Selección') {
-      // Deseleccionar todas las opciones
-      updatedOptions = [];
-    } else {
-      // Resto de la lógica para opciones individuales
-      updatedOptions = selectedOptions.includes(option)
-        ? selectedOptions.filter((item) => item.value !== option.value)
-        : [...selectedOptions, option];
+  const handleCheckboxChange = (option) =>
+  {
+    if (option === 'Todas')
+    {
+      const optionsWithoutSinRegion = options.filter(opt => opt.label !== 'Sin región asociada');
+      setSelectedOptions(optionsWithoutSinRegion);
+    } else if (option === 'Eliminar Selección')
+    {
+      setSelectedOptions([]); // Deseleccionar todas las opciones
+    } else
+    {
+      const isAlreadySelected = selectedOptions.some(opt => opt.value === option.value);
+      if (isAlreadySelected)
+      {
+        setSelectedOptions(selectedOptions.filter(opt => opt.value !== option.value));
+      } else
+      {
+        setSelectedOptions([ ...selectedOptions, option ]);
+      }
     }
-    // Filtramos duplicados y notificamos al componente padre
-    onSelectionChange([...new Map(updatedOptions.map((item) => [item.value, item])).values()]);
-    setSelectedOptions(updatedOptions);
   };
+  
 
   return (
-    <div className={`input-container col-11 ${readOnly ? 'readonly' : ''}`}>
+    <div className={`input-container ${readOnly ? 'readonly' : ''}`} ref={dropdownRef}>
       <label className="text-sans-h5 input-label">{label}</label>
       <button
         type="button"
-        id="abreDropdownCheckbox"
-        onClick={toggleDropdown}
-        className={`text-sans-p dropdown-btn ${isOpen ? 'dropdown-btn-abierto' : ''}${readOnly ? 'disabled' : ''}`}
+        onClick={handleDropdownClick}
+        className={`text-sans-p dropdown-btn ${readOnly ? 'disabled' : ''}`}
+        ref={toggleRef}
       >
         {selectedOptions.length > 0
           ? selectedOptions.length === 1
             ? selectedOptions[ 0 ].label
-            : `${selectedOptions.length} alternativas seleccionadas`
+            : `${selectedOptions.length} seleccionadas`
           : placeholder}
         {!readOnly && (
           <i className="material-symbols-rounded ms-2">{isOpen ? 'expand_less' : 'expand_more'}</i>
@@ -75,13 +71,13 @@ const DropdownCheckbox = ({ label, placeholder, options, onSelectionChange, read
       </button>
 
       {isOpen && !readOnly && (
-        <div className="dropdown d-flex flex-column p-2 dropdown-container" ref={dropdownRef}>
+        <div className="dropdown d-flex flex-column dropdown-container" ref={dropdownRef}>
           <button
             type="button"
             className={`text-sans-p btn-option ${selectedOptions.length > 0 ? 'active' : ''}`}
             onClick={() => handleCheckboxChange('Todas')}
           >
-            Todos
+            Todas
           </button>
           <button
             type="button"
@@ -97,10 +93,10 @@ const DropdownCheckbox = ({ label, placeholder, options, onSelectionChange, read
               key={option.value}
             >
               <input
-                className="ms-2 me-2 my-3"
+                className="my-3 mx-3 p-3" 
                 type="checkbox"
                 value={option.value}
-                checked={selectedOptions.some(opt => opt.value === option.value)}
+                checked={selectedOptions.find(opt => opt.value === option.value)}
                 onChange={() => handleCheckboxChange(option)}
               />
               {option.label}
