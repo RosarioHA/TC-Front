@@ -15,7 +15,7 @@ const DropdownCheckbox = ({ label, placeholder, options, onSelectionChange, read
   useEffect(() => {
     function handleDocumentClick(event) {
       // Si el clic ocurre fuera del dropdown y del boton, cerrar el dropdown
-      if (!dropdownRef.current.contains(event.target) && event.target.id !== 'abreDropdownCheckbox') {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target) && event.target.id !== 'abreDropdownCheckbox') {
         setIsOpen(false);
         onSelectionChange(selectedOptions);
       }

@@ -20,8 +20,7 @@ const DropdownSelect = ({ label, placeholder, options, onSelectionChange, select
 
   useEffect(() => {
     function handleDocumentClick(event) {
-      // Si el clic ocurre fuera del dropdown y del botón, cerrar el dropdown
-      if (!dropdownRef.current.contains(event.target) && event.target.id !== 'abreDropdownSelect') {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target) && event.target.id !== 'abreDropdownSelect') {
         setIsOpen(false);
       }
     }
