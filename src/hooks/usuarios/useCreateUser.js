@@ -30,7 +30,5 @@ export const useCreateUser = () =>
     }
   };
 
-  console.log('Error hook:', error )
-
   return { createUser, isLoading, error };
 };

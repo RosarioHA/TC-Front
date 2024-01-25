@@ -228,7 +228,7 @@ const CreacionUsuario = () => {
               )} />
           </div>
           <div className="mb-4">
-            < Controller
+            <Controller
               name="perfil"
               control={control}
               render={({ field }) => (
@@ -339,7 +339,7 @@ const CreacionUsuario = () => {
 
           {/* input estado */}
           <div className="mb-5">
-            < Controller
+            <Controller
               name="estado"
               control={control}
               render={({ field }) => (
@@ -382,7 +382,15 @@ const CreacionUsuario = () => {
                         onMouseDown={handleInputClick}
                       />
                     ) : (
-                      <input type="text" value="No hay competencias para mostrar" readOnly />
+                      <>
+                        <label className="text-sans-h5 input-label ms-3 ms-sm-0">Competencia</label>
+                        <input
+                          className="input-s p-3 input-textarea"
+                          type="text" 
+                          value="No hay Competencias para mostrar" 
+                          readOnly 
+                        />
+                      </>
                     )}
                   </>
                 )}
