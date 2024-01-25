@@ -6,19 +6,20 @@ const Home = () =>
 {
   const {
     dataCompetencia,
-    currentPageListaHome, 
-    setCurrentPageListaHome ,
+    currentPageListaHome,
+    setCurrentPageListaHome,
     paginationListaHome
-  } = useCompetencia(); 
-  
+  } = useCompetencia();
+
   const navigate = useNavigate();
-  
+
 
   const competenciasPerPage = 2; // Ajusta según sea necesario
   const totalPages = Math.ceil(paginationListaHome.count / competenciasPerPage);
 
 
-  const handlePageChange = (newPage) => {
+  const handlePageChange = (newPage) =>
+  {
     setCurrentPageListaHome(newPage);
   };
 
@@ -85,33 +86,33 @@ const Home = () =>
           </>
         )}
         <div className="d-flex justify-content-center">
-        <div className="d-flex flex-column flex-md-row my-5">
-        <p className="text-sans-h5 mx-5 text-center">
-          {`${Math.max((parseInt(currentPageListaHome) - 1) * competenciasPerPage+ 1, 1)}- ${Math.min(parseInt(currentPageListaHome) * competenciasPerPage, paginationListaHome.count)} de ${paginationListaHome.count} competencias`}
-        </p>
-        <nav className="pagination-container mx-auto mx-md-0">
-          <ul className="pagination ms-md-5">
-          <li className={`page-item ${currentPageListaHome === 1 ? 'disabled' : ''}`}>
-          <button className="custom-pagination-btn mx-3" onClick={() => handlePageChange(currentPageListaHome - 1)} disabled={currentPageListaHome === 1}>
+          <div className="d-flex flex-column flex-md-row my-5">
+            <p className="text-sans-h5 mx-5 text-center">
+              {`${Math.max((parseInt(currentPageListaHome) - 1) * competenciasPerPage + 1, 1)}- ${Math.min(parseInt(currentPageListaHome) * competenciasPerPage, paginationListaHome.count)} de ${paginationListaHome.count} competencias`}
+            </p>
+            <nav className="pagination-container mx-auto mx-md-0">
+              <ul className="pagination ms-md-5">
+                <li className={`page-item ${currentPageListaHome === 1 ? 'disabled' : ''}`}>
+                  <button className="custom-pagination-btn mx-3" onClick={() => handlePageChange(currentPageListaHome - 1)} disabled={currentPageListaHome === 1}>
 
-                &lt;
-              </button>
-            </li>
-            {Array.from({ length: totalPages }, (_, i) => (
-              <li key={i} className={`page-item ${currentPageListaHome === i + 1 ? 'active' : ''}`}>
-                <button className="custom-pagination-btn px-2 mx-2" onClick={() => handlePageChange(i + 1)}>
-                  {i + 1}
-                </button>
-              </li>
-            ))}
-            <li className={`page-item ${currentPageListaHome === totalPages ? 'disabled' : ''}`}>
-              <button className="custom-pagination-btn mx-3" onClick={() => handlePageChange(currentPageListaHome + 1)} disabled={currentPageListaHome === totalPages}>
-                &gt;
-              </button>
-            </li>
-          </ul>
-        </nav>
-      </div>
+                    &lt;
+                  </button>
+                </li>
+                {Array.from({ length: totalPages }, (_, i) => (
+                  <li key={i} className={`page-item ${currentPageListaHome === i + 1 ? 'active' : ''}`}>
+                    <button className="custom-pagination-btn px-2 mx-2" onClick={() => handlePageChange(i + 1)}>
+                      {i + 1}
+                    </button>
+                  </li>
+                ))}
+                <li className={`page-item ${currentPageListaHome === totalPages ? 'disabled' : ''}`}>
+                  <button className="custom-pagination-btn mx-3" onClick={() => handlePageChange(currentPageListaHome + 1)} disabled={currentPageListaHome === totalPages}>
+                    &gt;
+                  </button>
+                </li>
+              </ul>
+            </nav>
+          </div>
         </div>
       </div>
     </>

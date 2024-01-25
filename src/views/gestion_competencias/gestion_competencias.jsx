@@ -14,30 +14,36 @@ const GestionCompetencias = () =>
     paginationCompetencia,
     currentPageCompetencia,
     setCurrentPageCompetencia,
-    updateSearchTerm , 
+    updateSearchTerm,
   } = useCompetencia();
   const [ searchQuery, setSearchQuery ] = useState('');
   const [ filteredCompetencia, setFilteredCompetencia ] = useState([]);
   const navigate = useNavigate();
+  const [ hasSearched, setHasSearched ] = useState(false);
+
 
 
   const userSubdere = userData?.perfil?.includes('SUBDERE');
   const projectsPerPage = 10;
   const totalPages = Math.ceil(paginationCompetencia.count / projectsPerPage);
 
-  useEffect(() => {
-    if (dataListCompetencia) {
+  useEffect(() =>
+  {
+    if (dataListCompetencia)
+    {
       // Si hay información de paginación, filtra los usuarios según la página actual
-      if (currentPageCompetencia && currentPageCompetencia.results) {
+      if (currentPageCompetencia && currentPageCompetencia.results)
+      {
         const startIndex = (currentPageCompetencia.current_page - 1) * currentPageCompetencia.page_size;
         const endIndex = startIndex + currentPageCompetencia.results.length;
         setFilteredCompetencia(dataListCompetencia.slice(startIndex, endIndex));
-      } else {
+      } else
+      {
         // Si no hay información de paginación, muestra todos los usuarios
         setFilteredCompetencia(dataListCompetencia);
       }
     }
-  }, [dataListCompetencia, currentPageCompetencia]);
+  }, [ dataListCompetencia, currentPageCompetencia ]);
 
 
   useEffect(() =>
@@ -59,17 +65,20 @@ const GestionCompetencias = () =>
   }, [ dataListCompetencia ]);
 
 
-  const handlePageChange = (newPage) => {
+  const handlePageChange = (newPage) =>
+  {
     setCurrentPageCompetencia(newPage);
   };
 
   const sortOptions = {
-    Estado: (direction) => (a, b) => {
+    Estado: (direction) => (a, b) =>
+    {
       // Asegurándose de que los estados existen para evitar errores
       const estadoA = a.estado || '';
       const estadoB = b.estado || '';
-  
-      if (direction === 'asc') {
+
+      if (direction === 'asc')
+      {
         return estadoA.localeCompare(estadoB);
       }
       // Orden descendente
@@ -89,10 +98,12 @@ const GestionCompetencias = () =>
   };
 
   // Función de búsqueda
-  const handleSearch = useCallback((query) => {
-    setSearchQuery(query); // Actualiza el estado local
-    updateSearchTerm(query); // Actualiza el término de búsqueda en el hook
-  }, [updateSearchTerm]);
+  const handleSearch = useCallback((query) =>
+  {
+    setSearchQuery(query);
+    updateSearchTerm(query);
+    setHasSearched(true);
+  }, [ updateSearchTerm ]);
 
 
 
@@ -125,8 +136,8 @@ const GestionCompetencias = () =>
         </p>
         <nav className="pagination-container mx-auto mx-md-0">
           <ul className="pagination ms-md-5">
-          <li className={`page-item ${currentPageCompetencia === 1 ? 'disabled' : ''}`}>
-          <button className="custom-pagination-btn mx-3" onClick={() => handlePageChange(currentPageCompetencia - 1)} disabled={currentPageCompetencia === 1}>
+            <li className={`page-item ${currentPageCompetencia === 1 ? 'disabled' : ''}`}>
+              <button className="custom-pagination-btn mx-3" onClick={() => handlePageChange(currentPageCompetencia - 1)} disabled={currentPageCompetencia === 1}>
 
                 &lt;
               </button>
@@ -150,97 +161,81 @@ const GestionCompetencias = () =>
   };
 
   return (
-    <div className="container-fluid mt-2 " >
+    <div className="container-fluid mt-2">
       <div className="text-sans-h2 mx-3">Listado de Competencias</div>
-      {filteredCompetencia.length === 0 ? (
-        <div className="container-home d-flex justify-content-center my-5 py-5 ">
-          {userSubdere ? (
-            <div className="flex-column my-5 py-5">
-              <span className="text-sans-h2-tertiary"> Aún  no haz creado competencias</span>
-              <div className="mx-5 px-5 my-2">
-                <Link className="btn-primario-l py-3 link-underline link-underline-opacity-0" to='home/crear_competencia'>
-                  <u>Crear Competencia</u>
-                  <span className="material-symbols-outlined mx-1">
-                    post_add
-                  </span>
-                </Link>
-              </div>
-            </div>
-          ) : (
-            <div className="align-self-center">
-              <span className="text-sans-h2-tertiary" > Aún no hay competencias creadas</span>
-            </div>
-          )
-          }
-        </div>
-      ) : (
-        <><div className="d-flex flex-row me-5 ms-2 my-4">
-          <div className="w-50 pl-2 text-sans-24 align-self-center">Todas las competencias</div>
-          <InputSearch
-            value={searchQuery}
-            onChange={setSearchQuery}
-            placeholder="Buscar competencias"
-            onSearch={handleSearch}
-          />
-          {userSubdere && (
-            <div>
-              <Link className="btn-primario-l mx-4 py-3 link-underline link-underline-opacity-0" to='/home/crear_competencia'>
-                <u>Crear Competencia</u>
-                <span className="material-symbols-outlined mx-1">
-                  post_add
-                </span>
-              </Link>
-            </div>
-          )}
-        </div>
-          <div className="px-2">
 
-            <TableCheckbox
-              columnTitles={columnTitleCompetencias}
-              data={filteredCompetencia}
-              sortableColumns={[ ]}
-              renderRow={(competencia) => (
-                <tr key={competencia.id}>
-                  <td className="pt-3 col-4">
-                    <u className="text-sans-p my-4">{competencia.nombre}</u>
-                  </td>
-                  <td className="text-primary pt-4 col-2">{competencia.ambito}</td>
-                  <td>
-                    <span className={`badge my-3 ${getBadgeClass(competencia.estado)}`}>
-                      {competencia.estado}
-                    </span>
-                  </td>
-                  <td className="pt-4">
-                    <span className="badge-type">{competencia.origen}</span>
-                  </td>
-                  <td className="py-3 d-flex ">
-                    <button
-                      className="btn-secundario-s btn-sm align-self-center"
-                      onClick={() => handleVerEstado(competencia)}
-                    >
-                      <u>Ver estado</u>
-                    </button>
-                    <button
-                      className="btn-secundario-s btn-sm align-self-center ms-2"
-                      onClick={() => handleVerDetalle(competencia)}
-                    >
-                      <u>Ver detalle</u>
-                    </button>
-                  </td>
-                </tr>
-              )}
-              sortOptions={sortOptions}
-            />
+      <div className="d-flex flex-row me-5 ms-2 my-4">
+        <div className="w-50 pl-2 text-sans-24 align-self-center">Todas las competencias</div>
+        <InputSearch
+          value={searchQuery}
+          onChange={setSearchQuery}
+          placeholder="Buscar competencias"
+          onSearch={handleSearch}
+        />
+        {userSubdere && (
+          <div>
+            <Link className="btn-primario-l mx-4 py-3 link-underline link-underline-opacity-0" to='/home/crear_competencia'>
+              <u>Crear Competencia</u>
+              <span className="material-symbols-outlined mx-1">
+                post_add
+              </span>
+            </Link>
           </div>
+        )}
+      </div>
 
-
-          {paginationCompetencia && paginationCompetencia.count > 0 && (
-            <div className="pagination-container d-flex justify-content-center">
-              {renderPaginationButtons()}
-            </div>
-          )}
-        </>
+      {filteredCompetencia.length === 0 && hasSearched && (
+        <div className="text-center">
+          <span>No se han encontrado resultados para su búsqueda</span>
+        </div>
       )}
+
+      {filteredCompetencia.length > 0 && (
+        <div className="px-2">
+          <TableCheckbox
+            columnTitles={columnTitleCompetencias}
+            data={filteredCompetencia}
+            sortableColumns={[]}
+            renderRow={(competencia) => (
+              <tr key={competencia.id}>
+                <td className="pt-3 col-4">
+                  <u className="text-sans-p my-4">{competencia.nombre}</u>
+                </td>
+                <td className="text-primary pt-4 col-2">{competencia.ambito}</td>
+                <td>
+                  <span className={`badge my-3 ${getBadgeClass(competencia.estado)}`}>
+                    {competencia.estado}
+                  </span>
+                </td>
+                <td className="pt-4">
+                  <span className="badge-type">{competencia.origen}</span>
+                </td>
+                <td className="py-3 d-flex ">
+                  <button
+                    className="btn-secundario-s btn-sm align-self-center"
+                    onClick={() => handleVerEstado(competencia)}
+                  >
+                    <u>Ver estado</u>
+                  </button>
+                  <button
+                    className="btn-secundario-s btn-sm align-self-center ms-2"
+                    onClick={() => handleVerDetalle(competencia)}
+                  >
+                    <u>Ver detalle</u>
+                  </button>
+                </td>
+              </tr>
+            )}
+            sortOptions={sortOptions}
+          />
+        </div>
+      )}
+      {paginationCompetencia && paginationCompetencia.count > 0 && (
+        <div className="pagination-container d-flex justify-content-center">
+          {renderPaginationButtons()}
+        </div>
+      )}
+
     </div >
   );
 };
