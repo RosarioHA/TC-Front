@@ -54,23 +54,19 @@
 
 
 .selected-option{
-    border: 1px solid $grey-light-color;
-    background-color: $neutral-color;
+    background-color: $white-color;
 }
 .unselected-option{
-    border: 1px solid $grey-light-color;
     background-color: $white-color; 
 }
 
 
 .selected-option-ghost{
-    border: 1px solid $grey-light-color;
     border-bottom: none;
     border-top: none;
     background-color: $neutral-color;
 }
 .unselected-option-ghost{
-    border: 1px solid $grey-light-color;
     border-bottom: none;
     border-top: none;
     background-color: $white-color; 
@@ -78,7 +74,9 @@
 .ghost-input{
     border: none;
     width: 100%;
+    height: 50px;
 }
+
 .input-search  {
     border: 2px solid $grey-color;
     background: $white-color;
@@ -94,8 +92,13 @@
     height: 60px;
     width: 100%;    
 }
-.btn-option:hover:active{
-    background-color: $neutral-color;
+.btn-option:hover{
+    background-color: $blue-color;
+    color:$white-color; 
+}
+.btn-option:active{
+    background-color: $blue-color;
+    color:$white-color; 
 }
 
 // Textarea

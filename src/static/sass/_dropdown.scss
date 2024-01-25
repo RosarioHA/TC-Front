@@ -10,3 +10,84 @@
   text-align: center;
   vertical-align: middle;
   }
+
+  .dropdown-container {
+    max-height: 350px; 
+    overflow-y: auto;
+}
+
+.checkbox-custom {
+  display: inline-block;
+  width: 15px;  
+  height: 15px; 
+  border: 2px solid #ccc; 
+  border-radius: 3px; 
+  margin-right: 10px;
+  margin-left:5px; 
+  vertical-align: middle;
+}
+.checkbox-custom:checked {
+  border-color: $primary-color;
+  color:$white-color;
+  background-color: $primary-color;
+}
+
+.dropdown-container {
+  display: flex;
+  flex-direction: column;
+}
+
+
+.dropdown-option {
+  display: block; 
+  margin-left: 2px; 
+}
+
+.hidden {
+  display: none; 
+}
+
+
+.dropdown-option-check:hover,
+.dropdown-option-check.active {
+  background-color: $blue-color; 
+  color:$white-color; 
+}
+
+.dropdown-option-check label {
+  cursor: pointer;
+}
+
+.dropdown-ministerio {
+  border-top: 1px solid $grey-b-color;
+}
+
+.dropdown-sectores {
+  padding-left: 20px;
+  display: none;
+}
+.dropdown-sectores :hover{
+  background-color: $blue-color; 
+  color:$white-color; 
+}
+
+
+.dropdown-ministerio .active + .dropdown-sectores {
+  display: block;
+}
+
+.dropdown-sector {
+  display: block;
+  margin-bottom: 5px;
+}
+
+
+.dropdown-option-check {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.material-symbols-outlined {
+  cursor: pointer; /* Opcional, si quieres que el ícono sea clickeable */
+}

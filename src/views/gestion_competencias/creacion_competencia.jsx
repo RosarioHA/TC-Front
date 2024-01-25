@@ -6,6 +6,7 @@ import CustomInput from "../../components/forms/custom_input";
 import DropdownCheckbox from "../../components/dropdown/checkbox";
 import DropdownSelect from "../../components/dropdown/select";
 import DropdownConSecciones from "../../components/dropdown/checkbox_conSecciones_conTabla";
+import { DropdownSelectBuscadorCheck } from "../../components/dropdown/select_buscador_checkbox";
 import { esquemaCreacionCompetencia } from "../../validaciones/esquemaValidacion";
 import { useCrearCompetencia } from "../../hooks/competencias/useCrearCompetencia";
 import { useRegion } from "../../hooks/useRegion";
@@ -64,6 +65,7 @@ const CreacionCompetencia = () =>
   const [ errorMessage, setErrorMessage ] = useState("");
 
 
+
   const history = useNavigate();
 
   const handleBackButtonClick = () =>
@@ -84,11 +86,9 @@ const CreacionCompetencia = () =>
 
   const onSubmit = async (data) =>
   {
-
-
     const competenciaData = {
       ...data,
-      sectores: sectoresSeleccionados.map(s => s.value),
+      sectores: sectoresSeleccionados,
       regiones: regionesSeleccionadas.map(r => r.value),
       ambito_competencia: ambitoSeleccionado,
       origen: origenSeleccionado,
@@ -99,10 +99,11 @@ const CreacionCompetencia = () =>
       plazo_formulario_sectorial: data.plazo_formulario_sectorial,
       plazo_formulario_gore: data.plazo_formulario_gore,
       fecha_inicio: formatFechaInicio(),
-      oficio_origen: selectedFile 
+      oficio_origen: selectedFile,
     };
     try
     {
+      console.log(competenciaData);
       await createCompetencia(competenciaData);
       history('/home/success', { state: { origen: "crear_competencia" } });
       setErrorGeneral('');
@@ -130,18 +131,21 @@ const CreacionCompetencia = () =>
   const handleRegionesChange = (selectedOptions) =>
   {
     setRegionesSeleccionadas(selectedOptions);
-    setValue('regiones', selectedOptions);
+    setValue('regiones', selectedOptions.map(option => option.value));
   };
-
   //opciones sector 
-  const opcionesSectores = dataSector.map(sector => ({
-    label: sector.nombre,
-    value: sector.id,
+  const opcionesSectores = dataSector.map(ministerio => ({
+    label: ministerio.nombre,
+    options: ministerio.sectores.map(sector => ({
+      label: sector.nombre,
+      value: sector.id,
+      ministerioId: ministerio.id
+    }))
   }));
-  const handleSectorChange = (selectedOptions) =>
-  {
-    setSectoresSeleccionados(selectedOptions);
-    setValue('sectores', selectedOptions);
+
+  const handleSectorSelectionChange = (selectedSectorValues) => {
+    setSectoresSeleccionados(selectedSectorValues);
+    setValue('sectores', selectedSectorValues, { shouldValidate: true });
   };
 
   //opciones origen
@@ -171,7 +175,6 @@ const CreacionCompetencia = () =>
   {
     setUsuariosSeleccionados(nuevosUsuarios);
   }, []);
-  console.log('com', usuariosSeleccionados)
 
 
   const handleFileChange = (event) =>
@@ -187,7 +190,7 @@ const CreacionCompetencia = () =>
       {
         setSelectedFile(file);
         setButtonText('Modificar');
-        setErrorMessage(""); // Limpiar el mensaje de error si el archivo es válido
+        setErrorMessage("");
       }
     }
   };
@@ -215,7 +218,6 @@ const CreacionCompetencia = () =>
 
     return new Date(fechaInicio).toISOString();
   };
-
 
 
 
@@ -249,7 +251,7 @@ const CreacionCompetencia = () =>
             />
           </div>
 
-          <div className="mb-4 ">
+          <div className="mb-4 col-11">
             <DropdownCheckbox
               label="Región (Obligatorio)"
               placeholder="Elige la o las regiones donde se ejercerá la competencia"
@@ -262,20 +264,20 @@ const CreacionCompetencia = () =>
             )}
           </div>
 
-          <div className="mb-4 ">
-            <DropdownCheckbox
+          <div className="mb-4 col-11">
+            <DropdownSelectBuscadorCheck
               label="Elige el sector de la competencia (Obligatorio)"
               placeholder="Elige el sector de la competencia"
               options={opcionesSectores}
-              onSelectionChange={handleSectorChange}
-              selected={sectoresSeleccionados}
+              onSelectionChange={handleSectorSelectionChange}
+              readOnly={false}
             />
             {errors.sectores && (
               <p className="text-sans-h6-darkred mt-2 mb-0">{errors.sectores.message}</p>
             )}
           </div>
 
-          <div className="mb-4">
+          <div className="mb-4 col-11">
             <DropdownSelect
               label="Origen de la competencia (Obligatorio)"
               placeholder="Elige el origen de la competencia"
@@ -288,7 +290,7 @@ const CreacionCompetencia = () =>
             )}
           </div>
 
-          <div className="mb-4">
+          <div className="mb-4 col-11">
             <DropdownSelect
               label="Elige el ámbito de la competencia (Obligatorio)"
               placeholder="Elige el ámbito de la competencia"
@@ -348,7 +350,7 @@ const CreacionCompetencia = () =>
                           style={{ display: 'none' }}
                           accept=".pdf"
                         />
-                        <button className="btn-secundario-s d-flex" onClick={handleUploadClick}>
+                        <button type="button" className="btn-secundario-s d-flex" onClick={handleUploadClick}>
                           <i className="material-symbols-outlined">upgrade</i>
                           <u className="align-self-center text-sans-b-white">{buttonText}</u>
                         </button>
@@ -367,8 +369,8 @@ const CreacionCompetencia = () =>
                 <span className="text-sans-h5 ">Elige la fecha del oficio (Obligatorio)</span>
                 <input
                   id="dateInput"
-                  type="datetime-local"
-                  className="form-control py-3 my-2 input-textarea border-dark-subtle"
+                  type="date"
+                  className="form-control py-3 my-2  border rounded border-dark-subtle "
                   onChange={handleFechaInicioChange}
                   value={fechaInicio}
                 />
