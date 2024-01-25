@@ -43,7 +43,7 @@ const CreacionUsuario = () => {
   const [ sectorId, setSectorId ] = useState(null);
   const { dataFiltroCompetencias, loadingFiltroCompetencias } = useFiltroCompetencias(regionId, sectorId);
   const [ hasChanged, setHasChanged ] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [ isModalOpen, setIsModalOpen ] = useState(false);
 
   useEffect(() => {
     console.log("competencias seleccionadas en vista", competenciasSeleccionadas);

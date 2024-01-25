@@ -14,6 +14,8 @@ import { useUsers } from "../../hooks/usuarios/useUsers";
 import { useSector } from "../../hooks/useSector";
 import { useOrigenes } from "../../hooks/useOrigenes";
 import { useAmbitos } from "../../hooks/useAmbitos";
+import { useFormContext } from "../../context/FormAlert";
+import ModalAbandonoFormulario from "../../components/commons/modalAbandonoFormulario";
 
 const initialValues = {
   nombre: '',
@@ -29,10 +31,8 @@ const initialValues = {
   plazo_formulario_gore: undefined,
 };
 
-const groupUsersByType = (users) =>
-{
-  const grouped = users.reduce((acc, user) =>
-  {
+const groupUsersByType = (users) => {
+  const grouped = users.reduce((acc, user) => {
     acc[ user.perfil ] = acc[ user.perfil ] || [];
     acc[ user.perfil ].push(user);
     return acc;
@@ -44,8 +44,7 @@ const groupUsersByType = (users) =>
   }));
 };
 
-const CreacionCompetencia = () =>
-{
+const CreacionCompetencia = () => {
   const { createCompetencia } = useCrearCompetencia();
   const { dataRegiones } = useRegion();
   const { users } = useUsers();
@@ -63,14 +62,19 @@ const CreacionCompetencia = () =>
   const [ buttonText, setButtonText ] = useState('Subir archivo');
   const [ fechaInicio, setFechaInicio ] = useState('');
   const [ errorMessage, setErrorMessage ] = useState("");
-
-
+  const { updateHasChanged } = useFormContext();
+  const [ hasChanged, setHasChanged ] = useState(false);
+  const [ isModalOpen, setIsModalOpen ] = useState(false);
 
   const history = useNavigate();
-
-  const handleBackButtonClick = () =>
-  {
-    history(-1);
+  const handleBackButtonClick = () => {
+    if (hasChanged) {
+      // Muestra el modal
+      setIsModalOpen(true);
+    } else {
+      // Retrocede solo si no hay cambios
+      history(-1);
+    }
   };
 
   const {
@@ -84,8 +88,21 @@ const CreacionCompetencia = () =>
     mode: 'onBlur',
   });
 
-  const onSubmit = async (data) =>
-  {
+  //detecta cambios sin guardar en el formulario
+  function handleOnChange(event) {
+    const data = new FormData(event.currentTarget);
+    // Verifica si hay cambios respecto al valor inicial
+    const formHasChanged = Array.from(data.entries()).some(([name, value]) => {
+      const initialValue = initialValues[name];
+      return value !== String(initialValue);
+    });
+    setHasChanged(formHasChanged);
+    // Actualiza el valor de hasChanged en el contexto
+    updateHasChanged(formHasChanged);
+  }
+  console.log("hasChanged", hasChanged)
+
+  const onSubmit = async (data) => {
     const competenciaData = {
       ...data,
       sectores: sectoresSeleccionados,
@@ -101,35 +118,29 @@ const CreacionCompetencia = () =>
       fecha_inicio: formatFechaInicio(),
       oficio_origen: selectedFile,
     };
-    try
-    {
+    try {
       console.log(competenciaData);
       await createCompetencia(competenciaData);
       history('/home/success', { state: { origen: "crear_competencia" } });
       setErrorGeneral('');
-    } catch (error)
-    {
-      if (error.response && error.response.data)
-      {
+    } catch (error) {
+      if (error.response && error.response.data) {
         const errores = error.response.data;
         const primerCampoError = Object.keys(errores)[ 0 ];
         const primerMensajeError = errores[ primerCampoError ][ 0 ];
         setErrorGeneral(primerMensajeError);
-      } else
-      {
+      } else {
         setErrorGeneral('Error al conectarse con el servidor.');
       }
     }
   };
-
 
   //opciones regiones 
   const opcionesRegiones = dataRegiones.map(region => ({
     label: region.region,
     value: region.id,
   }));
-  const handleRegionesChange = (selectedOptions) =>
-  {
+  const handleRegionesChange = (selectedOptions) => {
     setRegionesSeleccionadas(selectedOptions);
     setValue('regiones', selectedOptions.map(option => option.value));
   };
@@ -142,7 +153,6 @@ const CreacionCompetencia = () =>
       ministerioId: ministerio.id
     }))
   }));
-
   const handleSectorSelectionChange = (selectedSectorValues) => {
     setSectoresSeleccionados(selectedSectorValues);
     setValue('sectores', selectedSectorValues, { shouldValidate: true });
@@ -153,8 +163,7 @@ const CreacionCompetencia = () =>
     label: origen.descripcion,
     value: origen.clave,
   }));
-  const handleOrigenChange = (selectedOption) =>
-  {
+  const handleOrigenChange = (selectedOption) => {
     setOrigenSeleccionado(selectedOption.value);
     setValue('origen', selectedOption.value);
   };
@@ -164,30 +173,23 @@ const CreacionCompetencia = () =>
     label: ambito.nombre,
     value: ambito.id,
   }));
-  const handleAmbitoChange = (selectedOption) =>
-  {
+  const handleAmbitoChange = (selectedOption) => {
     const ambitoId = selectedOption ? selectedOption.value : null;
     setAmbitoSeleccionado(ambitoId);
     setValue('ambito_competencia', ambitoId, { shouldValidate: true });
   };
 
-  const handleUsuariosTransformed = useCallback((nuevosUsuarios) =>
-  {
+  const handleUsuariosTransformed = useCallback((nuevosUsuarios) => {
     setUsuariosSeleccionados(nuevosUsuarios);
   }, []);
 
-
-  const handleFileChange = (event) =>
-  {
+  const handleFileChange = (event) => {
     const file = event.target.files[ 0 ];
-    if (file)
-    {
-      if (file.size > 20971520)
-      { // 20 MB en bytes
+    if (file) {
+      if (file.size > 20971520) { // 20 MB en bytes
         setErrorMessage("Archivo no cumple con el peso permitido");
         setSelectedFile(null);
-      } else
-      {
+      } else {
         setSelectedFile(file);
         setButtonText('Modificar');
         setErrorMessage("");
@@ -195,31 +197,24 @@ const CreacionCompetencia = () =>
     }
   };
 
-
-  const handleDelete = () =>
-  {
+  const handleDelete = () => {
     setSelectedFile(null);
     setButtonText('Subir archivo');
   };
 
-  const handleUploadClick = () =>
-  {
+  const handleUploadClick = () => {
     document.getElementById('fileUploadInput').click();
   };
 
-  const handleFechaInicioChange = (event) =>
-  {
+  const handleFechaInicioChange = (event) => {
     setFechaInicio(event.target.value);
   };
 
-  const formatFechaInicio = () =>
-  {
+  const formatFechaInicio = () => {
     if (!fechaInicio) return '';
 
     return new Date(fechaInicio).toISOString();
   };
-
-
 
   return (
     <div className="container col-10 my-4">
@@ -233,7 +228,7 @@ const CreacionCompetencia = () =>
       </div>
 
       <div className="col-10 ms-5">
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)} onChange={handleOnChange}>
           <div className="mb-4">
             <Controller
               name="nombre"
@@ -437,6 +432,14 @@ const CreacionCompetencia = () =>
           </div>
         </form>
       </div>
+      {isModalOpen && (
+        <ModalAbandonoFormulario
+          onClose={() => setIsModalOpen(false)}
+          isOpen={isModalOpen}
+          direction='-1'
+          goBack={true}
+        />
+      )}
     </div>
   );
 }
