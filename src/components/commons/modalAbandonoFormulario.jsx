@@ -1,9 +1,15 @@
 import { forwardRef, useRef, useImperativeHandle } from "react";
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { useFormContext } from "../../context/FormAlert";
 
-const ModalAbandonoFormulario = forwardRef(function ModalAbandonoFormulario({ isOpen, onClose, direction }, ref) {
+const ModalAbandonoFormulario = forwardRef(function ModalAbandonoFormulario({ isOpen, onClose, direction, goBack }, ref) {
   const { updateHasChanged } = useFormContext();
+
+  const history = useNavigate();
+  const handleBackButtonClick = () => {
+    updateHasChanged(false);
+    history(-1);
+  };
 
   const handleClose = () => {
     onClose();
@@ -32,10 +38,10 @@ const ModalAbandonoFormulario = forwardRef(function ModalAbandonoFormulario({ is
         <p className="text-sans-p mb-0 ms-3">--**** mensaje con las consecuencias de salir *****---</p>
         <hr/>
         <div className="d-flex justify-content-between">
-          <button className="btn-secundario-ghost text-decoration-underline ms-3">Salir del formulario</button>
-          <NavLink to={direction} className="mx-4 btn-link" onClick={handleLinkClick}>
+          {!goBack && <NavLink to={direction} className="mx-4 btn-link" onClick={handleLinkClick}>
             <u>Salir del formulario</u>
-          </NavLink>
+          </NavLink>}
+          {goBack && <button className="btn-secundario-ghost" onClick={handleBackButtonClick}> Salir del formulario</button>}
           <button className="btn-primario-s text-decoration-underline me-3" onClick={handleCloseRef.current}>Seguir en el formulario</button>
         </div>
       </div>

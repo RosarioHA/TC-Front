@@ -20,3 +20,23 @@
     max-width:800px;
     padding: 28px 0px;
   }
+
+  a.btn-link-fit {
+    display:flex;
+    width: fit-content;
+    align-items: center;
+    height: 48px;
+    color:$blue-color; 
+    text-align: center;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 24px; 
+    vertical-align: middle;
+    text-decoration: none;
+    &:hover  , &:focus  {
+      color:$dark-blue; 
+      background-color: $blue-sky;
+    }
+    }

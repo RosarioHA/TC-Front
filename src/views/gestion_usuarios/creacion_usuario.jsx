@@ -15,6 +15,7 @@ import { useGroups } from "../../hooks/useGroups";
 import { useSector } from "../../hooks/useSector";
 import { useFiltroCompetencias } from "../../hooks/useFiltrarCompetencias";
 import { useFormContext } from "../../context/FormAlert";
+import ModalAbandonoFormulario from "../../components/commons/modalAbandonoFormulario";
 
 const initialValues = {
   rut: '',
@@ -43,7 +44,7 @@ const CreacionUsuario = () => {
   const [ sectorId, setSectorId ] = useState(null);
   const { dataFiltroCompetencias, loadingFiltroCompetencias } = useFiltroCompetencias(regionId, sectorId);
   const [ hasChanged, setHasChanged ] = useState(false);
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     console.log("competencias seleccionadas en vista", competenciasSeleccionadas);
@@ -52,7 +53,13 @@ const CreacionUsuario = () => {
   // Maneja boton de volver atras.
   const history = useNavigate();
   const handleBackButtonClick = () => {
-    history(-1);
+    if (hasChanged) {
+      // Muestra el modal
+      setIsModalOpen(true);
+    } else {
+      // Retrocede solo si no hay cambios
+      history(-1);
+    }
   };
 
   const {
@@ -405,8 +412,15 @@ const CreacionUsuario = () => {
             <i className="material-symbols-rounded ms-2">arrow_forward_ios</i>
           </button>
         </form>
-
       </div>
+      {isModalOpen && (
+        <ModalAbandonoFormulario
+          onClose={() => setIsModalOpen(false)}
+          isOpen={isModalOpen}
+          direction='-1'
+          goBack={true}
+        />
+      )}
     </div>
   );
 }
