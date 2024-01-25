@@ -34,14 +34,12 @@ export const useUsers = () => {
 
   // Función para actualizar la página actual
   const updatePage = (newPage) => {
-    console.log("Updating page:", newPage);
     setPagination(newPage);
   };
 
   // Agregar la función updateUrl al objeto devuelto
   const updateUrl = (url) => {
     // Lógica para actualizar la URL si es necesario
-    console.log("Updating URL:", url);
     setPagination(url);
   };
 
