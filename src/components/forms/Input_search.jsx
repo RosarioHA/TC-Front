@@ -1,5 +1,5 @@
 
-const InputSearch = ({ value, onChange, placeholder, onSearch }) =>
+const InputSearch = ({ value, onChange, placeholder, onSearch,  setHasSearched  }) =>
 {
 
   const handleInputChange = (event) => {
@@ -7,20 +7,20 @@ const InputSearch = ({ value, onChange, placeholder, onSearch }) =>
     onChange(query);
     if (query === '') {
       onSearch('');
+      setHasSearched(false); // Resetea el estado de búsqueda si la búsqueda está vacía
     }
   }
   
   const handleSearchClick = () => {
     onSearch(value);
+    setHasSearched(true); // Establece el estado de búsqueda a verdadero cuando se realiza una búsqueda
   };
 
-
-  const handleClearSearch = () =>
-  {
+  const handleClearSearch = () => {
     onChange('');
     onSearch('');
+    setHasSearched(false); // Resetea el estado de búsqueda cuando se limpia la búsqueda
   };
-
 
   return (
     <div className="search-bar input-group border border-2 rounded d-flex">
@@ -30,10 +30,8 @@ const InputSearch = ({ value, onChange, placeholder, onSearch }) =>
         value={value}
         onChange={handleInputChange}
         placeholder={placeholder}
-        onKeyDown={(event) =>
-        {
-          if (event.key === 'Enter')
-          {
+        onKeyDown={(event) => {
+          if (event.key === 'Enter') {
             handleSearchClick();
           }
         }}
