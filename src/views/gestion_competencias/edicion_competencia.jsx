@@ -281,7 +281,7 @@ const EdicionCompetencia = () =>
             )} />
         </div>
 
-        <div className="my-4 col-11">
+        <div className="my-4">
           < DropdownConSecciones
             label="Asignar Usuarios (Opcional)"
             placeholder="Busca el nombre de la persona"

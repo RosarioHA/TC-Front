@@ -13,7 +13,8 @@ import { useRegion } from "../../hooks/useRegion";
 import { useGroups } from "../../hooks/useGroups";
 import { useSector } from "../../hooks/useSector";
 import { useFiltroCompetencias } from "../../hooks/useFiltrarCompetencias";
-import { object } from "yup";
+import { useFormContext } from "../../context/FormAlert";
+import ModalAbandonoFormulario from "../../components/commons/modalAbandonoFormulario";
 
 const initialValues = {
   rut: '',
@@ -26,7 +27,8 @@ const initialValues = {
 };
 
 const CreacionUsuario = () => {
-  const { createUser, isLoading, error } = useCreateUser();
+  const { createUser, isLoading } = useCreateUser();
+  const { updateHasChanged } = useFormContext();
   const { dataGroups, loadingGroups } = useGroups();
   const { dataSector, loadingSector } = useSector();
   const [ estado, setEstado ] = useState('inactivo');
@@ -40,17 +42,23 @@ const CreacionUsuario = () => {
   const [ regionId, setRegionId ] = useState(null);
   const [ sectorId, setSectorId ] = useState(null);
   const { dataFiltroCompetencias, loadingFiltroCompetencias } = useFiltroCompetencias(regionId, sectorId);
-  const [ errorGeneral, setErrorGeneral ] = useState('');
+  const [ hasChanged, setHasChanged ] = useState(false);
+  const [ isModalOpen, setIsModalOpen ] = useState(false);
 
   useEffect(() => {
     console.log("competencias seleccionadas en vista", competenciasSeleccionadas);
   }, [ competenciasSeleccionadas ]);
 
-
   // Maneja boton de volver atras.
   const history = useNavigate();
   const handleBackButtonClick = () => {
-    history(-1);
+    if (hasChanged) {
+      // Muestra el modal
+      setIsModalOpen(true);
+    } else {
+      // Retrocede solo si no hay cambios
+      history(-1);
+    }
   };
 
   const {
@@ -65,6 +73,20 @@ const CreacionUsuario = () => {
     shouldUnregister: false,
     mode: 'manual',
   });
+
+  //detecta cambios sin guardar en el formulario
+  function handleOnChange(event) {
+    const data = new FormData(event.currentTarget);
+    // Verifica si hay cambios respecto al valor inicial
+    const formHasChanged = Array.from(data.entries()).some(([name, value]) => {
+      const initialValue = initialValues[name];
+      return value !== String(initialValue);
+    });
+    setHasChanged(formHasChanged);
+    // Actualiza el valor de hasChanged en el contexto
+    updateHasChanged(formHasChanged);
+  }
+  console.log("hasChanged", hasChanged)
 
   //opciones de perfil 
   const opcionesGroups = dataGroups.map(group => ({
@@ -153,7 +175,6 @@ const CreacionUsuario = () => {
       } else {
         console.log("El formulario no es válido o no se ha hecho click en 'Crear Usuario'");
       }
-      setErrorGeneral('');
     } catch (error) {
       // Verifica si el error es debido a un problema en el campo 'rut'
       if (error.message && error.message.rut && error.message.rut.length > 0) {
@@ -180,7 +201,7 @@ const CreacionUsuario = () => {
       </div>
 
       <div className="col-10 ms-5">
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)} onChange={handleOnChange}>
           <div className="mb-4">
             <Controller
               name="rut"
@@ -227,7 +248,7 @@ const CreacionUsuario = () => {
                   {...field} />
               )} />
           </div>
-          <div className="mb-4">
+          <div className="mb-4 col-11">
             <Controller
               name="perfil"
               control={control}
@@ -402,8 +423,15 @@ const CreacionUsuario = () => {
             <i className="material-symbols-rounded ms-2">arrow_forward_ios</i>
           </button>
         </form>
-
       </div>
+      {isModalOpen && (
+        <ModalAbandonoFormulario
+          onClose={() => setIsModalOpen(false)}
+          isOpen={isModalOpen}
+          direction='-1'
+          goBack={true}
+        />
+      )}
     </div>
   );
 }

@@ -1,8 +1,8 @@
 import { Etapa1, Etapa2, Etapa3, Etapa4, Etapa5 } from "../etapas";
 
-const Etapa = ({ etapaInfo, index }) => {
+const Etapa = ({ etapaInfo, index, id }) => {
   switch (index) {
-    case 0: return <Etapa1 etapa={etapaInfo.etapa1} />;
+    case 0: return <Etapa1 etapa={etapaInfo.etapa1} id={id}/>;
     case 1: return <Etapa2 etapa={etapaInfo.etapa2} />;
     case 2: return <Etapa3 etapa={etapaInfo.etapa3} />;
     case 3: return <Etapa4 etapa={etapaInfo.etapa4} />;
@@ -11,8 +11,7 @@ const Etapa = ({ etapaInfo, index }) => {
   }
 };
 
-export const VerticalStepper = ({ etapasObjeto, etapaDatos }) =>
-{
+export const VerticalStepper = ({ etapasObjeto, etapaDatos, id }) => {
   if (!etapasObjeto)
   {
     return <div>Cargando...</div>;
@@ -20,6 +19,7 @@ export const VerticalStepper = ({ etapasObjeto, etapaDatos }) =>
 
   const etapasInfo = etapasObjeto.etapas_info;
   const etapasClaves = Object.keys(etapasInfo);
+  const idCompetencia = id
 
   let lastCompletedIndex = etapasClaves.findIndex((key, index) =>
     etapasInfo[ key ].estado !== 'Finalizada' && (index === 0 || etapasInfo[ etapasClaves[ index - 1 ] ].estado === 'Finalizada'));
@@ -63,7 +63,7 @@ export const VerticalStepper = ({ etapasObjeto, etapaDatos }) =>
                   <h3 className="stepperTitle">{etapa.nombre}</h3>
                   <div>{renderBadge(etapa.estado)}</div>
                 </div>
-                <Etapa etapaInfo={etapaDatos} index={index} />
+                <Etapa etapaInfo={etapaDatos} index={index} id={idCompetencia}/>
               </div>
             </li>
           );

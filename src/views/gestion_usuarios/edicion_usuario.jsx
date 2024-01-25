@@ -16,9 +16,10 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { esquemaEdicionUsuarios } from "../../validaciones/esquemaEditarUsuario";
 import { useAuth } from "../../context/AuthContext";
 import { useFiltroCompetencias } from "../../hooks/useFiltrarCompetencias";
+import { useFormContext } from "../../context/FormAlert";
+import ModalAbandonoFormulario from "../../components/commons/modalAbandonoFormulario";
 
-const EdicionUsuario = () =>
-{
+const EdicionUsuario = () => {
   const { id } = useParams();
   const history = useNavigate();
   const [ editMode, setEditMode ] = useState(false);
@@ -34,6 +35,9 @@ const EdicionUsuario = () =>
   const { dataFiltroCompetencias, loadingFiltroCompetencias } = useFiltroCompetencias(regionId, sectorId);
   const [competenciasPorAsignar, setCompetenciasPorAsignar] = useState([]);
   const [competenciasAsignadas, setCompetenciasAsignadas] = useState([]);
+  const { updateHasChanged } = useFormContext();
+  const [ hasChanged, setHasChanged ] = useState(false);
+  const [ isModalOpen, setIsModalOpen ] = useState(false);
 
   useEffect(() => {
   }, [ competenciasSeleccionadas ])
@@ -65,10 +69,8 @@ const EdicionUsuario = () =>
   const perfil = watch('perfil') || '';
   const renderizadoCondicional = editMode ? perfil : userDetails?.perfil;
 
-  useEffect(() =>
-  {
-    if (editMode && userDetails)
-    {
+  useEffect(() => {
+    if (editMode && userDetails) {
       // En modo edición, actualiza los valores iniciales con los valores actuales.
       setValue('nombre_completo', userDetails.nombre_completo || "");
       setValue('email', userDetails.email || "");
@@ -79,8 +81,7 @@ const EdicionUsuario = () =>
     }
   }, [ editMode, userDetails, setValue ]);
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     // Verifica si las competencias se han cargado
     if (!loadingCompetencia && !errorCompetencia)
     {
@@ -88,12 +89,31 @@ const EdicionUsuario = () =>
     }
   }, [ loadingCompetencia, errorCompetencia, dataListCompetencia ]);
 
-  const handleBackButtonClick = () =>
-  {
-    history(-1);
+  //detecta cambios sin guardar en el formulario
+  function handleOnChange(event) {
+    const data = new FormData(event.currentTarget);
+    // Verifica si hay cambios respecto al valor inicial
+    const formHasChanged = Array.from(data.entries()).some(([name, value]) => {
+      const initialValue = userDetails[name];
+      return value !== String(initialValue);
+    });
+    setHasChanged(formHasChanged);
+    // Actualiza el valor de hasChanged en el contexto
+    updateHasChanged(formHasChanged);
+  }
+  console.log("hasChanged", hasChanged)
+
+  const handleBackButtonClick = () => {
+    if (hasChanged) {
+      // Muestra el modal
+      setIsModalOpen(true);
+    } else {
+      // Retrocede solo si no hay cambios
+      history(-1);
+    }
   };
-  const handleEditClick = () =>
-  {
+
+  const handleEditClick = () => {
     setEditMode((prevMode) => !prevMode);
   };
 
@@ -116,10 +136,10 @@ const EdicionUsuario = () =>
     label: competencia.nombre,
   }));
   //Competencias Asignadas
-  const CompetenciasAsignadas = competenciasAsignadas.map(competencia => ({
-    value: competencia.id,
-    label: competencia.nombre,
-  }));
+  // const CompetenciasAsignadas = competenciasAsignadas.map(competencia => ({
+  //   value: competencia.id,
+  //   label: competencia.nombre,
+  // }));
 
 
   const handleCompetenciasChange = (selectedOptions) => {
@@ -131,18 +151,14 @@ const EdicionUsuario = () =>
     e.stopPropagation();
   }
 
-  const handleDdSelectChange = (fieldName, selectedOption) =>
-  {
-    try
-    {
-      if (selectedOption && selectedOption.label)
-      {
+  const handleDdSelectChange = (fieldName, selectedOption) => {
+    try {
+      if (selectedOption && selectedOption.label) {
         setValue(fieldName, selectedOption.label);
         setSectorId('');
         setRegionId('');
       }
-    } catch (error)
-    {
+    } catch (error) {
       console.error('Error en handleDdSelectChange:', error);
     }
   };
@@ -164,22 +180,18 @@ const EdicionUsuario = () =>
     }
   };
 
-  const handleEstadoChange = (selectionName, nuevoEstado) =>
-  {
+  const handleEstadoChange = (selectionName, nuevoEstado) => {
     const isActivo = nuevoEstado === "activo";
     setValue("is_active", isActivo);
   };
 
 
-  const onSubmit = async (formData) =>
-  {
-    try
-    {
+  const onSubmit = async (formData) => {
+    try {
       await editUser(id, formData);
       setEditMode(false);
       history('/home/success', { state: { origen: "editar_usuario" } });
-    } catch (error)
-    {
+    } catch (error) {
       console.error("Error al editar el usuario:", error);
     }
   };
@@ -203,8 +215,8 @@ const EdicionUsuario = () =>
         )}
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="d-flex align-items-center mb-4 col-11">
+      <form onSubmit={handleSubmit(onSubmit)} onChange={handleOnChange}>
+        <div className="d-flex align-items-center mb-4">
           <CustomInput
             label="RUT (Obligatorio)"
             placeholder={userDetails ? userDetails.rut : ''}
@@ -216,7 +228,7 @@ const EdicionUsuario = () =>
           {editMode ? <i className="col material-symbols-rounded ms-2">lock</i> : ''}
         </div>
 
-        <div className="my-4 col-11">
+        <div className="my-4">
           <Controller
             name="nombre_completo"
             control={control}
@@ -234,7 +246,7 @@ const EdicionUsuario = () =>
           />
         </div>
 
-        <div className="my-4 col-11">
+        <div className="my-4">
           <Controller
             name="email"
             control={control}
@@ -270,7 +282,7 @@ const EdicionUsuario = () =>
             <input type="text" value="No hay perfiles para mostrar" readOnly />
           )}
         </div>
-        <div className="my-4 col-11">
+        <div className="my-4 ">
           {/* Renderizan de manera condicional según el Perfil de usuario */}
           {renderizadoCondicional === 'GORE' && (
             <div className="my-4 col-11 ">
@@ -440,6 +452,15 @@ const EdicionUsuario = () =>
       </form>
       {editUserLoading && <p>Cargando...</p>}
       {editUserError && <p>Error al editar el usuario: {editUserError.message}</p>}
+
+      {isModalOpen && (
+        <ModalAbandonoFormulario
+          onClose={() => setIsModalOpen(false)}
+          isOpen={isModalOpen}
+          direction='-1'
+          goBack={true}
+        />
+      )}
     </div>
   );
 }
