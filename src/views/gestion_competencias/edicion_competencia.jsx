@@ -369,7 +369,7 @@ const EdicionCompetencia = () =>
         ) : (
           <div></div>
         )}
-
+        </div>
       </form>
     </div>
   );
