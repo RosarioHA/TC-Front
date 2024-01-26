@@ -16,8 +16,7 @@ const DropdownSelectBuscador = ({ label, placeholder, options, onSelectionChange
       }
     }
     function handleDocumentClick(event) {
-      // Si el clic ocurre fuera del dropdown y del botón, cerrar el dropdown
-      if (!dropdownRef.current.contains(event.target) && event.target.id !== 'abreDropdownSelect') {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target) && event.target.id !== 'abreDropdownSelectBuscador') {
         setIsOpen(false);
       }
     }

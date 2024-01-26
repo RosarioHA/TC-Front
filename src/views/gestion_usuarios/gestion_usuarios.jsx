@@ -150,14 +150,14 @@ const GestionUsuarios = () => {
         sortableColumns={[ 'Estado' ]}
         renderRow={(user) => (
           <tr key={user.id}>
-            <th scope="row">
-              {/* <input
+            {/*<th scope="row">
+                <input
                 type="checkbox"
                 className="check my-3"
                 checked={isChecked}
                 onChange={() => handleCheckboxChange(user.id)}
-              /> */}
-            </th>
+              /> 
+            </th>*/}
             <td className="pt-3"><u className="text-sans-p my-4">{user.nombre_completo}</u></td>
             <td className="text-primary pt-4">
               {renderCompetenciasAsignadas(user.competencias_asignadas)}

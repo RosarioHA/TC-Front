@@ -181,7 +181,7 @@ return (
                     <p className="my-3">{competenciaNombre}</p>
                   </td>
                   <td>
-                    <button className="btn-terciario-ghost" onClick={() => handleCheckboxChange(competenciaId)}>
+                    <button type="button" className="btn-terciario-ghost" onClick={() => handleCheckboxChange(competenciaId)}>
                       <p className="mb-0 text-decoration-underline">Eliminar</p>
                       <i className="material-symbols-rounded ms-2">delete</i>
                     </button>
