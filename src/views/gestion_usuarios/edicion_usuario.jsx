@@ -11,7 +11,6 @@ import { useUserDetails } from "../../hooks/usuarios/useUserDetail";
 import { useGroups } from "../../hooks/useGroups";
 import { useRegion } from "../../hooks/useRegion";
 import { useSector } from "../../hooks/useSector";
-import { useCompetencia } from "../../hooks/competencias/useCompetencias";
 import { yupResolver } from '@hookform/resolvers/yup';
 import { esquemaEdicionUsuarios } from "../../validaciones/esquemaEditarUsuario";
 import { useAuth } from "../../context/AuthContext";
@@ -28,19 +27,15 @@ const EdicionUsuario = () => {
   const { dataGroups, loadingGroups } = useGroups();
   const { dataRegiones, loadingRegiones } = useRegion();
   const { dataSector, loadingSector } = useSector();
-  const { dataListCompetencia, loadingCompetencia, errorCompetencia } = useCompetencia();
-  const [ competenciasSeleccionadas, setCompetenciasSeleccionadas ] = useState([]);
   const [ regionId, setRegionId ] = useState(null);
   const [ sectorId, setSectorId ] = useState(null);
   const { dataFiltroCompetencias, loadingFiltroCompetencias } = useFiltroCompetencias(regionId, sectorId);
-  const [competenciasPorAsignar, setCompetenciasPorAsignar] = useState([]);
-  const [competenciasAsignadas, setCompetenciasAsignadas] = useState([]);
+  const [ competenciasAsignadas, setCompetenciasAsignadas ] = useState([]);
+  const [ competenciasSeleccionadas, setCompetenciasSeleccionadas ] = useState([]);
   const { updateHasChanged } = useFormContext();
   const [ hasChanged, setHasChanged ] = useState(false);
   const [ isModalOpen, setIsModalOpen ] = useState(false);
 
-  useEffect(() => {
-  }, [ competenciasSeleccionadas ])
 
   const { userData } = useAuth();
   const userIsSubdere = userData?.perfil?.includes('SUBDERE');
@@ -55,14 +50,27 @@ const EdicionUsuario = () => {
       perfil: userDetails?.perfil || "",
       region: userDetails?.region?.id || null,
       sector: userDetails?.sector?.id || null,
-      is_active: userDetails?.is_active !== undefined ? userDetails.is_active === 'activo' : false,
+      is_active: userDetails?.is_active !== undefined ? userDetails.is_active === 'activo' : false
     },
   });
 
   useEffect(() => {
     if (userDetails) {
-      setCompetenciasPorAsignar(userDetails.competencias_por_asignar || []);
       setCompetenciasAsignadas(userDetails.competencias_asignadas || []);
+      if (userDetails.perfil === 'GORE' && userDetails.regionId) {
+        setRegionId(userDetails.regionId);
+      } 
+      if (userDetails.perfil === 'Usuario Sectorial' && userDetails.sectorId) {
+        setSectorId(userDetails.sectorId);
+      }
+    }
+  }, [userDetails]);
+
+  useEffect(() => {
+    if (userDetails && userDetails.competencias_asignadas) {
+      // Transforma las competencias asignadas en un formato que el componente hijo pueda entender
+      const asignadasIds = userDetails.competencias_asignadas.map(competencia => competencia.id);
+      setCompetenciasSeleccionadas(asignadasIds);
     }
   }, [userDetails]);
 
@@ -80,14 +88,6 @@ const EdicionUsuario = () => {
       setValue('is_active', userDetails.is_active !== undefined ? userDetails.is_active : false);
     }
   }, [ editMode, userDetails, setValue ]);
-
-  useEffect(() => {
-    // Verifica si las competencias se han cargado
-    if (!loadingCompetencia && !errorCompetencia)
-    {
-      console.log("Competencias en vista Editar usuario:", dataListCompetencia);
-    }
-  }, [ loadingCompetencia, errorCompetencia, dataListCompetencia ]);
 
   //detecta cambios sin guardar en el formulario
   function handleOnChange(event) {
@@ -129,21 +129,12 @@ const EdicionUsuario = () => {
     value: sector.id,
     label: sector.nombre,
   }));
-  //opciones Filtro Competencias por Asignar
-  const opcionesFiltroCompetencias = competenciasPorAsignar.map(competencia => ({
+   //opciones Filtro Competencias
+   const opcionesFiltroCompetencias = dataFiltroCompetencias.map(competencia => ({
     value: competencia.id,
     label: competencia.nombre,
   }));
-  //Competencias Asignadas
-  // const CompetenciasAsignadas = competenciasAsignadas.map(competencia => ({
-  //   value: competencia.id,
-  //   label: competencia.nombre,
-  // }));
 
-
-  const handleCompetenciasChange = (selectedOptions) => {
-    setCompetenciasSeleccionadas(selectedOptions);
-  }; 
 
   const handleInputClick = (e) => {
     // Previene que el evento se propague al boton
@@ -186,8 +177,13 @@ const EdicionUsuario = () => {
 
 
   const onSubmit = async (formData) => {
-    try {
-      await editUser(id, formData);
+    const payload = {
+      ...formData,
+      competencias_asignadas: competenciasSeleccionadas,
+    };
+
+      try {
+      await editUser(id, payload);
       setEditMode(false);
       history('/home/success', { state: { origen: "editar_usuario" } });
     } catch (error) {
@@ -402,44 +398,57 @@ const EdicionUsuario = () => {
 
         {/* input Filtro Competencias */}
         <div className="mb-5">
-            <div className="my-3 col-11">
-              <Controller
-                name="competenciasSeleccionadas"
-                control={control}
-                defaultValue={[]}
-                render={({ field }) => (
-                  <>
-                    {loadingFiltroCompetencias ? (
-                      <div>Cargando competencias...</div>
-                    ) : editMode && dataFiltroCompetencias && dataFiltroCompetencias.length > 0 ? (
-                      <DropdownSinSecciones
-                        label="Competencias disponibles para asignar (Opcional)"
-                        placeholder="Busca el nombre de la competencia"
-                        options={opcionesFiltroCompetencias}
-                        selectedOptions={field.value.map(val => parseInt(val, 10))}
-                        onSelectionChange={(selectedOptions) => {
-                          field.onChange(selectedOptions);
-                          handleCompetenciasChange(selectedOptions);
-                        }}
-                        onClick={handleInputClick}
-                        onMouseDown={handleInputClick}
-                      />
-                    ) : editMode && (
-                      <>
-                        <label className="text-sans-h5 input-label ms-3 ms-sm-0">Competencia</label>
-                        <input
-                          className="input-s p-3 input-textarea"
-                          type="text" 
-                          value="No hay Competencias para mostrar" 
-                          readOnly 
-                        />
-                      </>
-                    )}
-                  </>
-                )}
+          <div className="my-3 col-11">
+            {loadingFiltroCompetencias ? (
+              <div>Cargando competencias...</div>
+            ) : editMode && dataFiltroCompetencias && dataFiltroCompetencias.length > 0 ? (
+              <DropdownSinSecciones
+                label="Competencias disponibles para asignar (Opcional)"
+                placeholder="Busca el nombre de la competencia"
+                options={opcionesFiltroCompetencias}
+                selectedOptions={competenciasSeleccionadas}
+                onSelectionChange={setCompetenciasSeleccionadas}
+                onClick={handleInputClick}
+                onMouseDown={handleInputClick}
               />
-            </div>
+            ) : editMode && (
+              <>
+                <label className="text-sans-h5 input-label ms-3 ms-sm-0">Competencia</label>
+                <input
+                  className="input-s p-3 input-textarea"
+                  type="text"
+                  value="No hay Competencias para mostrar"
+                  readOnly
+                />
+              </>
+            )}
           </div>
+        </div>
+
+        {!editMode && (
+          <div className="d-flex align-items-center mb-4 col-11">
+          <CustomInput
+            label="Fecha de Creación"
+            placeholder={userDetails ? userDetails.created : ''}
+            readOnly={true}
+            maxLength={null}
+          />
+          {editMode ? <i className="col material-symbols-rounded ms-2">lock</i> : ''}
+        </div>
+        )}
+
+        {!editMode && (
+          <div className="d-flex align-items-center mb-4 col-11">
+          <CustomInput
+            label="Fecha último inicio de sesión"
+            placeholder={userDetails ? userDetails.last_login_display : ''}
+            readOnly={true}
+            maxLength={null}
+          />
+          {editMode ? <i className="col material-symbols-rounded ms-2">lock</i> : ''}
+        </div>
+        )}
+        
 
         {editMode && (
           <button className="btn-primario-s mb-5" type="submit">
