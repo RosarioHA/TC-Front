@@ -4,9 +4,10 @@ import { useAuth } from '../../context/AuthContext';
 import { useFormContext } from '../../context/FormAlert';
 import ModalAbandonoFormulario from '../commons/modalAbandonoFormulario';
 
-const SidebarLink = ({ to, icon, text, badgeCount, onClick }) => {
+const SidebarLink = ({ to, icon, text, badgeCount, onClick, hasBorder }) => {
   const { hasChanged } = useFormContext();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const linkStyle = hasBorder ? 'blue-border my-2' : '';
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -25,14 +26,14 @@ const SidebarLink = ({ to, icon, text, badgeCount, onClick }) => {
   return (
     <>
     {!hasChanged ? (
-      <NavLink to={to} className="mx-4 btn-link" onClick={handleLinkClick}>
+      <NavLink to={to} className={`mx-4 btn-link ${linkStyle}`} onClick={handleLinkClick}>
         <i className="material-symbols-outlined mx-3">{icon}</i>
         {badgeCount && <i className="badge badge-notification mx-3">{badgeCount}</i>}
         <u>{text}</u>
       </NavLink>
     ) : (
       <>
-        <NavLink  className="mx-4 btn-link" onClick={handleOpenModal}>
+        <NavLink className={`mx-4 btn-link ${linkStyle}`} onClick={handleOpenModal}>
           <i className="material-symbols-outlined mx-3">{icon}</i>
           {badgeCount && <i className="badge badge-notification mx-3">{badgeCount}</i>}
           <u>{text}</u>
@@ -68,10 +69,10 @@ const Sidebar = () => {
       </div>
       <ul className="nav nav-pills flex-column mb-auto mt-0">
         <li className="my-1">
-          <SidebarLink to="/home" icon="home" text="Inicio" onClick={handleItemClick} />
+          <SidebarLink to="/home" icon="home" text="Inicio" onClick={handleItemClick} hasBorder={false}/>
         </li>
         <li className="my-1">
-          <SidebarLink to="#" icon="mail" text="Notificaciones" badgeCount={10} onClick={handleItemClick} />
+          <SidebarLink to="#" icon="mail" text="Notificaciones" badgeCount={10} onClick={handleItemClick} hasBorder={false} />
         </li>
         {(userSubdere || userObservador) && (
           <>
@@ -80,10 +81,10 @@ const Sidebar = () => {
           </>
         )}
           {userSubdere && (
-          <SidebarLink to="/home/crear_usuario" icon="person_add" text="Crear Usuarios" onClick={handleItemClick} />
+          <SidebarLink to="/home/crear_usuario" icon="person_add" text="Crear Usuarios" onClick={handleItemClick} hasBorder={true}/>
         )}
         {(userSubdere || userObservador) && (
-          <SidebarLink to="/home/administrar_usuarios" icon="supervised_user_circle" text="Administrar Usuarios" onClick={handleItemClick} />
+          <SidebarLink to="/home/administrar_usuarios" icon="supervised_user_circle" text="Administrar Usuarios" onClick={handleItemClick} hasBorder={false}/>
         )}
         {(userSubdere || userObservador) && (
           <>
@@ -91,10 +92,10 @@ const Sidebar = () => {
             <span className="title-section ms-4 my-2">Gestión de Competencias</span>
           </>)}
         {userSubdere && (
-          <SidebarLink to="/home/crear_competencia" icon="post_add" text="Crear Competencia" onClick={handleItemClick} />
+          <SidebarLink to="/home/crear_competencia" icon="post_add" text="Crear Competencia" onClick={handleItemClick} hasBorder={true} />
         )}
         {(userSubdere || userObservador) && (
-          <SidebarLink to="/home/listado_competencias" icon="library_books" text="Listado de Competencias" badgeCount={99} onClick={handleItemClick} />
+          <SidebarLink to="/home/listado_competencias" icon="library_books" text="Listado de Competencias" badgeCount={99} onClick={handleItemClick} hasBorder={false}/>
         )}
         <hr className="w-85 mx-4" />
 
