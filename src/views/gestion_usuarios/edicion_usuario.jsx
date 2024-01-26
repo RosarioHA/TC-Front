@@ -11,14 +11,14 @@ import { useUserDetails } from "../../hooks/usuarios/useUserDetail";
 import { useGroups } from "../../hooks/useGroups";
 import { useRegion } from "../../hooks/useRegion";
 import { useSector } from "../../hooks/useSector";
-import { useCompetencia } from "../../hooks/competencias/useCompetencias";
 import { yupResolver } from '@hookform/resolvers/yup';
 import { esquemaEdicionUsuarios } from "../../validaciones/esquemaEditarUsuario";
 import { useAuth } from "../../context/AuthContext";
 import { useFiltroCompetencias } from "../../hooks/useFiltrarCompetencias";
+import { useFormContext } from "../../context/FormAlert";
+import ModalAbandonoFormulario from "../../components/commons/modalAbandonoFormulario";
 
-const EdicionUsuario = () =>
-{
+const EdicionUsuario = () => {
   const { id } = useParams();
   const history = useNavigate();
   const [ editMode, setEditMode ] = useState(false);
@@ -27,16 +27,15 @@ const EdicionUsuario = () =>
   const { dataGroups, loadingGroups } = useGroups();
   const { dataRegiones, loadingRegiones } = useRegion();
   const { dataSector, loadingSector } = useSector();
-  const { dataListCompetencia, loadingCompetencia, errorCompetencia } = useCompetencia();
-  const [ competenciasSeleccionadas, setCompetenciasSeleccionadas ] = useState([]);
   const [ regionId, setRegionId ] = useState(null);
   const [ sectorId, setSectorId ] = useState(null);
   const { dataFiltroCompetencias, loadingFiltroCompetencias } = useFiltroCompetencias(regionId, sectorId);
-  const [competenciasPorAsignar, setCompetenciasPorAsignar] = useState([]);
-  const [competenciasAsignadas, setCompetenciasAsignadas] = useState([]);
+  const [ competenciasAsignadas, setCompetenciasAsignadas ] = useState([]);
+  const [ competenciasSeleccionadas, setCompetenciasSeleccionadas ] = useState([]);
+  const { updateHasChanged } = useFormContext();
+  const [ hasChanged, setHasChanged ] = useState(false);
+  const [ isModalOpen, setIsModalOpen ] = useState(false);
 
-  useEffect(() => {
-  }, [ competenciasSeleccionadas ])
 
   const { userData } = useAuth();
   const userIsSubdere = userData?.perfil?.includes('SUBDERE');
@@ -51,24 +50,35 @@ const EdicionUsuario = () =>
       perfil: userDetails?.perfil || "",
       region: userDetails?.region?.id || null,
       sector: userDetails?.sector?.id || null,
-      is_active: userDetails?.is_active !== undefined ? userDetails.is_active === 'activo' : false,
+      is_active: userDetails?.is_active !== undefined ? userDetails.is_active === 'activo' : false
     },
   });
 
   useEffect(() => {
     if (userDetails) {
-      setCompetenciasPorAsignar(userDetails.competencias_por_asignar || []);
       setCompetenciasAsignadas(userDetails.competencias_asignadas || []);
+      if (userDetails.perfil === 'GORE' && userDetails.regionId) {
+        setRegionId(userDetails.regionId);
+      } 
+      if (userDetails.perfil === 'Usuario Sectorial' && userDetails.sectorId) {
+        setSectorId(userDetails.sectorId);
+      }
+    }
+  }, [userDetails]);
+
+  useEffect(() => {
+    if (userDetails && userDetails.competencias_asignadas) {
+      // Transforma las competencias asignadas en un formato que el componente hijo pueda entender
+      const asignadasIds = userDetails.competencias_asignadas.map(competencia => competencia.id);
+      setCompetenciasSeleccionadas(asignadasIds);
     }
   }, [userDetails]);
 
   const perfil = watch('perfil') || '';
   const renderizadoCondicional = editMode ? perfil : userDetails?.perfil;
 
-  useEffect(() =>
-  {
-    if (editMode && userDetails)
-    {
+  useEffect(() => {
+    if (editMode && userDetails) {
       // En modo edición, actualiza los valores iniciales con los valores actuales.
       setValue('nombre_completo', userDetails.nombre_completo || "");
       setValue('email', userDetails.email || "");
@@ -79,21 +89,30 @@ const EdicionUsuario = () =>
     }
   }, [ editMode, userDetails, setValue ]);
 
-  useEffect(() =>
-  {
-    // Verifica si las competencias se han cargado
-    if (!loadingCompetencia && !errorCompetencia)
-    {
-      console.log("Competencias en vista Editar usuario:", dataListCompetencia);
-    }
-  }, [ loadingCompetencia, errorCompetencia, dataListCompetencia ]);
+  //detecta cambios sin guardar en el formulario
+  function handleOnChange(event) {
+    const data = new FormData(event.currentTarget);
+    // Verifica si hay cambios respecto al valor inicial
+    const formHasChanged = Array.from(data.entries()).some(([name, value]) => {
+      const initialValue = userDetails[name];
+      return value !== String(initialValue);
+    });
+    setHasChanged(formHasChanged);
+    // Actualiza el valor de hasChanged en el contexto
+    updateHasChanged(formHasChanged);
+  }
 
-  const handleBackButtonClick = () =>
-  {
-    history(-1);
+  const handleBackButtonClick = () => {
+    if (hasChanged) {
+      // Muestra el modal
+      setIsModalOpen(true);
+    } else {
+      // Retrocede solo si no hay cambios
+      history(-1);
+    }
   };
-  const handleEditClick = () =>
-  {
+
+  const handleEditClick = () => {
     setEditMode((prevMode) => !prevMode);
   };
 
@@ -110,39 +129,26 @@ const EdicionUsuario = () =>
     value: sector.id,
     label: sector.nombre,
   }));
-  //opciones Filtro Competencias por Asignar
-  const opcionesFiltroCompetencias = competenciasPorAsignar.map(competencia => ({
-    value: competencia.id,
-    label: competencia.nombre,
-  }));
-  //Competencias Asignadas
-  const CompetenciasAsignadas = competenciasAsignadas.map(competencia => ({
+   //opciones Filtro Competencias
+   const opcionesFiltroCompetencias = dataFiltroCompetencias.map(competencia => ({
     value: competencia.id,
     label: competencia.nombre,
   }));
 
-
-  const handleCompetenciasChange = (selectedOptions) => {
-    setCompetenciasSeleccionadas(selectedOptions);
-  }; 
 
   const handleInputClick = (e) => {
     // Previene que el evento se propague al boton
     e.stopPropagation();
   }
 
-  const handleDdSelectChange = (fieldName, selectedOption) =>
-  {
-    try
-    {
-      if (selectedOption && selectedOption.label)
-      {
+  const handleDdSelectChange = (fieldName, selectedOption) => {
+    try {
+      if (selectedOption && selectedOption.label) {
         setValue(fieldName, selectedOption.label);
         setSectorId('');
         setRegionId('');
       }
-    } catch (error)
-    {
+    } catch (error) {
       console.error('Error en handleDdSelectChange:', error);
     }
   };
@@ -164,22 +170,23 @@ const EdicionUsuario = () =>
     }
   };
 
-  const handleEstadoChange = (selectionName, nuevoEstado) =>
-  {
+  const handleEstadoChange = (selectionName, nuevoEstado) => {
     const isActivo = nuevoEstado === "activo";
     setValue("is_active", isActivo);
   };
 
 
-  const onSubmit = async (formData) =>
-  {
-    try
-    {
-      await editUser(id, formData);
+  const onSubmit = async (formData) => {
+    const payload = {
+      ...formData,
+      competencias_asignadas: competenciasSeleccionadas,
+    };
+
+      try {
+      await editUser(id, payload);
       setEditMode(false);
       history('/home/success', { state: { origen: "editar_usuario" } });
-    } catch (error)
-    {
+    } catch (error) {
       console.error("Error al editar el usuario:", error);
     }
   };
@@ -203,8 +210,8 @@ const EdicionUsuario = () =>
         )}
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="d-flex align-items-center mb-4 col-11">
+      <form onSubmit={handleSubmit(onSubmit)} onChange={handleOnChange}>
+        <div className="d-flex align-items-center mb-4">
           <CustomInput
             label="RUT (Obligatorio)"
             placeholder={userDetails ? userDetails.rut : ''}
@@ -216,7 +223,7 @@ const EdicionUsuario = () =>
           {editMode ? <i className="col material-symbols-rounded ms-2">lock</i> : ''}
         </div>
 
-        <div className="my-4 col-11">
+        <div className="my-4">
           <Controller
             name="nombre_completo"
             control={control}
@@ -234,7 +241,7 @@ const EdicionUsuario = () =>
           />
         </div>
 
-        <div className="my-4 col-11">
+        <div className="my-4">
           <Controller
             name="email"
             control={control}
@@ -270,7 +277,7 @@ const EdicionUsuario = () =>
             <input type="text" value="No hay perfiles para mostrar" readOnly />
           )}
         </div>
-        <div className="my-4 col-11">
+        <div className="my-4 ">
           {/* Renderizan de manera condicional según el Perfil de usuario */}
           {renderizadoCondicional === 'GORE' && (
             <div className="my-4 col-11 ">
@@ -391,44 +398,57 @@ const EdicionUsuario = () =>
 
         {/* input Filtro Competencias */}
         <div className="mb-5">
-            <div className="my-3 col-11">
-              <Controller
-                name="competenciasSeleccionadas"
-                control={control}
-                defaultValue={[]}
-                render={({ field }) => (
-                  <>
-                    {loadingFiltroCompetencias ? (
-                      <div>Cargando competencias...</div>
-                    ) : editMode && dataFiltroCompetencias && dataFiltroCompetencias.length > 0 ? (
-                      <DropdownSinSecciones
-                        label="Competencias disponibles para asignar (Opcional)"
-                        placeholder="Busca el nombre de la competencia"
-                        options={opcionesFiltroCompetencias}
-                        selectedOptions={field.value.map(val => parseInt(val, 10))}
-                        onSelectionChange={(selectedOptions) => {
-                          field.onChange(selectedOptions);
-                          handleCompetenciasChange(selectedOptions);
-                        }}
-                        onClick={handleInputClick}
-                        onMouseDown={handleInputClick}
-                      />
-                    ) : editMode && (
-                      <>
-                        <label className="text-sans-h5 input-label ms-3 ms-sm-0">Competencia</label>
-                        <input
-                          className="input-s p-3 input-textarea"
-                          type="text" 
-                          value="No hay Competencias para mostrar" 
-                          readOnly 
-                        />
-                      </>
-                    )}
-                  </>
-                )}
+          <div className="my-3 col-11">
+            {loadingFiltroCompetencias ? (
+              <div>Cargando competencias...</div>
+            ) : editMode && dataFiltroCompetencias && dataFiltroCompetencias.length > 0 ? (
+              <DropdownSinSecciones
+                label="Competencias disponibles para asignar (Opcional)"
+                placeholder="Busca el nombre de la competencia"
+                options={opcionesFiltroCompetencias}
+                selectedOptions={competenciasSeleccionadas}
+                onSelectionChange={setCompetenciasSeleccionadas}
+                onClick={handleInputClick}
+                onMouseDown={handleInputClick}
               />
-            </div>
+            ) : editMode && (
+              <>
+                <label className="text-sans-h5 input-label ms-3 ms-sm-0">Competencia</label>
+                <input
+                  className="input-s p-3 input-textarea"
+                  type="text"
+                  value="No hay Competencias para mostrar"
+                  readOnly
+                />
+              </>
+            )}
           </div>
+        </div>
+
+        {!editMode && (
+          <div className="d-flex align-items-center mb-4 col-11">
+          <CustomInput
+            label="Fecha de Creación"
+            placeholder={userDetails ? userDetails.created : ''}
+            readOnly={true}
+            maxLength={null}
+          />
+          {editMode ? <i className="col material-symbols-rounded ms-2">lock</i> : ''}
+        </div>
+        )}
+
+        {!editMode && (
+          <div className="d-flex align-items-center mb-4 col-11">
+          <CustomInput
+            label="Fecha último inicio de sesión"
+            placeholder={userDetails ? userDetails.last_login_display : ''}
+            readOnly={true}
+            maxLength={null}
+          />
+          {editMode ? <i className="col material-symbols-rounded ms-2">lock</i> : ''}
+        </div>
+        )}
+        
 
         {editMode && (
           <button className="btn-primario-s mb-5" type="submit">
@@ -440,6 +460,15 @@ const EdicionUsuario = () =>
       </form>
       {editUserLoading && <p>Cargando...</p>}
       {editUserError && <p>Error al editar el usuario: {editUserError.message}</p>}
+
+      {isModalOpen && (
+        <ModalAbandonoFormulario
+          onClose={() => setIsModalOpen(false)}
+          isOpen={isModalOpen}
+          direction='-1'
+          goBack={true}
+        />
+      )}
     </div>
   );
 }

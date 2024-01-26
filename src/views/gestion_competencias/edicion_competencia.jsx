@@ -12,11 +12,11 @@ import { useSector } from "../../hooks/useSector";
 import { useAmbitos } from "../../hooks/useAmbitos";
 import { useEditCompetencia } from "../../hooks/competencias/useEditCompetencia"
 import { useUsers } from "../../hooks/usuarios/useUsers";
+import { useFormContext } from "../../context/FormAlert";
+import ModalAbandonoFormulario from "../../components/commons/modalAbandonoFormulario";
 
-const groupUsersByType = (users) =>
-{
-  const grouped = users.reduce((acc, user) =>
-  {
+const groupUsersByType = (users) => {
+  const grouped = users.reduce((acc, user) => {
     acc[ user.perfil ] = acc[ user.perfil ] || [];
     acc[ user.perfil ].push(user);
     return acc;
@@ -27,8 +27,7 @@ const groupUsersByType = (users) =>
   }));
 };
 
-const EdicionCompetencia = () =>
-{
+const EdicionCompetencia = () => {
   const { id } = useParams();
   const history = useNavigate();
   const [ editMode, setEditMode ] = useState(false);
@@ -40,6 +39,9 @@ const EdicionCompetencia = () =>
   const userOptions = groupUsersByType(users);
   const { competencia, updateCompetencia } = useEditCompetencia(id);
   const [ usuariosSeleccionados, setUsuariosSeleccionados ] = useState();
+  const { updateHasChanged } = useFormContext();
+  const [ hasChanged, setHasChanged ] = useState(false);
+  const [ isModalOpen, setIsModalOpen ] = useState(false);
 
   //opciones selectores
   const opcionesRegiones = dataRegiones.map(region => ({
@@ -60,8 +62,7 @@ const EdicionCompetencia = () =>
   }));
 
   //data competencia
-  const regionesSeleccionadas = competencia ? competencia.regiones.map(regionId =>
-  {
+  const regionesSeleccionadas = competencia ? competencia.regiones.map(regionId => {
     const region = dataRegiones.find(region => region.id === regionId);
     return {
       label: region.region,
@@ -94,10 +95,8 @@ const EdicionCompetencia = () =>
     },
   });
 
-  useEffect(() =>
-  {
-    if (editMode && competencia)
-    {
+  useEffect(() => {
+    if (editMode && competencia) {
       // Inicializar el formulario con los detalles de la competencia
       setValue("nombre", competencia.nombre || "");
       setValue("regiones", competencia.regiones || null);
@@ -113,57 +112,65 @@ const EdicionCompetencia = () =>
     }
   }, [ editMode, competencia, setValue ]);
 
+  //detecta cambios sin guardar en el formulario
+  function handleOnChange(event) {
+    const data = new FormData(event.currentTarget);
+    // Verifica si hay cambios respecto al valor inicial
+    const formHasChanged = Array.from(data.entries()).some(([name, value]) => {
+      const initialValue = competencia[name];
+      return value !== String(initialValue);
+    });
+    setHasChanged(formHasChanged);
+    // Actualiza el valor de hasChanged en el contexto
+    updateHasChanged(formHasChanged);
+  }
+
   //manejo de cambios en campos editables
-  const handleSectoresChange = (selectedSectores) =>
-  {
+  const handleSectoresChange = (selectedSectores) => {
     const selectedSectoresValues = selectedSectores.map(sector => sector.value);
     setValue("sectores", selectedSectoresValues);
+    setHasChanged(true);
   };
 
-  const handleRegionesChange = (selectedRegiones) =>
-  {
+  const handleRegionesChange = (selectedRegiones) => {
     const selectedRegionesValues = selectedRegiones.map(region => region.value);
     setValue("regiones", selectedRegionesValues);
   };
 
-
-  const handleAmbitoChange = (selectedAmbito) =>
-  {
+  const handleAmbitoChange = (selectedAmbito) => {
     setValue("ambito_competencia", selectedAmbito.value)
   };
 
-
-  const handleOrigenChange = (selectedOrigen) =>
-  {
+  const handleOrigenChange = (selectedOrigen) => {
     setValue("origen", selectedOrigen.value)
   };
 
-  const onSubmit = async (formData) =>
-  {
-    try
-    {
+  const onSubmit = async (formData) => {
+    try {
       await updateCompetencia(formData);
       setEditMode(false);
       history('/home/success', { state: { origen: "editar_competencia" } });
-    } catch (error)
-    {
+    } catch (error) {
       console.error("Error al guardar la competencia:", error);
     }
   };
 
-  const handleUsuariosTransformed = useCallback((nuevosUsuarios) =>
-  {
+  const handleUsuariosTransformed = useCallback((nuevosUsuarios) => {
     setUsuariosSeleccionados(nuevosUsuarios);
   }, []);
   console.log('com', usuariosSeleccionados)
 
 
-  const handleBackButtonClick = () =>
-  {
-    history(-1);
+  const handleBackButtonClick = () => {
+    if (hasChanged) {
+      // Muestra el modal
+      setIsModalOpen(true);
+    } else {
+      // Retrocede solo si no hay cambios
+      history(-1);
+    }
   };
-  const handleEditClick = () =>
-  {
+  const handleEditClick = () => {
     setEditMode((prevMode) => !prevMode);
   };
 
@@ -184,7 +191,7 @@ const EdicionCompetencia = () =>
         </button>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onSubmit)} onChange={handleOnChange}>
         <div className="mb-4">
           <Controller
             name="nombre"
@@ -239,7 +246,6 @@ const EdicionCompetencia = () =>
                 selectedOptions={field.value}
               />
             )} />
-
         </div>
 
         <div className="mb-4 col-11">
@@ -276,12 +282,11 @@ const EdicionCompetencia = () =>
                 control={control}
                 onSelectionChange={handleAmbitoChange}
                 initialValue={ambitoSeleccionado}
-
               />
             )} />
         </div>
 
-        <div className="my-4 col-11">
+        <div className="my-4">
           < DropdownConSecciones
             label="Asignar Usuarios (Opcional)"
             placeholder="Busca el nombre de la persona"
@@ -361,7 +366,6 @@ const EdicionCompetencia = () =>
         )}
 
         <div className="py-2">
-
         {editMode ? (
           <button className="btn-primario-s my-4" type="submit">
             <i className="material-symbols-rounded me-2">save</i>
@@ -372,6 +376,14 @@ const EdicionCompetencia = () =>
         )}
         </div>
       </form>
+      {isModalOpen && (
+        <ModalAbandonoFormulario
+          onClose={() => setIsModalOpen(false)}
+          isOpen={isModalOpen}
+          direction='-1'
+          goBack={true}
+        />
+      )}
     </div>
   );
 }

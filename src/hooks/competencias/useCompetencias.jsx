@@ -1,39 +1,93 @@
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react";
 import { apiTransferenciaCompentencia } from "../../services/transferenciaCompetencia";
 
-export const useCompetencia = (id) => {
+export const useCompetencia = (id) =>
+{
+  // Estados y funciones para 'lista-home'
   const [ dataCompetencia, setDataCompetencia ] = useState([]);
+  const [ paginationListaHome, setPaginationListaHome ] = useState({ count: 0, next: null, previous: null });
+  const [ currentPageListaHome, setCurrentPageListaHome ] = useState(1);
+
+  // Estados y funciones para 'competencias'
   const [ dataListCompetencia, setDataListCompetencia ] = useState([]);
+  const [ paginationCompetencia, setPaginationCompetencia ] = useState({ count: 0, next: null, previous: null });
+  const [ currentPageCompetencia, setCurrentPageCompetencia ] = useState(1);
+
+  // Otros estados
   const [ competenciaDetails, setCompetenciaDetails ] = useState([]);
   const [ loadingCompetencia, setLoadingComptencia ] = useState(true);
   const [ errorCompetencia, setErrorCompetencia ] = useState(null);
-  const [ paginationCompetencia, setPaginationCompetencia ] = useState({ count: 0, next: null, previous: null });
-  const [ currentPage, setCurrentPage ] = useState(1);
 
-  const fetchCompetencias = useCallback(async () => {
+  // Estados para filtros y búsqueda
+  const [ searchTerm, setSearchTerm ] = useState('');
+  const [ filterRegion, setFilterRegion ] = useState(null);
+  const [ filterSector, setFilterSector ] = useState(null);
+
+
+  const fetchCompetencias = useCallback(async () =>
+  {
     setLoadingComptencia(true);
-    try {
-      const response = await apiTransferenciaCompentencia.get(`/competencias/lista-home/?page=${currentPage}`);
-      const { data } = response
-      
+    try
+    {
+      // Realizar la solicitud con la URL modificada
+      const response = await apiTransferenciaCompentencia.get(`/competencias/lista-home/?page=${currentPageListaHome}`);
+      const { data } = response;
       setDataCompetencia(data.results);
-      setPaginationCompetencia({ 
-        count: data.count, 
-        next: data.next, 
-        previous: data.previous, 
+      setPaginationListaHome({
+        count: data.count,
+        next: data.next,
+        previous: data.previous,
       });
-    } catch (err) {
-      console.error(err)
+    } catch (err)
+    {
+      console.error(err);
       setErrorCompetencia(err);
-    } finally {
+    } finally
+    {
       setLoadingComptencia(false);
     }
-  }, [ currentPage ]);
+  }, [ currentPageListaHome]);
 
-  const fetchListaCompentencias = useCallback(async () => {
-    try {
-      const response = await apiTransferenciaCompentencia.get(`/competencias/?page=${currentPage}`);
-      setDataListCompetencia(response.data);
+
+  // Funciones para actualizar los filtros y búsqueda
+  const updateSearchTerm = (term) =>
+  {
+    setSearchTerm(term);
+  };
+
+  const updateFilterRegion = (regionId) =>
+  {
+    setFilterRegion(regionId);
+  };
+
+  const updateFilterSector = (sectorId) =>
+  {
+    setFilterSector(sectorId);
+  };
+
+
+
+
+  const fetchListaCompentencias = useCallback(async () =>
+  {
+    try
+    {
+      // Construir la URL con parámetros de búsqueda y filtros
+      let url = `/competencias/?page=${currentPageCompetencia}`;
+      if (searchTerm)
+      {
+        url += `&search=${encodeURIComponent(searchTerm)}`;
+      }
+      if (filterRegion)
+      {
+        url += `&region_id=${filterRegion}`;
+      }
+      if (filterSector)
+      {
+        url += `&sector_id=${filterSector}`;
+      }
+      const response = await apiTransferenciaCompentencia.get(url);
+      setDataListCompetencia(response.data.results);
       setPaginationCompetencia({
         count: response.data.count,
         next: response.data.next,
@@ -43,28 +97,41 @@ export const useCompetencia = (id) => {
       console.error(err);
       setErrorCompetencia(err);
     }
-  }, [currentPage]);
+  }, [currentPageCompetencia, filterRegion, filterSector, searchTerm]);
 
-  const updatePage = (newPage) => {
-    setCurrentPage(newPage);
+
+  const updateUrl = (url) => {
+    setCurrentPageCompetencia(url);
   };
 
-  const fetchCompetenciaDetails = useCallback(async (id) => {
+  const fetchCompetenciaDetails = useCallback(async (id) =>
+  {
     setLoadingComptencia(true);
-    try {
-      const response = await apiTransferenciaCompentencia.get(`competencias/${id}/`);
+    try
+    {
+      const response = await apiTransferenciaCompentencia.get(`/competencias/${id}/`);
       setCompetenciaDetails(response.data);
-    } catch (err) {
+    } catch (err)
+    {
       setErrorCompetencia(err);
-    } finally {
+    } finally
+    {
       setLoadingComptencia(false);
     }
   }, []);
 
   useEffect(() => {
-    if (id) {
+    console.log("Término de búsqueda actualizado:", searchTerm);
+    fetchListaCompentencias();
+  }, [searchTerm, fetchListaCompentencias]);
+
+  useEffect(() =>
+  {
+    if (id)
+    {
       fetchCompetenciaDetails(id);
-    } else {
+    } else
+    {
       fetchCompetencias();
       fetchListaCompentencias();
     }
@@ -76,7 +143,15 @@ export const useCompetencia = (id) => {
     competenciaDetails,
     loadingCompetencia,
     errorCompetencia,
+    paginationListaHome,
     paginationCompetencia,
-    updatePage
+    updateSearchTerm,
+    updateFilterRegion,
+    updateFilterSector,
+    updateUrl,
+    currentPageCompetencia,
+    setCurrentPageCompetencia,
+    setCurrentPageListaHome ,
+    currentPageListaHome
   };
-}
+};
