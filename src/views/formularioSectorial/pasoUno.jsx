@@ -8,14 +8,13 @@ import { ButtonsNavigate } from "../../components/layout/ButtonsNavigate";
 import { MonoStepers } from '../../components/stepers/MonoStepers';
 
 const PasoUno = () => {
-  const { pasoData, loadingPaso, errorPaso, updateStepNumber, data } = useContext(FormularioContext);
+  const { pasoData, errorPaso, updateStepNumber, data } = useContext(FormularioContext);
   const stepNumber = 1;
 
   useEffect(() => {
     updateStepNumber(stepNumber);
   }, [updateStepNumber, stepNumber]);
 
-  if (loadingPaso) return <div>Cargando...</div>;
   if (errorPaso) return <div>Error: {errorPaso.message || "Error desconocido"}</div>;
   if (!pasoData || pasoData.length === 0) return <div>No hay datos disponibles para el Paso 1</div>;
   

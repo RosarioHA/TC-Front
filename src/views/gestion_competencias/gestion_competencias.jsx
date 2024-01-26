@@ -210,7 +210,7 @@ const GestionCompetencias = () =>
                 <td className="pt-4">
                   <span className="badge-type">{competencia.origen}</span>
                 </td>
-                <td className="py-3 d-flex ">
+                <td className="py-4 d-flex ">
                   <button
                     className="btn-secundario-s btn-sm align-self-center"
                     onClick={() => handleVerEstado(competencia)}

@@ -113,7 +113,7 @@ export const DropdownSelectBuscadorCheck = ({ label, placeholder, options, onSel
       {isOpen ? (
         <input
           className={`ghost-input dropdown-btn ${isOpen ? "dropdown-btn-abierto" : ""}`}
-          type="text"
+          type="search"
           placeholder="Buscar..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}

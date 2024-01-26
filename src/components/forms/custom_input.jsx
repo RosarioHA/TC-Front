@@ -71,16 +71,18 @@ const CustomInput = forwardRef(
                 {renderSpinnerOrCheck()}
               </div>
             </div>
-            {maxLength !== null && maxLength !== undefined && (
-              <div className="d-flex justify-content-end mb-0">
-                <span className={counterClass}>
-                  {inputValue.length}/{maxLength} caracteres.
-                </span>
-              </div>
-            )}
-            {error && (
-              <p className="text-sans-h6-darkred mt-2 mb-0">{error}</p>
-            )}
+            <div className="d-flex justify-content-between col-12">
+              {error && (
+                <p className="text-sans-h6-darkred mt-1 mb-0">{error}</p>
+              )}
+              {maxLength !== null && maxLength !== undefined && (
+                <div className="mb-0  mt-1 ms-auto ">
+                  <span className={counterClass}>
+                    {inputValue.length}/{maxLength} caracteres.
+                  </span>
+                </div>
+              )}
+            </div>
           </>
         )}
       </div>

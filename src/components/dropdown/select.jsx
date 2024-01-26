@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 
-const DropdownSelect = ({ label, placeholder, options, onSelectionChange, selected, readOnly }) =>
+const DropdownSelect = ({ label, placeholder, options, onSelectionChange, selected, error, readOnly }) =>
 {
   const [ isOpen, setIsOpen ] = useState(false);
   const [ selectedOption, setSelectedOption ] = useState(null);
@@ -83,6 +83,7 @@ const DropdownSelect = ({ label, placeholder, options, onSelectionChange, select
           ))}
         </div>
       )}
+      {error && <div className="text-sans-h6-darkred mt-2">{error}</div>}
     </div>
   );
 };
