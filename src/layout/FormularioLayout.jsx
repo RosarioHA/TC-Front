@@ -10,8 +10,7 @@ const FormularioLayout = () => {
   const location = useLocation();
   const params = useParams();
   const [baseUrl, setBaseUrl] = useState('');
-
-  const id = data.id; 
+  const id = data?.id; 
 
   useEffect(() => {
     let currentId = location.state?.id || params.id;
@@ -24,11 +23,16 @@ const FormularioLayout = () => {
     } else if (location.pathname.includes('revision_formulario_sectorial')) {
       setBaseUrl(`/home/revision_formulario_sectorial/${params.id}`);
     }
-  }, [location, params.id, id, updateFormId]);
+  }, [location, params.id, id, updateFormId]); // Make sure this dependency array is correctly set
 
   if (error) {
     return <div>Error: {error.message}</div>;
   }
+
+  if (!data) {
+    return <div>Loading...</div>; // Or any other loading state representation
+  }
+
 
   return (
     <>

@@ -20,7 +20,7 @@ export const SuccessSOficio = ({ idCompetencia }) =>
           </div>
           <div className="col-9">
             <h2 className="text-sans-h2 mb-4">Subiste el oficio DIPRES con éxito</h2>
-            <p className="text-sans-p">Con esto, DIPRES tienen hábilitada la plataforma para subir su minuta. También,<br /> los plazos establecidos para el llenado de este comienzan a correr.</p>
+            <p className="text-sans-p">Con esto, DIPRES tienen hábilitada la plataforma para subir su minuta.<br/> También, los plazos establecidos para el llenado de este comienzan a correr.</p>
           </div>
         </div>
       </div>

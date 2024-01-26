@@ -57,7 +57,7 @@ export const PersonsAssigned = ({ usuariosSubdere, usuariosDipres, usuariosSecto
             tabIndex="0"
             key={user.id}
           >
-            <Table userData={getUserData()} />
+          <Table userData={getUserData()} userType={selectedTab} />
           </div>
         ))}
       </div>

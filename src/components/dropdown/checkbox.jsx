@@ -7,21 +7,24 @@ const DropdownCheckbox = ({ label, placeholder, options, onSelectionChange, read
   const dropdownRef = useRef(null);
   const toggleRef = useRef(null);
 
-  useEffect(() => {
-    function handleClickOutside(event) {
+  useEffect(() =>
+  {
+    function handleClickOutside(event)
+    {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target) &&
-          toggleRef.current && !toggleRef.current.contains(event.target)) {
+        toggleRef.current && !toggleRef.current.contains(event.target))
+      {
         setIsOpen(false);
         onSelectionChange(selectedOptions);
       }
     }
 
     document.addEventListener('mousedown', handleClickOutside);
-    return () => {
+    return () =>
+    {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [selectedOptions, onSelectionChange]);
-
+  }, [ selectedOptions, onSelectionChange ]);
 
   const handleDropdownClick = () =>
   {
@@ -49,7 +52,6 @@ const DropdownCheckbox = ({ label, placeholder, options, onSelectionChange, read
       }
     }
   };
-  
 
   return (
     <div className={`input-container ${readOnly ? 'readonly' : ''}`} ref={dropdownRef}>
@@ -89,14 +91,14 @@ const DropdownCheckbox = ({ label, placeholder, options, onSelectionChange, read
 
           {options.map((option) => (
             <label
-              className={selectedOptions.find(opt => opt.value === option.value) ? 'selected-option' : 'unselected-option'}
+              className={selectedOptions.some(opt => opt.value === option.value) ? 'selected-option' : 'unselected-option'}
               key={option.value}
             >
               <input
-                className="my-3 mx-3 p-3" 
+                className="my-3 mx-3 p-3"
                 type="checkbox"
                 value={option.value}
-                checked={selectedOptions.find(opt => opt.value === option.value)}
+                checked={selectedOptions.some(opt => opt.value === option.value)} // Asegurar valor booleano
                 onChange={() => handleCheckboxChange(option)}
               />
               {option.label}
