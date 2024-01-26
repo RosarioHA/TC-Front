@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -22,7 +22,7 @@ const initialValues = {
   regiones: [],
   sectores: [],
   origen: '',
-  ambito_competencia: '',
+  ambito_competencia: null,
   usuarios_subdere: [],
   usuarios_dipres: [],
   usuarios_sectoriales: [],
@@ -31,8 +31,10 @@ const initialValues = {
   plazo_formulario_gore: undefined,
 };
 
-const groupUsersByType = (users) => {
-  const grouped = users.reduce((acc, user) => {
+const groupUsersByType = (users) =>
+{
+  const grouped = users.reduce((acc, user) =>
+  {
     acc[ user.perfil ] = acc[ user.perfil ] || [];
     acc[ user.perfil ].push(user);
     return acc;
@@ -44,7 +46,8 @@ const groupUsersByType = (users) => {
   }));
 };
 
-const CreacionCompetencia = () => {
+const CreacionCompetencia = () =>
+{
   const { createCompetencia } = useCrearCompetencia();
   const { dataRegiones } = useRegion();
   const { users } = useUsers();
@@ -67,11 +70,14 @@ const CreacionCompetencia = () => {
   const [ isModalOpen, setIsModalOpen ] = useState(false);
 
   const history = useNavigate();
-  const handleBackButtonClick = () => {
-    if (hasChanged) {
+  const handleBackButtonClick = () =>
+  {
+    if (hasChanged)
+    {
       // Muestra el modal
       setIsModalOpen(true);
-    } else {
+    } else
+    {
       // Retrocede solo si no hay cambios
       history(-1);
     }
@@ -89,11 +95,13 @@ const CreacionCompetencia = () => {
   });
 
   //detecta cambios sin guardar en el formulario
-  function handleOnChange(event) {
+  function handleOnChange(event)
+  {
     const data = new FormData(event.currentTarget);
     // Verifica si hay cambios respecto al valor inicial
-    const formHasChanged = Array.from(data.entries()).some(([name, value]) => {
-      const initialValue = initialValues[name];
+    const formHasChanged = Array.from(data.entries()).some(([ name, value ]) =>
+    {
+      const initialValue = initialValues[ name ];
       return value !== String(initialValue);
     });
     setHasChanged(formHasChanged);
@@ -102,7 +110,8 @@ const CreacionCompetencia = () => {
   }
   console.log("hasChanged", hasChanged)
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data) =>
+  {
     const competenciaData = {
       ...data,
       sectores: sectoresSeleccionados,
@@ -118,18 +127,22 @@ const CreacionCompetencia = () => {
       fecha_inicio: formatFechaInicio(),
       oficio_origen: selectedFile,
     };
-    try {
+    try
+    {
       console.log(competenciaData);
       await createCompetencia(competenciaData);
       history('/home/success', { state: { origen: "crear_competencia" } });
       setErrorGeneral('');
-    } catch (error) {
-      if (error.response && error.response.data) {
+    } catch (error)
+    {
+      if (error.response && error.response.data)
+      {
         const errores = error.response.data;
         const primerCampoError = Object.keys(errores)[ 0 ];
         const primerMensajeError = errores[ primerCampoError ][ 0 ];
         setErrorGeneral(primerMensajeError);
-      } else {
+      } else
+      {
         setErrorGeneral('Error al conectarse con el servidor.');
       }
     }
@@ -140,7 +153,8 @@ const CreacionCompetencia = () => {
     label: region.region,
     value: region.id,
   }));
-  const handleRegionesChange = (selectedOptions) => {
+  const handleRegionesChange = (selectedOptions) =>
+  {
     setRegionesSeleccionadas(selectedOptions);
     setValue('regiones', selectedOptions.map(option => option.value));
   };
@@ -153,7 +167,9 @@ const CreacionCompetencia = () => {
       ministerioId: ministerio.id
     }))
   }));
-  const handleSectorSelectionChange = (selectedSectorValues) => {
+
+  const handleSectorSelectionChange = (selectedSectorValues) =>
+  {
     setSectoresSeleccionados(selectedSectorValues);
     setValue('sectores', selectedSectorValues, { shouldValidate: true });
   };
@@ -163,7 +179,8 @@ const CreacionCompetencia = () => {
     label: origen.descripcion,
     value: origen.clave,
   }));
-  const handleOrigenChange = (selectedOption) => {
+  const handleOrigenChange = (selectedOption) =>
+  {
     setOrigenSeleccionado(selectedOption.value);
     setValue('origen', selectedOption.value);
   };
@@ -173,23 +190,28 @@ const CreacionCompetencia = () => {
     label: ambito.nombre,
     value: ambito.id,
   }));
-  const handleAmbitoChange = (selectedOption) => {
-    const ambitoId = selectedOption ? selectedOption.value : null;
-    setAmbitoSeleccionado(ambitoId);
-    setValue('ambito_competencia', ambitoId, { shouldValidate: true });
+  const handleAmbitoChange = (selectedOption) =>
+  {
+    setAmbitoSeleccionado(selectedOption.value );
+    setValue('ambito_competencia',selectedOption.value );
   };
 
-  const handleUsuariosTransformed = useCallback((nuevosUsuarios) => {
+  const handleUsuariosTransformed = useCallback((nuevosUsuarios) =>
+  {
     setUsuariosSeleccionados(nuevosUsuarios);
   }, []);
 
-  const handleFileChange = (event) => {
+  const handleFileChange = (event) =>
+  {
     const file = event.target.files[ 0 ];
-    if (file) {
-      if (file.size > 20971520) { // 20 MB en bytes
+    if (file)
+    {
+      if (file.size > 20971520)
+      { // 20 MB en bytes
         setErrorMessage("Archivo no cumple con el peso permitido");
         setSelectedFile(null);
-      } else {
+      } else
+      {
         setSelectedFile(file);
         setButtonText('Modificar');
         setErrorMessage("");
@@ -197,23 +219,38 @@ const CreacionCompetencia = () => {
     }
   };
 
-  const handleDelete = () => {
+  const handleDelete = () =>
+  {
     setSelectedFile(null);
     setButtonText('Subir archivo');
   };
 
-  const handleUploadClick = () => {
+  const handleUploadClick = () =>
+  {
     document.getElementById('fileUploadInput').click();
   };
 
-  const handleFechaInicioChange = (event) => {
+  const handleFechaInicioChange = (event) =>
+  {
     setFechaInicio(event.target.value);
   };
 
-  const formatFechaInicio = () => {
+  const formatFechaInicio = () =>
+  {
     if (!fechaInicio) return '';
 
     return new Date(fechaInicio).toISOString();
+  };
+
+  const dateInputRef = useRef(null);
+
+  const handleDateContainerClick = () =>
+  {
+    // Enfoca el input de fecha cuando se hace clic en el contenedor
+    if (dateInputRef.current)
+    {
+      dateInputRef.current.focus();
+    }
   };
 
   return (
@@ -238,7 +275,7 @@ const CreacionCompetencia = () => {
                   label="Nombre de la Competencia (Obligatorio)"
                   placeholder="Escribe el nombre de la competencia"
                   id="nombre"
-                  maxLength={30}
+                  maxLength={100}
                   error={errors.nombre?.message}
                   {...field}
                 />
@@ -293,11 +330,12 @@ const CreacionCompetencia = () => {
               options={opcionesAmbito}
               onSelectionChange={handleAmbitoChange}
               selected={ambitoSeleccionado}
-              error={errors.ambito?.message}
+              
             />
-            {errors.ambito_competencia && (
+              {errors.ambito_competencia&& (
               <p className="text-sans-h6-darkred mt-2 mb-0">{errors.ambito_competencia.message}</p>
             )}
+            
             <div className="d-flex mt-2 text-sans-h6-primary">
               <i className="material-symbols-rounded me-2">info</i>
               <h6> editable </h6>
@@ -361,14 +399,17 @@ const CreacionCompetencia = () => {
                 </tbody>
               </table>
               <div className="my-4 py-3 col-12">
-                <span className="text-sans-h5 ">Elige la fecha del oficio (Obligatorio)</span>
-                <input
-                  id="dateInput"
-                  type="date"
-                  className="form-control py-3 my-2  border rounded border-dark-subtle "
-                  onChange={handleFechaInicioChange}
-                  value={fechaInicio}
-                />
+                <div onClick={handleDateContainerClick} className="fecha-oficio-contenedor">
+                  <span className="text-sans-h5">Elige la fecha del oficio (Obligatorio)</span>
+                  <input
+                    ref={dateInputRef}
+                    id="dateInput"
+                    type="date"
+                    className="form-control py-3 my-2 border rounded border-dark-subtle"
+                    onChange={handleFechaInicioChange}
+                    value={fechaInicio}
+                  />
+                </div>
                 <div className="d-flex text-sans-h6-primary">
                   <i className="material-symbols-rounded me-2">info</i>
                   <h6>La fecha del oficio debe coincidir con la fecha en que el sector recibió la información, así los plazos previamente establecidos para el llenado del formulario sectorial  </h6>
@@ -386,14 +427,16 @@ const CreacionCompetencia = () => {
                   placeholder="Escribe el número de días corridos"
                   id="plazo_formulario_sectorial"
                   maxLength={null}
-                  error={errors.plazo_formulario_sectorial?.message}
                   {...field} />
               )}
             />
-            <div className="d-flex justify-content-end col-11">
-              <h6 className="text-sans-h6-grey mt-1 me-4">Número entre 15 y 30</h6>
+            <div className="d-flex justify-content-between col-11">
+              {errors.plazo_formulario_sectorial && (
+                <p className="text-sans-h6-darkred mt-1 mb-0">{errors.plazo_formulario_sectorial.message}</p>
+              )}
+              <h6 className="text-sans-h6-grey mt-1 ms-auto">Número entre 15 y 30</h6>
             </div>
-            <div className="d-flex text-sans-h6-primary">
+            <div className="d-flex text-sans-h6-primary col-11 mt-1">
               <i className="material-symbols-rounded me-2">info</i>
               <h6> El plazo debe ser de 15 a 30 días corridos y se contará desde el día en que asocies un usuario sectorial a la competencia. </h6>
             </div>
@@ -409,14 +452,17 @@ const CreacionCompetencia = () => {
                   placeholder="Escribe el número de días corridos"
                   id="plazo_formulario_gore"
                   maxLength={null}
-                  error={errors.plazo_formulario_gore?.message}
                   ref={field.ref}
                   {...field} />
               )} />
-            <div className="d-flex justify-content-end col-11">
-              <h6 className="text-sans-h6-grey mt-1 me-4 ">Número entre 15 y 30</h6>
+            <div className="d-flex justify-content-between col-11">
+              {errors.plazo_formulario_gore && (
+                <p className="text-sans-h6-darkred mt-1 mb-0">{errors.plazo_formulario_gore.message}</p>
+              )}
+              <h6 className="text-sans-h6-grey mt-1 ms-auto">Número entre 15 y 30</h6>
             </div>
-            <div className="d-flex text-sans-h6-primary">
+
+            <div className="d-flex text-sans-h6-primary mt-1">
               <i className="material-symbols-rounded me-2">info</i>
               <h6> El plazo debe ser de 15 a 30 días corridos y se contará desde el día en que asocies un usuario GORE a la competencia. </h6>
             </div>

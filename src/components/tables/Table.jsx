@@ -1,7 +1,8 @@
-export const Table = ({ userData }) => {
-  // Identificar si necesitamos columnas adicionales
-  const showSector = userData.some(user => user.sector_nombre);
-  const showRegion = userData.some(user => user.region_nombre);
+
+export const Table = ({ userData, userType }) => {
+  // Determinar si se deben mostrar las columnas de 'Sector' y 'Región'
+  const showSector = userType === 'Sectorial' ;
+  const showRegion = userType  === 'Gore';
 
   return (
     <table className="table table-striped">
@@ -27,4 +28,4 @@ export const Table = ({ userData }) => {
       </tbody>
     </table>
   );
-}
+};
