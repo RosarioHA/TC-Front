@@ -362,7 +362,6 @@ const EdicionCompetencia = () =>
 
         <div className="py-2">
 
-<<<<<<< HEAD
         {editMode ? (
           <button className="btn-primario-s my-4" type="submit">
             <i className="material-symbols-rounded me-2">save</i>
@@ -372,17 +371,6 @@ const EdicionCompetencia = () =>
           <div></div>
         )}
         </div>
-=======
-          {editMode ? (
-            <button className="btn-primario-s my-4" type="submit">
-              <i className="material-symbols-rounded me-2">save</i>
-              <p className="mb-0">Guardar</p>
-            </button>
-          ) : (
-            <div></div>
-          )}
-          </div>
->>>>>>> ff6eea4786e2aaa892a3faebbf87dbd1ff67dd13
       </form>
     </div>
   );
