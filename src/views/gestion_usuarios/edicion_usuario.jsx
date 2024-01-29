@@ -232,7 +232,7 @@ const EdicionUsuario = () => {
                 label="Nombre Completo (Obligatorio)"
                 placeholder={userDetails ? userDetails.nombre_completo : ''}
                 id="nombre_completo"
-                readOnly={editMode}
+                readOnly={!editMode}
                 maxLength={null}
                 error={errors.nombre_completo?.message}
                 {...field}
