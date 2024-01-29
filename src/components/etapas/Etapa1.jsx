@@ -3,13 +3,10 @@ import { Link } from 'react-router-dom';
 export const Etapa1 = ({ etapa, id }) => {
   const { competencia_creada, usuarios_vinculados, fecha_ultima_modificacion, ultimo_editor } = etapa;
 
-  console.log("usuarios_vinculados", usuarios_vinculados);
-  console.log("competencia creada", competencia_creada);
+
   return (
     <div className="my-3">
-
       <div>
-        {/* Manejar competencia_creada que es un array */}
         {competencia_creada && competencia_creada.length > 0 && competencia_creada.map((competencia, index) => (
           <div key={index} className="d-flex justify-content-between text-sans-p border-top border-bottom my-3 py-1">
             <div className="align-self-center">{competencia.nombre}</div>
@@ -21,10 +18,14 @@ export const Etapa1 = ({ etapa, id }) => {
         {usuarios_vinculados && (
           <div className="d-flex justify-content-between text-sans-p border-top border-bottom my-3 py-1">
             <div className="align-self-center">{usuarios_vinculados.nombre}</div>
-            <Link to={`/home/editar_competencia/${id}`} className="btn-secundario-s text-decoration-none" id="btn">
-              <span className="material-symbols-outlined me-1">folder</span>
-              <u>{usuarios_vinculados.accion}</u>
-            </Link>
+            {usuarios_vinculados.accion === "Editar usuario(s)" ? (
+              <Link to={`/home/editar_competencia/${id}`} className="btn-secundario-s text-decoration-none" id="btn">
+                <span className="material-symbols-outlined me-1">folder</span>
+                <u>{usuarios_vinculados.accion}</u>
+              </Link>
+            ) : (
+              <span className="badge-status-finish">{usuarios_vinculados.accion}</span>
+            )}
           </div>
         )}
 

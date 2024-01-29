@@ -11,6 +11,8 @@ const Etapa = ({ etapaInfo, index, id }) => {
   }
 };
 
+
+
 export const VerticalStepper = ({ etapasObjeto, etapaDatos, id }) => {
   if (!etapasObjeto)
   {

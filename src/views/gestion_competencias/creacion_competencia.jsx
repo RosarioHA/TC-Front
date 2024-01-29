@@ -275,7 +275,7 @@ const CreacionCompetencia = () =>
                   label="Nombre de la Competencia (Obligatorio)"
                   placeholder="Escribe el nombre de la competencia"
                   id="nombre"
-                  maxLength={100}
+                  maxLength={200}
                   error={errors.nombre?.message}
                   {...field}
                 />
