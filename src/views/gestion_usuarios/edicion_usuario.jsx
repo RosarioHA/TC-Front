@@ -80,7 +80,7 @@ const EdicionUsuario = () => {
 
   useEffect(() => {
     if (editMode && userDetails) {
-      // En modo edición, actualiza los valores iniciales con los valores actuales.
+      // En modo edicion, actualiza los valores iniciales con los valores actuales.
       setValue('nombre_completo', userDetails.nombre_completo || "");
       setValue('email', userDetails.email || "");
       setValue('perfil', userDetails.perfil || "");
@@ -104,11 +104,11 @@ const EdicionUsuario = () => {
   }
 
   const handleBackButtonClick = () => {
-    if (hasChanged) {
-      // Muestra el modal
+    if (editMode) {
+      setEditMode(false);
+    } else if (hasChanged) {
       setIsModalOpen(true);
     } else {
-      // Retrocede solo si no hay cambios
       history(-1);
     }
   };
@@ -242,7 +242,7 @@ const EdicionUsuario = () => {
                 label="Nombre Completo (Obligatorio)"
                 placeholder={userDetails ? userDetails.nombre_completo : ''}
                 id="nombre_completo"
-                readOnly={editMode}
+                readOnly={!editMode}
                 maxLength={null}
                 error={errors.nombre_completo?.message}
                 {...field}

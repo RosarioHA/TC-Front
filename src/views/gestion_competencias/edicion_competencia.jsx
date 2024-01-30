@@ -162,14 +162,15 @@ const EdicionCompetencia = () => {
 
 
   const handleBackButtonClick = () => {
-    if (hasChanged) {
-      // Muestra el modal
+    if (editMode) {
+      setEditMode(false);
+    } else if (hasChanged) {
       setIsModalOpen(true);
     } else {
-      // Retrocede solo si no hay cambios
       history(-1);
     }
   };
+  
   const handleEditClick = () => {
     setEditMode((prevMode) => !prevMode);
   };
