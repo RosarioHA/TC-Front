@@ -199,6 +199,8 @@ const EdicionUsuario = () => {
       try {
       await editUser(id, payload);
       setEditMode(false);
+      updateHasChanged(false);
+      setHasChanged(false);
       history('/home/success', { state: { origen: "editar_usuario" } });
     } catch (error) {
       console.error("Error al editar el usuario:", error);

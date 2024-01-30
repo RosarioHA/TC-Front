@@ -187,6 +187,8 @@ const CreacionUsuario = () => {
       const isValid = await trigger();
       if (submitClicked && isValid) {
         await createUser(payload);
+        updateHasChanged(false);
+        setHasChanged(false);
         history('/home/success', { state: { origen: "crear_usuario" } });
       } else {
         console.log("El formulario no es válido o no se ha hecho click en 'Crear Usuario'");

@@ -1,4 +1,5 @@
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import successIcon from '../static/icons/success.svg';
 
 const SuccessViews = () => {
@@ -7,48 +8,50 @@ const SuccessViews = () => {
   const origen = location.state?.origen;
 
   const handleButtonClick = () => {
+    // Realizar la navegación condicional según la procedencia del usuario
     switch (origen) {
       case "crear_usuario":
         history('/home/administrar_usuarios');
         break;
       case "crear_competencia":
-        history('/home/listado_competencias'); 
+        history('/home/listado_competencias');
         break;
       case "editar_usuario":
-        history('/home/administrar_usuarios');
+        history('/home/administrar_usuarios'); // Cambia a la vista deseada
         break;
-      // Añadir más casos según sea necesario
       default:
         history('/home');
     }
   };
   
-  let titulo, subtitulo, tituloRecuadro, nombreBoton;
-  switch (origen) {
-    case "crear_usuario":
-      titulo = "Administrar Usuarios";
-      subtitulo = "Crear Usuario";
-      tituloRecuadro = "Creaste un usuario con éxito";
-      nombreBoton = "Volver a Administrar Usuarios";
-      break;
-    case "crear_competencia":
-      titulo = "Administrar Competencias";
-      subtitulo = "Crear Competencia";
-      tituloRecuadro = "Creaste una competencia con éxito";
-      nombreBoton = "Volver a Listado de Competencias";
-      break;
-    case "editar_usuario":
-      titulo = "Administrar Usuarios";
-      subtitulo = "Editar Usuario";
-      tituloRecuadro = "Editaste un usuario con éxito";
-      nombreBoton = "Volver a Administrar Usuarios";
-      break;
-    // Añadir más casos según sea necesario
-    default:
-      titulo = "Éxito!";
-      subtitulo = "Plataforma Transferencia de Competencias";
-      tituloRecuadro = "Operación realizada con éxito";
-      nombreBoton = "Volver al Inicio";
+  let titulo = "";
+  let subtitulo = "";
+  let tituloRecuadro = "";
+  let nombreBoton = "";
+  if (origen === "crear_usuario") {
+    titulo = "Administrar Usuarios";
+    subtitulo = "Crear Usuario";
+    tituloRecuadro = "Creaste un usuario con éxito";
+    nombreBoton = "Volver a Administrar Usuarios";
+  } else if (origen === "crear_competencia") {
+    titulo = "Administrar Competencias";
+    subtitulo = "Crear Competencia";
+    tituloRecuadro = "Creaste una competencia con éxito";
+    nombreBoton = "Volver a Listado de Competencias";
+  } else if (origen === "editar_usuario") {
+    titulo = "Administrar Usuario";
+    subtitulo = "Editar Usuario";
+    tituloRecuadro = "Editaste un usuario con éxito";
+    nombreBoton = "Volver a Administrar Usuarios";
+  } else if (origen === "editar_competencia") {
+    titulo = "Administrar Competencias";
+    subtitulo = "Editar Competencia";
+    tituloRecuadro = "Editaste una competencia con éxito";
+    nombreBoton = "Volver a Listado de Competencias";
+  } else {
+    titulo = "Exito!";
+    subtitulo = "Plataforma Transferencia de Competencias";
+    tituloRecuadro = "Esta es la vista de success";
   }
 
   return (
@@ -59,7 +62,7 @@ const SuccessViews = () => {
       <div className="success-container col-7 p-3 px-5">
         <div className="row align-items-center">
           <div className="col-3">
-            <img src={successIcon} alt="Éxito" />
+            <img src={successIcon} alt="Éxito"/>
           </div>
           <div className="col-9">
             <h2 className="text-sans-h2 mb-4">{tituloRecuadro}</h2>
@@ -76,5 +79,5 @@ const SuccessViews = () => {
     </div>   
   );
 }
-
-export default SuccessViews;
+    
+export default SuccessViews ;
