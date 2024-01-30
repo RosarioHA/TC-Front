@@ -79,7 +79,7 @@ const EdicionUsuario = () => {
 
   useEffect(() => {
     if (editMode && userDetails) {
-      // En modo edición, actualiza los valores iniciales con los valores actuales.
+      // En modo edicion, actualiza los valores iniciales con los valores actuales.
       setValue('nombre_completo', userDetails.nombre_completo || "");
       setValue('email', userDetails.email || "");
       setValue('perfil', userDetails.perfil || "");
