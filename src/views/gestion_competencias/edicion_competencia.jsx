@@ -129,20 +129,27 @@ const EdicionCompetencia = () => {
   const handleSectoresChange = (selectedSectores) => {
     const selectedSectoresValues = selectedSectores.map(sector => sector.value);
     setValue("sectores", selectedSectoresValues);
+    updateHasChanged(true);
     setHasChanged(true);
   };
 
   const handleRegionesChange = (selectedRegiones) => {
     const selectedRegionesValues = selectedRegiones.map(region => region.value);
     setValue("regiones", selectedRegionesValues);
+    updateHasChanged(true);
+    setHasChanged(true);
   };
 
   const handleAmbitoChange = (selectedAmbito) => {
-    setValue("ambito_competencia", selectedAmbito.value)
+    setValue("ambito_competencia", selectedAmbito.value);
+    updateHasChanged(true);
+    setHasChanged(true);
   };
 
   const handleOrigenChange = (selectedOrigen) => {
-    setValue("origen", selectedOrigen.value)
+    setValue("origen", selectedOrigen.value);
+    updateHasChanged(true);
+    setHasChanged(true);
   };
 
   const onSubmit = async (formData) => {
