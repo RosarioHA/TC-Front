@@ -23,7 +23,7 @@
       background-color: $primary-color;
       border:none;  
     }
-    &.next-step .stepIndex, &.next-step .material-symbols-outlined {
+    &.next-step .stepIndex, &.next-step i.material-symbols-outlined {
       color:$white-color
     }
     &.last-completed::after {
