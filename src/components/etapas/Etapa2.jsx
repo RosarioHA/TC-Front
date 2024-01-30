@@ -3,43 +3,38 @@ import { useNavigate } from 'react-router-dom';
 import { Counter } from "../tables/Counter";
 import { useAuth } from '../../context/AuthContext';
 
-export const Etapa2 = ({ etapa }) =>
-{
+export const Etapa2 = ({ etapa , sectoriales}) => {
+  const navigate = useNavigate();
+  const { userData } = useAuth();
+  const userSubdere = userData?.perfil?.includes('SUBDERE');
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  console.log(sectoriales); 
+  console.log('auth',userData);
+
+  const toggleCollapse = () => {
+    setIsCollapsed(!isCollapsed);
+  };
+  const etapaNum = 2;
   const {
     nombre_etapa,
     estado,
     oficio_inicio_sectorial,
     observaciones_sectorial,
-    fecha_ultima_modificacion
+    fecha_ultima_modificacion,
+    usuarios_notificados
   } = etapa;
-  const navigate = useNavigate();
-  const { userData } = useAuth();
-  const userSubdere = userData?.perfil?.includes('SUBDERE');
-  const [ isCollapsed, setIsCollapsed ] = useState(false);
 
-  const toggleCollapse = () =>
-  {
-    setIsCollapsed(!isCollapsed);
-  };
+  const usuariosNotificadosDetalles = usuarios_notificados?.detalle_usuarios_notificados || [];
 
-  const { detalle_formularios_sectoriales, formularios_sectoriales } = etapa.formulario_sectorial;
-
-  const usuariosNotificadosDetalles = etapa.usuarios_notificados.detalle_usuarios_notificados;
-
-
-  const renderBadge = (usuario) =>
-  {
-    if (usuario.estado === "finalizada" && usuario.accion === "Finalizada")
-    {
-      return <span className="badge-status-finish ">{usuario.accion}</span>;
+  const renderBadge = (usuario) => {
+    if (usuario.estado === "finalizada" && usuario.accion === "Finalizada") {
+      return <span className="badge-status-finish">{usuario.accion}</span>;
     }
     // Aquí puedes añadir más lógica para otros estados o acciones
   };
 
-  const renderBadgeForEstado = (estado) =>
-  {
-    switch (estado)
-    {
+  const renderBadgeForEstado = (estado) => {
+    switch (estado) {
       case "finalizada":
         return <span className="badge-status-finish">Finalizada</span>;
       case "revision":
@@ -51,20 +46,9 @@ export const Etapa2 = ({ etapa }) =>
     }
   };
 
-
-
-  const etapaNum = 2;
-
-  const handleNavigation = (path) =>
-  {
-    console.log("Navegando a:", path);
+  const handleNavigation = (path) => {
     navigate(path);
   };
-
-  if (!etapa || etapa.nombre_etapa === undefined)
-  {
-    return <div>Data is loading or not available</div>;
-  }
 
   const renderButtonForSubetapa = (subetapa) =>
   {
@@ -111,86 +95,34 @@ export const Etapa2 = ({ etapa }) =>
       </button>
     );
   };
-  // Función para mostrar un botón para un formulario sectorial
+
   const renderButtonForFormularioSectorial = (formulario) => {
     const buttonText = formulario.accion;
     const path = `/home/formulario_sectorial/${formulario.id}/paso_1`;
+    const isButtonDisabled = userSubdere || formulario.estado !== "pendiente" 
+
+
   
-    // Deshabilita el botón si el usuario es SUBDERE
-    const isButtonDisabled = userSubdere || formulario.estado !== "pendiente";
+    let icon = 'edit';
+    if (formulario.estado !== "pendiente") {
+      icon = ''; // O asignar un icono diferente según el estado
+    }
   
     return (
-      <button 
-        onClick={() => handleNavigation(path)} 
-        className={`btn-secundario-s text-decoration-none ${isButtonDisabled ? 'disabled' : ''}`} 
-        id="btn"
+      <button
+        onClick={() => handleNavigation(path)}
+        className={`btn-secundario-s text-decoration-none ${isButtonDisabled ? 'disabled' : ''}`}
+        id={`btn-formulario-${formulario.id}`}
         disabled={isButtonDisabled}
       >
-        <span className="material-symbols-outlined me-1">edit</span>
+        <span className="material-symbols-outlined me-1">{icon}</span>
         <u>{buttonText}</u>
       </button>
     );
   };
+  
 
-  const renderSubetapas = (subetapas) =>
-  {
-    return subetapas.map((subetapa, index) => (
-      <div key={index} className="d-flex justify-content-between text-sans-p border-top border-bottom my-3 py-1">
-        <div className="align-self-center">{subetapa.nombre}</div>
-        {renderButtonForSubetapa(subetapa)}
-      </div>
-    ));
-  };
-
-  const renderFormularioSectorial = () =>
-  {
-    if (Array.isArray(detalle_formularios_sectoriales) && detalle_formularios_sectoriales.length > 0)
-    {
-      if (detalle_formularios_sectoriales.length === 1)
-      {
-        // Si solo hay un formulario, muestra directamente su nombre y botón
-        return renderSingleFormularioSectorial(detalle_formularios_sectoriales[ 0 ]);
-      } else
-      {
-        // Si hay más de un formulario, muestra un collapse con la información de 'formularios_sectoriales'
-        const info = formularios_sectoriales[ 0 ];
-        return (
-          <div className='w-100'>
-            <button type="button" className="btn d-flex justify-content-between w-100 px-0" onClick={toggleCollapse}>
-              <span>{info.nombre}</span>
-              <div className="d-flex align-items-center">
-                {renderBadgeForEstado(info.estado)}
-                <span className="material-symbols-outlined text-black">
-                  {isCollapsed ? 'expand_less' : 'expand_more'}
-                </span>
-              </div>
-            </button>
-            <div className={`collapse ${isCollapsed ? 'show' : ''}`}>
-              <div className="card card-body border-0">
-                <table className="table table-striped">
-                  <tbody>
-                    {detalle_formularios_sectoriales.map((formulario, index) => (
-                      <tr key={index}>
-                        <td className="d-flex justify-content-between">
-                          <span className="align-self-center">{formulario.nombre}</span>
-                          {formulario.estado === "pendiente"
-                            ? renderButtonForFormularioSectorial(formulario)
-                            : formulario.accion}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        );
-      }
-    }
-  }
-  // Función para mostrar un único formulario sectorial
-  const renderSingleFormularioSectorial = (formulario) =>
-  {
+  const renderSingleFormularioSectorial = (formulario) => {
     return (
       <div className="d-flex justify-content-between text-sans-p border-top border-bottom my-2 py-1">
         <div className="align-self-center">{formulario.nombre}</div>
@@ -199,22 +131,79 @@ export const Etapa2 = ({ etapa }) =>
     );
   };
 
+  const renderUsuariosNotificados = () => {
+    if (usuarios_notificados && usuarios_notificados.length === 1) {
+      const usuario = usuarios_notificados[0];
+      return (
+        <div className="usuario-notificado d-flex justify-content-between py-2 my-1 border-top border-bottom">
+          <span>{usuario.nombre}</span>
+          {renderBadge(usuario)}
+        </div>
+      );
+    } else if (usuariosNotificadosDetalles.length > 0) {
+      return usuariosNotificadosDetalles.map((usuario, index) => (
+        <div key={index} className="usuario-notificado d-flex justify-content-between py-2 my-1 border-top border-bottom">
+          <span>{usuario.nombre}</span>
+          {renderBadge(usuario)}
+        </div>
+      ));
+    }
+    return null;
+  };
+
+  const renderFormularioSectorial = () => {
+    // Verifica si el array formulario_sectorial tiene un solo elemento
+    if (etapa.formulario_sectorial && etapa.formulario_sectorial.length === 1) {
+      const formulario = etapa.formulario_sectorial[0];
+      return renderSingleFormularioSectorial(formulario);
+    }
+    // Verifica si el array detalle_formularios_sectoriales tiene elementos
+    else if (etapa.formulario_sectorial.detalle_formularios_sectoriales && etapa.formulario_sectorial.detalle_formularios_sectoriales.length > 0) {
+      const info = etapa.formulario_sectorial.formularios_sectoriales[0];
+      return (
+        <div className='w-100'>
+          <button type="button" className="btn d-flex justify-content-between w-100 px-0" onClick={toggleCollapse}>
+            <span>{info.nombre}</span>
+            <div className="d-flex align-items-center">
+              {renderBadgeForEstado(info.estado)}
+              <span className="material-symbols-outlined text-black">
+                {isCollapsed ? 'expand_less' : 'expand_more'}
+              </span>
+            </div>
+          </button>
+          <div className={`collapse ${isCollapsed ? 'show' : ''}`}>
+            <div className="card card-body border-0">
+              <table className="table table-striped">
+                <tbody>
+                  {etapa.formulario_sectorial.detalle_formularios_sectoriales.map((formulario, index) => (
+                    <tr key={index}>
+                      <td className="d-flex justify-content-between">
+                        <span className="align-self-center">{formulario.nombre}</span>
+                        {formulario.estado === "pendiente"
+                          ? renderButtonForFormularioSectorial(formulario)
+                          : formulario.accion}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      );
+    } else {
+      return <div>No hay formularios sectoriales para mostrar.</div>;
+    }
+  };
+  
+  
   return (
     <div className="my-3">
       <div className="d-flex justify-content-between my-2 text-sans-p">
         Para completar {nombre_etapa} con éxito deben cumplirse estas condiciones:
       </div>
       <div>
-        {usuariosNotificadosDetalles && usuariosNotificadosDetalles.length > 0 && (
-          <div>
-            {usuariosNotificadosDetalles.map((usuario, index) => (
-              <div key={index} className="usuario-notificado d-flex justify-content-between py-2 my-1 border-top border-bottom">
-                <span>{usuario.nombre}</span>
-                {renderBadge(usuario)}
-              </div>
-            ))}
-          </div>
-        )}
+        {renderUsuariosNotificados()}
         {oficio_inicio_sectorial && (
           <div className="d-flex justify-content-between text-sans-p border-top border-bottom my-2 py-1">
             <div className="align-self-center">{oficio_inicio_sectorial.nombre}</div>
@@ -222,7 +211,14 @@ export const Etapa2 = ({ etapa }) =>
           </div>
         )}
         {renderFormularioSectorial()}
-        {observaciones_sectorial.length > 0 && renderSubetapas(observaciones_sectorial)}
+        {observaciones_sectorial.length > 0 && (
+          observaciones_sectorial.map((observacion, index) => (
+            <div key={index} className="d-flex justify-content-between text-sans-p border-top border-bottom my-3 py-1">
+              <div className="align-self-center">{observacion.nombre}</div>
+              {renderButtonForSubetapa(observacion)}
+            </div>
+          ))
+        )}
         {estado === "En Estudio" && (
           <Counter
             plazoDias={etapa.plazo_dias}

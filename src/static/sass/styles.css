@@ -419,9 +419,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: #FFF;
 }
 .btn-secundario-s span.material-symbols-outlined {
-  color: inherit;
+  color: #0F69C4;
 }
 
 .btn-secundario-s:hover, .btn-secundario-s:focus {
@@ -429,7 +430,7 @@
   color: #FFF;
 }
 .btn-secundario-s:hover span.material-symbols-outlined, .btn-secundario-s:focus span.material-symbols-outlined {
-  color: inherit;
+  color: #FFF;
 }
 
 .btn-secundario-s.disabled {
@@ -1366,7 +1367,7 @@ a.btn-link:hover, a.btn-link:focus {
   background-color: #006FB3;
   border: none;
 }
-.stepper .stepperItem.next-step .stepIndex, .stepper .stepperItem.next-step .material-symbols-outlined {
+.stepper .stepperItem.next-step .stepIndex, .stepper .stepperItem.next-step i.material-symbols-outlined {
   color: #FFF;
 }
 .stepper .stepperItem.last-completed::after {
