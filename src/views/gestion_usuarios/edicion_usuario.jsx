@@ -5,7 +5,8 @@ import CustomInput from "../../components/forms/custom_input";
 import DropdownSelect from "../../components/dropdown/select";
 import DropdownSelectBuscador from "../../components/dropdown/select_buscador";
 import DropdownSinSecciones from "../../components/dropdown/checkbox_sinSecciones_conTabla";
-import { RadioButtons } from "../../components/forms/radio_btns";
+//import { RadioButtons } from "../../components/forms/radio_btns";
+import { OpcionesAB } from "../../components/forms/opciones_AB";
 import { useEditUser } from "../../hooks/usuarios/useEditUser";
 import { useUserDetails } from "../../hooks/usuarios/useUserDetail";
 import { useGroups } from "../../hooks/useGroups";
@@ -189,6 +190,8 @@ const EdicionUsuario = () => {
   const handleEstadoChange = (nuevoEstado) => {
     const isActivo = nuevoEstado === "activo";
     setValue("is_active", isActivo);
+    setHasChanged(true);
+    updateHasChanged(true);
   };
 
   const onSubmit = async (formData) => {
@@ -382,14 +385,14 @@ const EdicionUsuario = () => {
                 name="is_active"
                 control={control}
                 render={({ field }) => (
-                  <RadioButtons
+                  <OpcionesAB
                     readOnly={!editMode}
                     id="is_active"
                     initialState={watch('is_active')}
                     handleEstadoChange={handleEstadoChange}
                     field={field}
                     errors={errors}
-                    is_active={watch('is_active')}
+                    //is_active={watch('is_active')}
                     altA="Activo"
                     altB="Inactivo"
                     label="Estado"
