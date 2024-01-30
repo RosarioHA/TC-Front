@@ -1,63 +1,61 @@
 import { useState, useRef, useEffect } from 'react';
 
-const DropdownSelect = ({ label, placeholder, options, onSelectionChange, selected, error, readOnly }) =>
-{
+const DropdownSelect = ({ label, placeholder, options, onSelectionChange, selected, error, readOnly }) => {
   const [ isOpen, setIsOpen ] = useState(false);
   const [ selectedOption, setSelectedOption ] = useState(null);
+  const [ hasChanges, setHasChanges ] = useState(false);
   const dropdownRef = useRef(null);
 
   // Inicialización y actualización de selectedOption
-  useEffect(() =>
-  {
+  useEffect(() => {
     // Si 'selected' es un objeto (como en CreacionUsuario)
-    if (selected && typeof selected === 'object')
-    {
+    if (selected && typeof selected === 'object') {
       setSelectedOption(selected);
     }
     // Si 'selected' es un valor simple (como en Subpaso_CuatroUno)
-    else if (selected)
-    {
+    else if (selected) {
       const option = options.find(o => o.value === selected);
       setSelectedOption(option || null);
     }
   }, [ selected, options ]);
 
+  useEffect(() => {
+    if (hasChanges) {
+      onSelectionChange(selectedOption);
+      setHasChanges(false); // Reinicia el estado de cambios después de notificar al padre
+    }
+  }, [hasChanges, selectedOption, onSelectionChange]);
 
-  useEffect(() =>
-  {
-    function handleClickOutside(event)
-    {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target))
-      {
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsOpen(false);
       }
     }
 
-    if (isOpen)
-    {
+    if (isOpen) {
       document.addEventListener('mousedown', handleClickOutside);
-    } else
-    {
+    } else {
       document.removeEventListener('mousedown', handleClickOutside);
     }
 
-    return () =>
-    {
+    return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [ isOpen ]);
 
-  const toggleDropdown = () =>
-  {
+  const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
 
-  const handleOptionClick = (option) =>
-  {
+  const handleOptionClick = (option) => {
     setSelectedOption(option);
     setIsOpen(false);
     onSelectionChange(option);
+    setHasChanges(true);
   };
+  
   return (
     <div className={`input-container ${readOnly ? 'readonly' : ''}`}>
       <label className="text-sans-h5 input-label">{label}</label>
