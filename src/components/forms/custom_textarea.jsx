@@ -59,18 +59,9 @@ const CustomTextarea = ({ loading, saved, label, placeholder, id, maxLength, row
       {readOnly ? (
         <div className="d-flex flex-column textarea-container">
           <label className="text-sans-h5 input-label ms-3 ms-sm-0">{label}</label>
-          <textarea
-            ref={textareaRef}
-            className="teaxtarea-text input-textarea p-3"
-            placeholder={placeholder}
-            id={id}
-            value={inputValue}
-            onChange={handleChange}
-            rows={rows}
-            style={{ overflow: 'hidden' }}
-            name={name}
-            disabled
-          />
+          <div className="teaxtarea-text input-textarea p-3">
+            <p className="text-sans-p-grey mb-0">{placeholder}</p>
+          </div>
         </div>
       ) : (
         <>
@@ -85,6 +76,7 @@ const CustomTextarea = ({ loading, saved, label, placeholder, id, maxLength, row
               value={inputValue}
               onChange={handleChange}
               onBlur={handleBlur}
+              rows={rows}
               style={{ overflow: 'hidden' }}
               name={name}
             />
