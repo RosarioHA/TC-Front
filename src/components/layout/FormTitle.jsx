@@ -2,6 +2,8 @@ import { Link, useNavigate } from 'react-router-dom';
 
 export const FormTitle = ({ data,error}) =>
 {
+
+  console.log('title',data)
   const navigate = useNavigate();
 
   const handleBackButtonClick = () =>

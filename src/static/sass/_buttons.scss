@@ -59,19 +59,21 @@
 .btn-secundario-s {
     @include btn-border(fit-content, $blue-color);
     @include typo-style;
+    background-color: $white-color;
 
     // Asegurar que el color del ícono sea el mismo que el texto por defecto
     span.material-symbols-outlined {
-        color: inherit;
+        color: $blue-color;
     }
 }
 // Cambios de estilo para hover y focus
 .btn-secundario-s:hover, .btn-secundario-s:focus {
     background-color: $blue-color;
     color: $white-color;
-    // Cambiar el color del ícono a blanco en hover y focus
+
+    // Asegurarte de que el ícono también cambie a blanco
     span.material-symbols-outlined {
-        color: inherit;
+        color: $white-color;
     }
 }
 // Estilos para el botón deshabilitado
