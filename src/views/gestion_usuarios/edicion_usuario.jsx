@@ -36,7 +36,6 @@ const EdicionUsuario = () => {
   const [ hasChanged, setHasChanged ] = useState(false);
   const [ isModalOpen, setIsModalOpen ] = useState(false);
 
-
   const { userData } = useAuth();
   const userIsSubdere = userData?.perfil?.includes('SUBDERE');
 
@@ -149,7 +148,6 @@ const EdicionUsuario = () => {
     value: competencia.id,
     label: competencia.nombre,
   }));
-
 
   const handleInputClick = (e) => {
     // Previene que el evento se propague al boton
@@ -328,7 +326,7 @@ const EdicionUsuario = () => {
                       initialValue={userDetails ? userDetails.region : ''}
                     />
                   )}
-                />) : (
+                /> ) : (
                 <input type="text" value="No hay regiones para mostrar" readOnly />
               )}
             </div>
