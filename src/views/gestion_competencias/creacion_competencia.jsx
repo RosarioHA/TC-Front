@@ -110,8 +110,7 @@ const CreacionCompetencia = () =>
   }
   console.log("hasChanged", hasChanged)
 
-  const onSubmit = async (data) =>
-  {
+  const onSubmit = async (data) => {
     const competenciaData = {
       ...data,
       sectores: sectoresSeleccionados,
@@ -127,22 +126,20 @@ const CreacionCompetencia = () =>
       fecha_inicio: formatFechaInicio(),
       oficio_origen: selectedFile,
     };
-    try
-    {
+    try {
       console.log(competenciaData);
       await createCompetencia(competenciaData);
+      updateHasChanged(false);
+      setHasChanged(false);
       history('/home/success', { state: { origen: "crear_competencia" } });
       setErrorGeneral('');
-    } catch (error)
-    {
-      if (error.response && error.response.data)
-      {
+    } catch (error) {
+      if (error.response && error.response.data) {
         const errores = error.response.data;
         const primerCampoError = Object.keys(errores)[ 0 ];
         const primerMensajeError = errores[ primerCampoError ][ 0 ];
         setErrorGeneral(primerMensajeError);
-      } else
-      {
+      } else {
         setErrorGeneral('Error al conectarse con el servidor.');
       }
     }
@@ -153,8 +150,7 @@ const CreacionCompetencia = () =>
     label: region.region,
     value: region.id,
   }));
-  const handleRegionesChange = (selectedOptions) =>
-  {
+  const handleRegionesChange = (selectedOptions) => {
     setRegionesSeleccionadas(selectedOptions);
     setValue('regiones', selectedOptions.map(option => option.value));
   };
@@ -168,8 +164,7 @@ const CreacionCompetencia = () =>
     }))
   }));
 
-  const handleSectorSelectionChange = (selectedSectorValues) =>
-  {
+  const handleSectorSelectionChange = (selectedSectorValues) => {
     setSectoresSeleccionados(selectedSectorValues);
     setValue('sectores', selectedSectorValues, { shouldValidate: true });
   };
@@ -179,8 +174,7 @@ const CreacionCompetencia = () =>
     label: origen.descripcion,
     value: origen.clave,
   }));
-  const handleOrigenChange = (selectedOption) =>
-  {
+  const handleOrigenChange = (selectedOption) => {
     setOrigenSeleccionado(selectedOption.value);
     setValue('origen', selectedOption.value);
   };
@@ -190,28 +184,23 @@ const CreacionCompetencia = () =>
     label: ambito.nombre,
     value: ambito.id,
   }));
-  const handleAmbitoChange = (selectedOption) =>
-  {
+  const handleAmbitoChange = (selectedOption) => {
     setAmbitoSeleccionado(selectedOption.value );
     setValue('ambito_competencia',selectedOption.value );
   };
 
-  const handleUsuariosTransformed = useCallback((nuevosUsuarios) =>
-  {
+  const handleUsuariosTransformed = useCallback((nuevosUsuarios) => {
     setUsuariosSeleccionados(nuevosUsuarios);
   }, []);
 
-  const handleFileChange = (event) =>
-  {
+  const handleFileChange = (event) => {
     const file = event.target.files[ 0 ];
-    if (file)
-    {
+    if (file) {
       if (file.size > 20971520)
       { // 20 MB en bytes
         setErrorMessage("Archivo no cumple con el peso permitido");
         setSelectedFile(null);
-      } else
-      {
+      } else {
         setSelectedFile(file);
         setButtonText('Modificar');
         setErrorMessage("");
@@ -219,36 +208,29 @@ const CreacionCompetencia = () =>
     }
   };
 
-  const handleDelete = () =>
-  {
+  const handleDelete = () => {
     setSelectedFile(null);
     setButtonText('Subir archivo');
   };
 
-  const handleUploadClick = () =>
-  {
+  const handleUploadClick = () => {
     document.getElementById('fileUploadInput').click();
   };
 
-  const handleFechaInicioChange = (event) =>
-  {
+  const handleFechaInicioChange = (event) => {
     setFechaInicio(event.target.value);
   };
 
-  const formatFechaInicio = () =>
-  {
+  const formatFechaInicio = () => {
     if (!fechaInicio) return '';
-
     return new Date(fechaInicio).toISOString();
   };
 
   const dateInputRef = useRef(null);
 
-  const handleDateContainerClick = () =>
-  {
+  const handleDateContainerClick = () => {
     // Enfoca el input de fecha cuando se hace clic en el contenedor
-    if (dateInputRef.current)
-    {
+    if (dateInputRef.current) {
       dateInputRef.current.focus();
     }
   };
@@ -275,7 +257,7 @@ const CreacionCompetencia = () =>
                   label="Nombre de la Competencia (Obligatorio)"
                   placeholder="Escribe el nombre de la competencia"
                   id="nombre"
-                  maxLength={100}
+                  maxLength={200}
                   error={errors.nombre?.message}
                   {...field}
                 />

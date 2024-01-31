@@ -3,18 +3,18 @@ import { apiTransferenciaCompentencia } from "../../services/transferenciaCompet
 
 export const useFormSectorial = (id) => {
   const [dataFormSectorial, setDataFormSectorial] = useState(null);
-  const [loadingFormSectorial, setLoadingFormSectorial] = useState(true);
+  const [loadingFormSectorial, setLoadingFormSectorial] = useState(false);
   const [errorFormSectorial, setErrorFormSectorial] = useState(null);
 
   const fetchFormSectorial = useCallback(async () => {
-  
     if (!id) {
+      setDataFormSectorial(null);
       setLoadingFormSectorial(false);
       return;
     }
 
+    setLoadingFormSectorial(true);
     try {
-      setLoadingFormSectorial(true);
       const response = await apiTransferenciaCompentencia.get(`/formulario-sectorial/${id}/`);
       setDataFormSectorial(response.data);
     } catch (err) {
@@ -26,7 +26,25 @@ export const useFormSectorial = (id) => {
   }, [id]);
 
   useEffect(() => {
-    fetchFormSectorial();
+    let isActive = true;
+
+    const fetch = async () => {
+      try {
+        if (isActive) {
+          await fetchFormSectorial();
+        }
+      } catch (error) {
+        if (isActive) {
+          setErrorFormSectorial(error);
+        }
+      }
+    };
+
+    fetch();
+
+    return () => {
+      isActive = false; // Función de limpieza para cancelar la suscripción
+    };
   }, [fetchFormSectorial]);
 
   return { dataFormSectorial, loadingFormSectorial, errorFormSectorial };

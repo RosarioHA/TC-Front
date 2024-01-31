@@ -5,6 +5,7 @@ const DropdownSelectBuscador = ({ label, placeholder, options, onSelectionChange
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedOption, setSelectedOption] = useState(null);
   const [hasOpened, setHasOpened] = useState(false);
+  const [ hasChanges, setHasChanges ] = useState(false);
   const dropdownRef = useRef(null);
 
   useEffect(() => {
@@ -27,6 +28,14 @@ const DropdownSelectBuscador = ({ label, placeholder, options, onSelectionChange
       document.removeEventListener('mousedown', handleDocumentClick);
     };
   }, [isOpen, hasOpened]);
+
+  useEffect(() => {
+    if (hasChanges) {
+      onSelectionChange(selectedOption);
+      setHasChanges(false); // Reinicia el estado de cambios después de notificar al padre
+    }
+  }, [hasChanges, selectedOption, onSelectionChange]);
+
 
   const toggleDropdown = () => {
     if (!readOnly) {

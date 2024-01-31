@@ -69,7 +69,12 @@ const CreacionUsuario = () => {
     trigger,
   } = useForm({
     resolver: yupResolver(esquemaCreacionUsuario),
-    defaultValues: initialValues,
+    defaultValues: {
+      ...initialValues,
+      perfil: perfilSeleccionado,
+      sector: sectorSeleccionado,
+      region: regionSeleccionada,
+    },
     shouldUnregister: false,
     mode: 'manual',
   });
@@ -82,6 +87,7 @@ const CreacionUsuario = () => {
       const initialValue = initialValues[name];
       return value !== String(initialValue);
     });
+    console.log("form has changed", formHasChanged)
     setHasChanged(formHasChanged);
     // Actualiza el valor de hasChanged en el contexto
     updateHasChanged(formHasChanged);
@@ -100,6 +106,8 @@ const CreacionUsuario = () => {
     } else {
       setPerfilSeleccionado(null);
     }
+    setHasChanged(true);
+    updateHasChanged(true);
   };
 
   //opciones de regiones
@@ -111,6 +119,8 @@ const CreacionUsuario = () => {
     setRegionSeleccionada(region.value);
     setRegionId(region.value);
     setSectorId(null);
+    setHasChanged(true);
+    updateHasChanged(true);
   }
 
   //opciones sector 
@@ -124,11 +134,15 @@ const CreacionUsuario = () => {
     setSectorSeleccionado(sector.value);
     setSectorId(sector.value);
     setRegionId(null);
+    setHasChanged(true);
+    updateHasChanged(true);
   }
 
   const handleEstadoChange = (nuevoEstado) => {
     setEstado(nuevoEstado);
     setActiveButton(nuevoEstado);
+    setHasChanged(true);
+    updateHasChanged(true);
   };
 
   //opciones Filtro Competencias
@@ -139,6 +153,8 @@ const CreacionUsuario = () => {
 
   const handleCompetenciasChange = (selectedOptions) => {
     setCompetenciasSeleccionadas(selectedOptions);
+    setHasChanged(true);
+    updateHasChanged(true);
   }; 
 
   const handleInputClick = (e) => {
@@ -173,6 +189,8 @@ const CreacionUsuario = () => {
       const isValid = await trigger();
       if (submitClicked && isValid) {
         await createUser(payload);
+        updateHasChanged(false);
+        setHasChanged(false);
         history('/home/success', { state: { origen: "crear_usuario" } });
       } else {
         console.log("El formulario no es válido o no se ha hecho click en 'Crear Usuario'");
@@ -267,7 +285,8 @@ const CreacionUsuario = () => {
                       {
                         field.onChange(selectedOption.label);
                         handlePerfilChange(selectedOption);
-                      }} />
+                      }} 
+                      {...field} />
                   ) : (
                     <input type="text" value="No hay perfiles para mostrar" readOnly />
                   )}
@@ -288,12 +307,19 @@ const CreacionUsuario = () => {
                 {loadingSector ? (
                   <div>Cargando organismos...</div>
                 ) : dataSector && dataSector.length > 0 ? (
-                  <DropdownSelectBuscador
-                    label="Elige el organismo al que pertenece (Obligatorio)"
-                    placeholder="Elige un organismo"
-                    options={opcionesSector}
-                    onSelectionChange={handleSectorChange}
-                  />
+                  <Controller 
+                  name="sector"
+                  control={control}
+                  render={({ field }) => (
+                    <DropdownSelectBuscador
+                      label="Elige el organismo al que pertenece (Obligatorio)"
+                      placeholder="Elige un organismo"
+                      options={opcionesSector}
+                      onSelectionChange={handleSectorChange}
+                      {...field}
+                    />
+                  )}/>
+                  
                 ) : (
                   <input type="text" value="No hay organismos para mostrar" readOnly />
                 )}
@@ -310,12 +336,19 @@ const CreacionUsuario = () => {
                 {loadingRegiones ? (
                   <div>Cargando regiones...</div>
                 ) : dataRegiones && dataRegiones.length > 0 ? (
-                  <DropdownSelectBuscador
-                    label="Elige la región a la que representa (Obligatorio)"
-                    placeholder="Elige una región"
-                    options={opcionesDeRegiones}
-                    onSelectionChange={handleRegionChange}
-                  />
+                  <Controller 
+                  name="region"
+                  control={control}
+                  render={({ field }) => (
+                    <DropdownSelectBuscador
+                      label="Elige la región a la que representa (Obligatorio)"
+                      placeholder="Elige una región"
+                      options={opcionesDeRegiones}
+                      onSelectionChange={handleRegionChange}
+                      {...field}
+                    />
+                  )}/>
+                  
                 ) : (
                   <input type="text" value="No hay regiones para mostrar" readOnly />
                 )}

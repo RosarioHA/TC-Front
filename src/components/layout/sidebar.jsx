@@ -84,7 +84,7 @@ const Sidebar = () => {
           <SidebarLink to="/home/crear_usuario" icon="person_add" text="Crear Usuarios" onClick={handleItemClick} hasBorder={true}/>
         )}
         {(userSubdere || userObservador) && (
-          <SidebarLink to="/home/administrar_usuarios" icon="supervised_user_circle" text="Administrar Usuarios" onClick={handleItemClick} hasBorder={false}/>
+          <SidebarLink to="/home/administrar_usuarios"  icon="supervised_user_circle" text="Administrar Usuarios" onClick={handleItemClick} hasBorder={false}/>
         )}
         {(userSubdere || userObservador) && (
           <>
