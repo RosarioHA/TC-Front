@@ -268,7 +268,7 @@ export const Subpaso_dosPuntoDos = ({
 
                           <div className="col-10 border p-2">
                             {unidades.map((unidad, unidadIndex) => (
-                              <div key={unidad.id} className="border row">
+                              <div key={unidad.id} className="row p-1">
                                 <div className="col-10 p-3">
                                   <div className="conteo">{unidadIndex + 1}</div>
                                   <CustomInput
@@ -292,13 +292,14 @@ export const Subpaso_dosPuntoDos = ({
                                   <div className="col d-flex align-items-center">
                                   {unidades.length > 1 && (
                                     <button
-                                    className="btn-terciario-ghost"
+                                    className="btn-terciario-ghost mb-2"
                                     onClick={() => eliminarFila(organismoDisplay, ministerio, unidad.id)}>
                                     <i className="material-symbols-rounded me-2">delete</i>
                                     <p className="mb-0 text-decoration-underline">Borrar</p>
                                     </button>
                                     )}
                                   </div>
+                                  <hr/>
                               </div>
                             ))}
                               <div className="row">
@@ -309,7 +310,7 @@ export const Subpaso_dosPuntoDos = ({
                                     <p className="mb-0 text-decoration-underline">Guardar</p>
                                   </button>
                                   ) : (
-                                  <button className="btn-secundario-s" onClick={() => agregarFila(organismoDisplay, ministerio)}>
+                                  <button className="btn-secundario-s m-2" onClick={() => agregarFila(organismoDisplay, ministerio)}>
                                     <i className="material-symbols-rounded me-2">add</i>
                                     <p className="mb-0 text-decoration-underline">Agregar Otro</p>
                                   </button>
