@@ -5,7 +5,8 @@ import CustomInput from "../../components/forms/custom_input";
 import DropdownSelect from "../../components/dropdown/select";
 import DropdownSelectBuscador from "../../components/dropdown/select_buscador";
 import DropdownSinSecciones from "../../components/dropdown/checkbox_sinSecciones_conTabla";
-import { RadioButtons } from "../../components/forms/radio_btns";
+//import { RadioButtons } from "../../components/forms/radio_btns";
+import { OpcionesAB } from "../../components/forms/opciones_AB";
 import { useEditUser } from "../../hooks/usuarios/useEditUser";
 import { useUserDetails } from "../../hooks/usuarios/useUserDetail";
 import { useGroups } from "../../hooks/useGroups";
@@ -36,7 +37,6 @@ const EdicionUsuario = () => {
   const { updateHasChanged } = useFormContext();
   const [ hasChanged, setHasChanged ] = useState(false);
   const [ isModalOpen, setIsModalOpen ] = useState(false);
-
 
   const { userData } = useAuth();
   const userIsSubdere = userData?.perfil?.includes('SUBDERE');
@@ -93,14 +93,29 @@ const EdicionUsuario = () => {
   //detecta cambios sin guardar en el formulario
   function handleOnChange(event) {
     const data = new FormData(event.currentTarget);
+    const formEntries = Array.from(data.entries());
+    console.log('Form Entries:', formEntries);
+
     // Verifica si hay cambios respecto al valor inicial
     const formHasChanged = Array.from(data.entries()).some(([name, value]) => {
       const initialValue = userDetails[name];
       return value !== String(initialValue);
     });
-    setHasChanged(formHasChanged);
-    // Actualiza el valor de hasChanged en el contexto
-    updateHasChanged(formHasChanged);
+    console.log('Form Has Changed:', formHasChanged);
+
+    // Verificar cambios específicos
+    const perfilChanged = watch('perfil') !== userDetails?.perfil;
+    const regionChanged = watch('region') !== userDetails?.region?.id;
+    const sectorChanged = watch('sector') !== userDetails?.sector?.id;
+    const estadoChanged = watch('is_active') !== (userDetails?.is_active === 'activo');
+    console.log('Perfil Changed:', perfilChanged);
+    console.log('Region Changed:', regionChanged);
+    console.log('Sector Changed:', sectorChanged);
+    console.log('Estado Changed:', estadoChanged);
+
+    // Establecer hasChanged si hay algún cambio
+    setHasChanged(formHasChanged || perfilChanged || regionChanged || sectorChanged || estadoChanged);
+    updateHasChanged(formHasChanged || perfilChanged || regionChanged || sectorChanged || estadoChanged);
   }
 
   const handleBackButtonClick = () => {
@@ -140,7 +155,6 @@ const EdicionUsuario = () => {
     label: competencia.nombre,
   }));
 
-
   const handleInputClick = (e) => {
     // Previene que el evento se propague al boton
     e.stopPropagation();
@@ -152,6 +166,8 @@ const EdicionUsuario = () => {
         setValue(fieldName, selectedOption.label);
         setRegionId('');
       }
+      updateHasChanged(true);
+      setHasChanged(true);
     } catch (error) {
       console.error('Error en handleDdSelectChange:', error);
     }
@@ -173,28 +189,31 @@ const EdicionUsuario = () => {
         if (fieldName === 'sector') {
           setSectorId(selectedOption.value); // Actualiza sectorId cuando se selecciona un nuevo sector
         }
-        
       }
+      updateHasChanged(true);
+      setHasChanged(true);
     } catch (error) {
       console.error('Error en handleDdSelectBuscadorChange:', error);
     }
   };
 
-  const handleEstadoChange = (selectionName, nuevoEstado) => {
+  const handleEstadoChange = (nuevoEstado) => {
     const isActivo = nuevoEstado === "activo";
     setValue("is_active", isActivo);
+    setHasChanged(true);
+    updateHasChanged(true);
   };
-
 
   const onSubmit = async (formData) => {
     const payload = {
       ...formData,
       competencias_asignadas: competenciasSeleccionadas,
     };
-
       try {
       await editUser(id, payload);
       setEditMode(false);
+      updateHasChanged(false);
+      setHasChanged(false);
       history('/home/success', { state: { origen: "editar_usuario" } });
     } catch (error) {
       console.error("Error al editar el usuario:", error);
@@ -273,17 +292,26 @@ const EdicionUsuario = () => {
           {loadingGroups ? (
             <div>Cargando perfiles...</div>
           ) : dataGroups && dataGroups.length > 0 ? (
-            <DropdownSelect
-              label="Elige el perfil de usuario (Obligatorio)"
-              placeholder={userDetails ? userDetails.perfil : ''}
-              id="perfil"
-              name="perfil"
-              options={loadingGroups ? [] : opcionesGroups}
-              readOnly={!editMode}
-              control={control}
-              onSelectionChange={(selectedOption) => handleDdSelectChange('perfil', selectedOption)}
-              initialValue={userDetails ? userDetails.perfil : ''}
-            />) : (
+            <Controller 
+            name="perfil"
+            control={control}
+            render={({ field }) => (
+              <DropdownSelect
+                label="Elige el perfil de usuario (Obligatorio)"
+                placeholder={userDetails ? userDetails.perfil : ''}
+                id="perfil"
+                name="perfil"
+                options={loadingGroups ? [] : opcionesGroups}
+                readOnly={!editMode}
+                control={control}
+                onSelectionChange={(selectedOption) => {
+                  field.onChange(selectedOption.label);
+                  handleDdSelectChange('perfil', selectedOption);
+                }}
+                initialValue={userDetails ? userDetails.perfil : ''}
+              />
+            )}/>
+            ) : (
             <input type="text" value="No hay perfiles para mostrar" readOnly />
           )}
         </div>
@@ -294,17 +322,26 @@ const EdicionUsuario = () => {
               {loadingRegiones ? (
                 <div>Cargando regiones...</div>
               ) : dataRegiones && dataRegiones.length > 0 ? (
-                <DropdownSelectBuscador
-                  label="Elige la región a la que representa (Obligatorio)"
-                  placeholder={userDetails.region || ''}
-                  id="region"
+                <Controller
                   name="region"
-                  readOnly={!editMode}
-                  options={loadingRegiones ? [] : opcionesDeRegiones}
                   control={control}
-                  onSelectionChange={(selectedOption) => handleDdSelectBuscadorChange('region', selectedOption)}
-                  initialValue={userDetails ? userDetails.region : ''}
-                />) : (
+                  render={({ field }) => (
+                    <DropdownSelectBuscador
+                      label="Elige la región a la que representa (Obligatorio)"
+                      placeholder={userDetails.region || ''}
+                      id="region"
+                      name="region"
+                      readOnly={!editMode}
+                      options={loadingRegiones ? [] : opcionesDeRegiones}
+                      control={control}
+                      onSelectionChange={(selectedOption) => {
+                        field.onChange(selectedOption.value);
+                        handleDdSelectBuscadorChange('region', selectedOption);
+                      }}
+                      initialValue={userDetails ? userDetails.region : ''}
+                    />
+                  )}
+                /> ) : (
                 <input type="text" value="No hay regiones para mostrar" readOnly />
               )}
             </div>
@@ -349,14 +386,14 @@ const EdicionUsuario = () => {
                 name="is_active"
                 control={control}
                 render={({ field }) => (
-                  <RadioButtons
+                  <OpcionesAB
                     readOnly={!editMode}
                     id="is_active"
                     initialState={watch('is_active')}
                     handleEstadoChange={handleEstadoChange}
                     field={field}
                     errors={errors}
-                    is_active={watch('is_active')}
+                    //is_active={watch('is_active')}
                     altA="Activo"
                     altB="Inactivo"
                     label="Estado"
