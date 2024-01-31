@@ -18,6 +18,7 @@ import { useAuth } from "../../context/AuthContext";
 import { useFiltroCompetencias } from "../../hooks/useFiltrarCompetencias";
 import { useFormContext } from "../../context/FormAlert";
 import ModalAbandonoFormulario from "../../components/commons/modalAbandonoFormulario";
+import { DropdownSelectBuscadorUnico } from "../../components/dropdown/select_buscador_sector";
 
 const EdicionUsuario = () => {
   const { id } = useParams();
@@ -140,9 +141,13 @@ const EdicionUsuario = () => {
     value: region.id,
     label: region.region
   }));
-  const opcionesSector = dataSector.map(sector => ({
-    value: sector.id,
-    label: sector.nombre,
+  const opcionesSector = dataSector.map(ministerio => ({
+    label: ministerio.nombre,
+    options: ministerio.sectores.map(sector => ({
+      label: sector.nombre,
+      value: sector.id,
+      ministerioId: ministerio.id
+    }))
   }));
    //opciones Filtro Competencias
    const opcionesFiltroCompetencias = dataFiltroCompetencias.map(competencia => ({
@@ -159,7 +164,6 @@ const EdicionUsuario = () => {
     try {
       if (selectedOption && selectedOption.label) {
         setValue(fieldName, selectedOption.label);
-        setSectorId('');
         setRegionId('');
       }
       updateHasChanged(true);
@@ -167,6 +171,12 @@ const EdicionUsuario = () => {
     } catch (error) {
       console.error('Error en handleDdSelectChange:', error);
     }
+  };
+
+  const handleSectorSelectionChange = (selectedSectorValues) =>
+  {
+    setSectorId(selectedSectorValues);
+    setValue('sector', selectedSectorValues, { shouldValidate: true });
   };
 
   const handleDdSelectBuscadorChange = (fieldName, selectedOption) => {
@@ -341,26 +351,17 @@ const EdicionUsuario = () => {
               {loadingSector ? (
                 <div>Cargando organismos...</div>
               ) : dataSector && dataSector.length > 0 ? (
-                <Controller
+                <DropdownSelectBuscadorUnico
+                  label="Elige el organismo al que pertenece (Obligatorio)"
+                  placeholder={userDetails.sector || 'Selecciona un sector'}
+                  id="sector"
                   name="sector"
+                  readOnly={!editMode}
+                  options={loadingSector ? [] : opcionesSector}
                   control={control}
-                  render={({ field }) => (
-                    <DropdownSelectBuscador
-                      label="Elige el organismo al que pertenece (Obligatorio)"
-                      placeholder={userDetails.sector || 'Selecciona un sector'}
-                      id="sector"
-                      name="sector"
-                      readOnly={!editMode}
-                      options={loadingSector ? [] : opcionesSector}
-                      control={control}
-                      onSelectionChange={(selectedOption) => {
-                        field.onChange(selectedOption.value);
-                        handleDdSelectBuscadorChange('sector', selectedOption);
-                      }}
-                      initialValue={userDetails ? userDetails.sector : ''}
-                    />
-                  )}
-                /> ) : (
+                  onSelectionChange={handleSectorSelectionChange}
+                  initialValue={userDetails ? userDetails.sector : ''}
+                />) : (
                 <input type="text" value="No hay organismos para mostrar" readOnly />
               )}
             </div>
