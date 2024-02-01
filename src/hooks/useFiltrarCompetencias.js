@@ -28,6 +28,7 @@ export const useFiltroCompetencias = (regionId, sectorId) => {
 
     fetchData();
   }, [regionId, sectorId]); // Dependencias: regionId y sectorId
-
+  
   return { dataFiltroCompetencias, loadingFiltroCompetencias, errorFiltroCompetencias };
+
 };

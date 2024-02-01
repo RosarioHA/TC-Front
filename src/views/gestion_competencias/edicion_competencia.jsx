@@ -5,52 +5,62 @@ import CustomInput from "../../components/forms/custom_input";
 import DropdownSelect from "../../components/dropdown/select";
 import DropdownCheckbox from "../../components/dropdown/checkbox";
 import DropdownConSecciones from "../../components/dropdown/checkbox_conSecciones_conTabla";
-import SubirArchivo from "../../components/forms/subir_archivo";
 import { useOrigenes } from "../../hooks/useOrigenes";
 import { useRegion } from "../../hooks/useRegion";
 import { useSector } from "../../hooks/useSector";
 import { useAmbitos } from "../../hooks/useAmbitos";
 import { useEditCompetencia } from "../../hooks/competencias/useEditCompetencia"
-import { useUsers } from "../../hooks/usuarios/useUsers";
 import { useFormContext } from "../../context/FormAlert";
 import ModalAbandonoFormulario from "../../components/commons/modalAbandonoFormulario";
+import { DropdownSelectBuscadorCheck } from "../../components/dropdown/select_buscador_checkbox";
+import { useFiltroUsuarios } from "../../hooks/usuarios/useFiltroUsuarios";
 
-const groupUsersByType = (users) => {
-  const grouped = users.reduce((acc, user) => {
-    acc[ user.perfil ] = acc[ user.perfil ] || [];
-    acc[ user.perfil ].push(user);
+const groupUsersByType = (usuarios) =>
+{
+  if (!usuarios || usuarios.length === 0)
+  {
+    return [];
+  }
+
+  const grouped = usuarios.reduce((acc, user) =>
+  {
+    const perfil = user.perfil; 
+    acc[ perfil ] = acc[ perfil ] || [];
+    acc[ perfil ].push(user);
     return acc;
   }, {});
+
   return Object.entries(grouped).map(([ perfil, users ]) => ({
     label: perfil,
     options: users,
   }));
 };
 
-const EdicionCompetencia = () => {
+const EdicionCompetencia = () =>
+{
   const { id } = useParams();
   const history = useNavigate();
   const [ editMode, setEditMode ] = useState(false);
+  const [ readOnly, setReadOnly ] = useState(false);
   const { dataRegiones } = useRegion();
   const { dataSector } = useSector();
   const { origenes } = useOrigenes();
   const { ambitos } = useAmbitos();
-  const { users } = useUsers();
-  const userOptions = groupUsersByType(users);
   const { competencia, updateCompetencia } = useEditCompetencia(id);
   const [ usuariosSeleccionados, setUsuariosSeleccionados ] = useState();
   const { updateHasChanged } = useFormContext();
   const [ hasChanged, setHasChanged ] = useState(false);
   const [ isModalOpen, setIsModalOpen ] = useState(false);
+  const [ sectoresSeleccionados, setSectoresSeleccionados ] = useState([]);
+  const [ selectedReadOnlyOptions, setSelectedReadOnlyOptions ] = useState([]);
+  const [ sectorSeleccionado, setSectorSeleccionado ] = useState(null);
+  const [ regionSeleccionada, setRegionSeleccionada ] = useState(null);
+  const { usuarios } = useFiltroUsuarios(sectorSeleccionado, regionSeleccionada);
 
   //opciones selectores
   const opcionesRegiones = dataRegiones.map(region => ({
     label: region.region,
     value: region.id,
-  }));
-  const opcionesSectores = dataSector.map(sector => ({
-    label: sector.nombre,
-    value: sector.id,
   }));
   const opcionesOrigen = origenes.map(origen => ({
     label: origen.descripcion,
@@ -62,19 +72,14 @@ const EdicionCompetencia = () => {
   }));
 
   //data competencia
-  const regionesSeleccionadas = competencia ? competencia.regiones.map(regionId => {
+  const regionesSeleccionadas = competencia ? competencia.regiones.map(regionId =>
+  {
     const region = dataRegiones.find(region => region.id === regionId);
     return {
       label: region.region,
       value: region.id,
     };
   }) : [];
-  const sectoresMap = new Map(dataSector.map(sector => [ sector.nombre, sector.id ]));
-  const sectoresSeleccionados = competencia ? competencia.sectores.map(sector => ({
-    label: sector.nombre,
-    value: sectoresMap.get(sector.nombre), // Obtiene el ID correspondiente al nombre
-  })) : [];
-  console.log("sectores seleccionados", sectoresSeleccionados)
   const ambitoSeleccionado = ambitos.find(ambito => ambito.id === competencia?.ambito_competencia);
   const origenSeleccionado = origenes.find(origen => origen.clave === competencia?.origen)
 
@@ -95,29 +100,34 @@ const EdicionCompetencia = () => {
     },
   });
 
-  useEffect(() => {
-    if (editMode && competencia) {
+  useEffect(() =>
+  {
+    if (editMode && competencia)
+    {
       // Inicializar el formulario con los detalles de la competencia
       setValue("nombre", competencia.nombre || "");
       setValue("regiones", competencia.regiones || null);
-      // setValue("sectores", competencia.sectores || null);
-      setValue("sectores", competencia.sectores.map(sector => ({
-        label: sector.nombre,
-        value: sector.id,
-      })) || null);
       setValue("ambito_competencia", competencia.ambito_competencia || null);
       setValue("origen", competencia.origen || null);
+      setValue("sectores", competencia.sectores || null);
       setValue("plazo_formulario_sectorial", competencia.plazo_formulario_sectorial || "");
       setValue("plazo_formulario_gore", competencia.plazo_formulario_gore || "");
+      setValue("usuarios_dipres", competencia.usuarios_dipres || null); 
+      setValue("usuarios_gore", competencia.usuarios_gore || null); 
+      setValue("usuarios_sectoriales", competencia.usuarios_sectoriales|| null); 
+      setValue("usuarios_subdere", competencia.usuarios_subdere || null); 
+
     }
   }, [ editMode, competencia, setValue ]);
 
   //detecta cambios sin guardar en el formulario
-  function handleOnChange(event) {
+  function handleOnChange(event)
+  {
     const data = new FormData(event.currentTarget);
     // Verifica si hay cambios respecto al valor inicial
-    const formHasChanged = Array.from(data.entries()).some(([name, value]) => {
-      const initialValue = competencia[name];
+    const formHasChanged = Array.from(data.entries()).some(([ name, value ]) =>
+    {
+      const initialValue = competencia[ name ];
       return value !== String(initialValue);
     });
     setHasChanged(formHasChanged);
@@ -125,64 +135,135 @@ const EdicionCompetencia = () => {
     updateHasChanged(formHasChanged);
   }
 
-  //manejo de cambios en campos editables
-  const handleSectoresChange = (selectedSectores) => {
-    const selectedSectoresValues = selectedSectores.map(sector => sector.value);
-    setValue("sectores", selectedSectoresValues);
-    updateHasChanged(true);
-    setHasChanged(true);
+  useEffect(() => {
+    if (editMode && competencia) {
+      // Resto de la inicialización del formulario...
+      const sectorInicial = competencia.sectores?.[0]?.id; // Asumiendo que competencia.sectores es un array
+      setSectorSeleccionado(sectorInicial);
+      // Transforma el sector inicial en el formato adecuado para el selector si es necesario
+      const sectoresFormateados = competencia.sectores?.map(sector => ({
+        label: sector.nombre,
+        value: sector.id,
+      }));
+      setSectoresSeleccionados(sectoresFormateados);
+    }
+  }, [editMode, competencia]);
+
+
+  //opciones sector 
+  const opcionesSectores = dataSector.map(ministerio => ({
+    label: ministerio.nombre,
+    options: ministerio.sectores.map(sector => ({
+      label: sector.nombre,
+      value: sector.id,
+      ministerioId: ministerio.id
+    }))
+  }));
+
+
+  const handleSectorSelectionChange = (selectedSectorValues) => {
+    const sectorId = selectedSectorValues.length > 0 ? selectedSectorValues[0].value : null;
+    setSectorSeleccionado(sectorId);
+    setSectoresSeleccionados(selectedSectorValues);
+    setValue('sectores', selectedSectorValues, { shouldValidate: true });
   };
 
   const handleRegionesChange = (selectedRegiones) => {
-    const selectedRegionesValues = selectedRegiones.map(region => region.value);
-    setValue("regiones", selectedRegionesValues);
+    const regionId = selectedRegiones.length > 0 ? selectedRegiones[0].value : null;
+    setRegionSeleccionada(regionId);
+    const selectedRegionIds = selectedRegiones.map(region => region.value);
+    setValue("regiones", selectedRegionIds, { shouldDirty: true });
     updateHasChanged(true);
     setHasChanged(true);
   };
 
-  const handleAmbitoChange = (selectedAmbito) => {
+  const handleAmbitoChange = (selectedAmbito) =>
+  {
     setValue("ambito_competencia", selectedAmbito.value);
     updateHasChanged(true);
     setHasChanged(true);
   };
 
-  const handleOrigenChange = (selectedOrigen) => {
+  const handleOrigenChange = (selectedOrigen) =>
+  {
     setValue("origen", selectedOrigen.value);
     updateHasChanged(true);
     setHasChanged(true);
   };
 
-  const onSubmit = async (formData) => {
-    try {
-      await updateCompetencia(formData);
+  const onSubmit = async (formData) =>
+  {
+    try
+    {
+      const sectorIds = sectoresSeleccionados.map(sector => sector.value);
+
+      const dataToSend = {
+        ...formData,
+        sectores: sectorIds,
+        ...usuariosSeleccionados 
+      };
+
+      await updateCompetencia(dataToSend);
       setEditMode(false);
       updateHasChanged(false);
       setHasChanged(false);
       history('/home/success', { state: { origen: "editar_competencia" } });
-    } catch (error) {
+    } catch (error)
+    {
       console.error("Error al guardar la competencia:", error);
     }
   };
 
-  const handleUsuariosTransformed = useCallback((nuevosUsuarios) => {
+  const handleUsuariosTransformed = useCallback((nuevosUsuarios) =>
+  {
     setUsuariosSeleccionados(nuevosUsuarios);
   }, []);
-  console.log('com', usuariosSeleccionados)
 
-
-  const handleBackButtonClick = () => {
-    if (editMode) {
+  const handleBackButtonClick = () =>
+  {
+    if (editMode)
+    {
       setEditMode(false);
-    } else if (hasChanged) {
+    } else if (hasChanged)
+    {
       setIsModalOpen(true);
-    } else {
+    } else
+    {
       history(-1);
     }
   };
-  
-  const handleEditClick = () => {
-    setEditMode((prevMode) => !prevMode);
+
+  const toggleEditMode = () =>
+  {
+    setEditMode(!editMode);
+    setReadOnly(!editMode);
   };
+
+
+  useEffect(() =>
+  {
+    if (competencia)
+    {
+      const sectoresPreseleccionados = competencia.sectores.map(sector => ({
+        label: sector.nombre,
+        value: sector.id,
+      }));
+      setSectoresSeleccionados(sectoresPreseleccionados);
+
+      setSectoresSeleccionados(sectoresPreseleccionados);
+      setSelectedReadOnlyOptions(sectoresPreseleccionados);
+    }
+  }, [ competencia ]);
+
+  const extractFileName = (url) =>
+  {
+    return url.split('/').pop();
+  };
+  
+
+  const userOptions = usuarios ? groupUsersByType(usuarios) : [];
+
+
 
   return (
     <div className="container col-10 my-4">
@@ -195,9 +276,9 @@ const EdicionCompetencia = () => {
           </button>
           <h3 className="text-sans-h3 ms-3 mb-0">Competencia: {competencia?.nombre}</h3>
         </div>
-        <button className="btn-secundario-s" onClick={handleEditClick}>
-          <i className="material-symbols-rounded me-2">edit</i>
-          <p className="mb-0">{editMode ? 'Editando' : 'Editar'}</p>
+        <button className="btn-secundario-s ms-3" onClick={toggleEditMode}>
+          <p className="mb-0 ms-2">{editMode ? 'Editando' : 'Editar'}</p>
+          <i className="material-symbols-rounded me-2">{editMode ? 'edit' : 'edit'}</i>
         </button>
       </div>
 
@@ -212,7 +293,7 @@ const EdicionCompetencia = () => {
                 placeholder={competencia ? competencia.nombre : ''}
                 id="nombre"
                 name="nombre"
-                readOnly={!editMode}
+                readOnly={!editMode || readOnly}
                 error={errors.nombre_completo?.message}
                 {...field}
               />
@@ -234,28 +315,27 @@ const EdicionCompetencia = () => {
                 prevSelection={regionesSeleccionadas}
                 onSelectionChange={handleRegionesChange}
                 selectedOptions={field.value}
+                selectedRegions={regionesSeleccionadas}
               />
-            )} />
-
+            )}
+          />
         </div>
 
         <div className="mb-4 col-11">
-          <Controller
-            name="sectores"
-            control={control}
-            render={({ field }) => (
-              <DropdownCheckbox
-                label="Elige el sector de la competencia (Obligatorio)"
-                placeholder='Elige el sector de la competencia'
-                id="sectores"
-                name="sectores"
-                options={opcionesSectores}
-                readOnly={!editMode}
-                prevSelection={sectoresSeleccionados}
-                onSelectionChange={handleSectoresChange}
-                selectedOptions={field.value}
-              />
-            )} />
+          <DropdownSelectBuscadorCheck
+            label="Elige el sector de la competencia (Obligatorio)"
+            placeholder="Elige el sector de la competencia"
+            options={opcionesSectores}
+            onSelectionChange={handleSectorSelectionChange}
+            readOnly={!editMode}
+            selectedReadOnlyOptions={selectedReadOnlyOptions}
+            editMode={editMode}
+            competencia={competencia}
+          />
+
+          {errors.sectores && (
+            <p className="text-sans-h6-darkred mt-2 mb-0">{errors.sectores.message}</p>
+          )}
         </div>
 
         <div className="mb-4 col-11">
@@ -296,12 +376,15 @@ const EdicionCompetencia = () => {
             )} />
         </div>
 
-        <div className="my-4">
-          < DropdownConSecciones
+        <div className="my-4 h-auto">
+          <DropdownConSecciones
+            key={sectorSeleccionado + '-' + regionSeleccionada}
             label="Asignar Usuarios (Opcional)"
             placeholder="Busca el nombre de la persona"
             options={userOptions}
             onUsuariosTransformed={handleUsuariosTransformed}
+            readOnly={!editMode}
+            usuariosCompetencia={usuarios}
           />
         </div>
 
@@ -314,20 +397,29 @@ const EdicionCompetencia = () => {
           ) : (
             <h5 className="text-sans-h5">Oficio correspondiente a la competencia</h5>
           )}
-          <div className="d-flex justify-content-between py-3 fw-bold">
-            <div className="d-flex mb-2">
-              <div className="ms-4">#</div>
-              <div className="ms-5">Documento</div>
-            </div>
-            <div className="me-5">Acción</div>
-          </div>
-          <div className="row neutral-line align-items-center">
-            {/* ESTE CAMPO NO ES EDITABLE, SOLO DEBE PERMITIR DESCARGAR  */}
-            <SubirArchivo
-              readOnly={true}
-              index="1"
-              fileType="No seleccionado" />
-          </div>
+          <table className="table table-striped table align-middle">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col" htmlFor="fileUploadInput" className="form-label">Documento</th>
+                <th scope="col">Acción</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">1</th>
+                <td className="text-sans-h6-grey">{competencia?.oficio_origen ? extractFileName(competencia.oficio_origen) : 'No disponible'}</td>
+                <td>
+                  {competencia?.oficio_origen ? (
+                    <a type="button" href={competencia.oficio_origen} target="_blank" rel="noopener noreferrer" download className="btn-secundario-s link-underline link-underline-opacity-0"><u>Descargar</u>
+                      <span className="material-symbols-outlined">
+                        download
+                      </span></a>
+                  ) : 'No disponible'}
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
 
         <div className={editMode ? 'mb-3' : 'mb-4'}>
@@ -376,14 +468,14 @@ const EdicionCompetencia = () => {
         )}
 
         <div className="py-2">
-        {editMode ? (
-          <button className="btn-primario-s my-4" type="submit">
-            <i className="material-symbols-rounded me-2">save</i>
-            <p className="mb-0">Guardar</p>
-          </button>
-        ) : (
-          <div></div>
-        )}
+          {editMode ? (
+            <button className="btn-primario-s my-4" type="submit">
+              <i className="material-symbols-rounded me-2">save</i>
+              <p className="mb-0">Guardar</p>
+            </button>
+          ) : (
+            <div></div>
+          )}
         </div>
       </form>
       {isModalOpen && (

@@ -15,6 +15,7 @@ import { useSector } from "../../hooks/useSector";
 import { useFiltroCompetencias } from "../../hooks/useFiltrarCompetencias";
 import { useFormContext } from "../../context/FormAlert";
 import ModalAbandonoFormulario from "../../components/commons/modalAbandonoFormulario";
+import { DropdownSelectBuscadorUnico } from "../../components/dropdown/select_buscador_sector";
 
 const initialValues = {
   rut: '',
@@ -24,13 +25,15 @@ const initialValues = {
   estado: '',
   password: '',
   password2: '',
+  sector: "",
 };
 
-const CreacionUsuario = () => {
-  const { createUser, isLoading } = useCreateUser();
+const CreacionUsuario = () =>
+{
+  const { createUser } = useCreateUser();
   const { updateHasChanged } = useFormContext();
   const { dataGroups, loadingGroups } = useGroups();
-  const { dataSector, loadingSector } = useSector();
+  const { dataSector } = useSector();
   const [ estado, setEstado ] = useState('inactivo');
   const [ activeButton, setActiveButton ] = useState(null);
   const [ competenciasSeleccionadas, setCompetenciasSeleccionadas ] = useState([]);
@@ -45,17 +48,21 @@ const CreacionUsuario = () => {
   const [ hasChanged, setHasChanged ] = useState(false);
   const [ isModalOpen, setIsModalOpen ] = useState(false);
 
-  useEffect(() => {
+  useEffect(() =>
+  {
     console.log("competencias seleccionadas en vista", competenciasSeleccionadas);
   }, [ competenciasSeleccionadas ]);
 
   // Maneja boton de volver atras.
   const history = useNavigate();
-  const handleBackButtonClick = () => {
-    if (hasChanged) {
+  const handleBackButtonClick = () =>
+  {
+    if (hasChanged)
+    {
       // Muestra el modal
       setIsModalOpen(true);
-    } else {
+    } else
+    {
       // Retrocede solo si no hay cambios
       history(-1);
     }
@@ -80,11 +87,13 @@ const CreacionUsuario = () => {
   });
 
   //detecta cambios sin guardar en el formulario
-  function handleOnChange(event) {
+  function handleOnChange(event)
+  {
     const data = new FormData(event.currentTarget);
     // Verifica si hay cambios respecto al valor inicial
-    const formHasChanged = Array.from(data.entries()).some(([name, value]) => {
-      const initialValue = initialValues[name];
+    const formHasChanged = Array.from(data.entries()).some(([ name, value ]) =>
+    {
+      const initialValue = initialValues[ name ];
       return value !== String(initialValue);
     });
     console.log("form has changed", formHasChanged)
@@ -99,11 +108,14 @@ const CreacionUsuario = () => {
     value: group.id,
     label: group.name
   }))
-  const handlePerfilChange = (selectedValue) => {
+  const handlePerfilChange = (selectedValue) =>
+  {
     const selectedProfile = opcionesGroups.find((option) => option.value === selectedValue.value);
-    if (selectedProfile) {
+    if (selectedProfile)
+    {
       setPerfilSeleccionado(selectedProfile.label);
-    } else {
+    } else
+    {
       setPerfilSeleccionado(null);
     }
     setHasChanged(true);
@@ -115,7 +127,8 @@ const CreacionUsuario = () => {
     value: region.id,
     label: region.region
   }));
-  const handleRegionChange = (region) => {
+  const handleRegionChange = (region) =>
+  {
     setRegionSeleccionada(region.value);
     setRegionId(region.value);
     setSectorId(null);
@@ -123,22 +136,28 @@ const CreacionUsuario = () => {
     updateHasChanged(true);
   }
 
-  //opciones sector 
-  const opcionesSector = Array.isArray(dataSector) ? dataSector.map(sector => ({
-  value: sector.id, 
-  label: sector.nombre
-   })) : [];
-
-  const handleSectorChange = (sector) =>
+  //opciones sector
+  const opcionesSector = dataSector.map(ministerio => ({
+    label: ministerio.nombre,
+    options: ministerio.sectores.map(sector => ({
+      label: sector.nombre,
+      value: sector.id,
+      ministerioId: ministerio.id
+    }))
+  }));
+  const handleSectorChange = (sectorId) =>
   {
-    setSectorSeleccionado(sector.value);
-    setSectorId(sector.value);
-    setRegionId(null);
+    console.log("Estado sectorId actualizado:", sectorId);
+    setSectorSeleccionado(sectorId.label);
+    setSectorId(sectorId);
     setHasChanged(true);
     updateHasChanged(true);
-  }
+    console.log("Sector seleccionado:", sectorId); // Dentro de handleSectorChange
+  };
 
-  const handleEstadoChange = (nuevoEstado) => {
+  console.log("Estado sectorId actualizado:", sectorId);
+  const handleEstadoChange = (nuevoEstado) =>
+  {
     setEstado(nuevoEstado);
     setActiveButton(nuevoEstado);
     setHasChanged(true);
@@ -151,63 +170,68 @@ const CreacionUsuario = () => {
     label: competencia.nombre,
   }));
 
-  const handleCompetenciasChange = (selectedOptions) => {
+  const handleCompetenciasChange = (selectedOptions) =>
+  {
     setCompetenciasSeleccionadas(selectedOptions);
     setHasChanged(true);
     updateHasChanged(true);
-  }; 
+  };
 
-  const handleInputClick = (e) => {
+  const handleInputClick = (e) =>
+  {
     // Previene que el evento se propague al boton
     e.stopPropagation();
   };
 
-  const onSubmit = async (data) => {
-    try {
-      // Transformar competenciasSeleccionadas
+  const onSubmit = async (data) =>
+  {
+    try
+    {
+      // Preparar las competencias seleccionadas para la modificación
       const competenciasModificar = competenciasSeleccionadas.map(id => ({
         id: parseInt(id, 10),
         action: 'add'
       }));
 
-      // Construir el payload con el nuevo campo
+      // Construir el payload con el campo sector actualizado para solo incluir el ID
       const payload = {
         ...data,
         nombre_completo: data.nombre,
-        perfil: perfilSeleccionado,
-        sector: sectorSeleccionado,
-        region: regionSeleccionada,
+        perfil: perfilSeleccionado, // Asegúrate de que este es el ID o el valor necesario del perfil
+        sector: sectorId, // Usar directamente el ID del sector seleccionado
+        region: regionSeleccionada, // Asegúrate de que este es el ID o el valor necesario de la región
         password: data.password,
         is_active: estado === 'activo',
         competencias_modificar: competenciasModificar,
       };
-  
-      // Eliminar campos que no se necesitan enviar
-      delete payload.competenciasSeleccionadas;
-  
-      // Realizar la solicitud de creación de usuario con el payload actualizado
+
+      // Omitir campos no necesarios antes de enviar
+      delete payload.password2; // Asumiendo que no necesitas enviar este campo
+      console.log("Payload enviado a la API:", payload);
+
       const isValid = await trigger();
-      if (submitClicked && isValid) {
+      if (submitClicked && isValid)
+      {
         await createUser(payload);
         updateHasChanged(false);
         setHasChanged(false);
         history('/home/success', { state: { origen: "crear_usuario" } });
-      } else {
+      } else
+      {
         console.log("El formulario no es válido o no se ha hecho click en 'Crear Usuario'");
       }
-    } catch (error) {
+    } catch (error)
+    {
       // Verifica si el error es debido a un problema en el campo 'rut'
-      if (error.message && error.message.rut && error.message.rut.length > 0) {
+      if (error.message && error.message.rut && error.message.rut.length > 0)
+      {
         // Utiliza el primer mensaje de error para el campo 'rut'
-        const mensajeErrorRut = error.message.rut[0];
+        const mensajeErrorRut = error.message.rut[ 0 ];
         setError('rut', { type: 'manual', message: mensajeErrorRut });
       }
     }
   };
 
-  if (isLoading) {
-    return <div>Cargando...</div>;
-  }
 
   return (
     <div className="container col-10 my-4">
@@ -285,7 +309,7 @@ const CreacionUsuario = () => {
                       {
                         field.onChange(selectedOption.label);
                         handlePerfilChange(selectedOption);
-                      }} 
+                      }}
                       {...field} />
                   ) : (
                     <input type="text" value="No hay perfiles para mostrar" readOnly />
@@ -304,28 +328,28 @@ const CreacionUsuario = () => {
                 <h6 className="">Al usuario Sectorial debes asignarle un organismo.</h6>
               </div>
               <div className="mb-4 col-11">
-                {loadingSector ? (
-                  <div>Cargando organismos...</div>
-                ) : dataSector && dataSector.length > 0 ? (
-                  <Controller 
+                <Controller
                   name="sector"
                   control={control}
                   render={({ field }) => (
-                    <DropdownSelectBuscador
+                    <DropdownSelectBuscadorUnico
                       label="Elige el organismo al que pertenece (Obligatorio)"
-                      placeholder="Elige un organismo"
+                      placeholder="Elige el organismo del usuario"
                       options={opcionesSector}
-                      onSelectionChange={handleSectorChange}
-                      {...field}
+                      onSelectionChange={(value) =>
+                      {
+                        // Actualiza el campo del formulario con el valor seleccionado
+                        field.onChange(value);
+                        handleSectorChange(value); // Actualiza el estado local si es necesario
+                      }}
+                      sectorId={sectorId}
                     />
-                  )}/>
-                  
-                ) : (
-                  <input type="text" value="No hay organismos para mostrar" readOnly />
-                )}
+                  )}
+                />
               </div>
             </>
-          )}
+          )
+          }
           {perfilSeleccionado === "GORE" && (
             <>
               <div className="d-flex mb-4 text-sans-h6-primary">
@@ -336,19 +360,19 @@ const CreacionUsuario = () => {
                 {loadingRegiones ? (
                   <div>Cargando regiones...</div>
                 ) : dataRegiones && dataRegiones.length > 0 ? (
-                  <Controller 
-                  name="region"
-                  control={control}
-                  render={({ field }) => (
-                    <DropdownSelectBuscador
-                      label="Elige la región a la que representa (Obligatorio)"
-                      placeholder="Elige una región"
-                      options={opcionesDeRegiones}
-                      onSelectionChange={handleRegionChange}
-                      {...field}
-                    />
-                  )}/>
-                  
+                  <Controller
+                    name="region"
+                    control={control}
+                    render={({ field }) => (
+                      <DropdownSelectBuscador
+                        label="Elige la región a la que representa (Obligatorio)"
+                        placeholder="Elige una región"
+                        options={opcionesDeRegiones}
+                        onSelectionChange={handleRegionChange}
+                        {...field}
+                      />
+                    )} />
+
                 ) : (
                   <input type="text" value="No hay regiones para mostrar" readOnly />
                 )}
@@ -430,7 +454,8 @@ const CreacionUsuario = () => {
                         placeholder="Busca el nombre de la competencia"
                         options={opcionesFiltroCompetencias}
                         selectedOptions={field.value.map(val => parseInt(val, 10))}
-                        onSelectionChange={(selectedOptions) => {
+                        onSelectionChange={(selectedOptions) =>
+                        {
                           field.onChange(selectedOptions);
                           handleCompetenciasChange(selectedOptions);
                         }}
@@ -442,9 +467,9 @@ const CreacionUsuario = () => {
                         <label className="text-sans-h5 input-label ms-3 ms-sm-0">Competencia</label>
                         <input
                           className="input-s p-3 input-textarea"
-                          type="text" 
-                          value="No hay Competencias para mostrar" 
-                          readOnly 
+                          type="text"
+                          value="No hay Competencias para mostrar"
+                          readOnly
                         />
                       </>
                     )}
