@@ -82,6 +82,19 @@ export const Subpaso_dosPuntoCuatro = ({
       capacitacion_plataforma: { loading: false, saved: false }
     }
   }));
+
+  const updateFieldState = (plataformaId, fieldName, newState) => {
+    setPlataformasySoftwares(prevPlataformas =>
+      prevPlataformas.map(plataforma => {
+        if (plataforma.id === plataformaId) {
+          // Actualiza solo los estados del campo específico
+          const updatedEstados = { ...plataforma.estados, [fieldName]: { ...newState } };
+          return { ...plataforma, estados: updatedEstados };
+        }
+        return plataforma;
+      })
+    );
+  };
   
   const [plataformasySoftwares, setPlataformasySoftwares] = useState(initialState);
 
@@ -147,91 +160,68 @@ export const Subpaso_dosPuntoCuatro = ({
 
 
   const handleInputChange = (plataformaId, campo, valor) => {
-    setPlataformaEnEdicionId(plataformaId);
-
     setPlataformasySoftwares(prevPlataformas => prevPlataformas.map(plataforma => {
       if (plataforma.id === plataformaId) {
-        // Actualizar una plataforma específica
+        // Asegúrate de que solo se actualice el valor del campo específico
         return { ...plataforma, [campo]: valor };
       }
       return plataforma;
     }));
   };
+  
 
 
   const handleSave = async (plataformaId, esGuardadoPorBlur, fieldName) => {
+    // Si se está guardando por blur, no es necesario desactivar el botón de guardar general
     if (!esGuardadoPorBlur) {
       setMostrarBotonGuardarPlataforma(false);
     }
 
     const plataforma = plataformasySoftwares.find(e => e.id === plataformaId);
-    setPlataformasySoftwares(prevPlataformas =>
-      prevPlataformas.map(plataforma =>
-        plataforma.id === plataformaId ? {
-          ...plataforma,
-          estados: {
-            ...plataforma.estados,
-            [fieldName]: { ...plataforma.estados[fieldName], loading: true, saved: false }
-          }
-        } : plataforma
-      )
-    );
+
+    updateFieldState(plataformaId, fieldName, { loading: true, saved: false });
+    
     let payload;
 
-    // Verificar si nuevaUnidadId tiene un valor
-    const etapasArray = nuevaUnidadId ? [nuevaUnidadId] : [];
-
-    // Preparar payload para guardar una etapa
-    payload = {
-      'p_2_4_plataformas_y_softwares': [{
-        id: plataformaId,
-        nombre_plataforma: plataforma.nombre_plataforma,
-        descripcion_tecnica: plataforma.descripcion_tecnica,
-        costo_adquisicion: plataforma.costo_adquisicion,
-        costo_mantencion_anual: plataforma.costo_mantencion_anual,
-        descripcion_costos: plataforma.descripcion_costos,
-        funcion_plataforma: plataforma.funcion_plataforma,
-        'etapas': etapasArray,
-        capacitacion_plataforma: plataforma.capacitacion_plataforma
-      }]
-    };
-
+    if (esGuardadoPorBlur) {
+        // Guardar solo el campo específico
+        payload = {
+          'p_2_4_plataformas_y_softwares': [{ id: plataformaId, [fieldName]: plataforma[fieldName] }]
+        };
+    } else {
+        // Guardar todos los campos de la plataforma
+        payload = {
+            'p_2_4_plataformas_y_softwares': [{
+              id: plataformaId,
+              nombre_plataforma: plataforma.nombre_plataforma,
+              descripcion_tecnica: plataforma.descripcion_tecnica,
+              costo_adquisicion: plataforma.costo_adquisicion,
+              costo_mantencion_anual: plataforma.costo_mantencion_anual,
+              descripcion_costos: plataforma.descripcion_costos,
+              funcion_plataforma: plataforma.funcion_plataforma,
+              etapas: nuevaUnidadId ? [nuevaUnidadId] : [],
+              capacitacion_plataforma: plataforma.capacitacion_plataforma,
+            }]
+        };
+    }
 
     try {
-      // Llamar a la API para actualizar los datos
-      const response = await handleUpdatePaso(id, stepNumber, payload);
-      // Más código para manejar la respuesta
+        // Asume que handleUpdatePaso puede manejar ambos casos adecuadamente
+        const response = await handleUpdatePaso(id, stepNumber, payload);
 
-      setMostrarBotonGuardarPlataforma(false);
-      // Si el guardado es exitoso, actualiza el estado correspondiente
-      setPlataformasySoftwares(prevPlataformas =>
-        prevPlataformas.map(plataforma =>
-          plataforma.id === plataformaId ? {
-            ...plataforma,
-            estados: {
-              ...plataforma.estados,
-              [fieldName]: { ...plataforma.estados[fieldName], loading: false, saved: true }
-            }
-          } : plataforma
-        )
-      );
+        // Actualiza el estado de carga y guardado
+        updateFieldState(plataformaId, fieldName, { loading: false, saved: true });
+
+        if (!esGuardadoPorBlur) {
+          setMostrarBotonGuardarPlataforma(false);
+        }
 
     } catch (error) {
-      console.error("Error al guardar los datos:", error);
-      setPlataformasySoftwares(prevPlataformas =>
-        prevPlataformas.map(plataforma =>
-          plataforma.id === plataformaId ? {
-            ...plataforma,
-            estados: {
-              ...plataforma.estados,
-              [fieldName]: { ...plataforma.estados[fieldName], loading: false, saved: false }
-            }
-          } : plataforma
-        )
-      );
-    
+        console.error("Error al guardar los datos:", error);
+        updateFieldState(plataformaId, fieldName, { loading: false, saved: false });
     }
-  };
+};
+
 
 
   return (
@@ -254,7 +244,7 @@ export const Subpaso_dosPuntoCuatro = ({
                 maxLength={500}
                 value={plataforma.nombre_plataforma || ''}
                 onChange={(valor) => handleInputChange(plataforma.id, 'nombre_plataforma', valor)}
-                onBlur={plataforma.id !== ultimaPlataformaId ? () => handleSave(plataforma.id, null, true, 'nombre_plataforma') : null}
+                onBlur={plataforma.id !== ultimaPlataformaId ? () => handleSave(plataforma.id, true, 'nombre_plataforma') : null}
                 loading={plataforma.estados.nombre_plataforma.loading}
                 saved={plataforma.estados.nombre_plataforma.saved}
               />
@@ -273,9 +263,9 @@ export const Subpaso_dosPuntoCuatro = ({
                 name="descripcion_tecnica"
                 value={plataforma.descripcion_tecnica || ''}
                 onChange={(valor) => handleInputChange(plataforma.id, 'descripcion_tecnica', valor)}
-                onBlur={plataforma.id !== ultimaPlataformaId ? () => handleSave(plataforma.id, null, true, 'descripcion_tecnica') : null}
-                loading={plataforma.estados.nombre_plataforma.loading}
-                saved={plataforma.estados.nombre_plataforma.saved}
+                onBlur={plataforma.id !== ultimaPlataformaId ? () => handleSave(plataforma.id, true, 'descripcion_tecnica') : null}
+                loading={plataforma.estados.descripcion_tecnica.loading}
+                saved={plataforma.estados.descripcion_tecnica.saved}
               />
             </div>
           </div>
