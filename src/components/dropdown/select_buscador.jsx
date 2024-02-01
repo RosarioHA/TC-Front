@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 
-const DropdownSelectBuscador = ({ label, placeholder, options, onSelectionChange, readOnly }) => {
+const DropdownSelectBuscador = ({  label, placeholder, options, onSelectionChange, readOnly, initialValue }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedOption, setSelectedOption] = useState(null);
@@ -28,6 +28,16 @@ const DropdownSelectBuscador = ({ label, placeholder, options, onSelectionChange
       document.removeEventListener('mousedown', handleDocumentClick);
     };
   }, [isOpen, hasOpened]);
+
+  useEffect(() => {
+    // Si hay un valor inicial, establecerlo como la opción seleccionada
+    if (initialValue) {
+      const initialOption = options.find(option => option.value === initialValue);
+      if (initialOption) {
+        setSelectedOption(initialOption);
+      }
+    }
+  }, [initialValue, options]);
 
   useEffect(() => {
     if (hasChanges) {
