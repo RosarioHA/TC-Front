@@ -257,7 +257,7 @@ export const Subpaso_dosPuntoTres = ({
     <div>
       <h4 className="text-sans-h4">2.3 Descripción de etapas y procedimientos del ejercicio de la competencia</h4>
       <h6 className="text-sans-h6-primary">En esta sección se deben describir las etapas que componen el ejercicio de la competencia, indicando los procedimientos que se realizan, los hitos que la componen, y las unidades que intervienen en su ejecución, y sus responsabilidades.</h6>
-      <h6 className="text-sans-h6-primary mt-3">Asegúrate que las etapas, procedimientos y unidades intervinientes están bien llenadas, ya que esta información será utilizada más adelante en tu formulario.</h6>
+      <h6 className="text-sans-h6-primary mt-3">Este punto es opcional.</h6>
   
       {etapas.map((etapa, etapaIndex) => (
       <div key={etapa.id} className="row border my-4">
@@ -306,13 +306,8 @@ export const Subpaso_dosPuntoTres = ({
           <div className="row">
             <div className="d-flex p-2 py-4">
               <p className="text-sans-p-bold mb-0 me-2">Procedimientos</p>
-              <p className="text-sans-p-grayc me-3">(Opcional)</p>
-              <button className="btn-secundario-s ms-5" onClick={() => agregarProcedimiento(etapa.id)}>
-                <i className="material-symbols-rounded me-2">add</i>
-                <p className="mb-0 text-decoration-underline">Agregar Procedimiento</p>
-              </button>   
-            </div>
-            <hr className="my-0"/>  
+              <p className="text-sans-p-grayc me-3">(Opcional)</p>  
+            </div>  
           </div>
 
           <div className="">
@@ -355,19 +350,31 @@ export const Subpaso_dosPuntoTres = ({
               <hr className="my-0"/>
             </div>
             ))}
+            <div className="row">
+              <div className="p-2">
+                {mostrarBotonGuardarProcedimiento ? (
+                  <button className="btn-primario-s m-2" onClick={() => handleSave(etapa.id, procedimientoEnEdicionId, true)}>
+                    <i className="material-symbols-rounded me-2">save</i>
+                    <p className="mb-0 text-decoration-underline">Guardar Procedimiento</p>
+                  </button>
+                  ) : (
+                  <button className="btn-secundario-s" onClick={() => agregarProcedimiento(etapa.id)}>
+                    <i className="material-symbols-rounded me-2">add</i>
+                    <p className="mb-0 text-decoration-underline">Agregar Procedimiento</p>
+                  </button>
+                )}
+              </div>
+              <hr className="my-0"/>
+            </div>
           </div>
         </div>
           
         <div className="d-flex justify-content-end p-3">
-          <button className="btn-secundario-s me-3" onClick={() => handleSave(etapa.id, procedimientoEnEdicionId, true)}>
-            <i className="material-symbols-rounded me-2">save</i>
-            <p className="mb-0 text-decoration-underline">Guardar</p>
-          </button>
           <button
             className="btn-terciario-ghost"
             onClick={() => eliminarElemento(etapa.id)}>
             <i className="material-symbols-rounded me-2">delete</i>
-            <p className="mb-0 text-decoration-underline">Borrar</p>
+            <p className="mb-0 text-decoration-underline">Borrar Etapa</p>
           </button>
         </div>
       </div>
@@ -376,9 +383,9 @@ export const Subpaso_dosPuntoTres = ({
       <div className="row">
         <div className="p-2">
           {mostrarBotonGuardarEtapa ? (
-            <button className="btn-secundario-s m-2" onClick={() => handleSave(etapaEnEdicionId, null, true)}>
+            <button className="btn-primario-s m-2" onClick={() => handleSave(etapaEnEdicionId, null, true)}>
               <i className="material-symbols-rounded me-2">save</i>
-              <p className="mb-0 text-decoration-underline">Guardar</p>
+              <p className="mb-0 text-decoration-underline">Guardar Etapa</p>
             </button>
             ) : (
             <button className="btn-secundario-s" onClick={agregarEtapa}>
