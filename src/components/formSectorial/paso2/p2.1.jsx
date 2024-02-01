@@ -384,7 +384,8 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
       {mostrarFormularioNuevoOrganismo && (
         <div className="tabla-organismo">
           <div className="row border">
-            <div className="col p-3">
+
+            <div className="col-2 p-3">
               <p>
                 <DropdownSelect
                   options={opciones}
