@@ -16,9 +16,9 @@ export const Subpaso_dosPuntoCuatro = ({
 }) => {
 
   // Lógica para recargar opciones de etapa cuando se crean o eliminan en paso 2.3
-  const [ dataDirecta, setDataDirecta ] = useState(null);
-  const [ opcionesEtapas, setOpcionesEtapas ] = useState([]);
-  
+  const [dataDirecta, setDataDirecta] = useState(null);
+  const [opcionesEtapas, setOpcionesEtapas] = useState([]);
+
   // Llamada para recargar componente
   const fetchDataDirecta = async () => {
     try {
@@ -43,7 +43,7 @@ export const Subpaso_dosPuntoCuatro = ({
       setRefreshSubpasoDos_tres(false);
     }
   }, [refreshSubpasoDos_cuatro, setRefreshSubpasoDos_tres, id, stepNumber]);
-  
+
   // Efecto para manejar la actualización de opciones basado en dataDirecta
   useEffect(() => {
     if (dataDirecta?.listado_unidades) {
@@ -51,7 +51,7 @@ export const Subpaso_dosPuntoCuatro = ({
       setOpcionesEtapas(nuevasOpciones);
     }
   }, [dataDirecta]);
-  
+
   // Efecto para manejar la carga inicial de opciones
   useEffect(() => {
     if (listado_etapas) {
@@ -78,93 +78,105 @@ export const Subpaso_dosPuntoCuatro = ({
   };
 
   const [ultimaPlataformaId, setUltimaPlataformaId] = useState(null);
-  const [mostrarBotonGuardarEtapa, setMostrarBotonGuardarEtapa] = useState(false);
+  const [mostrarBotonGuardarPlataforma, setMostrarBotonGuardarPlataforma] = useState(false);
 
   const agregarPlataforma = () => {
-    const nuevaEtapaId = generarIdUnico();
-    setUltimaPlataformaId(nuevaEtapaId);
-    const nuevaEtapa = {
-      id: nuevaEtapaId,
-      nombre_etapa: '',
-      descripcion_etapa: '',
-      procedimientos: [],
+    const nuevaPlataformaId = generarIdUnico();
+    setUltimaPlataformaId(nuevaPlataformaId);
+    const nuevaPlataforma = {
+      id: nuevaPlataformaId,
+      nombre_plataforma: '',
+      descripcion_tecnica: '',
+      costo_adquisicion: null,
+      costo_mantencion_anual: null,
+      descripcion_costos: '',
+      funcion_plataforma: '',
+      etapas: [],
+      capacitacion_plataforma: false,
       editando: false
     };
-    setPlataformasySoftwares(prevEtapas => [...prevEtapas, nuevaEtapa]);
-    setMostrarBotonGuardarEtapa(true);
+    setPlataformasySoftwares(prevPlataformas => [...prevPlataformas, nuevaPlataforma]);
+    setMostrarBotonGuardarPlataforma(true);
   };
 
   // Lógica para eliminar una fila de un organismo
   const eliminarElemento = async (plataformaId) => {
-    
-      // Preparar payload para eliminar una etapa
-        const payload = {
-          'p_2_4_plataformas_y_softwares': [{
-            id: plataformaId,
-            DELETE: true
-          }]
-        };
-        
-      // Actualizar el estado local para reflejar la eliminación
-      setPlataformasySoftwares(prevPlataformas => prevPlataformas.filter(plataforma => plataforma.id !== plataformaId));
 
-      // Llamar a la API para actualizar los datos
-      try {
-        await handleUpdatePaso(id, stepNumber, payload);
+    // Preparar payload para eliminar una etapa
+    const payload = {
+      'p_2_4_plataformas_y_softwares': [{
+        id: plataformaId,
+        DELETE: true
+      }]
+    };
 
-      setMostrarBotonGuardarEtapa(false);
-      setRefreshSubpasoDos_cuatro(true);
+    // Actualizar el estado local para reflejar la eliminación
+    setPlataformasySoftwares(prevPlataformas => prevPlataformas.filter(plataforma => plataforma.id !== plataformaId));
 
-      } catch (error) {
-        console.error("Error al eliminar:", error);
-      }
+    // Llamar a la API para actualizar los datos
+    try {
+      await handleUpdatePaso(id, stepNumber, payload);
+
+      setMostrarBotonGuardarPlataforma(false);
+
+    } catch (error) {
+      console.error("Error al eliminar:", error);
     }
-  
+  }
+
 
   // Lógica para editar sectores existentes
   // Actualiza el estado cuando los campos cambian
 
   const [plataformaEnEdicionId, setPlataformaEnEdicionId] = useState(null);
-  
+
 
   const handleInputChange = (plataformaId, campo, valor) => {
     setPlataformaEnEdicionId(plataformaId);
 
     setPlataformasySoftwares(prevPlataformas => prevPlataformas.map(plataforma => {
       if (plataforma.id === plataformaId) {
-          // Actualizar una plataforma específica
-          return { ...plataforma, [campo]: valor };
+        // Actualizar una plataforma específica
+        return { ...plataforma, [campo]: valor };
       }
       return plataforma;
     }));
   };
-  
-  
+
+
   const handleSave = async (plataformaId, esGuardadoPorBlur) => {
     if (!esGuardadoPorBlur) {
-      setMostrarBotonGuardarEtapa(false);
+      setMostrarBotonGuardarPlataforma(false);
     }
 
     const plataforma = plataformasySoftwares.find(e => e.id === plataformaId);
     let payload;
-  
-      // Preparar payload para guardar una etapa
-      payload = {
-        'p_2_4_plataformas_y_softwares': [{
-          id: plataformaId,
-          nombre_plataforma: plataforma.nombre_plataforma,
-          descripcion_tecnica: plataforma.descripcion_tecnica
-        }]
-      };
-    
-  
+
+    // Verificar si nuevaUnidadId tiene un valor
+    const etapasArray = nuevaUnidadId ? [nuevaUnidadId] : [];
+
+    // Preparar payload para guardar una etapa
+    payload = {
+      'p_2_4_plataformas_y_softwares': [{
+        id: plataformaId,
+        nombre_plataforma: plataforma.nombre_plataforma,
+        descripcion_tecnica: plataforma.descripcion_tecnica,
+        costo_adquisicion: plataforma.costo_adquisicion,
+        costo_mantencion_anual: plataforma.costo_mantencion_anual,
+        descripcion_costos: plataforma.descripcion_costos,
+        funcion_plataforma: plataforma.funcion_plataforma,
+        'etapas': etapasArray,
+        capacitacion_plataforma: plataforma.capacitacion_plataforma
+      }]
+    };
+
+
     try {
       // Llamar a la API para actualizar los datos
       const response = await handleUpdatePaso(id, stepNumber, payload);
       // Más código para manejar la respuesta
 
-    setMostrarBotonGuardarEtapa(false);
-    setRefreshSubpasoDos_cuatro(true);
+      setMostrarBotonGuardarPlataforma(false);
 
     } catch (error) {
       console.error("Error al guardar los datos:", error);
@@ -172,107 +184,124 @@ export const Subpaso_dosPuntoCuatro = ({
   };
 
 
-    return(
-      <div>
-        <h4 className="text-sans-h4">2.4 Plataformas y softwares utilizados en el ejercicio de la competencia</h4>
-        <h6 className="text-sans-h6-primary">Identifica las plataformas y/o softwares utilizados en el ejercicio de la competencia y llena una ficha técnica para cada plataforma o software.</h6>
+  return (
+    <div>
+      <h4 className="text-sans-h4">2.4 Plataformas y softwares utilizados en el ejercicio de la competencia</h4>
+      <h6 className="text-sans-h6-primary">Identifica las plataformas y/o softwares utilizados en el ejercicio de la competencia y llena una ficha técnica para cada plataforma o software.</h6>
 
-        {/* Renderiza las tablas para cada plataforma */}
-        <div className="col border">
+      {/* Renderiza las tablas para cada plataforma */}
+      {plataformasySoftwares.map((plataforma, index) => (
+        <div key={plataforma.id} className="col border">
           <div className="row p-3">
-            <div className="col-2"> 
+            <div className="col-2">
+              <p className="text-sans-p-bold mb-0">{index + 1}</p>
               <p className="text-sans-p-bold ms-2">Nombre de Plataforma o Sofware</p>
             </div>
             <div className="col ms-5">
-              <CustomInput 
-              placeholder="Escribe el nombre de la plataforma o software"
-              maxLength={500}/>
+              <CustomInput
+                label=""
+                placeholder="Escribe el nombre de la plataforma o software"
+                maxLength={500}
+                value={plataforma.nombre_plataforma || ''}
+                onChange={(valor) => handleInputChange(plataforma.id, 'nombre_plataforma', valor)}
+                onBlur={plataforma.id !== ultimaPlataformaId ? () => handleSave(plataforma.id, null, true) : null}
+              />
             </div>
           </div>
 
-          <hr/>
+          <hr />
           <div className="row p-3">
-            <div className="col-2"> 
+            <div className="col-2">
               <p className="text-sans-p-bold ms-2">Descripción técnica y versiones</p>
             </div>
             <div className="col ms-5">
-              <CustomInput 
-              placeholder="Indique la versión y una descripción técnica del software o plataforma"
-              maxLength={500}/>
+              <CustomInput
+                placeholder="Indique la versión y una descripción técnica del software o plataforma"
+                maxLength={500} 
+
+              />
             </div>
           </div>
 
-          <hr/>
+          <hr />
           <div className="row p-3">
-            <div className="col-2"> 
+            <div className="col-2">
               <p className="text-sans-p-bold ms-2">Descripción técnica y versiones</p>
             </div>
             <div className="col ms-5">
               <div className="row d-flex">
                 <div className="col">
-                <CustomInput 
-                label="Costo de adquisición"
-                placeholder="Costo de adquisión M$"
-                />
-                <h6 className="text-sans-h6 text-end">Campo númerico en miles de pesos.</h6>
+                  <CustomInput
+                    label="Costo de adquisición"
+                    placeholder="Costo de adquisión M$"
+                  />
+                  <h6 className="text-sans-h6 text-end">Campo númerico en miles de pesos.</h6>
                 </div>
                 <div className="col">
-                <CustomInput 
-                label="Costo de Mantención Anual"
-                placeholder="Costo de mantención M$"
-                />
-                <h6 className="text-sans-h6 text-end">Campo númerico en miles de pesos.</h6>
+                  <CustomInput
+                    label="Costo de Mantención Anual"
+                    placeholder="Costo de mantención M$"
+                  />
+                  <h6 className="text-sans-h6 text-end">Campo númerico en miles de pesos.</h6>
                 </div>
               </div>
               <div className="row mt-4">
-                <CustomTextarea 
-                label="Descripción de costos"
-                placeholder="Describe los costos de la plataforma o software"
-                maxLength={500}/>
+                <CustomTextarea
+                  label="Descripción de costos"
+                  placeholder="Describe los costos de la plataforma o software"
+                  maxLength={500} />
               </div>
             </div>
           </div>
-          
-          <hr/>
+
+          <hr />
           <div className="row p-3">
-            <div className="col-2"> 
+            <div className="col-2">
               <p className="text-sans-p-bold ms-2">Función en el ejercicio de la competencia identificando perfiles de usuario</p>
             </div>
             <div className="col ms-5">
-              <CustomTextarea 
-              placeholder="Describe la función en el ejercicio de la competencia y los perfiles de usuario."
-              maxLength={500}/>
+              <CustomTextarea
+                placeholder="Describe la función en el ejercicio de la competencia y los perfiles de usuario."
+                maxLength={500} />
             </div>
           </div>
 
-          <hr/>
+          <hr />
           <div className="row p-3">
-            <div className="col-2"> 
+            <div className="col-2">
               <p className="text-sans-p-bold ms-2 mb-0">Etapas donde se utiliza</p>
               <p className="text-sans-p ms-2">(Opcional)</p>
             </div>
             <div className="col ms-5">
               <DropdownSelect
-              placeholder="Etapa"
-              options=""/>
+                placeholder="Etapa"
+                options="" />
             </div>
           </div>
 
-          <hr/>
+          <hr />
           <div className="row p-3">
-            <div className="col-2"> 
+            <div className="col-2">
               <p className="text-sans-p-bold ms-2 mb-0">¿El uso de la plataforma o software requirió capacitación?</p>
             </div>
             <div className="col ms-5">
               <RadioButtons
-              altA="Si"
-              altB="No"/>
+                altA="Si"
+                altB="No" />
             </div>
-          </div> 
-        </div>
-  
-        
+          </div>
 
-      </div>
-    )
-  };
+          <div className="col d-flex align-items-center">
+            <button
+              className="btn-terciario-ghost"
+              onClick={() => eliminarElemento(etapa.id, procedimiento.id)}>
+              <i className="material-symbols-rounded me-2">delete</i>
+              <p className="mb-0 text-decoration-underline">Borrar</p>
+            </button>
+          </div>
+        </div>
+      ))}
+
+    </div>
+  )
+};

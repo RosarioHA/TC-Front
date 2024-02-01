@@ -327,10 +327,11 @@ export const Subpaso_dosPuntoTres = ({
                         label="Unidades Intervinientes"
                         placeholder="Unidades"
                         options={opciones}
-                        value={procedimiento.unidadSeleccionada || ''}
+                        value={procedimiento.unidadSeleccionada || null}
                         onSelectionChange={(opcionSeleccionada) => manejarCambioDropdown(opcionSeleccionada)}
                       />
                     </div>
+                    
                     <div className="col d-flex align-items-center">
                       <button
                         className="btn-terciario-ghost"
