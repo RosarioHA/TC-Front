@@ -20,7 +20,8 @@ import { useFormContext } from "../../context/FormAlert";
 import ModalAbandonoFormulario from "../../components/commons/modalAbandonoFormulario";
 import { DropdownSelectBuscadorUnico } from "../../components/dropdown/select_buscador_sector";
 
-const EdicionUsuario = () => {
+const EdicionUsuario = () =>
+{
   const { id } = useParams();
   const history = useNavigate();
   const [ editMode, setEditMode ] = useState(false);
@@ -31,7 +32,7 @@ const EdicionUsuario = () => {
   const { dataSector, loadingSector } = useSector();
   const [ regionId, setRegionId ] = useState(null);
   const [ sectorId, setSectorId ] = useState(null);
-  const { dataFiltroCompetencias, loadingFiltroCompetencias } = useFiltroCompetencias(regionId, sectorId);
+  const { dataFiltroCompetencias } = useFiltroCompetencias(regionId, sectorId);
   const [ competenciasAsignadas, setCompetenciasAsignadas ] = useState([]);
   const [ competenciasSeleccionadas, setCompetenciasSeleccionadas ] = useState([]);
   const { updateHasChanged } = useFormContext();
@@ -51,35 +52,45 @@ const EdicionUsuario = () => {
       perfil: userDetails?.perfil || "",
       region: userDetails?.region?.id || null,
       sector: userDetails?.sector?.id || null,
-      is_active: userDetails?.is_active !== undefined ? userDetails.is_active === 'activo' : false
+      is_active: userDetails?.is_active !== undefined ? userDetails.is_active === 'activo' : false,
     },
   });
 
-  useEffect(() => {
-    if (userDetails) {
+  console.log('user',userDetails)
+
+  useEffect(() =>
+  {
+    if (userDetails)
+    {
       setCompetenciasAsignadas(userDetails.competencias_asignadas || []);
-      if (userDetails.perfil === 'GORE' && userDetails.regionId) {
+      if (userDetails.perfil === 'GORE' && userDetails.regionId)
+      {
         setRegionId(userDetails.regionId);
-      } 
-      if (userDetails.perfil === 'Usuario Sectorial' && userDetails.sectorId) {
+      }
+      if (userDetails.perfil === 'Usuario Sectorial' && userDetails.sectorId)
+      {
         setSectorId(userDetails.sectorId);
       }
     }
-  }, [userDetails]);
+  }, [ userDetails ]);
 
-  useEffect(() => {
-    if (userDetails && userDetails.competencias_asignadas) {
+  useEffect(() =>
+  {
+    if (userDetails && userDetails.competencias_asignadas)
+    {
       // Transforma las competencias asignadas en un formato que el componente hijo pueda entender
       const asignadasIds = userDetails.competencias_asignadas.map(competencia => competencia.id);
       setCompetenciasSeleccionadas(asignadasIds);
     }
-  }, [userDetails]);
+  }, [ userDetails ]);
 
   const perfil = watch('perfil') || '';
   const renderizadoCondicional = editMode ? perfil : userDetails?.perfil;
 
-  useEffect(() => {
-    if (editMode && userDetails) {
+  useEffect(() =>
+  {
+    if (editMode && userDetails)
+    {
       // En modo edicion, actualiza los valores iniciales con los valores actuales.
       setValue('nombre_completo', userDetails.nombre_completo || "");
       setValue('email', userDetails.email || "");
@@ -91,14 +102,16 @@ const EdicionUsuario = () => {
   }, [ editMode, userDetails, setValue ]);
 
   //detecta cambios sin guardar en el formulario
-  function handleOnChange(event) {
+  function handleOnChange(event)
+  {
     const data = new FormData(event.currentTarget);
     const formEntries = Array.from(data.entries());
     console.log('Form Entries:', formEntries);
 
     // Verifica si hay cambios respecto al valor inicial
-    const formHasChanged = Array.from(data.entries()).some(([name, value]) => {
-      const initialValue = userDetails[name];
+    const formHasChanged = Array.from(data.entries()).some(([ name, value ]) =>
+    {
+      const initialValue = userDetails[ name ];
       return value !== String(initialValue);
     });
     console.log('Form Has Changed:', formHasChanged);
@@ -108,27 +121,29 @@ const EdicionUsuario = () => {
     const regionChanged = watch('region') !== userDetails?.region?.id;
     const sectorChanged = watch('sector') !== userDetails?.sector?.id;
     const estadoChanged = watch('is_active') !== (userDetails?.is_active === 'activo');
-    console.log('Perfil Changed:', perfilChanged);
-    console.log('Region Changed:', regionChanged);
-    console.log('Sector Changed:', sectorChanged);
-    console.log('Estado Changed:', estadoChanged);
+
 
     // Establecer hasChanged si hay algún cambio
     setHasChanged(formHasChanged || perfilChanged || regionChanged || sectorChanged || estadoChanged);
     updateHasChanged(formHasChanged || perfilChanged || regionChanged || sectorChanged || estadoChanged);
   }
 
-  const handleBackButtonClick = () => {
-    if (editMode) {
+  const handleBackButtonClick = () =>
+  {
+    if (editMode)
+    {
       setEditMode(false);
-    } else if (hasChanged) {
+    } else if (hasChanged)
+    {
       setIsModalOpen(true);
-    } else {
+    } else
+    {
       history(-1);
     }
   };
 
-  const handleEditClick = () => {
+  const handleEditClick = () =>
+  {
     setEditMode((prevMode) => !prevMode);
   };
 
@@ -149,26 +164,31 @@ const EdicionUsuario = () => {
       ministerioId: ministerio.id
     }))
   }));
-   //opciones Filtro Competencias
-   const opcionesFiltroCompetencias = dataFiltroCompetencias.map(competencia => ({
+  //opciones Filtro Competencias
+  const opcionesFiltroCompetencias = dataFiltroCompetencias.map(competencia => ({
     value: competencia.id,
     label: competencia.nombre,
   }));
 
-  const handleInputClick = (e) => {
+  const handleInputClick = (e) =>
+  {
     // Previene que el evento se propague al boton
     e.stopPropagation();
   }
 
-  const handleDdSelectChange = (fieldName, selectedOption) => {
-    try {
-      if (selectedOption && selectedOption.label) {
+  const handleDdSelectChange = (fieldName, selectedOption) =>
+  {
+    try
+    {
+      if (selectedOption && selectedOption.label)
+      {
         setValue(fieldName, selectedOption.label);
         setRegionId('');
       }
       updateHasChanged(true);
       setHasChanged(true);
-    } catch (error) {
+    } catch (error)
+    {
       console.error('Error en handleDdSelectChange:', error);
     }
   };
@@ -179,46 +199,58 @@ const EdicionUsuario = () => {
     setValue('sector', selectedSectorValues, { shouldValidate: true });
   };
 
-  const handleDdSelectBuscadorChange = (fieldName, selectedOption) => {
-    try {
-      if (selectedOption && selectedOption.value) {
+  const handleDdSelectBuscadorChange = (fieldName, selectedOption) =>
+  {
+    try
+    {
+      if (selectedOption && selectedOption.value)
+      {
         setValue(fieldName, selectedOption.value);
-        if (fieldName === 'region') {
+        if (fieldName === 'region')
+        {
           setRegionId(selectedOption.value); // Actualiza regionId cuando se selecciona una nueva región
         }
-        if (fieldName === 'sector') {
+        if (fieldName === 'sector')
+        {
           setSectorId(selectedOption.value); // Actualiza sectorId cuando se selecciona un nuevo sector
         }
       }
       updateHasChanged(true);
       setHasChanged(true);
-    } catch (error) {
+    } catch (error)
+    {
       console.error('Error en handleDdSelectBuscadorChange:', error);
     }
   };
 
-  const handleEstadoChange = (nuevoEstado) => {
+  const handleEstadoChange = (nuevoEstado) =>
+  {
     const isActivo = nuevoEstado === "activo";
     setValue("is_active", isActivo);
     setHasChanged(true);
     updateHasChanged(true);
   };
 
-  const onSubmit = async (formData) => {
+  const onSubmit = async (formData) =>
+  {
     const payload = {
       ...formData,
       competencias_asignadas: competenciasSeleccionadas,
     };
-      try {
+    try
+    {
       await editUser(id, payload);
       setEditMode(false);
       updateHasChanged(false);
       setHasChanged(false);
       history('/home/success', { state: { origen: "editar_usuario" } });
-    } catch (error) {
+    } catch (error)
+    {
       console.error("Error al editar el usuario:", error);
     }
   };
+
+
 
   return (
     <div className="container col-10 my-4">
@@ -289,29 +321,28 @@ const EdicionUsuario = () => {
         </div>
 
         <div className="my-4 col-11">
-          {loadingGroups ? (
-            <div>Cargando perfiles...</div>
-          ) : dataGroups && dataGroups.length > 0 ? (
-            <Controller 
-            name="perfil"
-            control={control}
-            render={({ field }) => (
-              <DropdownSelect
-                label="Elige el perfil de usuario (Obligatorio)"
-                placeholder={userDetails ? userDetails.perfil : ''}
-                id="perfil"
-                name="perfil"
-                options={loadingGroups ? [] : opcionesGroups}
-                readOnly={!editMode}
-                control={control}
-                onSelectionChange={(selectedOption) => {
-                  field.onChange(selectedOption.label);
-                  handleDdSelectChange('perfil', selectedOption);
-                }}
-                initialValue={userDetails ? userDetails.perfil : ''}
-              />
-            )}/>
-            ) : (
+          {dataGroups && dataGroups.length > 0 ? (
+            <Controller
+              name="perfil"
+              control={control}
+              render={({ field }) => (
+                <DropdownSelect
+                  label="Elige el perfil de usuario (Obligatorio)"
+                  placeholder={userDetails ? userDetails.perfil : ''}
+                  id="perfil"
+                  name="perfil"
+                  options={loadingGroups ? [] : opcionesGroups}
+                  readOnly={!editMode}
+                  control={control}
+                  onSelectionChange={(selectedOption) =>
+                  {
+                    field.onChange(selectedOption.label);
+                    handleDdSelectChange('perfil', selectedOption);
+                  }}
+                  initialValue={userDetails ? userDetails.perfil : ''}
+                />
+              )} />
+          ) : (
             <input type="text" value="No hay perfiles para mostrar" readOnly />
           )}
         </div>
@@ -334,33 +365,32 @@ const EdicionUsuario = () => {
                       readOnly={!editMode}
                       options={loadingRegiones ? [] : opcionesDeRegiones}
                       control={control}
-                      onSelectionChange={(selectedOption) => {
+                      initialValue={userDetails?.region?.id}
+                      onSelectionChange={(selectedOption) =>
+                      {
                         field.onChange(selectedOption.value);
                         handleDdSelectBuscadorChange('region', selectedOption);
                       }}
-                      initialValue={userDetails ? userDetails.region : ''}
                     />
                   )}
-                /> ) : (
+                />) : (
                 <input type="text" value="No hay regiones para mostrar" readOnly />
               )}
             </div>
           )}
           {renderizadoCondicional === 'Usuario Sectorial' && (
             <div className="my-4 col-11 ">
-              {loadingSector ? (
-                <div>Cargando organismos...</div>
-              ) : dataSector && dataSector.length > 0 ? (
+              { dataSector && dataSector.length > 0 ? (
                 <DropdownSelectBuscadorUnico
                   label="Elige el organismo al que pertenece (Obligatorio)"
-                  placeholder={userDetails.sector || 'Selecciona un sector'}
+                  placeholder={userDetails.sector || ''}
                   id="sector"
                   name="sector"
                   readOnly={!editMode}
                   options={loadingSector ? [] : opcionesSector}
                   control={control}
                   onSelectionChange={handleSectorSelectionChange}
-                  initialValue={userDetails ? userDetails.sector : ''}
+                  sectorId={userDetails.sector || ''}
                 />) : (
                 <input type="text" value="No hay organismos para mostrar" readOnly />
               )}
@@ -408,7 +438,7 @@ const EdicionUsuario = () => {
         </div>
 
         {!editMode && (
-          <div className="mb-5 mt-5">
+          <div className="mb-5 mt-5 col-11">
             {competenciasAsignadas.length > 0 ? (
               <table>
                 <thead className="">
@@ -446,9 +476,7 @@ const EdicionUsuario = () => {
         {/* input Filtro Competencias */}
         <div className="mb-5">
           <div className="my-3 col-11">
-            {loadingFiltroCompetencias ? (
-              <div>Cargando competencias...</div>
-            ) : editMode && dataFiltroCompetencias && dataFiltroCompetencias.length > 0 ? (
+            {editMode && dataFiltroCompetencias && dataFiltroCompetencias.length > 0 ? (
               <DropdownSinSecciones
                 label="Competencias disponibles para asignar (Opcional)"
                 placeholder="Busca el nombre de la competencia"
@@ -474,28 +502,28 @@ const EdicionUsuario = () => {
 
         {!editMode && (
           <div className="d-flex align-items-center mb-4 col-11">
-          <CustomInput
-            label="Fecha de Creación"
-            placeholder={userDetails ? userDetails.created : ''}
-            readOnly={true}
-            maxLength={null}
-          />
-          {editMode ? <i className="col material-symbols-rounded ms-2">lock</i> : ''}
-        </div>
+            <CustomInput
+              label="Fecha de Creación"
+              placeholder={userDetails ? userDetails.created : ''}
+              readOnly={true}
+              maxLength={null}
+            />
+            {editMode ? <i className="col material-symbols-rounded ms-2">lock</i> : ''}
+          </div>
         )}
 
         {!editMode && (
           <div className="d-flex align-items-center mb-4 col-11">
-          <CustomInput
-            label="Fecha último inicio de sesión"
-            placeholder={userDetails ? userDetails.last_login_display : ''}
-            readOnly={true}
-            maxLength={null}
-          />
-          {editMode ? <i className="col material-symbols-rounded ms-2">lock</i> : ''}
-        </div>
+            <CustomInput
+              label="Fecha último inicio de sesión"
+              placeholder={userDetails ? userDetails.last_login_display : ''}
+              readOnly={true}
+              maxLength={null}
+            />
+            {editMode ? <i className="col material-symbols-rounded ms-2">lock</i> : ''}
+          </div>
         )}
-        
+
 
         {editMode && (
           <button className="btn-primario-s mb-5" type="submit">

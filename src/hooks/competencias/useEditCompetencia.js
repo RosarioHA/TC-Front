@@ -11,7 +11,6 @@ export const useEditCompetencia = (competenciaId) => {
       try {
         const response = await apiTransferenciaCompentencia.get(`/competencias/${competenciaId}/`);
         setCompetencia(response.data);
-        console.log("competencia obtenida", response.data);
       } catch (error) {
         setError(error);
       } finally {
