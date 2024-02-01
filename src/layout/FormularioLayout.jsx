@@ -36,7 +36,7 @@ const FormularioLayout = () => {
   }
 
   return (
-    <div className="container-fluid">
+    <div className="container-fluid col-11">
       <div className="row">
         <div className="col mb-2">
           <FormTitle data={data} loading={loading} id={data.id} />

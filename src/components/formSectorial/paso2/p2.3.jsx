@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import CustomInput from "../../forms/custom_input";
 import DropdownSelect from "../../dropdown/select";
-import DropdownSinSecciones from "../../dropdown/checkbox_sinSecciones_conTabla";
+//import DropdownSinSecciones from "../../dropdown/checkbox_sinSecciones_conTabla";
 import { FormularioContext } from "../../../context/FormSectorial";
 import { apiTransferenciaCompentencia } from "../../../services/transferenciaCompetencia";
 
@@ -259,132 +259,135 @@ export const Subpaso_dosPuntoTres = ({
       <h6 className="text-sans-h6-primary">En esta sección se deben describir las etapas que componen el ejercicio de la competencia, indicando los procedimientos que se realizan, los hitos que la componen, y las unidades que intervienen en su ejecución, y sus responsabilidades.</h6>
       <h6 className="text-sans-h6-primary mt-3">Asegúrate que las etapas, procedimientos y unidades intervinientes están bien llenadas, ya que esta información será utilizada más adelante en tu formulario.</h6>
   
-    {etapas.map((etapa, etapaIndex) => (
-        <div key={etapa.id} className="row border my-4">
-          {/* Contenido de la etapa, como nombre y descripción */}
-          <div className="col-1 border">
-            <p className="text-sans-p-bold mb-0">Etapa {etapaIndex + 1}</p>
-          </div>
-          <div className="col">
-
-            <div className="row border">
-              <div className="col-2 p-2">
-                <p className="text-sans-p-bold mb-0">Nombre de la etapa</p>
-                <p className="text-sans-p-grayc">(Opcional)</p>
-              </div>
-              <div className="col p-2">
-                <CustomInput 
-                  label=""
-                  value={etapa.nombre_etapa || ''}
-                  placeholder="Escribe el nombre de la etapa"
-                  maxLength={500}
-                  onChange={(valor) => handleInputChange(etapa.id, null, 'nombre_etapa', valor)}
-                  onBlur={etapa.id !== ultimaEtapaId ? () => handleSave(etapa.id, null, true) : null}
-                />
-              </div>
-            </div>
-
-            <div className="row border">
-              <div className="col-2 p-2">
-                <p className="text-sans-p-bold mb-0">Descripción de la etapa</p>
-                <p className="text-sans-p-grayc">(Opcional)</p>
-              </div>
-              <div className="col p-2">
-              <CustomInput 
-                    label=""
-                    value={etapa.descripcion_etapa || ''}
-                    placeholder="Describe la etapa"
-                    maxLength={500}
-                    onChange={(valor) => handleInputChange(etapa.id, null, 'descripcion_etapa', valor)}
-                    onBlur={etapa.id !== ultimaEtapaId ? () => handleSave(etapa.id, null, true) : null}
-                />
-              </div>
-            </div>
-
-            {/* Mapeo de los procedimientos de cada etapa */}
-            
-            <div className="row border">
-              <div className="d-flex p-2">
-                <p className="text-sans-p-bold mb-0 me-2">Procedimientos</p>
-                <p className="text-sans-p-grayc me-3">(Opcional)</p>
-              </div>
-
-              <div className="col-10 border p-2">
-                {etapa.procedimientos.map((procedimiento, procedimientoIndex) => (
-                  <div key={procedimiento.id} className="border row">
-                    {/* Contenido del procedimiento, como descripción y unidades intervinientes */}
-                    <div className="col-10 p-3">
-                      <div className="conteo">{procedimientoIndex + 1}</div>
-                      <CustomInput 
-                        label="Descripción del procedimiento (Obligatorio)"
-                        value={procedimiento.descripcion_procedimiento || ''}
-                        placeholder="Describe el procedimiento"
-                        maxLength={500}
-                        onChange={(valor) => handleInputChange(etapa.id, procedimiento.id, 'descripcion_procedimiento', valor)}
-                        onBlur={etapa.id !== ultimoProcedimientoId ? () => handleSave(etapa.id, procedimiento.id, true) : null}
-                      />
-                      <DropdownSelect
-                        label="Unidades Intervinientes"
-                        placeholder="Unidades"
-                        options={opciones}
-                        value={procedimiento.unidadSeleccionada || null}
-                        onSelectionChange={(opcionSeleccionada) => manejarCambioDropdown(opcionSeleccionada)}
-                      />
-                    </div>
-                    
-                    <div className="col d-flex align-items-center">
-                      <button
-                        className="btn-terciario-ghost"
-                        onClick={() => eliminarElemento(etapa.id, procedimiento.id)}>
-                        <i className="material-symbols-rounded me-2">delete</i>
-                        <p className="mb-0 text-decoration-underline">Borrar Procedimiento</p>
-                      </button>
-                    </div>
-                  </div>
-                ))}
-                <div className="row">
-                      <div className="p-2">
-                        {mostrarBotonGuardarProcedimiento ? (
-                          <button className="btn-secundario-s m-2" onClick={() => handleSave(etapa.id, procedimientoEnEdicionId, true)}>
-                            <i className="material-symbols-rounded me-2">save</i>
-                            <p className="mb-0 text-decoration-underline">Guardar Procedimiento</p>
-                          </button>
-                          ) : (
-                          <button className="btn-secundario-s" onClick={() => agregarProcedimiento(etapa.id)}>
-                            <i className="material-symbols-rounded me-2">add</i>
-                            <p className="mb-0 text-decoration-underline">Agregar Procedimiento</p>
-                          </button>
-                          )}
-                      </div>
-                    </div>
-              </div>
-            </div> 
-          </div>
-          <div className="row">
-                      <button
-                        className="btn-terciario-ghost"
-                        onClick={() => eliminarElemento(etapa.id)}>
-                        <i className="material-symbols-rounded me-2">delete</i>
-                        <p className="mb-0 text-decoration-underline">Borrar Etapa</p>
-                      </button>
-                    </div>
+      {etapas.map((etapa, etapaIndex) => (
+      <div key={etapa.id} className="row border my-4">
+        {/* Contenido de la etapa, como nombre y descripción */}
+        <div className="col-1 border">
+          <p className="text-sans-p-bold mb-0">Etapa {etapaIndex + 1}</p>
         </div>
-      ))}
-      <div className="row">
-                  <div className="p-2">
-                    {mostrarBotonGuardarEtapa ? (
-                      <button className="btn-secundario-s m-2" onClick={() => handleSave(etapaEnEdicionId, null, true)}>
-                        <i className="material-symbols-rounded me-2">save</i>
-                        <p className="mb-0 text-decoration-underline">Guardar Etapa</p>
-                      </button>
-                      ) : (
-                      <button className="btn-secundario-s" onClick={agregarEtapa}>
-                        <i className="material-symbols-rounded me-2">add</i>
-                        <p className="mb-0 text-decoration-underline">Agregar Etapa</p>
-                      </button>
-                      )}
-                  </div>
+
+        <div className="col">
+          <div className="row ">
+            <div className="col-2 p-2">
+              <p className="text-sans-p-bold mb-0">Nombre de la etapa</p>
+              <p className="text-sans-p-grayc">(Opcional)</p>
             </div>
+            <div className="col p-2">
+              <CustomInput 
+                label=""
+                value={etapa.nombre_etapa || ''}
+                placeholder="Escribe el nombre de la etapa"
+                maxLength={500}
+                onChange={(valor) => handleInputChange(etapa.id, null, 'nombre_etapa', valor)}
+                onBlur={etapa.id !== ultimaEtapaId ? () => handleSave(etapa.id, null, true) : null}
+              />
+            </div>
+          </div>
+
+          <div className="row ">
+            <div className="col-2 p-2">
+              <p className="text-sans-p-bold mb-0">Descripción de la etapa</p>
+              <p className="text-sans-p-grayc">(Opcional)</p>
+            </div>
+            <div className="col p-2">
+              <CustomInput 
+                label=""
+                value={etapa.descripcion_etapa || ''}
+                placeholder="Describe la etapa"
+                maxLength={500}
+                onChange={(valor) => handleInputChange(etapa.id, null, 'descripcion_etapa', valor)}
+                onBlur={etapa.id !== ultimaEtapaId ? () => handleSave(etapa.id, null, true) : null}
+              />
+            </div>
+            <hr />
+          </div>
+
+          {/* Mapeo de los procedimientos de cada etapa */}  
+          <div className="row">
+            <div className="d-flex p-2 py-4">
+              <p className="text-sans-p-bold mb-0 me-2">Procedimientos</p>
+              <p className="text-sans-p-grayc me-3">(Opcional)</p>
+              <button className="btn-secundario-s ms-5" onClick={() => agregarProcedimiento(etapa.id)}>
+                <i className="material-symbols-rounded me-2">add</i>
+                <p className="mb-0 text-decoration-underline">Agregar Procedimiento</p>
+              </button>   
+            </div>
+            <hr className="my-0"/>  
+          </div>
+
+          <div className="">
+            {etapa.procedimientos.map((procedimiento, procedimientoIndex) => (
+            <div key={procedimiento.id} className="p-1">
+              {/* Contenido del procedimiento, como descripción y unidades intervinientes */}
+              <div className="">
+                <div className="conteo mb-3">{procedimientoIndex + 1}</div>
+                <div className="d-flex pb-4">
+                  <div className="col-6">
+                    <CustomInput
+                      label="Descripción del procedimiento (Obligatorio)"
+                      value={procedimiento.descripcion_procedimiento || ''}
+                      placeholder="Describe el procedimiento"
+                      maxLength={500}
+                      onChange={(valor) => handleInputChange(etapa.id, procedimiento.id, 'descripcion_procedimiento', valor)}
+                      onBlur={etapa.id !== ultimoProcedimientoId ? () => handleSave(etapa.id, procedimiento.id, true) : null}
+                    />
+                  </div>
+                  <div className="col-4">
+                    <DropdownSelect
+                      label="Unidades Intervinientes"
+                      placeholder="Unidades"
+                      options={opciones}
+                      value={procedimiento.unidadSeleccionada || ''}
+                      onSelectionChange={(opcionSeleccionada) => manejarCambioDropdown(opcionSeleccionada)}
+                    />
+                  </div>
+                  <div className="col-1">
+                  <button
+                    className="btn-terciario-ghost ms-3"
+                    onClick={() => eliminarElemento(etapa.id, procedimiento.id)}>
+                    <i className="material-symbols-rounded me-2">delete</i>
+                    <p className="mb-0 text-decoration-underline">Borrar</p>
+                  </button>
+                </div>
+                </div>
+                
+              </div> 
+              <hr className="my-0"/>
+            </div>
+            ))}
+          </div>
+        </div>
+          
+        <div className="d-flex justify-content-end p-3">
+          <button className="btn-secundario-s me-3" onClick={() => handleSave(etapa.id, procedimientoEnEdicionId, true)}>
+            <i className="material-symbols-rounded me-2">save</i>
+            <p className="mb-0 text-decoration-underline">Guardar</p>
+          </button>
+          <button
+            className="btn-terciario-ghost"
+            onClick={() => eliminarElemento(etapa.id)}>
+            <i className="material-symbols-rounded me-2">delete</i>
+            <p className="mb-0 text-decoration-underline">Borrar</p>
+          </button>
+        </div>
+      </div>
+      ))}
+
+      <div className="row">
+        <div className="p-2">
+          {mostrarBotonGuardarEtapa ? (
+            <button className="btn-secundario-s m-2" onClick={() => handleSave(etapaEnEdicionId, null, true)}>
+              <i className="material-symbols-rounded me-2">save</i>
+              <p className="mb-0 text-decoration-underline">Guardar</p>
+            </button>
+            ) : (
+            <button className="btn-secundario-s" onClick={agregarEtapa}>
+              <i className="material-symbols-rounded me-2">add</i>
+              <p className="mb-0 text-decoration-underline">Agregar Etapa</p>
+            </button>
+          )}
+        </div>
+      </div>
   
     </div>
   )

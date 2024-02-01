@@ -41,7 +41,7 @@ const EstadoCompetencia = () =>
 
   return (
     <>
-      <div className="my-3 mx-5">
+      <div className="container col-11 my-3 mx-5">
         <div className="py-3 d-flex">
           <button className="btn-secundario-s" onClick={handleBackButtonClick}>
             <i className="material-symbols-rounded me-2">arrow_back_ios</i>
