@@ -161,7 +161,7 @@ const GestionCompetencias = () =>
   };
 
   return (
-    <div className="container-fluid mt-2">
+    <div className="container-fluid col-11 mt-2">
       <div className="text-sans-h2 mx-3">Listado de Competencias</div>
 
       <div className="d-flex flex-row me-5 ms-2 my-4">
@@ -198,16 +198,16 @@ const GestionCompetencias = () =>
             sortableColumns={[]}
             renderRow={(competencia) => (
               <tr key={competencia.id}>
-                <td className="pt-3 col-4">
+                <td className="pt-3 ps-3 col-4">
                   <u className="text-sans-p my-4">{competencia.nombre}</u>
                 </td>
                 <td className="text-primary pt-4 col-2">{competencia.ambito}</td>
-                <td>
+                <td className="col-1">
                   <span className={`badge my-3 ${getBadgeClass(competencia.estado)}`}>
                     {competencia.estado}
                   </span>
                 </td>
-                <td className="pt-4">
+                <td className="col-2 pt-4">
                   <span className="badge-type">{competencia.origen}</span>
                 </td>
                 <td className="py-4 d-flex ">

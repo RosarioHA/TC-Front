@@ -5,7 +5,6 @@ import { FormularioContext } from '../../../context/FormSectorial';
 import { apiTransferenciaCompentencia } from '../../../services/transferenciaCompetencia';
 
 export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSubpasoDos_dos }) => {
- 
   const [ dataDirecta, setDataDirecta ] = useState(null);
   const [ opciones, setOpciones ] = useState([]);
 
@@ -312,7 +311,7 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
 
       {/* Renderiza las tablas para cada organismo */}
       <div className="my-4">
-      {Object.entries(organismosAgrupados).map(([organismoDisplay, filas], index) => (
+        {Object.entries(organismosAgrupados).map(([organismoDisplay, filas], index) => (
         <div key={index} className="tabla-organismo">
           <div className="row border">
             <div className="col p-3">
@@ -321,7 +320,7 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
             
             <div className="col-10 border p-2">
             {filas.map((fila, filaIndex) => (
-              <div key={fila.id} className="border row">
+              <div key={fila.id} className="row p-1">
                 <div className="col-10 p-3">
                   <div className="conteo">{filaIndex + 1}</div>
                   <CustomInput
@@ -347,6 +346,7 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
                       saved={savedState[fila.id]}
                     />
                   )}
+                  
                 </div>
                 {index !== 0 || filaIndex !== 0 ? (
                   <div className="col d-flex align-items-center">
@@ -358,6 +358,7 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
                     </button>
                   </div>
                 ) : null}
+                <hr className=""/>
               </div>
             ))}
               <div className="row">
@@ -394,7 +395,7 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
             </div>
 
             <div className="col-10 border p-2">
-              <div className="border row">
+              <div className="row">
                 <div className="col-10 p-3">
                   <CustomInput
                     label="Nombre"
@@ -437,7 +438,7 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
 
       {
         opciones.length > 0 && (
-          <button className="btn-secundario-s" onClick={mostrarFormulario}>
+          <button className="btn-secundario-s mt-3" onClick={mostrarFormulario}>
             <i className="material-symbols-rounded me-2">add</i>
             <p className="mb-0 text-decoration-underline">Agregar Organismo</p>
           </button>
@@ -445,7 +446,7 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
       }
 
       
-    </div>
+      </div>
     </div>
   )
 };
