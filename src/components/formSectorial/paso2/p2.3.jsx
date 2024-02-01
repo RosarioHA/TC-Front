@@ -337,7 +337,7 @@ export const Subpaso_dosPuntoTres = ({
                         className="btn-terciario-ghost"
                         onClick={() => eliminarElemento(etapa.id, procedimiento.id)}>
                         <i className="material-symbols-rounded me-2">delete</i>
-                        <p className="mb-0 text-decoration-underline">Borrar</p>
+                        <p className="mb-0 text-decoration-underline">Borrar Procedimiento</p>
                       </button>
                     </div>
                   </div>
@@ -347,7 +347,7 @@ export const Subpaso_dosPuntoTres = ({
                         {mostrarBotonGuardarProcedimiento ? (
                           <button className="btn-secundario-s m-2" onClick={() => handleSave(etapa.id, procedimientoEnEdicionId, true)}>
                             <i className="material-symbols-rounded me-2">save</i>
-                            <p className="mb-0 text-decoration-underline">Guardar</p>
+                            <p className="mb-0 text-decoration-underline">Guardar Procedimiento</p>
                           </button>
                           ) : (
                           <button className="btn-secundario-s" onClick={() => agregarProcedimiento(etapa.id)}>
@@ -365,7 +365,7 @@ export const Subpaso_dosPuntoTres = ({
                         className="btn-terciario-ghost"
                         onClick={() => eliminarElemento(etapa.id)}>
                         <i className="material-symbols-rounded me-2">delete</i>
-                        <p className="mb-0 text-decoration-underline">Borrar</p>
+                        <p className="mb-0 text-decoration-underline">Borrar Etapa</p>
                       </button>
                     </div>
         </div>
@@ -375,7 +375,7 @@ export const Subpaso_dosPuntoTres = ({
                     {mostrarBotonGuardarEtapa ? (
                       <button className="btn-secundario-s m-2" onClick={() => handleSave(etapaEnEdicionId, null, true)}>
                         <i className="material-symbols-rounded me-2">save</i>
-                        <p className="mb-0 text-decoration-underline">Guardar</p>
+                        <p className="mb-0 text-decoration-underline">Guardar Etapa</p>
                       </button>
                       ) : (
                       <button className="btn-secundario-s" onClick={agregarEtapa}>

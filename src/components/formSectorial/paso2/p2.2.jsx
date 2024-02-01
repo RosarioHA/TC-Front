@@ -311,7 +311,7 @@ export const Subpaso_dosPuntoDos = ({
                                   ) : (
                                   <button className="btn-secundario-s" onClick={() => agregarFila(organismoDisplay, ministerio)}>
                                     <i className="material-symbols-rounded me-2">add</i>
-                                    <p className="mb-0 text-decoration-underline">Agregar Otro</p>
+                                    <p className="mb-0 text-decoration-underline">Agregar Unidad</p>
                                   </button>
                                   )}
                                 </div>

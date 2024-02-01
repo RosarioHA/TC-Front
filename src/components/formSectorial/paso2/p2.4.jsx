@@ -68,7 +68,22 @@ export const Subpaso_dosPuntoCuatro = ({
   };
 
   const { handleUpdatePaso } = useContext(FormularioContext);
-  const [plataformasySoftwares, setPlataformasySoftwares] = useState(data);
+
+  const initialState = data.map(item => ({
+    ...item,
+    estados: {
+      nombre_plataforma: { loading: false, saved: false },
+      descripcion_tecnica: { loading: false, saved: false },
+      costo_adquisicion: { loading: false, saved: false },
+      costo_mantencion_anual: { loading: false, saved: false },
+      descripcion_costos: { loading: false, saved: false },
+      funcion_plataforma: { loading: false, saved: false },
+      etapas: { loading: false, saved: false },
+      capacitacion_plataforma: { loading: false, saved: false }
+    }
+  }));
+  
+  const [plataformasySoftwares, setPlataformasySoftwares] = useState(initialState);
 
   // Lógica para agregar una nueva tabla Plataformas
   // Generador de ID único
@@ -144,12 +159,23 @@ export const Subpaso_dosPuntoCuatro = ({
   };
 
 
-  const handleSave = async (plataformaId, esGuardadoPorBlur) => {
+  const handleSave = async (plataformaId, esGuardadoPorBlur, fieldName) => {
     if (!esGuardadoPorBlur) {
       setMostrarBotonGuardarPlataforma(false);
     }
 
     const plataforma = plataformasySoftwares.find(e => e.id === plataformaId);
+    setPlataformasySoftwares(prevPlataformas =>
+      prevPlataformas.map(plataforma =>
+        plataforma.id === plataformaId ? {
+          ...plataforma,
+          estados: {
+            ...plataforma.estados,
+            [fieldName]: { ...plataforma.estados[fieldName], loading: true, saved: false }
+          }
+        } : plataforma
+      )
+    );
     let payload;
 
     // Verificar si nuevaUnidadId tiene un valor
@@ -177,9 +203,33 @@ export const Subpaso_dosPuntoCuatro = ({
       // Más código para manejar la respuesta
 
       setMostrarBotonGuardarPlataforma(false);
+      // Si el guardado es exitoso, actualiza el estado correspondiente
+      setPlataformasySoftwares(prevPlataformas =>
+        prevPlataformas.map(plataforma =>
+          plataforma.id === plataformaId ? {
+            ...plataforma,
+            estados: {
+              ...plataforma.estados,
+              [fieldName]: { ...plataforma.estados[fieldName], loading: false, saved: true }
+            }
+          } : plataforma
+        )
+      );
 
     } catch (error) {
       console.error("Error al guardar los datos:", error);
+      setPlataformasySoftwares(prevPlataformas =>
+        prevPlataformas.map(plataforma =>
+          plataforma.id === plataformaId ? {
+            ...plataforma,
+            estados: {
+              ...plataforma.estados,
+              [fieldName]: { ...plataforma.estados[fieldName], loading: false, saved: false }
+            }
+          } : plataforma
+        )
+      );
+    
     }
   };
 
@@ -204,7 +254,9 @@ export const Subpaso_dosPuntoCuatro = ({
                 maxLength={500}
                 value={plataforma.nombre_plataforma || ''}
                 onChange={(valor) => handleInputChange(plataforma.id, 'nombre_plataforma', valor)}
-                onBlur={plataforma.id !== ultimaPlataformaId ? () => handleSave(plataforma.id, null, true) : null}
+                onBlur={plataforma.id !== ultimaPlataformaId ? () => handleSave(plataforma.id, null, true, 'nombre_plataforma') : null}
+                loading={plataforma.estados.nombre_plataforma.loading}
+                saved={plataforma.estados.nombre_plataforma.saved}
               />
             </div>
           </div>
@@ -217,8 +269,13 @@ export const Subpaso_dosPuntoCuatro = ({
             <div className="col ms-5">
               <CustomInput
                 placeholder="Indique la versión y una descripción técnica del software o plataforma"
-                maxLength={500} 
-
+                maxLength={500}
+                name="descripcion_tecnica"
+                value={plataforma.descripcion_tecnica || ''}
+                onChange={(valor) => handleInputChange(plataforma.id, 'descripcion_tecnica', valor)}
+                onBlur={plataforma.id !== ultimaPlataformaId ? () => handleSave(plataforma.id, null, true, 'descripcion_tecnica') : null}
+                loading={plataforma.estados.nombre_plataforma.loading}
+                saved={plataforma.estados.nombre_plataforma.saved}
               />
             </div>
           </div>
