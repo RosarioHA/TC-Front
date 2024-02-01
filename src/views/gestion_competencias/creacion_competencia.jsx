@@ -10,7 +10,7 @@ import { DropdownSelectBuscadorCheck } from "../../components/dropdown/select_bu
 import { esquemaCreacionCompetencia } from "../../validaciones/esquemaValidacion";
 import { useCrearCompetencia } from "../../hooks/competencias/useCrearCompetencia";
 import { useRegion } from "../../hooks/useRegion";
-import { useUsers } from "../../hooks/usuarios/useUsers";
+import { useFiltroUsuarios } from "../../hooks/usuarios/useFiltroUsuarios";
 import { useSector } from "../../hooks/useSector";
 import { useOrigenes } from "../../hooks/useOrigenes";
 import { useAmbitos } from "../../hooks/useAmbitos";
@@ -31,12 +31,18 @@ const initialValues = {
   plazo_formulario_gore: undefined,
 };
 
-const groupUsersByType = (users) =>
+const groupUsersByType = (usuarios) =>
 {
-  const grouped = users.reduce((acc, user) =>
+  if (!usuarios || usuarios.length === 0)
   {
-    acc[ user.perfil ] = acc[ user.perfil ] || [];
-    acc[ user.perfil ].push(user);
+    return [];
+  }
+
+  const grouped = usuarios.reduce((acc, user) =>
+  {
+    const perfil = user.perfil; 
+    acc[ perfil ] = acc[ perfil ] || [];
+    acc[ perfil ].push(user);
     return acc;
   }, {});
 
@@ -50,14 +56,12 @@ const CreacionCompetencia = () =>
 {
   const { createCompetencia } = useCrearCompetencia();
   const { dataRegiones } = useRegion();
-  const { users } = useUsers();
   const { dataSector } = useSector();
   const { origenes } = useOrigenes();
   const { ambitos } = useAmbitos();
-  const userOptions = groupUsersByType(users);
   const [ errorGeneral, setErrorGeneral ] = useState('');
   const [ regionesSeleccionadas, setRegionesSeleccionadas ] = useState([]);
-  const [ sectoresSeleccionados, setSectoresSeleccionados ] = useState([]);
+  const [sectoresIds, setSectoresIds] = useState([]); 
   const [ origenSeleccionado, setOrigenSeleccionado ] = useState('');
   const [ ambitoSeleccionado, setAmbitoSeleccionado ] = useState('');
   const [ usuariosSeleccionados, setUsuariosSeleccionados ] = useState(initialValues);
@@ -68,6 +72,9 @@ const CreacionCompetencia = () =>
   const { updateHasChanged } = useFormContext();
   const [ hasChanged, setHasChanged ] = useState(false);
   const [ isModalOpen, setIsModalOpen ] = useState(false);
+  const [ sectorSeleccionado, setSectorSeleccionado ] = useState(null);
+  const [ regionSeleccionada, setRegionSeleccionada ] = useState(null);
+  const { usuarios } = useFiltroUsuarios(sectorSeleccionado, regionSeleccionada);
 
   const history = useNavigate();
   const handleBackButtonClick = () =>
@@ -98,22 +105,19 @@ const CreacionCompetencia = () =>
   function handleOnChange(event)
   {
     const data = new FormData(event.currentTarget);
-    // Verifica si hay cambios respecto al valor inicial
     const formHasChanged = Array.from(data.entries()).some(([ name, value ]) =>
     {
       const initialValue = initialValues[ name ];
       return value !== String(initialValue);
     });
     setHasChanged(formHasChanged);
-    // Actualiza el valor de hasChanged en el contexto
     updateHasChanged(formHasChanged);
   }
-  console.log("hasChanged", hasChanged)
 
   const onSubmit = async (data) => {
     const competenciaData = {
       ...data,
-      sectores: sectoresSeleccionados,
+      sectores: sectoresIds,
       regiones: regionesSeleccionadas.map(r => r.value),
       ambito_competencia: ambitoSeleccionado,
       origen: origenSeleccionado,
@@ -127,7 +131,6 @@ const CreacionCompetencia = () =>
       oficio_origen: selectedFile,
     };
     try {
-      console.log(competenciaData);
       await createCompetencia(competenciaData);
       updateHasChanged(false);
       setHasChanged(false);
@@ -150,10 +153,13 @@ const CreacionCompetencia = () =>
     label: region.region,
     value: region.id,
   }));
-  const handleRegionesChange = (selectedOptions) => {
+  const handleRegionesChange = useCallback((selectedOptions) => {
+    const regionIds = selectedOptions.map(option => option.value);
     setRegionesSeleccionadas(selectedOptions);
-    setValue('regiones', selectedOptions.map(option => option.value));
-  };
+    setRegionSeleccionada(regionIds);
+    setValue('regiones', regionIds);
+    // Otras acciones...
+}, [setValue]);
   //opciones sector 
   const opcionesSectores = dataSector.map(ministerio => ({
     label: ministerio.nombre,
@@ -165,9 +171,14 @@ const CreacionCompetencia = () =>
   }));
 
   const handleSectorSelectionChange = (selectedSectorValues) => {
-    setSectoresSeleccionados(selectedSectorValues);
+    // Transforma y actualiza el estado con solo los IDs de los sectores
+    const sectoresIds = selectedSectorValues.map(sector => sector.value);
+    setSectoresIds(sectoresIds);
+    setSectorSeleccionado(sectoresIds);
     setValue('sectores', selectedSectorValues, { shouldValidate: true });
+    console.log(sectoresIds)
   };
+
 
   //opciones origen
   const opcionesOrigen = origenes.map(origen => ({
@@ -229,11 +240,12 @@ const CreacionCompetencia = () =>
   const dateInputRef = useRef(null);
 
   const handleDateContainerClick = () => {
-    // Enfoca el input de fecha cuando se hace clic en el contenedor
     if (dateInputRef.current) {
       dateInputRef.current.focus();
     }
   };
+
+  const userOptions = usuarios ? groupUsersByType(usuarios) : [];
 
   return (
     <div className="container col-10 my-4">
@@ -324,12 +336,13 @@ const CreacionCompetencia = () =>
             </div>
           </div>
           <div className="mb-4">
-            <div className="">
+            <div >
               <DropdownConSecciones
-                label="Asignar Usuarios (Opcional)"
-                placeholder="Busca el nombre de la persona"
-                options={userOptions}
-                onUsuariosTransformed={handleUsuariosTransformed}
+                  key={sectorSeleccionado + '-' + regionSeleccionada}
+                  label="Asignar Usuarios (Opcional)"
+                  placeholder="Busca el nombre de la persona"
+                  options={userOptions}
+                  onUsuariosTransformed={handleUsuariosTransformed}
               />
             </div>
           </div>

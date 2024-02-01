@@ -6,7 +6,6 @@ export const FormProvider = ({ children }) => {
   const [hasChanged, setHasChanged] = useState(false);
 
   const updateHasChanged = (value) => {
-    console.log('Nuevo valor de hasChanged en context:', value);
     setHasChanged(value);
   };
 
