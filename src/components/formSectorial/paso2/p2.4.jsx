@@ -1,10 +1,13 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useCallback } from "react";
 import { FormularioContext } from "../../../context/FormSectorial";
 import { apiTransferenciaCompentencia } from "../../../services/transferenciaCompetencia";
 import CustomInput from "../../forms/custom_input";
 import CustomTextarea from "../../forms/custom_textarea";
-import DropdownSelect from "../../dropdown/select";
 import { RadioButtons } from "../../forms/radio_btns";
+import DropdownCheckbox from "../../dropdown/checkbox";
+import { useForm, Controller } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { esquemaEditarPaso2_4 } from "../../../validaciones/esquemaEditarFormularioSectorial";
 
 export const Subpaso_dosPuntoCuatro = ({
   id,
@@ -15,9 +18,19 @@ export const Subpaso_dosPuntoCuatro = ({
   refreshSubpasoDos_cuatro,
 }) => {
 
+  const {
+    setValue,
+    control,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(esquemaEditarPaso2_4),
+    mode: 'onBlur',
+  });
+
   // Lógica para recargar opciones de etapa cuando se crean o eliminan en paso 2.3
   const [dataDirecta, setDataDirecta] = useState(null);
   const [opcionesEtapas, setOpcionesEtapas] = useState([]);
+  const [ etapasSeleccionadas, setEtapasSeleccionadas ] = useState([]);
 
   // Llamada para recargar componente
   const fetchDataDirecta = async () => {
@@ -60,12 +73,11 @@ export const Subpaso_dosPuntoCuatro = ({
     }
   }, [listado_etapas]);
 
-  const [nuevaUnidadId, setNuevaUnidadId] = useState('');
-
-  const manejarCambioDropdown = (opcionSeleccionada) => {
-    const idSeleccionado = opcionSeleccionada.value;
-    setNuevaUnidadId(idSeleccionado);
-  };
+  const handleEtapasChange = useCallback((selectedOptions) => {
+    const etapasIds = selectedOptions.map(option => option.value);
+    setEtapasSeleccionadas(selectedOptions);
+    setValue('etapas', etapasIds);
+  }, [setValue]);
 
   const { handleUpdatePaso } = useContext(FormularioContext);
 
@@ -110,7 +122,7 @@ export const Subpaso_dosPuntoCuatro = ({
 
   const agregarPlataforma = () => {
     const nuevaPlataformaId = generarIdUnico();
-    setUltimaPlataformaId(nuevaPlataformaId);
+    // Asegúrate de que la nueva plataforma tenga un estado inicial completo
     const nuevaPlataforma = {
       id: nuevaPlataformaId,
       nombre_plataforma: '',
@@ -121,11 +133,23 @@ export const Subpaso_dosPuntoCuatro = ({
       funcion_plataforma: '',
       etapas: [],
       capacitacion_plataforma: false,
-      editando: false
+      editando: false,
+      estados: { // Estado inicial para 'estados'
+        nombre_plataforma: { loading: false, saved: false },
+        descripcion_tecnica: { loading: false, saved: false },
+        costo_adquisicion: { loading: false, saved: false },
+        costo_mantencion_anual: { loading: false, saved: false },
+        descripcion_costos: { loading: false, saved: false },
+        funcion_plataforma: { loading: false, saved: false },
+        etapas: { loading: false, saved: false },
+        capacitacion_plataforma: { loading: false, saved: false },
+      },
     };
+  
     setPlataformasySoftwares(prevPlataformas => [...prevPlataformas, nuevaPlataforma]);
     setMostrarBotonGuardarPlataforma(true);
   };
+  
 
   // Lógica para eliminar una fila de un organismo
   const eliminarElemento = async (plataformaId) => {
@@ -160,15 +184,18 @@ export const Subpaso_dosPuntoCuatro = ({
 
 
   const handleInputChange = (plataformaId, campo, valor) => {
-    setPlataformasySoftwares(prevPlataformas => prevPlataformas.map(plataforma => {
-      if (plataforma.id === plataformaId) {
-        // Asegúrate de que solo se actualice el valor del campo específico
-        return { ...plataforma, [campo]: valor };
-      }
-      return plataforma;
-    }));
+    setPlataformasySoftwares(prevPlataformas =>
+      prevPlataformas.map(plataforma => {
+        // Verifica si es la plataforma que estamos actualizando
+        if (plataforma.id === plataformaId) {
+          // Actualiza el valor del campo específico de manera inmutable
+          return { ...plataforma, [campo]: valor };
+        }
+        // Si no es la plataforma que estamos actualizando, la retorna sin cambios
+        return plataforma;
+      })
+    );
   };
-  
 
 
   const handleSave = async (plataformaId, esGuardadoPorBlur, fieldName) => {
@@ -199,7 +226,7 @@ export const Subpaso_dosPuntoCuatro = ({
               costo_mantencion_anual: plataforma.costo_mantencion_anual,
               descripcion_costos: plataforma.descripcion_costos,
               funcion_plataforma: plataforma.funcion_plataforma,
-              etapas: nuevaUnidadId ? [nuevaUnidadId] : [],
+              etapas: etapasSeleccionadas.map(r => r.value),
               capacitacion_plataforma: plataforma.capacitacion_plataforma,
             }]
         };
@@ -238,15 +265,15 @@ export const Subpaso_dosPuntoCuatro = ({
               <p className="text-sans-p-bold ms-2">Nombre de Plataforma o Sofware</p>
             </div>
             <div className="col ms-5">
-              <CustomInput
+              <CustomTextarea
                 label=""
                 placeholder="Escribe el nombre de la plataforma o software"
                 maxLength={500}
                 value={plataforma.nombre_plataforma || ''}
-                onChange={(valor) => handleInputChange(plataforma.id, 'nombre_plataforma', valor)}
+                onChange={(e) => handleInputChange(plataforma.id, 'nombre_plataforma', e.target.value)}
                 onBlur={plataforma.id !== ultimaPlataformaId ? () => handleSave(plataforma.id, true, 'nombre_plataforma') : null}
-                loading={plataforma.estados.nombre_plataforma.loading}
-                saved={plataforma.estados.nombre_plataforma.saved}
+                loading={plataforma.estados?.nombre_plataforma?.loading ?? false}
+                saved={plataforma.estados?.nombre_plataforma?.saved ?? false}
               />
             </div>
           </div>
@@ -257,15 +284,15 @@ export const Subpaso_dosPuntoCuatro = ({
               <p className="text-sans-p-bold ms-2">Descripción técnica y versiones</p>
             </div>
             <div className="col ms-5">
-              <CustomInput
+              <CustomTextarea
                 placeholder="Indique la versión y una descripción técnica del software o plataforma"
                 maxLength={500}
                 name="descripcion_tecnica"
                 value={plataforma.descripcion_tecnica || ''}
-                onChange={(valor) => handleInputChange(plataforma.id, 'descripcion_tecnica', valor)}
+                onChange={(e) => handleInputChange(plataforma.id, 'descripcion_tecnica', e.target.value)}
                 onBlur={plataforma.id !== ultimaPlataformaId ? () => handleSave(plataforma.id, true, 'descripcion_tecnica') : null}
-                loading={plataforma.estados.descripcion_tecnica.loading}
-                saved={plataforma.estados.descripcion_tecnica.saved}
+                loading={plataforma.estados?.descripcion_tecnica?.loading ?? false}
+                saved={plataforma.estados?.descripcion_tecnica?.saved ?? false}
               />
             </div>
           </div>
@@ -278,9 +305,23 @@ export const Subpaso_dosPuntoCuatro = ({
             <div className="col ms-5">
               <div className="row d-flex">
                 <div className="col">
-                  <CustomInput
-                    label="Costo de adquisición"
-                    placeholder="Costo de adquisión M$"
+                  <Controller
+                    name="costo_adquisicion"
+                    control={control}
+                    render={({ field }) => (
+                      <CustomInput
+                        id="costo_adquisicion"
+                        label="Costo de adquisición"
+                        placeholder="Costo de adquisión M$"
+                        value={plataforma.costo_adquisicion || ''}
+                        onChange={(valor) => handleInputChange(plataforma.id, 'costo_adquisicion', valor)}
+                        onBlur={plataforma.id !== ultimaPlataformaId ? () => handleSave(plataforma.id, true, 'costo_adquisicion') : null}
+                        loading={plataforma.estados?.costo_adquisicion?.loading ?? false}
+                        saved={plataforma.estados?.costo_adquisicion?.saved ?? false}
+                        error={errors.costo_adquisicion?.message}
+                        {...field}
+                      />
+                    )}
                   />
                   <h6 className="text-sans-h6 text-end">Campo númerico en miles de pesos.</h6>
                 </div>
@@ -288,6 +329,11 @@ export const Subpaso_dosPuntoCuatro = ({
                   <CustomInput
                     label="Costo de Mantención Anual"
                     placeholder="Costo de mantención M$"
+                    value={plataforma.costo_mantencion_anual || ''}
+                    onChange={(valor) => handleInputChange(plataforma.id, 'costo_mantencion_anual', valor)}
+                    onBlur={plataforma.id !== ultimaPlataformaId ? () => handleSave(plataforma.id, true, 'costo_mantencion_anual') : null}
+                    loading={plataforma.estados?.costo_mantencion_anual?.loading ?? false}
+                    saved={plataforma.estados?.costo_mantencion_anual?.saved ?? false}
                   />
                   <h6 className="text-sans-h6 text-end">Campo númerico en miles de pesos.</h6>
                 </div>
@@ -296,7 +342,13 @@ export const Subpaso_dosPuntoCuatro = ({
                 <CustomTextarea
                   label="Descripción de costos"
                   placeholder="Describe los costos de la plataforma o software"
-                  maxLength={500} />
+                  maxLength={500}
+                  value={plataforma?.descripcion_costos}
+                  onChange={(e) => handleInputChange(plataforma.id, 'descripcion_costos', e.target.value)}
+                  onBlur={plataforma.id !== ultimaPlataformaId ? () => handleSave(plataforma.id, true, 'descripcion_costos') : null}
+                  loading={plataforma.estados?.descripcion_costos?.loading ?? false}
+                  saved={plataforma.estados?.descripcion_costos?.saved ?? false}
+                />
               </div>
             </div>
           </div>
@@ -309,7 +361,13 @@ export const Subpaso_dosPuntoCuatro = ({
             <div className="col ms-5">
               <CustomTextarea
                 placeholder="Describe la función en el ejercicio de la competencia y los perfiles de usuario."
-                maxLength={500} />
+                maxLength={500}
+                value={plataforma?.funcion_plataforma}
+                onChange={(e) => handleInputChange(plataforma.id, 'funcion_plataforma', e.target.value)}
+                onBlur={plataforma.id !== ultimaPlataformaId ? () => handleSave(plataforma.id, true, 'funcion_plataforma') : null}
+                loading={plataforma.estados?.funcion_plataforma?.loading ?? false}
+                saved={plataforma.estados?.funcion_plataforma?.saved ?? false}  
+                />
             </div>
           </div>
 
@@ -320,9 +378,12 @@ export const Subpaso_dosPuntoCuatro = ({
               <p className="text-sans-p ms-2">(Opcional)</p>
             </div>
             <div className="col ms-5">
-              <DropdownSelect
+              <DropdownCheckbox
                 placeholder="Etapa"
-                options="" />
+                options={opcionesEtapas}
+                onSelectionChange={handleEtapasChange}
+                selected={etapasSeleccionadas}
+                />
             </div>
           </div>
 
@@ -334,20 +395,37 @@ export const Subpaso_dosPuntoCuatro = ({
             <div className="col ms-5">
               <RadioButtons
                 altA="Si"
-                altB="No" />
+                altB="No"
+              />
             </div>
           </div>
 
           <div className="col d-flex align-items-center">
             <button
               className="btn-terciario-ghost"
-              onClick={() => eliminarElemento(etapa.id, procedimiento.id)}>
+              onClick={() => eliminarElemento(plataforma.id)}>
               <i className="material-symbols-rounded me-2">delete</i>
               <p className="mb-0 text-decoration-underline">Borrar</p>
             </button>
           </div>
         </div>
       ))}
+
+      <div className="row">
+        <div className="p-2">
+          {mostrarBotonGuardarPlataforma ? (
+            <button className="btn-secundario-s m-2" onClick={() => handleSave(plataformaEnEdicionId, false)}>
+              <i className="material-symbols-rounded me-2">save</i>
+              <p className="mb-0 text-decoration-underline">Guardar</p>
+            </button>
+            ) : (
+            <button className="btn-secundario-s" onClick={agregarPlataforma}>
+              <i className="material-symbols-rounded me-2">add</i>
+              <p className="mb-0 text-decoration-underline">Agregar ficha técnica</p>
+            </button>
+          )}
+        </div>
+      </div>
 
     </div>
   )

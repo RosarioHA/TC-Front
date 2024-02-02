@@ -359,7 +359,7 @@ export const Subpaso_dosPuntoTres = ({
         </div>
           
         <div className="d-flex justify-content-end p-3">
-          <button className="btn-secundario-s me-3" onClick={() => handleSave(etapa.id, procedimientoEnEdicionId, true)}>
+          <button className="btn-secundario-s me-3" onClick={() => handleSave(etapa.id, procedimientoEnEdicionId, false)}>
             <i className="material-symbols-rounded me-2">save</i>
             <p className="mb-0 text-decoration-underline">Guardar</p>
           </button>
@@ -376,7 +376,7 @@ export const Subpaso_dosPuntoTres = ({
       <div className="row">
         <div className="p-2">
           {mostrarBotonGuardarEtapa ? (
-            <button className="btn-secundario-s m-2" onClick={() => handleSave(etapaEnEdicionId, null, true)}>
+            <button className="btn-secundario-s m-2" onClick={() => handleSave(etapaEnEdicionId, null, false)}>
               <i className="material-symbols-rounded me-2">save</i>
               <p className="mb-0 text-decoration-underline">Guardar</p>
             </button>
