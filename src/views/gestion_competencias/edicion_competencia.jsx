@@ -15,6 +15,7 @@ import ModalAbandonoFormulario from "../../components/commons/modalAbandonoFormu
 import { DropdownSelectBuscadorCheck } from "../../components/dropdown/select_buscador_checkbox";
 import { useFiltroUsuarios } from "../../hooks/usuarios/useFiltroUsuarios";
 
+
 const groupUsersByType = (usuarios) =>
 {
   if (!usuarios || usuarios.length === 0)
@@ -24,7 +25,7 @@ const groupUsersByType = (usuarios) =>
 
   const grouped = usuarios.reduce((acc, user) =>
   {
-    const perfil = user.perfil; 
+    const perfil = user.perfil;
     acc[ perfil ] = acc[ perfil ] || [];
     acc[ perfil ].push(user);
     return acc;
@@ -56,6 +57,7 @@ const EdicionCompetencia = () =>
   const [ sectorSeleccionado, setSectorSeleccionado ] = useState(null);
   const [ regionSeleccionada, setRegionSeleccionada ] = useState(null);
   const { usuarios } = useFiltroUsuarios(sectorSeleccionado, regionSeleccionada);
+
 
   //opciones selectores
   const opcionesRegiones = dataRegiones.map(region => ({
@@ -112,13 +114,13 @@ const EdicionCompetencia = () =>
       setValue("sectores", competencia.sectores || null);
       setValue("plazo_formulario_sectorial", competencia.plazo_formulario_sectorial || "");
       setValue("plazo_formulario_gore", competencia.plazo_formulario_gore || "");
-      setValue("usuarios_dipres", competencia.usuarios_dipres || null); 
-      setValue("usuarios_gore", competencia.usuarios_gore || null); 
-      setValue("usuarios_sectoriales", competencia.usuarios_sectoriales|| null); 
-      setValue("usuarios_subdere", competencia.usuarios_subdere || null); 
-
+      setValue("usuarios_dipres", competencia.usuarios_dipres || null);
+      setValue("usuarios_gore", competencia.usuarios_gore || null);
+      setValue("usuarios_sectoriales", competencia.usuarios_sectoriales || null);
+      setValue("usuarios_subdere", competencia.usuarios_subdere || null);
     }
   }, [ editMode, competencia, setValue ]);
+
 
   //detecta cambios sin guardar en el formulario
   function handleOnChange(event)
@@ -135,10 +137,12 @@ const EdicionCompetencia = () =>
     updateHasChanged(formHasChanged);
   }
 
-  useEffect(() => {
-    if (editMode && competencia) {
+  useEffect(() =>
+  {
+    if (editMode && competencia)
+    {
       // Resto de la inicialización del formulario...
-      const sectorInicial = competencia.sectores?.[0]?.id; // Asumiendo que competencia.sectores es un array
+      const sectorInicial = competencia.sectores?.[ 0 ]?.id; // Asumiendo que competencia.sectores es un array
       setSectorSeleccionado(sectorInicial);
       // Transforma el sector inicial en el formato adecuado para el selector si es necesario
       const sectoresFormateados = competencia.sectores?.map(sector => ({
@@ -147,7 +151,7 @@ const EdicionCompetencia = () =>
       }));
       setSectoresSeleccionados(sectoresFormateados);
     }
-  }, [editMode, competencia]);
+  }, [ editMode, competencia ]);
 
 
   //opciones sector 
@@ -161,15 +165,17 @@ const EdicionCompetencia = () =>
   }));
 
 
-  const handleSectorSelectionChange = (selectedSectorValues) => {
-    const sectorId = selectedSectorValues.length > 0 ? selectedSectorValues[0].value : null;
+  const handleSectorSelectionChange = (selectedSectorValues) =>
+  {
+    const sectorId = selectedSectorValues.length > 0 ? selectedSectorValues.value : null;
     setSectorSeleccionado(sectorId);
     setSectoresSeleccionados(selectedSectorValues);
     setValue('sectores', selectedSectorValues, { shouldValidate: true });
   };
 
-  const handleRegionesChange = (selectedRegiones) => {
-    const regionId = selectedRegiones.length > 0 ? selectedRegiones[0].value : null;
+  const handleRegionesChange = (selectedRegiones) =>
+  {
+    const regionId = selectedRegiones.length > 0 ? selectedRegiones.value : null;
     setRegionSeleccionada(regionId);
     const selectedRegionIds = selectedRegiones.map(region => region.value);
     setValue("regiones", selectedRegionIds, { shouldDirty: true });
@@ -200,7 +206,7 @@ const EdicionCompetencia = () =>
       const dataToSend = {
         ...formData,
         sectores: sectorIds,
-        ...usuariosSeleccionados 
+        ...usuariosSeleccionados
       };
 
       await updateCompetencia(dataToSend);
@@ -255,15 +261,41 @@ const EdicionCompetencia = () =>
     }
   }, [ competencia ]);
 
+
   const extractFileName = (url) =>
   {
     return url.split('/').pop();
   };
-  
 
+  // manejo de usuario 
   const userOptions = usuarios ? groupUsersByType(usuarios) : [];
+  const [ combinedUsers, setCombinedUsers ] = useState([]);
 
+  const combineUsers = (competencia) => {
+    const { usuarios_dipres, usuarios_gore, usuarios_sectoriales, usuarios_subdere } = competencia;
+  
+    // Función para agregar el nombre del perfil a cada usuario
+    const addProfileToUsers = (users, profile) => {
+      return users.map(user => ({ ...user, perfil: profile }));
+    };
+  
+    // Combina los usuarios de todos los perfiles, añadiendo la información del perfil
+    return [
+      ...addProfileToUsers(usuarios_dipres, 'DIPRES'),
+      ...addProfileToUsers(usuarios_gore, 'GORE'),
+      ...addProfileToUsers(usuarios_sectoriales, 'Usuario Sectorial'),
+      ...addProfileToUsers(usuarios_subdere, 'SUBDERE')
+    ];
+  };
+  
+  useEffect(() => {
+    if (competencia) {
+      const usuariosCombinados = combineUsers(competencia);
+      setCombinedUsers(usuariosCombinados);
+    }
+  }, [competencia]);
 
+  console.log('userop',userOptions)
 
   return (
     <div className="container col-10 my-4">
@@ -382,9 +414,9 @@ const EdicionCompetencia = () =>
             label="Asignar Usuarios (Opcional)"
             placeholder="Busca el nombre de la persona"
             options={userOptions}
-            onUsuariosTransformed={handleUsuariosTransformed}
             readOnly={!editMode}
-            usuariosCompetencia={usuarios}
+            onUsuariosTransformed={handleUsuariosTransformed}
+            usuariosCompetencia={combinedUsers}
           />
         </div>
 
