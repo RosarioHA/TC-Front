@@ -27,11 +27,29 @@ export const Subpaso_dosPuntoCuatro = ({
     mode: 'onBlur',
   });
 
-  // Lógica para recargar opciones de etapa cuando se crean o eliminan en paso 2.3
+  const initialState = data.map(item => ({
+    ...item,
+    estados: {
+      nombre_plataforma: { loading: false, saved: false },
+      descripcion_tecnica: { loading: false, saved: false },
+      costo_adquisicion: { loading: false, saved: false },
+      costo_mantencion_anual: { loading: false, saved: false },
+      descripcion_costos: { loading: false, saved: false },
+      funcion_plataforma: { loading: false, saved: false },
+      etapas: { loading: false, saved: false },
+      capacitacion_plataforma: { loading: false, saved: false }
+    }
+  }));
+
+  const [plataformasySoftwares, setPlataformasySoftwares] = useState(initialState);
   const [dataDirecta, setDataDirecta] = useState(null);
   const [opcionesEtapas, setOpcionesEtapas] = useState([]);
-  const [ etapasSeleccionadas, setEtapasSeleccionadas ] = useState([]);
+  const [etapasSeleccionadas, setEtapasSeleccionadas] = useState([]);
+  const { handleUpdatePaso } = useContext(FormularioContext);
 
+
+
+  // Lógica para recargar opciones de etapa cuando se crean o eliminan en paso 2.3
   // Llamada para recargar componente
   const fetchDataDirecta = async () => {
     try {
@@ -50,6 +68,7 @@ export const Subpaso_dosPuntoCuatro = ({
     }));
   };
 
+  // refreshSubpasoDos_cuatro es un trigger disparado desde subpaso 2.3
   useEffect(() => {
     if (refreshSubpasoDos_cuatro) {
       fetchDataDirecta();
@@ -73,28 +92,14 @@ export const Subpaso_dosPuntoCuatro = ({
     }
   }, [listado_etapas]);
 
+  // Manejador del Dropdown de etapas
   const handleEtapasChange = useCallback((selectedOptions) => {
     const etapasIds = selectedOptions.map(option => option.value);
     setEtapasSeleccionadas(selectedOptions);
     setValue('etapas', etapasIds);
   }, [setValue]);
 
-  const { handleUpdatePaso } = useContext(FormularioContext);
-
-  const initialState = data.map(item => ({
-    ...item,
-    estados: {
-      nombre_plataforma: { loading: false, saved: false },
-      descripcion_tecnica: { loading: false, saved: false },
-      costo_adquisicion: { loading: false, saved: false },
-      costo_mantencion_anual: { loading: false, saved: false },
-      descripcion_costos: { loading: false, saved: false },
-      funcion_plataforma: { loading: false, saved: false },
-      etapas: { loading: false, saved: false },
-      capacitacion_plataforma: { loading: false, saved: false }
-    }
-  }));
-
+  // Función para recargar campos por separado
   const updateFieldState = (plataformaId, fieldName, newState) => {
     setPlataformasySoftwares(prevPlataformas =>
       prevPlataformas.map(plataforma => {
@@ -107,8 +112,6 @@ export const Subpaso_dosPuntoCuatro = ({
       })
     );
   };
-  
-  const [plataformasySoftwares, setPlataformasySoftwares] = useState(initialState);
 
   // Lógica para agregar una nueva tabla Plataformas
   // Generador de ID único
@@ -116,9 +119,6 @@ export const Subpaso_dosPuntoCuatro = ({
     // Implementa tu lógica para generar un ID único
     return Math.floor(Date.now() / 1000);
   };
-
-  const [ultimaPlataformaId, setUltimaPlataformaId] = useState(null);
-  const [mostrarBotonGuardarPlataforma, setMostrarBotonGuardarPlataforma] = useState(false);
 
   const agregarPlataforma = () => {
     const nuevaPlataformaId = generarIdUnico();
@@ -145,13 +145,12 @@ export const Subpaso_dosPuntoCuatro = ({
         capacitacion_plataforma: { loading: false, saved: false },
       },
     };
-  
-    setPlataformasySoftwares(prevPlataformas => [...prevPlataformas, nuevaPlataforma]);
-    setMostrarBotonGuardarPlataforma(true);
-  };
-  
 
-  // Lógica para eliminar una fila de un organismo
+    setPlataformasySoftwares(prevPlataformas => [...prevPlataformas, nuevaPlataforma]);
+  };
+
+
+  // Lógica para eliminar una ficha de una plataforma
   const eliminarElemento = async (plataformaId) => {
 
     // Preparar payload para eliminar una etapa
@@ -169,20 +168,12 @@ export const Subpaso_dosPuntoCuatro = ({
     try {
       await handleUpdatePaso(id, stepNumber, payload);
 
-      setMostrarBotonGuardarPlataforma(false);
-
     } catch (error) {
       console.error("Error al eliminar:", error);
     }
-  }
+  };
 
-
-  // Lógica para editar sectores existentes
-  // Actualiza el estado cuando los campos cambian
-
-  const [plataformaEnEdicionId, setPlataformaEnEdicionId] = useState(null);
-
-
+  // Manejadora de CustomInput y CustomTextArea
   const handleInputChange = (plataformaId, campo, valor) => {
     setPlataformasySoftwares(prevPlataformas =>
       prevPlataformas.map(plataforma => {
@@ -197,57 +188,32 @@ export const Subpaso_dosPuntoCuatro = ({
     );
   };
 
-
-  const handleSave = async (plataformaId, esGuardadoPorBlur, fieldName) => {
+  // Función de guardado
+  const handleSave = async (plataformaId, fieldName) => {
     // Si se está guardando por blur, no es necesario desactivar el botón de guardar general
-    if (!esGuardadoPorBlur) {
-      setMostrarBotonGuardarPlataforma(false);
-    }
 
     const plataforma = plataformasySoftwares.find(e => e.id === plataformaId);
 
     updateFieldState(plataformaId, fieldName, { loading: true, saved: false });
-    
+
     let payload;
 
-    if (esGuardadoPorBlur) {
-        // Guardar solo el campo específico
-        payload = {
-          'p_2_4_plataformas_y_softwares': [{ id: plataformaId, [fieldName]: plataforma[fieldName] }]
-        };
-    } else {
-        // Guardar todos los campos de la plataforma
-        payload = {
-            'p_2_4_plataformas_y_softwares': [{
-              id: plataformaId,
-              nombre_plataforma: plataforma.nombre_plataforma,
-              descripcion_tecnica: plataforma.descripcion_tecnica,
-              costo_adquisicion: plataforma.costo_adquisicion,
-              costo_mantencion_anual: plataforma.costo_mantencion_anual,
-              descripcion_costos: plataforma.descripcion_costos,
-              funcion_plataforma: plataforma.funcion_plataforma,
-              etapas: etapasSeleccionadas.map(r => r.value),
-              capacitacion_plataforma: plataforma.capacitacion_plataforma,
-            }]
-        };
-    }
+    payload = {
+        'p_2_4_plataformas_y_softwares': [{ id: plataformaId, [fieldName]: plataforma[fieldName] }]
+      };
 
     try {
-        // Asume que handleUpdatePaso puede manejar ambos casos adecuadamente
-        const response = await handleUpdatePaso(id, stepNumber, payload);
+      // Asume que handleUpdatePaso puede manejar ambos casos adecuadamente
+      const response = await handleUpdatePaso(id, stepNumber, payload);
 
-        // Actualiza el estado de carga y guardado
-        updateFieldState(plataformaId, fieldName, { loading: false, saved: true });
-
-        if (!esGuardadoPorBlur) {
-          setMostrarBotonGuardarPlataforma(false);
-        }
+      // Actualiza el estado de carga y guardado
+      updateFieldState(plataformaId, fieldName, { loading: false, saved: true });
 
     } catch (error) {
-        console.error("Error al guardar los datos:", error);
-        updateFieldState(plataformaId, fieldName, { loading: false, saved: false });
+      console.error("Error al guardar los datos:", error);
+      updateFieldState(plataformaId, fieldName, { loading: false, saved: false });
     }
-};
+  };
 
 
 
@@ -271,7 +237,7 @@ export const Subpaso_dosPuntoCuatro = ({
                 maxLength={500}
                 value={plataforma.nombre_plataforma || ''}
                 onChange={(e) => handleInputChange(plataforma.id, 'nombre_plataforma', e.target.value)}
-                onBlur={plataforma.id !== ultimaPlataformaId ? () => handleSave(plataforma.id, true, 'nombre_plataforma') : null}
+                onBlur={plataforma.id? () => handleSave(plataforma.id, 'nombre_plataforma') : null}
                 loading={plataforma.estados?.nombre_plataforma?.loading ?? false}
                 saved={plataforma.estados?.nombre_plataforma?.saved ?? false}
               />
@@ -290,7 +256,7 @@ export const Subpaso_dosPuntoCuatro = ({
                 name="descripcion_tecnica"
                 value={plataforma.descripcion_tecnica || ''}
                 onChange={(e) => handleInputChange(plataforma.id, 'descripcion_tecnica', e.target.value)}
-                onBlur={plataforma.id !== ultimaPlataformaId ? () => handleSave(plataforma.id, true, 'descripcion_tecnica') : null}
+                onBlur={plataforma.id? () => handleSave(plataforma.id, 'descripcion_tecnica') : null}
                 loading={plataforma.estados?.descripcion_tecnica?.loading ?? false}
                 saved={plataforma.estados?.descripcion_tecnica?.saved ?? false}
               />
@@ -315,7 +281,7 @@ export const Subpaso_dosPuntoCuatro = ({
                         placeholder="Costo de adquisión M$"
                         value={plataforma.costo_adquisicion || ''}
                         onChange={(valor) => handleInputChange(plataforma.id, 'costo_adquisicion', valor)}
-                        onBlur={plataforma.id !== ultimaPlataformaId ? () => handleSave(plataforma.id, true, 'costo_adquisicion') : null}
+                        onBlur={plataforma.id? () => handleSave(plataforma.id, 'costo_adquisicion') : null}
                         loading={plataforma.estados?.costo_adquisicion?.loading ?? false}
                         saved={plataforma.estados?.costo_adquisicion?.saved ?? false}
                         error={errors.costo_adquisicion?.message}
@@ -331,7 +297,7 @@ export const Subpaso_dosPuntoCuatro = ({
                     placeholder="Costo de mantención M$"
                     value={plataforma.costo_mantencion_anual || ''}
                     onChange={(valor) => handleInputChange(plataforma.id, 'costo_mantencion_anual', valor)}
-                    onBlur={plataforma.id !== ultimaPlataformaId ? () => handleSave(plataforma.id, true, 'costo_mantencion_anual') : null}
+                    onBlur={plataforma.id? () => handleSave(plataforma.id, 'costo_mantencion_anual') : null}
                     loading={plataforma.estados?.costo_mantencion_anual?.loading ?? false}
                     saved={plataforma.estados?.costo_mantencion_anual?.saved ?? false}
                   />
@@ -345,7 +311,7 @@ export const Subpaso_dosPuntoCuatro = ({
                   maxLength={500}
                   value={plataforma?.descripcion_costos}
                   onChange={(e) => handleInputChange(plataforma.id, 'descripcion_costos', e.target.value)}
-                  onBlur={plataforma.id !== ultimaPlataformaId ? () => handleSave(plataforma.id, true, 'descripcion_costos') : null}
+                  onBlur={plataforma.id? () => handleSave(plataforma.id, 'descripcion_costos') : null}
                   loading={plataforma.estados?.descripcion_costos?.loading ?? false}
                   saved={plataforma.estados?.descripcion_costos?.saved ?? false}
                 />
@@ -364,10 +330,10 @@ export const Subpaso_dosPuntoCuatro = ({
                 maxLength={500}
                 value={plataforma?.funcion_plataforma}
                 onChange={(e) => handleInputChange(plataforma.id, 'funcion_plataforma', e.target.value)}
-                onBlur={plataforma.id !== ultimaPlataformaId ? () => handleSave(plataforma.id, true, 'funcion_plataforma') : null}
+                onBlur={plataforma.id? () => handleSave(plataforma.id, 'funcion_plataforma') : null}
                 loading={plataforma.estados?.funcion_plataforma?.loading ?? false}
-                saved={plataforma.estados?.funcion_plataforma?.saved ?? false}  
-                />
+                saved={plataforma.estados?.funcion_plataforma?.saved ?? false}
+              />
             </div>
           </div>
 
@@ -383,7 +349,7 @@ export const Subpaso_dosPuntoCuatro = ({
                 options={opcionesEtapas}
                 onSelectionChange={handleEtapasChange}
                 selected={etapasSeleccionadas}
-                />
+              />
             </div>
           </div>
 
@@ -405,7 +371,7 @@ export const Subpaso_dosPuntoCuatro = ({
               className="btn-terciario-ghost"
               onClick={() => eliminarElemento(plataforma.id)}>
               <i className="material-symbols-rounded me-2">delete</i>
-              <p className="mb-0 text-decoration-underline">Borrar</p>
+              <p className="mb-0 text-decoration-underline">Borrar ficha</p>
             </button>
           </div>
         </div>
@@ -413,17 +379,10 @@ export const Subpaso_dosPuntoCuatro = ({
 
       <div className="row">
         <div className="p-2">
-          {mostrarBotonGuardarPlataforma ? (
-            <button className="btn-secundario-s m-2" onClick={() => handleSave(plataformaEnEdicionId, false)}>
-              <i className="material-symbols-rounded me-2">save</i>
-              <p className="mb-0 text-decoration-underline">Guardar</p>
-            </button>
-            ) : (
             <button className="btn-secundario-s" onClick={agregarPlataforma}>
               <i className="material-symbols-rounded me-2">add</i>
               <p className="mb-0 text-decoration-underline">Agregar ficha técnica</p>
             </button>
-          )}
         </div>
       </div>
 
