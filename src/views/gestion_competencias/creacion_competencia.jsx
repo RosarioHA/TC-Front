@@ -153,13 +153,13 @@ const CreacionCompetencia = () =>
     label: region.region,
     value: region.id,
   }));
+
   const handleRegionesChange = useCallback((selectedOptions) => {
     const regionIds = selectedOptions.map(option => option.value);
     setRegionesSeleccionadas(selectedOptions);
-    setRegionSeleccionada(regionIds);
+    setRegionSeleccionada(regionIds); // Asegúrate de que esta línea actualiza correctamente el estado
     setValue('regiones', regionIds);
-    // Otras acciones...
-}, [setValue]);
+  }, [setValue]);
   //opciones sector 
   const opcionesSectores = dataSector.map(ministerio => ({
     label: ministerio.nombre,

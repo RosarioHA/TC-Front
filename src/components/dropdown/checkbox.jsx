@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 
 const DropdownCheckbox = ({
   label,
@@ -9,28 +9,29 @@ const DropdownCheckbox = ({
   onSelectionChange,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOptions, setSelectedOptions] = useState([]);
+  const [selectedOptions, setSelectedOptions] = useState(() => selectedRegions || []);
   const [userHasMadeSelection, setUserHasMadeSelection] = useState(false); 
   const dropdownRef = useRef(null);
   const toggleRef = useRef(null);
 
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target) &&
-        toggleRef.current &&
-        !toggleRef.current.contains(event.target)
-      ) {
-        setIsOpen(false);
-      }
+  const handleClickOutside = useCallback((event) => {
+    if (
+      dropdownRef.current &&
+      !dropdownRef.current.contains(event.target) &&
+      toggleRef.current &&
+      !toggleRef.current.contains(event.target)
+    ) {
+      setIsOpen(false);
     }
+  }, []);
 
+  useEffect(() => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, []);
+  }, [handleClickOutside]);
+
 
   useEffect(() => {
     // Actualizar solo si el usuario no ha hecho ninguna selección
@@ -39,11 +40,11 @@ const DropdownCheckbox = ({
     }
   }, [selectedRegions, userHasMadeSelection]);
 
-  const handleDropdownClick = () => {
-    setIsOpen((current) => !current);
-  };
+  const handleDropdownClick = useCallback(() => {
+    setIsOpen(!isOpen);
+  }, [isOpen]);
 
-  const handleCheckboxChange = (option) => {
+  const handleCheckboxChange = useCallback((option) => {
     if (readOnly) return;
     let newSelectedOptions;
   
@@ -71,13 +72,8 @@ const DropdownCheckbox = ({
     if (onSelectionChange) {
       onSelectionChange(newSelectedOptions);
     }
-  };
+  }, [selectedOptions, options, onSelectionChange, readOnly]);
 
-  useEffect(() => {
-    if (onSelectionChange) {
-      onSelectionChange(selectedOptions);
-    }
-  }, [selectedOptions, onSelectionChange]);
 
   const renderSelectedOptions = () => {
     if (readOnly && selectedRegions && selectedRegions.length > 0) {
