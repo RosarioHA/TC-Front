@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback ,useMemo} from "react";
 import { useForm, Controller } from 'react-hook-form';
 import { useNavigate, useParams } from "react-router-dom";
 import CustomInput from "../../components/forms/custom_input";
@@ -60,10 +60,11 @@ const EdicionCompetencia = () =>
 
 
   //opciones selectores
-  const opcionesRegiones = dataRegiones.map(region => ({
+  const opcionesRegiones = useMemo(() => dataRegiones.map(region => ({
     label: region.region,
     value: region.id,
-  }));
+  })), [dataRegiones]); 
+
   const opcionesOrigen = origenes.map(origen => ({
     label: origen.descripcion,
     value: origen.clave,
@@ -167,28 +168,28 @@ const EdicionCompetencia = () =>
 
   const handleSectorSelectionChange = (selectedSectorValues) =>
   {
-    const sectorId = selectedSectorValues.length > 0 ? selectedSectorValues.value : null;
+    const sectorId = selectedSectorValues.map(sector => sector.value);
     setSectorSeleccionado(sectorId);
     setSectoresSeleccionados(selectedSectorValues);
     setValue('sectores', selectedSectorValues, { shouldValidate: true });
-  };
-
-  const handleRegionesChange = (selectedRegiones) =>
-  {
-    const regionId = selectedRegiones.length > 0 ? selectedRegiones.value : null;
-    setRegionSeleccionada(regionId);
-    const selectedRegionIds = selectedRegiones.map(region => region.value);
-    setValue("regiones", selectedRegionIds, { shouldDirty: true });
     updateHasChanged(true);
     setHasChanged(true);
   };
 
-  const handleAmbitoChange = (selectedAmbito) =>
+  const handleRegionesChange = useCallback((selectedRegiones) => {
+    const regionId = selectedRegiones.map(region => region.value);
+    setRegionSeleccionada(regionId);
+    setValue("regiones", regionId, { shouldValidate: true });
+    updateHasChanged(true);
+    setHasChanged(true);
+  }, [setValue, updateHasChanged]);
+
+  function handleAmbitoChange(selectedAmbito)
   {
     setValue("ambito_competencia", selectedAmbito.value);
     updateHasChanged(true);
     setHasChanged(true);
-  };
+  }
 
   const handleOrigenChange = (selectedOrigen) =>
   {
@@ -255,7 +256,6 @@ const EdicionCompetencia = () =>
         value: sector.id,
       }));
       setSectoresSeleccionados(sectoresPreseleccionados);
-
       setSectoresSeleccionados(sectoresPreseleccionados);
       setSelectedReadOnlyOptions(sectoresPreseleccionados);
     }
@@ -295,7 +295,6 @@ const EdicionCompetencia = () =>
     }
   }, [competencia]);
 
-  console.log('userop',userOptions)
 
   return (
     <div className="container col-10 my-4">

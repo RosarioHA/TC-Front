@@ -19,12 +19,6 @@ const DropdownConSecciones = ({
   const [searchTerm, setSearchTerm] = useState('');
   const dropdownRef = useRef(null);
 
-  console.log('usetab', usuariosCompetencia);
-
-  useEffect(() => {
-    console.log('usuariosCompetencia:', usuariosCompetencia);
-  }, [usuariosCompetencia]);
-
   // Cierra el dropdown si se hace clic fuera del componente
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -152,12 +146,6 @@ const DropdownConSecciones = ({
       setSelectedOptions(usuariosInicializados);
     }
   }, [usuariosCompetencia]);
-
-  console.log('Usuarios Competencia: ', usuariosCompetencia);
-  console.log('Selected Options: ', selectedOptions);
-  console.log('Usuarios Por Perfil: ', usuariosPorPerfil);
-  console.log('opciones', filteredOptions)
-  
   // Renderiza la tabla resumen
   const renderTablaResumen = (usuarios, tipoUsuario, tipoPerfil) => {
     if (!usuarios || usuarios.length === 0) {
@@ -273,8 +261,8 @@ const DropdownConSecciones = ({
           ref={dropdownRef}
         >
           {filteredOptions.map((optionGroup) => (
-            <React.Fragment key={optionGroup.id}>
-              <div className="group-label unselected-option py-2 ps-3 d-flex border-bottom border-top">
+            <React.Fragment key={`group-${optionGroup.id}`}>
+              <div key={optionGroup.id} className="group-label unselected-option py-2 ps-3 d-flex border-bottom border-top">
                 <label className="me-1 mb-0 text-sans-p-bold">
                   {optionGroup.label}
                 </label>
