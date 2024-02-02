@@ -4,7 +4,7 @@ import React, {
   useEffect,
   useMemo,
   useCallback,
-} from 'react'
+} from 'react';
 
 const DropdownConSecciones = ({
   label,
@@ -45,18 +45,15 @@ const DropdownConSecciones = ({
     const perfil = option.perfil;
     const updatedSelection = {
       ...selectedOptions,
-      [perfil]: (selectedOptions[perfil] || []).filter(
-        (o) => o.id !== option.id
-      ),
+      [perfil]: selectedOptions[perfil] ? selectedOptions[perfil].filter(o => o.id !== option.id) : []
     };
-
-    if (!selectedOptions[perfil]?.includes(option)) {
+  
+    if (!selectedOptions[perfil] || !selectedOptions[perfil].some(o => o.id === option.id)) {
       updatedSelection[perfil] = [...(updatedSelection[perfil] || []), option];
     }
-
+  
     setSelectedOptions(updatedSelection);
   };
-
   // Filtra las opciones basadas en el término de búsqueda
   const filteredOptions = useMemo(() => {
     if (!searchTerm) return options;
@@ -89,6 +86,12 @@ const DropdownConSecciones = ({
           perfil === 'Usuario Sectorial'
             ? 'usuarios_sectoriales'
             : `usuarios_${perfil.toLowerCase()}`;
+
+        // Asegurarse de que exista el arreglo antes de hacer push
+        if (!transformed[key]) {
+          transformed[key] = [];
+        }
+
         transformed[key].push(option.id);
       });
     }
@@ -96,15 +99,16 @@ const DropdownConSecciones = ({
     return transformed;
   }, []);
 
-
-
   useEffect(() => {
     if (typeof onUsuariosTransformed === 'function') {
       const transformed = transformSelectedOptionsForProfiles(selectedOptions);
       onUsuariosTransformed(transformed); // Directamente llamando a onUsuariosTransformed
     }
-  }, [selectedOptions, transformSelectedOptionsForProfiles, onUsuariosTransformed]);
-
+  }, [
+    selectedOptions,
+    transformSelectedOptionsForProfiles,
+    onUsuariosTransformed,
+  ]);
 
   const agruparUsuariosPorPerfil = (usuarios) => {
     const usuariosAgrupados = {};
@@ -127,33 +131,37 @@ const DropdownConSecciones = ({
     ? agruparUsuariosPorPerfil(usuariosCompetencia)
     : {};
 
-    const inicializarUsuarios = (usuarios) => {
-      const usuariosInicializados = {};
-      usuarios.forEach((usuario) => {
-        if (!usuariosInicializados[usuario.perfil]) {
-          usuariosInicializados[usuario.perfil] = [];
-        }
-        if (!usuariosInicializados[usuario.perfil].some((u) => u.id === usuario.id)) {
-          usuariosInicializados[usuario.perfil].push(usuario);
-        }
-      });
-      return usuariosInicializados;
-    };
-
-    useEffect(() => {
-      if (usuariosCompetencia) {
-        const usuariosInicializados = inicializarUsuarios(usuariosCompetencia);
-        setSelectedOptions(usuariosInicializados);
+  const inicializarUsuarios = (usuarios) => {
+    const usuariosInicializados = {};
+    usuarios.forEach((usuario) => {
+      if (!usuariosInicializados[usuario.perfil]) {
+        usuariosInicializados[usuario.perfil] = [];
       }
-    }, [usuariosCompetencia]);
+      if (
+        !usuariosInicializados[usuario.perfil].some((u) => u.id === usuario.id)
+      ) {
+        usuariosInicializados[usuario.perfil].push(usuario);
+      }
+    });
+    return usuariosInicializados;
+  };
+
+  useEffect(() => {
+    if (usuariosCompetencia) {
+      const usuariosInicializados = inicializarUsuarios(usuariosCompetencia);
+      setSelectedOptions(usuariosInicializados);
+    }
+  }, [usuariosCompetencia]);
 
   console.log('Usuarios Competencia: ', usuariosCompetencia);
   console.log('Selected Options: ', selectedOptions);
   console.log('Usuarios Por Perfil: ', usuariosPorPerfil);
-
+  console.log('opciones', filteredOptions)
+  
   // Renderiza la tabla resumen
   const renderTablaResumen = (usuarios, tipoUsuario, tipoPerfil) => {
     if (!usuarios || usuarios.length === 0) {
+      console.log('usuarios', usuarios)
       return null; // No hay usuarios para este tipo de perfil
     }
 
@@ -284,7 +292,7 @@ const DropdownConSecciones = ({
                     className="checkbox ms-4 me-2 my-3"
                     type="checkbox"
                     value={option.id}
-                    checked={selectedOptions[option.perfil]?.includes(option)}
+                    checked={selectedOptions[option.perfil]?.some(selectedOption => selectedOption.id === option.id)}
                     onChange={() => handleCheckboxChange(option)}
                   />
                   {option.nombre_completo}
@@ -294,12 +302,12 @@ const DropdownConSecciones = ({
           ))}
         </div>
       )}
-      {/* Mostrar la tabla de selecciones en modo editar también */}
-      {Object.keys(selectedOptions).map(
-        (tipoUsuario) =>
-          selectedOptions[tipoUsuario].length > 0 &&
-          renderTablaResumen(selectedOptions[tipoUsuario], tipoUsuario)
-      )}
+      {!readOnly &&
+        Object.keys(selectedOptions).map(
+          (tipoUsuario) =>
+            selectedOptions[tipoUsuario].length > 0 &&
+            renderTablaResumen(selectedOptions[tipoUsuario], tipoUsuario)
+        )}
     </div>
   );
 };
