@@ -272,7 +272,7 @@ export const Subpaso_dosPuntoDos = ({
                                 <div className="col-10 p-3">
                                   <div className="conteo">{unidadIndex + 1}</div>
                                   <CustomInput
-                                    label="Nombre"
+                                    label="Nombre (Obligatorio)"
                                     value={unidad.nombre_unidad || ''}
                                     placeholder="Nombre ministerio o servicio"
                                     maxLength={300}
@@ -280,7 +280,7 @@ export const Subpaso_dosPuntoDos = ({
                                     onBlur={() => handleSave(organismoDisplay, ministerio, unidad.id, true)}
                                   />                                  
                                     <CustomInput
-                                      label="Descripción"
+                                      label="Descripción (Obligatorio)"
                                       value={unidad.descripcion_unidad || ''}
                                       placeholder="Descripción"
                                       maxLength={300}
@@ -289,30 +289,30 @@ export const Subpaso_dosPuntoDos = ({
                                     />
                                 </div>
                                 
-                                  <div className="col d-flex align-items-center">
+                                <div className="col-2 d-flex align-items-center justify-content-center">
                                   {unidades.length > 1 && (
                                     <button
-                                    className="btn-terciario-ghost mb-2"
-                                    onClick={() => eliminarFila(organismoDisplay, ministerio, unidad.id)}>
-                                    <i className="material-symbols-rounded me-2">delete</i>
-                                    <p className="mb-0 text-decoration-underline">Borrar</p>
+                                      className="btn-terciario-ghost mb-2 me-5"
+                                      onClick={() => eliminarFila(organismoDisplay, ministerio, unidad.id)}>
+                                      <i className="material-symbols-rounded me-2">delete</i>
+                                      <p className="mb-0 text-decoration-underline">Borrar</p>
                                     </button>
-                                    )}
-                                  </div>
-                                  <hr/>
+                                  )}
+                                </div>
+                                <hr/>
                               </div>
                             ))}
                               <div className="row">
                                 <div className="p-2">
                                 {mostrarBotonGuardar ? (
-                                  <button className="btn-secundario-s m-2" onClick={() => handleSave(organismoDisplay, ministerio, filaEnEdicionId, true)}>
+                                  <button className="btn-primario-s m-2" onClick={() => handleSave(organismoDisplay, ministerio, filaEnEdicionId, true)}>
                                     <i className="material-symbols-rounded me-2">save</i>
                                     <p className="mb-0 text-decoration-underline">Guardar</p>
                                   </button>
                                   ) : (
                                   <button className="btn-secundario-s m-2" onClick={() => agregarFila(organismoDisplay, ministerio)}>
                                     <i className="material-symbols-rounded me-2">add</i>
-                                    <p className="mb-0 text-decoration-underline">Agregar Otro</p>
+                                    <p className="mb-0 text-decoration-underline">Agregar Unidad</p>
                                   </button>
                                   )}
                                 </div>
