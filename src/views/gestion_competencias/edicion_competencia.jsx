@@ -207,7 +207,7 @@ const EdicionCompetencia = () =>
       setEditMode(false);
       updateHasChanged(false);
       setHasChanged(false);
-      history('/home/success', { state: { origen: "editar_competencia", id } });
+      history('/home/success_edicion', { state: { origen: "editar_competencia", id } });
     } catch (error)
     {
       console.error("Error al guardar la competencia:", error);

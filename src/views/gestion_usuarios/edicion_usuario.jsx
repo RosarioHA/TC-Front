@@ -223,34 +223,29 @@ const EdicionUsuario = () =>
     }
   };
 
-  const handleEstadoChange = (nuevoEstado) =>
-  {
+  const handleEstadoChange = (nuevoEstado) => {
     const isActivo = nuevoEstado === "activo";
     setValue("is_active", isActivo);
     setHasChanged(true);
     updateHasChanged(true);
   };
 
-  const onSubmit = async (formData) =>
-  {
+  const onSubmit = async (formData) => {
     const payload = {
       ...formData,
       competencias_asignadas: competenciasSeleccionadas,
     };
-    try
-    {
+    try {
       await editUser(id, payload);
       setEditMode(false);
       updateHasChanged(false);
       setHasChanged(false);
-      history('/home/success', { state: { origen: "editar_usuario", id } });
-    } catch (error)
-    {
+      console.log("valor de id en editar usuario antes de hacer redireccion", id)
+      history('/home/success_edicion', { state: { origen: "editar_usuario", id } });
+    } catch (error) {
       console.error("Error al editar el usuario:", error);
     }
   };
-
-
 
   return (
     <div className="container col-10 my-4">

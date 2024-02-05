@@ -23,6 +23,7 @@ const Error404 = React.lazy(() => import('./views/Errors/Error404'));
 const Error500 = React.lazy(() => import('./views/Errors/Error500'));
 const Error503 = React.lazy(() => import('./views/Errors/Error503'));
 const Success = React.lazy(() => import('./views/success'));
+const SuccessEditar = React.lazy(() => import ('./views/success/success_edicion'))
 const PasoUno = React.lazy(() => import('./views/formularioSectorial/pasoUno'));
 const PasoDos = React.lazy(() => import('./views/formularioSectorial/pasoDos'));
 const PasoTres = React.lazy(() => import('./views/formularioSectorial/pasoTres'));
@@ -47,8 +48,7 @@ const createProtectedRoute = (path, Component, allowedProfiles) => (
   />
 );
 
-function App()
-{
+function App() {
   return (
     <Suspense fallback={<div>Cargando página...</div>}>
       <Routes>
@@ -69,6 +69,7 @@ function App()
           <Route path="estado_competencia/:id/subir_oficio/:etapaNum/:subetapaId" element={<SubirOficio />} />
           <Route path="editar_competencia/:id" element={<EditarCompetencia />} />
           <Route path="success" element={<Success />} />
+          <Route path="success_edicion" element={<SuccessEditar />} />
           <Route
             path="formulario_sectorial/:id"
             element={
