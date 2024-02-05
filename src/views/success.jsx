@@ -6,6 +6,7 @@ const SuccessViews = () => {
   const history = useNavigate();
   const location = useLocation();
   const origen = location.state?.origen;
+  let id = location.state?.id.id;
 
   const handleButtonClick = () => {
     // Realizar la navegación condicional según la procedencia del usuario
@@ -17,7 +18,10 @@ const SuccessViews = () => {
         history('/home/listado_competencias');
         break;
       case "editar_usuario":
-        history('/home/administrar_usuarios'); // Cambia a la vista deseada
+        history(`/home/editar_usuario/${id}`);
+        break;
+        case "editar_competencia":
+        history(`/home/editar_competencia/${id}`);
         break;
       default:
         history('/home');

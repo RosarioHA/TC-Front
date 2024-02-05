@@ -243,7 +243,7 @@ const EdicionUsuario = () =>
       setEditMode(false);
       updateHasChanged(false);
       setHasChanged(false);
-      history('/home/success', { state: { origen: "editar_usuario" } });
+      history('/home/success', { state: { origen: "editar_usuario", id } });
     } catch (error)
     {
       console.error("Error al editar el usuario:", error);
