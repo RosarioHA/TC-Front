@@ -20,8 +20,7 @@ import { useFormContext } from "../../context/FormAlert";
 import ModalAbandonoFormulario from "../../components/commons/modalAbandonoFormulario";
 import { DropdownSelectBuscadorUnico } from "../../components/dropdown/select_buscador_sector";
 
-const EdicionUsuario = () =>
-{
+const EdicionUsuario = () => {
   const { id } = useParams();
   const history = useNavigate();
   const [ editMode, setEditMode ] = useState(false);
@@ -58,26 +57,20 @@ const EdicionUsuario = () =>
 
   console.log('user',userDetails)
 
-  useEffect(() =>
-  {
-    if (userDetails)
-    {
+  useEffect(() => {
+    if (userDetails) {
       setCompetenciasAsignadas(userDetails.competencias_asignadas || []);
-      if (userDetails.perfil === 'GORE' && userDetails.regionId)
-      {
+      if (userDetails.perfil === 'GORE' && userDetails.regionId) {
         setRegionId(userDetails.regionId);
       }
-      if (userDetails.perfil === 'Usuario Sectorial' && userDetails.sectorId)
-      {
+      if (userDetails.perfil === 'Usuario Sectorial' && userDetails.sectorId) {
         setSectorId(userDetails.sectorId);
       }
     }
   }, [ userDetails ]);
 
-  useEffect(() =>
-  {
-    if (userDetails && userDetails.competencias_asignadas)
-    {
+  useEffect(() => {
+    if (userDetails && userDetails.competencias_asignadas)  {
       // Transforma las competencias asignadas en un formato que el componente hijo pueda entender
       const asignadasIds = userDetails.competencias_asignadas.map(competencia => competencia.id);
       setCompetenciasSeleccionadas(asignadasIds);
@@ -87,10 +80,8 @@ const EdicionUsuario = () =>
   const perfil = watch('perfil') || '';
   const renderizadoCondicional = editMode ? perfil : userDetails?.perfil;
 
-  useEffect(() =>
-  {
-    if (editMode && userDetails)
-    {
+  useEffect(() => {
+    if (editMode && userDetails) {
       // En modo edicion, actualiza los valores iniciales con los valores actuales.
       setValue('nombre_completo', userDetails.nombre_completo || "");
       setValue('email', userDetails.email || "");
@@ -102,15 +93,13 @@ const EdicionUsuario = () =>
   }, [ editMode, userDetails, setValue ]);
 
   //detecta cambios sin guardar en el formulario
-  function handleOnChange(event)
-  {
+  function handleOnChange(event) {
     const data = new FormData(event.currentTarget);
     const formEntries = Array.from(data.entries());
     console.log('Form Entries:', formEntries);
 
     // Verifica si hay cambios respecto al valor inicial
-    const formHasChanged = Array.from(data.entries()).some(([ name, value ]) =>
-    {
+    const formHasChanged = Array.from(data.entries()).some(([ name, value ]) => {
       const initialValue = userDetails[ name ];
       return value !== String(initialValue);
     });
@@ -122,28 +111,22 @@ const EdicionUsuario = () =>
     const sectorChanged = watch('sector') !== userDetails?.sector?.id;
     const estadoChanged = watch('is_active') !== (userDetails?.is_active === 'activo');
 
-
     // Establecer hasChanged si hay algún cambio
     setHasChanged(formHasChanged || perfilChanged || regionChanged || sectorChanged || estadoChanged);
     updateHasChanged(formHasChanged || perfilChanged || regionChanged || sectorChanged || estadoChanged);
   }
 
-  const handleBackButtonClick = () =>
-  {
-    if (editMode)
-    {
+  const handleBackButtonClick = () => {
+    if (editMode) {
       setEditMode(false);
-    } else if (hasChanged)
-    {
+    } else if (hasChanged) {
       setIsModalOpen(true);
-    } else
-    {
+    } else {
       history(-1);
     }
   };
 
-  const handleEditClick = () =>
-  {
+  const handleEditClick = () => {
     setEditMode((prevMode) => !prevMode);
   };
 
@@ -170,55 +153,43 @@ const EdicionUsuario = () =>
     label: competencia.nombre,
   }));
 
-  const handleInputClick = (e) =>
-  {
+  const handleInputClick = (e) => {
     // Previene que el evento se propague al boton
     e.stopPropagation();
   }
 
-  const handleDdSelectChange = (fieldName, selectedOption) =>
-  {
-    try
-    {
-      if (selectedOption && selectedOption.label)
-      {
+  const handleDdSelectChange = (fieldName, selectedOption) => {
+    try {
+      if (selectedOption && selectedOption.label) {
         setValue(fieldName, selectedOption.label);
         setRegionId('');
       }
       updateHasChanged(true);
       setHasChanged(true);
-    } catch (error)
-    {
+    } catch (error) {
       console.error('Error en handleDdSelectChange:', error);
     }
   };
 
-  const handleSectorSelectionChange = (selectedSectorValues) =>
-  {
+  const handleSectorSelectionChange = (selectedSectorValues) => {
     setSectorId(selectedSectorValues);
     setValue('sector', selectedSectorValues, { shouldValidate: true });
   };
 
-  const handleDdSelectBuscadorChange = (fieldName, selectedOption) =>
-  {
-    try
-    {
-      if (selectedOption && selectedOption.value)
-      {
+  const handleDdSelectBuscadorChange = (fieldName, selectedOption) => {
+    try {
+      if (selectedOption && selectedOption.value) {
         setValue(fieldName, selectedOption.value);
-        if (fieldName === 'region')
-        {
+        if (fieldName === 'region') {
           setRegionId(selectedOption.value); // Actualiza regionId cuando se selecciona una nueva región
         }
-        if (fieldName === 'sector')
-        {
+        if (fieldName === 'sector')  {
           setSectorId(selectedOption.value); // Actualiza sectorId cuando se selecciona un nuevo sector
         }
       }
       updateHasChanged(true);
       setHasChanged(true);
-    } catch (error)
-    {
+    } catch (error) {
       console.error('Error en handleDdSelectBuscadorChange:', error);
     }
   };
@@ -518,7 +489,6 @@ const EdicionUsuario = () =>
             {editMode ? <i className="col material-symbols-rounded ms-2">lock</i> : ''}
           </div>
         )}
-
 
         {editMode && (
           <button className="btn-primario-s mb-5" type="submit">
