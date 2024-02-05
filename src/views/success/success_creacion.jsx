@@ -1,24 +1,32 @@
 import { useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import successIcon from '../static/icons/success.svg';
+import successIcon from '../../static/icons/success.svg';
 
-const SuccessViews = () => {
+const SuccessCreacion = () => {
   const history = useNavigate();
   const location = useLocation();
   const origen = location.state?.origen;
+  const id = location.state?.id;
+  console.log("id de usuario en vista success creacion", id)
 
   const handleButtonClick = () => {
+    // Verifica que id tenga un valor antes de intentar acceder a sus propiedades
+    if (id) {
       // Realizar la navegación condicional según la procedencia del usuario
       switch (origen) {
         case "crear_usuario":
-          history('/home/administrar_usuarios');
+          history(`/home/editar_usuario/${id}`);
           break;
         case "crear_competencia":
-          history('/home/listado_competencias');
+          history(`/home/editar_competencia/${id}`);
           break;
         default:
           history('/home');
       }
+    } else {
+      console.error("El ID del usuario es nulo o indefinido.");
+      // Puedes manejar este caso según tus necesidades, por ejemplo, redirigir a una página de error.
+    }
   };
   
   let titulo = "";
@@ -43,7 +51,7 @@ const SuccessViews = () => {
 
   return (
     <div className="container view-container ms-5">
-      <h2 className="text-sans-h2 mt-3">{titulo}</h2>
+      <h2 className="text-sans-h2 mt-3">CREACION COMPETENCIA{titulo}</h2>
       <h3 className="text-sans-h3 mt-3 mb-5">{subtitulo}</h3>
   
       <div className="success-container col-7 p-3 px-5">
@@ -67,4 +75,4 @@ const SuccessViews = () => {
   );
 }
     
-export default SuccessViews ;
+export default SuccessCreacion ;

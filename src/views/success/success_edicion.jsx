@@ -50,7 +50,7 @@ const SuccessEdicion = () => {
 
   return (
     <div className="container view-container ms-5">
-      <h2 className="text-sans-h2 mt-3">SUCCESS EDICION {titulo}</h2>
+      <h2 className="text-sans-h2 mt-3">{titulo}</h2>
       <h3 className="text-sans-h3 mt-3 mb-5">{subtitulo}</h3>
   
       <div className="success-container col-7 p-3 px-5">
