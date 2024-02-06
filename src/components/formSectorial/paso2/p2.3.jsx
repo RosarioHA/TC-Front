@@ -383,7 +383,7 @@ export const Subpaso_dosPuntoTres = ({
       <div className="row">
         <div className="p-2">
           {mostrarBotonGuardarEtapa ? (
-            <button className="btn-primario-s m-2" onClick={() => handleSave(etapaEnEdicionId, null, true)}>
+            <button className="btn-secundario-s m-2" onClick={() => handleSave(etapaEnEdicionId, null, false)}>
               <i className="material-symbols-rounded me-2">save</i>
               <p className="mb-0 text-decoration-underline">Guardar Etapa</p>
             </button>

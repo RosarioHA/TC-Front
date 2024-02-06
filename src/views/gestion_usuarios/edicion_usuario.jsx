@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect , useMemo} from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Controller, useForm } from 'react-hook-form';
 import CustomInput from "../../components/forms/custom_input";
@@ -145,14 +145,14 @@ const EdicionUsuario = () => {
     value: region.id,
     label: region.region
   }));
-  const opcionesSector = dataSector.map(ministerio => ({
+  const opcionesSector = useMemo(() => dataSector.map(ministerio => ({
     label: ministerio.nombre,
     options: ministerio.sectores.map(sector => ({
       label: sector.nombre,
       value: sector.id,
       ministerioId: ministerio.id
     }))
-  }));
+  })), [dataSector]);
   //opciones Filtro Competencias
   const opcionesFiltroCompetencias = dataFiltroCompetencias.map(competencia => ({
     value: competencia.id,
@@ -176,9 +176,9 @@ const EdicionUsuario = () => {
     }
   };
 
-  const handleSectorSelectionChange = (selectedSectorValues) => {
-    setSectorId(selectedSectorValues);
-    setValue('sector', selectedSectorValues, { shouldValidate: true });
+  const handleSectorSelectionChange = (selectedSectorValue) => {
+    setSectorId(selectedSectorValue);
+    setValue('sector', selectedSectorValue, { shouldValidate: true });
   };
 
   const handleDdSelectBuscadorChange = (fieldName, selectedOption) => {
@@ -318,9 +318,7 @@ const EdicionUsuario = () => {
           {/* Renderizan de manera condicional según el Perfil de usuario */}
           {renderizadoCondicional === 'GORE' && (
             <div className="my-4 col-11 ">
-              {loadingRegiones ? (
-                <div>Cargando regiones...</div>
-              ) : dataRegiones && dataRegiones.length > 0 ? (
+              { dataRegiones && dataRegiones.length > 0 ? (
                 <Controller
                   name="region"
                   control={control}
