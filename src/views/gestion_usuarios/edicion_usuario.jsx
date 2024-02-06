@@ -5,7 +5,6 @@ import CustomInput from "../../components/forms/custom_input";
 import DropdownSelect from "../../components/dropdown/select";
 import DropdownSelectBuscador from "../../components/dropdown/select_buscador";
 import DropdownSinSecciones from "../../components/dropdown/checkbox_sinSecciones_conTabla";
-//import { RadioButtons } from "../../components/forms/radio_btns";
 import { OpcionesAB } from "../../components/forms/opciones_AB";
 import { useEditUser } from "../../hooks/usuarios/useEditUser";
 import { useUserDetails } from "../../hooks/usuarios/useUserDetail";
@@ -23,7 +22,6 @@ import { DropdownSelectBuscadorUnico } from "../../components/dropdown/select_bu
 const EdicionUsuario = () => {
   const { id } = useParams();
   const history = useNavigate();
-  const [ editMode, setEditMode ] = useState(false);
   const { userDetails } = useUserDetails(id);
   const { editUser, isLoading: editUserLoading, error: editUserError } = useEditUser();
   const { dataGroups, loadingGroups } = useGroups();
@@ -34,8 +32,8 @@ const EdicionUsuario = () => {
   const { dataFiltroCompetencias } = useFiltroCompetencias(regionId, sectorId);
   const [ competenciasAsignadas, setCompetenciasAsignadas ] = useState([]);
   const [ competenciasSeleccionadas, setCompetenciasSeleccionadas ] = useState([]);
-  const { updateHasChanged } = useFormContext();
-  const [ hasChanged, setHasChanged ] = useState(false);
+  const { editMode, updateEditMode } = useFormContext();
+  const { hasChanged, updateHasChanged } = useFormContext();
   const [ isModalOpen, setIsModalOpen ] = useState(false);
 
   const { userData } = useAuth();
@@ -54,8 +52,6 @@ const EdicionUsuario = () => {
       is_active: userDetails?.is_active !== undefined ? userDetails.is_active === 'activo' : false,
     },
   });
-
-  console.log('user',userDetails)
 
   useEffect(() => {
     if (userDetails) {
@@ -112,7 +108,6 @@ const EdicionUsuario = () => {
     const estadoChanged = watch('is_active') !== (userDetails?.is_active === 'activo');
 
     // Establecer hasChanged si hay algún cambio
-    setHasChanged(formHasChanged || perfilChanged || regionChanged || sectorChanged || estadoChanged);
     updateHasChanged(formHasChanged || perfilChanged || regionChanged || sectorChanged || estadoChanged);
   }
 
@@ -121,7 +116,7 @@ const EdicionUsuario = () => {
       if (hasChanged) {
         setIsModalOpen(true);
       } else {
-        setEditMode(false);
+        updateEditMode(false);
       }
     } else {
       history(-1);
@@ -131,13 +126,13 @@ const EdicionUsuario = () => {
   const handleEditClick = () => {
     if (!editMode) {
       // Si no está en modo edición, simplemente cambia a modo edición
-      setEditMode(true);
+      updateEditMode(true);
     } else if (hasChanged) {
       // Si está en modo edición y hay cambios, mostrar el modal de advertencia
       setIsModalOpen(true);
     } else {
       // Si está en modo edición y no hay cambios, cambia a modo visualización
-      setEditMode(false);
+      updateEditMode(false);
     }
   };
 
@@ -176,7 +171,6 @@ const EdicionUsuario = () => {
         setRegionId('');
       }
       updateHasChanged(true);
-      setHasChanged(true);
     } catch (error) {
       console.error('Error en handleDdSelectChange:', error);
     }
@@ -199,7 +193,6 @@ const EdicionUsuario = () => {
         }
       }
       updateHasChanged(true);
-      setHasChanged(true);
     } catch (error) {
       console.error('Error en handleDdSelectBuscadorChange:', error);
     }
@@ -208,7 +201,6 @@ const EdicionUsuario = () => {
   const handleEstadoChange = (nuevoEstado) => {
     const isActivo = nuevoEstado === "activo";
     setValue("is_active", isActivo);
-    setHasChanged(true);
     updateHasChanged(true);
   };
 
@@ -219,9 +211,8 @@ const EdicionUsuario = () => {
     };
     try {
       await editUser(id, payload);
-      setEditMode(false);
+      updateEditMode(false);
       updateHasChanged(false);
-      setHasChanged(false);
       console.log("valor de id en editar usuario antes de hacer redireccion", id)
       history('/home/success_edicion', { state: { origen: "editar_usuario", id } });
     } catch (error) {
@@ -515,7 +506,6 @@ const EdicionUsuario = () => {
         <ModalAbandonoFormulario
           onClose={() => setIsModalOpen(false)}
           isOpen={isModalOpen}
-          direction={`/home/editar_usuario/${id}`}
         />
       )}
     </div>

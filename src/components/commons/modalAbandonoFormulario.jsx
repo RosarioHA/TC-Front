@@ -1,15 +1,9 @@
 import { forwardRef, useRef, useImperativeHandle } from "react";
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, } from 'react-router-dom';
 import { useFormContext } from "../../context/FormAlert";
 
-const ModalAbandonoFormulario = forwardRef(function ModalAbandonoFormulario({ isOpen, onClose, direction, goBack }, ref) {
-  const { updateHasChanged } = useFormContext();
-
-  const history = useNavigate();
-  const handleBackButtonClick = () => {
-    updateHasChanged(false);
-    history(-1);
-  };
+const ModalAbandonoFormulario = forwardRef(function ModalAbandonoFormulario({ isOpen, onClose, direction }, ref) {
+  const { updateHasChanged, updateEditMode } = useFormContext();
 
   const handleClose = () => {
     onClose();
@@ -18,14 +12,36 @@ const ModalAbandonoFormulario = forwardRef(function ModalAbandonoFormulario({ is
   const handleLinkClick = () => {
     handleClose();
     updateHasChanged(false);
-    return <NavLink to={direction} />
+    updateEditMode(false);
   };
+  const handleBtnClick = () => {
+    handleClose();
+    updateHasChanged(false);
+    updateEditMode(false);
+  }
 
   const handleCloseRef = useRef(handleClose);
 
   useImperativeHandle(ref, () => ({
     handleClose: handleCloseRef.current
   }));
+
+  //renderizado condicional para boton de abandono de formulario desde modal
+  const renderLinkOrButton = () => {
+    if (direction) {
+      return (
+        <NavLink to={direction} className="mx-4 btn-link-fit px-3" onClick={handleLinkClick}>
+          <u>Salir del formulario</u>
+        </NavLink>
+      );
+    } else {
+      return (
+        <button className="btn-secundario-ghost text-decoration-underline me-3" onClick={handleBtnClick}>
+          Salir del formulario
+        </button>
+      );
+    }
+  };
 
   return (
     <div className={`modal ${isOpen ? 'open' : ''}`}>
@@ -38,10 +54,10 @@ const ModalAbandonoFormulario = forwardRef(function ModalAbandonoFormulario({ is
         <p className="text-sans-p mb-0 ms-3">--**** mensaje con las consecuencias de salir *****---</p>
         <hr/>
         <div className="d-flex justify-content-between">
-          {!goBack && <NavLink to={direction} className="mx-4 btn-link-fit px-3" onClick={handleLinkClick}>
+          {/* <NavLink to={direction} className="mx-4 btn-link-fit px-3" onClick={handleLinkClick}>
             <u>Salir del formulario</u>
-          </NavLink>}
-          {goBack && <button className="btn-secundario-ghost" onClick={handleBackButtonClick}> Salir del formulario</button>}
+          </NavLink> */}
+          {renderLinkOrButton()}
           <button className="btn-primario-s text-decoration-underline me-3" onClick={handleCloseRef.current}>Seguir en el formulario</button>
         </div>
       </div>
