@@ -15,16 +15,11 @@ import ModalAbandonoFormulario from "../../components/commons/modalAbandonoFormu
 import { DropdownSelectBuscadorCheck } from "../../components/dropdown/select_buscador_checkbox";
 import { useFiltroUsuarios } from "../../hooks/usuarios/useFiltroUsuarios";
 
-
-const groupUsersByType = (usuarios) =>
-{
-  if (!usuarios || usuarios.length === 0)
-  {
+const groupUsersByType = (usuarios) => {
+  if (!usuarios || usuarios.length === 0) {
     return [];
   }
-
-  const grouped = usuarios.reduce((acc, user) =>
-  {
+  const grouped = usuarios.reduce((acc, user) => {
     const perfil = user.perfil;
     acc[ perfil ] = acc[ perfil ] || [];
     acc[ perfil ].push(user);
@@ -37,8 +32,7 @@ const groupUsersByType = (usuarios) =>
   }));
 };
 
-const EdicionCompetencia = () =>
-{
+const EdicionCompetencia = () => {
   const { id } = useParams();
   const history = useNavigate();
   const [ editMode, setEditMode ] = useState(false);
@@ -58,13 +52,11 @@ const EdicionCompetencia = () =>
   const [ regionSeleccionada, setRegionSeleccionada ] = useState(null);
   const { usuarios } = useFiltroUsuarios(sectorSeleccionado, regionSeleccionada);
 
-
   //opciones selectores
   const opcionesRegiones = useMemo(() => dataRegiones.map(region => ({
     label: region.region,
     value: region.id,
   })), [dataRegiones]); 
-
   const opcionesOrigen = origenes.map(origen => ({
     label: origen.descripcion,
     value: origen.clave,
@@ -75,8 +67,7 @@ const EdicionCompetencia = () =>
   }));
 
   //data competencia
-  const regionesSeleccionadas = competencia ? competencia.regiones.map(regionId =>
-  {
+  const regionesSeleccionadas = competencia ? competencia.regiones.map(regionId => {
     const region = dataRegiones.find(region => region.id === regionId);
     return {
       label: region.region,
@@ -103,10 +94,8 @@ const EdicionCompetencia = () =>
     },
   });
 
-  useEffect(() =>
-  {
-    if (editMode && competencia)
-    {
+  useEffect(() => {
+    if (editMode && competencia) {
       // Inicializar el formulario con los detalles de la competencia
       setValue("nombre", competencia.nombre || "");
       setValue("regiones", competencia.regiones || null);
@@ -122,14 +111,11 @@ const EdicionCompetencia = () =>
     }
   }, [ editMode, competencia, setValue ]);
 
-
   //detecta cambios sin guardar en el formulario
-  function handleOnChange(event)
-  {
+  function handleOnChange(event) {
     const data = new FormData(event.currentTarget);
     // Verifica si hay cambios respecto al valor inicial
-    const formHasChanged = Array.from(data.entries()).some(([ name, value ]) =>
-    {
+    const formHasChanged = Array.from(data.entries()).some(([ name, value ]) => {
       const initialValue = competencia[ name ];
       return value !== String(initialValue);
     });
@@ -138,10 +124,8 @@ const EdicionCompetencia = () =>
     updateHasChanged(formHasChanged);
   }
 
-  useEffect(() =>
-  {
-    if (editMode && competencia)
-    {
+  useEffect(() => {
+    if (editMode && competencia) {
       // Resto de la inicialización del formulario...
       const sectorInicial = competencia.sectores?.[ 0 ]?.id; // Asumiendo que competencia.sectores es un array
       setSectorSeleccionado(sectorInicial);
@@ -154,7 +138,6 @@ const EdicionCompetencia = () =>
     }
   }, [ editMode, competencia ]);
 
-
   //opciones sector 
   const opcionesSectores = dataSector.map(ministerio => ({
     label: ministerio.nombre,
@@ -165,9 +148,7 @@ const EdicionCompetencia = () =>
     }))
   }));
 
-
-  const handleSectorSelectionChange = (selectedSectorValues) =>
-  {
+  const handleSectorSelectionChange = (selectedSectorValues) => {
     const sectorId = selectedSectorValues.map(sector => sector.value);
     setSectorSeleccionado(sectorId);
     setSectoresSeleccionados(selectedSectorValues);
@@ -184,26 +165,21 @@ const EdicionCompetencia = () =>
     setHasChanged(true);
   }, [setValue, updateHasChanged]);
 
-  function handleAmbitoChange(selectedAmbito)
-  {
+  function handleAmbitoChange(selectedAmbito) {
     setValue("ambito_competencia", selectedAmbito.value);
     updateHasChanged(true);
     setHasChanged(true);
   }
 
-  const handleOrigenChange = (selectedOrigen) =>
-  {
+  const handleOrigenChange = (selectedOrigen) => {
     setValue("origen", selectedOrigen.value);
     updateHasChanged(true);
     setHasChanged(true);
   };
 
-  const onSubmit = async (formData) =>
-  {
-    try
-    {
+  const onSubmit = async (formData) => {
+    try {
       const sectorIds = sectoresSeleccionados.map(sector => sector.value);
-
       const dataToSend = {
         ...formData,
         sectores: sectorIds,
@@ -215,42 +191,32 @@ const EdicionCompetencia = () =>
       updateHasChanged(false);
       setHasChanged(false);
       history('/home/success_edicion', { state: { origen: "editar_competencia", id } });
-    } catch (error)
-    {
+    } catch (error) {
       console.error("Error al guardar la competencia:", error);
     }
   };
 
-  const handleUsuariosTransformed = useCallback((nuevosUsuarios) =>
-  {
+  const handleUsuariosTransformed = useCallback((nuevosUsuarios) => {
     setUsuariosSeleccionados(nuevosUsuarios);
   }, []);
 
-  const handleBackButtonClick = () =>
-  {
-    if (editMode)
-    {
+  const handleBackButtonClick = () => {
+    if (editMode) {
       setEditMode(false);
-    } else if (hasChanged)
-    {
+    } else if (hasChanged) {
       setIsModalOpen(true);
-    } else
-    {
+    } else {
       history(-1);
     }
   };
 
-  const toggleEditMode = () =>
-  {
+  const toggleEditMode = () => {
     setEditMode(!editMode);
     setReadOnly(!editMode);
   };
 
-
-  useEffect(() =>
-  {
-    if (competencia)
-    {
+  useEffect(() => {
+    if (competencia) {
       const sectoresPreseleccionados = competencia.sectores.map(sector => ({
         label: sector.nombre,
         value: sector.id,
@@ -261,9 +227,7 @@ const EdicionCompetencia = () =>
     }
   }, [ competencia ]);
 
-
-  const extractFileName = (url) =>
-  {
+  const extractFileName = (url) => {
     return url.split('/').pop();
   };
 
@@ -294,7 +258,6 @@ const EdicionCompetencia = () =>
       setCombinedUsers(usuariosCombinados);
     }
   }, [competencia]);
-
 
   return (
     <div className="container col-10 my-4">
