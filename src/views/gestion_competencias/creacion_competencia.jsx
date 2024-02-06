@@ -477,7 +477,6 @@ const CreacionCompetencia = () =>
         <ModalAbandonoFormulario
           onClose={() => setIsModalOpen(false)}
           isOpen={isModalOpen}
-          direction='-1'
           goBack={true}
         />
       )}
