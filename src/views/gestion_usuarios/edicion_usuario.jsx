@@ -32,8 +32,7 @@ const EdicionUsuario = () => {
   const { dataFiltroCompetencias } = useFiltroCompetencias(regionId, sectorId);
   const [ competenciasAsignadas, setCompetenciasAsignadas ] = useState([]);
   const [ competenciasSeleccionadas, setCompetenciasSeleccionadas ] = useState([]);
-  const { editMode, updateEditMode } = useFormContext();
-  const { hasChanged, updateHasChanged } = useFormContext();
+  const { editMode, updateEditMode, hasChanged, updateHasChanged } = useFormContext();
   const [ isModalOpen, setIsModalOpen ] = useState(false);
 
   const { userData } = useAuth();

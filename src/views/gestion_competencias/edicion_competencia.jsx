@@ -35,23 +35,20 @@ const groupUsersByType = (usuarios) => {
 const EdicionCompetencia = () => {
   const { id } = useParams();
   const history = useNavigate();
-  const [ editMode, setEditMode ] = useState(false);
-  const [ readOnly, setReadOnly ] = useState(false);
   const { dataRegiones } = useRegion();
   const { dataSector } = useSector();
   const { origenes } = useOrigenes();
   const { ambitos } = useAmbitos();
   const { competencia, updateCompetencia } = useEditCompetencia(id);
   const [ usuariosSeleccionados, setUsuariosSeleccionados ] = useState();
-  const { updateHasChanged } = useFormContext();
-  const [ hasChanged, setHasChanged ] = useState(false);
   const [ isModalOpen, setIsModalOpen ] = useState(false);
   const [ sectoresSeleccionados, setSectoresSeleccionados ] = useState([]);
   const [ selectedReadOnlyOptions, setSelectedReadOnlyOptions ] = useState([]);
   const [ sectorSeleccionado, setSectorSeleccionado ] = useState(null);
   const [ regionSeleccionada, setRegionSeleccionada ] = useState(null);
   const { usuarios } = useFiltroUsuarios(sectorSeleccionado, regionSeleccionada);
-
+  const { editMode, updateEditMode, hasChanged, updateHasChanged } = useFormContext();
+  
   //opciones selectores
   const opcionesRegiones = useMemo(() => dataRegiones.map(region => ({
     label: region.region,
@@ -119,7 +116,6 @@ const EdicionCompetencia = () => {
       const initialValue = competencia[ name ];
       return value !== String(initialValue);
     });
-    setHasChanged(formHasChanged);
     // Actualiza el valor de hasChanged en el contexto
     updateHasChanged(formHasChanged);
   }
@@ -154,7 +150,6 @@ const EdicionCompetencia = () => {
     setSectoresSeleccionados(selectedSectorValues);
     setValue('sectores', selectedSectorValues, { shouldValidate: true });
     updateHasChanged(true);
-    setHasChanged(true);
   };
 
   const handleRegionesChange = useCallback((selectedRegiones) => {
@@ -162,19 +157,16 @@ const EdicionCompetencia = () => {
     setRegionSeleccionada(regionId);
     setValue("regiones", regionId, { shouldValidate: true });
     updateHasChanged(true);
-    setHasChanged(true);
   }, [setValue, updateHasChanged]);
 
   function handleAmbitoChange(selectedAmbito) {
     setValue("ambito_competencia", selectedAmbito.value);
     updateHasChanged(true);
-    setHasChanged(true);
   }
 
   const handleOrigenChange = (selectedOrigen) => {
     setValue("origen", selectedOrigen.value);
     updateHasChanged(true);
-    setHasChanged(true);
   };
 
   const onSubmit = async (formData) => {
@@ -187,9 +179,8 @@ const EdicionCompetencia = () => {
       };
 
       await updateCompetencia(dataToSend);
-      setEditMode(false);
+      updateEditMode(false);
       updateHasChanged(false);
-      setHasChanged(false);
       history('/home/success_edicion', { state: { origen: "editar_competencia", id } });
     } catch (error) {
       console.error("Error al guardar la competencia:", error);
@@ -202,7 +193,7 @@ const EdicionCompetencia = () => {
 
   const handleBackButtonClick = () => {
     if (editMode) {
-      setEditMode(false);
+      updateEditMode(false);
     } else if (hasChanged) {
       setIsModalOpen(true);
     } else {
@@ -211,8 +202,7 @@ const EdicionCompetencia = () => {
   };
 
   const toggleEditMode = () => {
-    setEditMode(!editMode);
-    setReadOnly(!editMode);
+    updateEditMode(!editMode);
   };
 
   useEffect(() => {
@@ -287,7 +277,7 @@ const EdicionCompetencia = () => {
                 placeholder={competencia ? competencia.nombre : ''}
                 id="nombre"
                 name="nombre"
-                readOnly={!editMode || readOnly}
+                readOnly={!editMode}
                 error={errors.nombre_completo?.message}
                 {...field}
               />
