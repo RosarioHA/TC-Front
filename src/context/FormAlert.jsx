@@ -4,13 +4,18 @@ const FormContext = createContext();
 
 export const FormProvider = ({ children }) => {
   const [hasChanged, setHasChanged] = useState(false);
+  const [editMode, setEditMode] = useState(false);
 
   const updateHasChanged = (value) => {
     setHasChanged(value);
   };
 
+  const updateEditMode = (value) => {
+    setEditMode(value);
+  };
+
   return (
-    <FormContext.Provider value={{ hasChanged, updateHasChanged }}>
+    <FormContext.Provider value={{ hasChanged, updateHasChanged, editMode, updateEditMode }}>
       {children}
     </FormContext.Provider>
   );

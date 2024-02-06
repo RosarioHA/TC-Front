@@ -134,7 +134,7 @@ const CreacionCompetencia = () =>
       await createCompetencia(competenciaData);
       updateHasChanged(false);
       setHasChanged(false);
-      history('/home/success', { state: { origen: "crear_competencia" } });
+      history('/home/success_creacion', { state: { origen: "crear_competencia" } });
       setErrorGeneral('');
     } catch (error) {
       if (error.response && error.response.data) {
@@ -477,7 +477,6 @@ const CreacionCompetencia = () =>
         <ModalAbandonoFormulario
           onClose={() => setIsModalOpen(false)}
           isOpen={isModalOpen}
-          direction='-1'
           goBack={true}
         />
       )}

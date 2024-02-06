@@ -777,9 +777,7 @@ span.material-symbols-outlined {
   justify-content: space-between;
   border: 1px solid #BBBBBB;
   border-radius: 5px;
-  min-height: 60px;
-  height: -moz-fit-content;
-  height: fit-content;
+  height: 60px;
   width: 100%;
 }
 
@@ -895,10 +893,6 @@ span.material-symbols-outlined {
 
 .bg-color-odd {
   background-color: #fff;
-}
-
-.table td {
-  padding: 10px;
 }
 
 .line-container {
@@ -1132,10 +1126,6 @@ a.btn-link:hover, a.btn-link:focus {
 
 .bg-color-odd {
   background-color: #fff;
-}
-
-.table td {
-  padding: 10px;
 }
 
 .line-reference {
@@ -1538,9 +1528,9 @@ a.btn-link:hover, a.btn-link:focus {
   height: 95.5%;
   background-color: #0F69C4;
   position: absolute;
-  top: 81%;
+  top: 79%;
   bottom: 40%;
-  left: 23, 5%;
+  left: 20%;
 }
 
 /* Grafico
