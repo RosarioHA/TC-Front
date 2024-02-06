@@ -48,7 +48,7 @@ const EdicionCompetencia = () => {
   const [ regionSeleccionada, setRegionSeleccionada ] = useState(null);
   const { usuarios } = useFiltroUsuarios(sectorSeleccionado, regionSeleccionada);
   const { editMode, updateEditMode, hasChanged, updateHasChanged } = useFormContext();
-  
+
   //opciones selectores
   const opcionesRegiones = useMemo(() => dataRegiones.map(region => ({
     label: region.region,
@@ -193,16 +193,24 @@ const EdicionCompetencia = () => {
 
   const handleBackButtonClick = () => {
     if (editMode) {
-      updateEditMode(false);
-    } else if (hasChanged) {
-      setIsModalOpen(true);
+      if (hasChanged) {
+        setIsModalOpen(true);
+      } else {
+        updateEditMode(false);
+      }
     } else {
       history(-1);
     }
   };
 
-  const toggleEditMode = () => {
-    updateEditMode(!editMode);
+  const handleEditClick = () => {
+    if (!editMode) {
+      updateEditMode(true);
+    } else if (hasChanged) {
+      setIsModalOpen(true);
+    } else {
+      updateEditMode(false);
+    }
   };
 
   useEffect(() => {
@@ -260,7 +268,7 @@ const EdicionCompetencia = () => {
           </button>
           <h3 className="text-sans-h3 ms-3 mb-0">Competencia: {competencia?.nombre}</h3>
         </div>
-        <button className="btn-secundario-s ms-3" onClick={toggleEditMode}>
+        <button className="btn-secundario-s ms-3" onClick={handleEditClick}>
           <p className="mb-0 ms-2">{editMode ? 'Editando' : 'Editar'}</p>
           <i className="material-symbols-rounded me-2">{editMode ? 'edit' : 'edit'}</i>
         </button>
