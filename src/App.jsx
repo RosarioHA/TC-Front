@@ -12,7 +12,6 @@ const LoginLayout = React.lazy(() => import('./layout/LoginLayout'));
 const GestionUsuarios = React.lazy(() => import('./views/gestion_usuarios/gestion_usuarios'));
 const CrearUsuario = React.lazy(() => import('./views/gestion_usuarios/creacion_usuario'));
 const EditarUsuario = React.lazy(() => import('./views/gestion_usuarios/edicion_usuario'));
-//const UserSuccess = React.lazy(() => import('./views/gestion_usuarios/user_success'));
 const GestionCompetencias = React.lazy(() => import('./views/gestion_competencias/gestion_competencias'));
 const CreacionCompetencia = React.lazy(() => import('./views/gestion_competencias/creacion_competencia'));
 const EditarCompetencia = React.lazy(() => import('./views/gestion_competencias/edicion_competencia'));
@@ -22,7 +21,6 @@ const Minuta = React.lazy(() => import('./views/gestion_competencias/Minuta'));
 const Error404 = React.lazy(() => import('./views/Errors/Error404'));
 const Error500 = React.lazy(() => import('./views/Errors/Error500'));
 const Error503 = React.lazy(() => import('./views/Errors/Error503'));
-const Success = React.lazy(() => import('./views/success'));
 const SuccessEdicion = React.lazy(() => import ('./views/success/success_edicion'));
 const SuccessCreacion = React.lazy(() => import ('./views/success/success_creacion'));
 const PasoUno = React.lazy(() => import('./views/formularioSectorial/pasoUno'));
@@ -63,13 +61,13 @@ function App() {
           {createProtectedRoute("crear_usuario", CrearUsuario, [ 'SUBDERE' ])}
           {createProtectedRoute("administrar_usuarios", GestionUsuarios, [ 'SUBDERE', 'Usuario Observador' ])}
           {createProtectedRoute("editar_usuario/:id", EditarUsuario, [ 'SUBDERE', 'Usuario Observador' ])}
-          {createProtectedRoute("success", Success, [ 'SUBDERE', 'Usuario Observador' ])}
+          {createProtectedRoute("success_edicion", SuccessEdicion, [ 'SUBDERE', 'Usuario Observador' ])}
+          {createProtectedRoute("success_creacion", SuccessCreacion, [ 'SUBDERE', 'Usuario Observador' ])}
           {createProtectedRoute("listado_competencias", GestionCompetencias, [ 'SUBDERE', 'Usuario Observador' ])}
           <Route path="crear_competencia" element={<CreacionCompetencia />} />
           <Route path="estado_competencia/:id/" element={<EstadoCompentencia />} />
           <Route path="estado_competencia/:id/subir_oficio/:etapaNum/:subetapaId" element={<SubirOficio />} />
           <Route path="editar_competencia/:id" element={<EditarCompetencia />} />
-          <Route path="success" element={<Success />} />
           <Route path="success_edicion" element={<SuccessEdicion />} />
           <Route path="success_creacion" element={<SuccessCreacion />} />
           <Route

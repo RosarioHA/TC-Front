@@ -118,16 +118,27 @@ const EdicionUsuario = () => {
 
   const handleBackButtonClick = () => {
     if (editMode) {
-      setEditMode(false);
-    } else if (hasChanged) {
-      setIsModalOpen(true);
+      if (hasChanged) {
+        setIsModalOpen(true);
+      } else {
+        setEditMode(false);
+      }
     } else {
       history(-1);
     }
   };
 
   const handleEditClick = () => {
-    setEditMode((prevMode) => !prevMode);
+    if (!editMode) {
+      // Si no está en modo edición, simplemente cambia a modo edición
+      setEditMode(true);
+    } else if (hasChanged) {
+      // Si está en modo edición y hay cambios, mostrar el modal de advertencia
+      setIsModalOpen(true);
+    } else {
+      // Si está en modo edición y no hay cambios, cambia a modo visualización
+      setEditMode(false);
+    }
   };
 
   //opciones de Perfil, Region y Sector 
@@ -438,7 +449,6 @@ const EdicionUsuario = () => {
           </div>
         )}
 
-
         {/* input Filtro Competencias */}
         <div className="mb-5">
           <div className="my-3 col-11">
@@ -505,8 +515,7 @@ const EdicionUsuario = () => {
         <ModalAbandonoFormulario
           onClose={() => setIsModalOpen(false)}
           isOpen={isModalOpen}
-          direction='-1'
-          goBack={true}
+          direction={`/home/editar_usuario/${id}`}
         />
       )}
     </div>

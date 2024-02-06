@@ -482,7 +482,7 @@ const EdicionCompetencia = () =>
         <ModalAbandonoFormulario
           onClose={() => setIsModalOpen(false)}
           isOpen={isModalOpen}
-          direction='-1'
+          direction={`home/editar_competencia/${id}`}
           goBack={true}
         />
       )}
