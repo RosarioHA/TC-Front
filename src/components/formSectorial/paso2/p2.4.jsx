@@ -1,13 +1,14 @@
 import { useState, useEffect, useContext, useCallback } from "react";
 import { FormularioContext } from "../../../context/FormSectorial";
 import { apiTransferenciaCompentencia } from "../../../services/transferenciaCompetencia";
-import CustomInput from "../../forms/custom_input";
 import CustomTextarea from "../../forms/custom_textarea";
 import { RadioButtons } from "../../forms/radio_btns";
 import DropdownCheckbox from "../../dropdown/checkbox";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { construirEsquemaValidacion } from "../../../validaciones/esquemaEditarFormularioSectorial";
+import { OpcionesAB } from "../../forms/opciones_AB";
+
 
 export const Subpaso_dosPuntoCuatro = ({
   id,
@@ -138,7 +139,7 @@ export const Subpaso_dosPuntoCuatro = ({
       descripcion_costos: '',
       funcion_plataforma: '',
       etapas: [],
-      capacitacion_plataforma: false,
+      capacitacion_plataforma: null,
       editando: false,
       estados: { // Estado inicial para 'estados'
         nombre_plataforma: { loading: false, saved: false },
@@ -194,26 +195,46 @@ export const Subpaso_dosPuntoCuatro = ({
     );
   };
 
+  const handleCapacitacionChange = (plataformaId, newValue) => {
+    setPlataformasySoftwares(prevPlataformas =>
+      prevPlataformas.map(plataforma =>
+        plataforma.id === plataformaId
+          ? { ...plataforma, capacitacion_plataforma: newValue }
+          : plataforma
+      )
+    );
+  };
+
   // Función de guardado
-  const handleSave = async (plataformaId, fieldName) => {
+  const handleSave = async (arrayNameId, fieldName, newValue) => {
     // Si se está guardando por blur, no es necesario desactivar el botón de guardar general
 
-    const plataforma = plataformasySoftwares.find(e => e.id === plataformaId);
+    const plataforma = plataformasySoftwares.find(e => e.id === arrayNameId);
 
-    updateFieldState(plataformaId, fieldName, { loading: true, saved: false });
+    updateFieldState(arrayNameId, fieldName, { loading: true, saved: false });
+
+    console.log(`Valor actual de ${fieldName} para la plataforma ${arrayNameId}:`, plataforma[fieldName]);
+
 
     let payload;
-
+  if (fieldName === 'capacitacion_plataforma') {
     payload = {
-      'p_2_4_plataformas_y_softwares': [{ id: plataformaId, [fieldName]: plataforma[fieldName] }]
+      // Si es 'capacitacion_plataforma', usa esta estructura
+      'p_2_4_plataformas_y_softwares': [{ id: arrayNameId, [fieldName]: newValue }]
     };
+  } else {
+    // Para otros campos, utiliza la estructura original o una diferente si es necesario
+    payload = {
+      'p_2_4_plataformas_y_softwares': [{ id: arrayNameId, [fieldName]: plataforma[fieldName] }]
+    };
+  }
 
     try {
       // Asume que handleUpdatePaso puede manejar ambos casos adecuadamente
       const response = await handleUpdatePaso(id, stepNumber, payload);
 
       // Actualiza el estado de carga y guardado
-      updateFieldState(plataformaId, fieldName, { loading: false, saved: true });
+      updateFieldState(arrayNameId, fieldName, { loading: false, saved: true });
 
     } catch (error) {
       console.error("Error al guardar los datos:", error);
@@ -225,7 +246,7 @@ export const Subpaso_dosPuntoCuatro = ({
         });
       }
 
-      updateFieldState(plataformaId, fieldName, { loading: false, saved: false });
+      updateFieldState(arrayNameId, fieldName, { loading: false, saved: false });
     }
   };
 
@@ -372,7 +393,7 @@ export const Subpaso_dosPuntoCuatro = ({
 
                         return (
                           <CustomTextarea
-                            id={`costo_adquisicion_${plataforma.id}`}                            
+                            id={`costo_adquisicion_${plataforma.id}`}
                             label="Costo de adquisición"
                             placeholder="Costo de adquisión M$"
                             value={value}
@@ -389,7 +410,7 @@ export const Subpaso_dosPuntoCuatro = ({
                     <h6 className="text-sans-h6 text-end">Campo númerico en miles de pesos.</h6>
                   </div>
                   <div className="col">
-                  <Controller
+                    <Controller
                       control={control}
                       name={`costo_mantencion_anual_${plataforma.id}`}
                       defaultValue={plataforma?.costo_mantencion_anual || ''}
@@ -431,45 +452,45 @@ export const Subpaso_dosPuntoCuatro = ({
                   </div>
                 </div>
                 <div className="row mt-4">
-                <Controller
-                      control={control}
-                      name={`descripcion_costos_${plataforma.id}`}
-                      defaultValue={plataforma?.descripcion_costos || ''}
-                      render={({ field }) => {
-                        // Destructura las propiedades necesarias de field
-                        const { onChange, onBlur, value } = field;
+                  <Controller
+                    control={control}
+                    name={`descripcion_costos_${plataforma.id}`}
+                    defaultValue={plataforma?.descripcion_costos || ''}
+                    render={({ field }) => {
+                      // Destructura las propiedades necesarias de field
+                      const { onChange, onBlur, value } = field;
 
-                        const handleChange = (e) => {
-                          clearErrors(`descripcion_costos_${plataforma.id}`);
-                          onChange(e.target.value);
-                          handleInputChange(plataforma.id, 'descripcion_costos', e.target.value);
-                        };
+                      const handleChange = (e) => {
+                        clearErrors(`descripcion_costos_${plataforma.id}`);
+                        onChange(e.target.value);
+                        handleInputChange(plataforma.id, 'descripcion_costos', e.target.value);
+                      };
 
-                        // Función para manejar el evento onBlur
-                        const handleBlur = async () => {
-                          const isFieldValid = await trigger(`descripcion_costos_${plataforma.id}`);
-                          if (isFieldValid) {
-                            handleSave(plataforma.id, 'descripcion_costos');
-                          }
-                          onBlur();
-                        };
+                      // Función para manejar el evento onBlur
+                      const handleBlur = async () => {
+                        const isFieldValid = await trigger(`descripcion_costos_${plataforma.id}`);
+                        if (isFieldValid) {
+                          handleSave(plataforma.id, 'descripcion_costos');
+                        }
+                        onBlur();
+                      };
 
-                        return (
-                          <CustomTextarea
-                            id={`descripcion_costos_${plataforma.id}`}
-                            label="Descripción de costos"
-                            placeholder="Describe los costos de la plataforma o software"
-                            maxLength={500}
-                            value={value}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            loading={plataforma.estados?.descripcion_costos?.loading ?? false}
-                            saved={plataforma.estados?.descripcion_costos?.saved ?? false}
-                            error={errors[`descripcion_costos_${plataforma.id}`]?.message}
-                          />
-                        );
-                      }}
-                    />
+                      return (
+                        <CustomTextarea
+                          id={`descripcion_costos_${plataforma.id}`}
+                          label="Descripción de costos"
+                          placeholder="Describe los costos de la plataforma o software"
+                          maxLength={500}
+                          value={value}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          loading={plataforma.estados?.descripcion_costos?.loading ?? false}
+                          saved={plataforma.estados?.descripcion_costos?.saved ?? false}
+                          error={errors[`descripcion_costos_${plataforma.id}`]?.message}
+                        />
+                      );
+                    }}
+                  />
                 </div>
               </div>
             </div>
@@ -480,44 +501,44 @@ export const Subpaso_dosPuntoCuatro = ({
                 <p className="text-sans-p-bold ms-2">Función en el ejercicio de la competencia identificando perfiles de usuario</p>
               </div>
               <div className="col ms-5">
-              <Controller
-                      control={control}
-                      name={`funcion_plataforma_${plataforma.id}`}
-                      defaultValue={plataforma?.funcion_plataforma || ''}
-                      render={({ field }) => {
-                        // Destructura las propiedades necesarias de field
-                        const { onChange, onBlur, value } = field;
+                <Controller
+                  control={control}
+                  name={`funcion_plataforma_${plataforma.id}`}
+                  defaultValue={plataforma?.funcion_plataforma || ''}
+                  render={({ field }) => {
+                    // Destructura las propiedades necesarias de field
+                    const { onChange, onBlur, value } = field;
 
-                        const handleChange = (e) => {
-                          clearErrors(`funcion_plataforma_${plataforma.id}`);
-                          onChange(e.target.value);
-                          handleInputChange(plataforma.id, 'funcion_plataforma', e.target.value);
-                        };
+                    const handleChange = (e) => {
+                      clearErrors(`funcion_plataforma_${plataforma.id}`);
+                      onChange(e.target.value);
+                      handleInputChange(plataforma.id, 'funcion_plataforma', e.target.value);
+                    };
 
-                        // Función para manejar el evento onBlur
-                        const handleBlur = async () => {
-                          const isFieldValid = await trigger(`funcion_plataforma_${plataforma.id}`);
-                          if (isFieldValid) {
-                            handleSave(plataforma.id, 'funcion_plataforma');
-                          }
-                          onBlur();
-                        };
+                    // Función para manejar el evento onBlur
+                    const handleBlur = async () => {
+                      const isFieldValid = await trigger(`funcion_plataforma_${plataforma.id}`);
+                      if (isFieldValid) {
+                        handleSave(plataforma.id, 'funcion_plataforma');
+                      }
+                      onBlur();
+                    };
 
-                        return (
-                          <CustomTextarea
-                            id={`funcion_plataforma_${plataforma.id}`}
-                            placeholder="Describe la función en el ejercicio de la competencia y los perfiles de usuario."
-                            maxLength={500}
-                            value={value}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            loading={plataforma.estados?.funcion_plataforma?.loading ?? false}
-                            saved={plataforma.estados?.funcion_plataforma?.saved ?? false}
-                            error={errors[`funcion_plataforma_${plataforma.id}`]?.message}
-                          />
-                        );
-                      }}
-                    />
+                    return (
+                      <CustomTextarea
+                        id={`funcion_plataforma_${plataforma.id}`}
+                        placeholder="Describe la función en el ejercicio de la competencia y los perfiles de usuario."
+                        maxLength={500}
+                        value={value}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        loading={plataforma.estados?.funcion_plataforma?.loading ?? false}
+                        saved={plataforma.estados?.funcion_plataforma?.saved ?? false}
+                        error={errors[`funcion_plataforma_${plataforma.id}`]?.message}
+                      />
+                    );
+                  }}
+                />
               </div>
             </div>
 
@@ -543,10 +564,31 @@ export const Subpaso_dosPuntoCuatro = ({
                 <p className="text-sans-p-bold ms-2 mb-0">¿El uso de la plataforma o software requirió capacitación?</p>
               </div>
               <div className="col ms-5">
-                <RadioButtons
-                  altA="Si"
-                  altB="No"
+                <Controller
+                  control={control}
+                  name={`capacitacion_plataforma_${plataforma.id}`}
+                  defaultValue={plataforma.capacitacion_plataforma} // Asegúrate de que el defaultValue se maneje correctamente
+                  render={({ field, fieldState }) => {
+                    return (
+                      <OpcionesAB
+                        id={`capacitacion_plataforma_${plataforma.id}`}
+                        readOnly={false}
+                        initialState={field.value}
+                        handleEstadoChange={(newValue) => handleCapacitacionChange(plataforma.id, newValue)}
+                        loading={plataforma.estados?.capacitacion_plataforma?.loading ?? false}
+                        saved={plataforma.estados?.capacitacion_plataforma?.saved ?? false}
+                        error={fieldState.error?.message}
+                        altA="Si"
+                        altB="No"
+                        field={field}
+                        handleSave={handleSave}
+                        arrayNameId={plataforma.id}
+                        fieldName="capacitacion_plataforma"
+                      />
+                    );
+                  }}
                 />
+
               </div>
             </div>
 
