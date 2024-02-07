@@ -198,7 +198,7 @@ const GestionCompetencias = () =>
             sortableColumns={[]}
             renderRow={(competencia) => (
               <tr key={competencia.id}>
-                <td className="pt-3 ps-3 col-4">
+                <td className="ps-3 col-4">
                   <u className="text-sans-p my-4">{competencia.nombre}</u>
                 </td>
                 <td className="text-primary pt-4 col-2">{competencia.ambito}</td>
@@ -210,19 +210,21 @@ const GestionCompetencias = () =>
                 <td className="col-2 pt-4">
                   <span className="badge-type">{competencia.origen}</span>
                 </td>
-                <td className="py-4 d-flex ">
-                  <button
-                    className="btn-secundario-s btn-sm align-self-center"
-                    onClick={() => handleVerEstado(competencia)}
-                  >
-                    <u>Ver estado</u>
-                  </button>
-                  <button
-                    className="btn-secundario-s btn-sm align-self-center ms-2"
-                    onClick={() => handleVerDetalle(competencia)}
-                  >
-                    <u>Ver detalle</u>
-                  </button>
+                <td className="py-4 flex-grow ">
+                  <div className="d-flex">
+                    <button
+                      className="btn-secundario-s btn-sm align-self-center"
+                      onClick={() => handleVerEstado(competencia)}
+                    >
+                      <u>Ver estado</u>
+                    </button>
+                    <button
+                      className="btn-secundario-s btn-sm align-self-center ms-2"
+                      onClick={() => handleVerDetalle(competencia)}
+                    >
+                      <u>Ver detalle</u>
+                    </button>
+                  </div>
                 </td>
               </tr>
             )}

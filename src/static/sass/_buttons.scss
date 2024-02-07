@@ -89,11 +89,11 @@
 .btn-secundario-l{
     @include btn-border(100%, $blue-color);
     @include typo-style;
-}
-.btn-secundario-l:hover{
-    background-color: $blue-color;
-    color: $white-color;
-    border: 2px solid $blue-color;   
+    &:hover  , &:focus  {
+        background-color: $blue-color;
+        color: $white-color;
+        border: 2px solid $blue-color;  
+      }
 }
 
 //BOTON SECUNDARIO SIN BORDE
@@ -102,11 +102,10 @@
     @include typo-style;
     font-size: 16px;
     font-weight: 600;
-}
-.btn-secundario-ghost:hover{
-    background-color: $blue-color;
-    color: $white-color;
-    font-weight: 400;
+    &:hover  , &:focus  {
+        color:$dark-blue; 
+        background-color: $blue-sky;
+      }
 }
 
 // BOTON TERCIARIO
