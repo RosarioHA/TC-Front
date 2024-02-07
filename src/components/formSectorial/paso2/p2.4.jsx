@@ -7,7 +7,7 @@ import { RadioButtons } from "../../forms/radio_btns";
 import DropdownCheckbox from "../../dropdown/checkbox";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { esquemaEditarPaso2_4 } from "../../../validaciones/esquemaEditarFormularioSectorial";
+import { construirEsquemaValidacion } from "../../../validaciones/esquemaEditarFormularioSectorial";
 
 export const Subpaso_dosPuntoCuatro = ({
   id,
@@ -17,15 +17,6 @@ export const Subpaso_dosPuntoCuatro = ({
   setRefreshSubpasoDos_tres,
   refreshSubpasoDos_cuatro,
 }) => {
-
-  const {
-    setValue,
-    control,
-    formState: { errors },
-  } = useForm({
-    resolver: yupResolver(esquemaEditarPaso2_4),
-    mode: 'onBlur',
-  });
 
   const initialState = data.map(item => ({
     ...item,
@@ -46,8 +37,17 @@ export const Subpaso_dosPuntoCuatro = ({
   const [opcionesEtapas, setOpcionesEtapas] = useState([]);
   const [etapasSeleccionadas, setEtapasSeleccionadas] = useState([]);
   const { handleUpdatePaso } = useContext(FormularioContext);
+  const [esquemaValidacion, setEsquemaValidacion] = useState(null);
 
+  useEffect(() => {
+    const esquema = construirEsquemaValidacion(plataformasySoftwares);
+    setEsquemaValidacion(esquema);
+  }, [plataformasySoftwares]);
 
+  const { setValue, control, handleSubmit, trigger, clearErrors, setError, formState: { errors } } = useForm({
+    resolver: esquemaValidacion ? yupResolver(esquemaValidacion) : undefined,
+    mode: 'onBlur',
+  });
 
   // Lógica para recargar opciones de etapa cuando se crean o eliminan en paso 2.3
   // Llamada para recargar componente
@@ -114,6 +114,12 @@ export const Subpaso_dosPuntoCuatro = ({
   };
 
   // Lógica para agregar una nueva tabla Plataformas
+  const onSubmit = data => {
+    console.log(data);
+    // Aquí puedes llamar a la función para agregar la nueva plataforma
+    agregarPlataforma();
+  };
+
   // Generador de ID único
   const generarIdUnico = () => {
     // Implementa tu lógica para generar un ID único
@@ -199,8 +205,8 @@ export const Subpaso_dosPuntoCuatro = ({
     let payload;
 
     payload = {
-        'p_2_4_plataformas_y_softwares': [{ id: plataformaId, [fieldName]: plataforma[fieldName] }]
-      };
+      'p_2_4_plataformas_y_softwares': [{ id: plataformaId, [fieldName]: plataforma[fieldName] }]
+    };
 
     try {
       // Asume que handleUpdatePaso puede manejar ambos casos adecuadamente
@@ -211,9 +217,21 @@ export const Subpaso_dosPuntoCuatro = ({
 
     } catch (error) {
       console.error("Error al guardar los datos:", error);
+
+      if (error.response && error.response.data.errors) {
+        const serverErrors = error.response.data.errors;
+        Object.keys(serverErrors).forEach((field) => {
+          setError(field, { type: 'server', message: serverErrors[field][0] });
+        });
+      }
+
       updateFieldState(plataformaId, fieldName, { loading: false, saved: false });
     }
   };
+
+  useEffect(() => {
+    console.log(errors);
+  }, [errors]);
 
 
 
@@ -222,169 +240,336 @@ export const Subpaso_dosPuntoCuatro = ({
       <h4 className="text-sans-h4">2.4 Plataformas y softwares utilizados en el ejercicio de la competencia</h4>
       <h6 className="text-sans-h6-primary">Identifica las plataformas y/o softwares utilizados en el ejercicio de la competencia y llena una ficha técnica para cada plataforma o software.</h6>
 
-      {/* Renderiza las tablas para cada plataforma */}
-      {plataformasySoftwares.map((plataforma, index) => (
-        <div key={plataforma.id} className="col border">
-          <div className="row p-3">
-            <div className="col-2">
-              <p className="text-sans-p-bold mb-0">{index + 1}</p>
-              <p className="text-sans-p-bold ms-2">Nombre de Plataforma o Sofware</p>
-            </div>
-            <div className="col ms-5">
-              <CustomTextarea
-                label=""
-                placeholder="Escribe el nombre de la plataforma o software"
-                maxLength={500}
-                value={plataforma.nombre_plataforma || ''}
-                onChange={(e) => handleInputChange(plataforma.id, 'nombre_plataforma', e.target.value)}
-                onBlur={plataforma.id? () => handleSave(plataforma.id, 'nombre_plataforma') : null}
-                loading={plataforma.estados?.nombre_plataforma?.loading ?? false}
-                saved={plataforma.estados?.nombre_plataforma?.saved ?? false}
-              />
-            </div>
-          </div>
-
-          <hr />
-          <div className="row p-3">
-            <div className="col-2">
-              <p className="text-sans-p-bold ms-2">Descripción técnica y versiones</p>
-            </div>
-            <div className="col ms-5">
-              <CustomTextarea
-                placeholder="Indique la versión y una descripción técnica del software o plataforma"
-                maxLength={500}
-                name="descripcion_tecnica"
-                value={plataforma.descripcion_tecnica || ''}
-                onChange={(e) => handleInputChange(plataforma.id, 'descripcion_tecnica', e.target.value)}
-                onBlur={plataforma.id? () => handleSave(plataforma.id, 'descripcion_tecnica') : null}
-                loading={plataforma.estados?.descripcion_tecnica?.loading ?? false}
-                saved={plataforma.estados?.descripcion_tecnica?.saved ?? false}
-              />
-            </div>
-          </div>
-
-          <hr />
-          <div className="row p-3">
-            <div className="col-2">
-              <p className="text-sans-p-bold ms-2">Descripción técnica y versiones</p>
-            </div>
-            <div className="col ms-5">
-              <div className="row d-flex">
-                <div className="col">
-                  <Controller
-                    name="costo_adquisicion"
-                    control={control}
-                    render={({ field }) => (
-                      <CustomInput
-                        id="costo_adquisicion"
-                        label="Costo de adquisición"
-                        placeholder="Costo de adquisión M$"
-                        value={plataforma.costo_adquisicion || ''}
-                        onChange={(valor) => handleInputChange(plataforma.id, 'costo_adquisicion', valor)}
-                        onBlur={plataforma.id? () => handleSave(plataforma.id, 'costo_adquisicion') : null}
-                        loading={plataforma.estados?.costo_adquisicion?.loading ?? false}
-                        saved={plataforma.estados?.costo_adquisicion?.saved ?? false}
-                        error={errors.costo_adquisicion?.message}
-                        {...field}
-                      />
-                    )}
-                  />
-                  <h6 className="text-sans-h6 text-end">Campo númerico en miles de pesos.</h6>
-                </div>
-                <div className="col">
-                  <CustomInput
-                    label="Costo de Mantención Anual"
-                    placeholder="Costo de mantención M$"
-                    value={plataforma.costo_mantencion_anual || ''}
-                    onChange={(valor) => handleInputChange(plataforma.id, 'costo_mantencion_anual', valor)}
-                    onBlur={plataforma.id? () => handleSave(plataforma.id, 'costo_mantencion_anual') : null}
-                    loading={plataforma.estados?.costo_mantencion_anual?.loading ?? false}
-                    saved={plataforma.estados?.costo_mantencion_anual?.saved ?? false}
-                  />
-                  <h6 className="text-sans-h6 text-end">Campo númerico en miles de pesos.</h6>
-                </div>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        {/* Renderiza las tablas para cada plataforma */}
+        {plataformasySoftwares.map((plataforma, index) => (
+          <div key={plataforma.id} className="col border">
+            <div className="row p-3">
+              <div className="col-2">
+                <p className="text-sans-p-bold mb-0">{index + 1}</p>
+                <p className="text-sans-p-bold ms-2">Nombre de Plataforma o Sofware</p>
               </div>
-              <div className="row mt-4">
-                <CustomTextarea
-                  label="Descripción de costos"
-                  placeholder="Describe los costos de la plataforma o software"
-                  maxLength={500}
-                  value={plataforma?.descripcion_costos}
-                  onChange={(e) => handleInputChange(plataforma.id, 'descripcion_costos', e.target.value)}
-                  onBlur={plataforma.id? () => handleSave(plataforma.id, 'descripcion_costos') : null}
-                  loading={plataforma.estados?.descripcion_costos?.loading ?? false}
-                  saved={plataforma.estados?.descripcion_costos?.saved ?? false}
+
+              <div className="col ms-5">
+                <Controller
+                  control={control}
+                  name={`nombre_plataforma_${plataforma.id}`}
+                  defaultValue={plataforma?.nombre_plataforma || ''}
+                  render={({ field }) => {
+                    // Destructura las propiedades necesarias de field
+                    const { onChange, onBlur, value } = field;
+
+                    const handleChange = (e) => {
+                      clearErrors(`nombre_plataforma_${plataforma.id}`);
+                      onChange(e.target.value);
+                      handleInputChange(plataforma.id, 'nombre_plataforma', e.target.value);
+                    };
+
+                    // Función para manejar el evento onBlur
+                    const handleBlur = async () => {
+                      const isFieldValid = await trigger(`nombre_plataforma_${plataforma.id}`);
+                      if (isFieldValid) {
+                        handleSave(plataforma.id, 'nombre_plataforma');
+                      }
+                      onBlur();
+                    };
+
+                    return (
+                      <CustomTextarea
+                        id={`nombre_plataforma_${plataforma.id}`}
+                        placeholder="Escribe el nombre de la plataforma o software"
+                        maxLength={500}
+                        value={value}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        loading={plataforma.estados?.nombre_plataforma?.loading ?? false}
+                        saved={plataforma.estados?.nombre_plataforma?.saved ?? false}
+                        error={errors[`nombre_plataforma_${plataforma.id}`]?.message}
+                      />
+                    );
+                  }}
                 />
               </div>
             </div>
-          </div>
 
-          <hr />
-          <div className="row p-3">
-            <div className="col-2">
-              <p className="text-sans-p-bold ms-2">Función en el ejercicio de la competencia identificando perfiles de usuario</p>
+            <hr />
+            <div className="row p-3">
+              <div className="col-2">
+                <p className="text-sans-p-bold ms-2">Descripción técnica y versiones</p>
+              </div>
+              <div className="col ms-5">
+                <Controller
+                  control={control}
+                  name={`descripcion_tecnica_${plataforma.id}`}
+                  defaultValue={plataforma?.descripcion_tecnica || ''}
+                  render={({ field }) => {
+                    // Destructura las propiedades necesarias de field
+                    const { onChange, onBlur, value } = field;
+
+                    const handleChange = (e) => {
+                      clearErrors(`descripcion_tecnica_${plataforma.id}`);
+                      onChange(e.target.value);
+                      handleInputChange(plataforma.id, 'descripcion_tecnica', e.target.value);
+                    };
+
+                    // Función para manejar el evento onBlur
+                    const handleBlur = async () => {
+                      const isFieldValid = await trigger(`descripcion_tecnica_${plataforma.id}`);
+                      if (isFieldValid) {
+                        handleSave(plataforma.id, 'descripcion_tecnica');
+                      }
+                      onBlur();
+                    };
+
+                    return (
+                      <CustomTextarea
+                        id={`descripcion_tecnica_${plataforma.id}`}
+                        placeholder="Escribe el nombre de la plataforma o software"
+                        maxLength={500}
+                        value={value}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        loading={plataforma.estados?.descripcion_tecnica?.loading ?? false}
+                        saved={plataforma.estados?.descripcion_tecnica?.saved ?? false}
+                        error={errors[`descripcion_tecnica_${plataforma.id}`]?.message}
+                      />
+                    );
+                  }}
+                />
+              </div>
             </div>
-            <div className="col ms-5">
-              <CustomTextarea
-                placeholder="Describe la función en el ejercicio de la competencia y los perfiles de usuario."
-                maxLength={500}
-                value={plataforma?.funcion_plataforma}
-                onChange={(e) => handleInputChange(plataforma.id, 'funcion_plataforma', e.target.value)}
-                onBlur={plataforma.id? () => handleSave(plataforma.id, 'funcion_plataforma') : null}
-                loading={plataforma.estados?.funcion_plataforma?.loading ?? false}
-                saved={plataforma.estados?.funcion_plataforma?.saved ?? false}
-              />
+
+            <hr />
+            <div className="row p-3">
+              <div className="col-2">
+                <p className="text-sans-p-bold ms-2">Descripción técnica y versiones</p>
+              </div>
+              <div className="col ms-5">
+                <div className="row d-flex">
+                  <div className="col">
+                    <Controller
+                      control={control}
+                      name={`costo_adquisicion_${plataforma.id}`}
+                      defaultValue={plataforma?.costo_adquisicion || ''}
+                      render={({ field }) => {
+                        // Destructura las propiedades necesarias de field
+                        const { onChange, onBlur, value } = field;
+
+                        const handleChange = (e) => {
+                          clearErrors(`costo_adquisicion_${plataforma.id}`);
+                          onChange(e.target.value);
+                          handleInputChange(plataforma.id, 'costo_adquisicion', e.target.value);
+                        };
+
+                        // Función para manejar el evento onBlur
+                        const handleBlur = async () => {
+                          const isFieldValid = await trigger(`costo_adquisicion_${plataforma.id}`);
+                          if (isFieldValid) {
+                            handleSave(plataforma.id, 'costo_adquisicion');
+                          }
+                          onBlur();
+                        };
+
+                        return (
+                          <CustomTextarea
+                            id={`costo_adquisicion_${plataforma.id}`}                            
+                            label="Costo de adquisición"
+                            placeholder="Costo de adquisión M$"
+                            value={value}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            loading={plataforma.estados?.costo_adquisicion?.loading ?? false}
+                            saved={plataforma.estados?.costo_adquisicion?.saved ?? false}
+                            error={errors[`costo_adquisicion_${plataforma.id}`]?.message}
+                          />
+                        );
+                      }}
+                    />
+
+                    <h6 className="text-sans-h6 text-end">Campo númerico en miles de pesos.</h6>
+                  </div>
+                  <div className="col">
+                  <Controller
+                      control={control}
+                      name={`costo_mantencion_anual_${plataforma.id}`}
+                      defaultValue={plataforma?.costo_mantencion_anual || ''}
+                      render={({ field }) => {
+                        // Destructura las propiedades necesarias de field
+                        const { onChange, onBlur, value } = field;
+
+                        const handleChange = (e) => {
+                          clearErrors(`costo_mantencion_anual_${plataforma.id}`);
+                          onChange(e.target.value);
+                          handleInputChange(plataforma.id, 'costo_mantencion_anual', e.target.value);
+                        };
+
+                        // Función para manejar el evento onBlur
+                        const handleBlur = async () => {
+                          const isFieldValid = await trigger(`costo_mantencion_anual_${plataforma.id}`);
+                          if (isFieldValid) {
+                            handleSave(plataforma.id, 'costo_mantencion_anual');
+                          }
+                          onBlur();
+                        };
+
+                        return (
+                          <CustomTextarea
+                            id={`costo_mantencion_anual_${plataforma.id}`}
+                            label="Costo de Mantención Anual"
+                            placeholder="Costo de mantención M$"
+                            value={value}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            loading={plataforma.estados?.costo_mantencion_anual?.loading ?? false}
+                            saved={plataforma.estados?.costo_mantencion_anual?.saved ?? false}
+                            error={errors[`costo_mantencion_anual_${plataforma.id}`]?.message}
+                          />
+                        );
+                      }}
+                    />
+                    <h6 className="text-sans-h6 text-end">Campo númerico en miles de pesos.</h6>
+                  </div>
+                </div>
+                <div className="row mt-4">
+                <Controller
+                      control={control}
+                      name={`descripcion_costos_${plataforma.id}`}
+                      defaultValue={plataforma?.descripcion_costos || ''}
+                      render={({ field }) => {
+                        // Destructura las propiedades necesarias de field
+                        const { onChange, onBlur, value } = field;
+
+                        const handleChange = (e) => {
+                          clearErrors(`descripcion_costos_${plataforma.id}`);
+                          onChange(e.target.value);
+                          handleInputChange(plataforma.id, 'descripcion_costos', e.target.value);
+                        };
+
+                        // Función para manejar el evento onBlur
+                        const handleBlur = async () => {
+                          const isFieldValid = await trigger(`descripcion_costos_${plataforma.id}`);
+                          if (isFieldValid) {
+                            handleSave(plataforma.id, 'descripcion_costos');
+                          }
+                          onBlur();
+                        };
+
+                        return (
+                          <CustomTextarea
+                            id={`descripcion_costos_${plataforma.id}`}
+                            label="Descripción de costos"
+                            placeholder="Describe los costos de la plataforma o software"
+                            maxLength={500}
+                            value={value}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            loading={plataforma.estados?.descripcion_costos?.loading ?? false}
+                            saved={plataforma.estados?.descripcion_costos?.saved ?? false}
+                            error={errors[`descripcion_costos_${plataforma.id}`]?.message}
+                          />
+                        );
+                      }}
+                    />
+                </div>
+              </div>
+            </div>
+
+            <hr />
+            <div className="row p-3">
+              <div className="col-2">
+                <p className="text-sans-p-bold ms-2">Función en el ejercicio de la competencia identificando perfiles de usuario</p>
+              </div>
+              <div className="col ms-5">
+              <Controller
+                      control={control}
+                      name={`funcion_plataforma_${plataforma.id}`}
+                      defaultValue={plataforma?.funcion_plataforma || ''}
+                      render={({ field }) => {
+                        // Destructura las propiedades necesarias de field
+                        const { onChange, onBlur, value } = field;
+
+                        const handleChange = (e) => {
+                          clearErrors(`funcion_plataforma_${plataforma.id}`);
+                          onChange(e.target.value);
+                          handleInputChange(plataforma.id, 'funcion_plataforma', e.target.value);
+                        };
+
+                        // Función para manejar el evento onBlur
+                        const handleBlur = async () => {
+                          const isFieldValid = await trigger(`funcion_plataforma_${plataforma.id}`);
+                          if (isFieldValid) {
+                            handleSave(plataforma.id, 'funcion_plataforma');
+                          }
+                          onBlur();
+                        };
+
+                        return (
+                          <CustomTextarea
+                            id={`funcion_plataforma_${plataforma.id}`}
+                            placeholder="Describe la función en el ejercicio de la competencia y los perfiles de usuario."
+                            maxLength={500}
+                            value={value}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            loading={plataforma.estados?.funcion_plataforma?.loading ?? false}
+                            saved={plataforma.estados?.funcion_plataforma?.saved ?? false}
+                            error={errors[`funcion_plataforma_${plataforma.id}`]?.message}
+                          />
+                        );
+                      }}
+                    />
+              </div>
+            </div>
+
+            <hr />
+            <div className="row p-3">
+              <div className="col-2">
+                <p className="text-sans-p-bold ms-2 mb-0">Etapas donde se utiliza</p>
+                <p className="text-sans-p ms-2">(Opcional)</p>
+              </div>
+              <div className="col ms-5">
+                <DropdownCheckbox
+                  placeholder="Etapa"
+                  options={opcionesEtapas}
+                  onSelectionChange={handleEtapasChange}
+                  selected={etapasSeleccionadas}
+                />
+              </div>
+            </div>
+
+            <hr />
+            <div className="row p-3">
+              <div className="col-2">
+                <p className="text-sans-p-bold ms-2 mb-0">¿El uso de la plataforma o software requirió capacitación?</p>
+              </div>
+              <div className="col ms-5">
+                <RadioButtons
+                  altA="Si"
+                  altB="No"
+                />
+              </div>
+            </div>
+
+            <div className="col d-flex align-items-center">
+              <button
+                className="btn-terciario-ghost"
+                onClick={() => eliminarElemento(plataforma.id)}>
+                <i className="material-symbols-rounded me-2">delete</i>
+                <p className="mb-0 text-decoration-underline">Borrar ficha</p>
+              </button>
             </div>
           </div>
+        ))}
 
-          <hr />
-          <div className="row p-3">
-            <div className="col-2">
-              <p className="text-sans-p-bold ms-2 mb-0">Etapas donde se utiliza</p>
-              <p className="text-sans-p ms-2">(Opcional)</p>
-            </div>
-            <div className="col ms-5">
-              <DropdownCheckbox
-                placeholder="Etapa"
-                options={opcionesEtapas}
-                onSelectionChange={handleEtapasChange}
-                selected={etapasSeleccionadas}
-              />
-            </div>
-          </div>
-
-          <hr />
-          <div className="row p-3">
-            <div className="col-2">
-              <p className="text-sans-p-bold ms-2 mb-0">¿El uso de la plataforma o software requirió capacitación?</p>
-            </div>
-            <div className="col ms-5">
-              <RadioButtons
-                altA="Si"
-                altB="No"
-              />
-            </div>
-          </div>
-
-          <div className="col d-flex align-items-center">
-            <button
-              className="btn-terciario-ghost"
-              onClick={() => eliminarElemento(plataforma.id)}>
-              <i className="material-symbols-rounded me-2">delete</i>
-              <p className="mb-0 text-decoration-underline">Borrar ficha</p>
-            </button>
-          </div>
-        </div>
-      ))}
-
-      <div className="row">
-        <div className="p-2">
-            <button className="btn-secundario-s" onClick={agregarPlataforma}>
+        <div className="row">
+          <div className="p-2">
+            <button type="submit" className="btn-secundario-s">
               <i className="material-symbols-rounded me-2">add</i>
               <p className="mb-0 text-decoration-underline">Agregar ficha técnica</p>
             </button>
+          </div>
         </div>
-      </div>
+      </form>
 
     </div>
   )
