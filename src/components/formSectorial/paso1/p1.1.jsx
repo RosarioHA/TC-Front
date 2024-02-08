@@ -1,13 +1,14 @@
 import { useContext, useState, useEffect, useCallback } from 'react';
 import CustomTextarea from "../../forms/custom_textarea";
 import CustomInput from "../../forms/custom_input";
-import { DocumentsAditionals } from '../../commons/documents';
+import { DocumentsAditionals } from "../../commons/documents";
 import { FormularioContext } from "../../../context/FormSectorial";
 
-export const Subpaso_uno = ({ pasoData, id, stepNumber }) =>
+export const Subpaso_uno = ({ pasoData, id, stepNumber, marcojuridico }) =>
 {
-  const { handleUpdatePaso } = useContext(FormularioContext);
+  const { handleUpdatePaso, handleUploadFiles } = useContext(FormularioContext);
   const [ formData, setFormData ] = useState({
+    marcojuridico: pasoData.marcojuridico || [],
     paso1: pasoData.paso1 || {
       forma_juridica_organismo: '',
       mision_institucional: '',
@@ -21,7 +22,7 @@ export const Subpaso_uno = ({ pasoData, id, stepNumber }) =>
     descripcion_archivo_marco_juridico: { loading: false, saved: false },
     informacion_adicional_marco_juridico: { loading: false, saved: false },
   });
-  const [ files, setFiles ] = useState([]);
+  const [ isUploading, setIsUploading ] = useState(false);
 
   useEffect(() =>
   {
@@ -30,7 +31,7 @@ export const Subpaso_uno = ({ pasoData, id, stepNumber }) =>
     {
       setFormData(JSON.parse(savedData));
     }
-  }, []); // Dependencia vacía para que se ejecute solo una vez al montar el componente
+  }, []);
 
   useEffect(() =>
   {
@@ -78,41 +79,76 @@ export const Subpaso_uno = ({ pasoData, id, stepNumber }) =>
     }
   };
 
-  const handleFileChange = useCallback((newFiles) =>
+
+
+  const uploadFiles = useCallback(async (inputFiles) =>
   {
-    setFiles(currentFiles => [ ...currentFiles, ...newFiles ]);
-  }, []);
+    // Comprobar si inputFiles es un archivo o un array de archivos
+    const filesArray = Array.isArray(inputFiles) ? inputFiles : [ inputFiles ];
 
+    setIsUploading(true);
 
+    const formData = new FormData();
 
-  const uploadFiles = useCallback(async () => {
-    if (files.length === 0) {
-      console.log("No hay archivos para subir.");
-      return;
-    }
-  
-    const formDataWithFiles = new FormData();
-    files.forEach(file => {
-      formDataWithFiles.append('marcojuridico', file);
-    });
-  
-    // Agregar el resto de los campos de paso1 al formData
-    Object.entries(formData.paso1).forEach(([key, value]) => {
-      formDataWithFiles.append(key, value);
-    });
-  
-    try {
-      const success = await handleUpdatePaso(id, stepNumber, formDataWithFiles);
-      if (success) {
-        console.log('Datos y archivos actualizados con éxito');
-        setFiles([]); // Limpieza del estado de archivos
-      } else {
-        console.error('Error al actualizar datos y archivos');
+    // Iterar sobre todos los archivos (o el único archivo) y añadirlos a formData
+    filesArray.forEach(file =>
+    {
+      if (file)
+      {
+        formData.append('marcojuridico', file);
       }
-    } catch (error) {
-      console.error('Error en la actualización:', error);
+    });
+
+    try
+    {
+      // Suponiendo que handleUploadFiles puede manejar múltiples archivos y espera FormData como argumento
+      const success = await handleUploadFiles(id, stepNumber, formData, 'marcojuridico');
+      if (success)
+      {
+        console.log('Todos los archivos fueron cargados con éxito');
+      } else
+      {
+        console.log('La operación de carga no tuvo éxito.');
+      }
+    } catch (error)
+    {
+      console.error('Error en la carga de archivos:', error);
+    } finally
+    {
+      setIsUploading(false);
     }
-  }, [files, formData.paso1, id, stepNumber, handleUpdatePaso]);
+  }, [ id, stepNumber, handleUploadFiles ]);
+
+
+  const handleFileChange = useCallback((inputFiles) =>
+  {
+    setIsUploading(true);
+
+    // Asegurarse de que inputFiles sea siempre un array
+    const filesArray = Array.isArray(inputFiles) ? inputFiles : [ inputFiles ]
+      ;
+    // Preparar FormData con todos los archivos para 'marcojuridico'
+    const formData = new FormData();
+    filesArray.forEach(file =>
+    {
+      formData.append('marcojuridico', file);
+    });
+
+    // Aquí asumimos que `handleUploadFiles` puede manejar este FormData
+    // y que está configurado para enviar la solicitud al backend correctamente
+    handleUploadFiles(id, stepNumber, formData, 'marcojuridico')
+      .then(() =>
+      {
+        console.log('Todos los archivos fueron cargados con éxito');
+        setIsUploading(false);
+      })
+      .catch(error =>
+      {
+        console.error('Error en la subida de archivos:', error);
+        setIsUploading(false);
+      });
+  }, [ id, stepNumber, handleUploadFiles ]);
+  
 
 
 
@@ -156,7 +192,18 @@ export const Subpaso_uno = ({ pasoData, id, stepNumber }) =>
           <DocumentsAditionals
             onFilesChanged={handleFileChange}
             onUpload={uploadFiles}
+            marcoJuridicoData={marcojuridico}
           />
+          {isUploading && (
+            <div className="loading-indicator col-11 w-50 mx-auto">
+              <div className="text-center">
+                Cargando archivos...
+              </div>
+              <div className="progress" role="progressbar" aria-label="Animated striped example" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
+                <div className="progress-bar progress-bar-striped progress-bar-animated" style={{ width: '100%' }}></div>
+              </div>
+            </div>
+          )}
         </div>
         <div className="my-4">
           <CustomTextarea

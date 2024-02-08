@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import UploadBtn from "../commons/uploadBtn";
 
-const SubirArchivo = ({ index, tituloDocumento, readOnly, archivoDescargaUrl, handleFileSelect, fieldName }) =>
+export const SubirArchivoRegiones = ({ index, tituloDocumento, readOnly, archivoDescargaUrl, handleFileSelect, fieldName, region }) =>
 {
   const [ fileUploaded, setFileUploaded ] = useState(false);
   const [ fileName, setFileName ] = useState('');
@@ -65,16 +65,16 @@ const SubirArchivo = ({ index, tituloDocumento, readOnly, archivoDescargaUrl, ha
 
   return (
     <>
-      <div className="d-flex justify-content-between align-items-center gap-2 neutral-line align-items-center">
-        <div className="p-3 ps-3 me-0">{index}</div>
-        {fileName && (
-          <div className="py-3 text-wrap col-5">{fileName}</div>
-        )
-        }
+      <div className="d-flex justify-content-between grid gap-2 align-items-center  neutral-line align-items-center">
+        <div className="py-3 ps-3 ">{index}</div>
+        <div className="py-3 col ms-2">{region}</div>
+        <div className="py-3 col-3">{fileName}</div>
         <div className="py-3 px-2">{error ? <div className="text-sans-p-bold-darkred">{error}</div> : displayFileType}</div>
         <div>
+        </div>
+        <div>
           {!readOnly ? (
-            <div className="col p-3 d-flex">
+            <div className="p-3 d-flex">
               <UploadBtn onFileChange={handleFileChange} fileUploaded={fileUploaded} />
               {fileUploaded && (
                 <>
@@ -97,5 +97,3 @@ const SubirArchivo = ({ index, tituloDocumento, readOnly, archivoDescargaUrl, ha
     </>
   );
 };
-
-export default SubirArchivo;
