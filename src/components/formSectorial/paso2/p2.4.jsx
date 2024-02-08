@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, useCallback } from "react";
+import { useState, useEffect, useContext } from "react";
 import { FormularioContext } from "../../../context/FormSectorial";
 import { apiTransferenciaCompentencia } from "../../../services/transferenciaCompetencia";
 import CustomTextarea from "../../forms/custom_textarea";
@@ -35,7 +35,6 @@ export const Subpaso_dosPuntoCuatro = ({
   const [plataformasySoftwares, setPlataformasySoftwares] = useState(initialState);
   const [dataDirecta, setDataDirecta] = useState(null);
   const [opcionesEtapas, setOpcionesEtapas] = useState([]);
-  const [etapasSeleccionadas, setEtapasSeleccionadas] = useState([]);
   const { handleUpdatePaso } = useContext(FormularioContext);
   const [esquemaValidacion, setEsquemaValidacion] = useState(null);
 
@@ -44,7 +43,7 @@ export const Subpaso_dosPuntoCuatro = ({
     setEsquemaValidacion(esquema);
   }, [plataformasySoftwares]);
 
-  const { setValue, control, handleSubmit, trigger, clearErrors, setError, formState: { errors } } = useForm({
+  const { control, handleSubmit, trigger, clearErrors, setError, formState: { errors } } = useForm({
     resolver: esquemaValidacion ? yupResolver(esquemaValidacion) : undefined,
     mode: 'onBlur',
   });
@@ -64,7 +63,7 @@ export const Subpaso_dosPuntoCuatro = ({
   const transformarEnOpciones = (datos) => {
     return datos.map(dato => ({
       label: dato.nombre_etapa,
-      value: dato.id.toString() // Convertimos el ID a string para mantener consistencia
+      value: dato.id.toString()
     }));
   };
 
@@ -91,15 +90,6 @@ export const Subpaso_dosPuntoCuatro = ({
       setOpcionesEtapas(listaInicial);
     }
   }, [listado_etapas]);
-
-  console.log('copciones:', opcionesEtapas)
-
-  // Manejador del Dropdown de etapas
-  const handleEtapasChange = useCallback((selectedOptions) => {
-    const etapasIds = selectedOptions.map(option => option.value);
-    setEtapasSeleccionadas(selectedOptions);
-    setValue('etapas', etapasIds);
-  }, [setValue]);
 
   // Función para recargar campos por separado
   const updateFieldState = (plataformaId, fieldName, newState) => {
@@ -255,11 +245,6 @@ export const Subpaso_dosPuntoCuatro = ({
       updateFieldState(arrayNameId, fieldName, { loading: false, saved: false });
     }
   };
-
-  useEffect(() => {
-    console.log(errors);
-  }, [errors]);
-
 
 
   return (

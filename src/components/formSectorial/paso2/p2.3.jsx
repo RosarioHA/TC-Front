@@ -1,9 +1,9 @@
 import { useState, useEffect, useContext } from "react";
 import CustomInput from "../../forms/custom_input";
-import DropdownSelect from "../../dropdown/select";
-//import DropdownSinSecciones from "../../dropdown/checkbox_sinSecciones_conTabla";
+import DropdownCheckbox from "../../dropdown/checkbox";
 import { FormularioContext } from "../../../context/FormSectorial";
 import { apiTransferenciaCompentencia } from "../../../services/transferenciaCompetencia";
+import { useForm, Controller } from "react-hook-form";
 
 export const Subpaso_dosPuntoTres = ({
   id,
@@ -15,8 +15,19 @@ export const Subpaso_dosPuntoTres = ({
   setRefreshSubpasoDos_cuatro
 }) => {
 
+  const { control, handleSubmit, trigger, clearErrors, setError, formState: { errors } } = useForm({
+    mode: 'onBlur',
+  });
+
   const [dataDirecta, setDataDirecta] = useState(null);
   const [opciones, setOpciones] = useState([]);
+  const [nuevaUnidadId, setNuevaUnidadId] = useState('');
+  const { handleUpdatePaso } = useContext(FormularioContext);
+  const [etapas, setEtapas] = useState(data);
+  const [ultimaEtapaId, setUltimaEtapaId] = useState(null);
+  const [mostrarBotonGuardarEtapa, setMostrarBotonGuardarEtapa] = useState(false);
+  const [etapaEnEdicionId, setEtapaEnEdicionId] = useState(null);
+  const [procedimientoEnEdicionId, setProcedimientoEnEdicionId] = useState(null);
 
   // Llamada para recargar componente, en este caso a listado unidades
   const fetchDataDirecta = async () => {
@@ -59,7 +70,7 @@ export const Subpaso_dosPuntoTres = ({
     }
   }, [listado_unidades]);
 
-  const [nuevaUnidadId, setNuevaUnidadId] = useState('');
+
 
   const manejarCambioDropdown = (opcionSeleccionada) => {
     // Asumiendo que opcionSeleccionada es un objeto con las propiedades 'label' y 'value'
@@ -67,9 +78,6 @@ export const Subpaso_dosPuntoTres = ({
     setNuevaUnidadId(idSeleccionado);
   };
 
-  const { handleUpdatePaso } = useContext(FormularioContext);
-
-  const [etapas, setEtapas] = useState(data);
 
   // Lógica para agregar una nueva Etapa
   // Generador de ID único
@@ -78,8 +86,6 @@ export const Subpaso_dosPuntoTres = ({
     return Math.floor(Date.now() / 1000);
   };
 
-  const [ultimaEtapaId, setUltimaEtapaId] = useState(null);
-  const [mostrarBotonGuardarEtapa, setMostrarBotonGuardarEtapa] = useState(false);
 
   const agregarEtapa = () => {
     const nuevaEtapaId = generarIdUnico();
@@ -171,12 +177,6 @@ export const Subpaso_dosPuntoTres = ({
 
 
   // Lógica para editar sectores existentes
-  // Actualiza el estado cuando los campos cambian
-
-  const [etapaEnEdicionId, setEtapaEnEdicionId] = useState(null);
-  const [procedimientoEnEdicionId, setProcedimientoEnEdicionId] = useState(null);
-
-
   const handleInputChange = (etapaId, procedimientoId, campo, valor) => {
     setEtapaEnEdicionId(etapaId);
     setProcedimientoEnEdicionId(procedimientoId);
@@ -204,7 +204,7 @@ export const Subpaso_dosPuntoTres = ({
   };
 
 
-  const handleSave = async (etapaId, procedimientoId, esGuardadoPorBlur) => {
+  const handleSave = async (etapaId, procedimientoId, esGuardadoPorBlur, fieldName, newValue) => {
     if (!esGuardadoPorBlur) {
       setMostrarBotonGuardarEtapa(false);
     }
@@ -222,8 +222,10 @@ export const Subpaso_dosPuntoTres = ({
             id: procedimientoId,
             descripcion_procedimiento: procedimiento.descripcion_procedimiento,
             'unidades_intervinientes':
-              [nuevaUnidadId]
-
+              [{
+                id: procedimientoId,
+                unidades_intervinientes: newValue.map(option => option.value)
+              }]
           }]
         }]
       };
@@ -328,12 +330,27 @@ export const Subpaso_dosPuntoTres = ({
                         />
                       </div>
                       <div className="col-4">
-                        <DropdownSelect
-                          label="Unidades Intervinientes"
-                          placeholder="Unidades"
-                          options={opciones}
-                          value={procedimiento.unidadSeleccionada || ''}
-                          onSelectionChange={(opcionSeleccionada) => manejarCambioDropdown(opcionSeleccionada)}
+                        <Controller
+                          control={control}
+                          name={`unidades_intervinientes_${procedimiento.id}`}
+                          render={({ field }) => {
+                            return (
+                              <DropdownCheckbox
+                                id={`unidades_intervinientes_${procedimiento.id}`}
+                                name={`unidades_intervinientes_${procedimiento.id}`}
+                                label="Unidades Intervinientes"
+                                placeholder="Unidades"
+                                options={opciones}
+                                onSelectionChange={(selectedOptions) => {
+                                  handleSave(etapa.id, procedimiento.id, 'unidades_intervinientes', selectedOptions);
+                                  field.onChange(selectedOptions);
+                                }}
+
+                                readOnly={false}
+                                selectedValues={procedimiento.unidades_intervinientes_label_value}
+                              />
+                            );
+                          }}
                         />
                       </div>
                       <div className="col-1">

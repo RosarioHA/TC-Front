@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 export const OpcionesAB = ({
   initialState,
@@ -19,11 +19,6 @@ export const OpcionesAB = ({
   const [activeButton, setActiveButton] = useState(
     initialState === true ? 'activo' : initialState === false ? 'inactivo' : 'none'
   );
-
-  // Log cuando el componente recibe un nuevo initialState
-  useEffect(() => {
-    console.log(`[OpcionesAB] useEffect updated initialState:`, initialState);
-  }, [initialState]);
 
   const handleClick = async (estado) => {
     if (!readOnly) {
