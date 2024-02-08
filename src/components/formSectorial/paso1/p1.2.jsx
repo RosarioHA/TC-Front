@@ -8,7 +8,7 @@ export const Subpaso_dos = ({ pasoData, organigrama, id, stepNumber }) =>
 {
   const { updatePasoError, handleUpdatePaso, handleUploadFiles, handleUploadFilesOrganigramaregional } = useContext(FormularioContext);
   const [ formData, setFormData ] = useState({
-    organigramaregional: organigrama.organigramaregional,
+    organigramaregional: organigrama?.organigramaregional,
     paso1: pasoData.paso1 || {
       descripcion_archivo_organigrama_regional: pasoData.descripcion_archivo_organigrama_regional,
       descripcion_archivo_organigrama_nacional: pasoData.descripcion_archivo_organigrama_nacional,
