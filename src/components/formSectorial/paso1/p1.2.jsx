@@ -2,24 +2,26 @@ import { useContext, useState, useEffect } from "react";
 import CustomTextarea from "../../forms/custom_textarea";
 import SubirArchivo from "../../forms/subir_archivo";
 import { FormularioContext } from "../../../context/FormSectorial";
+import { SubirArchivoRegiones } from "../../forms/subirArchivoRegiones";
 
 export const Subpaso_dos = ({ pasoData, organigrama, id, stepNumber }) =>
 {
-  const { updatePasoError, handleUpdatePaso, handleUploadFiles } = useContext(FormularioContext);
-
+  const { updatePasoError, handleUpdatePaso, handleUploadFiles, handleUploadFilesOrganigramaregional } = useContext(FormularioContext);
   const [ formData, setFormData ] = useState({
+    organigramaregional: organigrama?.organigramaregional,
     paso1: pasoData.paso1 || {
       descripcion_archivo_organigrama_regional: pasoData.descripcion_archivo_organigrama_regional,
       descripcion_archivo_organigrama_nacional: pasoData.descripcion_archivo_organigrama_nacional,
       organigrama_nacional: pasoData.organigrama_nacional,
-      organigramaregional: pasoData.organigramaregional
     }
   });
 
   const [ inputStatus, setInputStatus ] = useState({
     descripcion_archivo_organigrama_regional: { loading: false, saved: false },
     descripcion_archivo_organigrama_nacional: { loading: false, saved: false },
+    organigrama_nacional: { loading: false, saved: false },
   });
+
 
   useEffect(() =>
   {
@@ -82,39 +84,81 @@ export const Subpaso_dos = ({ pasoData, organigrama, id, stepNumber }) =>
     }
   };
 
-  const handleFileUpload = async (event, fieldName) =>
+
+  const handleFileSelect = async (file, fieldName) =>
   {
-    if (event.target.files && event.target.files[ 0 ])
+    try
     {
-      const file = event.target.files[ 0 ];
+      // Actualizar el estado local con el archivo seleccionado
       const archivos = new FormData();
       archivos.append(fieldName, file);
 
-      if (archivos.has(fieldName))
-      {
-        try
-        {
-          await handleUploadFiles(id, stepNumber, archivos);
-          // Resto del código
-        } catch (error)
-        {
-          console.error("Error al subir el archivo:", error);
-        }
-      } else
-      {
-        console.log("El campo de archivos no está presente en el objeto FormData.");
-      }
-    } else
+      setInputStatus(prevStatus => ({
+        ...prevStatus,
+        [ fieldName ]: { ...prevStatus[ fieldName ], loading: true },
+      }));
+
+      await handleUploadFiles(id, stepNumber, archivos, fieldName);
+      setInputStatus(prevStatus => ({
+        ...prevStatus,
+        [ fieldName ]: { loading: false, saved: true },
+      }));
+
+      console.log("Archivo recibido en el componente padre:", file.name);
+    } catch (error)
     {
-      console.log("No se ha seleccionado ningún archivo para subir.");
+      console.error("Error al subir el archivo:", error);
+      setInputStatus(prevStatus => ({
+        ...prevStatus,
+        [ fieldName ]: { loading: false, saved: false },
+      }));
     }
   };
 
-  const handleFileSelect = (event, fieldName) =>
+
+  const handleFileSelectRegion = async (file, fieldName, regionId) =>
   {
-    // Resto del código
-    handleFileUpload(event, fieldName);
+    console.log("regionId:", regionId);
+    try
+    {
+      // Verifica si id y stepNumber están definidos en el contexto
+      if (id === undefined || stepNumber === undefined)
+      {
+        console.error("El ID o el stepNumber no están definidos.");
+        return;
+      }
+
+      // Crea un objeto FormData y agrega el archivo usando el fieldName proporcionado
+      const formData = new FormData();
+      formData.append(fieldName, file);
+
+      // Actualiza el estado para mostrar que la carga está en progreso
+      setInputStatus(prevStatus => ({
+        ...prevStatus,
+        [ fieldName ]: { ...prevStatus[ fieldName ], loading: true },
+      }));
+
+      // Llama a la función handleUploadFilesOrganigramaregional con los datos relevantes
+      await handleUploadFilesOrganigramaregional(file, regionId, id, stepNumber);
+
+      // Actualiza el estado para mostrar que la carga ha terminado con éxito
+      setInputStatus(prevStatus => ({
+        ...prevStatus,
+        [ fieldName ]: { loading: false, saved: true },
+      }));
+
+      console.log("Archivo recibido en el componente padre:", file.name);
+    } catch (error)
+    {
+      // Maneja cualquier error que ocurra durante la carga del archivo
+      console.error("Error al subir el archivo:", error);
+      setInputStatus(prevStatus => ({
+        ...prevStatus,
+        [ fieldName ]: { loading: false, saved: false },
+      }));
+    }
   };
+
 
 
 
@@ -146,13 +190,14 @@ export const Subpaso_dos = ({ pasoData, organigrama, id, stepNumber }) =>
           </div>
           <div className="me-5">Acción</div>
         </div>
-        <div className="row neutral-line align-items-center">
+        <div>
           <SubirArchivo
             index="1"
-            fileType={formData.paso1.organigrama_nacional ? "Seleccionado" : "No seleccionado"}
-            handleFileSelect={(e) => handleFileSelect(e, 'organigrama_nacional')}
+            fieldName="organigrama_nacional"
+            handleFileSelect={handleFileSelect}
+            loading={inputStatus.organigrama_nacional.loading}
+            tituloDocumento={pasoData?.organigrama_nacional}
           />
-
         </div>
       </div>
 
@@ -179,19 +224,26 @@ export const Subpaso_dos = ({ pasoData, organigrama, id, stepNumber }) =>
       <div className="col-11">
         <div className="d-flex justify-content-between py-3 fw-bold">
           <div className="d-flex mb-2">
-            <div className="ms-4">#</div>
-            <div className="ms-5">Región</div>
-            <div className="ms-5 ps-5">Documento</div>
+            <div className="mx-3">#</div>
+            <div className="me-5 ms-2 pe-5 ">Región</div>
+            <div className="mx-5 pe-5">Documento</div>
           </div>
           <div className="me-5">Acción</div>
         </div>
-        {organigrama?.map((region) => (
-          <SubirArchivo
+        {organigrama?.map((region, index) => (
+          <SubirArchivoRegiones
             key={region.id}
-            index={region.id}
-            tituloDocumento={region.region}
-            fileType={formData.paso1.organigramaregional && formData.paso1.organigramaregional[ region.id ] ? "Archivo Seleccionado: " + formData.paso1.organigramaregional[ region.id ].name : "No seleccionado"}
-            handleFileSelect={(e) => handleFileUpload(e, `organigramaregional_${region.id}`)}
+            index={index + 1}
+            region={region.region}
+            tituloDocumento={region.documento}
+            fileType={
+              formData.paso1.organigramaregional &&
+                formData.paso1.organigramaregional[ region.id ]
+                ? "Archivo Seleccionado: " +
+                formData.paso1.organigramaregional[ region.id ].name
+                : "No seleccionado"
+            }
+            handleFileSelect={(file) => handleFileSelectRegion(file, 'organigramaregional', region.id)} // Asegúrate de incluir region.id aquí
           />
         ))}
 

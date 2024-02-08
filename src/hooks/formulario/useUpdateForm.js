@@ -4,6 +4,7 @@ import { apiTransferenciaCompentencia } from "../../services/transferenciaCompet
 export const useUpdateForm = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(false);
 
   const createFormDataPayload = (datosPaso, archivos) => {
     const payload = new FormData();
@@ -41,18 +42,21 @@ export const useUpdateForm = () => {
   const patchStep = async (id, stepNumber, payload) => {
     setLoading(true);
     setError(null);
-
+    setSuccess(false); // Reiniciar el estado de éxito
+  
     try {
       const response = await apiTransferenciaCompentencia.patch(`/formulario-sectorial/${id}/paso-${stepNumber}/`, payload);
-
+  
       setLoading(false);
+      setSuccess(true); // Actualizar el estado de éxito
       return response.data;
     } catch (err) {
       setLoading(false);
-      setError(err);
-      throw err; // Lanza una excepción para que el componente pueda manejar el error
+      const errMsg = err.response ? err.response.data : err.message;
+      setError(errMsg);
+      throw new Error(errMsg);
     }
-  };
 
-  return { patchStep, loading, error, createFormDataPayload };
+  }
+  return { patchStep, loading, error, createFormDataPayload , success};
 };

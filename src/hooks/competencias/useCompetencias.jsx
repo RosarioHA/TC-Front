@@ -121,7 +121,6 @@ export const useCompetencia = (id) =>
   }, []);
 
   useEffect(() => {
-    console.log("Término de búsqueda actualizado:", searchTerm);
     fetchListaCompentencias();
   }, [searchTerm, fetchListaCompentencias]);
 

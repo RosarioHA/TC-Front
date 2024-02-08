@@ -3,13 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import { Counter } from "../tables/Counter";
 import { useAuth } from '../../context/AuthContext';
 
-export const Etapa2 = ({ etapa , sectoriales}) => {
+export const Etapa2 = ({ etapa }) => {
   const navigate = useNavigate();
   const { userData } = useAuth();
   const userSubdere = userData?.perfil?.includes('SUBDERE');
   const [isCollapsed, setIsCollapsed] = useState(false);
-  console.log(sectoriales); 
-  console.log('auth',userData);
 
   const toggleCollapse = () => {
     setIsCollapsed(!isCollapsed);
@@ -57,6 +55,14 @@ export const Etapa2 = ({ etapa , sectoriales}) => {
     let icon = estado === "finalizada" ? "visibility" : "draft";
     let path = "/";
 
+    const isSubirOficio = nombre.includes("Subir oficio");
+
+    // Determina si el botón debe estar habilitado para usuarios con perfil SUBDERE y estado pendiente
+    const isButtonEnabledForSubdere = isSubirOficio && userSubdere && estado !== "pendiente";
+  
+    // Determina si el botón debe estar habilitado para todos los usuarios cuando la acción es "Ver oficio" y el estado es "finalizada"
+    const isButtonEnabledForAll = accion === "Ver oficio" && estado === "finalizada";
+  
     switch (true)
     {
       case nombre.startsWith("Notificar a") && estado === "finalizada":
@@ -68,10 +74,9 @@ export const Etapa2 = ({ etapa , sectoriales}) => {
           return <span className="badge-status-finish">{accion}</span>;
         }
 
-      case nombre.includes("Subir oficio y su fecha para habilitar formulario sectorial"):
-        path = estado === "finalizada" ? "/home/ver_minuta" : `/home/estado_competencia/${etapa.id}/subir_oficio/${etapaNum}/${subetapaId}`;
-        break;
-
+        case nombre.includes("Subir oficio y su fecha para habilitar formulario sectorial"):
+          path = estado === "finalizada" ? "/home/ver_minuta" : `/home/estado_competencia/${etapa.id}/subir_oficio/${etapaNum}/${subetapaId}`;
+          break;
       case nombre.includes("Observación del formulario sectorial"):
         path = estado === "finalizada" ? "/home/ver_observaciones" : "/home/ingresar_observaciones";
         break;
@@ -81,31 +86,36 @@ export const Etapa2 = ({ etapa , sectoriales}) => {
         break;
     }
 
-    const isDisabled = estado === "pendiente";
-
-    return isDisabled ? (
-      <button className={`btn-secundario-s ${estado === "pendiente" ? "disabled" : ""}`} id="btn">
-        <span className="material-symbols-outlined me-1">{icon}</span>
-        <u>{buttonText}</u>
-      </button>
-    ) : (
-      <button onClick={() => handleNavigation(path)} className="btn-secundario-s text-decoration-none" id="btn">
-        <span className="material-symbols-outlined me-1">{icon}</span>
-        <u>{buttonText}</u>
-      </button>
-    );
+    if (isButtonEnabledForAll || isButtonEnabledForSubdere) {
+      return (
+        <button onClick={() => handleNavigation(path)} className="btn-secundario-s text-decoration-none" id="btn">
+          <span className="material-symbols-outlined me-1">{icon}</span>
+          <u>{buttonText}</u>
+        </button>
+      );
+    } else {
+      // Para otros casos, desactiva el botón si no se cumplen las condiciones
+      return (
+        <button className="btn-secundario-s disabled" id="btn">
+          <span className="material-symbols-outlined me-1">{icon}</span>
+          <u>{buttonText}</u>
+        </button>
+      );
+    }
   };
+
+    
 
   const renderButtonForFormularioSectorial = (formulario) => {
     const buttonText = formulario.accion;
     const path = `/home/formulario_sectorial/${formulario.id}/paso_1`;
-    const isButtonDisabled = userSubdere || formulario.estado !== "pendiente" 
+    const isButtonDisabled = userSubdere || formulario.estado  === "pendiente" 
 
 
   
     let icon = 'edit';
     if (formulario.estado !== "pendiente") {
-      icon = ''; // O asignar un icono diferente según el estado
+      icon = 'draft'; 
     }
   
     return (
