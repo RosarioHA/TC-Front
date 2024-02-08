@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+
+
 export const RadioButtons = ({ initialState, handleEstadoChange, field, altA, altB, label, readOnly }) => {
   const [activeButton, setActiveButton] = useState(initialState);
 

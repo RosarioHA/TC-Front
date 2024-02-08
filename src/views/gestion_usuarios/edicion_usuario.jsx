@@ -384,7 +384,7 @@ const EdicionUsuario = () => {
                   <OpcionesAB
                     readOnly={!editMode}
                     id="is_active"
-                    initialState={watch('is_active')}
+                    initialState={userDetails?.is_active}
                     handleEstadoChange={handleEstadoChange}
                     field={field}
                     errors={errors}

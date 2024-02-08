@@ -1,38 +1,53 @@
 import { useState, useEffect } from "react";
 
-export const OpcionesAB = ({ initialState, handleEstadoChange, field, altA, altB, label, readOnly }) => {
-  const [activeButton, setActiveButton] = useState(initialState === true ? 'activo' : 'inactivo');
-  console.log("initial state en componente OpcionesAB", initialState);
+export const OpcionesAB = ({
+  initialState,
+  handleEstadoChange,
+  field,
+  label,
+  altA,
+  altB,
+  loading,
+  saved,
+  error,
+  readOnly,
+  handleSave,
+  arrayNameId,
+  fieldName
+}) => {
+  console.log(`[OpcionesAB] initialState:`, initialState);
+  const [activeButton, setActiveButton] = useState(
+    initialState === true ? 'activo' : initialState === false ? 'inactivo' : 'none'
+  );
 
+  // Log cuando el componente recibe un nuevo initialState
   useEffect(() => {
-    if (initialState !== null && !readOnly) {
-      const newActiveButton = initialState === true ? 'activo' : 'inactivo';
+    console.log(`[OpcionesAB] useEffect updated initialState:`, initialState);
+  }, [initialState]);
 
-      // Verificamos si el nuevo estado es diferente al estado actual antes de actualizar
-      if (newActiveButton !== activeButton) {
-        setActiveButton(newActiveButton);
-        handleEstadoChange(initialState);
-        field.onChange(initialState === true);
-      }
-    }
-  }, [initialState, readOnly, handleEstadoChange, field, activeButton]);
-
-  const handleClick = (estado) => {
+  const handleClick = async (estado) => {
     if (!readOnly) {
-      setActiveButton((prevActiveButton) => {
-        if (prevActiveButton === estado) {
-          // Si el botón ya está activo, desactívalo
-          handleEstadoChange(null);
-          field.onChange(false);
-          return null;
-        } else {
-          // Activa el botón
-          handleEstadoChange(estado === 'activo');
-          field.onChange(estado === 'activo');
-          return estado;
-        }
-      });
+      const newState = estado === 'activo' ? true : false;
+      setActiveButton(estado);
+      handleEstadoChange(newState);
+      field.onChange(newState); // Actualiza el estado en el form global
+
+      // Llama a handleSave directamente con el nuevo estado
+      await handleSave(arrayNameId, fieldName, newState);
     }
+  };
+
+  const renderSpinnerOrCheck = () =>
+  {// Agrega esta línea para depurar
+    if (loading)
+    {
+      return <div className="spinner-border text-primary my-4 mx-3" role="status"></div>;
+    }
+    if (saved)
+    {
+      return <i className="material-symbols-outlined my-4 mx-3 text-success ">check</i>;
+    }
+    return null;
   };
 
   return (
@@ -57,6 +72,14 @@ export const OpcionesAB = ({ initialState, handleEstadoChange, field, altA, altB
           {altB}
           {activeButton === 'inactivo' && <i className="material-symbols-rounded ms-2">check</i>}
         </button>
+      </div>
+      <div className=" d-flex align-self-end align-items-center">
+              {renderSpinnerOrCheck()}
+            </div>
+      <div className="d-flex justify-content-between col-12">
+        {error && (
+          <p className="text-sans-h6-darkred mt-1 mb-0">{error}</p>
+        )}
       </div>
     </div>
   );

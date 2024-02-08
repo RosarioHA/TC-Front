@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 
-const CustomTextarea = ({ loading, saved, label, placeholder, id, maxLength, rows, value = "", onChange, onBlur, readOnly, name }) =>
+const CustomTextarea = ({ loading, saved, label, placeholder, id, maxLength, error, rows, value = "", onChange, onBlur, readOnly, name }) =>
 {
   const [ inputValue, setInputValue ] = useState(value); // Inicialización segura de inputValue
   const textareaRef = useRef(null);
@@ -59,7 +59,7 @@ const CustomTextarea = ({ loading, saved, label, placeholder, id, maxLength, row
       {readOnly ? (
         <div className="d-flex flex-column textarea-container">
           <label className="text-sans-h5 input-label ms-3 ms-sm-0">{label}</label>
-          <div className="teaxtarea-text input-textarea p-3">
+          <div className={`teaxtarea-text input-textarea p-3 ${error ? 'input-error' : ''}`}>
             <p className="text-sans-p-grey mb-0">{placeholder}</p>
           </div>
         </div>
@@ -69,7 +69,7 @@ const CustomTextarea = ({ loading, saved, label, placeholder, id, maxLength, row
             <label className="text-sans-h5 input-label ms-3 ms-sm-0">{label}</label>
             <textarea
               ref={textareaRef}
-              className="input-textarea input-s p-3 p-2 col-11"
+              className={`input-textarea input-s p-3 p-2 col-11 ${error ? 'input-error' : ''}`}
               type="text"
               placeholder={placeholder}
               id={id}
@@ -84,13 +84,18 @@ const CustomTextarea = ({ loading, saved, label, placeholder, id, maxLength, row
               {renderSpinnerOrCheck()}
             </div>
           </div>
+          <div className="d-flex justify-content-between col-12">
+              {error && (
+                <p className="text-sans-h6-darkred mt-1 mb-0">{error}</p>
+              )}
           {maxLength !== null && maxLength !== undefined && (
             <div className="d-flex justify-content-end mb-0 col-11">
               <span className={counterClass}>
                 {inputValue.length}/{maxLength} caracteres.
               </span>
             </div>
-          )}
+            )}
+            </div>
         </>
       )}
     </div>
