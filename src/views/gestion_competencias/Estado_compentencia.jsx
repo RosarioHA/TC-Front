@@ -12,11 +12,13 @@ const EstadoCompetencia = () =>
   const navigate = useNavigate();
   const [ competencia, setCompetencia ] = useState(null);
 
-  useEffect(() => {
-    if (competenciaDetails) {
+  useEffect(() =>
+  {
+    if (competenciaDetails)
+    {
       setCompetencia(competenciaDetails);
     }
-  }, [competenciaDetails]);
+  }, [ competenciaDetails ]);
 
   const handleBackButtonClick = () =>
   {
@@ -43,10 +45,12 @@ const EstadoCompetencia = () =>
     <>
       <div className="container col-11 my-3 mx-5">
         <div className="py-3 d-flex">
-          <button className="btn-secundario-s" onClick={handleBackButtonClick}>
-            <i className="material-symbols-rounded me-2">arrow_back_ios</i>
-            <p className="mb-0 text-decoration-underline">Volver</p>
-          </button>
+          <div  className="align-self-center">
+            <button className="btn-secundario-s" onClick={handleBackButtonClick}>
+              <i className="material-symbols-rounded me-2">arrow_back_ios</i>
+              <p className="mb-0 text-decoration-underline">Volver</p>
+            </button>
+          </div>
           <nav className="container mx-5" aria-label="breadcrumb">
             <ol className="breadcrumb breadcrumb-style d-flex my-2">
               <li className="breadcrumb-item align-self-center"><Link to="/home">Inicio</Link></li>
@@ -70,7 +74,7 @@ const EstadoCompetencia = () =>
         </div>
         <div className="mt-5 mx-0">
           <div className="text-sans-h2 my-3">Etapas de levantamiento de información</div>
-          <VerticalStepper etapasObjeto={competencia.resumen_competencia}  etapaDatos={competencia} id={id} />
+          <VerticalStepper etapasObjeto={competencia.resumen_competencia} etapaDatos={competencia} id={id} />
         </div>
       </div>
     </>
