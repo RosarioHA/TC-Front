@@ -5,14 +5,23 @@ const DropdownCheckbox = ({
   options,
   placeholder,
   readOnly,
-  selectedRegions,
+  selectedValues,
   onSelectionChange,
+  loading,
+  saved,
+  error
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOptions, setSelectedOptions] = useState(() => selectedRegions || []);
-  const [userHasMadeSelection, setUserHasMadeSelection] = useState(false); 
+  const [selectedOptions, setSelectedOptions] = useState(() => selectedValues || []);
+  const [userHasMadeSelection, setUserHasMadeSelection] = useState(false);
   const dropdownRef = useRef(null);
   const toggleRef = useRef(null);
+
+  useEffect(() => {
+    if (selectedValues) {
+      setSelectedOptions(selectedValues);
+    }
+  }, [selectedValues]);
 
   const handleClickOutside = useCallback((event) => {
     if (
@@ -22,8 +31,12 @@ const DropdownCheckbox = ({
       !toggleRef.current.contains(event.target)
     ) {
       setIsOpen(false);
+      // Notificar al componente padre cuando el dropdown se cierra
+      if (userHasMadeSelection && onSelectionChange) {
+        onSelectionChange(selectedOptions);
+      }
     }
-  }, []);
+  }, [selectedOptions, userHasMadeSelection, onSelectionChange]);
 
   useEffect(() => {
     document.addEventListener('mousedown', handleClickOutside);
@@ -35,10 +48,10 @@ const DropdownCheckbox = ({
 
   useEffect(() => {
     // Actualizar solo si el usuario no ha hecho ninguna selección
-    if (selectedRegions && !userHasMadeSelection) {
-      setSelectedOptions(selectedRegions);
+    if (selectedValues && !userHasMadeSelection) {
+      setSelectedOptions(selectedValues);
     }
-  }, [selectedRegions, userHasMadeSelection]);
+  }, [selectedValues, userHasMadeSelection]);
 
   const handleDropdownClick = useCallback(() => {
     setIsOpen(!isOpen);
@@ -47,9 +60,9 @@ const DropdownCheckbox = ({
   const handleCheckboxChange = useCallback((option) => {
     if (readOnly) return;
     let newSelectedOptions;
-  
+
     if (option === 'Todas') {
-      newSelectedOptions = options.filter(opt => opt.label !== 'Sin región asociada');
+      newSelectedOptions = options.filter(opt => opt.label !== 'Sin opción asociada');
     } else if (option === 'Eliminar Selección') {
       newSelectedOptions = [];
     } else {
@@ -76,14 +89,24 @@ const DropdownCheckbox = ({
 
 
   const renderSelectedOptions = () => {
-    if (readOnly && selectedRegions && selectedRegions.length > 0) {
-      return selectedRegions.map((region) => region.label).join(', ');
+    if (readOnly && selectedValues && selectedValues.length > 0) {
+      return selectedValues.map((value) => value.label).join(', ');
     } else if (!readOnly && selectedOptions && selectedOptions.length > 0) {
       return selectedOptions.length === 1
         ? selectedOptions[0].label
         : `${selectedOptions.length} seleccionadas`;
     }
     return placeholder;
+  };
+
+  const renderSpinnerOrCheck = () => {
+    if (loading) {
+      return <div className="spinner-border text-primary" role="status"></div>;
+    }
+    if (saved) {
+      return <i className="material-symbols-outlined">check</i>; // Reemplaza esto con tu ícono de check real
+    }
+    return null;
   };
 
   return (
@@ -110,18 +133,16 @@ const DropdownCheckbox = ({
         <div className="dropdown d-flex flex-column dropdown-container">
           <button
             type="button"
-            className={`text-sans-p btn-option ${
-              selectedOptions.length > 0 ? 'active' : ''
-            }`}
+            className={`text-sans-p btn-option ${selectedOptions.length > 0 ? 'active' : ''
+              }`}
             onClick={() => handleCheckboxChange('Todas')}
           >
             Todas
           </button>
           <button
             type="button"
-            className={`text-sans-p btn-option ${
-              selectedOptions.length === 0 ? 'active' : ''
-            }`}
+            className={`text-sans-p btn-option ${selectedOptions.length === 0 ? 'active' : ''
+              }`}
             onClick={() => handleCheckboxChange('Eliminar Selección')}
           >
             Eliminar Selección
@@ -149,6 +170,15 @@ const DropdownCheckbox = ({
           ))}
         </div>
       )}
+
+      <div className=" d-flex align-self-end align-items-center">
+        {renderSpinnerOrCheck()}
+      </div>
+      <div className="d-flex justify-content-between col-12">
+        {error && (
+          <p className="text-sans-h6-darkred mt-1 mb-0">{error}</p>
+        )}
+      </div>
     </div>
   );
 };

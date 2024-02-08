@@ -90,8 +90,6 @@ const PasoDos = () => {
               listado_etapas={listado_etapas}
               stepNumber={stepNumber} 
               id={data.id}
-              refreshSubpasoDos_tres={refreshSubpasoDos_tres}
-              setRefreshSubpasoDos_tres={setRefreshSubpasoDos_tres}
               refreshSubpasoDos_cuatro={refreshSubpasoDos_cuatro}
               setRefreshSubpasoDos_cuatro={setRefreshSubpasoDos_cuatro}
               />

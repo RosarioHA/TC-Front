@@ -2,7 +2,6 @@ import { useState, useEffect, useContext, useCallback } from "react";
 import { FormularioContext } from "../../../context/FormSectorial";
 import { apiTransferenciaCompentencia } from "../../../services/transferenciaCompetencia";
 import CustomTextarea from "../../forms/custom_textarea";
-import { RadioButtons } from "../../forms/radio_btns";
 import DropdownCheckbox from "../../dropdown/checkbox";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -15,7 +14,7 @@ export const Subpaso_dosPuntoCuatro = ({
   data,
   stepNumber,
   listado_etapas,
-  setRefreshSubpasoDos_tres,
+  setRefreshSubpasoDos_cuatro,
   refreshSubpasoDos_cuatro,
 }) => {
 
@@ -73,14 +72,14 @@ export const Subpaso_dosPuntoCuatro = ({
   useEffect(() => {
     if (refreshSubpasoDos_cuatro) {
       fetchDataDirecta();
-      setRefreshSubpasoDos_tres(false);
+      setRefreshSubpasoDos_cuatro(false);
     }
-  }, [refreshSubpasoDos_cuatro, setRefreshSubpasoDos_tres, id, stepNumber]);
+  }, [refreshSubpasoDos_cuatro, id, stepNumber]);
 
   // Efecto para manejar la actualización de opciones basado en dataDirecta
   useEffect(() => {
-    if (dataDirecta?.listado_unidades) {
-      const nuevasOpciones = transformarEnOpciones(dataDirecta.listado_unidades);
+    if (dataDirecta?.listado_etapas) {
+      const nuevasOpciones = transformarEnOpciones(dataDirecta.listado_etapas);
       setOpcionesEtapas(nuevasOpciones);
     }
   }, [dataDirecta]);
@@ -92,6 +91,8 @@ export const Subpaso_dosPuntoCuatro = ({
       setOpcionesEtapas(listaInicial);
     }
   }, [listado_etapas]);
+
+  console.log('copciones:', opcionesEtapas)
 
   // Manejador del Dropdown de etapas
   const handleEtapasChange = useCallback((selectedOptions) => {
@@ -213,21 +214,26 @@ export const Subpaso_dosPuntoCuatro = ({
 
     updateFieldState(arrayNameId, fieldName, { loading: true, saved: false });
 
-    console.log(`Valor actual de ${fieldName} para la plataforma ${arrayNameId}:`, plataforma[fieldName]);
-
-
     let payload;
-  if (fieldName === 'capacitacion_plataforma') {
-    payload = {
-      // Si es 'capacitacion_plataforma', usa esta estructura
-      'p_2_4_plataformas_y_softwares': [{ id: arrayNameId, [fieldName]: newValue }]
-    };
-  } else {
-    // Para otros campos, utiliza la estructura original o una diferente si es necesario
-    payload = {
-      'p_2_4_plataformas_y_softwares': [{ id: arrayNameId, [fieldName]: plataforma[fieldName] }]
-    };
-  }
+    if (fieldName === 'etapas') {
+      payload = {
+        // Forma el payload específico para 'etapas'
+        'p_2_4_plataformas_y_softwares': [{
+          id: arrayNameId,
+          etapas: newValue.map(option => option.value) // Asume que newValue es un array de opciones seleccionadas
+        }]
+      };
+    } else if (fieldName === 'capacitacion_plataforma') {
+      payload = {
+        // Payload para 'capacitacion_plataforma'
+        'p_2_4_plataformas_y_softwares': [{ id: arrayNameId, [fieldName]: newValue }]
+      };
+    } else {
+      // Payload para otros campos
+      payload = {
+        'p_2_4_plataformas_y_softwares': [{ id: arrayNameId, [fieldName]: plataforma[fieldName] }]
+      };
+    }
 
     try {
       // Asume que handleUpdatePaso puede manejar ambos casos adecuadamente
@@ -549,11 +555,29 @@ export const Subpaso_dosPuntoCuatro = ({
                 <p className="text-sans-p ms-2">(Opcional)</p>
               </div>
               <div className="col ms-5">
-                <DropdownCheckbox
-                  placeholder="Etapa"
-                  options={opcionesEtapas}
-                  onSelectionChange={handleEtapasChange}
-                  selected={etapasSeleccionadas}
+                <Controller
+                  control={control}
+                  name={`etapas_${plataforma.id}`}
+                  render={({ field }) => {
+                    return (
+                      <DropdownCheckbox
+                        id={`etapas_${plataforma.id}`}
+                        name={`etapas_${plataforma.id}`}
+                        placeholder="Elige la o las Etapas donde se utiliza"
+                        options={opcionesEtapas}
+                        onSelectionChange={(selectedOptions) => {
+                          handleSave(plataforma.id, 'etapas', selectedOptions);
+                          field.onChange(selectedOptions);
+                        }}
+
+                        readOnly={false}
+                        selectedValues={plataforma.etapas_label_value}
+
+                        loading={plataforma.estados?.etapas?.loading ?? false}
+                        saved={plataforma.estados?.etapas?.saved ?? false}
+                      />
+                    );
+                  }}
                 />
               </div>
             </div>
@@ -567,7 +591,7 @@ export const Subpaso_dosPuntoCuatro = ({
                 <Controller
                   control={control}
                   name={`capacitacion_plataforma_${plataforma.id}`}
-                  defaultValue={plataforma.capacitacion_plataforma} // Asegúrate de que el defaultValue se maneje correctamente
+                  defaultValue={plataforma.capacitacion_plataforma}
                   render={({ field, fieldState }) => {
                     return (
                       <OpcionesAB
