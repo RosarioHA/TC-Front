@@ -10,7 +10,7 @@ export const DocumentsAditionals = ({ onFilesChanged, marcoJuridicoData }) =>
   useEffect(() =>
   {
     // Inicializa 'files' con la estructura correcta y el nombre del archivo obtenido de 'documento_url'
-    const initialFiles = marcoJuridicoData.map(doc => ({
+    const initialFiles = marcoJuridicoData?.map(doc => ({
       title: doc.documento_url?.split('/').pop(),
       isTooLarge: false,
     })).filter((file, index, self) =>
