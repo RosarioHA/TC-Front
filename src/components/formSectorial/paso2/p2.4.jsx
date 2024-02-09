@@ -257,9 +257,9 @@ export const Subpaso_dosPuntoCuatro = ({
         {plataformasySoftwares.map((plataforma, index) => (
           <div key={plataforma.id} className="col border">
             <div className="row p-3">
-              <div className="col-2">
-                <p className="text-sans-p-bold mb-0">{index + 1}</p>
-                <p className="text-sans-p-bold ms-2">Nombre de Plataforma o Sofware</p>
+              <div className="col-2  d-flex">
+                <span className="text-sans-p-bold mb-0">{index + 1}</span>
+                <span className="text-sans-p-bold ms-2">Nombre de Plataforma o Sofware</span>
               </div>
 
               <div className="col ms-5">
@@ -356,9 +356,9 @@ export const Subpaso_dosPuntoCuatro = ({
               <div className="col-2">
                 <p className="text-sans-p-bold ms-2">Descripción técnica y versiones</p>
               </div>
-              <div className="col ms-5">
+              <div className="col ms-5 ">
                 <div className="row d-flex">
-                  <div className="col">
+                  <div className="col-5 me-4">
                     <Controller
                       control={control}
                       name={`costo_adquisicion_${plataforma.id}`}
@@ -393,14 +393,13 @@ export const Subpaso_dosPuntoCuatro = ({
                             loading={plataforma.estados?.costo_adquisicion?.loading ?? false}
                             saved={plataforma.estados?.costo_adquisicion?.saved ?? false}
                             error={errors[`costo_adquisicion_${plataforma.id}`]?.message}
+                            descripcion="Campo númerico en miles de pesos."
                           />
                         );
                       }}
                     />
-
-                    <h6 className="text-sans-h6 text-end">Campo númerico en miles de pesos.</h6>
                   </div>
-                  <div className="col">
+                  <div className="col-6">
                     <Controller
                       control={control}
                       name={`costo_mantencion_anual_${plataforma.id}`}
@@ -435,14 +434,14 @@ export const Subpaso_dosPuntoCuatro = ({
                             loading={plataforma.estados?.costo_mantencion_anual?.loading ?? false}
                             saved={plataforma.estados?.costo_mantencion_anual?.saved ?? false}
                             error={errors[`costo_mantencion_anual_${plataforma.id}`]?.message}
+                            descripcion="Campo númerico en miles de pesos."
                           />
                         );
                       }}
                     />
-                    <h6 className="text-sans-h6 text-end">Campo númerico en miles de pesos.</h6>
                   </div>
                 </div>
-                <div className="row mt-4">
+                <div className="mt-4 col">
                   <Controller
                     control={control}
                     name={`descripcion_costos_${plataforma.id}`}
@@ -539,7 +538,7 @@ export const Subpaso_dosPuntoCuatro = ({
                 <p className="text-sans-p-bold ms-2 mb-0">Etapas donde se utiliza</p>
                 <p className="text-sans-p ms-2">(Opcional)</p>
               </div>
-              <div className="col ms-5">
+              <div className="col-8 ms-5">
                 <Controller
                   control={control}
                   name={`etapas_${plataforma.id}`}
@@ -603,7 +602,7 @@ export const Subpaso_dosPuntoCuatro = ({
 
             <div className="col d-flex align-items-center">
               <button
-                className="btn-terciario-ghost"
+                className="btn-terciario-ghost ms-2 mb-2"
                 onClick={() => eliminarElemento(plataforma.id)}>
                 <i className="material-symbols-rounded me-2">delete</i>
                 <p className="mb-0 text-decoration-underline">Borrar ficha</p>

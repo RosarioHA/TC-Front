@@ -134,7 +134,6 @@
 // p
 .text-sans-p{
     @include font-sans(16px, 400, $grey-a-color);
-    line-height: 30px;
 }
 .text-sans-p-grey{
     @include font-sans(16px, 400, $grey-light-a);

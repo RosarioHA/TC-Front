@@ -62,7 +62,7 @@ const DropdownSelect = ({ label, placeholder, options, onSelectionChange, select
       <button
         type="button"
         onClick={toggleDropdown}
-        className={`text-sans-p dropdown-btn ${isOpen ? 'dropdown-btn-abierto' : ''} ${readOnly ? "disabled" : ""}`}
+        className={`text-sans-p dropdown-btn text-wrap ${isOpen ? 'dropdown-btn-abierto' : ''} ${readOnly ? "disabled" : ""}`}
       >
         {selectedOption ? selectedOption.label : placeholder}
         {!readOnly && <i className="material-symbols-rounded ms-2">{isOpen ? 'expand_less' : 'expand_more'}</i>}
@@ -74,7 +74,7 @@ const DropdownSelect = ({ label, placeholder, options, onSelectionChange, select
             <div
               key={option.value}
               onClick={() => handleOptionClick(option)}
-              className={`p-3 dropdown-option text-sans-p ${option.value === selectedOption?.value ? 'selected-dropdown-option' : ''}`}
+              className={`p-3 dropdown-option text-sans-p  text-wrap ${option.value === selectedOption?.value ? 'selected-dropdown-option' : ''}`}
             >
               {option.label}
             </div>

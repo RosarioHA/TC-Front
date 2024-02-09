@@ -15,7 +15,6 @@ export const OpcionesAB = ({
   arrayNameId,
   fieldName
 }) => {
-  console.log(`[OpcionesAB] initialState:`, initialState);
   const [activeButton, setActiveButton] = useState(
     initialState === true ? 'activo' : initialState === false ? 'inactivo' : 'none'
   );
@@ -25,30 +24,31 @@ export const OpcionesAB = ({
       const newState = estado === 'activo' ? true : false;
       setActiveButton(estado);
       handleEstadoChange(newState);
-      field.onChange(newState); // Actualiza el estado en el form global
+      field.onChange(newState);
 
-      // Llama a handleSave directamente con el nuevo estado
       await handleSave(arrayNameId, fieldName, newState);
     }
   };
 
-  const renderSpinnerOrCheck = () =>
-  {// Agrega esta línea para depurar
-    if (loading)
-    {
-      return <div className="spinner-border text-primary my-4 mx-3" role="status"></div>;
+  const renderSpinnerOrCheck = (buttonState) => {
+    // Solo muestra el spinner o el check si el estado del botón coincide con el estado activo/inactivo
+    if (loading && activeButton === buttonState) {
+      return <div className="spinner-border  text-info spinner-border-sm mx-2" role="status"></div>;
     }
-    if (saved)
-    {
-      return <i className="material-symbols-outlined my-4 mx-3 text-success ">check</i>;
+    if (saved && activeButton === buttonState) {
+      return <i className="material-symbols-outlined mx-1 ">check</i>;
     }
-    return null;
+    // Si no está cargando ni ha guardado, y el botón está activo, muestra el check
+    if (!loading && !saved && activeButton === buttonState) {
+      return <i className="material-symbols-rounded">check</i>;
+    }
+    return null; // No muestra nada si no se cumplen las condiciones
   };
 
   return (
     <div className="mb-5">
       {label && <h5 className="text-sans-h5">{label}</h5>}
-      <div className="d-flex mb-2">
+      <div className="d-flex my-3">
         <button
           type="button"
           disabled={readOnly}
@@ -56,21 +56,18 @@ export const OpcionesAB = ({
           onClick={() => handleClick('activo')}
         >
           {altA}
-          {activeButton === 'activo' && <i className="material-symbols-rounded ms-2">check</i>}
+          {renderSpinnerOrCheck('activo')}
         </button>
         <button
           type="button"
           disabled={readOnly}
-          className={`ms-2 ${activeButton === 'inactivo' ? 'btn-primario-s' : 'btn-secundario-s'}`}
+          className={`ms-4  ${activeButton === 'inactivo' ? 'btn-primario-s' : 'btn-secundario-s'}`}
           onClick={() => handleClick('inactivo')}
         >
           {altB}
-          {activeButton === 'inactivo' && <i className="material-symbols-rounded ms-2">check</i>}
+          {renderSpinnerOrCheck('inactivo')}
         </button>
       </div>
-      <div className=" d-flex align-self-end align-items-center">
-              {renderSpinnerOrCheck()}
-            </div>
       <div className="d-flex justify-content-between col-12">
         {error && (
           <p className="text-sans-h6-darkred mt-1 mb-0">{error}</p>
