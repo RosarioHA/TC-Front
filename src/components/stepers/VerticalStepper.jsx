@@ -17,8 +17,7 @@ export const VerticalStepper = ({ etapasObjeto, etapaDatos, id }) => {
   {
     return <div>Cargando...</div>;
   }
-  console.log('datps',etapaDatos)
-
+  
   const etapasInfo = etapasObjeto.etapas_info;
   const etapasClaves = Object.keys(etapasInfo);
   const idCompetencia = id

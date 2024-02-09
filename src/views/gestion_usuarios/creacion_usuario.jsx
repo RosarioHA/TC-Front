@@ -28,8 +28,7 @@ const initialValues = {
   sector: "",
 };
 
-const CreacionUsuario = () =>
-{
+const CreacionUsuario = () => {
   const { createUser } = useCreateUser();
   const { updateHasChanged } = useFormContext();
   const { dataGroups, loadingGroups } = useGroups();
@@ -48,21 +47,17 @@ const CreacionUsuario = () =>
   const [ hasChanged, setHasChanged ] = useState(false);
   const [ isModalOpen, setIsModalOpen ] = useState(false);
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     console.log("competencias seleccionadas en vista", competenciasSeleccionadas);
   }, [ competenciasSeleccionadas ]);
 
   // Maneja boton de volver atras.
   const history = useNavigate();
-  const handleBackButtonClick = () =>
-  {
-    if (hasChanged)
-    {
+  const handleBackButtonClick = () => {
+    if (hasChanged) {
       // Muestra el modal
       setIsModalOpen(true);
-    } else
-    {
+    } else {
       // Retrocede solo si no hay cambios
       history(-1);
     }
@@ -87,12 +82,10 @@ const CreacionUsuario = () =>
   });
 
   //detecta cambios sin guardar en el formulario
-  function handleOnChange(event)
-  {
+  function handleOnChange(event) {
     const data = new FormData(event.currentTarget);
     // Verifica si hay cambios respecto al valor inicial
-    const formHasChanged = Array.from(data.entries()).some(([ name, value ]) =>
-    {
+    const formHasChanged = Array.from(data.entries()).some(([ name, value ]) => {
       const initialValue = initialValues[ name ];
       return value !== String(initialValue);
     });
@@ -108,14 +101,11 @@ const CreacionUsuario = () =>
     value: group.id,
     label: group.name
   }))
-  const handlePerfilChange = (selectedValue) =>
-  {
+  const handlePerfilChange = (selectedValue) => {
     const selectedProfile = opcionesGroups.find((option) => option.value === selectedValue.value);
-    if (selectedProfile)
-    {
+    if (selectedProfile) {
       setPerfilSeleccionado(selectedProfile.label);
-    } else
-    {
+    } else {
       setPerfilSeleccionado(null);
     }
     setHasChanged(true);
@@ -127,8 +117,7 @@ const CreacionUsuario = () =>
     value: region.id,
     label: region.region
   }));
-  const handleRegionChange = (region) =>
-  {
+  const handleRegionChange = (region) => {
     setRegionSeleccionada(region.value);
     setRegionId(region.value);
     setSectorId(null);
@@ -145,8 +134,7 @@ const CreacionUsuario = () =>
       ministerioId: ministerio.id
     }))
   }));
-  const handleSectorChange = (sectorId) =>
-  {
+  const handleSectorChange = (sectorId) => {
     console.log("Estado sectorId actualizado:", sectorId);
     setSectorSeleccionado(sectorId.label);
     setSectorId(sectorId);
@@ -156,8 +144,7 @@ const CreacionUsuario = () =>
   };
 
   console.log("Estado sectorId actualizado:", sectorId);
-  const handleEstadoChange = (nuevoEstado) =>
-  {
+  const handleEstadoChange = (nuevoEstado) => {
     setEstado(nuevoEstado);
     setActiveButton(nuevoEstado);
     setHasChanged(true);
@@ -170,23 +157,19 @@ const CreacionUsuario = () =>
     label: competencia.nombre,
   }));
 
-  const handleCompetenciasChange = (selectedOptions) =>
-  {
+  const handleCompetenciasChange = (selectedOptions) => {
     setCompetenciasSeleccionadas(selectedOptions);
     setHasChanged(true);
     updateHasChanged(true);
   };
 
-  const handleInputClick = (e) =>
-  {
+  const handleInputClick = (e) => {
     // Previene que el evento se propague al boton
     e.stopPropagation();
   };
 
-  const onSubmit = async (data) =>
-  {
-    try
-    {
+  const onSubmit = async (data) => {
+    try {
       // Preparar las competencias seleccionadas para la modificación
       const competenciasModificar = competenciasSeleccionadas.map(id => ({
         id: parseInt(id, 10),
@@ -210,21 +193,17 @@ const CreacionUsuario = () =>
       console.log("Payload enviado a la API:", payload);
 
       const isValid = await trigger();
-      if (submitClicked && isValid)
-      {
+      if (submitClicked && isValid) {
         await createUser(payload);
         updateHasChanged(false);
         setHasChanged(false);
-        history('/home/success', { state: { origen: "crear_usuario" } });
-      } else
-      {
+        history('/home/success_creacion', { state: { origen: "crear_usuario" } });
+      } else {
         console.log("El formulario no es válido o no se ha hecho click en 'Crear Usuario'");
       }
-    } catch (error)
-    {
+    } catch (error) {
       // Verifica si el error es debido a un problema en el campo 'rut'
-      if (error.message && error.message.rut && error.message.rut.length > 0)
-      {
+      if (error.message && error.message.rut && error.message.rut.length > 0) {
         // Utiliza el primer mensaje de error para el campo 'rut'
         const mensajeErrorRut = error.message.rut[ 0 ];
         setError('rut', { type: 'manual', message: mensajeErrorRut });
@@ -488,7 +467,6 @@ const CreacionUsuario = () =>
         <ModalAbandonoFormulario
           onClose={() => setIsModalOpen(false)}
           isOpen={isModalOpen}
-          direction='-1'
           goBack={true}
         />
       )}

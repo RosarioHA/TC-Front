@@ -5,7 +5,6 @@ import CustomInput from "../../components/forms/custom_input";
 import DropdownSelect from "../../components/dropdown/select";
 import DropdownSelectBuscador from "../../components/dropdown/select_buscador";
 import DropdownSinSecciones from "../../components/dropdown/checkbox_sinSecciones_conTabla";
-//import { RadioButtons } from "../../components/forms/radio_btns";
 import { OpcionesAB } from "../../components/forms/opciones_AB";
 import { useEditUser } from "../../hooks/usuarios/useEditUser";
 import { useUserDetails } from "../../hooks/usuarios/useUserDetail";
@@ -20,11 +19,9 @@ import { useFormContext } from "../../context/FormAlert";
 import ModalAbandonoFormulario from "../../components/commons/modalAbandonoFormulario";
 import { DropdownSelectBuscadorUnico } from "../../components/dropdown/select_buscador_sector";
 
-const EdicionUsuario = () =>
-{
+const EdicionUsuario = () => {
   const { id } = useParams();
   const history = useNavigate();
-  const [ editMode, setEditMode ] = useState(false);
   const { userDetails } = useUserDetails(id);
   const { editUser, isLoading: editUserLoading, error: editUserError } = useEditUser();
   const { dataGroups, loadingGroups } = useGroups();
@@ -35,8 +32,7 @@ const EdicionUsuario = () =>
   const { dataFiltroCompetencias } = useFiltroCompetencias(regionId, sectorId);
   const [ competenciasAsignadas, setCompetenciasAsignadas ] = useState([]);
   const [ competenciasSeleccionadas, setCompetenciasSeleccionadas ] = useState([]);
-  const { updateHasChanged } = useFormContext();
-  const [ hasChanged, setHasChanged ] = useState(false);
+  const { editMode, updateEditMode, hasChanged, updateHasChanged } = useFormContext();
   const [ isModalOpen, setIsModalOpen ] = useState(false);
 
   const { userData } = useAuth();
@@ -56,28 +52,20 @@ const EdicionUsuario = () =>
     },
   });
 
-  console.log('user',userDetails)
-
-  useEffect(() =>
-  {
-    if (userDetails)
-    {
+  useEffect(() => {
+    if (userDetails) {
       setCompetenciasAsignadas(userDetails.competencias_asignadas || []);
-      if (userDetails.perfil === 'GORE' && userDetails.regionId)
-      {
+      if (userDetails.perfil === 'GORE' && userDetails.regionId) {
         setRegionId(userDetails.regionId);
       }
-      if (userDetails.perfil === 'Usuario Sectorial' && userDetails.sectorId)
-      {
+      if (userDetails.perfil === 'Usuario Sectorial' && userDetails.sectorId) {
         setSectorId(userDetails.sectorId);
       }
     }
   }, [ userDetails ]);
 
-  useEffect(() =>
-  {
-    if (userDetails && userDetails.competencias_asignadas)
-    {
+  useEffect(() => {
+    if (userDetails && userDetails.competencias_asignadas)  {
       // Transforma las competencias asignadas en un formato que el componente hijo pueda entender
       const asignadasIds = userDetails.competencias_asignadas.map(competencia => competencia.id);
       setCompetenciasSeleccionadas(asignadasIds);
@@ -87,10 +75,8 @@ const EdicionUsuario = () =>
   const perfil = watch('perfil') || '';
   const renderizadoCondicional = editMode ? perfil : userDetails?.perfil;
 
-  useEffect(() =>
-  {
-    if (editMode && userDetails)
-    {
+  useEffect(() => {
+    if (editMode && userDetails) {
       // En modo edicion, actualiza los valores iniciales con los valores actuales.
       setValue('nombre_completo', userDetails.nombre_completo || "");
       setValue('email', userDetails.email || "");
@@ -102,15 +88,13 @@ const EdicionUsuario = () =>
   }, [ editMode, userDetails, setValue ]);
 
   //detecta cambios sin guardar en el formulario
-  function handleOnChange(event)
-  {
+  function handleOnChange(event) {
     const data = new FormData(event.currentTarget);
     const formEntries = Array.from(data.entries());
     console.log('Form Entries:', formEntries);
 
     // Verifica si hay cambios respecto al valor inicial
-    const formHasChanged = Array.from(data.entries()).some(([ name, value ]) =>
-    {
+    const formHasChanged = Array.from(data.entries()).some(([ name, value ]) => {
       const initialValue = userDetails[ name ];
       return value !== String(initialValue);
     });
@@ -122,29 +106,33 @@ const EdicionUsuario = () =>
     const sectorChanged = watch('sector') !== userDetails?.sector?.id;
     const estadoChanged = watch('is_active') !== (userDetails?.is_active === 'activo');
 
-
     // Establecer hasChanged si hay algún cambio
-    setHasChanged(formHasChanged || perfilChanged || regionChanged || sectorChanged || estadoChanged);
     updateHasChanged(formHasChanged || perfilChanged || regionChanged || sectorChanged || estadoChanged);
   }
 
-  const handleBackButtonClick = () =>
-  {
-    if (editMode)
-    {
-      setEditMode(false);
-    } else if (hasChanged)
-    {
-      setIsModalOpen(true);
-    } else
-    {
+  const handleBackButtonClick = () => {
+    if (editMode) {
+      if (hasChanged) {
+        setIsModalOpen(true);
+      } else {
+        updateEditMode(false);
+      }
+    } else {
       history(-1);
     }
   };
 
-  const handleEditClick = () =>
-  {
-    setEditMode((prevMode) => !prevMode);
+  const handleEditClick = () => {
+    if (!editMode) {
+      // Si no está en modo edición, simplemente cambia a modo edición
+      updateEditMode(true);
+    } else if (hasChanged) {
+      // Si está en modo edición y hay cambios, mostrar el modal de advertencia
+      setIsModalOpen(true);
+    } else {
+      // Si está en modo edición y no hay cambios, cambia a modo visualización
+      updateEditMode(false);
+    }
   };
 
   //opciones de Perfil, Region y Sector 
@@ -170,25 +158,19 @@ const EdicionUsuario = () =>
     label: competencia.nombre,
   }));
 
-  const handleInputClick = (e) =>
-  {
+  const handleInputClick = (e) => {
     // Previene que el evento se propague al boton
     e.stopPropagation();
   }
 
-  const handleDdSelectChange = (fieldName, selectedOption) =>
-  {
-    try
-    {
-      if (selectedOption && selectedOption.label)
-      {
+  const handleDdSelectChange = (fieldName, selectedOption) => {
+    try {
+      if (selectedOption && selectedOption.label) {
         setValue(fieldName, selectedOption.label);
         setRegionId('');
       }
       updateHasChanged(true);
-      setHasChanged(true);
-    } catch (error)
-    {
+    } catch (error) {
       console.error('Error en handleDdSelectChange:', error);
     }
   };
@@ -198,58 +180,44 @@ const EdicionUsuario = () =>
     setValue('sector', selectedSectorValue, { shouldValidate: true });
   };
 
-  const handleDdSelectBuscadorChange = (fieldName, selectedOption) =>
-  {
-    try
-    {
-      if (selectedOption && selectedOption.value)
-      {
+  const handleDdSelectBuscadorChange = (fieldName, selectedOption) => {
+    try {
+      if (selectedOption && selectedOption.value) {
         setValue(fieldName, selectedOption.value);
-        if (fieldName === 'region')
-        {
+        if (fieldName === 'region') {
           setRegionId(selectedOption.value); // Actualiza regionId cuando se selecciona una nueva región
         }
-        if (fieldName === 'sector')
-        {
+        if (fieldName === 'sector')  {
           setSectorId(selectedOption.value); // Actualiza sectorId cuando se selecciona un nuevo sector
         }
       }
       updateHasChanged(true);
-      setHasChanged(true);
-    } catch (error)
-    {
+    } catch (error) {
       console.error('Error en handleDdSelectBuscadorChange:', error);
     }
   };
 
-  const handleEstadoChange = (nuevoEstado) =>
-  {
+  const handleEstadoChange = (nuevoEstado) => {
     const isActivo = nuevoEstado === "activo";
     setValue("is_active", isActivo);
-    setHasChanged(true);
     updateHasChanged(true);
   };
 
-  const onSubmit = async (formData) =>
-  {
+  const onSubmit = async (formData) => {
     const payload = {
       ...formData,
       competencias_asignadas: competenciasSeleccionadas,
     };
-    try
-    {
+    try {
       await editUser(id, payload);
-      setEditMode(false);
+      updateEditMode(false);
       updateHasChanged(false);
-      setHasChanged(false);
-      history('/home/success', { state: { origen: "editar_usuario" } });
-    } catch (error)
-    {
+      console.log("valor de id en editar usuario antes de hacer redireccion", id)
+      history('/home/success_edicion', { state: { origen: "editar_usuario", id } });
+    } catch (error) {
       console.error("Error al editar el usuario:", error);
     }
   };
-
-
 
   return (
     <div className="container col-10 my-4">
@@ -416,7 +384,7 @@ const EdicionUsuario = () =>
                   <OpcionesAB
                     readOnly={!editMode}
                     id="is_active"
-                    initialState={watch('is_active')}
+                    initialState={userDetails?.is_active}
                     handleEstadoChange={handleEstadoChange}
                     field={field}
                     errors={errors}
@@ -469,7 +437,6 @@ const EdicionUsuario = () =>
           </div>
         )}
 
-
         {/* input Filtro Competencias */}
         <div className="mb-5">
           <div className="my-3 col-11">
@@ -521,7 +488,6 @@ const EdicionUsuario = () =>
           </div>
         )}
 
-
         {editMode && (
           <button className="btn-primario-s mb-5" type="submit">
             <i className="material-symbols-rounded me-2">save</i>
@@ -537,8 +503,6 @@ const EdicionUsuario = () =>
         <ModalAbandonoFormulario
           onClose={() => setIsModalOpen(false)}
           isOpen={isModalOpen}
-          direction='-1'
-          goBack={true}
         />
       )}
     </div>

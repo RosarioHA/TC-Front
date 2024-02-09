@@ -3,7 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 export const FormTitle = ({ data,error}) =>
 {
 
-  console.log('title',data)
   const navigate = useNavigate();
 
   const handleBackButtonClick = () =>
@@ -17,11 +16,13 @@ export const FormTitle = ({ data,error}) =>
   return (
     <div className="my-3 mx-3">
       <div className="py-3 d-flex">
+        <div className="d-flex align-items-center">
         <button className="btn-secundario-s" onClick={handleBackButtonClick}>
           <i className="material-symbols-rounded me-2">arrow_back_ios</i>
           <p className="mb-0 text-decoration-underline">Volver</p>
         </button>
-        <nav className="container mx-5" aria-label="breadcrumb">
+        </div>
+        <nav className="container mx-2" aria-label="breadcrumb">
           <ol className="breadcrumb breadcrumb-style d-flex my-2">
             <li className="breadcrumb-item align-self-center"><Link to="/home">Inicio</Link></li>
             <li className="breadcrumb-item align-self-center text-sans-p-lightgrey" aria-current="page">

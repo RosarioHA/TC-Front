@@ -1,27 +1,24 @@
 import { useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import successIcon from '../static/icons/success.svg';
+import successIcon from '../../static/icons/success.svg';
 
-const SuccessViews = () => {
+const SuccessCreacion = () => {
   const history = useNavigate();
   const location = useLocation();
   const origen = location.state?.origen;
 
   const handleButtonClick = () => {
-    // Realizar la navegación condicional según la procedencia del usuario
-    switch (origen) {
-      case "crear_usuario":
-        history('/home/administrar_usuarios');
-        break;
-      case "crear_competencia":
-        history('/home/listado_competencias');
-        break;
-      case "editar_usuario":
-        history('/home/administrar_usuarios'); // Cambia a la vista deseada
-        break;
-      default:
-        history('/home');
-    }
+      // Realizar la navegación condicional según la procedencia del usuario
+      switch (origen) {
+        case "crear_usuario":
+          history('/home/administrar_usuarios');
+          break;
+        case "crear_competencia":
+          history('/home/listado_competencias');
+          break;
+        default:
+          history('/home');
+      }
   };
   
   let titulo = "";
@@ -37,16 +34,6 @@ const SuccessViews = () => {
     titulo = "Administrar Competencias";
     subtitulo = "Crear Competencia";
     tituloRecuadro = "Creaste una competencia con éxito";
-    nombreBoton = "Volver a Listado de Competencias";
-  } else if (origen === "editar_usuario") {
-    titulo = "Administrar Usuario";
-    subtitulo = "Editar Usuario";
-    tituloRecuadro = "Editaste un usuario con éxito";
-    nombreBoton = "Volver a Administrar Usuarios";
-  } else if (origen === "editar_competencia") {
-    titulo = "Administrar Competencias";
-    subtitulo = "Editar Competencia";
-    tituloRecuadro = "Editaste una competencia con éxito";
     nombreBoton = "Volver a Listado de Competencias";
   } else {
     titulo = "Exito!";
@@ -80,4 +67,4 @@ const SuccessViews = () => {
   );
 }
     
-export default SuccessViews ;
+export default SuccessCreacion ;
