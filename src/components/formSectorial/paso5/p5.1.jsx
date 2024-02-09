@@ -13,6 +13,7 @@ export const Subpaso_CincoPuntoUno = (
     data_resumen_costos,
     listado_subtitulos,
     listado_item_subtitulos,
+    listado_etapas,
     setRefreshSubpaso_CincoDos, }
 ) => {
 
@@ -34,6 +35,7 @@ export const Subpaso_CincoPuntoUno = (
           stepNumber={stepNumber}
           listado_subtitulos={listado_subtitulos}
           listado_item_subtitulos={listado_item_subtitulos}
+          listado_etapas={listado_etapas}
           setRefreshSubpaso_CincoDos={setRefreshSubpaso_CincoDos}
           setRefreshSumatoriaCostos={setRefreshSumatoriaCostos}
           readOnly={false}

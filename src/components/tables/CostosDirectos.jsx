@@ -1,5 +1,6 @@
 import { useState, useContext, useEffect } from "react";
 import CustomTextarea from "../forms/custom_textarea";
+import DropdownCheckbox from "../dropdown/checkbox";
 import DropdownSelect from "../dropdown/select";
 import { OpcionesAB } from "../forms/opciones_AB";
 import { FormularioContext } from "../../context/FormSectorial";
@@ -13,6 +14,7 @@ const CostosDirectos = ({
   stepNumber,
   listado_subtitulos,
   listado_item_subtitulos,
+  listado_etapas,
   setRefreshSubpaso_CincoDos,
   setRefreshSumatoriaCostos,
 }) => {
@@ -28,11 +30,12 @@ const CostosDirectos = ({
       descripcion: { loading: false, saved: false }
     }
   }));
-  
+
   const [costosDirectos, setCostosDirectos] = useState(initialState);
   const [opcionesSubtitulos, setOpcionesSubtitulos] = useState([]);
   const [subtituloSeleccionado, setSubtituloSeleccionado] = useState('');
   const [opcionesItems, setOpcionesItems] = useState([]);
+  const [ opcionesEtapas, setopcionesEtapas ] = useState([]);
   const { handleUpdatePaso } = useContext(FormularioContext);
   const [esquemaValidacion, setEsquemaValidacion] = useState(null);
 
@@ -73,6 +76,15 @@ const CostosDirectos = ({
     }
   }, [subtituloSeleccionado, listado_item_subtitulos]);
 
+  useEffect(() => {
+    if (listado_etapas) {
+      const opcionesDeEtapas = transformarEnOpciones(listado_etapas, 'nombre_etapa');
+      setopcionesEtapas(opcionesDeEtapas);
+    }
+  }, [listado_etapas]);
+
+  console.log('etapas', opcionesEtapas)
+
   // Función para recargar campos por separado
   const updateFieldState = (costoDirectoId, fieldName, newState) => {
     setCostosDirectos(prevCostosDirectos =>
@@ -90,7 +102,7 @@ const CostosDirectos = ({
   // Lógica para agregar una nueva tabla Plataformas
   const onSubmit = data => {
     console.log(data);
-    // Aquí puedes llamar a la función para agregar la nueva plataforma
+    // Aquí puedes llamar a la función para agregar la nueva costo
     agregarCostoDirecto();
   };
 
@@ -102,7 +114,7 @@ const CostosDirectos = ({
 
   const agregarCostoDirecto = () => {
     const nuevoCostoDirectoId = generarIdUnico();
-    // Asegúrate de que la nueva plataforma tenga un estado inicial completo
+    // Asegúrate de que la nueva costo tenga un estado inicial completo
     const nuevoCostoDirecto = {
       id: nuevoCostoDirectoId,
       etapa: [],
@@ -126,7 +138,7 @@ const CostosDirectos = ({
   };
 
 
-  // Lógica para eliminar una ficha de una plataforma
+  // Lógica para eliminar una ficha de una costo
   const eliminarElemento = async (costoDirectoId) => {
 
     // Preparar payload para eliminar una etapa
@@ -153,12 +165,12 @@ const CostosDirectos = ({
   const handleInputChange = (costoDirectoId, campo, valor) => {
     setCostosDirectos(prevCostosDirectos =>
       prevCostosDirectos.map(costoDirecto => {
-        // Verifica si es la plataforma que estamos actualizando
+        // Verifica si es la costo que estamos actualizando
         if (costoDirecto.id === costoDirectoId) {
           // Actualiza el valor del campo específico de manera inmutable
           return { ...costoDirecto, [campo]: valor };
         }
-        // Si no es la plataforma que estamos actualizando, la retorna sin cambios
+        // Si no es la costo que estamos actualizando, la retorna sin cambios
         return costoDirecto;
       })
     );
@@ -232,17 +244,57 @@ const CostosDirectos = ({
             <div className="row">
               <div className="col">
                 <p className="text-sans-p-bold">Subtítulo</p>
-                <DropdownSelect
-                  placeholder="Subtítulos"
-                  options=""
-                  />
+                <Controller
+                  control={control}
+                  name={`subtitulo_${costo.id}`}
+                  render={({ field }) => {
+                    return (
+                      <DropdownSelect
+                        id={`subtitulo_${costo.id}`}
+                        name={`subtitulo_${costo.id}`}
+                        placeholder="Subtítulos"
+                        options={opcionesSubtitulos}
+                        onSelectionChange={(selectedOption) => {
+                          setSubtituloSeleccionado(selectedOption.value);
+                          field.onChange(selectedOption.value);
+                        }}
+
+                        readOnly={false}
+                        selected={costo.subtitulo_label_value}
+
+                        loading={costo.estados?.subtitulo?.loading ?? false}
+                        saved={costo.estados?.subtitulo?.saved ?? false}
+                      />
+                    );
+                  }}
+                />
               </div>
               <div className="col">
                 <p className="text-sans-p-bold">Item</p>
-                <DropdownSelect
-                  placeholder="Ítem"
-                  options=""
-                  />
+                <Controller
+                  control={control}
+                  name={`item_subtitulo_${costo.id}`}
+                  render={({ field }) => {
+                    return (
+                      <DropdownSelect
+                        id={`item_subtitulo_${costo.id}`}
+                        name={`item_subtitulo_${costo.id}`}
+                        placeholder="Ítem"
+                        options={opcionesItems}
+                        onSelectionChange={(selectedOptions) => {
+                            handleSave(costo.id, 'item_subtitulo', selectedOptions);
+                            field.onChange(selectedOptions);
+                          }}
+
+                        readOnly={false}
+                        selected={costo.item_subtitulo_label_value}
+
+                        loading={costo.estados?.item_subtitulo?.loading ?? false}
+                        saved={costo.estados?.item_subtitulo?.saved ?? false}
+                      />
+                    );
+                  }}
+                />
               </div>
               <div className="col">
                 <p className="text-sans-p-bold mb-0">Total Anual</p>
@@ -254,10 +306,30 @@ const CostosDirectos = ({
                   <p className="text-sans-p-bold mb-0">Etapa</p>
                   <p className="ms-2">(Opcional)</p>
                 </div>
+                  <Controller
+                    control={control}
+                    name={`etapa_${costo.id}`}
+                    render={({ field }) => {
+                      return (
+                        <DropdownCheckbox
+                          id={`etapa_${costo.id}`}
+                          name={`etapa_${costo.id}`}
+                          placeholder="Elige la o las Etapas donde se utiliza"
+                          options={opcionesEtapas}
+                          onSelectionChange={(selectedOptions) => {
+                            handleSave(costo.id, 'etapa', selectedOptions);
+                            field.onChange(selectedOptions);
+                          }}
 
-                <DropdownSelect
-                  placeholder="Ítem"
-                  options="" />
+                          readOnly={false}
+                          selectedValues={costo.etapa_label_value}
+
+                          loading={costo.estados?.etapa?.loading ?? false}
+                          saved={costo.estados?.etapa?.saved ?? false}
+                        />
+                      );
+                    }}
+                  />
               </div>
               <div className="col">
                 <p className="text-sans-p-bold">¿Es transversal?</p>

@@ -34,7 +34,8 @@ const PasoCinco = () => {
     listado_subtitulos, 
     listado_item_subtitulos, 
     listado_estamentos, 
-    listado_calidades_juridicas 
+    listado_calidades_juridicas,
+    listado_etapas
   } = pasoData;
 
   return (
@@ -58,6 +59,7 @@ const PasoCinco = () => {
             data_resumen_costos={p_5_1_c_resumen_costos_por_subtitulo}
             listado_subtitulos={listado_subtitulos}
             listado_item_subtitulos={listado_item_subtitulos}
+            listado_etapas={listado_etapas}
             setRefreshSubpaso_CincoDos={setRefreshSubpaso_CincoDos}
             />
           <Subpaso_CincoDos data={p_5_2_evolucion_gasto_asociado} variacion_promedio={p_5_2_variacion_promedio} />
