@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 
-const CustomTextarea = ({ loading, saved, label, placeholder, id, maxLength, error, rows, value = "", onChange, onBlur, readOnly, name }) =>
+const CustomTextarea = ({ loading,descripcion, saved, label, placeholder, id, maxLength, error, rows, value = "", onChange, onBlur, readOnly, name }) =>
 {
   const [ inputValue, setInputValue ] = useState(value); // Inicialización segura de inputValue
   const textareaRef = useRef(null);
@@ -84,12 +84,15 @@ const CustomTextarea = ({ loading, saved, label, placeholder, id, maxLength, err
               {renderSpinnerOrCheck()}
             </div>
           </div>
-          <div className="d-flex justify-content-between col-12">
+          <div className="d-flex justify-content-between col-11">
               {error && (
-                <p className="text-sans-h6-darkred mt-1 mb-0">{error}</p>
+                <p className="text-sans-h6-darkred mt-1 mb-0 ">{error}</p>
               )}
+            <div className="mb-0  mt-1 ms-auto text-sans-h6 text-end">
+              {descripcion}
+            </div>
           {maxLength !== null && maxLength !== undefined && (
-            <div className="d-flex justify-content-end mb-0 col-11">
+            <div className="mb-0  mt-1 ms-auto ">
               <span className={counterClass}>
                 {inputValue.length}/{maxLength} caracteres.
               </span>

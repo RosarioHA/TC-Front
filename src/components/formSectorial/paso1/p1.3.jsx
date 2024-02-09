@@ -176,7 +176,7 @@ export const Subpaso_tres = ({ pasoData, id, stepNumber }) =>
             saved={inputStatus.fuentes_normativas.saved}
             maxLength={500}
           />
-          <div className="d-flex mb-3 pt-0 text-sans-h6-primary">
+          <div className="d-flex mb-3 pt-0 text-sans-h6-primary col-11">
             <i className="material-symbols-rounded me-2">info</i>
             <h6 className="mt-1">Identificar todas las normas e instrumentos que regulan el ejercicio de la competencia y su jerarquía: Ley, Decreto Ley, Decreto con Fuerza de Ley, Decreto o Resoluciones u otros instrumentos.</h6>
           </div>
@@ -194,7 +194,7 @@ export const Subpaso_tres = ({ pasoData, id, stepNumber }) =>
             saved={inputStatus.territorio_competencia.saved}
             maxLength={500}
           />
-          <div className="d-flex mb-3 mt-1 text-sans-h6-primary">
+          <div className="d-flex mb-3 mt-1 text-sans-h6-primary col-11">
             <i className="material-symbols-rounded me-2">info</i>
             <h6 className="mt-1">Delimitación territorial del ejercicio de la competencia ya sea a nivel: nacional, regional, comunal u otra zona territorial, de corresponder.</h6>
           </div>
@@ -212,7 +212,7 @@ export const Subpaso_tres = ({ pasoData, id, stepNumber }) =>
             saved={inputStatus.enfoque_territorial_competencia.saved}
             maxLength={500}
           />
-          <div className="d-flex mb-3 mt-1 text-sans-h6-primary">
+          <div className="d-flex mb-3 mt-1 text-sans-h6-primary col-11">
             <i className="material-symbols-rounded me-2">info</i>
             <h6 className="mt-1">Describir si la competencia genera un bien o servicio público estándar, o si tiene especifidades dependiendo del nivel territorial, identificando otros organismos públicos con los que se relaciona.</h6>
           </div>
@@ -225,7 +225,7 @@ export const Subpaso_tres = ({ pasoData, id, stepNumber }) =>
             onSelectionChange={handleAmbitoChange}
             selected={ambitoSeleccionado}
           />
-          <div className="d-flex mb-3 mt-1 text-sans-h6-primary">
+          <div className="d-flex mb-3 mt-1 text-sans-h6-primary col-11">
             <i className="material-symbols-rounded me-2">info</i>
             <h6 className="mt-1">El ámbito de la competencia se define al final del análisis de la competencia, este campo define la postura del sector.</h6>
           </div>
@@ -242,7 +242,7 @@ export const Subpaso_tres = ({ pasoData, id, stepNumber }) =>
             loading={inputStatus.posibilidad_ejercicio_por_gobierno_regional.loading}
             saved={inputStatus.posibilidad_ejercicio_por_gobierno_regional.saved}
             maxLength={500} />
-          <div className="d-flex mb-3 mt-1 text-sans-h6-primary">
+          <div className="d-flex mb-3 mt-1 text-sans-h6-primary col-11">
             <i className="material-symbols-rounded me-2">info</i>
             <h6 className="mt-1">Indicar si se trata de un traspaso de competencias al “Gobierno Regional”, constituido tanto por el Gobernador como por el Consejo Regional, o se trata de un traspaso al “Gobernador Regional”, órgano ejecutivo del Gobierno Regional.</h6>
           </div>
@@ -259,7 +259,7 @@ export const Subpaso_tres = ({ pasoData, id, stepNumber }) =>
             loading={inputStatus.organo_actual_competencia.loading}
             saved={inputStatus.organo_actual_competencia.saved}
             maxLength={500} />
-          <div className="d-flex mb-3 mt-1 text-sans-h6-primary">
+          <div className="d-flex mb-3 mt-1 text-sans-h6-primary col-11">
             <i className="material-symbols-rounded me-2">info</i>
             <h6 className="mt-1">Analizar si la competencia es actualmente ejercida por los ministerios y de los servicios públicos a que se refiere el artículo 28 de la ley N° 18.575, orgánica constitucional de Bases Generales de la Administración del Estado.</h6>
           </div>
