@@ -35,7 +35,7 @@ const CostosDirectos = ({
   const [opcionesSubtitulos, setOpcionesSubtitulos] = useState([]);
   const [subtituloSeleccionado, setSubtituloSeleccionado] = useState('');
   const [opcionesItems, setOpcionesItems] = useState([]);
-  const [ opcionesEtapas, setopcionesEtapas ] = useState([]);
+  const [opcionesEtapas, setopcionesEtapas] = useState([]);
   const { handleUpdatePaso } = useContext(FormularioContext);
   const [esquemaValidacion, setEsquemaValidacion] = useState(null);
 
@@ -66,13 +66,15 @@ const CostosDirectos = ({
   }, [listado_subtitulos]);
 
   useEffect(() => {
+    console.log("listado_item_subtitulos actual:", listado_item_subtitulos);
+    console.log("Subtítulo actualmente seleccionado:", subtituloSeleccionado);
     if (subtituloSeleccionado && listado_item_subtitulos[subtituloSeleccionado]) {
-      // Encuentra los ítems basados en el subtítulo seleccionado y actualiza las opciones
       const opcionesDeItems = transformarEnOpciones(listado_item_subtitulos[subtituloSeleccionado], 'item');
       setOpcionesItems(opcionesDeItems);
+      console.log("opcionesItems actualizado:", opcionesDeItems); // Debugging
     } else {
-      // Si no hay selección o no se encuentran ítems, vacía las opciones
       setOpcionesItems([]);
+      console.log("opcionesItems vaciado"); // Debugging
     }
   }, [subtituloSeleccionado, listado_item_subtitulos]);
 
@@ -82,8 +84,6 @@ const CostosDirectos = ({
       setopcionesEtapas(opcionesDeEtapas);
     }
   }, [listado_etapas]);
-
-  console.log('etapas', opcionesEtapas)
 
   // Función para recargar campos por separado
   const updateFieldState = (costoDirectoId, fieldName, newState) => {
@@ -195,12 +195,20 @@ const CostosDirectos = ({
     updateFieldState(arrayNameId, fieldName, { loading: true, saved: false });
 
     let payload;
-    if (fieldName === 'etapa' || fieldName === 'item_subtitulo') {
+    if (fieldName === 'etapa') {
       payload = {
-        // Forma el payload específico para 'etapas'
         'p_5_1_a_costos_directos': [{
           id: arrayNameId,
-          etapas: newValue.map(option => option.value) // Asume que newValue es un array de opciones seleccionadas
+          [fieldName]: newValue.map(option => option.value)
+        }]
+      };
+    } else if (fieldName === 'item_subtitulo') {
+      // Ajuste para enviar 'item_subtitulo' como un valor único, no un array
+      // Asumiendo que newValue es un objeto de la opción seleccionada
+      payload = {
+        'p_5_1_a_costos_directos': [{
+          id: arrayNameId,
+          [fieldName]: newValue.value // Envía el valor seleccionado directamente
         }]
       };
     } else if (fieldName === 'es_transversal') {
@@ -255,8 +263,13 @@ const CostosDirectos = ({
                         placeholder="Subtítulos"
                         options={opcionesSubtitulos}
                         onSelectionChange={(selectedOption) => {
-                          setSubtituloSeleccionado(selectedOption.value);
-                          field.onChange(selectedOption.value);
+                          const textoSubtitulo = listado_subtitulos.find(subtitulo => subtitulo.id.toString() === selectedOption.value)?.subtitulo;
+                          if (textoSubtitulo) {
+                            setSubtituloSeleccionado(textoSubtitulo);
+                            field.onChange(selectedOption.value);
+                          } else {
+                            console.error("Subtítulo seleccionado no encontrado en la lista de subtítulos.");
+                          }
                         }}
 
                         readOnly={false}
@@ -282,9 +295,9 @@ const CostosDirectos = ({
                         placeholder="Ítem"
                         options={opcionesItems}
                         onSelectionChange={(selectedOptions) => {
-                            handleSave(costo.id, 'item_subtitulo', selectedOptions);
-                            field.onChange(selectedOptions);
-                          }}
+                          handleSave(costo.id, 'item_subtitulo', selectedOptions);
+                          field.onChange(selectedOptions);
+                        }}
 
                         readOnly={false}
                         selected={costo.item_subtitulo_label_value}
@@ -306,30 +319,30 @@ const CostosDirectos = ({
                   <p className="text-sans-p-bold mb-0">Etapa</p>
                   <p className="ms-2">(Opcional)</p>
                 </div>
-                  <Controller
-                    control={control}
-                    name={`etapa_${costo.id}`}
-                    render={({ field }) => {
-                      return (
-                        <DropdownCheckbox
-                          id={`etapa_${costo.id}`}
-                          name={`etapa_${costo.id}`}
-                          placeholder="Elige la o las Etapas donde se utiliza"
-                          options={opcionesEtapas}
-                          onSelectionChange={(selectedOptions) => {
-                            handleSave(costo.id, 'etapa', selectedOptions);
-                            field.onChange(selectedOptions);
-                          }}
+                <Controller
+                  control={control}
+                  name={`etapa_${costo.id}`}
+                  render={({ field }) => {
+                    return (
+                      <DropdownCheckbox
+                        id={`etapa_${costo.id}`}
+                        name={`etapa_${costo.id}`}
+                        placeholder="Etapa"
+                        options={opcionesEtapas}
+                        onSelectionChange={(selectedOptions) => {
+                          handleSave(costo.id, 'etapa', selectedOptions);
+                          field.onChange(selectedOptions);
+                        }}
 
-                          readOnly={false}
-                          selectedValues={costo.etapa_label_value}
+                        readOnly={false}
+                        selectedValues={costo.etapa_label_value}
 
-                          loading={costo.estados?.etapa?.loading ?? false}
-                          saved={costo.estados?.etapa?.saved ?? false}
-                        />
-                      );
-                    }}
-                  />
+                        loading={costo.estados?.etapa?.loading ?? false}
+                        saved={costo.estados?.etapa?.saved ?? false}
+                      />
+                    );
+                  }}
+                />
               </div>
               <div className="col">
                 <p className="text-sans-p-bold">¿Es transversal?</p>
