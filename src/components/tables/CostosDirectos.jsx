@@ -21,6 +21,8 @@ const CostosDirectos = ({
 
   const initialState = data?.map(item => ({
     ...item,
+    subtituloSeleccionado: '',
+    opcionesItems: [],
     estados: {
       etapa: { loading: false, saved: false },
       item_subtitulo: { loading: false, saved: false },
@@ -66,17 +68,18 @@ const CostosDirectos = ({
   }, [listado_subtitulos]);
 
   useEffect(() => {
-    console.log("listado_item_subtitulos actual:", listado_item_subtitulos);
-    console.log("Subtítulo actualmente seleccionado:", subtituloSeleccionado);
     if (subtituloSeleccionado && listado_item_subtitulos[subtituloSeleccionado]) {
       const opcionesDeItems = transformarEnOpciones(listado_item_subtitulos[subtituloSeleccionado], 'item');
       setOpcionesItems(opcionesDeItems);
-      console.log("opcionesItems actualizado:", opcionesDeItems); // Debugging
     } else {
       setOpcionesItems([]);
-      console.log("opcionesItems vaciado"); // Debugging
     }
   }, [subtituloSeleccionado, listado_item_subtitulos]);
+
+  const encontrarOpcionesDeItems = (subtituloSeleccionado) => {
+    const items = listado_item_subtitulos[subtituloSeleccionado] || [];
+    return transformarEnOpciones(items, 'item');
+  };
 
   useEffect(() => {
     if (listado_etapas) {
@@ -244,6 +247,8 @@ const CostosDirectos = ({
     }
   };
 
+
+
   return (
     <div>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -264,12 +269,18 @@ const CostosDirectos = ({
                         options={opcionesSubtitulos}
                         onSelectionChange={(selectedOption) => {
                           const textoSubtitulo = listado_subtitulos.find(subtitulo => subtitulo.id.toString() === selectedOption.value)?.subtitulo;
-                          if (textoSubtitulo) {
-                            setSubtituloSeleccionado(textoSubtitulo);
-                            field.onChange(selectedOption.value);
-                          } else {
-                            console.error("Subtítulo seleccionado no encontrado en la lista de subtítulos.");
-                          }
+                          const opcionesDeItems = encontrarOpcionesDeItems(textoSubtitulo);
+
+                          setCostosDirectos(prevCostosDirectos => prevCostosDirectos.map(costoDirecto => {
+                            if (costoDirecto.id === costo.id) {
+                              return {
+                                ...costoDirecto,
+                                subtituloSeleccionado: textoSubtitulo,
+                                opcionesItems: opcionesDeItems, // Actualiza opcionesItems aquí
+                              };
+                            }
+                            return costoDirecto;
+                          }));
                         }}
 
                         readOnly={false}
@@ -293,7 +304,7 @@ const CostosDirectos = ({
                         id={`item_subtitulo_${costo.id}`}
                         name={`item_subtitulo_${costo.id}`}
                         placeholder="Ítem"
-                        options={opcionesItems}
+                        options={costo.opcionesItems}
                         onSelectionChange={(selectedOptions) => {
                           handleSave(costo.id, 'item_subtitulo', selectedOptions);
                           field.onChange(selectedOptions);
