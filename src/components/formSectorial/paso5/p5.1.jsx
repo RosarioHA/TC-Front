@@ -1,12 +1,14 @@
 import CostosDirectos from "../../tables/CostosDirectos";
 import Costos from "../../tables/Costos";
 import SumatoriaCostos from "../../tables/SumatoriaCostos";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { apiTransferenciaCompentencia } from "../../../services/transferenciaCompetencia";
 
 export const Subpaso_CincoPuntoUno = (
   {
     id,
     paso5,
+    formulario_enviado,
     stepNumber,
     data_costos_directos,
     data_costos_indirectos,
@@ -18,6 +20,49 @@ export const Subpaso_CincoPuntoUno = (
 ) => {
 
   const [refreshSumatoriaCostos, setRefreshSumatoriaCostos] = useState(false);
+  const [dataDirecta, setDataDirecta] = useState(null);
+  const [totalCostosDirectos, setTotalCostosDirectos] = useState('');
+  const [totalCostosIndirectos, setTotalCostosIndirectos] = useState('');
+
+// Actualiza los estados con los datos de dataDirecta cuando esta cambie
+useEffect(() => {
+  if (dataDirecta && dataDirecta.paso5) {
+    setTotalCostosDirectos(dataDirecta.paso5.total_costos_directos || '0');
+    setTotalCostosIndirectos(dataDirecta.paso5.total_costos_indirectos || '0');
+  }
+}, [dataDirecta]);
+
+// Luego, usa totalCostosDirectos y totalCostosIndirectos para mostrar los valores en tu componente
+
+
+  // Lógica para recargar sumatoria al agregar costos directos o indirectos
+  // Llamada para recargar componente
+  const fetchDataDirecta = async () => {
+    try {
+      const response = await apiTransferenciaCompentencia.get(`/formulario-sectorial/${id}/paso-${stepNumber}/`);
+      setDataDirecta(response.data);
+    } catch (error) {
+      console.error('Error al obtener datos directamente:', error);
+    }
+  };
+
+  // refreshSubpasoDos_cuatro es un trigger disparado desde subpaso 2.3
+  useEffect(() => {
+    if (refreshSumatoriaCostos) {
+      fetchDataDirecta();
+      setRefreshSumatoriaCostos(false);
+    }
+  }, [refreshSumatoriaCostos, id, stepNumber]);
+
+  useEffect(() => {
+    if (dataDirecta && dataDirecta.paso5) {
+      setTotalCostosDirectos(dataDirecta.paso5.total_costos_directos || '0');
+      setTotalCostosIndirectos(dataDirecta.paso5.total_costos_indirectos || '0');
+    }
+  }, [dataDirecta]);
+  
+
+
 
   return (
     <div className="mt-4 me-5 pe-5">
@@ -38,14 +83,14 @@ export const Subpaso_CincoPuntoUno = (
           listado_etapas={listado_etapas}
           setRefreshSubpaso_CincoDos={setRefreshSubpaso_CincoDos}
           setRefreshSumatoriaCostos={setRefreshSumatoriaCostos}
-          readOnly={false}
+          formulario_enviado={formulario_enviado}
         />
         <hr />
       </div>
 
       <div className="row mt-5">
         <p className="text-sans-p-bold mb-0 col-2">Costos Directos <br /> Totales Anual ($M)</p>
-        <p className="text-sans-p-blue col">{paso5.total_costos_directos}</p>
+        <p className="text-sans-p-blue col">{totalCostosDirectos}</p>
       </div>
       <hr />
 
@@ -60,7 +105,7 @@ export const Subpaso_CincoPuntoUno = (
 
       <div className="row mt-5">
         <p className="text-sans-p-bold mb-0 col-2">Costos Directos <br /> Totales Anual ($M)</p>
-        <p className="text-sans-p-blue col">{paso5.total_costos_indirectos}</p>
+        <p className="text-sans-p-blue col">{totalCostosIndirectos}</p>
       </div>
       <hr />
 

@@ -2,6 +2,7 @@ import { useState, useContext, useEffect } from "react";
 import CustomTextarea from "../forms/custom_textarea";
 import DropdownCheckbox from "../dropdown/checkbox";
 import DropdownSelect from "../dropdown/select";
+import CustomInput from "../forms/custom_input";
 import { OpcionesAB } from "../forms/opciones_AB";
 import { FormularioContext } from "../../context/FormSectorial";
 import { construirValidacionPaso5_1a } from "../../validaciones/esquemaValidarPaso5Sectorial";
@@ -17,6 +18,7 @@ const CostosDirectos = ({
   listado_etapas,
   setRefreshSubpaso_CincoDos,
   setRefreshSumatoriaCostos,
+  formulario_enviado
 }) => {
 
   const initialState = data?.map(item => ({
@@ -158,6 +160,8 @@ const CostosDirectos = ({
     // Llamar a la API para actualizar los datos
     try {
       await handleUpdatePaso(id, stepNumber, payload);
+      setRefreshSubpaso_CincoDos(true);
+      setRefreshSumatoriaCostos(true);
 
     } catch (error) {
       console.error("Error al eliminar:", error);
@@ -232,6 +236,8 @@ const CostosDirectos = ({
 
       // Actualiza el estado de carga y guardado
       updateFieldState(arrayNameId, fieldName, { loading: false, saved: true });
+      setRefreshSubpaso_CincoDos(true);
+      setRefreshSumatoriaCostos(true);
 
     } catch (error) {
       console.error("Error al guardar los datos:", error);
@@ -255,12 +261,13 @@ const CostosDirectos = ({
         {costosDirectos.map((costo, index) => (
           <div key={costo.id} className="col mt-4">
             <div className="row">
+              <span className="text-sans-p-bold mb-0">{index + 1}</span>
               <div className="col">
                 <p className="text-sans-p-bold">Subtítulo</p>
                 <Controller
                   control={control}
                   name={`subtitulo_${costo.id}`}
-                  render={({ field }) => {
+                  render={() => {
                     return (
                       <DropdownSelect
                         id={`subtitulo_${costo.id}`}
@@ -276,14 +283,14 @@ const CostosDirectos = ({
                               return {
                                 ...costoDirecto,
                                 subtituloSeleccionado: textoSubtitulo,
-                                opcionesItems: opcionesDeItems, // Actualiza opcionesItems aquí
+                                opcionesItems: opcionesDeItems,
                               };
                             }
                             return costoDirecto;
                           }));
                         }}
 
-                        readOnly={false}
+                        readOnly={formulario_enviado}
                         selected={costo.subtitulo_label_value}
 
                         loading={costo.estados?.subtitulo?.loading ?? false}
@@ -310,7 +317,7 @@ const CostosDirectos = ({
                           field.onChange(selectedOptions);
                         }}
 
-                        readOnly={false}
+                        readOnly={formulario_enviado}
                         selected={costo.item_subtitulo_label_value}
 
                         loading={costo.estados?.item_subtitulo?.loading ?? false}
@@ -323,7 +330,43 @@ const CostosDirectos = ({
               <div className="col">
                 <p className="text-sans-p-bold mb-0">Total Anual</p>
                 <p>($M)</p>
-                <input></input>
+                <Controller
+                  control={control}
+                  name={`total_anual_${costo.id}`}
+                  defaultValue={costo?.total_anual || ''}
+                  render={({ field }) => {
+                    // Destructura las propiedades necesarias de field
+                    const { onChange, onBlur, value } = field;
+
+                    const handleChange = (valor) => {
+                      clearErrors(`total_anual_${costo.id}`);
+                      onChange(valor);
+                      handleInputChange(costo.id, 'total_anual', valor);
+                    };
+
+                    // Función para manejar el evento onBlur
+                    const handleBlur = async () => {
+                      const isFieldValid = await trigger(`total_anual_${costo.id}`);
+                      if (isFieldValid) {
+                        handleSave(costo.id, 'total_anual');
+                      }
+                      onBlur();
+                    };
+
+                    return (
+                      <CustomInput
+                        id={`total_anual_${costo.id}`}
+                        placeholder="Costo (M$)"
+                        value={value}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        loading={costo.estados?.total_anual?.loading ?? false}
+                        saved={costo.estados?.total_anual?.saved ?? false}
+                        error={errors[`total_anual_${costo.id}`]?.message}
+                      />
+                    );
+                  }}
+                />
               </div>
               <div className="col">
                 <div className="d-flex">
@@ -357,21 +400,77 @@ const CostosDirectos = ({
               </div>
               <div className="col">
                 <p className="text-sans-p-bold">¿Es transversal?</p>
-                <OpcionesAB
-                  altA="Si"
-                  altB="No" />
+                <Controller
+                  control={control}
+                  name={`es_transversal_${costo.id}`}
+                  defaultValue={costo.es_transversal}
+                  render={({ field, fieldState }) => {
+                    return (
+                      <OpcionesAB
+                        id={`es_transversal_${costo.id}`}
+                        readOnly={false}
+                        initialState={field.value}
+                        handleEstadoChange={(newValue) => handleEsTransversalChange(costo.id, newValue)}
+                        loading={costo.estados?.es_transversal?.loading ?? false}
+                        saved={costo.estados?.es_transversal?.saved ?? false}
+                        error={fieldState.error?.message}
+                        altA="Si"
+                        altB="No"
+                        field={field}
+                        handleSave={handleSave}
+                        arrayNameId={costo.id}
+                        fieldName="es_transversal"
+                      />
+                    );
+                  }}
+                />
               </div>
             </div>
 
             <div className="row pe-3">
-              <CustomTextarea
-                label="Descripción "
-                placeholder="Describe el costo por subtítulo e ítem"
-                maxLength={500} />
+              <Controller
+                control={control}
+                name={`descripcion_${costo.id}`}
+                defaultValue={costo?.descripcion || ''}
+                render={({ field }) => {
+                  // Destructura las propiedades necesarias de field
+                  const { onChange, onBlur, value } = field;
+
+                  const handleChange = (e) => {
+                    clearErrors(`descripcion_${costo.id}`);
+                    onChange(e.target.value);
+                    handleInputChange(costo.id, 'descripcion', e.target.value);
+                  };
+
+                  // Función para manejar el evento onBlur
+                  const handleBlur = async () => {
+                    const isFieldValid = await trigger(`descripcion_${costo.id}`);
+                    if (isFieldValid) {
+                      handleSave(costo.id, 'descripcion');
+                    }
+                    onBlur();
+                  };
+
+                  return (
+                    <CustomTextarea
+                      id={`descripcion_${costo.id}`}
+                      label="Descripción"
+                      placeholder="Describe el costo por subtítulo e ítem."
+                      maxLength={500}
+                      value={value}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      loading={costo.estados?.descripcion?.loading ?? false}
+                      saved={costo.estados?.descripcion?.saved ?? false}
+                      error={errors[`descripcion_${costo.id}`]?.message}
+                    />
+                  );
+                }}
+              />
             </div>
 
             <div className="d-flex justify-content-end me-2">
-              {index.length > 1 && ( // Condición para mostrar el botón "Eliminar"
+              {(costosDirectos.length > 1 && !formulario_enviado) && (
                 <div className="">
                   <button
                     className="btn-terciario-ghost mt-3"
@@ -388,7 +487,7 @@ const CostosDirectos = ({
 
         <button
           className="btn-secundario-s m-2"
-          onClick={agregarCostoDirecto}>
+          type="submit">
           <i className="material-symbols-rounded me-2">add</i>
           <p className="mb-0 text-decoration-underline">Agregar subtítulo</p>
         </button>

@@ -35,7 +35,8 @@ const PasoCinco = () => {
     listado_item_subtitulos, 
     listado_estamentos, 
     listado_calidades_juridicas,
-    listado_etapas
+    listado_etapas,
+    formulario_enviado
   } = pasoData;
 
   return (
@@ -53,6 +54,7 @@ const PasoCinco = () => {
           <Subpaso_CincoPuntoUno
             id={data.id}
             paso5={paso5}
+            formulario_enviado={formulario_enviado}
             stepNumber={stepNumber}
             data_costos_directos={p_5_1_a_costos_directos}
             data_costos_indirectos={p_5_1_b_costos_indirectos}
