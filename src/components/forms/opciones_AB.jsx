@@ -19,7 +19,6 @@ export const OpcionesAB = ({
     initialState === true ? 'activo' : initialState === false ? 'inactivo' : 'none'
   );
 
-
   const handleClick = async (estado) => {
     if (!readOnly) {
       const newState = estado === 'activo' ? true : false;
