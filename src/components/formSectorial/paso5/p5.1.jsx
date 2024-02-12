@@ -3,6 +3,7 @@ import Costos from "../../tables/Costos";
 import SumatoriaCostos from "../../tables/SumatoriaCostos";
 import { useState, useEffect } from "react";
 import { apiTransferenciaCompentencia } from "../../../services/transferenciaCompetencia";
+import CostosIndirectos from "../../tables/CostosIndirectos";
 
 export const Subpaso_CincoPuntoUno = (
   {
@@ -58,11 +59,12 @@ useEffect(() => {
     if (dataDirecta && dataDirecta.paso5) {
       setTotalCostosDirectos(dataDirecta.paso5.total_costos_directos || '0');
       setTotalCostosIndirectos(dataDirecta.paso5.total_costos_indirectos || '0');
+    } else {
+      setTotalCostosDirectos(paso5.total_costos_directos || '0');
+      setTotalCostosIndirectos(paso5.total_costos_indirectos || '0');
     }
   }, [dataDirecta]);
   
-
-
 
   return (
     <div className="mt-4 me-5 pe-5">
@@ -99,7 +101,17 @@ useEffect(() => {
       <h6 className="text-sans-h6-primary mt-3">Llenar información para al menos un subtítulo/item es obligatorio.</h6>
 
       <div>
-        <Costos />
+      <CostosIndirectos
+          id={id}
+          data={data_costos_indirectos}
+          stepNumber={stepNumber}
+          listado_subtitulos={listado_subtitulos}
+          listado_item_subtitulos={listado_item_subtitulos}
+          listado_etapas={listado_etapas}
+          setRefreshSubpaso_CincoDos={setRefreshSubpaso_CincoDos}
+          setRefreshSumatoriaCostos={setRefreshSumatoriaCostos}
+          formulario_enviado={formulario_enviado}
+        />
         <hr />
       </div>
 

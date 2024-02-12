@@ -1,24 +1,20 @@
 import * as yup from 'yup';
 
-export const construirValidacionPaso5_1a = (costosDirectos) => {
+export const construirValidacionPaso5_1ab = (modeloCostos) => {
   let schemaFields = {};
 
-  costosDirectos.forEach(costoDirecto => {
-    const id = costoDirecto.id;
+  modeloCostos.forEach(modeloCostos => {
+    const id = modeloCostos.id;
 
-    // Validación para subtítulo
+    // Validación para subtítulo como valor único requerido
     schemaFields[`subtitulo_${id}`] = yup
-      .array()
-      .of(yup.string())
-      .min(1, 'Al menos un ítem es requerido')
-      .nullable();
-    
-    // Validación para ítems
+      .string()
+      .required('El subtítulo es requerido');
+
+    // Validación para ítems como valor único requerido
     schemaFields[`item_subtitulo_${id}`] = yup
-      .array()
-      .of(yup.string())
-      .min(1, 'Al menos un ítem es requerido')
-      .nullable();
+      .string()
+      .required('Un ítem es requerido');
       
     // Validación para etapa (no requerido)
     schemaFields[`etapa_${id}`] = yup
@@ -48,3 +44,5 @@ export const construirValidacionPaso5_1a = (costosDirectos) => {
 
   return yup.object().shape(schemaFields);
 };
+
+

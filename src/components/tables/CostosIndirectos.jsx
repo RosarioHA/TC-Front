@@ -9,7 +9,7 @@ import { construirValidacionPaso5_1ab } from "../../validaciones/esquemaValidarP
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
-const CostosDirectos = ({
+const CostosIndirectos = ({
   id,
   data,
   stepNumber,
@@ -35,7 +35,7 @@ const CostosDirectos = ({
     }
   }));
 
-  const [costosDirectos, setCostosDirectos] = useState(initialState);
+  const [costosIndirectos, setCostosIndirectos] = useState(initialState);
   const [opcionesSubtitulos, setOpcionesSubtitulos] = useState([]);
   const [subtituloSeleccionado, setSubtituloSeleccionado] = useState('');
   const [opcionesItems, setOpcionesItems] = useState([]);
@@ -43,18 +43,18 @@ const CostosDirectos = ({
   const { handleUpdatePaso } = useContext(FormularioContext);
   const [esquemaValidacion, setEsquemaValidacion] = useState(null);
 
-  const defaultValues = costosDirectos.reduce((acc, costoDirecto) => {
-    if (costoDirecto.item_subtitulo) {
-      acc[`subtitulo_${costoDirecto.id}`] = "Valor existente";
+  const defaultValues = costosIndirectos.reduce((acc, costoIndirecto) => {
+    if (costoIndirecto.item_subtitulo) {
+      acc[`subtitulo_${costoIndirecto.id}`] = "Valor existente";
     }
-    acc[`item_subtitulo_${costoDirecto.id}`] = costoDirecto.item_subtitulo || '';
+    acc[`item_subtitulo_${costoIndirecto.id}`] = costoIndirecto.item_subtitulo || '';
     return acc;
   }, {});
 
   useEffect(() => {
-    const esquema = construirValidacionPaso5_1ab(costosDirectos);
+    const esquema = construirValidacionPaso5_1ab(costosIndirectos);
     setEsquemaValidacion(esquema);
-  }, [costosDirectos]);
+  }, [costosIndirectos]);
 
   const { control, handleSubmit, trigger, clearErrors, setError, formState: { errors } } = useForm({
     resolver: esquemaValidacion ? yupResolver(esquemaValidacion) : undefined,
@@ -101,14 +101,14 @@ const CostosDirectos = ({
 
   // Función para recargar campos por separado
   const updateFieldState = (costoDirectoId, fieldName, newState) => {
-    setCostosDirectos(prevCostosDirectos =>
-      prevCostosDirectos.map(costoDirecto => {
-        if (costoDirecto.id === costoDirectoId) {
+    setCostosIndirectos(prevCostosIndirectos =>
+      prevCostosIndirectos.map(costoIndirecto => {
+        if (costoIndirecto.id === costoDirectoId) {
           // Actualiza solo los estados del campo específico
-          const updatedEstados = { ...costoDirecto.estados, [fieldName]: { ...newState } };
-          return { ...costoDirecto, estados: updatedEstados };
+          const updatedEstados = { ...costoIndirecto.estados, [fieldName]: { ...newState } };
+          return { ...costoIndirecto, estados: updatedEstados };
         }
-        return costoDirecto;
+        return costoIndirecto;
       })
     );
   };
@@ -117,7 +117,7 @@ const CostosDirectos = ({
   const onSubmit = data => {
     console.log(data);
     // Aquí puedes llamar a la función para agregar la nueva costo
-    agregarCostoDirecto();
+    agregarCostoIndirecto();
   };
 
   // Generador de ID único
@@ -126,11 +126,11 @@ const CostosDirectos = ({
     return Math.floor(Date.now() / 1000);
   };
 
-  const agregarCostoDirecto = () => {
-    const nuevoCostoDirectoId = generarIdUnico();
+  const agregarCostoIndirecto = () => {
+    const nuevoCostoIndirectoId = generarIdUnico();
     // Asegúrate de que la nueva costo tenga un estado inicial completo
-    const nuevoCostoDirecto = {
-      id: nuevoCostoDirectoId,
+    const nuevoCostoIndirecto = {
+      id: nuevoCostoIndirectoId,
       etapa: [],
       item_subtitulo: [],
       nombre_item_subtitulo: [],
@@ -148,23 +148,23 @@ const CostosDirectos = ({
       },
     };
 
-    setCostosDirectos(prevCostosDirectos => [...prevCostosDirectos, nuevoCostoDirecto]);
+    setCostosIndirectos(prevCostosIndirectos => [...prevCostosIndirectos, nuevoCostoIndirecto]);
   };
 
 
   // Lógica para eliminar una ficha de una costo
-  const eliminarElemento = async (costoDirectoId) => {
+  const eliminarElemento = async (elementoId) => {
 
     // Preparar payload para eliminar una etapa
     const payload = {
-      'p_5_1_a_costos_directos': [{
-        id: costoDirectoId,
+      'p_5_1_b_costos_indirectos': [{
+        id: elementoId,
         DELETE: true
       }]
     };
 
     // Actualizar el estado local para reflejar la eliminación
-    setCostosDirectos(prevCostosDirectos => prevCostosDirectos.filter(costoDirecto => costoDirecto.id !== costoDirectoId));
+    setCostosIndirectos(prevCostosIndirectos => prevCostosIndirectos.filter(costoIndirecto => costoIndirecto.id !== elementoId));
 
     // Llamar a la API para actualizar los datos
     try {
@@ -178,26 +178,26 @@ const CostosDirectos = ({
   };
 
   // Manejadora de CustomInput y CustomTextArea
-  const handleInputChange = (costoDirectoId, campo, valor) => {
-    setCostosDirectos(prevCostosDirectos =>
-      prevCostosDirectos.map(costoDirecto => {
+  const handleInputChange = (elementoId, campo, valor) => {
+    setCostosIndirectos(prevCostosIndirectos =>
+      prevCostosIndirectos.map(elemento => {
         // Verifica si es la costo que estamos actualizando
-        if (costoDirecto.id === costoDirectoId) {
+        if (elemento.id === elementoId) {
           // Actualiza el valor del campo específico de manera inmutable
-          return { ...costoDirecto, [campo]: valor };
+          return { ...elemento, [campo]: valor };
         }
         // Si no es la costo que estamos actualizando, la retorna sin cambios
-        return costoDirecto;
+        return elemento;
       })
     );
   };
 
   const handleEsTransversalChange = (costoDirectoId, newValue) => {
-    setCostosDirectos(prevCostosDirectos =>
-      prevCostosDirectos.map(costoDirecto =>
-        costoDirecto.id === costoDirectoId
-          ? { ...costoDirecto, es_transversal: newValue }
-          : costoDirecto
+    setCostosIndirectos(prevCostosIndirectos =>
+      prevCostosIndirectos.map(costoIndirecto =>
+        costoIndirecto.id === costoDirectoId
+          ? { ...costoIndirecto, es_transversal: newValue }
+          : costoIndirecto
       )
     );
   };
@@ -206,14 +206,14 @@ const CostosDirectos = ({
   const handleSave = async (arrayNameId, fieldName, newValue) => {
     // Si se está guardando por blur, no es necesario desactivar el botón de guardar general
 
-    const costoDirecto = costosDirectos.find(e => e.id === arrayNameId);
+    const costoIndirecto = costosIndirectos.find(e => e.id === arrayNameId);
 
     updateFieldState(arrayNameId, fieldName, { loading: true, saved: false });
 
     let payload;
     if (fieldName === 'etapa') {
       payload = {
-        'p_5_1_a_costos_directos': [{
+        'p_5_1_b_costos_indirectos': [{
           id: arrayNameId,
           [fieldName]: newValue.map(option => option.value)
         }]
@@ -222,7 +222,7 @@ const CostosDirectos = ({
       // Ajuste para enviar 'item_subtitulo' como un valor único, no un array
       // Asumiendo que newValue es un objeto de la opción seleccionada
       payload = {
-        'p_5_1_a_costos_directos': [{
+        'p_5_1_b_costos_indirectos': [{
           id: arrayNameId,
           [fieldName]: newValue.value // Envía el valor seleccionado directamente
         }]
@@ -230,12 +230,12 @@ const CostosDirectos = ({
     } else if (fieldName === 'es_transversal') {
       payload = {
         // Payload para 'es_transversal'
-        'p_5_1_a_costos_directos': [{ id: arrayNameId, [fieldName]: newValue }]
+        'p_5_1_b_costos_indirectos': [{ id: arrayNameId, [fieldName]: newValue }]
       };
     } else {
       // Payload para otros campos
       payload = {
-        'p_5_1_a_costos_directos': [{ id: arrayNameId, [fieldName]: costoDirecto[fieldName] }]
+        'p_5_1_b_costos_indirectos': [{ id: arrayNameId, [fieldName]: costoIndirecto[fieldName] }]
       };
     }
 
@@ -267,7 +267,7 @@ const CostosDirectos = ({
   return (
     <div>
       <form onSubmit={handleSubmit(onSubmit)}>
-        {costosDirectos.map((costo, index) => (
+        {costosIndirectos.map((costo, index) => (
           <div key={costo.id} className="col mt-4">
             <div className="row">
               <span className="text-sans-p-bold mb-0">{index + 1}</span>
@@ -287,15 +287,15 @@ const CostosDirectos = ({
                           const textoSubtitulo = listado_subtitulos.find(subtitulo => subtitulo.id.toString() === selectedOption.value)?.subtitulo;
                           const opcionesDeItems = encontrarOpcionesDeItems(textoSubtitulo);
 
-                          setCostosDirectos(prevCostosDirectos => prevCostosDirectos.map(costoDirecto => {
-                            if (costoDirecto.id === costo.id) {
+                          setCostosIndirectos(prevCostosIndirectos => prevCostosIndirectos.map(costoIndirecto => {
+                            if (costoIndirecto.id === costo.id) {
                               return {
-                                ...costoDirecto,
+                                ...costoIndirecto,
                                 subtituloSeleccionado: textoSubtitulo,
                                 opcionesItems: opcionesDeItems,
                               };
                             }
-                            return costoDirecto;
+                            return costoIndirecto;
                           }));
                           field.onChange(selectedOption.value);
                         }}
@@ -482,7 +482,7 @@ const CostosDirectos = ({
             </div>
 
             <div className="d-flex justify-content-end me-2">
-              {(costosDirectos.length > 1 && !formulario_enviado) && (
+              {(costosIndirectos.length > 1 && !formulario_enviado) && (
                 <div className="">
                   <button
                     className="btn-terciario-ghost mt-3"
@@ -508,4 +508,4 @@ const CostosDirectos = ({
   )
 };
 
-export default CostosDirectos;
+export default CostosIndirectos;
