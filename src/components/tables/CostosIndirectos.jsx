@@ -37,8 +37,6 @@ const CostosIndirectos = ({
 
   const [costosIndirectos, setCostosIndirectos] = useState(initialState);
   const [opcionesSubtitulos, setOpcionesSubtitulos] = useState([]);
-  const [subtituloSeleccionado, setSubtituloSeleccionado] = useState('');
-  const [opcionesItems, setOpcionesItems] = useState([]);
   const [opcionesEtapas, setopcionesEtapas] = useState([]);
   const { handleUpdatePaso } = useContext(FormularioContext);
   const [esquemaValidacion, setEsquemaValidacion] = useState(null);
@@ -78,14 +76,6 @@ const CostosIndirectos = ({
     }
   }, [listado_subtitulos]);
 
-  useEffect(() => {
-    if (subtituloSeleccionado && listado_item_subtitulos[subtituloSeleccionado]) {
-      const opcionesDeItems = transformarEnOpciones(listado_item_subtitulos[subtituloSeleccionado], 'item');
-      setOpcionesItems(opcionesDeItems);
-    } else {
-      setOpcionesItems([]);
-    }
-  }, [subtituloSeleccionado, listado_item_subtitulos]);
 
   const encontrarOpcionesDeItems = (subtituloSeleccionado) => {
     const items = listado_item_subtitulos[subtituloSeleccionado] || [];
@@ -241,7 +231,7 @@ const CostosIndirectos = ({
 
     try {
       // Asume que handleUpdatePaso puede manejar ambos casos adecuadamente
-      const response = await handleUpdatePaso(id, stepNumber, payload);
+     await handleUpdatePaso(id, stepNumber, payload);
 
       // Actualiza el estado de carga y guardado
       updateFieldState(arrayNameId, fieldName, { loading: false, saved: true });
