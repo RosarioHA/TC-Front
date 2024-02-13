@@ -45,4 +45,22 @@ export const construirValidacionPaso5_1ab = (modeloCostos) => {
   return yup.object().shape(schemaFields);
 };
 
+export const construirValidacionPaso5_1c = (modeloCostos) => {
+  let schemaFields = {};
+
+  modeloCostos.forEach(modeloCostos => {
+    const id = modeloCostos.id;
+
+    // Validación para descripcion
+    schemaFields[`descripcion_${id}`] = yup
+      .string()
+      .required('La descripción es obligatoria')
+      .min(3, 'La descripción debe tener al menos 3 caracteres')
+      .max(500, 'La descripción no debe exceder los 500 caracteres');
+  });
+
+  return yup.object().shape(schemaFields);
+};
+
+
 
