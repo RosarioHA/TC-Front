@@ -1,46 +1,37 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Avance } from "../../components/tables/Avance";
+import { useResumenFormulario } from '../../hooks/formulario/useResumenFormulario';
 
-const ResumenSectorial = () =>
-{
+const ResumenSectorial = () => {
   const navigate = useNavigate();
   const [ pasos, setPasos ] = useState([]);
   const [ todosCompletos, setTodosCompletos ] = useState(false);
+  const { id } = useParams();
+  const { resumen } = useResumenFormulario(id);
 
-  useEffect(() =>
-  {
-    const datosSimulados = [
-      { numero_paso: 1, nombre_paso: 'Descripción de la Institución', avance: '0/10' },
-      { numero_paso: 2, nombre_paso: 'Arquitectura del Proceso', avance: '0/10' },
-      { numero_paso: 3, nombre_paso: 'Cobertura de la Competencia', avance: '0/10' },
-      { numero_paso: 4, nombre_paso: 'Indicadores de Desempeño', avance: '0/10' },
-      { numero_paso: 5, nombre_paso: 'Costeo de la Competencia', avance: '0/10' },
+  useEffect(() => {
+    if (resumen) {
+      const pasosArray = Object
+        .keys(resumen)
+        .filter(key => key.startsWith('paso'))
+        .map(key => resumen[key]);
+      setPasos(pasosArray);
+    }
+  }, [resumen]);
 
-
-    ];
-    setPasos(datosSimulados);
-  }, []);
-
-  useEffect(() =>
-  {
+  useEffect(() => {
     const todosPasosCompletos = pasos.every(paso => isStageComplete(paso.avance));
     setTodosCompletos(todosPasosCompletos);
   }, [ pasos ]);
 
-
-  const handleBackButtonClick = () =>
-  {
+  const handleBackButtonClick = () => {
     navigate(-1);
   }
 
-
-  const isStageComplete = (avance) =>
-  {
-
+  const isStageComplete = (avance) => {
     return avance === "10/10";
   }
-
 
   return (
     <>
