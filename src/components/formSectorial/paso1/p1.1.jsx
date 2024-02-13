@@ -178,6 +178,7 @@ export const Subpaso_uno = ({ pasoData, id, stepNumber, marcojuridico }) =>
             loading={inputStatus.forma_juridica_organismo.loading}
             saved={inputStatus.forma_juridica_organismo.saved}
             maxLength={500}
+            readOnly={false}
           />
           <div className="d-flex mb-3 mt-0 text-sans-h6-primary">
             <i className="material-symbols-rounded me-2">info</i>

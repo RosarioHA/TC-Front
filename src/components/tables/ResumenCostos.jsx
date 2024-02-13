@@ -15,13 +15,6 @@ const ResumenCostos = ({
   setRefreshSumatoriaCostos,
 }) => {
 
-  const initialState = data?.map(item => ({
-    ...item,
-    estados: {
-      descripcion: { loading: false, saved: false }
-    }
-  }));
-
   const [ResumenCostos, setResumenCostos] = useState(() => { return Array.isArray(data) ? data : []; });
   const [dataDirecta, setDataDirecta] = useState(null);
   const { handleUpdatePaso } = useContext(FormularioContext);
