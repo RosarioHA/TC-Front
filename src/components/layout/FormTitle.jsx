@@ -32,7 +32,7 @@ export const FormTitle = ({ data,error}) =>
         </nav>
       </div>
       <span className="text-sans-Title mt-3">Formulario Sectorial</span>
-      <div className="my-3 border-bottom">
+      <div className="my-3 mb-5">
         <div className="text-sans-h1 mb-1">{data.competencia_nombre}</div>
         <div className="text-sans-h2-grey mb-2">{data.sector_nombre}</div>
       </div>
