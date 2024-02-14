@@ -23,22 +23,16 @@ const datosGastos = [
   { 'id': 5, 'subtitulo': 'Sub. 23', 'descripcion': '' },
 ]
 
-export const GastosAsociados = ({
-  id,
-  paso5,
-  formulario_enviado,
-  stepNumber,
-  dataGastos,
-}) => {
-
-  const [datos, setDatos] = useState([]);
-  const [showErrorMessage, setShowErrorMessage] = useState(false);
+export const GastosAsociados = ({readOnly}) => {
+  const { id, stepNumber, updatePaso } = useContext(FormularioContext);
+  const [ datos, setDatos ] = useState([]);
+  const [ showErrorMessage, setShowErrorMessage ] = useState(false);
 
   useEffect(() => {
     if (datosGastos) {
       setDatos(datosGastos);
     }
-  }, [id]);
+  }, [ id ]);
 
   if (!datosGastos) {
     return <div>Cargando datos...</div>;
@@ -47,29 +41,60 @@ export const GastosAsociados = ({
   if (!datos || datos.length === 0) {
     return <div>No hay datos para mostrar.</div>;
   }
-
   const validateInput = (value) => {
-    return value.replace(/[-+.e]/g, '');
+    return value.replace(/[-+.e-]/g, '');
   };
 
-  const headers = paso5.años
+  const headers = datos.map(data => data.anio);
+
+  const handleBlur = async (index, tipo, value) => {
+    const validatedValue = validateInput(value);
+    if (datos[ index ][ tipo ] !== validatedValue) {
+      try {
+        console.log(`Guardando: ${tipo} = ${value} para el ID: ${id}`);
+        await updatePaso(id, stepNumber, { [ tipo ]: value });
+        const newDatos = [ ...datos ];
+        newDatos[ index ][ tipo ] = validatedValue;
+        setDatos(newDatos);
+        if (!areAllFieldsFilled()) {
+          setShowErrorMessage(true);
+        } else {
+          setShowErrorMessage(false);
+        }
+      } catch (error) {
+        console.error("Error al actualizar:", error);
+      }
+    }
+  };
+
+  const handleInputChange = (index, tipo, value) => {
+    const validatedValue = validateInput(value);
+    const newDatos = [ ...datos ];
+    newDatos[ index ][ tipo ] = validatedValue;
+    setDatos(newDatos);
+  };
+  const areAllFieldsFilled = () => {
+    return datos.every(data => Object.values(data).every(value => value !== ""));
+  };
+
+  const currentYear = new Date().getFullYear();
+  const yearDifferences = headers.map(year => currentYear - year);
 
   return (
     <div className="mt-4">
       <div className="my-4">
         <table className="table table-borderless table-striped">
-
           <thead>
             <tr>
-              <th scope="col" className="text-sans-p-bold px-2 pb-5">Subtítulo</th>
-              {headers && headers.map((year, index) => (
+              <th scope="col" className="text-sans-p-bold px-2 pb-5">Subtitulo</th>
+              {headers.map((year, index) => (
                 <th key={index} scope="col" className="text-sans-p text-center">
                   <u>{year}</u>
+                  <p className="text-sans-h6-grey">(año n-{yearDifferences[ index ]})</p>
                 </th>
               ))}
             </tr>
           </thead>
-
           <tbody>
             {datosGastos.map((item, rowIndex) => (
               <React.Fragment key={rowIndex}>
@@ -85,25 +110,25 @@ export const GastosAsociados = ({
                         onChange={(e) => handleInputChange(rowIndex, 'costo', e.target.value)}
                         onBlur={(e) => handleBlur(rowIndex, 'costo', e.target.value)}
                         className="form-control mx-auto px-0 mb-2 text-center"
-                        disabled={formulario_enviado}
+                        disabled={readOnly}
                       />
                     </td>
                   ))}
                 </tr>
-
+              
                 <tr>
                   <td colSpan={headers.length + 1} className="px-0 my-5">
                     <div className="mt-2">
-                      <CustomTextarea
-                        label="Descripción"
-                        placeholder="Describe la evolución del gasto por subtitulo"
-                        maxLength={500}
-                        value={item.descripcion}
-                        onChange={(e) => handleInputChange(rowIndex, 'descripcion', e.target.value)}
-                        onBlur={(e) => handleBlur(rowIndex, 'descripcion', e.target.value)}
-                        className={`form-control ${rowIndex % 2 === 0 ? "bg-color-even" : "bg-color-odd"}`}
-                        readOnly={formulario_enviado}
-                      />
+                    <CustomTextarea
+                      label="Descripción"
+                      placeholder="Describe la evolución del gasto por subtitulo"
+                      maxLength={500}
+                      value={item.descripcion}
+                      onChange={(e) => handleInputChange(rowIndex, 'descripcion', e.target.value)}
+                      onBlur={(e) => handleBlur(rowIndex, 'descripcion', e.target.value)}
+                      className={`form-control ${rowIndex % 2 === 0 ? "bg-color-even" : "bg-color-odd"}`}
+                      readOnly={readOnly}
+                    />
                     </div>
                   </td>
                 </tr>
@@ -122,9 +147,9 @@ export const GastosAsociados = ({
           <CustomTextarea
             label="Glosas específicas (Opcional)"
             placeholder="Describe las glosas específicas "
-            maxLength={1100}
-            readOnly={formulario_enviado}
-          />
+            maxLength={1100} 
+            readOnly={readOnly} 
+            />
           <div className="d-flex mb-3 pt-0 text-sans-h6-primary">
             <i className="material-symbols-rounded me-2">info</i>
             <h6 className="mt-1">Si existen glosas especificas para el ejercicio de la competencia,

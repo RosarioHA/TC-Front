@@ -1,5 +1,6 @@
 import { GastosAnuales } from "../../tables/GastoAnual";
 import { GastosAsociados } from "../../tables/GastosAsociados"
+import { GastosEvolucionVariacion } from "../../tables/GastosEvolucionVariacion";
 import { useState, useEffect } from "react";
 import { apiTransferenciaCompentencia } from "../../../services/transferenciaCompetencia";
 
@@ -63,7 +64,7 @@ export const Subpaso_CincoDos = ({
           </p>
         </h6>
       </div>
-      <GastosAsociados
+      <GastosEvolucionVariacion
         id={id}
         paso5={paso5}
         formulario_enviado={formulario_enviado}
