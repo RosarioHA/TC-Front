@@ -47,7 +47,7 @@ const PasoCinco = () => {
       <div className="col-11">
         <div className="container vh-100">
           <div className="d-flex">
-            <h3 className="mt-3">{paso5.nombre_paso}</h3>
+            <h3 className="mt-3 me-4">{paso5.nombre_paso}</h3>
             <Avance avance={paso5.avance} />
           </div>
           <span className="text-sans-h6-primary">Texto de apoyo</span>

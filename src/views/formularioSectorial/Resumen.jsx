@@ -1,46 +1,37 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Avance } from "../../components/tables/Avance";
+import { useResumenFormulario } from '../../hooks/formulario/useResumenFormulario';
 
-const ResumenSectorial = () =>
-{
+const ResumenSectorial = () => {
   const navigate = useNavigate();
   const [ pasos, setPasos ] = useState([]);
   const [ todosCompletos, setTodosCompletos ] = useState(false);
+  const { id } = useParams();
+  const { resumen } = useResumenFormulario(id);
 
-  useEffect(() =>
-  {
-    const datosSimulados = [
-      { numero_paso: 1, nombre_paso: 'Descripción de la Institución', avance: '0/10' },
-      { numero_paso: 2, nombre_paso: 'Arquitectura del Proceso', avance: '0/10' },
-      { numero_paso: 3, nombre_paso: 'Cobertura de la Competencia', avance: '0/10' },
-      { numero_paso: 4, nombre_paso: 'Indicadores de Desempeño', avance: '0/10' },
-      { numero_paso: 5, nombre_paso: 'Costeo de la Competencia', avance: '0/10' },
+  useEffect(() => {
+    if (resumen) {
+      const pasosArray = Object
+        .keys(resumen)
+        .filter(key => key.startsWith('paso'))
+        .map(key => resumen[key]);
+      setPasos(pasosArray);
+    }
+  }, [resumen]);
 
-
-    ];
-    setPasos(datosSimulados);
-  }, []);
-
-  useEffect(() =>
-  {
+  useEffect(() => {
     const todosPasosCompletos = pasos.every(paso => isStageComplete(paso.avance));
     setTodosCompletos(todosPasosCompletos);
   }, [ pasos ]);
 
-
-  const handleBackButtonClick = () =>
-  {
+  const handleBackButtonClick = () => {
     navigate(-1);
   }
 
-
-  const isStageComplete = (avance) =>
-  {
-
+  const isStageComplete = (avance) => {
     return avance === "10/10";
   }
-
 
   return (
     <>
@@ -48,27 +39,36 @@ const ResumenSectorial = () =>
         <div className="text-center">
           <span className="text-sans-h1">Resumen formulario </span>
         </div>
-        <div className="mb-5 px-5 me-5">
+        <div className="mb-5 me-5">
 
           {pasos.map(paso => (
-            <div className="container mx-5 px-5" key={paso.numero_paso} >
+            <div className="container" key={paso.numero_paso} >
               <div className="row align-items-center ">
-                <div className="col-4">
+                <div className="col-4 ps-5">
                   <span className=""><strong>Paso {paso.numero_paso}:</strong> {paso.nombre_paso} </span>
                 </div>
                 <div className="col-5 d-flex align-items-center">
                   <Avance avance={paso.avance} />
                 </div>
-                <div className="col">
+                <div className="col d-flex justify-content-center">
                   {isStageComplete(paso.avance) ?
-                    <img src="/public/check.svg" alt="Check" /> :
-                    <img src="/public/warning.svg" alt="Warning" />
+                    <img src="/public/check.svg" alt="Check"/> :
+                    <img src="/public/warning.svg" alt="Warning"/>
                   }
                 </div>
                 <div className="col-2">
-                  <button className="btn-secundario-s my-2">
-                    Completar paso
-                  </button>
+                  {paso.campos_obligatorios_completados ? (
+                    <div className="d-flex justify-content-center">
+                      <span className="text-sans-p-blue text-center">Listo</span>
+                    </div>
+                  ) : (
+                    <button 
+                    className="btn-secundario-s my-2"
+                    onClick={() => navigate(`/home/formulario_sectorial/${id}/paso_${paso.numero_paso}`)}
+                    >
+                      Completar paso
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
