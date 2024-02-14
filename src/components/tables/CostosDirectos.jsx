@@ -311,7 +311,7 @@ const CostosDirectos = ({
                   />
                 </div>
               </div>
-              <div className="col border-end">
+              <div className="col border-end  d-flex flex-column justify-content-between">
                 <p className="text-sans-p-bold">Item</p>
                 <Controller
                   control={control}
