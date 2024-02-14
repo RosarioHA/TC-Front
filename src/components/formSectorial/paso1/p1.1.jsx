@@ -1,156 +1,129 @@
-import { useContext, useState, useEffect, useCallback } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import CustomTextarea from "../../forms/custom_textarea";
 import CustomInput from "../../forms/custom_input";
 import { DocumentsAditionals } from "../../commons/documents";
 import { FormularioContext } from "../../../context/FormSectorial";
+import {useUploadMarcoJuridico} from '../../../hooks/formulario/useMarcoJuridico';
+import { apiTransferenciaCompentencia } from '../../../services/transferenciaCompetencia';
 
-export const Subpaso_uno = ({ pasoData, id, stepNumber, marcojuridico }) =>
-{
-  const { handleUpdatePaso, handleUploadFiles } = useContext(FormularioContext);
-  const [ formData, setFormData ] = useState({
-    marcojuridico: pasoData.marcojuridico || [],
-    paso1: pasoData.paso1 || {
+export const Subpaso_uno = ({ dataPaso, id, stepNumber, marcojuridico }) => {
+  const { handleUpdatePaso} = useContext(FormularioContext);
+  const { uploadDocumento } = useUploadMarcoJuridico(id, stepNumber); 
+  const [formData, setFormData] = useState({
+    marcojuridico: marcojuridico || [],
+    paso1:dataPaso.paso1 || {
       forma_juridica_organismo: '',
       mision_institucional: '',
       descripcion_archivo_marco_juridico: '',
       informacion_adicional_marco_juridico: '',
-    }
+    },
   });
-  const [ inputStatus, setInputStatus ] = useState({
+  const [inputStatus, setInputStatus] = useState({
     forma_juridica_organismo: { loading: false, saved: false },
     mision_institucional: { loading: false, saved: false },
     descripcion_archivo_marco_juridico: { loading: false, saved: false },
     informacion_adicional_marco_juridico: { loading: false, saved: false },
   });
-  const [ isUploading, setIsUploading ] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const [marcoJuridicoFiles, setMarcoJuridicoFiles] = useState(marcojuridico || []);
 
-  useEffect(() =>
-  {
+
+  useEffect(() => {
+    setMarcoJuridicoFiles(marcojuridico || []);
+  }, [marcojuridico]);
+
+
+const fetchData = async () => {
+  try {
+    const response = await apiTransferenciaCompentencia.get(`/formulario-sectorial/${id}/paso-${stepNumber}/`);
+    setMarcoJuridicoFiles(response.data.marcojuridico);
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+};
+
+
+  useEffect(() => {
     const savedData = localStorage.getItem('formData');
-    if (savedData)
-    {
+    if (savedData) {
       setFormData(JSON.parse(savedData));
     }
   }, []);
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     localStorage.setItem('formData', JSON.stringify(formData));
-  }, [ formData ]);
+  }, [formData]);
 
-
-  const handleChange = (inputName, e) =>
-  {
+  const handleChange = (inputName, e) => {
     const { value } = e.target;
     setFormData(prevFormData => ({
       ...prevFormData,
       paso1: {
         ...prevFormData.paso1,
-        [ inputName ]: value,
-      }
+        [inputName]: value,
+      },
     }));
     setInputStatus(prevStatus => ({
       ...prevStatus,
-      [ inputName ]: { loading: false, saved: false }
+      [inputName]: { loading: false, saved: false },
     }));
   };
 
-  const handleSave = async (inputName) =>
-  {
+  const handleSave = async (inputName) => {
     setInputStatus(prevStatus => ({
       ...prevStatus,
-      [ inputName ]: { ...prevStatus[ inputName ], loading: true }
+      [inputName]: { ...prevStatus[inputName], loading: true },
     }));
 
-    try
-    {
+    try {
       const success = await handleUpdatePaso(id, stepNumber, formData);
       setInputStatus(prevStatus => ({
         ...prevStatus,
-        [ inputName ]: { loading: false, saved: success }
+        [inputName]: { loading: false, saved: success },
       }));
-    } catch (error)
-    {
-      console.error('Error al guardar:', error);
+    } catch (error) {
+      console.error('Error saving:', error);
       setInputStatus(prevStatus => ({
         ...prevStatus,
-        [ inputName ]: { loading: false, saved: false }
+        [inputName]: { loading: false, saved: false },
       }));
     }
   };
-
-
-
-  const uploadFiles = useCallback(async (inputFiles) =>
-  {
-    // Comprobar si inputFiles es un archivo o un array de archivos
-    const filesArray = Array.isArray(inputFiles) ? inputFiles : [ inputFiles ];
-
+  const uploadFile = async (file) => {
     setIsUploading(true);
+    try {
+      await uploadDocumento(id, { documento: file });
+      await fetchData();
+    } catch (error) {
+      console.error('Error uploading file:', error);
+    } finally {
+      setIsUploading(false);
+    }
+  };
 
-    const formData = new FormData();
-
-    // Iterar sobre todos los archivos (o el único archivo) y añadirlos a formData
-    filesArray.forEach(file =>
-    {
-      if (file)
-      {
-        formData.append('marcojuridico', file);
-      }
-    });
+  const eliminarDocMarco = async (idMarco) =>
+  {
+    console.log('id', idMarco);
+    const payload = {
+      marcojuridico: [ {
+        id: idMarco,
+        DELETE: true
+      } ]
+    };
 
     try
     {
-      // Suponiendo que handleUploadFiles puede manejar múltiples archivos y espera FormData como argumento
-      const success = await handleUploadFiles(id, stepNumber, formData, 'marcojuridico');
-      if (success)
-      {
-        console.log('Todos los archivos fueron cargados con éxito');
-      } else
-      {
-        console.log('La operación de carga no tuvo éxito.');
-      }
+      await handleUpdatePaso(id, stepNumber, payload);
+      setMarcoJuridicoFiles(currentFiles => currentFiles.filter(file => file.id !== idMarco));
+      await fetchData();
+      console.log("Marco Juridico eliminado con éxito");
     } catch (error)
     {
-      console.error('Error en la carga de archivos:', error);
-    } finally
-    {
-      setIsUploading(false);
+      console.error("Error al eliminar el marco juridico:", error);
     }
-  }, [ id, stepNumber, handleUploadFiles ]);
+  };
 
-
-  const handleFileChange = useCallback((inputFiles) =>
-  {
-    setIsUploading(true);
-
-    // Asegurarse de que inputFiles sea siempre un array
-    const filesArray = Array.isArray(inputFiles) ? inputFiles : [ inputFiles ]
-      ;
-    // Preparar FormData con todos los archivos para 'marcojuridico'
-    const formData = new FormData();
-    filesArray.forEach(file =>
-    {
-      formData.append('marcojuridico', file);
-    });
-
-    // Aquí asumimos que `handleUploadFiles` puede manejar este FormData
-    // y que está configurado para enviar la solicitud al backend correctamente
-    handleUploadFiles(id, stepNumber, formData, 'marcojuridico')
-      .then(() =>
-      {
-        console.log('Todos los archivos fueron cargados con éxito');
-        setIsUploading(false);
-      })
-      .catch(error =>
-      {
-        console.error('Error en la subida de archivos:', error);
-        setIsUploading(false);
-      });
-  }, [ id, stepNumber, handleUploadFiles ]);
-  
-
-
+ console.log(marcoJuridicoFiles)
 
   return (
     <>
@@ -160,8 +133,8 @@ export const Subpaso_uno = ({ pasoData, id, stepNumber, marcojuridico }) =>
           <CustomInput
             label="Denominación del organismo"
             placeholder="Escriba la denominación del organismo"
-            id={pasoData?.denominacion_organismo}
-            value={pasoData?.denominacion_organismo}
+            id={dataPaso?.denominacion_organismo}
+            value={dataPaso?.denominacion_organismo}
             disabled={true}
             readOnly={false}
             name="denominacion_organismo"
@@ -172,7 +145,7 @@ export const Subpaso_uno = ({ pasoData, id, stepNumber, marcojuridico }) =>
             label="Forma jurídica del organismo (Obligatorio)"
             placeholder="Debes llenar este campo para poder enviar el formulario."
             name="forma_juridica_organismo"
-            value={pasoData?.forma_juridica_organismo}
+            value={dataPaso?.forma_juridica_organismo}
             onChange={(e) => handleChange('forma_juridica_organismo', e)}
             onBlur={() => handleSave('forma_juridica_organismo')}
             loading={inputStatus.forma_juridica_organismo.loading}
@@ -190,14 +163,14 @@ export const Subpaso_uno = ({ pasoData, id, stepNumber, marcojuridico }) =>
             <p className="text-sans-h6-grey">Mínimo 1 archivo, máximo 5 archivos, peso máximo 20MB, formato PDF)</p>
           </div>
           <DocumentsAditionals
-            onFilesChanged={handleFileChange}
-            onUpload={uploadFiles}
-            marcoJuridicoData={marcojuridico}
+            onFilesChanged={uploadFile}
+            marcoJuridicoData={marcoJuridicoFiles}
+            handleDelete={eliminarDocMarco}
           />
           {isUploading && (
             <div className="loading-indicator col-11 w-50 mx-auto">
               <div className="text-center">
-                Cargando archivos...
+                Guardando archivo...
               </div>
               <div className="progress" role="progressbar" aria-label="Animated striped example" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
                 <div className="progress-bar progress-bar-striped progress-bar-animated" style={{ width: '100%' }}></div>
@@ -210,7 +183,7 @@ export const Subpaso_uno = ({ pasoData, id, stepNumber, marcojuridico }) =>
             label="Descripción archivo(s) de marco jurídico (Opcional)"
             placeholder="Descripción del marco jurídico"
             name="descripcion_archivo_marco_juridico"
-            value={pasoData?.descripcion_archivo_marco_juridico}
+            value={dataPaso?.descripcion_archivo_marco_juridico}
             onChange={(e) => handleChange('descripcion_archivo_marco_juridico', e)}
             onBlur={() => handleSave('descripcion_archivo_marco_juridico')}
             loading={inputStatus.descripcion_archivo_marco_juridico.loading}
@@ -223,7 +196,7 @@ export const Subpaso_uno = ({ pasoData, id, stepNumber, marcojuridico }) =>
             label="Misión Institucional (Obligatorio)"
             placeholder="Misión que defina el propósito de ser del organismo"
             name="mision_institucional"
-            value={pasoData?.mision_institucional}
+            value={dataPaso?.mision_institucional}
             onChange={(e) => handleChange('mision_institucional', e)}
             onBlur={() => handleSave('mision_institucional')}
             loading={inputStatus.mision_institucional.loading}
@@ -236,7 +209,7 @@ export const Subpaso_uno = ({ pasoData, id, stepNumber, marcojuridico }) =>
             label="Información adicional (Opcional)"
             placeholder="Escribe información adicional de ser necesario"
             name="informacion_adicional_marco_juridico"
-            value={pasoData?.informacion_adicional_marco_juridico}
+            value={dataPaso?.informacion_adicional_marco_juridico}
             onChange={(e) => handleChange('informacion_adicional_marco_juridico', e)}
             onBlur={() => handleSave('informacion_adicional_marco_juridico')}
             loading={inputStatus.informacion_adicional_marco_juridico.loading}

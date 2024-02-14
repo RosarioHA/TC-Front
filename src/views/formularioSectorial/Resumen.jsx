@@ -11,11 +11,11 @@ const ResumenSectorial = () =>
   useEffect(() =>
   {
     const datosSimulados = [
-      { numero_paso: 1, nombre_paso: 'Descripción de la Institución', avance: '0/10' },
-      { numero_paso: 2, nombre_paso: 'Arquitectura del Proceso', avance: '0/10' },
-      { numero_paso: 3, nombre_paso: 'Cobertura de la Competencia', avance: '0/10' },
-      { numero_paso: 4, nombre_paso: 'Indicadores de Desempeño', avance: '0/10' },
-      { numero_paso: 5, nombre_paso: 'Costeo de la Competencia', avance: '0/10' },
+      { numero_paso: 1, nombre_paso: 'Descripción de la Institución', avance: '10/10' },
+      { numero_paso: 2, nombre_paso: 'Arquitectura del Proceso', avance: '10/10' },
+      { numero_paso: 3, nombre_paso: 'Cobertura de la Competencia', avance: '10/10' },
+      { numero_paso: 4, nombre_paso: 'Indicadores de Desempeño', avance: '10/10' },
+      { numero_paso: 5, nombre_paso: 'Costeo de la Competencia', avance: '10/10' },
 
 
     ];
