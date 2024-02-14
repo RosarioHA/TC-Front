@@ -11,7 +11,7 @@ export const Avance = ({ avance }) => {
 
   return (
     <div className="d-inline-flex my-2 py-1">
-      <div className="avance-bar pt-2 my-auto mx-5 align-self-center">
+      <div className="avance-bar pt-2 my-auto align-self-center">
         <span className="text-sans-h5-medium mx-2">
           Avance
           <span className={claseAvanceStep}>

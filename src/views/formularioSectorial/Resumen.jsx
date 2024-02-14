@@ -39,27 +39,36 @@ const ResumenSectorial = () => {
         <div className="text-center">
           <span className="text-sans-h1">Resumen formulario </span>
         </div>
-        <div className="mb-5 px-5 me-5">
+        <div className="mb-5 me-5">
 
           {pasos.map(paso => (
-            <div className="container mx-5 px-5" key={paso.numero_paso} >
+            <div className="container" key={paso.numero_paso} >
               <div className="row align-items-center ">
-                <div className="col-4">
+                <div className="col-4 ps-5">
                   <span className=""><strong>Paso {paso.numero_paso}:</strong> {paso.nombre_paso} </span>
                 </div>
                 <div className="col-5 d-flex align-items-center">
                   <Avance avance={paso.avance} />
                 </div>
-                <div className="col">
+                <div className="col d-flex justify-content-center">
                   {isStageComplete(paso.avance) ?
-                    <img src="/public/check.svg" alt="Check" /> :
-                    <img src="/public/warning.svg" alt="Warning" />
+                    <img src="/public/check.svg" alt="Check"/> :
+                    <img src="/public/warning.svg" alt="Warning"/>
                   }
                 </div>
                 <div className="col-2">
-                  <button className="btn-secundario-s my-2">
-                    Completar paso
-                  </button>
+                  {paso.campos_obligatorios_completados ? (
+                    <div className="d-flex justify-content-center">
+                      <span className="text-sans-p-blue text-center">Listo</span>
+                    </div>
+                  ) : (
+                    <button 
+                    className="btn-secundario-s my-2"
+                    onClick={() => navigate(`/home/formulario_sectorial/${id}/paso_${paso.numero_paso}`)}
+                    >
+                      Completar paso
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
