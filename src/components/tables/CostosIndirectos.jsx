@@ -262,8 +262,6 @@ const CostosIndirectos = ({
     }
   };
 
-
-
   return (
     <div>
       <form onSubmit={handleSubmit(onSubmit)}>

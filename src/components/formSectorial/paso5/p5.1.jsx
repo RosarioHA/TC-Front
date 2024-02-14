@@ -73,7 +73,7 @@ useEffect(() => {
 
       <p className="text-sans-m-semibold mt-4">a. Costos directos</p>
       <h6 className="text-sans-h6-primary mt-3">Por costos directos se entenderán aquellos imputables a los procedimientos específicos de la competencia analizada, y que no corresponden a unidades de soporte transversal del Ministerio o Servicio de origen. Los costos analizados responden al año n-1, es decir, al año anterior al inicio del estudio de transferencia de competencias.</h6>
-      <h6 className="text-sans-h6-primary mt-3">Llenar información para al menos un subtítulo/item es obligatorio.</h6>
+      <h6 className="text-sans-h6-primary mt-3 mb-4">Llenar información para al menos un subtítulo/item es obligatorio.</h6>
 
       <div >
         <CostosDirectos
@@ -90,17 +90,17 @@ useEffect(() => {
         <hr />
       </div>
 
-      <div className="row mt-5">
+      <div className="row mt-5 d-flex align-items-center">
         <p className="text-sans-p-bold mb-0 col-2">Costos Directos <br /> Totales Anual ($M)</p>
         <p className="text-sans-p-blue col">{totalCostosDirectos}</p>
       </div>
-      <hr />
+      <hr className="col-4"/>
 
-      <p className="text-sans-m-semibold mt-4">b. Costos indirectos</p>
+      <p className="text-sans-m-semibold mt-5">b. Costos indirectos</p>
       <h6 className="text-sans-h6-primary mt-3">Por costos indirectos se entenderán aquellos que no son imputables a los procedimientos específicos de la competencia analizada, pero que, al financiar unidades de soporte transversal en el Ministerio o Servicio de origen, hacen posible el ejercicio de la competencia. Los costos analizados responden al año n-1, es decir, al año anterior al inicio de estudio de transferencia de competencias.</h6>
       <h6 className="text-sans-h6-primary mt-3">Llenar información para al menos un subtítulo/item es obligatorio.</h6>
 
-      <div>
+      <div className="mt-4">
       <CostosIndirectos
           id={id}
           data={data_costos_indirectos}
@@ -115,11 +115,11 @@ useEffect(() => {
         <hr />
       </div>
 
-      <div className="row mt-5">
+      <div className="row mt-5 d-flex align-items-center">
         <p className="text-sans-p-bold mb-0 col-2">Costos Directos <br /> Totales Anual ($M)</p>
         <p className="text-sans-p-blue col">{totalCostosIndirectos}</p>
       </div>
-      <hr />
+      <hr className="col-4" />
 
       <p className="text-sans-m-semibold mt-4">c. Sumatoria de costos anuales destinados al ejercicio de la competencia</p>
 
