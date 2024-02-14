@@ -34,7 +34,7 @@ const PasoUno = () => {
             <Avance avance={paso1Data.avance} />
           </div>
           <span className="text-sans-h6-primary">Texto de apoyo</span>
-          <Subpaso_uno pasoData={paso1Data} marcojuridico={marcojuridico} id={data ? data.id : null} stepNumber={stepNumber} />
+          <Subpaso_uno dataPaso={paso1Data} marcojuridico={marcojuridico} id={data ? data.id : null} stepNumber={stepNumber} />
           <Subpaso_dos pasoData={paso1Data} organigrama={organigramaregional}  id={data ? data.id : null} stepNumber={stepNumber} />
           <Subpaso_tres pasoData={paso1Data}   id={data ? data.id : null} stepNumber={stepNumber} />
           <ButtonsNavigate step={paso1Data.numero_paso} id={data ? data.id : null} />

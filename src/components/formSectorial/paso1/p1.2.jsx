@@ -3,10 +3,12 @@ import CustomTextarea from "../../forms/custom_textarea";
 import SubirArchivo from "../../forms/subir_archivo";
 import { FormularioContext } from "../../../context/FormSectorial";
 import { SubirArchivoRegiones } from "../../forms/subirArchivoRegiones";
+import { useFileRegional } from "../../../hooks/formulario/useFileRegional";
 
 export const Subpaso_dos = ({ pasoData, organigrama, id, stepNumber }) =>
 {
-  const { updatePasoError, handleUpdatePaso, handleUploadFiles, handleUploadFilesOrganigramaregional } = useContext(FormularioContext);
+  const { updatePasoError, handleUpdatePaso, handleUploadFiles } = useContext(FormularioContext);
+  const { uploadFile } = useFileRegional();
   const [ formData, setFormData ] = useState({
     organigramaregional: organigrama?.organigramaregional,
     paso1: pasoData.paso1 || {
@@ -115,42 +117,33 @@ export const Subpaso_dos = ({ pasoData, organigrama, id, stepNumber }) =>
     }
   };
 
-
   const handleFileSelectRegion = async (file, fieldName, regionId) =>
   {
-    console.log("regionId:", regionId);
+    // Asegúrate de que `id` y `stepNumber` están definidos
+    if (typeof id === 'undefined' || typeof stepNumber === 'undefined')
+    {
+      console.error("El ID del formulario o el número de paso no están definidos.");
+      return;
+    }
+
     try
     {
-      // Verifica si id y stepNumber están definidos en el contexto
-      if (id === undefined || stepNumber === undefined)
-      {
-        console.error("El ID o el stepNumber no están definidos.");
-        return;
-      }
-
-      // Crea un objeto FormData y agrega el archivo usando el fieldName proporcionado
-      const formData = new FormData();
-      formData.append(fieldName, file);
-
-      // Actualiza el estado para mostrar que la carga está en progreso
+      // Actualiza el estado para indicar que el archivo está cargando
       setInputStatus(prevStatus => ({
         ...prevStatus,
         [ fieldName ]: { ...prevStatus[ fieldName ], loading: true },
       }));
 
-      // Llama a la función handleUploadFilesOrganigramaregional con los datos relevantes
-      await handleUploadFilesOrganigramaregional(file, regionId, id, stepNumber);
+      // Llama a la función de carga del archivo
+      await uploadFile(id, regionId, file);
 
-      // Actualiza el estado para mostrar que la carga ha terminado con éxito
+      // Actualiza el estado para indicar que el archivo se ha cargado con éxito
       setInputStatus(prevStatus => ({
         ...prevStatus,
         [ fieldName ]: { loading: false, saved: true },
       }));
-
-      console.log("Archivo recibido en el componente padre:", file.name);
     } catch (error)
     {
-      // Maneja cualquier error que ocurra durante la carga del archivo
       console.error("Error al subir el archivo:", error);
       setInputStatus(prevStatus => ({
         ...prevStatus,
@@ -159,6 +152,24 @@ export const Subpaso_dos = ({ pasoData, organigrama, id, stepNumber }) =>
     }
   };
 
+  const eliminarDocRegional = async (idRegion) =>
+  {
+    const payload = {
+      organigramaregional: [ {
+        id: idRegion,
+        documento: null
+      } ]
+    };
+
+    try
+    {
+      await handleUpdatePaso(id, stepNumber, payload);
+      console.log("Organigrama regional eliminado con éxito");
+    } catch (error)
+    {
+      console.error("Error al eliminar el organigrama regional:", error);
+    }
+  };
 
 
 
@@ -235,15 +246,16 @@ export const Subpaso_dos = ({ pasoData, organigrama, id, stepNumber }) =>
             key={region.id}
             index={index + 1}
             region={region.region}
+            archivoId={region.id}
             tituloDocumento={region.documento}
             fileType={
               formData.paso1.organigramaregional &&
                 formData.paso1.organigramaregional[ region.id ]
-                ? "Archivo Seleccionado: " +
-                formData.paso1.organigramaregional[ region.id ].name
+                ? "Archivo Seleccionado: " + formData.paso1.organigramaregional[ region.id ].name
                 : "No seleccionado"
             }
-            handleFileSelect={(file) => handleFileSelectRegion(file, 'organigramaregional', region.id)} // Asegúrate de incluir region.id aquí
+            handleFileSelect={(file) => handleFileSelectRegion(file, 'organigramaregional', region.id)}
+            handleDelete={() => eliminarDocRegional(region.id)}
           />
         ))}
 
