@@ -60,7 +60,7 @@ const CustomTextarea = ({ loading,descripcion, saved, label, placeholder, id, ma
         <div className="d-flex flex-column textarea-container">
           <label className="text-sans-h5 input-label ms-3 ms-sm-0">{label}</label>
           <div className={`teaxtarea-text input-textarea p-3 ${error ? 'input-error' : ''}`}>
-            <p className="text-sans-p-grey mb-0">{placeholder}</p>
+            <p className="text-sans-p-grey mb-0">{value}</p>
           </div>
         </div>
       ) : (

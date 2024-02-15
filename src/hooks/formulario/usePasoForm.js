@@ -1,27 +1,24 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { apiTransferenciaCompentencia } from "../../services/transferenciaCompetencia";
 
-export const usePasoForm = (id, stepNumber) => {
+export const usePasoForm = (id, stepNumber, refetchTrigger) => {
   const [dataPaso, setDataPaso] = useState(null);
   const [loadingPaso, setLoadingPaso] = useState(true);
   const [errorPaso, setErrorPaso] = useState(null);
-  
 
+  const fetchData = useCallback(async () => {
+    try {
+      setLoadingPaso(true);
+      const response = await apiTransferenciaCompentencia.get(`/formulario-sectorial/${id}/paso-${stepNumber}/`);
+      setDataPaso(response.data);
+    } catch (err) {
+      setErrorPaso(err.response ? err.response.data : err.message);
+    } finally {
+      setLoadingPaso(false);
+    }
+  }, [id, stepNumber]); // Aquí agregamos id y stepNumber como dependencias
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoadingPaso(true);
-        const response = await apiTransferenciaCompentencia.get(`/formulario-sectorial/${id}/paso-${stepNumber}/`);
-        setDataPaso(response.data);
-      } catch (err) {
-        setErrorPaso(err.response ? err.response.data : err.message);
-      } finally {
-        setLoadingPaso(false);
-      }
-    };
-
-    // Verifica si id y stepNumber son válidos antes de hacer la llamada a la API
     if (id != null && stepNumber != null) {
       fetchData();
     } else {
@@ -29,7 +26,7 @@ export const usePasoForm = (id, stepNumber) => {
       setLoadingPaso(false);
       setErrorPaso(null);
     }
-  }, [id, stepNumber]);
+  }, [id, stepNumber, refetchTrigger, fetchData]);
 
-  return { dataPaso, loadingPaso, errorPaso };
+  return { dataPaso, loadingPaso, errorPaso, refetchTrigger: fetchData };
 };

@@ -37,8 +37,6 @@ const CostosIndirectos = ({
 
   const [costosIndirectos, setCostosIndirectos] = useState(initialState);
   const [opcionesSubtitulos, setOpcionesSubtitulos] = useState([]);
-  const [subtituloSeleccionado, setSubtituloSeleccionado] = useState('');
-  const [opcionesItems, setOpcionesItems] = useState([]);
   const [opcionesEtapas, setopcionesEtapas] = useState([]);
   const { handleUpdatePaso } = useContext(FormularioContext);
   const [esquemaValidacion, setEsquemaValidacion] = useState(null);
@@ -78,14 +76,6 @@ const CostosIndirectos = ({
     }
   }, [listado_subtitulos]);
 
-  useEffect(() => {
-    if (subtituloSeleccionado && listado_item_subtitulos[subtituloSeleccionado]) {
-      const opcionesDeItems = transformarEnOpciones(listado_item_subtitulos[subtituloSeleccionado], 'item');
-      setOpcionesItems(opcionesDeItems);
-    } else {
-      setOpcionesItems([]);
-    }
-  }, [subtituloSeleccionado, listado_item_subtitulos]);
 
   const encontrarOpcionesDeItems = (subtituloSeleccionado) => {
     const items = listado_item_subtitulos[subtituloSeleccionado] || [];
@@ -241,7 +231,7 @@ const CostosIndirectos = ({
 
     try {
       // Asume que handleUpdatePaso puede manejar ambos casos adecuadamente
-      const response = await handleUpdatePaso(id, stepNumber, payload);
+     await handleUpdatePaso(id, stepNumber, payload);
 
       // Actualiza el estado de carga y guardado
       updateFieldState(arrayNameId, fieldName, { loading: false, saved: true });
@@ -378,6 +368,7 @@ const CostosIndirectos = ({
                         loading={costo.estados?.total_anual?.loading ?? false}
                         saved={costo.estados?.total_anual?.saved ?? false}
                         error={errors[`total_anual_${costo.id}`]?.message}
+                        disabled={formulario_enviado}
                       />
                     );
                   }}
@@ -405,8 +396,8 @@ const CostosIndirectos = ({
                             field.onChange(selectedOptions);
                           }}
 
-                          readOnly={false}
-                          selectedValues={costo.etapa_label_value}
+                        readOnly={formulario_enviado}
+                        selectedValues={costo.etapa_label_value}
 
                           loading={costo.estados?.etapa?.loading ?? false}
                           saved={costo.estados?.etapa?.saved ?? false}
@@ -427,7 +418,7 @@ const CostosIndirectos = ({
                     return (
                       <OpcionesAB
                         id={`es_transversal_${costo.id}`}
-                        readOnly={false}
+                        readOnly={formulario_enviado}
                         initialState={field.value}
                         handleEstadoChange={(newValue) => handleEsTransversalChange(costo.id, newValue)}
                         loading={costo.estados?.es_transversal?.loading ?? false}
@@ -482,6 +473,7 @@ const CostosIndirectos = ({
                       loading={costo.estados?.descripcion?.loading ?? false}
                       saved={costo.estados?.descripcion?.saved ?? false}
                       error={errors[`descripcion_${costo.id}`]?.message}
+                      readOnly={formulario_enviado}
                     />
                   );
                 }}
@@ -489,7 +481,7 @@ const CostosIndirectos = ({
             </div>
 
             <div className="d-flex justify-content-end me-2">
-              {(costosIndirectos.length > 1 && !formulario_enviado) && (
+              {( !formulario_enviado) && (
                 <div className="">
                   <button
                     className="btn-terciario-ghost mt-3"

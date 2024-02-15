@@ -15,7 +15,7 @@ export const construirValidacionPaso5_1ab = (modeloCostos) => {
     schemaFields[`item_subtitulo_${id}`] = yup
       .string()
       .required('Un ítem es requerido');
-      
+
     // Validación para etapa (no requerido)
     schemaFields[`etapa_${id}`] = yup
       .array()
@@ -44,5 +44,27 @@ export const construirValidacionPaso5_1ab = (modeloCostos) => {
 
   return yup.object().shape(schemaFields);
 };
+
+export const construirValidacionPaso5_2evolucion = (modeloCostos) => {
+  let schemaFields = {};
+
+  modeloCostos.forEach(modelo => {
+    modelo.costo_anio.forEach(costoAnio => {
+      // Construye un identificador único para cada campo de costo
+      const campoCostoId = `costo_${costoAnio.id}`;
+      
+      // Agrega validación para el campo de costo específico
+      schemaFields[campoCostoId] = yup
+        .number()
+        .typeError('El costo debe ser un número')
+        .min(0, 'El costo no debe ser un número negativo')
+        .nullable(true) // Esto permite que el valor sea null, útil si el costo puede estar vacío
+        .required('El costo es obligatorio');
+    });
+  });
+
+  return yup.object().shape(schemaFields);
+};
+
 
 

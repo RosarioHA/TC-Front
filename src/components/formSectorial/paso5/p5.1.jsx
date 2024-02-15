@@ -1,9 +1,8 @@
 import CostosDirectos from "../../tables/CostosDirectos";
-import Costos from "../../tables/Costos";
-import SumatoriaCostos from "../../tables/SumatoriaCostos";
 import { useState, useEffect } from "react";
 import { apiTransferenciaCompentencia } from "../../../services/transferenciaCompetencia";
 import CostosIndirectos from "../../tables/CostosIndirectos";
+import ResumenCostos from "../../tables/ResumenCostos";
 
 export const Subpaso_CincoPuntoUno = (
   {
@@ -17,24 +16,16 @@ export const Subpaso_CincoPuntoUno = (
     listado_subtitulos,
     listado_item_subtitulos,
     listado_etapas,
-    setRefreshSubpaso_CincoDos, }
+    setRefreshSubpaso_CincoDos, 
+  }
 ) => {
 
   const [refreshSumatoriaCostos, setRefreshSumatoriaCostos] = useState(false);
   const [dataDirecta, setDataDirecta] = useState(null);
   const [totalCostosDirectos, setTotalCostosDirectos] = useState('');
   const [totalCostosIndirectos, setTotalCostosIndirectos] = useState('');
-
-// Actualiza los estados con los datos de dataDirecta cuando esta cambie
-useEffect(() => {
-  if (dataDirecta && dataDirecta.paso5) {
-    setTotalCostosDirectos(dataDirecta.paso5.total_costos_directos || '0');
-    setTotalCostosIndirectos(dataDirecta.paso5.total_costos_indirectos || '0');
-  }
-}, [dataDirecta]);
-
-// Luego, usa totalCostosDirectos y totalCostosIndirectos para mostrar los valores en tu componente
-
+  const [costosTotales, setCostosTotales] = useState('');
+  const [descripcionCostosTotales, setDescripcionCostosTotales] = useState('');
 
   // Lógica para recargar sumatoria al agregar costos directos o indirectos
   // Llamada para recargar componente
@@ -47,7 +38,7 @@ useEffect(() => {
     }
   };
 
-  // refreshSubpasoDos_cuatro es un trigger disparado desde subpaso 2.3
+  // refreshSumatoriaCostos es un trigger disparado desde CostosDirectos o CostosIndirectos
   useEffect(() => {
     if (refreshSumatoriaCostos) {
       fetchDataDirecta();
@@ -59,9 +50,13 @@ useEffect(() => {
     if (dataDirecta && dataDirecta.paso5) {
       setTotalCostosDirectos(dataDirecta.paso5.total_costos_directos || '0');
       setTotalCostosIndirectos(dataDirecta.paso5.total_costos_indirectos || '0');
+      setCostosTotales(dataDirecta.paso5.costos_totales || '0');
+      setDescripcionCostosTotales(dataDirecta.paso5.descripcion_costos_totales || '0');
     } else {
       setTotalCostosDirectos(paso5.total_costos_directos || '0');
       setTotalCostosIndirectos(paso5.total_costos_indirectos || '0');
+      setCostosTotales(paso5.costos_totales || '0');
+      setDescripcionCostosTotales(paso5.descripcion_costos_totales || '0');
     }
   }, [dataDirecta]);
   
@@ -124,8 +119,16 @@ useEffect(() => {
       <p className="text-sans-m-semibold mt-4">c. Sumatoria de costos anuales destinados al ejercicio de la competencia</p>
 
       <div>
-        <SumatoriaCostos
-          numFilas={5} />
+        <ResumenCostos
+          id={id}
+          data={data_resumen_costos}
+          costosTotales={costosTotales}
+          descripcionCostosTotales={descripcionCostosTotales}
+          stepNumber={stepNumber}
+          formulario_enviado={formulario_enviado}          
+          setRefreshSumatoriaCostos={setRefreshSumatoriaCostos}
+          refreshSumatoriaCostos={refreshSumatoriaCostos}
+        />
       </div>
 
     </div>
