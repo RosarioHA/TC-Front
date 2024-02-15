@@ -31,7 +31,7 @@ const ImputCosto = forwardRef(
       <div className="d-flex flex-column input-container col-11">
         {readOnly ? (
           <>
-            <div className={`input-s p-3 input-textarea ${error ? 'input-error' : ''}`}>
+            <div className={`input-costo p-3 col-12 ${error ? 'costo-error' : ''}`}>
               <p className="text-sans-p-grey mb-0">{placeholder}</p>
             </div>
           </>
@@ -40,7 +40,7 @@ const ImputCosto = forwardRef(
             <div className="d-flex input-container">
               <NumericFormat
                 thousandSeparator=","
-                className={`input-s p-3 input-textarea col-12 ${error ? 'input-error' : ''}`}
+                className={`input-costo p-3 col-12 ${error ? 'costo-error' : ''}`} 
                 type="text"
                 placeholder={placeholder}
                 id={id}

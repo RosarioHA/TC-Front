@@ -2,7 +2,6 @@ import { useState, useContext, useEffect } from "react";
 import CustomTextarea from "../forms/custom_textarea";
 import DropdownCheckbox from "../dropdown/checkbox";
 import DropdownSelect from "../dropdown/select";
-//import CustomInput from "../forms/custom_input";
 import InputCosto from "../forms/input_costo";
 import { OpcionesAB } from "../forms/opciones_AB";
 import { FormularioContext } from "../../context/FormSectorial";
@@ -379,7 +378,8 @@ const CostosDirectos = ({
                         loading={costo.estados?.total_anual?.loading ?? false}
                         saved={costo.estados?.total_anual?.saved ?? false}
                         error={errors[`total_anual_${costo.id}`]?.message}
-                        disabled={formulario_enviado}
+                        //disabled={formulario_enviado}
+                        disabled={true}
                       />
                     );
                   }}
