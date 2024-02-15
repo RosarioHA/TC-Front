@@ -9,24 +9,24 @@ const ImputCosto = forwardRef(
       const value = e.target.value;
       const formattedValue = value.replace(/,/g, '');
       setInputValue(formattedValue);
-    
       if (onChange) {
         onChange(formattedValue);
       }
-      console.log("input value", formattedValue)
     };
     
-
-    const renderSpinnerOrCheck = () => {
+    const inputStyle = () => {
       if (loading) {
-        return <div className="spinner-border text-primary" role="status"></div>;
+        return `input-costo p-3 col-12 ${error ? 'costo-error' : ''}`;
       }
       if (saved) {
-        return <i className="material-symbols-outlined">check</i>;
+        return `input-costo costo-saved p-3 col-12 `;
+      }
+      if (error) {
+        return `input-costo  p-3 col-12 costo-error`;
       }
       return null;
     };
-
+    
     return (
       <div className="d-flex flex-column input-container col-11">
         {readOnly ? (
@@ -40,7 +40,7 @@ const ImputCosto = forwardRef(
             <div className="d-flex input-container">
               <NumericFormat
                 thousandSeparator=","
-                className={`input-costo p-3 col-12 ${error ? 'costo-error' : ''}`} 
+                className={`input-costo p-3 col-12 ${error ? 'costo-error' : ''} ${inputStyle()}`} 
                 type="text"
                 placeholder={placeholder}
                 id={id}
@@ -49,9 +49,9 @@ const ImputCosto = forwardRef(
                 ref={ref}
                 {...props}
               />
-              <div className="d-flex align-self-end ms-1">
-                {renderSpinnerOrCheck()}
-              </div>
+             {/* <div className="d-flex align-self-end ms-1">
+                {loading && !saved && <div className="spinner-border text-primary" role="status"></div>}
+              </div> */}
             </div>
             <div className="d-flex justify-content-between col-11">
               {error && (
