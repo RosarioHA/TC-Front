@@ -293,7 +293,7 @@ export const GastosEvolucionVariacion = ({
 
         </table>
         <hr />
-        <div className="mt-2">
+        <div className="mt-4">
           <Controller
             control={control}
             name="glosas_especificas"
