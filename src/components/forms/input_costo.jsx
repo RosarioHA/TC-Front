@@ -1,4 +1,5 @@
 import { useState, forwardRef } from "react";
+import { NumericFormat } from "react-number-format";
 
 const ImputCosto = forwardRef(
   ({ loading, saved, placeholder, id, error, readOnly, onChange, initialValue, ...props }, ref) => {
@@ -6,12 +7,15 @@ const ImputCosto = forwardRef(
 
     const handleInputChange = (e) => {
       const value = e.target.value;
-      setInputValue(value);
+      const formattedValue = value.replace(/,/g, '');
+      setInputValue(formattedValue);
     
       if (onChange) {
-        onChange(value);
+        onChange(formattedValue);
       }
+      console.log("input value", formattedValue)
     };
+    
 
     const renderSpinnerOrCheck = () => {
       if (loading) {
@@ -34,7 +38,8 @@ const ImputCosto = forwardRef(
         ) : (
           <>
             <div className="d-flex input-container">
-              <input
+              <NumericFormat
+                thousandSeparator=","
                 className={`input-s p-3 input-textarea col-12 ${error ? 'input-error' : ''}`}
                 type="text"
                 placeholder={placeholder}
