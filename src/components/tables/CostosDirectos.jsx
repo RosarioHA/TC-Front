@@ -375,6 +375,7 @@ const CostosDirectos = ({
                         loading={costo.estados?.total_anual?.loading ?? false}
                         saved={costo.estados?.total_anual?.saved ?? false}
                         error={errors[`total_anual_${costo.id}`]?.message}
+                        disabled={formulario_enviado}
                       />
                     );
                   }}
@@ -400,7 +401,7 @@ const CostosDirectos = ({
                           field.onChange(selectedOptions);
                         }}
 
-                        readOnly={false}
+                        readOnly={formulario_enviado}
                         selectedValues={costo.etapa_label_value}
 
                         loading={costo.estados?.etapa?.loading ?? false}
@@ -420,7 +421,7 @@ const CostosDirectos = ({
                     return (
                       <OpcionesAB
                         id={`es_transversal_${costo.id}`}
-                        readOnly={false}
+                        readOnly={formulario_enviado}
                         initialState={field.value}
                         handleEstadoChange={(newValue) => handleEsTransversalChange(costo.id, newValue)}
                         loading={costo.estados?.es_transversal?.loading ?? false}
@@ -432,6 +433,7 @@ const CostosDirectos = ({
                         handleSave={handleSave}
                         arrayNameId={costo.id}
                         fieldName="es_transversal"
+                        
                       />
                     );
                   }}
@@ -475,6 +477,7 @@ const CostosDirectos = ({
                       loading={costo.estados?.descripcion?.loading ?? false}
                       saved={costo.estados?.descripcion?.saved ?? false}
                       error={errors[`descripcion_${costo.id}`]?.message}
+                      readOnly={formulario_enviado}
                     />
                   );
                 }}
@@ -482,7 +485,7 @@ const CostosDirectos = ({
             </div>
 
             <div className="d-flex justify-content-end me-2">
-              {(costosDirectos.length > 1 && !formulario_enviado) && (
+              {(!formulario_enviado) && (
                 <div className="">
                   <button
                     className="btn-terciario-ghost mt-3"
