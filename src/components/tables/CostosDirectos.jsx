@@ -378,8 +378,7 @@ const CostosDirectos = ({
                         loading={costo.estados?.total_anual?.loading ?? false}
                         saved={costo.estados?.total_anual?.saved ?? false}
                         error={errors[`total_anual_${costo.id}`]?.message}
-                        //disabled={formulario_enviado}
-                        disabled={true}
+                        disabled={formulario_enviado}
                       />
                     );
                   }}
