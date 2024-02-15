@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React,{ useContext, useState, useEffect } from "react";
 import { FormularioContext } from "../../context/FormSectorial";
 import CustomTextarea from "../forms/custom_textarea";
 import CustomInput from "../forms/custom_input";
@@ -25,6 +25,8 @@ export const GastosEvolucionVariacion = ({
   formulario_enviado,
   stepNumber,
   dataGastos,
+  setRefreshSubpaso_CincoDosVariacion
+
 }) => {
 
   const [datosGastos, setDatosGastos] = useState([]);
@@ -60,7 +62,7 @@ export const GastosEvolucionVariacion = ({
     setEsquemaValidacion(esquema);
   }, [datosGastos]);
 
-  const { control, handleSubmit, trigger, clearErrors, setError, formState: { errors } } = useForm({
+  const { control, trigger, clearErrors, formState: { errors } } = useForm({
     resolver: esquemaValidacion ? yupResolver(esquemaValidacion) : undefined,
     mode: 'onBlur',
   });
@@ -159,6 +161,7 @@ export const GastosEvolucionVariacion = ({
       updateFieldState(subtituloId, costoAnioId, fieldName, { loading: false, saved: true });
       setGlosasEspecificasLoading(false);
       setGlosasEspecificasSaved(true);
+      setRefreshSubpaso_CincoDosVariacion(true);
 
     } catch (error) {
       console.error("Error al guardar los datos:", error);

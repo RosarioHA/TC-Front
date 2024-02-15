@@ -19,7 +19,7 @@ const ResumenCostos = ({
   const [dataDirecta, setDataDirecta] = useState(null);
   const { handleUpdatePaso } = useContext(FormularioContext);
   const [descripcionCostosTotalesLoading, setDescripcionCostosTotalesLoading] = useState(false);
-const [descripcionCostosTotalesSaved, setDescripcionCostosTotalesSaved] = useState(false);
+  const [descripcionCostosTotalesSaved, setDescripcionCostosTotalesSaved] = useState(false);
 
 
   const { control, trigger, clearErrors, setValue } = useForm({

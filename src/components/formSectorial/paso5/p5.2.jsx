@@ -1,5 +1,4 @@
-import { GastosAnuales } from "../../tables/GastoAnual";
-import { GastosAsociados } from "../../tables/GastosAsociados"
+import { GastosPromedioAnual } from "../../tables/GastoPromedioAnual";
 import { GastosEvolucionVariacion } from "../../tables/GastosEvolucionVariacion";
 import { useState, useEffect } from "react";
 import { apiTransferenciaCompentencia } from "../../../services/transferenciaCompetencia";
@@ -16,8 +15,10 @@ export const Subpaso_CincoDos = ({
 }) => {
 
   const [dataDirecta, setDataDirecta] = useState(null);
+  const [actualizarVariacion, setActualizarVariacion] = useState(null);
   const [evolucionGastoAsociado, setEvolucionGastoAsociado] = useState('');
   const [variacionPromedio, setVariacionPromedio] = useState('');
+  const [refreshSubpaso_CincoDosVariacion, setRefreshSubpaso_CincoDosVariacion] = useState(false);
 
   // Lógica para recargar sumatoria al agregar costos directos o indirectos
   // Llamada para recargar componente
@@ -35,8 +36,9 @@ export const Subpaso_CincoDos = ({
     if (refreshSubpaso_CincoDos) {
       fetchDataDirecta();
       setRefreshSubpaso_CincoDos(false);
+      setRefreshSubpaso_CincoDosVariacion(false);
     }
-  }, [refreshSubpaso_CincoDos, id, stepNumber]);
+  }, [refreshSubpaso_CincoDos]);
 
   // Actualizar variables
   useEffect(() => {
@@ -49,6 +51,30 @@ export const Subpaso_CincoDos = ({
     }
   }, [dataDirecta]);
 
+  // Refrescar solo paso 5.2 Variacion Promedio Anual
+  const fetchDataVariacion = async () => {
+    try {
+      const response = await apiTransferenciaCompentencia.get(`/formulario-sectorial/${id}/paso-${stepNumber}/`);
+      setActualizarVariacion(response.data);
+    } catch (error) {
+      console.error('Error al obtener datos directamente:', error);
+    }
+  };
+
+  useEffect(() => {
+    if (refreshSubpaso_CincoDosVariacion) {
+      fetchDataVariacion();
+      setRefreshSubpaso_CincoDosVariacion(false);
+    }
+  }, [refreshSubpaso_CincoDosVariacion]);
+
+  useEffect(() => {
+    if (actualizarVariacion && actualizarVariacion.paso5) {
+      setVariacionPromedio(actualizarVariacion.p_5_2_variacion_promedio || '0');
+    } else {
+      setVariacionPromedio(p_5_2_variacion_promedio || '0');
+    }
+  }, [actualizarVariacion]);
 
 
   return (
@@ -70,8 +96,9 @@ export const Subpaso_CincoDos = ({
         formulario_enviado={formulario_enviado}
         stepNumber={stepNumber}
         dataGastos={evolucionGastoAsociado}
+        setRefreshSubpaso_CincoDosVariacion={setRefreshSubpaso_CincoDosVariacion}
       />
-      <GastosAnuales
+      <GastosPromedioAnual
         id={id}
         paso5={paso5}
         formulario_enviado={formulario_enviado}
