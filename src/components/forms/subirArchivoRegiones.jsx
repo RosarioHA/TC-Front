@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import UploadBtn from "../commons/uploadBtn";
 
-export const SubirArchivoRegiones = ({ index, tituloDocumento, readOnly, archivoDescargaUrl, handleFileSelect, fieldName, region }) =>
+export const SubirArchivoRegiones = ({ index, tituloDocumento, handleDelete, readOnly, archivoDescargaUrl, handleFileSelect, fieldName, region }) =>
 {
   const [ fileUploaded, setFileUploaded ] = useState(false);
   const [ fileName, setFileName ] = useState('');
@@ -12,7 +12,14 @@ export const SubirArchivoRegiones = ({ index, tituloDocumento, readOnly, archivo
     if (tituloDocumento)
     {
       const parts = tituloDocumento.split('/');
-      const name = parts.pop() || tituloDocumento;
+      let name = parts.pop() || tituloDocumento;
+      // Decodificando el nombre para mostrar correctamente los acentos
+      name = decodeURIComponent(name);
+      // Truncando el nombre a 30 caracteres si es más largo
+      if (name.length > 40)
+      {
+        name = name.substring(0, 40) + '...';
+      }
       setFileName(name);
       setFileUploaded(true);
     } else
@@ -41,18 +48,25 @@ export const SubirArchivoRegiones = ({ index, tituloDocumento, readOnly, archivo
       }
 
       setError('');
-      setFileName(file.name);
+      let name = file.name;
+      // Decodificando y truncando el nombre del archivo al subirlo
+      name = decodeURIComponent(name);
+      if (name.length > 40)
+      {
+        name = name.substring(0, 40) + '...';
+      }
+      setFileName(name);
       setFileUploaded(true);
       handleFileSelect(file, fieldName);
     }
   };
 
-  const handleDelete = () =>
+  const handleDeleteRegion = () =>
   {
+    handleDelete()
     setFileUploaded(false);
     setFileName('');
     setError('');
-    handleFileSelect('', fieldName);
   };
 
   const handleDownload = () =>
@@ -65,26 +79,25 @@ export const SubirArchivoRegiones = ({ index, tituloDocumento, readOnly, archivo
 
   return (
     <>
-      <div className="d-flex justify-content-between grid gap-2 align-items-center  neutral-line align-items-center">
+      <div className="d-flex justify-content-between grid gap- align-items-center neutral-line align-items-center">
         <div className="py-3 ps-3 ">{index}</div>
-        <div className="py-3 col ms-2">{region}</div>
-        <div className="py-3 col-3">{fileName}</div>
-        <div className="py-3 px-2">{error ? <div className="text-sans-p-bold-darkred">{error}</div> : displayFileType}</div>
+        <div className="py-3 col-2 ms-2">{region}</div>
+        <div className="py-3 col-5 text-wrap text-break">{fileName}</div>
+        <div className="py-3 col-2 px-3">{error ? <div className="text-sans-p-bold-darkred">{error}</div> : displayFileType}</div>
         <div>
         </div>
         <div>
           {!readOnly ? (
-            <div className="p-3 d-flex">
+            <div className="p-3 d-flex me-2">
               <UploadBtn onFileChange={handleFileChange} fileUploaded={fileUploaded} />
               {fileUploaded && (
                 <>
-                  <button onClick={handleDelete} className="btn-terciario-ghost px-2 d-flex align-items-center mx-1">
+                  <button onClick={handleDeleteRegion } className="btn-terciario-ghost px-2 d-flex align-items-center mx-1">
                     <span className="text-sans-b-red">Borrar</span>
                     <i className="material-symbols-rounded">delete</i>
                   </button>
                 </>
               )}
-
             </div>
           ) : archivoDescargaUrl && (
             <button onClick={handleDownload} className="btn-secundario-s px-2 d-flex align-items-center">
