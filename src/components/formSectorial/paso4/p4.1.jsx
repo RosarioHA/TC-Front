@@ -1,7 +1,7 @@
 import { useContext, useState, useEffect, useCallback } from "react";
 import DropdownSelect from "../../dropdown/select";
 import CustomTextarea from "../../forms/custom_textarea";
-import useRecargaDirecta from "../../../hooks/formulario/useRecargaDirecta";
+// import useRecargaDirecta from "../../../hooks/formulario/useRecargaDirecta";
 import { useUpdateFormRefresh } from "../../../hooks/formulario/useUpdateFormRefresh";
 import { FormularioContext } from "../../../context/FormSectorial";
 
@@ -10,7 +10,7 @@ export const Subpaso_CuatroUno = ({ data, listaIndicadores, id, stepNumber }) =>
   const { patchStep } = useUpdateFormRefresh((datosActualizados) =>
   {
     setIndicadores(datosActualizados.indicador_desempeno || []);
-    setDatosGuardados(true);
+    // setDatosGuardados(true);
   });
   const [ formData, setFormData ] = useState({
     data: data.indicador_desempeno || {
@@ -21,15 +21,17 @@ export const Subpaso_CuatroUno = ({ data, listaIndicadores, id, stepNumber }) =>
       indicador: data.indicador
     }
   });
-  const { dataDirecta } = useRecargaDirecta(id, stepNumber);
+  // const { dataDirecta } = useRecargaDirecta(id, stepNumber);
   const [ indicadores, setIndicadores ] = useState(data.indicador_desempeno || [ { id: generarIdTemp() } ]);
-  const [ datosGuardados, setDatosGuardados ] = useState(false);
+  // const [ datosGuardados, setDatosGuardados ] = useState(false);
   const [ inputStatus, setInputStatus ] = useState({
     formula_calculo: { loading: false, saved: false },
     descripcion_indicador: { loading: false, saved: false },
     medios_calculo: { loading: false, saved: false },
     verificador_asociado: { loading: false, saved: false },
   });
+  const [message, setMessage] = useState({ text: '', type: '' }); 
+
 
   const { handleUpdatePaso } = useContext(FormularioContext);
 
@@ -39,13 +41,13 @@ export const Subpaso_CuatroUno = ({ data, listaIndicadores, id, stepNumber }) =>
     return `temp-${Date.now()}-${Math.random()}`;
   }
 
-  useEffect(() =>
-  {
-    if (dataDirecta?.indicador_desempeno)
-    {
-      setIndicadores([ ...dataDirecta.indicador_desempeno, { id: null } ]);
-    }
-  }, [ dataDirecta ]);
+  // useEffect(() =>
+  // {
+  //   if (dataDirecta?.indicador_desempeno)
+  //   {
+  //     setIndicadores([ ...dataDirecta.indicador_desempeno, { id: null } ]);
+  //   }
+  // }, [ dataDirecta ]);
 
   const handleInputChange = useCallback((idIndicador, campo, evento) =>
   {
@@ -91,7 +93,7 @@ export const Subpaso_CuatroUno = ({ data, listaIndicadores, id, stepNumber }) =>
       return;
     }
     setIndicadores([ ...indicadores, { id: null } ]);
-    setDatosGuardados(false);
+    // setDatosGuardados(false);
   };
 
 
@@ -129,7 +131,8 @@ export const Subpaso_CuatroUno = ({ data, listaIndicadores, id, stepNumber }) =>
     label: label // Etiqueta del indicador
   }));
 
-  const handleDropdownChange = (idIndicador, valorSeleccionado) => {
+  const handleDropdownChange = (idIndicador, valorSeleccionado) =>
+  {
     setIndicadores(indicadoresActuales =>
       indicadoresActuales.map(indicador =>
         indicador.id === idIndicador
@@ -137,34 +140,33 @@ export const Subpaso_CuatroUno = ({ data, listaIndicadores, id, stepNumber }) =>
           : indicador
       )
     );
-    if (idIndicador) {
+    if (idIndicador)
+    {
       guardarCambioIndicador(idIndicador, valorSeleccionado.value);
     }
   };
 
 
-  const guardarCambioIndicador = async (idIndicador, nuevoValor) => {
+  const guardarCambioIndicador = async (idIndicador, nuevoValor) =>
+  {
     const indicadorActualizado = indicadores.find(indicador => indicador.id === idIndicador);
-  
+
     if (!indicadorActualizado) return;
-  
+
     const payload = {
       ...indicadorActualizado,
       indicador: nuevoValor
     };
-  
-    try {
-      await patchStep(id, stepNumber, { indicador_desempeno: [payload] });
-    } catch (error) {
+
+    try
+    {
+      await patchStep(id, stepNumber, { indicador_desempeno: [ payload ] });
+    } catch (error)
+    {
       console.error("Error al guardar el cambio de indicador:", error);
     }
   };
-  
 
-  useEffect(() =>
-  {
-    console.log("Estado actualizado de indicadores:", indicadores);
-  }, [ indicadores ]);
 
   const handleSave = async () =>
   {
@@ -180,24 +182,24 @@ export const Subpaso_CuatroUno = ({ data, listaIndicadores, id, stepNumber }) =>
           indicador.verificador_asociado
         );
       });
-
-      if (!todosCompletos)
-      {
-        alert("Por favor, completa todos los campos antes de guardar.");
-        return; 
+      
+      if (!todosCompletos) {
+        setMessage({ text: "Por favor, completa todos los campos antes de guardar.", type: 'error' });
+        return;
       }
       const datosPaso = {
         indicador_desempeno: indicadores,
       };
       const exito = await patchStep(id, stepNumber, datosPaso);
-      if (exito)
-      {
-        alert("Datos guardados exitosamente");
-        setDatosGuardados(true);
+      if (exito) {
+        setMessage({ text: "Datos guardados exitosamente", type: 'success' });
+        // setDatosGuardados(true);
+      } else {
+        setMessage({ text: "Error al guardar los datos", type: 'error' });
       }
-    } catch (error)
-    {
+    } catch (error) {
       console.error("Error en handleSave:", error);
+      setMessage({ text: "Error al guardar. Inténtalo de nuevo.", type: 'error' });
     }
   };
 
@@ -205,7 +207,10 @@ export const Subpaso_CuatroUno = ({ data, listaIndicadores, id, stepNumber }) =>
   {
     setInputStatus(prevStatus => ({
       ...prevStatus,
-      [ idIndicador ]: { ...prevStatus[ idIndicador ], [ campo ]: { loading: true, saved: false } }
+      [ idIndicador ]: {
+        ...prevStatus[ idIndicador ] || {}, // Asegura que el objeto exista
+        [ campo ]: { loading: true, saved: false }
+      }
     }));
 
     // Aquí debes asegurarte de enviar solo los datos relevantes del indicador específico
@@ -215,7 +220,10 @@ export const Subpaso_CuatroUno = ({ data, listaIndicadores, id, stepNumber }) =>
     {
       setInputStatus(prevStatus => ({
         ...prevStatus,
-        [ idIndicador ]: { ...prevStatus[ idIndicador ], [ campo ]: { loading: false, saved: true } }
+        [ idIndicador ]: {
+          ...prevStatus[ idIndicador ],
+          [ campo ]: { loading: false, saved: true }
+        }
       }));
     } else
     {
@@ -225,6 +233,10 @@ export const Subpaso_CuatroUno = ({ data, listaIndicadores, id, stepNumber }) =>
       }));
     }
   };
+
+  const todosIndicadoresGuardados = indicadores.every(indicador => typeof indicador.id === 'number');
+
+
 
   return (
     <>
@@ -260,12 +272,12 @@ export const Subpaso_CuatroUno = ({ data, listaIndicadores, id, stepNumber }) =>
                   value={indicador.formula_calculo || ""}
                   onChange={(evento) => handleChangeInput(indicador.id, 'formula_calculo', evento)}
                   onBlur={() => indicador.id ? inputSave(indicador.id, 'formula_calculo') : null}
-                  loading={inputStatus.formula_calculo.loading}
-                  saved={inputStatus.formula_calculo.saved}
+                  loading={inputStatus[ indicador.id ]?.formula_calculo?.loading || false}
+                  saved={inputStatus[ indicador.id ]?.formula_calculo?.saved || false}
                 />
               </div>
 
-              {index >= 1 && (
+              {index >= 0 && indicadores.length > 1 && (
                 <div className="col-1 me-4">
                   <button
                     className="btn-terciario-ghost mt-3"
@@ -286,6 +298,8 @@ export const Subpaso_CuatroUno = ({ data, listaIndicadores, id, stepNumber }) =>
                 value={indicador.descripcion_indicador}
                 onChange={(evento) => handleChangeInput(indicador.id, 'descripcion_indicador', evento)}
                 onBlur={() => indicador.id ? inputSave(indicador.id, 'descripcion_indicador') : null}
+                loading={inputStatus[ indicador.id ]?.descripcion_indicador?.loading || false}
+                saved={inputStatus[ indicador.id ]?.descripcion_indicador?.saved || false}
               />
             </div>
             <div className="mt-2 mx-3">
@@ -296,25 +310,28 @@ export const Subpaso_CuatroUno = ({ data, listaIndicadores, id, stepNumber }) =>
                 value={indicador.medios_calculo || ""}
                 onChange={(evento) => handleChangeInput(indicador.id, 'medios_calculo', evento)}
                 onBlur={() => indicador.id ? inputSave(indicador.id, 'medios_calculo') : null}
+                loading={inputStatus[ indicador.id ]?.medios_calculo?.loading || false}
+                saved={inputStatus[ indicador.id ]?.medios_calculo?.saved || false}
 
               />
             </div>
-            <div className="mt-2 mx-3">
+            <div className="mt-2 mx-3 ">
               <CustomTextarea
                 label="Verificador asociado al indicador (Obligatorio)"
                 placeholder="Describe los medios de verificación del indicador"
                 maxLength={300}
                 value={indicador.verificador_asociado || ""}
                 onChange={(evento) => handleInputChange(indicador.id, 'verificador_asociado', evento)}
-                onBlur={() => indicador.id ? inputSave(indicador.id, 'verificador_asociado ') : null}
-
+                onBlur={() => indicador.id ? inputSave(indicador.id, 'verificador_asociado') : null}
+                loading={inputStatus[ indicador.id ]?.verificador_asociado?.loading || false}
+                saved={inputStatus[ indicador.id ]?.verificador_asociado?.saved || false}
               />
             </div>
 
           </div>
         ))}
         <div className="d-flex">
-          {datosGuardados ? (
+          {todosIndicadoresGuardados ? (
             <button
               className="btn-secundario-s m-2"
               onClick={agregarIndicador}
@@ -323,6 +340,12 @@ export const Subpaso_CuatroUno = ({ data, listaIndicadores, id, stepNumber }) =>
               <p className="mb-0 text-decoration-underline">Agregar indicador</p>
             </button>
           ) : (
+            <div>
+            {message.text && (
+              <div className={`text-sans-h6-darkred mt-1 mb-0  mx-2 ${message.type}`}>
+                {message.text}
+              </div>
+            )}
             <button
               className="btn-primario-s m-2"
               onClick={handleSave}
@@ -330,6 +353,7 @@ export const Subpaso_CuatroUno = ({ data, listaIndicadores, id, stepNumber }) =>
               <i className="material-symbols-rounded me-2">save</i>
               Guardar Indicador
             </button>
+            </div>
           )}
         </div>
       </div>
