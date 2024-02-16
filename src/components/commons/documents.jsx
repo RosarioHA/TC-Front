@@ -1,67 +1,70 @@
 import { useState, useEffect } from 'react';
 
-export const DocumentsAditionals = ({ onFilesChanged, marcoJuridicoData }) =>
-{
-  const [ files, setFiles ] = useState([]);
+export const DocumentsAditionals = ({ onFilesChanged, marcoJuridicoData, handleDelete }) => {
+  const [files, setFiles] = useState([]);
   const maxFiles = 5; // Máximo número de archivos permitidos
   const maxSize = 20 * 1024 * 1024; // 20 MB
-  const [ maxFilesReached, setMaxFilesReached ] = useState(false);
+  const [maxFilesReached, setMaxFilesReached] = useState(false);
 
-  useEffect(() =>
-  {
-    // Inicializa 'files' con la estructura correcta y el nombre del archivo obtenido de 'documento_url'
-    const initialFiles = marcoJuridicoData?.map(doc => ({
-      title: doc.documento_url?.split('/').pop(),
-      isTooLarge: false,
-    })).filter((file, index, self) =>
-      index === self.findIndex((t) => (t.title === file.title))
-    );
-    if (!marcoJuridicoData || !Array.isArray(marcoJuridicoData))
-    {
-      console.log('marcoJuridicoData no está disponible o no es un arreglo');
-      return;
+  useEffect(() => {
+    if (marcoJuridicoData && marcoJuridicoData.length > 0) {
+      const updatedFiles = marcoJuridicoData.map(doc => {
+        if (doc && doc.documento_url) {
+          return {
+            id: doc.id,
+            title: doc.documento_url.split('/').pop(),
+            isTooLarge: false,
+          };
+        }
+        return null;
+      }).filter(doc => doc !== null);
+
+      setFiles(updatedFiles);
+      setMaxFilesReached(updatedFiles.length >= maxFiles);
+    } else {
+      // Si no hay archivos, asegúrate de resetear el estado local
+      setFiles([]);
+      setMaxFilesReached(false);
     }
-    setFiles(initialFiles);
-    setMaxFilesReached(initialFiles.length >= maxFiles);
-  }, [ marcoJuridicoData ]);
+  }, [marcoJuridicoData, maxFiles]);
 
-  const handleFileChange = async (event) =>
-  {
-    const selectedFiles = Array.from(event.target.files).filter(file => file.size <= maxSize);
-
-    if (selectedFiles.length === 0)
-    {
+  const handleFileChange = async (event) => {
+    const incomingFiles = Array.from(event.target.files).filter(file => file.size <= maxSize);
+    if (incomingFiles.length === 0) {
       console.log('No hay archivos válidos seleccionados.');
       return;
     }
-
-    // Verifica que los archivos seleccionados se pasen correctamente
-    console.log('Archivos seleccionados:', selectedFiles);
-
-    for (const file of selectedFiles)
-    {
-      if (files.length + 1 > maxFiles)
-      {
-        console.log('Número máximo de archivos alcanzado.');
-        setMaxFilesReached(true);
-        break;
-      }
-
-      // Verifica que cada archivo se pasa correctamente a la función onFilesChanged
-      console.log('Subiendo archivo:', file);
-
+  
+    // Calcula cuántos archivos más se pueden subir
+    const availableSlots = maxFiles - files.length;
+  
+    if (availableSlots <= 0) {
+      console.log('Número máximo de archivos ya alcanzado.');
+      setMaxFilesReached(true);
+      return;
+    }
+  
+    // Limita el número de archivos seleccionados al número de espacios disponibles
+    const filesToUpload = incomingFiles.slice(0, availableSlots);
+  
+    for (const file of filesToUpload) {
       await onFilesChanged(file);
     }
+  
+    // Verifica si se ha alcanzado el límite después de la subida
+    if ((files.length + filesToUpload.length) >= maxFiles) {
+      setMaxFilesReached(true);
+    }
   };
-
-  const handleDelete = (index) =>
-  {
-    const updatedFiles = files.filter((_, i) => i !== index);
-    setFiles(updatedFiles);
-    setMaxFilesReached(updatedFiles.length >= maxFiles);
-
-    // Verifica que los archivos eliminados se pasen correctamente a la función handleDelete
-    console.log('Archivo eliminado:', files[ index ]);
+  const handleDeleteDoc = (index) => {
+    const documentoId = files[index].id;
+    handleDelete(documentoId);
+    setFiles(currentFiles => {
+      const updatedFiles = currentFiles.filter((_, fileIndex) => fileIndex !== index);
+      const reachedMaxFiles = updatedFiles.length >= maxFiles;
+      setMaxFilesReached(reachedMaxFiles);
+      return updatedFiles;
+    });
   };
 
   return (
@@ -74,43 +77,30 @@ export const DocumentsAditionals = ({ onFilesChanged, marcoJuridicoData }) =>
         id="fileInput"
         style={{ display: "none" }}
       />
-      <button className="btn-secundario-s d-flex" onClick={() => document.getElementById('fileInput').click()}>
-        <i className="material-symbols-outlined">upgrade</i>
-        <u className="align-self-center text-sans-b-white">Subir Archivo</u>
-      </button>
-      {files.length > 0 ? (
-        <>
-          <div className="row my-4 fw-bold border-top me-5 pe-5 col-11">
-            <div className="col-1 mt-3">#</div>
-            <div className="col mt-3">Documento</div>
-            <div className="col mt-3"></div>
-            <div className="col mt-3 ms-5">Acción</div>
+      {!maxFilesReached && (
+        <button className="btn-secundario-s d-flex" onClick={() => document.getElementById('fileInput').click()}>
+          <i className="material-symbols-outlined">upgrade</i>
+          <u className="align-self-center text-sans-b-white">Subir Archivo</u>
+        </button>
+      )}
+      {files.map((fileObj, index) => (
+        <div key={index} className={`row border-top align-items-center me-5 pe-5 col-11 mt-2 ${index % 2 === 0 ? 'grey-table-line' : 'white-table-line'}`}>
+          <div className="col-1 p-3">{index + 1}</div>
+          <div className="col p-3">{fileObj.title}</div>
+          <div className="col p-3"></div>
+          <div className="col-2 p-3 d-flex">
+            <button
+              type="button"
+              onClick={() => handleDeleteDoc(index)}
+              className="btn-terciario-ghost px-0 d-flex align-items-center mx-0">
+              <span className="text-sans-b-red mx-2">Borrar</span><i className="material-symbols-rounded">delete</i>
+            </button>
           </div>
-          {files.map((fileObj, index) => (
-            <div key={index} className={`row border-top align-items-center me-5 pe-5 col-11 ${index % 2 === 0 ? 'grey-table-line' : 'white-table-line'}`}>
-              <div className="col-1 p-3">{index + 1}</div>
-              <div className="col p-3">{fileObj.title}</div>
-              <div className="col p-3"></div>
-              <div className="col p-3 d-flex">
-                <button
-                  type="button"
-                  onClick={() => handleDelete(index)}
-                  className="btn-terciario-ghost px-0 d-flex align-items-center mx-0">
-                  <span className="text-sans-b-red mx-2">Borrar</span><i className="material-symbols-rounded">delete</i>
-                </button>
-              </div>
-            </div>
-          ))}
-        </>
-      ) : null}
+        </div>
+      ))}
       {maxFilesReached && (
         <h6 className="text-sans-h6-primary">
           Alcanzaste el número máximo de archivos permitidos ({maxFiles} archivos).
-        </h6>
-      )}
-      {files.some(file => file.isTooLarge) && (
-        <h6 className="text-sans-h6-primary">
-          Algunos archivos no se añadieron porque exceden el tamaño máximo permitido (20MB).
         </h6>
       )}
     </>

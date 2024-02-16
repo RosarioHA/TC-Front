@@ -1,9 +1,8 @@
 import CostosDirectos from "../../tables/CostosDirectos";
-import Costos from "../../tables/Costos";
-import SumatoriaCostos from "../../tables/SumatoriaCostos";
 import { useState, useEffect } from "react";
 import { apiTransferenciaCompentencia } from "../../../services/transferenciaCompetencia";
 import CostosIndirectos from "../../tables/CostosIndirectos";
+import ResumenCostos from "../../tables/ResumenCostos";
 
 export const Subpaso_CincoPuntoUno = (
   {
@@ -17,24 +16,16 @@ export const Subpaso_CincoPuntoUno = (
     listado_subtitulos,
     listado_item_subtitulos,
     listado_etapas,
-    setRefreshSubpaso_CincoDos, }
+    setRefreshSubpaso_CincoDos, 
+  }
 ) => {
 
   const [refreshSumatoriaCostos, setRefreshSumatoriaCostos] = useState(false);
   const [dataDirecta, setDataDirecta] = useState(null);
   const [totalCostosDirectos, setTotalCostosDirectos] = useState('');
   const [totalCostosIndirectos, setTotalCostosIndirectos] = useState('');
-
-// Actualiza los estados con los datos de dataDirecta cuando esta cambie
-useEffect(() => {
-  if (dataDirecta && dataDirecta.paso5) {
-    setTotalCostosDirectos(dataDirecta.paso5.total_costos_directos || '0');
-    setTotalCostosIndirectos(dataDirecta.paso5.total_costos_indirectos || '0');
-  }
-}, [dataDirecta]);
-
-// Luego, usa totalCostosDirectos y totalCostosIndirectos para mostrar los valores en tu componente
-
+  const [costosTotales, setCostosTotales] = useState('');
+  const [descripcionCostosTotales, setDescripcionCostosTotales] = useState('');
 
   // Lógica para recargar sumatoria al agregar costos directos o indirectos
   // Llamada para recargar componente
@@ -47,7 +38,7 @@ useEffect(() => {
     }
   };
 
-  // refreshSubpasoDos_cuatro es un trigger disparado desde subpaso 2.3
+  // refreshSumatoriaCostos es un trigger disparado desde CostosDirectos o CostosIndirectos
   useEffect(() => {
     if (refreshSumatoriaCostos) {
       fetchDataDirecta();
@@ -59,9 +50,13 @@ useEffect(() => {
     if (dataDirecta && dataDirecta.paso5) {
       setTotalCostosDirectos(dataDirecta.paso5.total_costos_directos || '0');
       setTotalCostosIndirectos(dataDirecta.paso5.total_costos_indirectos || '0');
+      setCostosTotales(dataDirecta.paso5.costos_totales || '0');
+      setDescripcionCostosTotales(dataDirecta.paso5.descripcion_costos_totales || '0');
     } else {
       setTotalCostosDirectos(paso5.total_costos_directos || '0');
       setTotalCostosIndirectos(paso5.total_costos_indirectos || '0');
+      setCostosTotales(paso5.costos_totales || '0');
+      setDescripcionCostosTotales(paso5.descripcion_costos_totales || '0');
     }
   }, [dataDirecta]);
   
@@ -73,7 +68,7 @@ useEffect(() => {
 
       <p className="text-sans-m-semibold mt-4">a. Costos directos</p>
       <h6 className="text-sans-h6-primary mt-3">Por costos directos se entenderán aquellos imputables a los procedimientos específicos de la competencia analizada, y que no corresponden a unidades de soporte transversal del Ministerio o Servicio de origen. Los costos analizados responden al año n-1, es decir, al año anterior al inicio del estudio de transferencia de competencias.</h6>
-      <h6 className="text-sans-h6-primary mt-3">Llenar información para al menos un subtítulo/item es obligatorio.</h6>
+      <h6 className="text-sans-h6-primary mt-3 mb-4">Llenar información para al menos un subtítulo/item es obligatorio.</h6>
 
       <div >
         <CostosDirectos
@@ -90,17 +85,17 @@ useEffect(() => {
         <hr />
       </div>
 
-      <div className="row mt-5">
+      <div className="row mt-5 d-flex align-items-center">
         <p className="text-sans-p-bold mb-0 col-2">Costos Directos <br /> Totales Anual ($M)</p>
         <p className="text-sans-p-blue col">{totalCostosDirectos}</p>
       </div>
-      <hr />
+      <hr className="col-4"/>
 
-      <p className="text-sans-m-semibold mt-4">b. Costos indirectos</p>
+      <p className="text-sans-m-semibold mt-5">b. Costos indirectos</p>
       <h6 className="text-sans-h6-primary mt-3">Por costos indirectos se entenderán aquellos que no son imputables a los procedimientos específicos de la competencia analizada, pero que, al financiar unidades de soporte transversal en el Ministerio o Servicio de origen, hacen posible el ejercicio de la competencia. Los costos analizados responden al año n-1, es decir, al año anterior al inicio de estudio de transferencia de competencias.</h6>
       <h6 className="text-sans-h6-primary mt-3">Llenar información para al menos un subtítulo/item es obligatorio.</h6>
 
-      <div>
+      <div className="mt-4">
       <CostosIndirectos
           id={id}
           data={data_costos_indirectos}
@@ -115,17 +110,25 @@ useEffect(() => {
         <hr />
       </div>
 
-      <div className="row mt-5">
+      <div className="row mt-5 d-flex align-items-center">
         <p className="text-sans-p-bold mb-0 col-2">Costos Directos <br /> Totales Anual ($M)</p>
         <p className="text-sans-p-blue col">{totalCostosIndirectos}</p>
       </div>
-      <hr />
+      <hr className="col-4" />
 
       <p className="text-sans-m-semibold mt-4">c. Sumatoria de costos anuales destinados al ejercicio de la competencia</p>
 
       <div>
-        <SumatoriaCostos
-          numFilas={5} />
+        <ResumenCostos
+          id={id}
+          data={data_resumen_costos}
+          costosTotales={costosTotales}
+          descripcionCostosTotales={descripcionCostosTotales}
+          stepNumber={stepNumber}
+          formulario_enviado={formulario_enviado}          
+          setRefreshSumatoriaCostos={setRefreshSumatoriaCostos}
+          refreshSumatoriaCostos={refreshSumatoriaCostos}
+        />
       </div>
 
     </div>

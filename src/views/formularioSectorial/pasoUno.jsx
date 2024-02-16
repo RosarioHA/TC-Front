@@ -30,11 +30,11 @@ const PasoUno = () => {
       <div className="col-11">
         <div className="container-fluid ">
           <div className="d-flex">
-            <h3 className="mt-3">{paso1Data.nombre_paso}</h3>
+            <h3 className="mt-3 me-4">{paso1Data.nombre_paso}</h3>
             <Avance avance={paso1Data.avance} />
           </div>
           <span className="text-sans-h6-primary">Texto de apoyo</span>
-          <Subpaso_uno pasoData={paso1Data} marcojuridico={marcojuridico} id={data ? data.id : null} stepNumber={stepNumber} />
+          <Subpaso_uno dataPaso={paso1Data} marcojuridico={marcojuridico} id={data ? data.id : null} stepNumber={stepNumber} />
           <Subpaso_dos pasoData={paso1Data} organigrama={organigramaregional}  id={data ? data.id : null} stepNumber={stepNumber} />
           <Subpaso_tres pasoData={paso1Data}   id={data ? data.id : null} stepNumber={stepNumber} />
           <ButtonsNavigate step={paso1Data.numero_paso} id={data ? data.id : null} />

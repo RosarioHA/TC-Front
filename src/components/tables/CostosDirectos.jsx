@@ -2,7 +2,7 @@ import { useState, useContext, useEffect } from "react";
 import CustomTextarea from "../forms/custom_textarea";
 import DropdownCheckbox from "../dropdown/checkbox";
 import DropdownSelect from "../dropdown/select";
-import CustomInput from "../forms/custom_input";
+import InputCosto from "../forms/input_costo";
 import { OpcionesAB } from "../forms/opciones_AB";
 import { FormularioContext } from "../../context/FormSectorial";
 import { construirValidacionPaso5_1ab } from "../../validaciones/esquemaValidarPaso5Sectorial";
@@ -262,8 +262,6 @@ const CostosDirectos = ({
     }
   };
 
-
-
   return (
     <div>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -271,47 +269,49 @@ const CostosDirectos = ({
           <div key={costo.id} className="col mt-4">
             <div className="row">
               <span className="text-sans-p-bold mb-0">{index + 1}</span>
-              <div className="col">
+              <div className="col d-flex flex-column justify-content-between">
                 <p className="text-sans-p-bold">Subtítulo</p>
-                <Controller
-                  control={control}
-                  name={`subtitulo_${costo.id}`}
-                  render={({ field }) => {
-                    return (
-                      <DropdownSelect
-                        id={`subtitulo_${costo.id}`}
-                        name={`subtitulo_${costo.id}`}
-                        placeholder="Subtítulos"
-                        options={opcionesSubtitulos}
-                        onSelectionChange={(selectedOption) => {
-                          const textoSubtitulo = listado_subtitulos.find(subtitulo => subtitulo.id.toString() === selectedOption.value)?.subtitulo;
-                          const opcionesDeItems = encontrarOpcionesDeItems(textoSubtitulo);
+                <div>
+                  <Controller
+                    control={control}
+                    name={`subtitulo_${costo.id}`}
+                    render={({ field }) => {
+                      return (
+                        <DropdownSelect
+                          id={`subtitulo_${costo.id}`}
+                          name={`subtitulo_${costo.id}`}
+                          placeholder="Subtítulos"
+                          options={opcionesSubtitulos}
+                          onSelectionChange={(selectedOption) => {
+                            const textoSubtitulo = listado_subtitulos.find(subtitulo => subtitulo.id.toString() === selectedOption.value)?.subtitulo;
+                            const opcionesDeItems = encontrarOpcionesDeItems(textoSubtitulo);
 
-                          setCostosDirectos(prevCostosDirectos => prevCostosDirectos.map(costoDirecto => {
-                            if (costoDirecto.id === costo.id) {
-                              return {
-                                ...costoDirecto,
-                                subtituloSeleccionado: textoSubtitulo,
-                                opcionesItems: opcionesDeItems,
-                              };
-                            }
-                            return costoDirecto;
-                          }));
-                          field.onChange(selectedOption.value);
-                        }}
+                            setCostosDirectos(prevCostosDirectos => prevCostosDirectos.map(costoDirecto => {
+                              if (costoDirecto.id === costo.id) {
+                                return {
+                                  ...costoDirecto,
+                                  subtituloSeleccionado: textoSubtitulo,
+                                  opcionesItems: opcionesDeItems,
+                                };
+                              }
+                              return costoDirecto;
+                            }));
+                            field.onChange(selectedOption.value);
+                          }}
 
-                        readOnly={formulario_enviado}
-                        selected={costo.subtitulo_label_value}
+                          readOnly={formulario_enviado}
+                          selected={costo.subtitulo_label_value}
 
-                        loading={costo.estados?.subtitulo?.loading ?? false}
-                        saved={costo.estados?.subtitulo?.saved ?? false}
-                        error={errors[`subtitulo_${costo.id}`]?.message}
-                      />
-                    );
-                  }}
-                />
+                          loading={costo.estados?.subtitulo?.loading ?? false}
+                          saved={costo.estados?.subtitulo?.saved ?? false}
+                          error={errors[`subtitulo_${costo.id}`]?.message}
+                        />
+                      );
+                    }}
+                  />
+                </div>
               </div>
-              <div className="col">
+              <div className="col border-end  d-flex flex-column justify-content-between">
                 <p className="text-sans-p-bold">Item</p>
                 <Controller
                   control={control}
@@ -339,9 +339,12 @@ const CostosDirectos = ({
                   }}
                 />
               </div>
-              <div className="col">
-                <p className="text-sans-p-bold mb-0">Total Anual</p>
-                <p>($M)</p>
+              <div className="col d-flex flex-column justify-content-between border-end pe-4">
+                <div>
+                  <p className="text-sans-p-bold mb-0">Total Anual</p>
+                  <p className="mb-0">($M)</p>
+                </div>
+                
                 <Controller
                   control={control}
                   name={`total_anual_${costo.id}`}
@@ -366,7 +369,7 @@ const CostosDirectos = ({
                     };
 
                     return (
-                      <CustomInput
+                      <InputCosto
                         id={`total_anual_${costo.id}`}
                         placeholder="Costo (M$)"
                         value={value}
@@ -375,42 +378,48 @@ const CostosDirectos = ({
                         loading={costo.estados?.total_anual?.loading ?? false}
                         saved={costo.estados?.total_anual?.saved ?? false}
                         error={errors[`total_anual_${costo.id}`]?.message}
+                        disabled={formulario_enviado}
                       />
                     );
                   }}
                 />
               </div>
-              <div className="col">
-                <div className="d-flex">
-                  <p className="text-sans-p-bold mb-0">Etapa</p>
-                  <p className="ms-2">(Opcional)</p>
-                </div>
-                <Controller
-                  control={control}
-                  name={`etapa_${costo.id}`}
-                  render={({ field }) => {
-                    return (
-                      <DropdownCheckbox
-                        id={`etapa_${costo.id}`}
-                        name={`etapa_${costo.id}`}
-                        placeholder="Etapa"
-                        options={opcionesEtapas}
-                        onSelectionChange={(selectedOptions) => {
-                          handleSave(costo.id, 'etapa', selectedOptions);
-                          field.onChange(selectedOptions);
-                        }}
 
-                        readOnly={false}
+              <div className="col d-flex flex-column justify-content-between border-end">
+                <div>
+                  <p className="text-sans-p-bold mb-0">Etapa</p>
+                  <p className="">(Opcional)</p>
+                </div>
+                <div className="ps-2">
+                  <Controller
+                    control={control}
+                    name={`etapa_${costo.id}`}
+                    render={({ field }) => {
+                      return (
+                        <DropdownCheckbox
+                          id={`etapa_${costo.id}`}
+                          name={`etapa_${costo.id}`}
+                          placeholder="Etapa"
+                          options={opcionesEtapas}
+                          onSelectionChange={(selectedOptions) => {
+                            handleSave(costo.id, 'etapa', selectedOptions);
+                            field.onChange(selectedOptions);
+                          }}
+
+                        readOnly={formulario_enviado}
                         selectedValues={costo.etapa_label_value}
 
-                        loading={costo.estados?.etapa?.loading ?? false}
-                        saved={costo.estados?.etapa?.saved ?? false}
-                      />
-                    );
-                  }}
-                />
+                          loading={costo.estados?.etapa?.loading ?? false}
+                          saved={costo.estados?.etapa?.saved ?? false}
+                        />
+                      );
+                    }}
+                  />
+                </div>
+                
               </div>
-              <div className="col">
+
+              <div className="col d-flex flex-column justify-content-between">
                 <p className="text-sans-p-bold">¿Es transversal?</p>
                 <Controller
                   control={control}
@@ -420,7 +429,7 @@ const CostosDirectos = ({
                     return (
                       <OpcionesAB
                         id={`es_transversal_${costo.id}`}
-                        readOnly={false}
+                        readOnly={formulario_enviado}
                         initialState={field.value}
                         handleEstadoChange={(newValue) => handleEsTransversalChange(costo.id, newValue)}
                         loading={costo.estados?.es_transversal?.loading ?? false}
@@ -432,6 +441,7 @@ const CostosDirectos = ({
                         handleSave={handleSave}
                         arrayNameId={costo.id}
                         fieldName="es_transversal"
+                        
                       />
                     );
                   }}
@@ -439,7 +449,7 @@ const CostosDirectos = ({
               </div>
             </div>
 
-            <div className="row pe-3">
+            <div className="row pe-3 mt-4">
               <Controller
                 control={control}
                 name={`descripcion_${costo.id}`}
@@ -475,6 +485,7 @@ const CostosDirectos = ({
                       loading={costo.estados?.descripcion?.loading ?? false}
                       saved={costo.estados?.descripcion?.saved ?? false}
                       error={errors[`descripcion_${costo.id}`]?.message}
+                      readOnly={formulario_enviado}
                     />
                   );
                 }}
@@ -482,7 +493,7 @@ const CostosDirectos = ({
             </div>
 
             <div className="d-flex justify-content-end me-2">
-              {(costosDirectos.length > 1 && !formulario_enviado) && (
+              {(!formulario_enviado) && (
                 <div className="">
                   <button
                     className="btn-terciario-ghost mt-3"

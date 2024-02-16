@@ -46,9 +46,9 @@ export const OpcionesAB = ({
   };
 
   return (
-    <div className="mb-5">
+    <div className="">
       {label && <h5 className="text-sans-h5">{label}</h5>}
-      <div className="d-flex my-3">
+      <div className="d-flex">
         <button
           type="button"
           disabled={readOnly}
