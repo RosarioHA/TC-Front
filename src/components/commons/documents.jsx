@@ -5,6 +5,7 @@ export const DocumentsAditionals = ({ onFilesChanged, marcoJuridicoData, handleD
   const maxFiles = 5; // Máximo número de archivos permitidos
   const maxSize = 20 * 1024 * 1024; // 20 MB
   const [maxFilesReached, setMaxFilesReached] = useState(false);
+  const [fileTooLarge, setFileTooLarge] = useState(false); // Estado para manejar si el archivo es demasiado grande
 
   useEffect(() => {
     if (marcoJuridicoData && marcoJuridicoData.length > 0) {
@@ -22,47 +23,49 @@ export const DocumentsAditionals = ({ onFilesChanged, marcoJuridicoData, handleD
       setFiles(updatedFiles);
       setMaxFilesReached(updatedFiles.length >= maxFiles);
     } else {
-      // Si no hay archivos, asegúrate de resetear el estado local
       setFiles([]);
       setMaxFilesReached(false);
     }
   }, [marcoJuridicoData, maxFiles]);
 
   const handleFileChange = async (event) => {
-    const incomingFiles = Array.from(event.target.files).filter(file => file.size <= maxSize);
-    if (incomingFiles.length === 0) {
-      console.log('No hay archivos válidos seleccionados.');
+    setFileTooLarge(false); // Reiniciar el estado de archivo demasiado grande
+    const incomingFiles = Array.from(event.target.files);
+    const filesExceedingMaxSize = incomingFiles.filter(file => file.size > maxSize);
+
+    if (filesExceedingMaxSize.length > 0) {
+      console.log('Algunos archivos exceden el límite de 20 MB y no serán procesados.');
+      setFileTooLarge(true); // Establecer que hay archivos demasiado grandes
+    }
+
+    const validFiles = incomingFiles.filter(file => file.size <= maxSize);
+    if (validFiles.length === 0) {
       return;
     }
   
-    // Calcula cuántos archivos más se pueden subir
     const availableSlots = maxFiles - files.length;
-  
     if (availableSlots <= 0) {
       console.log('Número máximo de archivos ya alcanzado.');
       setMaxFilesReached(true);
       return;
     }
-  
-    // Limita el número de archivos seleccionados al número de espacios disponibles
-    const filesToUpload = incomingFiles.slice(0, availableSlots);
-  
+
+    const filesToUpload = validFiles.slice(0, availableSlots);
     for (const file of filesToUpload) {
       await onFilesChanged(file);
     }
-  
-    // Verifica si se ha alcanzado el límite después de la subida
+
     if ((files.length + filesToUpload.length) >= maxFiles) {
       setMaxFilesReached(true);
     }
   };
+
   const handleDeleteDoc = (index) => {
     const documentoId = files[index].id;
     handleDelete(documentoId);
     setFiles(currentFiles => {
       const updatedFiles = currentFiles.filter((_, fileIndex) => fileIndex !== index);
-      const reachedMaxFiles = updatedFiles.length >= maxFiles;
-      setMaxFilesReached(reachedMaxFiles);
+      setMaxFilesReached(updatedFiles.length >= maxFiles);
       return updatedFiles;
     });
   };
@@ -82,6 +85,11 @@ export const DocumentsAditionals = ({ onFilesChanged, marcoJuridicoData, handleD
           <i className="material-symbols-outlined">upgrade</i>
           <u className="align-self-center text-sans-b-white">Subir Archivo</u>
         </button>
+      )}
+      {fileTooLarge && (
+        <h6 className="text-sans-p-bold-darkred my-2">
+          El archivo no debe superar los 20 MB.
+        </h6>
       )}
       {files.map((fileObj, index) => (
         <div key={index} className={`row border-top align-items-center me-5 pe-5 col-11 mt-2 ${index % 2 === 0 ? 'grey-table-line' : 'white-table-line'}`}>

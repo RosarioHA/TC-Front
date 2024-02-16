@@ -80,7 +80,6 @@ export const Subpaso_tres = ({ pasoData, id, stepNumber }) =>
       ...formData,
       paso1: {
         ...formData.paso1,
-        // Asegúrate de incluir el ámbito seleccionado si es relevante para este input
         ambito_paso1: ambitoSeleccionado ? ambitoSeleccionado.value : formData.paso1.ambito_paso1
       }
     };
@@ -109,10 +108,7 @@ export const Subpaso_tres = ({ pasoData, id, stepNumber }) =>
   const handleAmbitoChange = async (selectedOption) =>
   {
     setAmbitoSeleccionado(selectedOption);
-    localStorage.setItem('ambitoSeleccionado', JSON.stringify(selectedOption)); // Guardar en localStorage
-
-
-    // Actualizar formData con la nueva selección de ámbito
+    localStorage.setItem('ambitoSeleccionado', JSON.stringify(selectedOption)); 
     const updatedFormData = {
       ...formData,
       paso1: {
@@ -120,14 +116,11 @@ export const Subpaso_tres = ({ pasoData, id, stepNumber }) =>
         ambito_paso1: selectedOption.value,
       },
     };
-
-    // Llamar a handleSave para enviar los datos actualizados
     await handleSave('ambito_paso1', updatedFormData);
   };
 
   useEffect(() =>
   {
-    // Recuperar la selección guardada al cargar el componente
     const savedSelection = localStorage.getItem('ambitoSeleccionado');
     if (savedSelection)
     {
