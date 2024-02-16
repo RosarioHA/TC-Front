@@ -2,7 +2,7 @@ import { useState, useContext, useEffect } from "react";
 import CustomTextarea from "../forms/custom_textarea";
 import DropdownCheckbox from "../dropdown/checkbox";
 import DropdownSelect from "../dropdown/select";
-import CustomInput from "../forms/custom_input";
+import ImputCosto from "../forms/input_costo";
 import { OpcionesAB } from "../forms/opciones_AB";
 import { FormularioContext } from "../../context/FormSectorial";
 import { construirValidacionPaso5_1ab } from "../../validaciones/esquemaValidarPaso5Sectorial";
@@ -252,8 +252,6 @@ const CostosIndirectos = ({
     }
   };
 
-
-
   return (
     <div>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -261,7 +259,7 @@ const CostosIndirectos = ({
           <div key={costo.id} className="col mt-4">
             <div className="row">
               <span className="text-sans-p-bold mb-0">{index + 1}</span>
-              <div className="col">
+              <div className="col d-flex flex-column justify-content-between">
                 <p className="text-sans-p-bold">Subtítulo</p>
                 <Controller
                   control={control}
@@ -301,7 +299,8 @@ const CostosIndirectos = ({
                   }}
                 />
               </div>
-              <div className="col">
+
+              <div className="col border-end d-flex flex-column justify-content-between">
                 <p className="text-sans-p-bold">Item</p>
                 <Controller
                   control={control}
@@ -329,9 +328,13 @@ const CostosIndirectos = ({
                   }}
                 />
               </div>
-              <div className="col">
-                <p className="text-sans-p-bold mb-0">Total Anual</p>
-                <p>($M)</p>
+
+              <div className="col border-end d-flex flex-column justify-content-between">
+                <div>
+                  <p className="text-sans-p-bold mb-0">Total Anual</p>
+                  <p>($M)</p>
+                </div>
+                  
                 <Controller
                   control={control}
                   name={`total_anual_${costo.id}`}
@@ -356,7 +359,7 @@ const CostosIndirectos = ({
                     };
 
                     return (
-                      <CustomInput
+                      <ImputCosto
                         id={`total_anual_${costo.id}`}
                         placeholder="Costo (M$)"
                         value={value}
@@ -371,37 +374,41 @@ const CostosIndirectos = ({
                   }}
                 />
               </div>
-              <div className="col">
+
+              <div className="col border-end d-flex flex-column justify-content-between">
                 <div className="d-flex">
                   <p className="text-sans-p-bold mb-0">Etapa</p>
                   <p className="ms-2">(Opcional)</p>
                 </div>
-                <Controller
-                  control={control}
-                  name={`etapa_${costo.id}`}
-                  render={({ field }) => {
-                    return (
-                      <DropdownCheckbox
-                        id={`etapa_${costo.id}`}
-                        name={`etapa_${costo.id}`}
-                        placeholder="Etapa"
-                        options={opcionesEtapas}
-                        onSelectionChange={(selectedOptions) => {
-                          handleSave(costo.id, 'etapa', selectedOptions);
-                          field.onChange(selectedOptions);
-                        }}
+                <div className="ps-2">
+                  <Controller
+                    control={control}
+                    name={`etapa_${costo.id}`}
+                    render={({ field }) => {
+                      return (
+                        <DropdownCheckbox
+                          id={`etapa_${costo.id}`}
+                          name={`etapa_${costo.id}`}
+                          placeholder="Etapa"
+                          options={opcionesEtapas}
+                          onSelectionChange={(selectedOptions) => {
+                            handleSave(costo.id, 'etapa', selectedOptions);
+                            field.onChange(selectedOptions);
+                          }}
 
                         readOnly={formulario_enviado}
                         selectedValues={costo.etapa_label_value}
 
-                        loading={costo.estados?.etapa?.loading ?? false}
-                        saved={costo.estados?.etapa?.saved ?? false}
-                      />
-                    );
-                  }}
-                />
+                          loading={costo.estados?.etapa?.loading ?? false}
+                          saved={costo.estados?.etapa?.saved ?? false}
+                        />
+                      );
+                    }}
+                  />
+                </div>
+                
               </div>
-              <div className="col">
+              <div className="col d-flex flex-column justify-content-between">
                 <p className="text-sans-p-bold">¿Es transversal?</p>
                 <Controller
                   control={control}
@@ -430,7 +437,7 @@ const CostosIndirectos = ({
               </div>
             </div>
 
-            <div className="row pe-3">
+            <div className="row pe-3 mt-4">
               <Controller
                 control={control}
                 name={`descripcion_${costo.id}`}

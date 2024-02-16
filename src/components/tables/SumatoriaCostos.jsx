@@ -35,6 +35,7 @@ const SumatoriaCostos = ({numFilas, readOnly}) => {
               </div>
               <div className="col-7 ps-2 d-flex">
                 <CustomTextarea
+                containerSize= "true"
                 placeholder="Describe el costo por subtítulo."
                 maxLength={300}
                 readOnly={readOnly}/>
@@ -56,6 +57,7 @@ const SumatoriaCostos = ({numFilas, readOnly}) => {
             </div>
             <div className="col-7 ps-2 d-flex">
               <CustomTextarea
+              containerSize= "true"
               placeholder="Describe el costo total."
               maxLength={300}
               readOnly={readOnly} />

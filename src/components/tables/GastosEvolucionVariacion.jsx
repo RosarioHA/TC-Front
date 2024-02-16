@@ -293,7 +293,7 @@ export const GastosEvolucionVariacion = ({
 
         </table>
         <hr />
-        <div className="mt-2">
+        <div className="mt-4">
           <Controller
             control={control}
             name="glosas_especificas"
@@ -333,9 +333,9 @@ export const GastosEvolucionVariacion = ({
               );
             }}
           />
-          <div className="d-flex mb-3 pt-0 text-sans-h6-primary">
+          <div className="d-flex mb-3 pt-0">
             <i className="material-symbols-rounded me-2">info</i>
-            <h6 className="mt-1">Si existen glosas especificas para el ejercicio de la competencia,
+            <h6 className="mt-1 text-sans-h6-primary">Si existen glosas especificas para el ejercicio de la competencia,
               deben ser incluidas describiendo aquello que permite financiar.</h6>
           </div>
         </div>

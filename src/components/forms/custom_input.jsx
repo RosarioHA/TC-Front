@@ -51,7 +51,7 @@ const CustomInput = forwardRef(
                 ref={ref}
                 {...props}
               />
-              <div className=" d-flex align-self-end align-items-center">
+              <div className=" d-flex align-self-end ms-1">
                 {renderSpinnerOrCheck()}
               </div>
             </div>

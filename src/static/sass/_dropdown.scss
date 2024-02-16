@@ -91,3 +91,10 @@
 .material-symbols-outlined {
   cursor: pointer; /* Opcional, si quieres que el ícono sea clickeable */
 }
+
+.dropdown-position{
+  position: absolute;
+  top: 0%;
+  right: 0%;
+  z-index: 1000;
+}
