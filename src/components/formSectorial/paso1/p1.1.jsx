@@ -27,7 +27,6 @@ export const Subpaso_uno = ({ dataPaso, id, stepNumber, marcojuridico }) => {
   const [isUploading, setIsUploading] = useState(false);
   const [marcoJuridicoFiles, setMarcoJuridicoFiles] = useState(marcojuridico || []);
 
-
   useEffect(() => {
     setMarcoJuridicoFiles(marcojuridico || []);
   }, [marcojuridico]);
@@ -103,7 +102,6 @@ const fetchData = async () => {
 
   const eliminarDocMarco = async (idMarco) =>
   {
-    console.log('id', idMarco);
     const payload = {
       marcojuridico: [ {
         id: idMarco,
@@ -116,14 +114,11 @@ const fetchData = async () => {
       await handleUpdatePaso(id, stepNumber, payload);
       setMarcoJuridicoFiles(currentFiles => currentFiles.filter(file => file.id !== idMarco));
       await fetchData();
-      console.log("Marco Juridico eliminado con éxito");
     } catch (error)
     {
       console.error("Error al eliminar el marco juridico:", error);
     }
   };
-
- console.log(marcoJuridicoFiles)
 
   return (
     <>

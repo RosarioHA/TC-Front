@@ -9,7 +9,7 @@ export const FormularioProvider = ({ children }) => {
   const [id, setId] = useState(null);
   const [stepNumber, setStepNumber] = useState(null);
 
-  const { dataFormSectorial, loadingFormSectorial, errorFormSectorial } = useFormSectorial(id);
+  const { dataFormSectorial, loadingFormSectorial, errorFormSectorial ,refetchTrigger} = useFormSectorial(id);
   const { dataPaso, loadingPaso, errorPaso } = usePasoForm(id, stepNumber);
   const { patchStep, loading, error } = useUpdateForm();
 
@@ -95,6 +95,7 @@ export const FormularioProvider = ({ children }) => {
     handleUpdatePaso,
     handleUploadFiles,
     handleUploadFilesOrganigramaregional,
+    refetchTrigger,
   };
 
   return (

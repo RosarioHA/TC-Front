@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { apiTransferenciaCompentencia } from "../../services/transferenciaCompetencia";
 
-export const usePasoForm = (id, stepNumber, refetchTrigger) => {
+export const usePasoForm = (id, stepNumber,) => {
   const [dataPaso, setDataPaso] = useState(null);
   const [loadingPaso, setLoadingPaso] = useState(true);
   const [errorPaso, setErrorPaso] = useState(null);
@@ -26,7 +26,7 @@ export const usePasoForm = (id, stepNumber, refetchTrigger) => {
       setLoadingPaso(false);
       setErrorPaso(null);
     }
-  }, [id, stepNumber, refetchTrigger, fetchData]);
+  }, [id, stepNumber, fetchData]);
 
   return { dataPaso, loadingPaso, errorPaso, refetchTrigger: fetchData };
 };
