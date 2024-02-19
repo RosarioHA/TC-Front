@@ -238,7 +238,7 @@ const GestionCompetencias = () =>
         </div>
       )}
 
-    </div >
+    </div>
   );
 };
 
