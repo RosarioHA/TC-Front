@@ -18,6 +18,20 @@
     border: 1px solid $grey-light-color;
     border-radius: 5px; 
 }
+.input-costo{
+    width: 112px;
+    height: 28px;
+    border-radius: 4px;
+    border: 1px solid $grey-light-color;
+    background: $neutral-color;
+    text-align: center;
+}
+.costo-error{
+    border: 3px solid $error-red;
+}
+.costo-saved{
+    border: 3px solid $success-color;
+}
 
 .dropdown-btn{
     display: flex;

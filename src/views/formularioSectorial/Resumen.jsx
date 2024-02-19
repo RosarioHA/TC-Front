@@ -51,7 +51,7 @@ const ResumenSectorial = () => {
                   <Avance avance={paso.avance} />
                 </div>
                 <div className="col d-flex justify-content-center">
-                  {isStageComplete(paso.avance) ?
+                  {paso.campos_obligatorios_completados ?
                     <img src="/public/check.svg" alt="Check"/> :
                     <img src="/public/warning.svg" alt="Warning"/>
                   }

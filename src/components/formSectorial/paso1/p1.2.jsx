@@ -1,6 +1,6 @@
 import { useContext, useState, useEffect } from "react";
 import CustomTextarea from "../../forms/custom_textarea";
-import SubirArchivo from "../../forms/subir_archivo";
+import { SubirOrganigrama } from "../../commons/subirOrganigrama";
 import { FormularioContext } from "../../../context/FormSectorial";
 import { SubirArchivoRegiones } from "../../forms/subirArchivoRegiones";
 import { useFileRegional } from "../../../hooks/formulario/useFileRegional";
@@ -178,6 +178,7 @@ export const Subpaso_dos = ({ pasoData, organigrama, id, stepNumber }) =>
     return <div>Error: {updatePasoError.message}</div>;
   }
 
+  const ver = false;
 
   return (
     <div className="pe-5 me-5 mt-4 col-12">
@@ -202,12 +203,13 @@ export const Subpaso_dos = ({ pasoData, organigrama, id, stepNumber }) =>
           <div className="me-5">Acción</div>
         </div>
         <div>
-          <SubirArchivo
+          <SubirOrganigrama
             index="1"
             fieldName="organigrama_nacional"
             handleFileSelect={handleFileSelect}
             loading={inputStatus.organigrama_nacional.loading}
             tituloDocumento={pasoData?.organigrama_nacional}
+            ver={ver}
           />
         </div>
       </div>

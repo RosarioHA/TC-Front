@@ -67,8 +67,8 @@ export const GastosAnuales = ({readOnly}) => {
   return (
     <div className="mt-4">
       <span className="my-4 ">Variación promedio del gasto anual respecto del año n-1</span>
-      <div className="container-fluid me-5 pe-5 text-sans-h6-primary">
-        <h6>
+      <div className="container-fluid me-5 pe-5">
+        <h6 className="text-sans-h6-primary">
           Las variaciones se calcularan automáticamente a partir de la tabla anterior.
           Debes describir los motivos de las variaciones anuales sustantivas.
         </h6>

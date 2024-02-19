@@ -101,24 +101,24 @@ const DropdownCheckbox = ({
 
   const renderSpinnerOrCheck = () => {
     if (loading) {
-      return <div className="spinner-border text-primary" role="status"></div>;
+      return <div className="spinner-border text-primary align-self-end" role="status"></div>;
     }
     if (saved) {
-      return <i className="material-symbols-outlined">check</i>; // Reemplaza esto con tu ícono de check real
+      return <i className="material-symbols-outlined align-self-end">check</i>; // Reemplaza esto con tu ícono de check real
     }
     return null;
   };
 
   return (
     <div
-      className={`input-container ${readOnly ? 'readonly' : ''}`}
+      className={`input-container row ${readOnly ? 'readonly' : ''}`}
       ref={dropdownRef}
     >
       <label className="text-sans-h5 input-label">{label}</label>
       <button
         type="button"
         onClick={!readOnly ? handleDropdownClick : undefined}
-        className={`text-sans-p dropdown-btn ${readOnly ? 'disabled' : ''}`}
+        className={`col-10 text-sans-p dropdown-btn ${readOnly ? 'disabled' : ''}`}
         ref={toggleRef}
       >
         {renderSelectedOptions()}
@@ -129,8 +129,17 @@ const DropdownCheckbox = ({
         )}
       </button>
 
+      <div className="col-1 p-0 d-flex ms-2">
+        {renderSpinnerOrCheck()}
+      </div>
+      <div className="col-2 d-flex justify-content-between col-12">
+        {error && (
+          <p className="text-sans-h6-darkred mt-1 mb-0">{error}</p>
+        )}
+      </div>
+
       {isOpen && !readOnly && (
-        <div className="dropdown d-flex flex-column dropdown-container">
+        <div className="dropdown d-flex flex-column dropdown-container dropdown-position p-0">
           <button
             type="button"
             className={`text-sans-p btn-option ${selectedOptions.length > 0 ? 'active' : ''
@@ -151,8 +160,8 @@ const DropdownCheckbox = ({
             <label
               className={
                 selectedOptions.some((opt) => opt.value === option.value)
-                  ? 'selected-option'
-                  : 'unselected-option'
+                  ? 'selected- p-2'
+                  : 'unselected-option p-2'
               }
               key={option.value}
             >
@@ -171,14 +180,7 @@ const DropdownCheckbox = ({
         </div>
       )}
 
-      <div className=" d-flex align-self-end align-items-center">
-        {renderSpinnerOrCheck()}
-      </div>
-      <div className="d-flex justify-content-between col-12">
-        {error && (
-          <p className="text-sans-h6-darkred mt-1 mb-0">{error}</p>
-        )}
-      </div>
+      
     </div>
   );
 };
