@@ -90,22 +90,6 @@ const CostosDirectos = ({
     }
   }, [listado_etapas]);
 
-  const handleSubtituloChange = (costoDirectoId, selectedOption) => {
-    // Lógica existente para actualizar opcionesItems...
-
-    // Aquí, desbloquea item_subtitulo haciendo isItemSubtituloReadOnly = false
-    setCostosDirectos(prevCostosDirectos => prevCostosDirectos.map(costoDirecto => {
-      if (costoDirecto.id === costoDirectoId) {
-        return {
-          ...costoDirecto,
-          isItemSubtituloReadOnly: false,
-          // Resto de la actualización...
-        };
-      }
-      return costoDirecto;
-    }));
-  };
-
 
   // Función para recargar campos por separado
   const updateFieldState = (costoDirectoId, fieldName, newState) => {
@@ -249,7 +233,7 @@ const CostosDirectos = ({
 
     try {
       // Asume que handleUpdatePaso puede manejar ambos casos adecuadamente
-      const response = await handleUpdatePaso(id, stepNumber, payload);
+      await handleUpdatePaso(id, stepNumber, payload);
 
       // Actualiza el estado de carga y guardado
       updateFieldState(arrayNameId, fieldName, { loading: false, saved: true });

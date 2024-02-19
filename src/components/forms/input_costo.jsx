@@ -1,7 +1,7 @@
 import { useState, forwardRef } from "react";
 import { NumericFormat } from "react-number-format";
 
-const ImputCosto = forwardRef(
+const InputCosto = forwardRef(
   ({ loading, saved, placeholder, id, error, readOnly, onChange, initialValue, ...props }, ref) => {
     const [ inputValue, setInputValue ] = useState(initialValue || '');
 
@@ -65,5 +65,5 @@ const ImputCosto = forwardRef(
   }
 );
 
-ImputCosto.displayName = 'ImputCosto';
-export default ImputCosto;
+InputCosto.displayName = 'InputCosto';
+export default InputCosto;
