@@ -90,7 +90,6 @@ const CostosDirectos = ({
     }
   }, [listado_etapas]);
 
-
   // Función para recargar campos por separado
   const updateFieldState = (costoDirectoId, fieldName, newState) => {
     setCostosDirectos(prevCostosDirectos =>
@@ -263,7 +262,6 @@ const CostosDirectos = ({
               <span className="text-sans-p-bold mb-0">{index + 1}</span>
               <div className="col d-flex flex-column justify-content-between">
                 <p className="text-sans-p-bold">Subtítulo</p>
-                <div>
                   <Controller
                     control={control}
                     name={`subtitulo_${costo.id}`}
@@ -284,6 +282,7 @@ const CostosDirectos = ({
                                   ...costoDirecto,
                                   subtituloSeleccionado: textoSubtitulo,
                                   opcionesItems: opcionesDeItems,
+                                  isItemSubtituloReadOnly: false,
                                 };
                               }
                               return costoDirecto;
@@ -301,8 +300,8 @@ const CostosDirectos = ({
                       );
                     }}
                   />
-                </div>
               </div>
+              
               <div className="col border-end  d-flex flex-column justify-content-between">
                 <p className="text-sans-p-bold">Item</p>
                 <Controller
