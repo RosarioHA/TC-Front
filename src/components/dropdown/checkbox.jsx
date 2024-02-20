@@ -111,7 +111,7 @@ const DropdownCheckbox = ({
 
   return (
     <div
-      className={`input-container row ${readOnly ? 'readonly' : ''}`}
+      className={`input-container ${readOnly ? 'readonly' : ''}`}
       ref={dropdownRef}
     >
       <label className="text-sans-h5 input-label">{label}</label>
