@@ -91,7 +91,7 @@ export const GastosEvolucionVariacion = ({
               return costoAnio;
             });
             return { ...subtitulo, costo_anio: updatedCostoAnio };
-          } else if (fieldName === 'descripcion') {
+          } else {
             // Actualiza el estado de la descripción del subtitulo
             return { ...subtitulo, estados: { ...subtitulo.estados, descripcion: { ...newState } } };
           }
@@ -119,11 +119,6 @@ export const GastosEvolucionVariacion = ({
 
   // Función de guardado
   const handleSave = async (subtituloId, costoAnioId, fieldName, fieldValue) => {
-    
-  console.log(`Guardando: ${fieldName} para subtituloId: ${subtituloId}, costoAnioId: ${costoAnioId}, valor: ${fieldValue}`);
-    // Si se está guardando por blur, no es necesario desactivar el botón de guardar general
-
-    const descripcionEvolucion = datosGastos.find(e => e.id === subtituloId);
 
     updateFieldState(subtituloId, costoAnioId, fieldName, { loading: true, saved: false });
 
@@ -131,7 +126,7 @@ export const GastosEvolucionVariacion = ({
 
     if (fieldName === 'descripcion') {
       payload = {
-        'p_5_2_evolucion_gasto_asociado': [{ id: subtituloId, [fieldName]: descripcionEvolucion[fieldName] }]
+        'p_5_2_evolucion_gasto_asociado': [{ id: subtituloId, [fieldName]: fieldValue}]
       };
     } else if (fieldName === 'costo') {
       
