@@ -8,7 +8,7 @@ import { ButtonsNavigate } from "../../components/layout/ButtonsNavigate";
 import { MonoStepers } from '../../components/stepers/MonoStepers';
 import CustomTextarea from '../../components/forms/custom_textarea';
 import { useAuth } from '../../context/AuthContext';
-import { useObservacionesSubdere } from '../../hooks/formulario/useObSubdereSectorial'; // es el hook directo, luego importarlo desde el context.
+import { useObservacionesSubdere } from '../../hooks/formulario/useObSubdereSectorial'; 
 
 const PasoUno = () => {
   const { pasoData, errorPaso, updateStepNumber, data } = useContext(FormularioContext);

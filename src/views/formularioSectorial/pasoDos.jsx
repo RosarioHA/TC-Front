@@ -10,6 +10,7 @@ import { Subpaso_dosPuntoCinco } from "../../components/formSectorial/paso2/p2.5
 import { MonoStepers } from "../../components/stepers/MonoStepers";
 import CustomTextarea from '../../components/forms/custom_textarea';
 import { useAuth } from '../../context/AuthContext';
+import { useObservacionesSubdere } from '../../hooks/formulario/useObSubdereSectorial';
 
 const PasoDos = () => {
   const { pasoData, loadingPaso, errorPaso, updateStepNumber, data } = useContext(FormularioContext);
@@ -19,6 +20,10 @@ const PasoDos = () => {
   const [ refreshSubpasoDos_cuatro, setRefreshSubpasoDos_cuatro ] = useState(false);
   const { userData } = useAuth();
   const userSubdere = userData?.perfil?.includes('SUBDERE');
+
+  const { observaciones, updateObservacion } = useObservacionesSubdere(data ? data.id : null);
+  const [observacionPaso2, setObservacionPaso2] = useState("");
+  console.log("observaciones en vista p2", observaciones)
 
   useEffect(() => {
     updateStepNumber(stepNumber);
@@ -41,8 +46,15 @@ const PasoDos = () => {
     listado_etapas,
     p_2_5_flujograma_competencia
   } = pasoData;
-  
 
+  const handleGuardarObservacion = async () => {
+    const observacionData = {
+      observacion_paso2: observacionPaso2,
+    };
+
+    await updateObservacion(observacionData);
+  };
+  
   return (
     <>
       <div className="col-1">
@@ -108,10 +120,15 @@ const PasoDos = () => {
           {userSubdere && (
             <div className="mt-5 my-4">
             <CustomTextarea 
-            label="Observaciones (Opcional)"
-            placeholder="Escribe tus observaciones de este paso del formulario"
-            rows={5}
-            maxLength={500}/>
+              label="Observaciones (Opcional)"
+              placeholder="Escribe tus observaciones de este paso del formulario"
+              rows={5}
+              maxLength={500}
+              value={observacionPaso2}
+              onChange={(e) => setObservacionPaso2(e.target.value)}
+            />
+            {/* aqui reemplazar boton por metodo automatico */}
+            <button onClick={handleGuardarObservacion}>Guardar Observaciones</button>
           </div>
           )}
           

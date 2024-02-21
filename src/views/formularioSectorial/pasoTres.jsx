@@ -6,6 +6,7 @@ import { Subpaso_Tres } from "../../components/formSectorial/paso3/p3.1";
 import { FormularioContext } from "../../context/FormSectorial";
 import { MonoStepers } from "../../components/stepers/MonoStepers";
 import { useAuth } from '../../context/AuthContext';
+import { useObservacionesSubdere } from '../../hooks/formulario/useObSubdereSectorial';
 
 const PasoTres = () => {
   const {
@@ -20,7 +21,9 @@ const PasoTres = () => {
   const stepNumber = 3;
   const id= data.id;
 
-  console.log('Data paso tres:', pasoData)
+  const { observaciones, updateObservacion } = useObservacionesSubdere(data ? data.id : null);
+  const [observacionPaso3, setObservacionPaso3] = useState("");
+  console.log("observaciones en vista p1", observaciones)
 
   // Estado inicial basado en los datos existentes
   const [formData, setFormData] = useState({
@@ -84,8 +87,14 @@ const PasoTres = () => {
   // Si no hay datos para el paso 3, mostrar un mensaje
   if (!pasoData.paso3) return <div>No hay datos disponibles para el Paso 3</div>;
 
-
   const { cobertura_anual, paso3 } = pasoData;
+
+  const handleGuardarObservacion = async () => {
+    const observacionData = {
+      observacion_paso3: observacionPaso3,
+    };
+    await updateObservacion(observacionData);
+  };
 
   return (
     <>
@@ -170,10 +179,15 @@ const PasoTres = () => {
           {userSubdere && (
             <div className="mt-5 my-4">
             <CustomTextarea 
-            label="Observaciones (Opcional)"
-            placeholder="Escribe tus observaciones de este paso del formulario"
-            rows={5}
-            maxLength={500}/>
+              label="Observaciones (Opcional)"
+              placeholder="Escribe tus observaciones de este paso del formulario"
+              rows={5}
+              maxLength={500}
+              value={observacionPaso3}
+              onChange={(e) => setObservacionPaso3(e.target.value)}
+            />
+            {/* aqui reemplazar boton por metodo automatico */}
+            <button onClick={handleGuardarObservacion}>Guardar Observaciones</button>
           </div>
           )}
 

@@ -8,6 +8,7 @@ import { Subpaso_CincoDos } from '../../components/formSectorial/paso5/p5.2';
 import { Subpaso_CincoPuntoTres } from "../../components/formSectorial/paso5/p5.3";
 import CustomTextarea from '../../components/forms/custom_textarea';
 import { useAuth } from '../../context/AuthContext';
+import { useObservacionesSubdere } from '../../hooks/formulario/useObSubdereSectorial';
 
 const PasoCinco = () => {
   const { updateStepNumber, pasoData, data, loadingPaso, errorPaso } = useContext(FormularioContext);
@@ -15,6 +16,10 @@ const PasoCinco = () => {
   const [refreshSubpaso_CincoDos, setRefreshSubpaso_CincoDos] = useState(false);
   const { userData } = useAuth();
   const userSubdere = userData?.perfil?.includes('SUBDERE');
+
+  const { observaciones, updateObservacion } = useObservacionesSubdere(data ? data.id : null);
+  const [observacionPaso5, setObservacionPaso5] = useState("");
+  console.log("observaciones en vista p1", observaciones)
 
   useEffect(() => {
     updateStepNumber(stepNumber);
@@ -43,6 +48,13 @@ const PasoCinco = () => {
     formulario_enviado
   } = pasoData;
 
+  const handleGuardarObservacion = async () => {
+    const observacionData = {
+      observacion_paso5: observacionPaso5,
+    };
+    await updateObservacion(observacionData);
+  };
+
   return (
     <>
       <div className="col-1">
@@ -67,7 +79,7 @@ const PasoCinco = () => {
             listado_item_subtitulos={listado_item_subtitulos}
             listado_etapas={listado_etapas}
             setRefreshSubpaso_CincoDos={setRefreshSubpaso_CincoDos}
-            />
+          />
           <Subpaso_CincoDos
             id={data?.id}
             paso5={paso5}
@@ -77,23 +89,28 @@ const PasoCinco = () => {
             p_5_2_variacion_promedio={p_5_2_variacion_promedio}
             refreshSubpaso_CincoDos={refreshSubpaso_CincoDos}
             setRefreshSubpaso_CincoDos={setRefreshSubpaso_CincoDos}
-            />
+          />
           <Subpaso_CincoPuntoTres 
             data_personal_directo={p_5_3_a_personal_directo} 
             data_personal_indirecto={p_5_3_b_personal_indirecto} 
             listado_estamentos={listado_estamentos} 
             listado_calidades_juridicas={listado_calidades_juridicas} 
-            />
+          />
 
-            {userSubdere && (
-              <div className="mt-5 my-4">
-              <CustomTextarea 
+          {userSubdere && (
+            <div className="mt-5 my-4">
+            <CustomTextarea 
               label="Observaciones (Opcional)"
               placeholder="Escribe tus observaciones de este paso del formulario"
               rows={5}
-              maxLength={500}/>
-            </div>
-            )}
+              maxLength={500}
+              value={observacionPaso5}
+              onChange={(e) => setObservacionPaso5(e.target.value)}
+            />
+            {/* aqui reemplazar boton por metodo automatico */}
+            <button onClick={handleGuardarObservacion}>Guardar Observaciones</button>
+          </div>
+          )}
 
           <div className="container me-5 pe-5">
             <ButtonsNavigate step={paso5.numero_paso} id={data.id} />

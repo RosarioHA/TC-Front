@@ -1,4 +1,4 @@
-import { useEffect, useContext } from "react";
+import { useEffect, useContext, useState } from "react";
 import { Avance } from "../../components/tables/Avance";
 import { ButtonsNavigate } from "../../components/layout/ButtonsNavigate";
 import { FormularioContext } from "../../context/FormSectorial";
@@ -6,12 +6,17 @@ import { Subpaso_CuatroUno } from "../../components/formSectorial/paso4/p4.1";
 import { MonoStepers } from "../../components/stepers/MonoStepers";
 import CustomTextarea from '../../components/forms/custom_textarea';
 import { useAuth } from '../../context/AuthContext';
+import { useObservacionesSubdere } from '../../hooks/formulario/useObSubdereSectorial';
 
 const PasoCuatro = () => {
   const { updateStepNumber, pasoData, data } = useContext(FormularioContext);
   const stepNumber = 4;
   const { userData } = useAuth();
   const userSubdere = userData?.perfil?.includes('SUBDERE');
+
+  const { observaciones, updateObservacion } = useObservacionesSubdere(data ? data.id : null);
+  const [observacionPaso4, setObservacionPaso4] = useState("");
+  console.log("observaciones en vista p1", observaciones)
 
   useEffect(() => {
     updateStepNumber(stepNumber);
@@ -23,6 +28,13 @@ const PasoCuatro = () => {
   if (!paso4Data) return <div>No hay información de paso 4 disponible</div>;
 
   const id = data?.id;
+
+  const handleGuardarObservacion = async () => {
+    const observacionData = {
+      observacion_paso4: observacionPaso4,
+    };
+    await updateObservacion(observacionData);
+  };
 
   return (
     <>
@@ -58,10 +70,15 @@ const PasoCuatro = () => {
           {userSubdere && (
             <div className="mt-5 my-4">
             <CustomTextarea 
-            label="Observaciones (Opcional)"
-            placeholder="Escribe tus observaciones de este paso del formulario"
-            rows={5}
-            maxLength={500}/>
+              label="Observaciones (Opcional)"
+              placeholder="Escribe tus observaciones de este paso del formulario"
+              rows={5}
+              maxLength={500}
+              value={observacionPaso4}
+              onChange={(e) => setObservacionPaso4(e.target.value)}
+            />
+            {/* aqui reemplazar boton por metodo automatico */}
+            <button onClick={handleGuardarObservacion}>Guardar Observaciones</button>
           </div>
           )}
 
