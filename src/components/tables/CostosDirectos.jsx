@@ -23,8 +23,9 @@ const CostosDirectos = ({
 
   const initialState = data?.map(item => ({
     ...item,
-    subtituloSeleccionado: '',
-    opcionesItems: [],
+    subtituloSeleccionado: item.subtitulo_label_value?.value || '',
+    opcionesItems: item.item_subtitulo_label_value ? [item.item_subtitulo_label_value] : [],
+    isItemSubtituloReadOnly: true,
     estados: {
       etapa: { loading: false, saved: false },
       item_subtitulo: { loading: false, saved: false },
@@ -37,8 +38,6 @@ const CostosDirectos = ({
 
   const [costosDirectos, setCostosDirectos] = useState(initialState);
   const [opcionesSubtitulos, setOpcionesSubtitulos] = useState([]);
-  const [subtituloSeleccionado, setSubtituloSeleccionado] = useState('');
-  const [opcionesItems, setOpcionesItems] = useState([]);
   const [opcionesEtapas, setopcionesEtapas] = useState([]);
   const { handleUpdatePaso } = useContext(FormularioContext);
   const [esquemaValidacion, setEsquemaValidacion] = useState(null);
@@ -78,14 +77,6 @@ const CostosDirectos = ({
     }
   }, [listado_subtitulos]);
 
-  useEffect(() => {
-    if (subtituloSeleccionado && listado_item_subtitulos[subtituloSeleccionado]) {
-      const opcionesDeItems = transformarEnOpciones(listado_item_subtitulos[subtituloSeleccionado], 'item');
-      setOpcionesItems(opcionesDeItems);
-    } else {
-      setOpcionesItems([]);
-    }
-  }, [subtituloSeleccionado, listado_item_subtitulos]);
 
   const encontrarOpcionesDeItems = (subtituloSeleccionado) => {
     const items = listado_item_subtitulos[subtituloSeleccionado] || [];
@@ -241,7 +232,7 @@ const CostosDirectos = ({
 
     try {
       // Asume que handleUpdatePaso puede manejar ambos casos adecuadamente
-      const response = await handleUpdatePaso(id, stepNumber, payload);
+      await handleUpdatePaso(id, stepNumber, payload);
 
       // Actualiza el estado de carga y guardado
       updateFieldState(arrayNameId, fieldName, { loading: false, saved: true });
@@ -271,7 +262,6 @@ const CostosDirectos = ({
               <span className="text-sans-p-bold mb-0">{index + 1}</span>
               <div className="col d-flex flex-column justify-content-between">
                 <p className="text-sans-p-bold">Subtítulo</p>
-                <div>
                   <Controller
                     control={control}
                     name={`subtitulo_${costo.id}`}
@@ -292,6 +282,7 @@ const CostosDirectos = ({
                                   ...costoDirecto,
                                   subtituloSeleccionado: textoSubtitulo,
                                   opcionesItems: opcionesDeItems,
+                                  isItemSubtituloReadOnly: false,
                                 };
                               }
                               return costoDirecto;
@@ -309,8 +300,8 @@ const CostosDirectos = ({
                       );
                     }}
                   />
-                </div>
               </div>
+              
               <div className="col border-end  d-flex flex-column justify-content-between">
                 <p className="text-sans-p-bold">Item</p>
                 <Controller
@@ -325,10 +316,19 @@ const CostosDirectos = ({
                         options={costo.opcionesItems}
                         onSelectionChange={(selectedOptions) => {
                           handleSave(costo.id, 'item_subtitulo', selectedOptions);
+                          setCostosDirectos(prevCostosDirectos => prevCostosDirectos.map(costoDirecto => {
+                            if (costoDirecto.id === costo.id) {
+                              return {
+                                ...costoDirecto,
+                                isItemSubtituloReadOnly: true, // Bloquea el campo después de seleccionar un item
+                              };
+                            }
+                            return costoDirecto;
+                          }));
                           field.onChange(selectedOptions.value);
                         }}
 
-                        readOnly={formulario_enviado}
+                        readOnly={costo.isItemSubtituloReadOnly}
                         selected={costo.item_subtitulo_label_value}
 
                         loading={costo.estados?.item_subtitulo?.loading ?? false}
@@ -441,7 +441,7 @@ const CostosDirectos = ({
                         handleSave={handleSave}
                         arrayNameId={costo.id}
                         fieldName="es_transversal"
-                        
+
                       />
                     );
                   }}

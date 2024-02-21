@@ -112,7 +112,8 @@ const PasoDos = () => {
           </div>
           <div className="container-fluid me-5 pe-5 my-5">
             <Subpaso_dosPuntoCinco
-              data={p_2_5_flujograma_competencia}
+              flujograma={p_2_5_flujograma_competencia}
+              data={pasoData.paso2}
               stepNumber={stepNumber}
               id={data.id} />
           </div>

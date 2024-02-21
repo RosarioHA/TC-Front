@@ -2,7 +2,7 @@ import { useState, useContext, useEffect } from "react";
 import CustomTextarea from "../forms/custom_textarea";
 import DropdownCheckbox from "../dropdown/checkbox";
 import DropdownSelect from "../dropdown/select";
-import ImputCosto from "../forms/input_costo";
+import InputCosto from "../forms/input_costo";
 import { OpcionesAB } from "../forms/opciones_AB";
 import { FormularioContext } from "../../context/FormSectorial";
 import { construirValidacionPaso5_1ab } from "../../validaciones/esquemaValidarPaso5Sectorial";
@@ -23,8 +23,9 @@ const CostosIndirectos = ({
 
   const initialState = data?.map(item => ({
     ...item,
-    subtituloSeleccionado: '',
-    opcionesItems: [],
+    subtituloSeleccionado: item.subtitulo_label_value?.value || '',
+    opcionesItems: item.item_subtitulo_label_value ? [item.item_subtitulo_label_value] : [],
+    isItemSubtituloReadOnly: true,
     estados: {
       etapa: { loading: false, saved: false },
       item_subtitulo: { loading: false, saved: false },
@@ -281,6 +282,7 @@ const CostosIndirectos = ({
                                 ...costoIndirecto,
                                 subtituloSeleccionado: textoSubtitulo,
                                 opcionesItems: opcionesDeItems,
+                                isItemSubtituloReadOnly: false,
                               };
                             }
                             return costoIndirecto;
@@ -314,10 +316,19 @@ const CostosIndirectos = ({
                         options={costo.opcionesItems}
                         onSelectionChange={(selectedOptions) => {
                           handleSave(costo.id, 'item_subtitulo', selectedOptions);
+                          setCostosIndirectos(prevCostosIndirectos => prevCostosIndirectos.map(costoIndirecto => {
+                            if (costoIndirecto.id === costo.id) {
+                              return {
+                                ...costoIndirecto,
+                                isItemSubtituloReadOnly: true, // Bloquea el campo después de seleccionar un item
+                              };
+                            }
+                            return costoIndirecto;
+                          }));
                           field.onChange(selectedOptions.value);
                         }}
 
-                        readOnly={formulario_enviado}
+                        readOnly={costo.isItemSubtituloReadOnly}
                         selected={costo.item_subtitulo_label_value}
 
                         loading={costo.estados?.item_subtitulo?.loading ?? false}
@@ -359,7 +370,7 @@ const CostosIndirectos = ({
                     };
 
                     return (
-                      <ImputCosto
+                      <InputCosto
                         id={`total_anual_${costo.id}`}
                         placeholder="Costo (M$)"
                         value={value}

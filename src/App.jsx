@@ -64,17 +64,17 @@ function App() {
           {createProtectedRoute("success_edicion", SuccessEdicion, [ 'SUBDERE', 'Usuario Observador' ])}
           {createProtectedRoute("success_creacion", SuccessCreacion, [ 'SUBDERE', 'Usuario Observador' ])}
           {createProtectedRoute("listado_competencias", GestionCompetencias, [ 'SUBDERE', 'Usuario Observador' ])}
-          <Route path="crear_competencia" element={<CreacionCompetencia />} />
+          {createProtectedRoute("editar_competencia/:id",EditarCompetencia , [ 'SUBDERE', 'Usuario Observador' ])}
+          {createProtectedRoute("crear_competencia",CreacionCompetencia, [ 'SUBDERE', 'Usuario Observador' ])}
+          {createProtectedRoute("estado_competencia/:id/subir_oficio/:etapaNum/:subetapaId", SubirOficio , [ 'SUBDERE', 'Usuario Observador' ])}
           <Route path="estado_competencia/:id/" element={<EstadoCompentencia />} />
-          <Route path="estado_competencia/:id/subir_oficio/:etapaNum/:subetapaId" element={<SubirOficio />} />
-          <Route path="editar_competencia/:id" element={<EditarCompetencia />} />
           <Route path="success_edicion" element={<SuccessEdicion />} />
           <Route path="success_creacion" element={<SuccessCreacion />} />
           <Route
             path="formulario_sectorial/:id"
             element={
               <FormularioProvider>
-                <ProtectedRoute allowedProfiles={[ 'Usuario Sectorial', 'SUBDERE' ]}>
+                <ProtectedRoute allowedProfiles={[ 'Usuario Sectorial','SUBDERE', 'Usuario Observador' ]}>
                   <FormularioLayout />
                 </ProtectedRoute>
               </FormularioProvider>

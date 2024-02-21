@@ -89,13 +89,17 @@ const PasoCinco = () => {
             p_5_2_variacion_promedio={p_5_2_variacion_promedio}
             refreshSubpaso_CincoDos={refreshSubpaso_CincoDos}
             setRefreshSubpaso_CincoDos={setRefreshSubpaso_CincoDos}
-          />
-          <Subpaso_CincoPuntoTres 
-            data_personal_directo={p_5_3_a_personal_directo} 
-            data_personal_indirecto={p_5_3_b_personal_indirecto} 
-            listado_estamentos={listado_estamentos} 
+            />
+          <Subpaso_CincoPuntoTres
+            id={data?.id}
+            paso5={paso5}
+            formulario_enviado={formulario_enviado}
+            stepNumber={stepNumber}
+            data_personal_directo={p_5_3_a_personal_directo}
+            data_personal_indirecto={p_5_3_b_personal_indirecto}
+            listado_estamentos={listado_estamentos}
             listado_calidades_juridicas={listado_calidades_juridicas} 
-          />
+            />
 
           {userSubdere && (
             <div className="mt-5 my-4">
@@ -111,7 +115,7 @@ const PasoCinco = () => {
             <button onClick={handleGuardarObservacion}>Guardar Observaciones</button>
           </div>
           )}
-
+          
           <div className="container me-5 pe-5">
             <ButtonsNavigate step={paso5.numero_paso} id={data.id} />
           </div>

@@ -54,7 +54,7 @@ const PasoCuatro = () => {
             <div className="my-5 pb-3 border-bottom">
               <div className="">
                 {/* Componente adicional en blanco para un nuevo indicador */}
-                {indicador_desempeno  && (
+                {indicador_desempeno && (
                   <Subpaso_CuatroUno
                     data={pasoData}
                     id={id}
