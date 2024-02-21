@@ -21,7 +21,7 @@ const PasoTres = () => {
   const stepNumber = 3;
   const id= data.id;
 
-  const { observaciones, updateObservacion } = useObservacionesSubdere(data ? data.id : null);
+  const { observaciones, updateObservacion, fetchObservaciones } = useObservacionesSubdere(data ? data.id : null);
   const [observacionPaso3, setObservacionPaso3] = useState("");
   console.log("observaciones en vista p1", observaciones)
 
@@ -39,7 +39,13 @@ const PasoTres = () => {
   // Efecto para actualizar el número de paso actual
   useEffect(() => {
     updateStepNumber(stepNumber);
-  }, [updateStepNumber, stepNumber]);
+    if (observaciones && Object.keys(observaciones).length === 0) {
+      fetchObservaciones();
+    }
+    if (observaciones && observaciones.observacion_paso3) {
+      setObservacionPaso3(observaciones.observacion_paso3);
+    }
+  }, [updateStepNumber, stepNumber, observaciones, fetchObservaciones]);
 
   const handleChange = (inputName, e) =>
   {

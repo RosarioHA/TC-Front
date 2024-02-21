@@ -14,13 +14,19 @@ const PasoCuatro = () => {
   const { userData } = useAuth();
   const userSubdere = userData?.perfil?.includes('SUBDERE');
 
-  const { observaciones, updateObservacion } = useObservacionesSubdere(data ? data.id : null);
+  const { observaciones, updateObservacion, fetchObservaciones } = useObservacionesSubdere(data ? data.id : null);
   const [observacionPaso4, setObservacionPaso4] = useState("");
   console.log("observaciones en vista p1", observaciones)
 
   useEffect(() => {
     updateStepNumber(stepNumber);
-  }, [ updateStepNumber, stepNumber ]);
+    if (observaciones && Object.keys(observaciones).length === 0) {
+      fetchObservaciones();
+    }
+    if (observaciones && observaciones.observacion_paso4) {
+      setObservacionPaso4(observaciones.observacion_paso4);
+    }
+  }, [updateStepNumber, stepNumber, observaciones, fetchObservaciones]);
 
   if (!pasoData) return <div>No hay datos disponibles para el Paso 4</div>;
 

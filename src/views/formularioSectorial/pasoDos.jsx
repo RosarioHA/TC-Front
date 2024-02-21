@@ -21,13 +21,19 @@ const PasoDos = () => {
   const { userData } = useAuth();
   const userSubdere = userData?.perfil?.includes('SUBDERE');
 
-  const { observaciones, updateObservacion } = useObservacionesSubdere(data ? data.id : null);
+  const { observaciones, updateObservacion, fetchObservaciones } = useObservacionesSubdere(data ? data.id : null);
   const [observacionPaso2, setObservacionPaso2] = useState("");
   console.log("observaciones en vista p2", observaciones)
 
   useEffect(() => {
     updateStepNumber(stepNumber);
-  }, [ updateStepNumber, stepNumber ]);
+    if (observaciones && Object.keys(observaciones).length === 0) {
+      fetchObservaciones();
+    }
+    if (observaciones && observaciones.observacion_paso2) {
+      setObservacionPaso2(observaciones.observacion_paso2);
+    }
+  }, [updateStepNumber, stepNumber, observaciones, fetchObservaciones]);
 
   if (loadingPaso) return <div>Cargando...</div>;
   if (errorPaso) return <div>Error: {errorPaso.message || "Error desconocido"}</div>;

@@ -17,13 +17,19 @@ const PasoCinco = () => {
   const { userData } = useAuth();
   const userSubdere = userData?.perfil?.includes('SUBDERE');
 
-  const { observaciones, updateObservacion } = useObservacionesSubdere(data ? data.id : null);
+  const { observaciones, updateObservacion, fetchObservaciones } = useObservacionesSubdere(data ? data.id : null);
   const [observacionPaso5, setObservacionPaso5] = useState("");
   console.log("observaciones en vista p1", observaciones)
 
   useEffect(() => {
     updateStepNumber(stepNumber);
-  }, [updateStepNumber, stepNumber]);
+    if (observaciones && Object.keys(observaciones).length === 0) {
+      fetchObservaciones();
+    }
+    if (observaciones && observaciones.observacion_paso5) {
+      setObservacionPaso5(observaciones.observacion_paso5);
+    }
+  }, [updateStepNumber, stepNumber, observaciones, fetchObservaciones]);
 
   if (loadingPaso) return <div>Cargando...</div>;
   if (errorPaso) return <div>Error: {errorPaso.message || "Error desconocido"}</div>;
@@ -115,7 +121,7 @@ const PasoCinco = () => {
             <button onClick={handleGuardarObservacion}>Guardar Observaciones</button>
           </div>
           )}
-          
+
           <div className="container me-5 pe-5">
             <ButtonsNavigate step={paso5.numero_paso} id={data.id} />
           </div>

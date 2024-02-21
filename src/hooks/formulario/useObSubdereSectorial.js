@@ -5,8 +5,9 @@ export const useObservacionesSubdere = (id) => {
   const [observaciones, setObservaciones] = useState({});
   const [loadingObservaciones, setLoadingObservaciones] = useState(false);
   const [errorObservaciones, setErrorObservaciones] = useState(null);
+  console.log("observaciones en el hook", observaciones)
 
-  const fetchObservacionesSubdere = useCallback(async () => {
+  const fetchObservaciones = useCallback(async () => {
     if (!id) {
       setObservaciones({});
       setLoadingObservaciones(false);
@@ -16,6 +17,7 @@ export const useObservacionesSubdere = (id) => {
     setLoadingObservaciones(true);
     try {
       const response = await apiTransferenciaCompentencia.get(`/formulario-sectorial/${id}/observaciones-subdere-sectorial/`);
+      console.log("Respuesta de la API:", response);
       setObservaciones(response.data.observaciones_sectoriales);
     } catch (err) {
       console.error("Error fetching observaciones data:", err);
@@ -36,12 +38,11 @@ export const useObservacionesSubdere = (id) => {
       observaciones_sectoriales: observacionData
     });
     setObservaciones(response.data.observaciones_sectoriales);
-    console.log("Observaciones actualizadas con éxito.");
   } catch (error) {
     console.error("Error al actualizar observaciones:", error);
     setErrorObservaciones(error);
   }
 }, [id]);
 
-  return { observaciones, loadingObservaciones, errorObservaciones, updateObservacion, fetchObservacionesSubdere };
+  return { observaciones, loadingObservaciones, errorObservaciones, updateObservacion, fetchObservaciones };
 };

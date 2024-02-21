@@ -15,14 +15,19 @@ const PasoUno = () => {
   const stepNumber = 1;
   const { userData } = useAuth();
   const userSubdere = userData?.perfil?.includes('SUBDERE');
-
-  const { observaciones, updateObservacion } = useObservacionesSubdere(data ? data.id : null);
+  const { observaciones, updateObservacion, fetchObservaciones } = useObservacionesSubdere(data ? data.id : null);
   const [observacionPaso1, setObservacionPaso1] = useState("");
-  console.log("observaciones en vista p1", observaciones)
 
   useEffect(() => {
     updateStepNumber(stepNumber);
-  }, [updateStepNumber, stepNumber]);
+    if (observaciones && Object.keys(observaciones).length === 0) {
+      fetchObservaciones();
+    }
+    if (observaciones && observaciones.observacion_paso1) {
+      setObservacionPaso1(observaciones.observacion_paso1);
+    }
+    console.log("observacion paso 1", observaciones.observacion_paso1)
+  }, [updateStepNumber, stepNumber, observaciones, data, fetchObservaciones]);
 
   if (errorPaso) return <div>Error: {errorPaso.message || "Error desconocido"}</div>;
   if (!pasoData || pasoData.length === 0) return <div>No hay datos disponibles para el Paso 1</div>;
@@ -31,16 +36,11 @@ const PasoUno = () => {
   const paso1Data = paso1 || {}; 
 
   const handleGuardarObservacion = async () => {
-    // Aquí podrías obtener el valor del textarea donde el usuario Subdere ingresa comentarios
-    // y luego utilizar el hook para actualizar las observaciones
     const observacionData = {
       observacion_paso1: observacionPaso1,
-      // Puedes agregar observacion_paso2, observacion_paso3, etc., según sea necesario
     };
-
     await updateObservacion(observacionData);
   };
-
 
   return (
     <>
@@ -74,7 +74,6 @@ const PasoUno = () => {
           )}
 
           <ButtonsNavigate step={paso1Data.numero_paso} id={data ? data.id : null} />
-          
         </div>
       </div>
     </>
