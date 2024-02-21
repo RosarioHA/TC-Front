@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Avance } from "../../components/tables/Avance";
 import { FormularioContext } from '../../context/FormSectorial';
 import { Subpaso_uno } from '../../components/formSectorial/paso1/p1.1';
@@ -8,12 +8,17 @@ import { ButtonsNavigate } from "../../components/layout/ButtonsNavigate";
 import { MonoStepers } from '../../components/stepers/MonoStepers';
 import CustomTextarea from '../../components/forms/custom_textarea';
 import { useAuth } from '../../context/AuthContext';
+import { useObservacionesSubdere } from '../../hooks/formulario/useObSubdereSectorial'; // es el hook directo, luego importarlo desde el context.
 
 const PasoUno = () => {
   const { pasoData, errorPaso, updateStepNumber, data } = useContext(FormularioContext);
   const stepNumber = 1;
   const { userData } = useAuth();
   const userSubdere = userData?.perfil?.includes('SUBDERE');
+
+  const { observaciones, updateObservacion } = useObservacionesSubdere(data ? data.id : null);
+  const [observacionPaso1, setObservacionPaso1] = useState("");
+  console.log("observaciones en vista p1", observaciones)
 
   useEffect(() => {
     updateStepNumber(stepNumber);
@@ -25,7 +30,16 @@ const PasoUno = () => {
   const { marcojuridico, organigramaregional, paso1 } = pasoData;
   const paso1Data = paso1 || {}; 
 
+  const handleGuardarObservacion = async () => {
+    // Aquí podrías obtener el valor del textarea donde el usuario Subdere ingresa comentarios
+    // y luego utilizar el hook para actualizar las observaciones
+    const observacionData = {
+      observacion_paso1: observacionPaso1,
+      // Puedes agregar observacion_paso2, observacion_paso3, etc., según sea necesario
+    };
 
+    await updateObservacion(observacionData);
+  };
 
 
   return (
@@ -50,7 +64,12 @@ const PasoUno = () => {
             label="Observaciones (Opcional)"
             placeholder="Escribe tus observaciones de este paso del formulario"
             rows={5}
-            maxLength={500}/>
+            maxLength={500}
+            value={observacionPaso1}
+            onChange={(e) => setObservacionPaso1(e.target.value)}
+            />
+            {/* aqui reemplazar boton por metodo automatico */}
+            <button onClick={handleGuardarObservacion}>Guardar Observaciones</button>
           </div>
           )}
 
