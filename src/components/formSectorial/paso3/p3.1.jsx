@@ -13,6 +13,7 @@ export const Subpaso_Tres = ({ esquemaDatos, id, stepNumber }) =>
   const [ ultimoCampoModificado, setUltimoCampoModificado ] = useState(null);
   const [ ultimoGuardadoExitoso, setUltimoGuardadoExitoso ] = useState(null);
   const [ errorField, setErrorField ] = useState(null);
+  const [valorInicial, setValorInicial] = useState({}); 
 
 
   // Actualizar los datos del componente cuando dataPaso cambia
@@ -32,6 +33,11 @@ export const Subpaso_Tres = ({ esquemaDatos, id, stepNumber }) =>
     }
   }, [ esquemaDatos ]);
 
+  const handleFocus = useCallback((index, campo, value) => {
+    // Almacenar el valor actual del input cuando gana el foco
+    setValorInicial(prev => ({ ...prev, [`${index}-${campo}`]: value }));
+  }, []);
+
   const handleInputChange = useCallback((index, campo, value) =>
   {
     if (value.trim() === '')
@@ -45,7 +51,7 @@ export const Subpaso_Tres = ({ esquemaDatos, id, stepNumber }) =>
     }
 
     let numericValue;
-    if (campo === 'recursos_ejecutados')
+    if (campo)
     {
       const unformattedValue = value.replace(/\$|\./g, '');
       numericValue = Number(unformattedValue);
@@ -77,39 +83,45 @@ export const Subpaso_Tres = ({ esquemaDatos, id, stepNumber }) =>
     }
   }, [ datos, setDatos, setUltimoCampoModificado, setUltimoGuardadoExitoso, setShowErrorMessage ]);
 
-
   const handleBlur = useCallback(async (index, campo, value) => {
-    const preparedValue = value.trim() === '' ? null : Number(value.replace(/\$|\./g, ''));
+    // Intenta convertir el valor del input a un número, o usa null si está vacío
+    const inputValue = value.trim() === '' ? null : Number(value.replace(/\$|\./g, ''));
 
-    if (preparedValue !== null && (isNaN(preparedValue) || (campo === 'recursos_ejecutados' && preparedValue < 0))) {
+    // Recupera el valor inicial para la comparación
+    const valorInicialKey = `${index}-${campo}`;
+    const valorInicialInput = valorInicial[valorInicialKey];
+    const valorInicialNumeric = valorInicialInput ? Number(valorInicialInput.replace(/\$|\./g, '')) : null;
 
-      setShowErrorMessage("Por favor, ingrese un número válido mayor o igual a 0 o deje el campo vacío para limpiar.");
-      setErrorField(`${index}-${campo}`); 
-      return;
+    // Si el valor no ha cambiado, no se realiza la actualización
+    if (inputValue === valorInicialNumeric) {
+        return;
     }
-    if (!(campo === 'recursos_ejecutados' && preparedValue < 0)) {
-      try {
-        const updatedData = [...datos];
-        updatedData[index][campo] = preparedValue >= 0 ? preparedValue : null;
-  
-        await handleUpdatePaso(id, stepNumber, { cobertura_anual: updatedData });
-  
-        setDatos(updatedData);
-        setUltimoGuardadoExitoso(true);
-        setShowErrorMessage(''); 
-        setErrorField(null);
-        refetchTrigger();
-      } catch (error) {
-        console.error("Error al actualizar:", error);
-        setUltimoGuardadoExitoso(false);
-        setShowErrorMessage("Error al guardar los cambios. Intente de nuevo.");
-      }
+
+    // Procede con la lógica existente si hay cambios
+    if (inputValue !== null && !isNaN(inputValue) && !(campo === 'recursos_ejecutados' && inputValue < 0)) {
+        try {
+            const updatedData = [...datos];
+            updatedData[index][campo] = inputValue;
+
+            await handleUpdatePaso(id, stepNumber, { cobertura_anual: updatedData });
+
+            setDatos(updatedData);
+            setUltimoGuardadoExitoso(true);
+            setShowErrorMessage('');
+            setErrorField(null);
+            refetchTrigger();
+        } catch (error) {
+            console.error("Error al actualizar:", error);
+            setUltimoGuardadoExitoso(false);
+            setShowErrorMessage("Error al guardar los cambios. Intente de nuevo.");
+        }
     } else {
-      setShowErrorMessage("El valor no puede ser menor a 0.");
-      setErrorField(`${index}-${campo}`); 
+        setShowErrorMessage("Por favor, ingrese un número válido mayor o igual a 0 o deje el campo vacío para limpiar.");
+        setErrorField(`${index}-${campo}`);
     }
-  }, [datos, handleUpdatePaso, id, stepNumber, refetchTrigger, setShowErrorMessage]);
-  
+}, [datos, handleUpdatePaso, id, stepNumber, refetchTrigger, setShowErrorMessage, valorInicial]);
+
+
 
 
   const getPlaceholder = (rowIndex) =>
@@ -137,6 +149,14 @@ export const Subpaso_Tres = ({ esquemaDatos, id, stepNumber }) =>
     return `${formatter.format(value)}`;
   }
 
+  function capitalizeFirstLetter(string)
+  {
+    return string
+      .replace(/_/g, ' ')
+      .split(' ')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+  }
 
   return (
     <div className="mt-4">
@@ -165,12 +185,15 @@ export const Subpaso_Tres = ({ esquemaDatos, id, stepNumber }) =>
             {[ 'universo_cobertura', 'cobertura_efectivamente_abordada', 'recursos_ejecutados' ].map((item, rowIndex) => (
               <tr key={rowIndex} className="mt-2">
                 <th scope="row" className="text-sans-p-bold align-self-center">{rowIndex + 1}</th>
-                <th scope="row" className="text-sans-p-bold pt-2">{item.replace(/_/g, ' ')}</th>
+                <th scope="row" className="text-sans-p-bold pt-2">
+                  {capitalizeFirstLetter(item)}{item === 'recursos_ejecutados' ? ' (M$)' : ''}
+                </th>
                 {datos.map((data, colIndex) => (
                   <td key={`${rowIndex}- ${colIndex}`} className="border-start px-1">
                     <input
                       type="text"
-                      value={item === 'recursos_ejecutados' && data[ item ] === null ? '' : item === 'recursos_ejecutados' ? `$${formatNumber(data[ item ])}` : data[ item ]}
+                      onFocus={(e) => handleFocus(colIndex, item, e.target.value)}
+                      value={item === 'recursos_ejecutados' && data[ item ] === null ? '' : item === 'recursos_ejecutados' ? `$${formatNumber(data[ item ])}` : `${formatNumber(data[ item ])}`}
                       placeholder={getPlaceholder(rowIndex)}
                       onChange={(e) => handleInputChange(colIndex, item, e.target.value)}
                       onBlur={(e) => handleBlur(colIndex, item, e.target.value)}
