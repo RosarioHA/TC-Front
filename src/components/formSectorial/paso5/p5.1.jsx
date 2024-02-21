@@ -8,7 +8,7 @@ export const Subpaso_CincoPuntoUno = (
   {
     id,
     paso5,
-    formulario_enviado,
+    solo_lectura,
     stepNumber,
     data_costos_directos,
     data_costos_indirectos,
@@ -80,7 +80,7 @@ export const Subpaso_CincoPuntoUno = (
           listado_etapas={listado_etapas}
           setRefreshSubpaso_CincoDos={setRefreshSubpaso_CincoDos}
           setRefreshSumatoriaCostos={setRefreshSumatoriaCostos}
-          formulario_enviado={formulario_enviado}
+          solo_lectura={solo_lectura}
         />
         <hr />
       </div>
@@ -105,7 +105,7 @@ export const Subpaso_CincoPuntoUno = (
           listado_etapas={listado_etapas}
           setRefreshSubpaso_CincoDos={setRefreshSubpaso_CincoDos}
           setRefreshSumatoriaCostos={setRefreshSumatoriaCostos}
-          formulario_enviado={formulario_enviado}
+          solo_lectura={solo_lectura}
         />
         <hr />
       </div>
@@ -125,7 +125,7 @@ export const Subpaso_CincoPuntoUno = (
           costosTotales={costosTotales}
           descripcionCostosTotales={descripcionCostosTotales}
           stepNumber={stepNumber}
-          formulario_enviado={formulario_enviado}          
+          solo_lectura={solo_lectura}          
           setRefreshSumatoriaCostos={setRefreshSumatoriaCostos}
           refreshSumatoriaCostos={refreshSumatoriaCostos}
         />

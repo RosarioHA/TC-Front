@@ -6,7 +6,7 @@ import { apiTransferenciaCompentencia } from "../../../services/transferenciaCom
 export const Subpaso_CincoDos = ({
   id,
   paso5,
-  formulario_enviado,
+  solo_lectura,
   stepNumber,
   p_5_2_evolucion_gasto_asociado,
   p_5_2_variacion_promedio,
@@ -93,7 +93,7 @@ export const Subpaso_CincoDos = ({
       <GastosEvolucionVariacion
         id={id}
         paso5={paso5}
-        formulario_enviado={formulario_enviado}
+        solo_lectura={solo_lectura}
         stepNumber={stepNumber}
         dataGastos={evolucionGastoAsociado}
         setRefreshSubpaso_CincoDosVariacion={setRefreshSubpaso_CincoDosVariacion}
@@ -101,7 +101,7 @@ export const Subpaso_CincoDos = ({
       <GastosPromedioAnual
         id={id}
         paso5={paso5}
-        formulario_enviado={formulario_enviado}
+        solo_lectura={solo_lectura}
         stepNumber={stepNumber}
         dataGastos={variacionPromedio} />
     </div>

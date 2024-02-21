@@ -6,7 +6,7 @@ import { useForm, Controller } from "react-hook-form";
 export const GastosPromedioAnual = ({
   id,
   paso5,
-  formulario_enviado,
+  solo_lectura,
   stepNumber,
   dataGastos,
 }) => {
@@ -165,7 +165,7 @@ export const GastosPromedioAnual = ({
                               onChange={handleChange}
                               onBlur={handleBlur}
                               className={`form-control ${rowIndex % 2 === 0 ? "bg-color-even" : "bg-color-odd"}`}
-                              readOnly={formulario_enviado}
+                              readOnly={solo_lectura}
                               loading={item.estados?.descripcion?.loading ?? false}
                               saved={item.estados?.descripcion?.saved ?? false}
                             />
