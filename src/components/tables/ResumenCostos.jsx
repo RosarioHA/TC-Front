@@ -10,7 +10,7 @@ const ResumenCostos = ({
   costosTotales,
   descripcionCostosTotales,
   stepNumber,
-  formulario_enviado,
+  solo_lectura,
   refreshSumatoriaCostos,
   setRefreshSumatoriaCostos,
 }) => {
@@ -191,7 +191,7 @@ const ResumenCostos = ({
                         onBlur={handleBlur}
                         loading={subtitulo.estados?.descripcion?.loading ?? false}
                         saved={subtitulo.estados?.descripcion?.saved ?? false}
-                        readOnly={formulario_enviado}
+                        readOnly={solo_lectura}
                       />
                     );
                   }}
@@ -244,7 +244,7 @@ const ResumenCostos = ({
                       onBlur={handleBlur}
                       loading={descripcionCostosTotalesLoading}
                       saved={descripcionCostosTotalesSaved}
-                      readOnly={formulario_enviado}
+                      readOnly={solo_lectura}
                     />
                   );
                 }}

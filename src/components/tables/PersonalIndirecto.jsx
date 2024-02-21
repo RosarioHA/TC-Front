@@ -8,7 +8,7 @@ import { FormularioContext } from "../../context/FormSectorial";
 const PersonalIndirecto = ({
   id,
   paso5,
-  formulario_enviado,
+  solo_lectura,
   stepNumber,
   data_personal_indirecto,
   listado_estamentos,

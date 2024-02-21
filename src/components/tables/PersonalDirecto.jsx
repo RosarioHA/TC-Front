@@ -8,7 +8,7 @@ import { FormularioContext } from "../../context/FormSectorial";
 const PersonalDirecto = ({
   id,
   paso5,
-  formulario_enviado,
+  solo_lectura,
   stepNumber,
   data_personal_directo,
   listado_estamentos,
@@ -290,7 +290,7 @@ const PersonalDirecto = ({
                             setMostrarSeccionDinamica(true);
                           }}
 
-                          readOnly={formulario_enviado}
+                          readOnly={solo_lectura}
                         />
                       );
                     }}
