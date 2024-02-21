@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import DropdownSelect from "../dropdown/select";
 import CustomTextarea from "../forms/custom_textarea";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { FormularioContext } from "../../context/FormSectorial";
 
 const PersonalDirecto = ({
   id,
@@ -15,12 +16,37 @@ const PersonalDirecto = ({
 }) => {
 
   const [personas, setPersonas] = useState([]);
-  const [estamentosPdirecto, setEstamentosPdirecto] = useState([{ id: 1 }]);
+  const [nuevaCalidadJuridica, setNuevaCalidadJuridica] = useState('');
+  const [ mostrarFormularioNuevo, setMostrarFormularioNuevo ] = useState(false);
+  const [nuevaPersonaCalJuridica, setNuevaPersonaCalJuridica] = useState('');
+  const [nuevaPersonaEstamento, setNuevaPersonaEstamento] = useState('');
+  const [nuevaPersonaRentaBruta, setNuevaPersonaRentaBruta] = useState('');
+  const [nuevaPersonaGrado, setNuevaPersonaGrado] = useState('');
+  const [ultimaFilaId, setUltimaFilaId] = useState(null);
+  const { handleUpdatePaso } = useContext(FormularioContext);
+
   const [opcionesEstamentos, setOpcionesEstamentos] = useState([]);
   const [opcionesCalidadJuridica, setOpcionesCalidadJuridica] = useState([]);
-  const [estamento, setEstamento] = useState(null);
+
+  const [calidadJuridica, setCalidadJuridica] = useState([{ id: 1 }]);
   const [mostrarSeccionDinamica, setMostrarSeccionDinamica] = useState(false);
 
+  // Función para agrupar los datos por organismo_display
+  const agruparPorCalidadJuridica = (datos) => {
+    const agrupados = datos.reduce((acc, item) => {
+      const displayKey = item.nombre_calidad_juridica;
+      acc[displayKey] = acc[displayKey] || [];
+      acc[displayKey].push(item);
+      return acc;
+    }, {});
+
+    setPersonas(agrupados);
+  };
+
+  // Efecto para agrupar datos cada vez que 'data' cambia
+  useEffect(() => {
+    agruparPorCalidadJuridica(data_personal_directo);
+  }, [data_personal_directo]);
 
   /*useEffect(() => {
     const esquema = construirValidacionPaso5_1ab(costosIndirectos);
@@ -32,35 +58,147 @@ const PersonalDirecto = ({
     mode: 'onBlur',
   });
 
-  // Función para agrupar los datos por organismo_display
-  const agruparPorEstamento = (datos) => {
-    const agrupados = datos.reduce((acc, item) => {
-      const displayKey = item.nombre_estamento;
-      acc[displayKey] = acc[displayKey] || [];
-      acc[displayKey].push(item);
-      return acc;
-    }, {});
+  // Lógica para agregar una nueva calidad juridica
+  const agregarPersona = (persona) => {
+    const nuevaFilaId = Math.floor(Date.now() / 1000);
 
-    setPersonas(agrupados);
+    const calidadJuridica = opcionesCalidadJuridica[persona] || "ValorPorDefectoSiNoExiste";
+
+    setUltimaFilaId(nuevaFilaId);
+    const nuevaFila = {
+      id: nuevaFilaId,
+      calidad_juridica: calidadJuridica,
+      estamento: [],
+      renta_bruta: null,
+      grado: null
+    };
+    setPersonas(prevPersonas => ({
+      ...prevPersonas,
+      [persona]: [...prevPersonas[persona], nuevaFila]
+    }));
   };
 
-  // Efecto para agrupar datos cada vez que 'data' cambia
-  useEffect(() => {
-    agruparPorEstamento(data_personal_directo);
-  }, [data_personal_directo]);
+  // Lógica para eliminar una fila de un organismo
+  const eliminarPersona = async (persona, idFila) => {
+    const payload = {
+      'p_5_3_a_personal_directo': [{
+        id: idFila,
+        DELETE: true
+      }]
+    };
 
-  console.log('personas', personas)
+    try {
+      // Llamar a la API para actualizar los datos
+      await handleUpdatePaso(id, stepNumber, payload);
 
+      // Actualizar el estado local para reflejar la eliminación
+      setPersonas(prevPersonas => {
+        const filasActualizadas = prevPersonas[persona].filter(fila => fila.id !== idFila);
 
-  const agregarEstamentoPdirecto = () => {
-    const nuevoEstamento = { id: estamentosPdirecto.length + 1 };
-    setEstamentosPdirecto([...estamentosPdirecto, nuevoEstamento]);
+        // Si después de la eliminación no quedan filas, eliminar también el organismo
+        if (filasActualizadas.length === 0) {
+          const nuevasPersonas = { ...prevPersonas };
+          delete nuevasPersonas[persona];
+          return nuevasPersonas;
+        }
+
+        return {
+          ...prevPersonas,
+          [persona]: filasActualizadas
+        };
+      });
+
+    } catch (error) {
+      console.error("Error al eliminar la fila:", error);
+    }
   };
-  const eliminarEstamentoPdirecto = (id) => {
-    const estamentosActualizados = estamentosPdirecto.filter(
-      (proc) => proc.id !== id
+
+  /*
+
+  // Función para recargar campos por separado
+  const updateFieldState = (costoDirectoId, fieldName, newState) => {
+    setCostosDirectos(prevCostosDirectos =>
+      prevCostosDirectos.map(costoDirecto => {
+        if (costoDirecto.id === costoDirectoId) {
+          // Actualiza solo los estados del campo específico
+          const updatedEstados = { ...costoDirecto.estados, [fieldName]: { ...newState } };
+          return { ...costoDirecto, estados: updatedEstados };
+        }
+        return costoDirecto;
+      })
     );
-    setEstamentosPdirecto(estamentosActualizados);
+  };
+
+
+  // Manejadora de CustomInput y CustomTextArea
+  const handleInputChange = (costoDirectoId, campo, valor) => {
+    setCostosDirectos(prevCostosDirectos =>
+      prevCostosDirectos.map(costoDirecto => {
+        // Verifica si es la costo que estamos actualizando
+        if (costoDirecto.id === costoDirectoId) {
+          // Actualiza el valor del campo específico de manera inmutable
+          return { ...costoDirecto, [campo]: valor };
+        }
+        // Si no es la costo que estamos actualizando, la retorna sin cambios
+        return costoDirecto;
+      })
+    );
+  };
+
+  */
+
+  const manejarDropdownCalidadJuridica = (opcionSeleccionada) => {
+    setNuevaCalidadJuridica(opcionSeleccionada);
+  };
+  
+
+  useEffect(() => {
+    if (nuevaCalidadJuridica) {
+      const ejecutarAgregarNuevaCalidadJuridica = async () => {
+        await agregarNuevaCalidadJuridica(nuevaCalidadJuridica.value, nuevaCalidadJuridica.label);
+      };
+      ejecutarAgregarNuevaCalidadJuridica();
+    }
+  }, [nuevaCalidadJuridica]); 
+  
+
+  const mostrarFormulario = () =>
+  {
+    setMostrarFormularioNuevo(true);
+  };
+
+  const agregarNuevaCalidadJuridica = async (calidadJuridicaSeleccionada, labelSeleccionado) => {
+    const nuevaCalidadJuridicaDatos = {
+      id: Math.floor(Date.now() / 1000),
+      calidad_juridica: calidadJuridicaSeleccionada,
+      nombre_calidad_juridica: labelSeleccionado
+    };
+  
+    const payload = {
+      'p_5_3_a_personal_directo': [nuevaCalidadJuridicaDatos]
+    };
+  
+    try {
+      await handleUpdatePaso(id, stepNumber, payload);
+
+      // Actualiza el estado para añadir el nuevo elemento
+  setPersonas(prevPersonas => {
+    // Si ya existen personas con esta calidad jurídica, añádelas al final
+    const nuevasPersonas = { ...prevPersonas };
+    if (!nuevasPersonas[calidadJuridicaSeleccionada]) {
+      nuevasPersonas[calidadJuridicaSeleccionada] = [];
+    }
+    // Añade la nueva persona al final del array existente
+    nuevasPersonas[calidadJuridicaSeleccionada].push(nuevaCalidadJuridicaDatos);
+    
+    return nuevasPersonas;
+  })
+      // Limpia los campos del formulario y oculta el formulario
+      setNuevaCalidadJuridica('');
+      setMostrarFormularioNuevo(false); // Esto oculta el formulario
+    } catch (error) {
+      console.error("Error al agregar la nueva calidad jurídica:", error);
+    }
   };
 
   //convertir estructura para el select
@@ -86,16 +224,27 @@ const PersonalDirecto = ({
     }
   }, [listado_calidades_juridicas]);
 
-  const agregarPersona = () => {
-    const nuevaPersona = { id: personas.length + 1 };
-    setPersonas([...personas, nuevaPersona]);
-  };
-  const eliminarPersona = (id) => {
-    const personasActualizados = personas.filter(
-      (proc) => proc.id !== id
-    );
-    setPersonas(personasActualizados);
-  };
+  // Función para manejar la adición de una nueva calidad jurídica
+  useEffect(() => {
+    const calidadesConPersonas = Object.keys(personas);
+    const calidadesSinPersonas = listado_calidades_juridicas.filter(({ calidad_juridica }) => 
+      !calidadesConPersonas.includes(calidad_juridica)
+    ).map(({ id, calidad_juridica }) => ({
+      label: calidad_juridica,
+      value: id.toString()
+    }));
+  
+    setOpcionesCalidadJuridica(calidadesSinPersonas);
+  
+    // Si ya no quedan calidades jurídicas sin asignar, ocultar el formulario
+    if (calidadesSinPersonas.length === 0) {
+      setMostrarFormularioNuevo(false);
+    }
+  }, [personas, listado_calidades_juridicas]);
+  
+  
+
+
 
   return (
     <div className="my-4">
@@ -103,122 +252,102 @@ const PersonalDirecto = ({
       <p className="text-sans-m-semibold mt-4">a. Personal que ejerce directamente la competencia</p>
       <h6 className="text-sans-h6-primary mt-3">Por ejercicio directo se entenderán todas aquellas tareas y procedimientos específicos y exclusivos de la competencia. En la renta bruta se deben considerar aquellas asignaciones propias del cargo. </h6>
 
-      {Object.entries(personas).map(([ nombre_estamento, filas ], index) => (
-        <div key={nombre_estamento}>
-          {nombre_estamento.length > 1 && (
-            <div className="d-flex justify-content-end absolute-container">
-              <button
-                type="button"
-                className="btn-terciario-ghost "
-                onClick={() => eliminarEstamentoPdirecto(estamento.id)}
-              >
-                <i className="material-symbols-rounded me-2">delete</i>
-                <p className="mb-0 text-decoration-underline">Borrar estamento</p>
-              </button>
-            </div>
-          )}
-        
 
       <div className="col my-4">
-        <div className="row">
-          <div className="col-1">
-            <p className="text-sans-p-bold mt-3">Estamento</p>
-          </div>
-          <div className="col-2">
-            <Controller
-              control={control}
-              name={`estamento`}
-              render={() => {
-                return (
-                  <DropdownSelect
-                    id={`estamento`}
-                    value={nombre_estamento}
-                    name={`estamento`}
-                    placeholder="Estamento"
-                    options={opcionesEstamentos}
-                    onSelectionChange={(selectedOption) => {
-                      setEstamento(selectedOption);
-                      setMostrarSeccionDinamica(true);
-                    }}
+        {/* Renderiza automáticamente basado en la presencia de datos en personas */}
+        {Object.entries(personas).map(([calidad_juridica, personas], index) => (
+          <div key={index}>
 
-                    readOnly={formulario_enviado}
-                  />
-                );
-              }}
-            />
-          </div>
-        </div>
-
-        {/* aparece dinamicamente */}
-        {mostrarSeccionDinamica && (
-          <div>
+            <p className="text-sans-p-bold mt-3">Calidad Jurídica</p><p>{personas[0]?.nombre_calidad_juridica}</p>
+            {/* Encabezado para cada grupo */}
             <div className="row">
-              <p className="text-sans-p mt-4">Luego agrega los profesionales que correspondan a este estamento:</p>
+              <div className="col-1"> <p className="text-sans-p-bold">N°</p> </div>
+              <div className="col"> <p className="text-sans-p-bold">Estamento</p> </div>
+              <div className="col"> <p className="text-sans-p-bold">Renta bruta mensual</p> </div>
+              <div className="col"> <p className="text-sans-p-bold">Grado <br /> (Si corresponde)</p> </div>
+              <div className="col"> <p className="text-sans-p-bold">Acción</p> </div>
             </div>
-
-            <div className="row">
-              <div className="col-1"> <p className="text-sans-p-bold mt-3">N°</p> </div>
-              <div className="col"> <p className="text-sans-p-bold mt-3">Calidad jurídica</p> </div>
-              <div className="col"> <p className="text-sans-p-bold mt-3">Renta bruta mensual</p> </div>
-              <div className="col"> <p className="text-sans-p-bold mt-3">Grado <br /> (Si corresponde)</p> </div>
-              <div className="col"> <p className="text-sans-p-bold mt-3">Acción</p> </div>
-            </div>
-
-            {filas.map((persona, personaIndex) => (
+            {personas.map((persona, personaIndex) => (
               <div
                 key={persona.id}
-                className={`row py-3 ${persona.id % 2 === 0 ? 'white-line' : 'neutral-line'} align-items-center me-3`}>
-                <div className="col-1"> <p className="text-sans-p-bold mt-3">{persona.id}</p> </div>
+                className={`row py-3 ${personaIndex % 2 === 0 ? 'white-line' : 'neutral-line'} align-items-center me-3`}>
+
+                <div className="col-1"> <p className="text-sans-p-bold mt-3">{personaIndex + 1}</p> </div>
                 <div className="col">
-                  <DropdownSelect
-                    placeholder="Calidad jurídica"
-                    options={opcionesCalidadJuridica}
-                    onSelectionChange={() => {
-                      // Mostrar la sección dinámica al hacer una selección
-                      setMostrarSeccionDinamica(true);
-                    }} />
+                  <Controller
+                    control={control}
+                    name={`estamento`}
+                    render={() => {
+                      return (
+                        <DropdownSelect
+                          id={`estamento`}
+                          defaultValue={persona.nombre_estamento}
+                          name={`estamento`}
+                          placeholder="Estamento"
+                          options={opcionesEstamentos}
+                          onSelectionChange={(selectedOption) => {
+                            setCalidadJuridica(selectedOption);
+                            setMostrarSeccionDinamica(true);
+                          }}
+
+                          readOnly={formulario_enviado}
+                        />
+                      );
+                    }}
+                  />
                 </div>
-                {/* ajustar segun estilos creados por Vero para campos de input en 5.2 */}
                 <div className="col pt-3">
-                  <input className="form-control mx-auto px-0 mb-2 text-center"></input>
+                  <input className="form-control mx-auto px-0 mb-2 text-center" defaultValue={persona.renta_bruta} />
                 </div>
                 <div className="col pt-3">
-                  <input className="form-control mx-auto px-0 mb-2 text-center"></input>
+                  <input className="form-control mx-auto px-0 mb-2 text-center" defaultValue={persona.grado} />
                 </div>
                 <div className="col">
-                  {personas.length > 1 && (
-                    <button
-                      className="btn-terciario-ghost"
-                      onClick={() => eliminarPersona(persona.id)}
-                    >
-                      <i className="material-symbols-rounded me-2">delete</i>
-                      <p className="mb-0 text-decoration-underline">Borrar</p>
-                    </button>
-                  )}
+                  <button
+                    className="btn-terciario-ghost"
+                    onClick={() => eliminarPersona(calidad_juridica, persona.id)}
+                  >
+                    <i className="material-symbols-rounded me-2">delete</i>
+                    <p className="mb-0 text-decoration-underline">Borrar</p>
+                  </button>
                 </div>
               </div>
             ))}
             <button
               className="btn-secundario-s m-2"
-              onClick={agregarPersona}
+              onClick={() => agregarPersona(calidad_juridica)}
             >
               <i className="material-symbols-rounded me-2">add</i>
-              <p className="mb-0 text-decoration-underline">Agregar {estamento ? estamento.label : 'Ninguna'}</p>
+              <p className="mb-0 text-decoration-underline">Agregar {personas[0]?.nombre_calidad_juridica}</p>
             </button>
           </div>
-        )}
+        ))}
       </div>
 
-      </div>
-      ))};
+      {mostrarFormularioNuevo && (
+        <div className="row">
+          <div className="col-1">
+            <p className="text-sans-p-bold mt-3">Calidad Jurídica</p>
+          </div>
+          <div className="col-2">
+            <DropdownSelect
+              placeholder="Calidad Jurídica"
+              options={opcionesCalidadJuridica}
+              onSelectionChange={manejarDropdownCalidadJuridica}
+              />
+          </div>
+        </div>
+      )}
+
 
       <button
         className="btn-secundario-s m-2"
-        onClick={agregarEstamentoPdirecto}
+        onClick={mostrarFormulario}
       >
         <i className="material-symbols-rounded me-2">add</i>
-        <p className="mb-0 text-decoration-underline">Agregar Estamento</p>
+        <p className="mb-0 text-decoration-underline">Agregar Calidad Juridica</p>
       </button>
+
 
       <div className="mt-5">
         <CustomTextarea
