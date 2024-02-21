@@ -8,17 +8,19 @@ import { Subpaso_dosPuntoTres } from "../../components/formSectorial/paso2/p2.3"
 import { Subpaso_dosPuntoCuatro } from "../../components/formSectorial/paso2/p2.4";
 import { Subpaso_dosPuntoCinco } from "../../components/formSectorial/paso2/p2.5";
 import { MonoStepers } from "../../components/stepers/MonoStepers";
+import CustomTextarea from '../../components/forms/custom_textarea';
+import { useAuth } from '../../context/AuthContext';
 
-const PasoDos = () =>
-{
+const PasoDos = () => {
   const { pasoData, loadingPaso, errorPaso, updateStepNumber, data } = useContext(FormularioContext);
   const stepNumber = 2;
   const [ refreshSubpasoDos_dos, setRefreshSubpasoDos_dos ] = useState(false);
   const [ refreshSubpasoDos_tres, setRefreshSubpasoDos_tres ] = useState(false);
   const [ refreshSubpasoDos_cuatro, setRefreshSubpasoDos_cuatro ] = useState(false);
+  const { userData } = useAuth();
+  const userSubdere = userData?.perfil?.includes('SUBDERE');
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     updateStepNumber(stepNumber);
   }, [ updateStepNumber, stepNumber ]);
 
@@ -103,6 +105,16 @@ const PasoDos = () =>
               id={data.id} />
           </div>
 
+          {userSubdere && (
+            <div className="mt-5 my-4">
+            <CustomTextarea 
+            label="Observaciones (Opcional)"
+            placeholder="Escribe tus observaciones de este paso del formulario"
+            rows={5}
+            maxLength={500}/>
+          </div>
+          )}
+          
           {/*Botones navegacion  */}
           <div className="container me-5 pe-5">
             <ButtonsNavigate step={paso2.numero_paso} id={data.id} />

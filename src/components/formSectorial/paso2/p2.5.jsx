@@ -83,7 +83,7 @@ console.log(data)
           </div>
         </div>
       </div>
-      <div className="mt-4">
+      <div className="mt-4 pb-4 border-bottom">
         <CustomTextarea 
           rows={15}
           label="Descripción cualitativa del ejercicio de la competencia en la región" 

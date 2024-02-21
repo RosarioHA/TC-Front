@@ -6,11 +6,15 @@ import { FormularioContext } from "../../context/FormSectorial";
 import { Subpaso_CincoPuntoUno } from '../../components/formSectorial/paso5/p5.1';
 import { Subpaso_CincoDos } from '../../components/formSectorial/paso5/p5.2';
 import { Subpaso_CincoPuntoTres } from "../../components/formSectorial/paso5/p5.3";
+import CustomTextarea from '../../components/forms/custom_textarea';
+import { useAuth } from '../../context/AuthContext';
 
 const PasoCinco = () => {
   const { updateStepNumber, pasoData, data, loadingPaso, errorPaso } = useContext(FormularioContext);
   const stepNumber = 5;
   const [refreshSubpaso_CincoDos, setRefreshSubpaso_CincoDos] = useState(false);
+  const { userData } = useAuth();
+  const userSubdere = userData?.perfil?.includes('SUBDERE');
 
   useEffect(() => {
     updateStepNumber(stepNumber);
@@ -74,7 +78,23 @@ const PasoCinco = () => {
             refreshSubpaso_CincoDos={refreshSubpaso_CincoDos}
             setRefreshSubpaso_CincoDos={setRefreshSubpaso_CincoDos}
             />
-          <Subpaso_CincoPuntoTres data_personal_directo={p_5_3_a_personal_directo} data_personal_indirecto={p_5_3_b_personal_indirecto} listado_estamentos={listado_estamentos} listado_calidades_juridicas={listado_calidades_juridicas} />
+          <Subpaso_CincoPuntoTres 
+            data_personal_directo={p_5_3_a_personal_directo} 
+            data_personal_indirecto={p_5_3_b_personal_indirecto} 
+            listado_estamentos={listado_estamentos} 
+            listado_calidades_juridicas={listado_calidades_juridicas} 
+            />
+
+            {userSubdere && (
+              <div className="mt-5 my-4">
+              <CustomTextarea 
+              label="Observaciones (Opcional)"
+              placeholder="Escribe tus observaciones de este paso del formulario"
+              rows={5}
+              maxLength={500}/>
+            </div>
+            )}
+
           <div className="container me-5 pe-5">
             <ButtonsNavigate step={paso5.numero_paso} id={data.id} />
           </div>

@@ -5,6 +5,7 @@ import CustomTextarea from "../../components/forms/custom_textarea";
 import { Subpaso_Tres } from "../../components/formSectorial/paso3/p3.1";
 import { FormularioContext } from "../../context/FormSectorial";
 import { MonoStepers } from "../../components/stepers/MonoStepers";
+import { useAuth } from '../../context/AuthContext';
 
 const PasoTres = () => {
   const {
@@ -13,6 +14,8 @@ const PasoTres = () => {
     pasoData,
     data
   } = useContext(FormularioContext);
+  const { userData } = useAuth();
+  const userSubdere = userData?.perfil?.includes('SUBDERE');
 
   const stepNumber = 3;
   const id= data.id;
@@ -158,11 +161,22 @@ const PasoTres = () => {
                   </h6>
                 </div>
               </div>
-              <div className="container-fluid me-5 pe-5">
+              <div className="container-fluid me-5 pe-5 border-bottom pb-2">
                 <Subpaso_Tres esquemaDatos={cobertura_anual} id={id} stepNumber={stepNumber}/>
               </div>
             </div>
           </div>
+
+          {userSubdere && (
+            <div className="mt-5 my-4">
+            <CustomTextarea 
+            label="Observaciones (Opcional)"
+            placeholder="Escribe tus observaciones de este paso del formulario"
+            rows={5}
+            maxLength={500}/>
+          </div>
+          )}
+
           {/* Botones navegación */}
           <div className="container me-5 pe-5">
             <ButtonsNavigate step={paso3.numero_paso} id={id} />

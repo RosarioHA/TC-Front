@@ -4,14 +4,16 @@ import { ButtonsNavigate } from "../../components/layout/ButtonsNavigate";
 import { FormularioContext } from "../../context/FormSectorial";
 import { Subpaso_CuatroUno } from "../../components/formSectorial/paso4/p4.1";
 import { MonoStepers } from "../../components/stepers/MonoStepers";
+import CustomTextarea from '../../components/forms/custom_textarea';
+import { useAuth } from '../../context/AuthContext';
 
-const PasoCuatro = () =>
-{
+const PasoCuatro = () => {
   const { updateStepNumber, pasoData, data } = useContext(FormularioContext);
   const stepNumber = 4;
+  const { userData } = useAuth();
+  const userSubdere = userData?.perfil?.includes('SUBDERE');
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     updateStepNumber(stepNumber);
   }, [ updateStepNumber, stepNumber ]);
 
@@ -37,7 +39,7 @@ const PasoCuatro = () =>
             <h6 className="text-sans-h6-primary">Los indicadores de desempeño, deben incluir una descripción de los componentes del indicador, asi como los medios utilizados para su calculo y sus medios de verificación. Si la competencia esta asociada a un programa que cuente con evaluación ex ante, se debe considerar la información incluida en su versión mas actualizada.</h6>
             <h6 className="text-sans-h6-primary mt-3">De no contar la competencia con indicadores de desempeño asociados, este apartado debe ser omitido.</h6>
             <h6 className="text-sans-h6-primary mt-3">Si el ejercicio de la competencia tiene mas de un indicador de desempeño, se deben añadir las tablas correspondientes.</h6>
-            <div className="my-5">
+            <div className="my-5 pb-3 border-bottom">
               <div className="">
                 {/* Componente adicional en blanco para un nuevo indicador */}
                 {indicador_desempeno  && (
@@ -52,6 +54,17 @@ const PasoCuatro = () =>
               </div>
             </div>
           </div>
+
+          {userSubdere && (
+            <div className="mt-5 my-4">
+            <CustomTextarea 
+            label="Observaciones (Opcional)"
+            placeholder="Escribe tus observaciones de este paso del formulario"
+            rows={5}
+            maxLength={500}/>
+          </div>
+          )}
+
           {/*Botones navegacion*/}
           <div className="container me-5 pe-5">
             <ButtonsNavigate step={paso4Data.numero_paso} id={id} />

@@ -107,7 +107,7 @@ export const Subpaso_CincoPuntoTres = () => {
           <p className="mb-0 text-decoration-underline">Agregar Estamento</p>
       </button>
 
-      <div className="mt-5">
+      <div className="mt-5 border-bottom pb-4">
         <CustomTextarea 
         label="Descripción de funciones"
         placeholder="Describe las funciones asociadas a otras competencias"

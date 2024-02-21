@@ -247,7 +247,7 @@ export const Subpaso_tres = ({ pasoData, id, stepNumber }) =>
             <h6 className="mt-1">Indicar si se trata de un traspaso de competencias al “Gobierno Regional”, constituido tanto por el Gobernador como por el Consejo Regional, o se trata de un traspaso al “Gobernador Regional”, órgano ejecutivo del Gobierno Regional.</h6>
           </div>
         </div>
-        <div className="my-4">
+        <div className="my-4 pb-3 border-bottom">
           <CustomTextarea
             label="Órgano que ejerce actualmente la competencia (Obligatorio)"
             placeholder="Indicar órgano que ejerce actualmente la competencia"
