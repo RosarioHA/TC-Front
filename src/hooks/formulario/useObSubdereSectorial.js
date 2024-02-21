@@ -25,39 +25,23 @@ export const useObservacionesSubdere = (id) => {
     }
   }, [id]);
 
-  const updateObservacion = useCallback(async (observacionData) => {
-    if (!id || !observacionData || typeof observacionData !== 'object' || Object.keys(observacionData).length === 0) {
-      console.error("ID o datos de observación inválidos.");
-      return;
-    }
-  
-    try {
-      const response = await apiTransferenciaCompentencia.patch(`/formulario-sectorial/${id}/observaciones-subdere-sectorial/`, observacionData);
-      setObservaciones(response.data.observaciones_sectoriales);
-      console.log("Observaciones actualizadas con éxito.");
-    } catch (error) {
-      console.error("Error al actualizar observaciones:", error);
-      setErrorObservaciones(error);
-    }
-  }, [id]);
+ const updateObservacion = useCallback(async (observacionData) => {
+  if (!id || !observacionData || typeof observacionData !== 'object' || Object.keys(observacionData).length === 0) {
+    console.error("ID o datos de observación inválidos.");
+    return;
+  }
 
-//  const updateObservacion = useCallback(async (observacionData) => {
-//   if (!id || !observacionData || typeof observacionData !== 'object' || Object.keys(observacionData).length === 0) {
-//     console.error("ID o datos de observación inválidos.");
-//     return;
-//   }
-
-//   try {
-//     const response = await apiTransferenciaCompentencia.patch(`/formulario-sectorial/${id}/observaciones-subdere-sectorial/`, {
-//       observaciones_sectoriales: observacionData
-//     });
-//     setObservaciones(response.data.observaciones_sectoriales);
-//     console.log("Observaciones actualizadas con éxito.");
-//   } catch (error) {
-//     console.error("Error al actualizar observaciones:", error);
-//     setErrorObservaciones(error);
-//   }
-// }, [id]);
+  try {
+    const response = await apiTransferenciaCompentencia.patch(`/formulario-sectorial/${id}/observaciones-subdere-sectorial/`, {
+      observaciones_sectoriales: observacionData
+    });
+    setObservaciones(response.data.observaciones_sectoriales);
+    console.log("Observaciones actualizadas con éxito.");
+  } catch (error) {
+    console.error("Error al actualizar observaciones:", error);
+    setErrorObservaciones(error);
+  }
+}, [id]);
 
   return { observaciones, loadingObservaciones, errorObservaciones, updateObservacion, fetchObservacionesSubdere };
 };
