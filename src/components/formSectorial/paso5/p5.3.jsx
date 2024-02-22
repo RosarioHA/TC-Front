@@ -132,7 +132,7 @@ export const Subpaso_CincoPuntoTres = (
 
       {estamentosPindirecto.map((calidadJuridica) => (
         <div key={calidadJuridica.id}>
-          {estamentosPindirecto.length > 1 && (
+          {estamentosPindirecto.length > 1 && !solo_lectura && (
             <div className="absolute-container">
               <button
                 type="button"
@@ -157,13 +157,15 @@ export const Subpaso_CincoPuntoTres = (
           </div>
         </div>
       ))}
+      {!solo_lectura && (
       <button
         className="btn-secundario-s m-2"
         onClick={agregarCalJuridicaPindirecto}>
         <i className="material-symbols-rounded me-2">add</i>
         <p className="mb-0 text-decoration-underline">Agregar Calidad Jurídica</p>
       </button>
-
+      )}
+      
       <div className="mt-5 border-bottom pb-4">
         <CustomTextarea 
         label="Descripción de funciones"
