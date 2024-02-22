@@ -15,7 +15,7 @@ const PasoUno = () => {
   const stepNumber = 1;
   const { userData } = useAuth();
   const userSubdere = userData?.perfil?.includes('SUBDERE');
-  const { observaciones, updateObservacion, fetchObservaciones } = useObservacionesSubdere(data ? data.id : null);
+  const { observaciones, updateObservacion, fetchObservaciones, loadingObservaciones, saved } = useObservacionesSubdere(data ? data.id : null);
   const [observacionPaso1, setObservacionPaso1] = useState("");
 
   const formularioEnviado = data.formulario_enviado
@@ -42,10 +42,12 @@ const PasoUno = () => {
   const paso1Data = paso1 || {}; 
 
   const handleGuardarObservacion = async () => {
-    const observacionData = {
-      observacion_paso1: observacionPaso1,
-    };
-    await updateObservacion(observacionData);
+    if (!observacionesEnviadas) {
+      const observacionData = {
+        observacion_paso1: observacionPaso1,
+      };
+      await updateObservacion(observacionData);
+    }
   };
 
   return (
@@ -74,11 +76,10 @@ const PasoUno = () => {
             value={observacionPaso1}
             onChange={(e) => setObservacionPaso1(e.target.value)}
             readOnly={observacionesEnviadas}
+            onBlur={handleGuardarObservacion}
+            loading={loadingObservaciones}
+            saved={saved}
             />
-            {/* aqui reemplazar boton por metodo automatico */}
-            {!observacionesEnviadas && (
-            <button className="btn-primario-s" onClick={handleGuardarObservacion}>Guardar Observaciones</button>
-            )}
           </div>
           )}
 

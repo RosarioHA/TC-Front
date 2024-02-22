@@ -23,7 +23,7 @@ const PasoTres = () => {
   const stepNumber = 3;
   const id= data.id;
 
-  const { observaciones, updateObservacion, fetchObservaciones } = useObservacionesSubdere(data ? data.id : null);
+  const { observaciones, updateObservacion, fetchObservaciones, loadingObservaciones, saved } = useObservacionesSubdere(data ? data.id : null);
   const [observacionPaso3, setObservacionPaso3] = useState("");
 
   // Estado inicial basado en los datos existentes
@@ -194,11 +194,10 @@ const PasoTres = () => {
             value={observacionPaso3}
             onChange={(e) => setObservacionPaso3(e.target.value)}
             readOnly={observacionesEnviadas}
+            onBlur={handleGuardarObservacion}
+            loading={loadingObservaciones}
+            saved={saved}
             />
-            {/* aqui reemplazar boton por metodo automatico */}
-            {!observacionesEnviadas && (
-            <button className="btn-primario-s" onClick={handleGuardarObservacion}>Guardar Observaciones</button>
-            )}
           </div>
           )}
 

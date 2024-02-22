@@ -13,7 +13,7 @@ const PasoCuatro = () => {
   const stepNumber = 4;
   const { userData } = useAuth();
   const userSubdere = userData?.perfil?.includes('SUBDERE');
-  const { observaciones, updateObservacion, fetchObservaciones } = useObservacionesSubdere(data ? data.id : null);
+  const { observaciones, updateObservacion, fetchObservaciones, loadingObservaciones, saved } = useObservacionesSubdere(data ? data.id : null);
   const [observacionPaso4, setObservacionPaso4] = useState("");
 
   const formularioEnviado = data.formulario_enviado
@@ -85,11 +85,10 @@ const PasoCuatro = () => {
             value={observacionPaso4}
             onChange={(e) => setObservacionPaso4(e.target.value)}
             readOnly={observacionesEnviadas}
+            onBlur={handleGuardarObservacion}
+            loading={loadingObservaciones}
+            saved={saved}
             />
-            {/* aqui reemplazar boton por metodo automatico */}
-            {!observacionesEnviadas && (
-            <button className="btn-primario-s" onClick={handleGuardarObservacion}>Guardar Observaciones</button>
-            )}
           </div>
           )}
 

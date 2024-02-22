@@ -16,7 +16,7 @@ const PasoCinco = () => {
   const [refreshSubpaso_CincoDos, setRefreshSubpaso_CincoDos] = useState(false);
   const { userData } = useAuth();
   const userSubdere = userData?.perfil?.includes('SUBDERE');
-  const { observaciones, updateObservacion, fetchObservaciones } = useObservacionesSubdere(data ? data.id : null);
+  const { observaciones, updateObservacion, fetchObservaciones, loadingObservaciones, saved } = useObservacionesSubdere(data ? data.id : null);
   const [observacionPaso5, setObservacionPaso5] = useState("");
 
   const formularioEnviado = data.formulario_enviado
@@ -118,11 +118,10 @@ const PasoCinco = () => {
             value={observacionPaso5}
             onChange={(e) => setObservacionPaso5(e.target.value)}
             readOnly={observacionesEnviadas}
+            onBlur={handleGuardarObservacion}
+            loading={loadingObservaciones}
+            saved={saved}
             />
-            {/* aqui reemplazar boton por metodo automatico */}
-            {!observacionesEnviadas && (
-            <button className="btn-primario-s" onClick={handleGuardarObservacion}>Guardar Observaciones</button>
-            )}
           </div>
           )}
 

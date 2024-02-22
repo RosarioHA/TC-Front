@@ -5,6 +5,7 @@ export const useObservacionesSubdere = (id) => {
   const [observaciones, setObservaciones] = useState({});
   const [loadingObservaciones, setLoadingObservaciones] = useState(false);
   const [errorObservaciones, setErrorObservaciones] = useState(null);
+  const [saved, setSaved] = useState(false);
 
   const fetchObservaciones = useCallback(async () => {
     if (!id) {
@@ -30,14 +31,18 @@ export const useObservacionesSubdere = (id) => {
   }
 
   try {
+    setLoadingObservaciones(true);
     const response = await apiTransferenciaCompentencia.patch(`/formulario-sectorial/${id}/observaciones-subdere-sectorial/`, {
       observaciones_sectoriales: observacionData
     });
     setObservaciones(response.data.observaciones_sectoriales);
+    setSaved(true);
   } catch (error) {
     setErrorObservaciones(error);
+  } finally {
+    setLoadingObservaciones(false);
   }
 }, [id]);
 
-  return { observaciones, loadingObservaciones, errorObservaciones, updateObservacion, fetchObservaciones };
+  return { observaciones, loadingObservaciones, saved, errorObservaciones, updateObservacion, fetchObservaciones };
 };
