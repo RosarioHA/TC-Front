@@ -94,7 +94,7 @@ const PasoTres = () => {
   // Si no hay datos para el paso 3, mostrar un mensaje
   if (!pasoData.paso3) return <div>No hay datos disponibles para el Paso 3</div>;
 
-  const { cobertura_anual, paso3 } = pasoData;
+  const { cobertura_anual, paso3, solo_lectura } = pasoData;
 
   const handleGuardarObservacion = async () => {
     const observacionData = {
@@ -146,7 +146,7 @@ const PasoTres = () => {
                   loading={inputStatus.universo_cobertura.loading}
                   saved={inputStatus.universo_cobertura.saved}
                   maxLength={800}
-
+                  readOnly={solo_lectura}
                 />
                 <div className="d-flex mb-3 mt-0 text-sans-h6-primary">
                   <i className="material-symbols-rounded me-2">info</i>
@@ -168,6 +168,7 @@ const PasoTres = () => {
                   loading={inputStatus.descripcion_cobertura.loading}
                   saved={inputStatus.descripcion_cobertura.saved}
                   maxLength={800}
+                  readOnly={solo_lectura}
                 />
                 <div className="d-flex mb-3 mt-0 text-sans-h6-primary">
                   <i className="material-symbols-rounded me-2">info</i>
@@ -178,7 +179,7 @@ const PasoTres = () => {
                 </div>
               </div>
               <div className="container-fluid me-5 pe-5 border-bottom pb-2">
-                <Subpaso_Tres esquemaDatos={cobertura_anual} id={id} stepNumber={stepNumber}/>
+                <Subpaso_Tres esquemaDatos={cobertura_anual} id={id} stepNumber={stepNumber} solo_lectura={solo_lectura}/>
               </div>
             </div>
           </div>
