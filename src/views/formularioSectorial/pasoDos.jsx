@@ -51,7 +51,8 @@ const PasoDos = () => {
     listado_unidades,
     p_2_4_plataformas_y_softwares,
     listado_etapas,
-    p_2_5_flujograma_competencia
+    p_2_5_flujograma_competencia,
+    solo_lectura
   } = pasoData;
 
   const handleGuardarObservacion = async () => {
@@ -82,6 +83,7 @@ const PasoDos = () => {
               stepNumber={stepNumber}
               id={data.id}
               setRefreshSubpasoDos_dos={setRefreshSubpasoDos_dos}
+              solo_lectura={solo_lectura}
             />
           </div>
           <div className="container-fluid me-5 pe-5 my-5">
@@ -93,6 +95,7 @@ const PasoDos = () => {
               setRefreshSubpasoDos_dos={setRefreshSubpasoDos_dos}
               refreshSubpasoDos_tres={refreshSubpasoDos_tres}
               setRefreshSubpasoDos_tres={setRefreshSubpasoDos_tres}
+              solo_lectura={solo_lectura}
             />
           </div>
           <div className="container-fluid me-5 pe-5 my-5">
@@ -105,6 +108,7 @@ const PasoDos = () => {
               setRefreshSubpasoDos_tres={setRefreshSubpasoDos_tres}
               refreshSubpasoDos_cuatro={refreshSubpasoDos_cuatro}
               setRefreshSubpasoDos_cuatro={setRefreshSubpasoDos_cuatro}
+              solo_lectura={solo_lectura}
             />
           </div>
           <div className="container-fluid me-5 pe-5 my-5">
@@ -115,6 +119,7 @@ const PasoDos = () => {
               id={data.id}
               refreshSubpasoDos_cuatro={refreshSubpasoDos_cuatro}
               setRefreshSubpasoDos_cuatro={setRefreshSubpasoDos_cuatro}
+              solo_lectura={solo_lectura}
             />
           </div>
           <div className="container-fluid me-5 pe-5 my-5">
@@ -122,7 +127,8 @@ const PasoDos = () => {
               flujograma={p_2_5_flujograma_competencia}
               data={pasoData.paso2}
               stepNumber={stepNumber}
-              id={data.id} />
+              id={data.id} 
+              solo_lectura={solo_lectura}/>
           </div>
 
           {userSubdere && formularioEnviado && (

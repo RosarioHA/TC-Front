@@ -9,7 +9,8 @@ export const Subpaso_dosPuntoDos = ({
   stepNumber,
   refreshSubpasoDos_dos,
   setRefreshSubpasoDos_dos,
-  setRefreshSubpasoDos_tres
+  setRefreshSubpasoDos_tres,
+  solo_lectura
 }) =>
 {
 
@@ -332,7 +333,7 @@ export const Subpaso_dosPuntoDos = ({
 
                       <div className="col-10 border p-2">
                         {unidades.map((unidad, unidadIndex) => (
-                          <div key={unidad.id} className="border row">
+                          <div key={unidad.id} className=" row">
                             <div className="col-10 p-3">
                               <div className="conteo">{unidadIndex + 1}</div>
                               <CustomInputArea
@@ -344,6 +345,7 @@ export const Subpaso_dosPuntoDos = ({
                                 onBlur={() => handleSave(organismoDisplay, ministerio, unidad.id, true)}
                                 loading={fieldStatus[`${unidad.id}_nombre_unidad`]?.loading}
                                 saved={fieldStatus[`${unidad.id}_nombre_unidad`]?.saved}
+                                readOnly={solo_lectura}
                               />
                               <CustomInputArea
                                 label="Descripción (Obligatorio)"
@@ -354,6 +356,7 @@ export const Subpaso_dosPuntoDos = ({
                                 onBlur={() => handleSave(organismoDisplay, ministerio, unidad.id, true)}
                                 loading={fieldStatus[`${unidad.id}_descripcion_unidad`]?.loading}
                                 saved={fieldStatus[`${unidad.id}_descripcion_unidad`]?.saved}
+                                readOnly={solo_lectura}
                               />
                             </div>
 
@@ -370,6 +373,7 @@ export const Subpaso_dosPuntoDos = ({
                             <hr />
                           </div>
                         ))}
+                        {!solo_lectura && (
                         <div className="row">
                           <div className="p-2">
                             {mostrarBotonGuardar ? (
@@ -385,6 +389,7 @@ export const Subpaso_dosPuntoDos = ({
                             )}
                           </div>
                         </div>
+                        )}
                       </div>
                     </div>
                   </div>

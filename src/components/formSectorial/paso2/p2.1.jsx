@@ -4,7 +4,7 @@ import DropdownSelect from '../../dropdown/select';
 import { FormularioContext } from '../../../context/FormSectorial';
 import { apiTransferenciaCompentencia } from '../../../services/transferenciaCompetencia';
 
-export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSubpasoDos_dos }) =>
+export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSubpasoDos_dos, solo_lectura }) =>
 {
   const [ dataDirecta, setDataDirecta ] = useState(null);
   const [ opciones, setOpciones ] = useState([]);
@@ -388,6 +388,7 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
                         onBlur={fila.id !== ultimaFilaId ? () => handleSave(fila.id, organismoDisplay, true) : null}
                         loading={loadingState[ fila.id ]}
                         saved={savedState[ fila.id ]}
+                        readOnly={solo_lectura}
                       />
                       {!(index === 0 && filaIndex === 0) && (
                         <CustomInputArea 
@@ -399,23 +400,27 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
                           onBlur={fila.id !== ultimaFilaId ? () => handleSave(fila.id, organismoDisplay, true) : null}
                           loading={loadingState[ fila.id ]}
                           saved={savedState[ fila.id ]}
+                          readOnly={solo_lectura}
                         />
                       )}
 
                     </div>
                     {index !== 0 || filaIndex !== 0 ? (
                       <div className="col d-flex align-items-center">
-                        <button
+                        {!solo_lectura && (
+                          <button
                           className="btn-terciario-ghost"
                           onClick={() => eliminarFila(organismoDisplay, fila.id)}>
                           <i className="material-symbols-rounded me-2">delete</i>
                           <p className="mb-0 text-decoration-underline">Borrar</p>
                         </button>
+                        )} 
                       </div>
                     ) : null}
-                    <hr className="" />
                   </div>
                 ))}
+
+                {!solo_lectura && (
                 <div className="row">
                   <div className="p-2">
                     {mostrarError && (
@@ -436,6 +441,7 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
                     )}
                   </div>
                 </div>
+                )}
               </div>
             </div>
           </div>
@@ -452,6 +458,7 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
                     value={nuevoOrganismoDisplay}
                     onSelectionChange={manejarCambioDropdown}
                     placeholder="Organismos"
+                    readOnly={solo_lectura}
                   />
                 </p>
               </div>
@@ -465,6 +472,7 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
                       onChange={handleNombreChange}
                       placeholder="Nombre ministerio o servicio"
                       maxLength={300}
+                      readOnly={solo_lectura}
                     />
 
                     <CustomInputArea 
@@ -473,6 +481,7 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
                       onChange={handleDescripcionChange}
                       placeholder="Descripción"
                       maxLength={300}
+                      readOnly={solo_lectura}
                     />
                   </div>
                   <div className="col d-flex align-items-center">
@@ -503,8 +512,7 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
           </div>
         )}
 
-        {
-          opciones.length > 0 && (
+        { opciones.length > 0 && !solo_lectura && (
             <button className="btn-secundario-s mt-3" onClick={mostrarFormulario}>
               <i className="material-symbols-rounded me-2">add</i>
               <p className="mb-0 text-decoration-underline">Agregar Organismo</p>
