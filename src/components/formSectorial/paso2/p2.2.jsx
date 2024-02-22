@@ -11,8 +11,7 @@ export const Subpaso_dosPuntoDos = ({
   setRefreshSubpasoDos_dos,
   setRefreshSubpasoDos_tres,
   solo_lectura
-}) =>
-{
+}) => {
 
   const { handleUpdatePaso } = useContext(FormularioContext);
   const [ agrupados, setAgrupados ] = useState({});
@@ -21,24 +20,18 @@ export const Subpaso_dosPuntoDos = ({
     nombre_unidad: { loading: false, saved: false },
     descripcion_unidad: { loading: false, saved: false },});
 
-
-  const fetchDataDirectly = async () =>
-  {
-    try
-    {
+  const fetchDataDirectly = async () => {
+    try {
       const response = await apiTransferenciaCompentencia.get(`/formulario-sectorial/${id}/paso-${stepNumber}/`);
       setDataDirecta(response.data);
-    } catch (error)
-    {
+    } catch (error) {
       console.error('Error al obtener datos directamente:', error);
     }
   };
 
   // Definición de la función 'agrupadosPorOrganismo'
-  const agrupadosPorOrganismo = (datos) =>
-  {
-    if (!Array.isArray(datos))
-    {
+  const agrupadosPorOrganismo = (datos) => {
+    if (!Array.isArray(datos)) {
       return {}; // Retorna un objeto vacío si 'datos' no es un array
     }
     return datos.reduce((acc, unidad) =>
@@ -308,7 +301,6 @@ export const Subpaso_dosPuntoDos = ({
 
   console.log('status', fieldStatus)
 
-
   return (
     <div>
       <h4 className="text-sans-h4">2.2 Unidades intervinientes en el Ministerio o Servicio</h4>
@@ -319,19 +311,19 @@ export const Subpaso_dosPuntoDos = ({
         {Object.entries(agrupados).map(([ organismoDisplay, ministerios ]) => (
           <div key={organismoDisplay} className="tabla-organismo">
             <div className="row border">
-              <div className="col-2 border">
+              <div className="col-2">
                 <p>{organismoDisplay}</p>
               </div>
 
-              <div className="col-10 border">
+              <div className="col-10">
                 {Object.entries(ministerios).map(([ ministerio, unidades ]) => (
                   <div key={ministerio} className="tabla-organismo">
-                    <div className="row border">
+                    <div className="row border-start">
                       <div className="col p-3">
                         <p>{ministerio}</p>
                       </div>
 
-                      <div className="col-10 border p-2">
+                      <div className="col-10 border-start border-bottom p-2">
                         {unidades.map((unidad, unidadIndex) => (
                           <div key={unidad.id} className=" row">
                             <div className="col-10 p-3">
@@ -370,7 +362,6 @@ export const Subpaso_dosPuntoDos = ({
                                 </button>
                               )}
                             </div>
-                            <hr />
                           </div>
                         ))}
                         {!solo_lectura && (

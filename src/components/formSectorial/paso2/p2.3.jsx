@@ -255,7 +255,6 @@ export const Subpaso_dosPuntoTres = ({
     }
   };
 
-
   return (
     <div>
       <h4 className="text-sans-h4">2.3 Descripción de etapas y procedimientos del ejercicio de la competencia</h4>
@@ -265,7 +264,7 @@ export const Subpaso_dosPuntoTres = ({
       {etapas.map((etapa, etapaIndex) => (
         <div key={etapa.id} className="row border my-4">
           {/* Contenido de la etapa, como nombre y descripción */}
-          <div className="col-1 border">
+          <div className="col-1 border-end border-bottom">
             <p className="text-sans-p-bold mb-0">Etapa {etapaIndex + 1}</p>
           </div>
 

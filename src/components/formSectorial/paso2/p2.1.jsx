@@ -373,7 +373,7 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
                 <p>{organismoDisplay}</p>
               </div>
 
-              <div className="col-10 border p-2">
+              <div className="col-10 border-start p-2">
                 {filas.map((fila, filaIndex) => (
                   <div key={fila.id} className="row p-1">
                     <div className="col-10 p-3">
@@ -448,7 +448,7 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
         ))}
 
         {mostrarFormularioNuevoOrganismo && (
-          <div className="tabla-organismo">
+          <div className="tabla-organismo mt-2">
             <div className="row border">
 
               <div className="col-2 p-3">
@@ -463,7 +463,7 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
                 </p>
               </div>
 
-              <div className="col-10 border p-2">
+              <div className="col-10 border-start p-2">
                 <div className="row">
                   <div className="col-10 p-3">
                     <CustomInputArea 
