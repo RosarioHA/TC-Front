@@ -18,7 +18,7 @@ const CostosDirectos = ({
   listado_etapas,
   setRefreshSubpaso_CincoDos,
   setRefreshSumatoriaCostos,
-  formulario_enviado
+  solo_lectura
 }) => {
 
   const initialState = data?.map(item => ({
@@ -290,7 +290,7 @@ const CostosDirectos = ({
                             field.onChange(selectedOption.value);
                           }}
 
-                          readOnly={formulario_enviado}
+                          readOnly={solo_lectura}
                           selected={costo.subtitulo_label_value}
 
                           loading={costo.estados?.subtitulo?.loading ?? false}
@@ -378,7 +378,7 @@ const CostosDirectos = ({
                         loading={costo.estados?.total_anual?.loading ?? false}
                         saved={costo.estados?.total_anual?.saved ?? false}
                         error={errors[`total_anual_${costo.id}`]?.message}
-                        disabled={formulario_enviado}
+                        disabled={solo_lectura}
                       />
                     );
                   }}
@@ -406,7 +406,7 @@ const CostosDirectos = ({
                             field.onChange(selectedOptions);
                           }}
 
-                        readOnly={formulario_enviado}
+                        readOnly={solo_lectura}
                         selectedValues={costo.etapa_label_value}
 
                           loading={costo.estados?.etapa?.loading ?? false}
@@ -429,7 +429,7 @@ const CostosDirectos = ({
                     return (
                       <OpcionesAB
                         id={`es_transversal_${costo.id}`}
-                        readOnly={formulario_enviado}
+                        readOnly={solo_lectura}
                         initialState={field.value}
                         handleEstadoChange={(newValue) => handleEsTransversalChange(costo.id, newValue)}
                         loading={costo.estados?.es_transversal?.loading ?? false}
@@ -485,7 +485,7 @@ const CostosDirectos = ({
                       loading={costo.estados?.descripcion?.loading ?? false}
                       saved={costo.estados?.descripcion?.saved ?? false}
                       error={errors[`descripcion_${costo.id}`]?.message}
-                      readOnly={formulario_enviado}
+                      readOnly={solo_lectura}
                     />
                   );
                 }}
@@ -493,7 +493,7 @@ const CostosDirectos = ({
             </div>
 
             <div className="d-flex justify-content-end me-2">
-              {(!formulario_enviado) && (
+              {(!solo_lectura) && (
                 <div className="">
                   <button
                     className="btn-terciario-ghost mt-3"

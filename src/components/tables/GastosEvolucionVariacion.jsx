@@ -22,7 +22,7 @@ const inputNumberStyle = {
 export const GastosEvolucionVariacion = ({
   id,
   paso5,
-  formulario_enviado,
+  solo_lectura,
   stepNumber,
   dataGastos,
   setRefreshSubpaso_CincoDosVariacion
@@ -222,7 +222,7 @@ export const GastosEvolucionVariacion = ({
                                 placeholder="Costo (M$)"
                                 value={value}
                                 style={inputNumberStyle}
-                                disabled={formulario_enviado}
+                                disabled={solo_lectura}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
                                 loading={costoAnio.estados?.loading ?? false}
@@ -271,7 +271,7 @@ export const GastosEvolucionVariacion = ({
                               onChange={handleChange}
                               onBlur={handleBlur}
                               className={`form-control ${rowIndex % 2 === 0 ? "bg-color-even" : "bg-color-odd"}`}
-                              readOnly={formulario_enviado}
+                              readOnly={solo_lectura}
                               loading={item.estados?.descripcion?.loading ?? false}
                               saved={item.estados?.descripcion?.saved ?? false}
                               error={errors[`descripcion_${item.id}`]?.message}
@@ -323,7 +323,7 @@ export const GastosEvolucionVariacion = ({
                   onBlur={handleBlur}
                   loading={glosasEspecificasLoading}
                   saved={glosasEspecificasSaved}
-                  readOnly={formulario_enviado}
+                  readOnly={solo_lectura}
                 />
               );
             }}

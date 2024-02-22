@@ -51,7 +51,7 @@ const PasoCinco = () => {
     listado_estamentos, 
     listado_calidades_juridicas,
     listado_etapas,
-    formulario_enviado
+    solo_lectura
   } = pasoData;
 
   const handleGuardarObservacion = async () => {
@@ -76,7 +76,7 @@ const PasoCinco = () => {
           <Subpaso_CincoPuntoUno
             id={data.id}
             paso5={paso5}
-            formulario_enviado={formulario_enviado}
+            solo_lectura={solo_lectura}
             stepNumber={stepNumber}
             data_costos_directos={p_5_1_a_costos_directos}
             data_costos_indirectos={p_5_1_b_costos_indirectos}
@@ -89,7 +89,7 @@ const PasoCinco = () => {
           <Subpaso_CincoDos
             id={data?.id}
             paso5={paso5}
-            formulario_enviado={formulario_enviado}
+            solo_lectura={solo_lectura}
             stepNumber={stepNumber}
             p_5_2_evolucion_gasto_asociado={p_5_2_evolucion_gasto_asociado}
             p_5_2_variacion_promedio={p_5_2_variacion_promedio}
@@ -99,7 +99,7 @@ const PasoCinco = () => {
           <Subpaso_CincoPuntoTres
             id={data?.id}
             paso5={paso5}
-            formulario_enviado={formulario_enviado}
+            solo_lectura={solo_lectura}
             stepNumber={stepNumber}
             data_personal_directo={p_5_3_a_personal_directo}
             data_personal_indirecto={p_5_3_b_personal_indirecto}

@@ -6,7 +6,7 @@ import PersonalDirecto from "../../tables/PersonalDirecto";
 export const Subpaso_CincoPuntoTres = (
   { id,
     paso5,
-    formulario_enviado,
+    solo_lectura,
     stepNumber,
     data_personal_directo,
     data_personal_indirecto,
@@ -119,7 +119,7 @@ export const Subpaso_CincoPuntoTres = (
         <PersonalDirecto
           id={id}
           paso5={paso5}
-          formulario_enviado={formulario_enviado}
+          solo_lectura={solo_lectura}
           stepNumber={stepNumber}
           data_personal_directo={data_personal_directo}
           listado_estamentos={listado_estamentos}
@@ -148,7 +148,7 @@ export const Subpaso_CincoPuntoTres = (
             <PersonalIndirecto
               id={id}
               paso5={paso5}
-              formulario_enviado={formulario_enviado}
+              solo_lectura={solo_lectura}
               stepNumber={stepNumber}
               data_personal_indirecto={data_personal_indirecto}
               listado_estamentos={listado_estamentos}
