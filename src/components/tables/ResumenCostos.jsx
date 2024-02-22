@@ -26,6 +26,21 @@ const ResumenCostos = ({
     mode: 'onBlur',
   });
 
+  // Función de utilidad para formatear números
+  const formatearNumero = (numero) => {
+    // Asegurarse de que el valor es un número. Convertir si es necesario.
+    const valorNumerico = Number(numero);
+    // Verificar si el valor es un número válido antes de intentar formatearlo
+    if (!isNaN(valorNumerico)) {
+      return valorNumerico.toLocaleString('es-CL', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2
+      });
+    }
+    // Devolver un valor predeterminado o el mismo valor si no es un número
+    return numero;
+  };
+
   useEffect(() => {
     // Verifica si descripcionCostosTotales tiene un valor y actualiza el campo correspondiente
     if (descripcionCostosTotales) {
@@ -156,7 +171,7 @@ const ResumenCostos = ({
                 <p className="text-sans-p-bold mb-0 mt-3 ms-4">{subtitulo.nombre_subtitulo}</p>
               </div>
               <div className="col">
-                <p className="text-sans-p-bold mb-0 mt-3 ms-5">{subtitulo.total_anual}</p>
+                <p className="text-sans-p-bold mb-0 mt-3 ms-5">{formatearNumero(subtitulo.total_anual)}</p>
               </div>
               <div className="col-7 ps-2 d-flex">
                 <Controller
