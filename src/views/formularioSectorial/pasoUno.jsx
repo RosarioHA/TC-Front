@@ -34,7 +34,11 @@ const PasoUno = () => {
   if (errorPaso) return <div>Error: {errorPaso.message || "Error desconocido"}</div>;
   if (!pasoData || pasoData.length === 0) return <div>No hay datos disponibles para el Paso 1</div>;
   
-  const { marcojuridico, organigramaregional, paso1 } = pasoData;
+  const { 
+    marcojuridico, 
+    organigramaregional,
+    solo_lectura, 
+    paso1 } = pasoData;
   const paso1Data = paso1 || {}; 
 
   const handleGuardarObservacion = async () => {
@@ -56,9 +60,9 @@ const PasoUno = () => {
             <Avance avance={paso1Data.avance} />
           </div>
           <span className="text-sans-h6-primary">Texto de apoyo</span>
-          <Subpaso_uno dataPaso={paso1Data} marcojuridico={marcojuridico} id={data ? data.id : null} stepNumber={stepNumber} />
-          <Subpaso_dos pasoData={paso1Data} organigrama={organigramaregional}  id={data ? data.id : null} stepNumber={stepNumber} />
-          <Subpaso_tres pasoData={paso1Data}   id={data ? data.id : null} stepNumber={stepNumber} />
+          <Subpaso_uno dataPaso={paso1Data} marcojuridico={marcojuridico} id={data ? data.id : null} stepNumber={stepNumber} solo_lectura={solo_lectura}/>
+          <Subpaso_dos pasoData={paso1Data} organigrama={organigramaregional}  id={data ? data.id : null} stepNumber={stepNumber} solo_lectura={solo_lectura}/>
+          <Subpaso_tres pasoData={paso1Data}   id={data ? data.id : null} stepNumber={stepNumber} solo_lectura={solo_lectura}/>
 
           {userSubdere && formularioEnviado && (
             <div className="mt-5 my-4">
