@@ -492,7 +492,7 @@ const CostosIndirectos = ({
             </div>
 
             <div className="d-flex justify-content-end me-2">
-              {!solo_lectura && (
+              {(!solo_lectura) && (
                 <div className="">
                   <button
                     className="btn-terciario-ghost mt-3"
@@ -507,12 +507,15 @@ const CostosIndirectos = ({
           </div>
         ))}
 
-        <button
-          className="btn-secundario-s m-2"
-          type="submit">
-          <i className="material-symbols-rounded me-2">add</i>
-          <p className="mb-0 text-decoration-underline">Agregar subtítulo</p>
-        </button>
+        {!solo_lectura && (
+          <button
+            className="btn-secundario-s m-2"
+            type="submit">
+            <i className="material-symbols-rounded me-2">add</i>
+            <p className="mb-0 text-decoration-underline">Agregar subtítulo</p>
+          </button>
+        )}
+
       </form>
     </div>
   )
