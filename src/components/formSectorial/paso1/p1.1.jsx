@@ -6,7 +6,7 @@ import { FormularioContext } from "../../../context/FormSectorial";
 import {useUploadMarcoJuridico} from '../../../hooks/formulario/useMarcoJuridico';
 import { apiTransferenciaCompentencia } from '../../../services/transferenciaCompetencia';
 
-export const Subpaso_uno = ({ dataPaso, id, stepNumber, marcojuridico }) => {
+export const Subpaso_uno = ({ dataPaso, id, stepNumber, marcojuridico, solo_lectura }) => {
   const { handleUpdatePaso} = useContext(FormularioContext);
   const { uploadDocumento } = useUploadMarcoJuridico(id, stepNumber); 
   const [formData, setFormData] = useState({
@@ -131,7 +131,7 @@ const fetchData = async () => {
             id={dataPaso?.denominacion_organismo}
             value={dataPaso?.denominacion_organismo}
             disabled={true}
-            readOnly={false}
+            readOnly={solo_lectura}
             name="denominacion_organismo"
           />
         </div>
@@ -146,7 +146,7 @@ const fetchData = async () => {
             loading={inputStatus.forma_juridica_organismo.loading}
             saved={inputStatus.forma_juridica_organismo.saved}
             maxLength={500}
-            readOnly={false}
+            readOnly={solo_lectura}
           />
           <div className="d-flex mb-3 mt-0 text-sans-h6-primary">
             <i className="material-symbols-rounded me-2">info</i>
@@ -185,6 +185,7 @@ const fetchData = async () => {
             loading={inputStatus.descripcion_archivo_marco_juridico.loading}
             saved={inputStatus.descripcion_archivo_marco_juridico.saved}
             maxLength={500}
+            readOnly={solo_lectura}
           />
         </div>
         <div className="my-4">
@@ -198,6 +199,7 @@ const fetchData = async () => {
             loading={inputStatus.mision_institucional.loading}
             saved={inputStatus.mision_institucional.saved}
             maxLength={500}
+            readOnly={solo_lectura}
           />
         </div>
         <div className="my-4">
@@ -211,6 +213,7 @@ const fetchData = async () => {
             loading={inputStatus.informacion_adicional_marco_juridico.loading}
             saved={inputStatus.informacion_adicional_marco_juridico.saved}
             maxLength={500}
+            readOnly={solo_lectura}
           />
           <div className="d-flex mb-3 mt-1 text-sans-h6-primary col-11">
             <i className="material-symbols-rounded me-2">info</i>

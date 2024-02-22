@@ -132,7 +132,7 @@ export const Subpaso_CincoPuntoTres = (
 
       {estamentosPindirecto.map((calidadJuridica) => (
         <div key={calidadJuridica.id}>
-          {estamentosPindirecto.length > 1 && (
+          {estamentosPindirecto.length > 1 && !solo_lectura && (
             <div className="absolute-container">
               <button
                 type="button"
@@ -157,18 +157,20 @@ export const Subpaso_CincoPuntoTres = (
           </div>
         </div>
       ))}
+      {!solo_lectura && (
       <button
         className="btn-secundario-s m-2"
         onClick={agregarCalJuridicaPindirecto}>
         <i className="material-symbols-rounded me-2">add</i>
         <p className="mb-0 text-decoration-underline">Agregar Calidad Jurídica</p>
       </button>
-
-      <div className="mt-5">
-        <CustomTextarea
-          label="Descripción de funciones"
-          placeholder="Describe las funciones asociadas a otras competencias"
-          maxLength={1100} />
+      )}
+      
+      <div className="mt-5 border-bottom pb-4">
+        <CustomTextarea 
+        label="Descripción de funciones"
+        placeholder="Describe las funciones asociadas a otras competencias"
+        maxLength={1100}/>
         <div className="d-flex text-sans-h6-primary">
           <i className="material-symbols-rounded me-2">info</i>
           <h6>En el caso de que los/as funcionarios/as identificados/as realicen funciones asociadas a otras competencias, describa brevemente sus características, y si existe relación entre ellas y el ejercicio de la competencia en estudio.</h6>

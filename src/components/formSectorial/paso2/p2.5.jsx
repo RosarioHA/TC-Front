@@ -4,7 +4,7 @@ import CustomTextarea from '../../forms/custom_textarea';
 import { FormularioContext } from '../../../context/FormSectorial';
 import { useFlujograma } from '../../../hooks/formulario/useFlujograma';
 import { usePasoForm } from '../../../hooks/formulario/usePasoForm';
-export const Subpaso_dosPuntoCinco = ({ id, stepNumber, data, flujograma }) => {
+export const Subpaso_dosPuntoCinco = ({ id, stepNumber, data, flujograma, solo_lectura }) => {
   const { handleUpdatePaso} = useContext(FormularioContext);
   const { uploadDocumento } = useFlujograma(id, stepNumber);
   const { dataPaso, refetchTrigger } = usePasoForm(id, stepNumber);
@@ -114,8 +114,6 @@ export const Subpaso_dosPuntoCinco = ({ id, stepNumber, data, flujograma }) => {
     }
   };
 
-
-
   return (
     <div>
       <h4 className="text-sans-h4">
@@ -169,7 +167,7 @@ export const Subpaso_dosPuntoCinco = ({ id, stepNumber, data, flujograma }) => {
         ></iframe>
       </div>
 
-      <div className="mt-4">
+      <div className="mt-4 pb-4 border-bottom">
         <CustomTextarea
           rows={15}
           label="Descripción cualitativa del ejercicio de la competencia en la región"
@@ -181,6 +179,7 @@ export const Subpaso_dosPuntoCinco = ({ id, stepNumber, data, flujograma }) => {
           loading={inputStatus.descripcion_cualitativa.loading}
           saved={inputStatus.descripcion_cualitativa.saved}
           maxLength={2200}
+          readOnly={solo_lectura}
         />
       </div>
     </div>

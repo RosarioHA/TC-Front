@@ -5,6 +5,8 @@ import CustomTextarea from "../../components/forms/custom_textarea";
 import { Subpaso_Tres } from "../../components/formSectorial/paso3/p3.1";
 import { FormularioContext } from "../../context/FormSectorial";
 import { MonoStepers } from "../../components/stepers/MonoStepers";
+import { useAuth } from '../../context/AuthContext';
+import { useObservacionesSubdere } from '../../hooks/formulario/useObSubdereSectorial';
 
 const PasoTres = () => {
   const {
@@ -13,11 +15,16 @@ const PasoTres = () => {
     pasoData,
     data
   } = useContext(FormularioContext);
+  const { userData } = useAuth();
+  const userSubdere = userData?.perfil?.includes('SUBDERE');
 
+  const formularioEnviado = data.formulario_enviado
+  const observacionesEnviadas = data.observacion_enviada
   const stepNumber = 3;
   const id= data.id;
 
-  console.log('Data paso tres:', pasoData)
+  const { observaciones, updateObservacion, fetchObservaciones, loadingObservaciones, saved } = useObservacionesSubdere(data ? data.id : null);
+  const [observacionPaso3, setObservacionPaso3] = useState("");
 
   // Estado inicial basado en los datos existentes
   const [formData, setFormData] = useState({
@@ -33,7 +40,13 @@ const PasoTres = () => {
   // Efecto para actualizar el número de paso actual
   useEffect(() => {
     updateStepNumber(stepNumber);
-  }, [updateStepNumber, stepNumber]);
+    if (observaciones && Object.keys(observaciones).length === 0) {
+      fetchObservaciones();
+    }
+    if (observaciones && observaciones.observacion_paso3) {
+      setObservacionPaso3(observaciones.observacion_paso3);
+    }
+  }, [updateStepNumber, stepNumber, observaciones, fetchObservaciones]);
 
   const handleChange = (inputName, e) =>
   {
@@ -81,8 +94,14 @@ const PasoTres = () => {
   // Si no hay datos para el paso 3, mostrar un mensaje
   if (!pasoData.paso3) return <div>No hay datos disponibles para el Paso 3</div>;
 
+  const { cobertura_anual, paso3, solo_lectura } = pasoData;
 
-  const { cobertura_anual, paso3 } = pasoData;
+  const handleGuardarObservacion = async () => {
+    const observacionData = {
+      observacion_paso3: observacionPaso3,
+    };
+    await updateObservacion(observacionData);
+  };
 
   return (
     <>
@@ -127,7 +146,7 @@ const PasoTres = () => {
                   loading={inputStatus.universo_cobertura.loading}
                   saved={inputStatus.universo_cobertura.saved}
                   maxLength={800}
-
+                  readOnly={solo_lectura}
                 />
                 <div className="d-flex mb-3 mt-0 text-sans-h6-primary">
                   <i className="material-symbols-rounded me-2">info</i>
@@ -149,6 +168,7 @@ const PasoTres = () => {
                   loading={inputStatus.descripcion_cobertura.loading}
                   saved={inputStatus.descripcion_cobertura.saved}
                   maxLength={800}
+                  readOnly={solo_lectura}
                 />
                 <div className="d-flex mb-3 mt-0 text-sans-h6-primary">
                   <i className="material-symbols-rounded me-2">info</i>
@@ -158,11 +178,29 @@ const PasoTres = () => {
                   </h6>
                 </div>
               </div>
-              <div className="container-fluid me-5 pe-5">
-                <Subpaso_Tres esquemaDatos={cobertura_anual} id={id} stepNumber={stepNumber}/>
+              <div className="container-fluid me-5 pe-5 border-bottom pb-2">
+                <Subpaso_Tres esquemaDatos={cobertura_anual} id={id} stepNumber={stepNumber} solo_lectura={solo_lectura}/>
               </div>
             </div>
           </div>
+
+          {userSubdere && formularioEnviado && (
+            <div className="mt-5 my-4">
+            <CustomTextarea 
+            label="Observaciones (Opcional)"
+            placeholder="Escribe tus observaciones de este paso del formulario"
+            rows={5}
+            maxLength={500}
+            value={observacionPaso3}
+            onChange={(e) => setObservacionPaso3(e.target.value)}
+            readOnly={observacionesEnviadas}
+            onBlur={handleGuardarObservacion}
+            loading={loadingObservaciones}
+            saved={saved}
+            />
+          </div>
+          )}
+
           {/* Botones navegación */}
           <div className="container me-5 pe-5">
             <ButtonsNavigate step={paso3.numero_paso} id={id} />
