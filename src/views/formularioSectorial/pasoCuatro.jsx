@@ -31,7 +31,7 @@ const PasoCuatro = () => {
 
   if (!pasoData) return <div>No hay datos disponibles para el Paso 4</div>;
 
-  const { paso4: paso4Data, indicador_desempeno, lista_indicadores } = pasoData;
+  const { paso4: paso4Data, indicador_desempeno, lista_indicadores, solo_lectura } = pasoData;
   if (!paso4Data) return <div>No hay información de paso 4 disponible</div>;
 
   const id = data?.id;
@@ -68,6 +68,7 @@ const PasoCuatro = () => {
                     stepNumber={stepNumber}
                     listaIndicadores={lista_indicadores}
                     readOnly={false}
+                    solo_lectura = {solo_lectura}
                   />
                 )}
               </div>
