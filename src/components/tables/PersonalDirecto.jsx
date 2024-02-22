@@ -21,18 +21,10 @@ const PersonalDirecto = ({
   const [nuevaCalidadJuridica, setNuevaCalidadJuridica] = useState('');
   const [mostrarFormularioNuevo, setMostrarFormularioNuevo] = useState(false);
   const [mostrarBotonFormulario, setMostrarBotonFormulario] = useState(true);
-  const [nuevaPersonaCalJuridica, setNuevaPersonaCalJuridica] = useState('');
-  const [nuevaPersonaEstamento, setNuevaPersonaEstamento] = useState('');
-  const [nuevaPersonaRentaBruta, setNuevaPersonaRentaBruta] = useState('');
-  const [nuevaPersonaGrado, setNuevaPersonaGrado] = useState('');
-  const [ultimaFilaId, setUltimaFilaId] = useState(null);
   const { handleUpdatePaso } = useContext(FormularioContext);
 
   const [opcionesEstamentos, setOpcionesEstamentos] = useState([]);
   const [opcionesCalidadJuridica, setOpcionesCalidadJuridica] = useState([]);
-
-  const [calidadJuridica, setCalidadJuridica] = useState([{ id: 1 }]);
-  const [mostrarSeccionDinamica, setMostrarSeccionDinamica] = useState(false);
 
   // Función para agrupar los datos por organismo_display
   const agruparPorCalidadJuridica = (datos) => {
@@ -61,25 +53,39 @@ const PersonalDirecto = ({
     mode: 'onBlur',
   });
 
-  // Lógica para agregar una nueva calidad juridica
-  const agregarPersona = (persona) => {
-    const nuevaFilaId = Math.floor(Date.now() / 1000);
 
-    const calidadJuridica = opcionesCalidadJuridica[persona] || "ValorPorDefectoSiNoExiste";
+  // Lógica para agregar una nueva personaaa calidad juridica existente
+  // Lógica para agregar una nueva persona a calidad juridica existente
+const agregarPersona = (calidadJuridicaLabel) => {
+  // Busca el objeto correspondiente en listado_calidades_juridicas basado en el label
+  const calidadJuridicaObjeto = listado_calidades_juridicas.find(cj => cj.calidad_juridica === calidadJuridicaLabel);
 
-    setUltimaFilaId(nuevaFilaId);
-    const nuevaFila = {
-      id: nuevaFilaId,
-      calidad_juridica: calidadJuridica,
-      estamento: [],
-      renta_bruta: null,
-      grado: null
-    };
-    setPersonas(prevPersonas => ({
-      ...prevPersonas,
-      [persona]: [...prevPersonas[persona], nuevaFila]
-    }));
+  // Asegúrate de que el objeto fue encontrado antes de proceder
+  if (!calidadJuridicaObjeto) {
+    console.error('Calidad jurídica no encontrada:', calidadJuridicaLabel);
+    return; // Termina la ejecución si no se encuentra la calidad jurídica
+  }
+
+  const nuevaFilaId = Math.floor(Date.now() / 1000);
+
+  const nuevaPersona = {
+    id: nuevaFilaId,
+    calidad_juridica: calidadJuridicaObjeto.id, // Usa el ID (value) de la calidad jurídica encontrada
   };
+
+  // Actualiza el estado inmediatamente con la nueva persona
+  setPersonas(prevPersonas => ({
+    ...prevPersonas,
+    [calidadJuridicaLabel]: [...(prevPersonas[calidadJuridicaLabel] || []), nuevaPersona]
+  }));
+
+  // Llama a handleSave directamente con la información necesaria
+  // Ahora pasando el ID de la calidad jurídica en vez del label
+  handleSave(nuevaPersona.id, 'calidad_juridica', calidadJuridicaObjeto.id);
+};
+
+
+
 
   // Lógica para eliminar una fila de un organismo
   const eliminarPersona = async (persona, idFila) => {
@@ -241,45 +247,55 @@ const PersonalDirecto = ({
 
   // Función de guardado
   const handleSave = async (arrayNameId, fieldName, newValue) => {
-    let personaEncontrada = null;
-
-    // Suponiendo que `personas` es un objeto donde cada clave es una calidad jurídica
-    // y su valor es un arreglo de personas, necesitas encontrar la persona en este objeto.
-    Object.values(personas).some(calidadJuridica => {
-      const persona = calidadJuridica.find(e => e.id === arrayNameId);
-      if (persona) {
-        personaEncontrada = persona;
-        return true; // Detiene el bucle una vez que se encuentra la persona
-      }
-      return false;
-    });
-
-    // Asegúrate de que la persona fue encontrada antes de proceder
-    if (!personaEncontrada) {
-      console.error('Persona no encontrada');
-      return; // Termina la ejecución de la función si no se encuentra la persona
-    }
 
 
     updateFieldState(arrayNameId, fieldName, { loading: true, saved: false });
 
     let payload;
-    if (fieldName === 'estamento') {
-      // Ajuste para enviar 'estamento' como un valor único, no un array
-      // Asumiendo que newValue es un objeto de la opción seleccionada
+
+    if (fieldName === 'calidad_juridica') {
       payload = {
         'p_5_3_a_personal_directo': [{
           id: arrayNameId,
-          [fieldName]: newValue.value // Envía el valor seleccionado directamente
+          calidad_juridica: newValue,
         }]
       };
     } else {
-      // Payload para otros campos
-      payload = {
-        'p_5_3_a_personal_directo': [{ id: arrayNameId, [fieldName]: personaEncontrada[fieldName] }]
-      };
-    }
 
+      let personaEncontrada = null;
+
+      Object.values(personas).some(calidadJuridica => {
+        const persona = calidadJuridica.find(e => e.id === arrayNameId);
+        if (persona) {
+          personaEncontrada = persona;
+          return true; // Detiene el bucle una vez que se encuentra la persona
+        }
+        return false;
+      });
+
+      // Asegurar que la persona fue encontrada antes de proceder
+      if (!personaEncontrada) {
+        console.error('Persona no encontrada');
+        return; // Termina la ejecución de la función si no se encuentra la persona
+      }
+
+      if (fieldName === 'estamento') {
+        // Ajuste para enviar 'estamento' como un valor único, no un array
+        // Asumiendo que newValue es un objeto de la opción seleccionada
+        payload = {
+          'p_5_3_a_personal_directo': [{
+            id: arrayNameId,
+            [fieldName]: newValue.value // Envía el valor seleccionado directamente
+          }]
+        };
+      } else {
+        // Payload para otros campos
+        payload = {
+          'p_5_3_a_personal_directo': [{ id: arrayNameId, [fieldName]: personaEncontrada[fieldName] }]
+        };
+      }
+
+    }
     try {
       // Asume que handleUpdatePaso puede manejar ambos casos adecuadamente
       await handleUpdatePaso(id, stepNumber, payload);
@@ -315,7 +331,7 @@ const PersonalDirecto = ({
         {Object.entries(personas).map(([calidad_juridica, personas], index) => (
           <div key={index}>
 
-            <p className="text-sans-p-bold mt-3">Calidad Jurídica</p><p>{personas[0]?.nombre_calidad_juridica}</p>
+            <p className="text-sans-p-bold mt-3">Calidad Jurídica</p><p>{calidad_juridica}</p>
             {/* Encabezado para cada grupo */}
             <div className="row">
               <div className="col-1"> <p className="text-sans-p-bold">N°</p> </div>
