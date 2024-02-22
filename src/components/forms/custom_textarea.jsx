@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 
-const CustomTextarea = ({ loading,descripcion, saved, label, placeholder, id, maxLength, error, rows, value = "", onChange, onBlur, readOnly, name, containerSize }) =>
+const CustomTextarea = ({ loading, descripcion, saved, label, placeholder, id, maxLength, error, rows, value = "", onChange, onBlur, readOnly, name, containerSize }) =>
 {
   const [ inputValue, setInputValue ] = useState(value); // Inicialización segura de inputValue
   const textareaRef = useRef(null);
@@ -80,7 +80,7 @@ const CustomTextarea = ({ loading,descripcion, saved, label, placeholder, id, ma
               style={{ overflow: 'hidden' }}
               name={name}
             />
-            <div className=" d-flex align-self-end align-items-center">
+            <div className="d-flex align-self-end align-items-center">
               {renderSpinnerOrCheck()}
             </div>
           </div>

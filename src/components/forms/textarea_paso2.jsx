@@ -40,12 +40,12 @@ const CustomInputArea = forwardRef(
     return (
       <div className="d-flex flex-column input-container col-11">
         {readOnly ? (
-          <>
+          <div className="my-3">
             <label className="text-sans-h5 input-label ms-3 ms-sm-0">{label}</label>
             <div className={`input-s p-3 input-textarea ${error ? 'input-error' : ''}`}>
               <p className="text-sans-p-grey mb-0">{placeholder}</p>
             </div>
-          </>
+          </div>
         ) : (
           <>
             <div className="d-flex input-container">

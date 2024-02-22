@@ -2,7 +2,7 @@ import { useState, useEffect, useContext, useCallback } from "react";
 import { FormularioContext } from "../../../context/FormSectorial";
 import { usePasoForm } from "../../../hooks/formulario/usePasoForm";
 
-export const Subpaso_Tres = ({ esquemaDatos, id, stepNumber }) =>
+export const Subpaso_Tres = ({ esquemaDatos, id, stepNumber, solo_lectura }) =>
 {
   const { handleUpdatePaso } = useContext(FormularioContext);
   const { dataPaso, refetchTrigger } = usePasoForm(id, stepNumber);
@@ -192,6 +192,7 @@ export const Subpaso_Tres = ({ esquemaDatos, id, stepNumber }) =>
                   <td key={`${rowIndex}- ${colIndex}`} className="border-start px-1">
                     <input
                       type="text"
+                      disabled={solo_lectura}
                       onFocus={(e) => handleFocus(colIndex, item, e.target.value)}
                       value={item === 'recursos_ejecutados' && data[ item ] === null ? '' : item === 'recursos_ejecutados' ? `$${formatNumber(data[ item ])}` : `${formatNumber(data[ item ])}`}
                       placeholder={getPlaceholder(rowIndex)}

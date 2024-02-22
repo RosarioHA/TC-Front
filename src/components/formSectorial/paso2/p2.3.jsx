@@ -12,7 +12,8 @@ export const Subpaso_dosPuntoTres = ({
   listado_unidades,
   refreshSubpasoDos_tres,
   setRefreshSubpasoDos_tres,
-  setRefreshSubpasoDos_cuatro
+  setRefreshSubpasoDos_cuatro,
+  solo_lectura
 }) => {
 
   const { control, handleSubmit, trigger, clearErrors, setError, formState: { errors } } = useForm({
@@ -254,7 +255,6 @@ export const Subpaso_dosPuntoTres = ({
     }
   };
 
-
   return (
     <div>
       <h4 className="text-sans-h4">2.3 Descripción de etapas y procedimientos del ejercicio de la competencia</h4>
@@ -264,7 +264,7 @@ export const Subpaso_dosPuntoTres = ({
       {etapas.map((etapa, etapaIndex) => (
         <div key={etapa.id} className="row border my-4">
           {/* Contenido de la etapa, como nombre y descripción */}
-          <div className="col-1 border">
+          <div className="col-1 border-end border-bottom">
             <p className="text-sans-p-bold mb-0">Etapa {etapaIndex + 1}</p>
           </div>
 
@@ -282,6 +282,7 @@ export const Subpaso_dosPuntoTres = ({
                   maxLength={500}
                   onChange={(valor) => handleInputChange(etapa.id, null, 'nombre_etapa', valor)}
                   onBlur={etapa.id !== ultimaEtapaId ? () => handleSave(etapa.id, null, true) : null}
+                  readOnly={solo_lectura}
                 />
               </div>
             </div>
@@ -299,6 +300,7 @@ export const Subpaso_dosPuntoTres = ({
                   maxLength={500}
                   onChange={(valor) => handleInputChange(etapa.id, null, 'descripcion_etapa', valor)}
                   onBlur={etapa.id !== ultimaEtapaId ? () => handleSave(etapa.id, null, true) : null}
+                  readOnly={solo_lectura}
                 />
               </div>
               <hr />
@@ -327,6 +329,7 @@ export const Subpaso_dosPuntoTres = ({
                           maxLength={500}
                           onChange={(valor) => handleInputChange(etapa.id, procedimiento.id, 'descripcion_procedimiento', valor)}
                           onBlur={etapa.id !== ultimoProcedimientoId ? () => handleSave(etapa.id, procedimiento.id, true) : null}
+                          readOnly={solo_lectura}
                         />
                       </div>
                       <div className="col-4">
@@ -345,8 +348,7 @@ export const Subpaso_dosPuntoTres = ({
                                   handleSave(etapa.id, procedimiento.id, 'unidades_intervinientes', selectedOptions);
                                   field.onChange(selectedOptions);
                                 }}
-
-                                readOnly={false}
+                                readOnly={solo_lectura}
                                 selectedValues={procedimiento.unidades_intervinientes_label_value}
                               />
                             );
@@ -367,6 +369,7 @@ export const Subpaso_dosPuntoTres = ({
                   <hr className="my-0" />
                 </div>
               ))}
+              {!solo_lectura && (
               <div className="row">
                 <div className="p-2">
                   {mostrarBotonGuardarProcedimiento ? (
@@ -383,9 +386,11 @@ export const Subpaso_dosPuntoTres = ({
                 </div>
                 <hr className="my-0" />
               </div>
+              )}
             </div>
           </div>
 
+          {!solo_lectura &&(
           <div className="d-flex justify-content-end p-3">
             <button
               className="btn-terciario-ghost"
@@ -394,9 +399,11 @@ export const Subpaso_dosPuntoTres = ({
               <p className="mb-0 text-decoration-underline">Borrar Etapa</p>
             </button>
           </div>
+          )}
         </div>
       ))}
 
+      {!solo_lectura && (
       <div className="row">
         <div className="p-2">
           {mostrarBotonGuardarEtapa ? (
@@ -412,6 +419,8 @@ export const Subpaso_dosPuntoTres = ({
           )}
         </div>
       </div>
+      )}
+   
 
     </div>
   )

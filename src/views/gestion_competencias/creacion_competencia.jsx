@@ -277,7 +277,7 @@ const CreacionCompetencia = () =>
             />
           </div>
 
-          <div className="mb-4 col-11">
+          <div className="mb-4">
             <DropdownCheckbox
               label="Región (Obligatorio)"
               placeholder="Elige la o las regiones donde se ejercerá la competencia"

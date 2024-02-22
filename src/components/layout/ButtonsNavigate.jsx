@@ -27,7 +27,7 @@ export const ButtonsNavigate = ({ step , id }) =>
     }
   };
 
-  return ( <div className={`border-top px-5 me-5 pt-3 pb-4 d-flex ${step === 1 ? "justify-content-end" : "justify-content-between"}`}>
+  return ( <div className={`px-5 me-5 pt-3 pb-4 d-flex ${step === 1 ? "justify-content-end" : "justify-content-between"}`}>
       {/* El botón "Atrás" solo se muestra si no estamos en el primer paso */}
       {step > 1 ? (
         <button className="btn-secundario-s" onClick={() => navigate(getRouteForStep(step - 1))}>
