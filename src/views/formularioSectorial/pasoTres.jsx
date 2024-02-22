@@ -18,6 +18,7 @@ const PasoTres = () => {
   const { userData } = useAuth();
   const userSubdere = userData?.perfil?.includes('SUBDERE');
 
+  const formularioEnviado = data.formulario_enviado
   const stepNumber = 3;
   const id= data.id;
 
@@ -181,7 +182,7 @@ const PasoTres = () => {
             </div>
           </div>
 
-          {userSubdere && (
+          {userSubdere && formularioEnviado && (
             <div className="mt-5 my-4">
             <CustomTextarea 
               label="Observaciones (Opcional)"

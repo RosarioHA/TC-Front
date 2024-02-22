@@ -16,9 +16,10 @@ const PasoCinco = () => {
   const [refreshSubpaso_CincoDos, setRefreshSubpaso_CincoDos] = useState(false);
   const { userData } = useAuth();
   const userSubdere = userData?.perfil?.includes('SUBDERE');
-
   const { observaciones, updateObservacion, fetchObservaciones } = useObservacionesSubdere(data ? data.id : null);
   const [observacionPaso5, setObservacionPaso5] = useState("");
+
+  const formularioEnviado = data.formulario_enviado
 
   useEffect(() => {
     updateStepNumber(stepNumber);
@@ -106,7 +107,7 @@ const PasoCinco = () => {
             listado_calidades_juridicas={listado_calidades_juridicas} 
             />
 
-          {userSubdere && (
+          {userSubdere && formularioEnviado && (
             <div className="mt-5 my-4">
             <CustomTextarea 
               label="Observaciones (Opcional)"

@@ -17,6 +17,8 @@ const PasoUno = () => {
   const userSubdere = userData?.perfil?.includes('SUBDERE');
   const { observaciones, updateObservacion, fetchObservaciones } = useObservacionesSubdere(data ? data.id : null);
   const [observacionPaso1, setObservacionPaso1] = useState("");
+  
+  const formularioEnviado = data.formulario_enviado
 
   useEffect(() => {
     updateStepNumber(stepNumber);
@@ -57,7 +59,7 @@ const PasoUno = () => {
           <Subpaso_dos pasoData={paso1Data} organigrama={organigramaregional}  id={data ? data.id : null} stepNumber={stepNumber} />
           <Subpaso_tres pasoData={paso1Data}   id={data ? data.id : null} stepNumber={stepNumber} />
 
-          {userSubdere && (
+          {userSubdere && formularioEnviado && (
             <div className="mt-5 my-4">
             <CustomTextarea 
             label="Observaciones (Opcional)"
