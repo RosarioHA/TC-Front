@@ -23,7 +23,6 @@ const PasoTres = () => {
 
   const { observaciones, updateObservacion, fetchObservaciones } = useObservacionesSubdere(data ? data.id : null);
   const [observacionPaso3, setObservacionPaso3] = useState("");
-  console.log("observaciones en vista p1", observaciones)
 
   // Estado inicial basado en los datos existentes
   const [formData, setFormData] = useState({

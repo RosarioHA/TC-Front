@@ -16,7 +16,6 @@ const PasoCuatro = () => {
 
   const { observaciones, updateObservacion, fetchObservaciones } = useObservacionesSubdere(data ? data.id : null);
   const [observacionPaso4, setObservacionPaso4] = useState("");
-  console.log("observaciones en vista p1", observaciones)
 
   useEffect(() => {
     updateStepNumber(stepNumber);

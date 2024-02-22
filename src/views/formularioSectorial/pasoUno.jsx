@@ -26,7 +26,6 @@ const PasoUno = () => {
     if (observaciones && observaciones.observacion_paso1) {
       setObservacionPaso1(observaciones.observacion_paso1);
     }
-    console.log("observacion paso 1", observaciones.observacion_paso1)
   }, [updateStepNumber, stepNumber, observaciones, data, fetchObservaciones]);
 
   if (errorPaso) return <div>Error: {errorPaso.message || "Error desconocido"}</div>;
