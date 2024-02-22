@@ -1,17 +1,29 @@
 import { useState, useEffect, useContext, useCallback } from "react";
 import { FormularioContext } from "../../../context/FormSectorial";
+import { usePasoForm } from "../../../hooks/formulario/usePasoForm";
 
 export const Subpaso_Tres = ({ esquemaDatos, id, stepNumber }) =>
 {
   const { handleUpdatePaso } = useContext(FormularioContext);
+  const { dataPaso, refetchTrigger } = usePasoForm(id, stepNumber);
   const [ datos, setDatos ] = useState(esquemaDatos || []);
   const [ showErrorMessage, setShowErrorMessage ] = useState(false);
   const currentYear = new Date().getFullYear();
   const yearDifferences = datos.map(data => currentYear - data.anio);
-  const [guardadoConExito, setGuardadoConExito] = useState(Array(datos.length).fill(false));
-  
-console.log('datos',datos )
-console.log('esquema', esquemaDatos)
+  const [ ultimoCampoModificado, setUltimoCampoModificado ] = useState(null);
+  const [ ultimoGuardadoExitoso, setUltimoGuardadoExitoso ] = useState(null);
+  const [ errorField, setErrorField ] = useState(null);
+  const [valorInicial, setValorInicial] = useState({}); 
+
+
+  // Actualizar los datos del componente cuando dataPaso cambia
+  useEffect(() =>
+  {
+    if (dataPaso)
+    {
+      setDatos(dataPaso.cobertura_anual || []);
+    }
+  }, [ dataPaso ]);
 
   useEffect(() =>
   {
@@ -21,56 +33,96 @@ console.log('esquema', esquemaDatos)
     }
   }, [ esquemaDatos ]);
 
+  const handleFocus = useCallback((index, campo, value) => {
+    // Almacenar el valor actual del input cuando gana el foco
+    setValorInicial(prev => ({ ...prev, [`${index}-${campo}`]: value }));
+  }, []);
+
   const handleInputChange = useCallback((index, campo, value) =>
   {
-    const newDatos = [ ...datos ];
-    const numericValue = value === '' ? null : Number(value);
-    if (isNaN(numericValue))
+    if (value.trim() === '')
     {
-      setShowErrorMessage("Por favor, ingrese un número válido.");
+      const newDatos = [ ...datos ];
+      newDatos[ index ][ campo ] = null;
+      setDatos(newDatos);
+      setShowErrorMessage('');
+      setErrorField(null);
       return;
     }
-    newDatos[ index ][ campo ] = numericValue;
-    setDatos(newDatos);
-  }, [ datos ]);
 
-  const handleBlur = useCallback(async (index, campo, value) =>
-  {
-    setShowErrorMessage('');
-
-    const numericValue = value === '' ? null : Number(value);
-
-    if (numericValue !== null && !isNaN(numericValue))
+    let numericValue;
+    if (campo)
     {
-      const idDelDato = datos[ index ].id;
-      const payload = {
-        id: idDelDato,
-        [ campo ]: numericValue,
-      };
+      const unformattedValue = value.replace(/\$|\./g, '');
+      numericValue = Number(unformattedValue);
+    } else
+    {
+      numericValue = Number(value);
+    }
 
-      try
+    if (!isNaN(numericValue))
+    {
+      if (numericValue < 0)
       {
-        await handleUpdatePaso(id, stepNumber, payload);
-        setDatos((datosAnteriores) =>
-          datosAnteriores.map((dato, i) =>
-            i === index ? { ...dato, [ campo ]: numericValue } : dato
-          )
-        );   
-        setGuardadoConExito((exitosAnteriores) =>
-        exitosAnteriores.map((exito, i) => i === index ? true : exito)
-      );
-      } catch (error)
+        setShowErrorMessage("El valor no puede ser negativo. Por favor, ingrese un número positivo.");
+        setErrorField(`${index}-${campo}`);
+      } else
       {
-        // Maneja los errores y muestra un mensaje adecuado.
-        console.error("Error al actualizar:", error);
-        setShowErrorMessage("Error al guardar los cambios. Intente de nuevo.");
+        const newDatos = [ ...datos ];
+        newDatos[ index ][ campo ] = numericValue;
+        setDatos(newDatos);
+        setUltimoCampoModificado({ index, campo });
+        setUltimoGuardadoExitoso(null);
+        setShowErrorMessage('');
+        setErrorField(null);
       }
     } else
     {
-      // Muestra un mensaje de error si el valor no es un número válido.
-      setShowErrorMessage("Por favor, ingrese un número válido.");
+      setShowErrorMessage("Por favor, ingrese un número válido o deje el campo vacío para limpiar.");
+      setErrorField(null);
     }
-  }, [ datos, handleUpdatePaso, id, stepNumber, setShowErrorMessage ]);
+  }, [ datos, setDatos, setUltimoCampoModificado, setUltimoGuardadoExitoso, setShowErrorMessage ]);
+
+  const handleBlur = useCallback(async (index, campo, value) => {
+    // Intenta convertir el valor del input a un número, o usa null si está vacío
+    const inputValue = value.trim() === '' ? null : Number(value.replace(/\$|\./g, ''));
+
+    // Recupera el valor inicial para la comparación
+    const valorInicialKey = `${index}-${campo}`;
+    const valorInicialInput = valorInicial[valorInicialKey];
+    const valorInicialNumeric = valorInicialInput ? Number(valorInicialInput.replace(/\$|\./g, '')) : null;
+
+    // Si el valor no ha cambiado, no se realiza la actualización
+    if (inputValue === valorInicialNumeric) {
+        return;
+    }
+
+    // Procede con la lógica existente si hay cambios
+    if (inputValue !== null && !isNaN(inputValue) && !(campo === 'recursos_ejecutados' && inputValue < 0)) {
+        try {
+            const updatedData = [...datos];
+            updatedData[index][campo] = inputValue;
+
+            await handleUpdatePaso(id, stepNumber, { cobertura_anual: updatedData });
+
+            setDatos(updatedData);
+            setUltimoGuardadoExitoso(true);
+            setShowErrorMessage('');
+            setErrorField(null);
+            refetchTrigger();
+        } catch (error) {
+            console.error("Error al actualizar:", error);
+            setUltimoGuardadoExitoso(false);
+            setShowErrorMessage("Error al guardar los cambios. Intente de nuevo.");
+        }
+    } else {
+        setShowErrorMessage("Por favor, ingrese un número válido mayor o igual a 0 o deje el campo vacío para limpiar.");
+        setErrorField(`${index}-${campo}`);
+    }
+}, [datos, handleUpdatePaso, id, stepNumber, refetchTrigger, setShowErrorMessage, valorInicial]);
+
+
+
 
   const getPlaceholder = (rowIndex) =>
   {
@@ -80,10 +132,31 @@ console.log('esquema', esquemaDatos)
       case 1:
         return "Unidades";
       case 2:
-        return "Recursos (M$)"; default:
+        return "Recursos (M$)";
+      default:
         return "";
     }
   };
+
+  function formatNumber(value)
+  {
+    if (value === null || value === undefined) return "";
+    const formatter = new Intl.NumberFormat('es-CL', {
+      style: 'decimal',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 2,
+    });
+    return `${formatter.format(value)}`;
+  }
+
+  function capitalizeFirstLetter(string)
+  {
+    return string
+      .replace(/_/g, ' ')
+      .split(' ')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+  }
 
   return (
     <div className="mt-4">
@@ -109,19 +182,28 @@ console.log('esquema', esquemaDatos)
             </tr>
           </thead>
           <tbody>
-          {[ 'universo_cobertura', 'cobertura_efectivamente_abordada', 'recursos_ejecutados' ].map((item, rowIndex) => (
+            {[ 'universo_cobertura', 'cobertura_efectivamente_abordada', 'recursos_ejecutados' ].map((item, rowIndex) => (
               <tr key={rowIndex} className="mt-2">
                 <th scope="row" className="text-sans-p-bold align-self-center">{rowIndex + 1}</th>
-                <th scope="row" className="text-sans-p-bold pt-2">{item.replace(/_/g, ' ')}</th>
+                <th scope="row" className="text-sans-p-bold pt-2">
+                  {capitalizeFirstLetter(item)}{item === 'recursos_ejecutados' ? ' (M$)' : ''}
+                </th>
                 {datos.map((data, colIndex) => (
                   <td key={`${rowIndex}- ${colIndex}`} className="border-start px-1">
                     <input
-                      type="number"
-                      value={data[ item ] || ""}
+                      type="text"
+                      onFocus={(e) => handleFocus(colIndex, item, e.target.value)}
+                      value={item === 'recursos_ejecutados' && data[ item ] === null ? '' : item === 'recursos_ejecutados' ? `$${formatNumber(data[ item ])}` : `${formatNumber(data[ item ])}`}
                       placeholder={getPlaceholder(rowIndex)}
                       onChange={(e) => handleInputChange(colIndex, item, e.target.value)}
                       onBlur={(e) => handleBlur(colIndex, item, e.target.value)}
-                      className={`form-control mx-auto px-0 mb-4 text-center ${guardadoConExito[colIndex] ? 'input-success' : ''}`}
+                      className={`form-control mx-auto px-0 mb-4 text-center ${errorField === `${colIndex}-${item}` ? 'border-error' : ''}
+                      ${ultimoCampoModificado?.index === colIndex && ultimoCampoModificado?.campo === item
+                          ? ultimoGuardadoExitoso
+                            ? 'border-success'
+                            : 'border-error'
+                          : ''
+                        }`}
                     />
                   </td>
                 ))}
@@ -131,14 +213,20 @@ console.log('esquema', esquemaDatos)
               <th scope="row">4</th>
               <th scope="row" className="text-sans-p-bold">Total<br />M$/Cobertura <br />efectiva</th>
               {datos.map((data, index) => (
-                <td key={`total-${index}`} className="border-start px-3 text-center " ><p className="text-sans-h6-primary">{data.total_cobertura_efectiva}</p></td>
+                <td key={`total-${index}`} className="border-start px-3 text-center ">
+                  <p className="text-sans-h6-primary">
+                    {typeof data.total_cobertura_efectiva === 'number'
+                      ? `$${formatNumber(data.total_cobertura_efectiva)}`
+                      : data.total_cobertura_efectiva}
+                  </p>
+                </td>
               ))}
             </tr>
           </tbody>
         </table>
         {showErrorMessage && (
           <div className="error-message text-sans-h6-darkred">
-            Debes llenar todos los campos para poder enviar el formulario.
+            {showErrorMessage}
           </div>
         )}
       </div>

@@ -121,6 +121,8 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
     setMostrarBotonGuardar(true);
     const organismo = mapeoOrganismos[ organismoDisplay ] || "ValorPorDefectoSiNoExiste";
 
+    console.log('organismo', organismo)
+
     setUltimaFilaId(nuevaFilaId);
     const nuevaFila = {
       id: nuevaFilaId,

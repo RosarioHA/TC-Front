@@ -111,14 +111,14 @@ const DropdownCheckbox = ({
 
   return (
     <div
-      className={`input-container row ${readOnly ? 'readonly' : ''}`}
+      className={`input-container ${readOnly ? 'readonly' : ''}`}
       ref={dropdownRef}
     >
       <label className="text-sans-h5 input-label">{label}</label>
       <button
         type="button"
         onClick={!readOnly ? handleDropdownClick : undefined}
-        className={`col-10 text-sans-p dropdown-btn ${readOnly ? 'disabled' : ''}`}
+        className={`text-sans-p dropdown-btn ${readOnly ? 'disabled' : ''}`}
         ref={toggleRef}
       >
         {renderSelectedOptions()}
@@ -132,11 +132,11 @@ const DropdownCheckbox = ({
       <div className="col-1 p-0 d-flex ms-2">
         {renderSpinnerOrCheck()}
       </div>
-      <div className="col-2 d-flex justify-content-between col-12">
+      <div className="col-2 d-flex justify-content-between ">
         {error && (
           <p className="text-sans-h6-darkred mt-1 mb-0">{error}</p>
         )}
-      </div>
+      </div>  
 
       {isOpen && !readOnly && (
         <div className="dropdown d-flex flex-column dropdown-container dropdown-position p-0">

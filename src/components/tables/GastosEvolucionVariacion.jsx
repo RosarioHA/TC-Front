@@ -22,7 +22,7 @@ const inputNumberStyle = {
 export const GastosEvolucionVariacion = ({
   id,
   paso5,
-  formulario_enviado,
+  solo_lectura,
   stepNumber,
   dataGastos,
   setRefreshSubpaso_CincoDosVariacion
@@ -91,7 +91,7 @@ export const GastosEvolucionVariacion = ({
               return costoAnio;
             });
             return { ...subtitulo, costo_anio: updatedCostoAnio };
-          } else if (fieldName === 'descripcion') {
+          } else {
             // Actualiza el estado de la descripción del subtitulo
             return { ...subtitulo, estados: { ...subtitulo.estados, descripcion: { ...newState } } };
           }
@@ -119,11 +119,6 @@ export const GastosEvolucionVariacion = ({
 
   // Función de guardado
   const handleSave = async (subtituloId, costoAnioId, fieldName, fieldValue) => {
-    
-  console.log(`Guardando: ${fieldName} para subtituloId: ${subtituloId}, costoAnioId: ${costoAnioId}, valor: ${fieldValue}`);
-    // Si se está guardando por blur, no es necesario desactivar el botón de guardar general
-
-    const descripcionEvolucion = datosGastos.find(e => e.id === subtituloId);
 
     updateFieldState(subtituloId, costoAnioId, fieldName, { loading: true, saved: false });
 
@@ -131,7 +126,7 @@ export const GastosEvolucionVariacion = ({
 
     if (fieldName === 'descripcion') {
       payload = {
-        'p_5_2_evolucion_gasto_asociado': [{ id: subtituloId, [fieldName]: descripcionEvolucion[fieldName] }]
+        'p_5_2_evolucion_gasto_asociado': [{ id: subtituloId, [fieldName]: fieldValue}]
       };
     } else if (fieldName === 'costo') {
       
@@ -227,7 +222,7 @@ export const GastosEvolucionVariacion = ({
                                 placeholder="Costo (M$)"
                                 value={value}
                                 style={inputNumberStyle}
-                                disabled={formulario_enviado}
+                                disabled={solo_lectura}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
                                 loading={costoAnio.estados?.loading ?? false}
@@ -276,7 +271,7 @@ export const GastosEvolucionVariacion = ({
                               onChange={handleChange}
                               onBlur={handleBlur}
                               className={`form-control ${rowIndex % 2 === 0 ? "bg-color-even" : "bg-color-odd"}`}
-                              readOnly={formulario_enviado}
+                              readOnly={solo_lectura}
                               loading={item.estados?.descripcion?.loading ?? false}
                               saved={item.estados?.descripcion?.saved ?? false}
                               error={errors[`descripcion_${item.id}`]?.message}
@@ -328,7 +323,7 @@ export const GastosEvolucionVariacion = ({
                   onBlur={handleBlur}
                   loading={glosasEspecificasLoading}
                   saved={glosasEspecificasSaved}
-                  readOnly={formulario_enviado}
+                  readOnly={solo_lectura}
                 />
               );
             }}

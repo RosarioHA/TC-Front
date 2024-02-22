@@ -2,7 +2,7 @@ import { useState, useContext, useEffect } from "react";
 import CustomTextarea from "../forms/custom_textarea";
 import DropdownCheckbox from "../dropdown/checkbox";
 import DropdownSelect from "../dropdown/select";
-import ImputCosto from "../forms/input_costo";
+import InputCosto from "../forms/input_costo";
 import { OpcionesAB } from "../forms/opciones_AB";
 import { FormularioContext } from "../../context/FormSectorial";
 import { construirValidacionPaso5_1ab } from "../../validaciones/esquemaValidarPaso5Sectorial";
@@ -18,13 +18,14 @@ const CostosIndirectos = ({
   listado_etapas,
   setRefreshSubpaso_CincoDos,
   setRefreshSumatoriaCostos,
-  formulario_enviado
+  solo_lectura
 }) => {
 
   const initialState = data?.map(item => ({
     ...item,
-    subtituloSeleccionado: '',
-    opcionesItems: [],
+    subtituloSeleccionado: item.subtitulo_label_value?.value || '',
+    opcionesItems: item.item_subtitulo_label_value ? [item.item_subtitulo_label_value] : [],
+    isItemSubtituloReadOnly: true,
     estados: {
       etapa: { loading: false, saved: false },
       item_subtitulo: { loading: false, saved: false },
@@ -281,6 +282,7 @@ const CostosIndirectos = ({
                                 ...costoIndirecto,
                                 subtituloSeleccionado: textoSubtitulo,
                                 opcionesItems: opcionesDeItems,
+                                isItemSubtituloReadOnly: false,
                               };
                             }
                             return costoIndirecto;
@@ -288,7 +290,7 @@ const CostosIndirectos = ({
                           field.onChange(selectedOption.value);
                         }}
 
-                        readOnly={formulario_enviado}
+                        readOnly={solo_lectura}
                         selected={costo.subtitulo_label_value}
 
                         loading={costo.estados?.subtitulo?.loading ?? false}
@@ -314,10 +316,19 @@ const CostosIndirectos = ({
                         options={costo.opcionesItems}
                         onSelectionChange={(selectedOptions) => {
                           handleSave(costo.id, 'item_subtitulo', selectedOptions);
+                          setCostosIndirectos(prevCostosIndirectos => prevCostosIndirectos.map(costoIndirecto => {
+                            if (costoIndirecto.id === costo.id) {
+                              return {
+                                ...costoIndirecto,
+                                isItemSubtituloReadOnly: true, // Bloquea el campo después de seleccionar un item
+                              };
+                            }
+                            return costoIndirecto;
+                          }));
                           field.onChange(selectedOptions.value);
                         }}
 
-                        readOnly={formulario_enviado}
+                        readOnly={costo.isItemSubtituloReadOnly}
                         selected={costo.item_subtitulo_label_value}
 
                         loading={costo.estados?.item_subtitulo?.loading ?? false}
@@ -359,7 +370,7 @@ const CostosIndirectos = ({
                     };
 
                     return (
-                      <ImputCosto
+                      <InputCosto
                         id={`total_anual_${costo.id}`}
                         placeholder="Costo (M$)"
                         value={value}
@@ -368,7 +379,7 @@ const CostosIndirectos = ({
                         loading={costo.estados?.total_anual?.loading ?? false}
                         saved={costo.estados?.total_anual?.saved ?? false}
                         error={errors[`total_anual_${costo.id}`]?.message}
-                        disabled={formulario_enviado}
+                        disabled={solo_lectura}
                       />
                     );
                   }}
@@ -396,7 +407,7 @@ const CostosIndirectos = ({
                             field.onChange(selectedOptions);
                           }}
 
-                        readOnly={formulario_enviado}
+                        readOnly={solo_lectura}
                         selectedValues={costo.etapa_label_value}
 
                           loading={costo.estados?.etapa?.loading ?? false}
@@ -418,7 +429,7 @@ const CostosIndirectos = ({
                     return (
                       <OpcionesAB
                         id={`es_transversal_${costo.id}`}
-                        readOnly={formulario_enviado}
+                        readOnly={solo_lectura}
                         initialState={field.value}
                         handleEstadoChange={(newValue) => handleEsTransversalChange(costo.id, newValue)}
                         loading={costo.estados?.es_transversal?.loading ?? false}
@@ -473,7 +484,7 @@ const CostosIndirectos = ({
                       loading={costo.estados?.descripcion?.loading ?? false}
                       saved={costo.estados?.descripcion?.saved ?? false}
                       error={errors[`descripcion_${costo.id}`]?.message}
-                      readOnly={formulario_enviado}
+                      readOnly={solo_lectura}
                     />
                   );
                 }}
@@ -481,7 +492,7 @@ const CostosIndirectos = ({
             </div>
 
             <div className="d-flex justify-content-end me-2">
-              {( !formulario_enviado) && (
+              {( !solo_lectura) && (
                 <div className="">
                   <button
                     className="btn-terciario-ghost mt-3"

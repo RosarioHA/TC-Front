@@ -6,7 +6,7 @@ import { useForm, Controller } from "react-hook-form";
 export const GastosPromedioAnual = ({
   id,
   paso5,
-  formulario_enviado,
+  solo_lectura,
   stepNumber,
   dataGastos,
 }) => {
@@ -106,31 +106,36 @@ export const GastosPromedioAnual = ({
             <tr>
               <th scope="col" className="text-sans-p-bold px-2 pb-5">Subtitulo</th>
               <th scope="col" className="text-sans-p text-center">
-                <u>Gasto en {paso5.años_variacion.n_5}</u>
-                <p className="text-sans-h6-grey">(año n-5)</p>
-              </th>
-              <th scope="col" className="text-sans-p text-center">
-                <u>Gasto en {paso5.años_variacion.n_1}</u>
-                <p className="text-sans-h6-grey">(año n-1)</p>
-              </th>
-              <th scope="col" className="text-sans-p text-center">
-                <u>Variación promedio ($M)</u>
+                <u>Variación con {paso5.años_variacion.n_5}</u>
                 <p className="text-sans-h6-grey">(año n-5) - (año n-1)</p>
+              </th>
+              <th scope="col" className="text-sans-p text-center">
+                <u>Variación con {paso5.años_variacion.n_4}</u>
+                <p className="text-sans-h6-grey">(año n-4) - (año n-1)</p>
+              </th>
+              <th scope="col" className="text-sans-p text-center">
+                <u>Variación con {paso5.años_variacion.n_3}</u>
+                <p className="text-sans-h6-grey">(año n-3) - (año n-1)</p>
+              </th>
+              <th scope="col" className="text-sans-p text-center">
+                <u>Variación con {paso5.años_variacion.n_2}</u>
+                <p className="text-sans-h6-grey">(año n-2) - (año n-1)</p>
               </th>
             </tr>
           </thead>
 
           <tbody>
             {datosGastos.map((item, rowIndex) => (
-              <React.Fragment key={rowIndex}>
+              <React.Fragment key={item.id}>
                 <tr>
                   <th scope="row" className="text-sans-p-bold pt-2"><u>{item.nombre_subtitulo}</u></th>
-                  <td className="text-sans-p text-center">{item.gasto_n_5}</td>
-                  <td className="text-sans-p text-center">{item.gasto_n_1}</td>
-                  <td className="text-sans-p text-center">{item.variacion}</td>
+                  <td className="text-sans-p text-center">{item.variacion_gasto_n_5}</td>
+                  <td className="text-sans-p text-center">{item.variacion_gasto_n_4}</td>
+                  <td className="text-sans-p text-center">{item.variacion_gasto_n_3}</td>
+                  <td className="text-sans-p text-center">{item.variacion_gasto_n_2}</td>
                 </tr>
                 <tr>
-                  <td colSpan="4" className="px-0">
+                  <td colSpan="7" className="px-0">
                     <div className="mt-2">
                       <Controller
                         control={control}
@@ -160,7 +165,7 @@ export const GastosPromedioAnual = ({
                               onChange={handleChange}
                               onBlur={handleBlur}
                               className={`form-control ${rowIndex % 2 === 0 ? "bg-color-even" : "bg-color-odd"}`}
-                              readOnly={formulario_enviado}
+                              readOnly={solo_lectura}
                               loading={item.estados?.descripcion?.loading ?? false}
                               saved={item.estados?.descripcion?.saved ?? false}
                             />

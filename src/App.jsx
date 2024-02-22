@@ -74,7 +74,7 @@ function App() {
             path="formulario_sectorial/:id"
             element={
               <FormularioProvider>
-                <ProtectedRoute allowedProfiles={[ 'Usuario Sectorial' ]}>
+                <ProtectedRoute allowedProfiles={[ 'Usuario Sectorial','SUBDERE', 'Usuario Observador' ]}>
                   <FormularioLayout />
                 </ProtectedRoute>
               </FormularioProvider>
