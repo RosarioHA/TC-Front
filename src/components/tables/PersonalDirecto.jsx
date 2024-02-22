@@ -336,9 +336,11 @@ const agregarPersona = (calidadJuridicaLabel) => {
             <div className="row">
               <div className="col-1"> <p className="text-sans-p-bold">N°</p> </div>
               <div className="col"> <p className="text-sans-p-bold">Estamento</p> </div>
-              <div className="col"> <p className="text-sans-p-bold">Renta bruta mensual</p> </div>
+              <div className="col"> <p className="text-sans-p-bold">Renta bruta mensual ($M)</p> </div>
               <div className="col"> <p className="text-sans-p-bold">Grado <br /> (Si corresponde)</p> </div>
+              {!solo_lectura && (
               <div className="col"> <p className="text-sans-p-bold">Acción</p> </div>
+              )}
             </div>
             {personas.map((persona, personaIndex) => (
               <div
@@ -396,7 +398,7 @@ const agregarPersona = (calidadJuridicaLabel) => {
                       return (
                         <InputCosto
                           id={`renta_bruta_${persona.id}`}
-                          placeholder="Persona (M$)"
+                          placeholder="Renta bruta (M$)"
                           value={value}
                           onChange={handleChange}
                           onBlur={handleBlur}
@@ -436,7 +438,7 @@ const agregarPersona = (calidadJuridicaLabel) => {
                       return (
                         <CustomInput
                           id={`grado_${persona.id}`}
-                          placeholder="Persona (M$)"
+                          placeholder="Grado"
                           value={value}
                           onChange={handleChange}
                           onBlur={handleBlur}
@@ -449,6 +451,7 @@ const agregarPersona = (calidadJuridicaLabel) => {
                     }}
                   />
                 </div>
+                {!solo_lectura && (
                 <div className="col">
                   <button
                     className="btn-terciario-ghost"
@@ -458,8 +461,11 @@ const agregarPersona = (calidadJuridicaLabel) => {
                     <p className="mb-0 text-decoration-underline">Borrar</p>
                   </button>
                 </div>
+                )}
               </div>
             ))}
+
+            {!solo_lectura && (
             <button
               className="btn-secundario-s m-2"
               onClick={() => agregarPersona(calidad_juridica)}
@@ -467,6 +473,8 @@ const agregarPersona = (calidadJuridicaLabel) => {
               <i className="material-symbols-rounded me-2">add</i>
               <p className="mb-0 text-decoration-underline">Agregar {personas[0]?.nombre_calidad_juridica}</p>
             </button>
+            )}
+
           </div>
         ))}
       </div>
@@ -486,7 +494,7 @@ const agregarPersona = (calidadJuridicaLabel) => {
         </div>
       )}
 
-      {mostrarBotonFormulario && (
+      {mostrarBotonFormulario && !solo_lectura && (
         <button
           className="btn-secundario-s m-2"
           onClick={mostrarFormulario}

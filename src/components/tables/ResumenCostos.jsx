@@ -223,7 +223,7 @@ const ResumenCostos = ({
             </div>
             <div className="col">
               {/* sumatoria de los valores de todos los subtitulos de la tabla */}
-              <p className="text-sans-p-bold mb-0 mt-3 ms-5">{costosTotales}</p>
+              <p className="text-sans-p-bold mb-0 mt-3 ms-5">{formatearNumero(costosTotales)}</p>
             </div>
             <div className="col-7 ps-2 d-flex">
               <Controller

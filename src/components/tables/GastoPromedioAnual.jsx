@@ -14,6 +14,21 @@ export const GastosPromedioAnual = ({
   const [datosGastos, setDatosGastos] = useState([]);
   const { handleUpdatePaso } = useContext(FormularioContext);
 
+  // Función de utilidad para formatear números
+  const formatearNumero = (numero) => {
+    // Asegurarse de que el valor es un número. Convertir si es necesario.
+    const valorNumerico = Number(numero);
+    // Verificar si el valor es un número válido antes de intentar formatearlo
+    if (!isNaN(valorNumerico)) {
+      return valorNumerico.toLocaleString('es-CL', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2
+      });
+    }
+    // Devolver un valor predeterminado o el mismo valor si no es un número
+    return numero;
+  };
+
   useEffect(() => {
     if (Array.isArray(dataGastos)) {
       const formattedData = dataGastos.map(item => ({
@@ -129,10 +144,10 @@ export const GastosPromedioAnual = ({
               <React.Fragment key={item.id}>
                 <tr>
                   <th scope="row" className="text-sans-p-bold pt-2"><u>{item.nombre_subtitulo}</u></th>
-                  <td className="text-sans-p text-center">{item.variacion_gasto_n_5}</td>
-                  <td className="text-sans-p text-center">{item.variacion_gasto_n_4}</td>
-                  <td className="text-sans-p text-center">{item.variacion_gasto_n_3}</td>
-                  <td className="text-sans-p text-center">{item.variacion_gasto_n_2}</td>
+                  <td className="text-sans-p text-center">{formatearNumero(item.variacion_gasto_n_5)}</td>
+                  <td className="text-sans-p text-center">{formatearNumero(item.variacion_gasto_n_4)}</td>
+                  <td className="text-sans-p text-center">{formatearNumero(item.variacion_gasto_n_3)}</td>
+                  <td className="text-sans-p text-center">{formatearNumero(item.variacion_gasto_n_2)}</td>
                 </tr>
                 <tr>
                   <td colSpan="7" className="px-0">
