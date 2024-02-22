@@ -17,8 +17,9 @@ const PasoUno = () => {
   const userSubdere = userData?.perfil?.includes('SUBDERE');
   const { observaciones, updateObservacion, fetchObservaciones } = useObservacionesSubdere(data ? data.id : null);
   const [observacionPaso1, setObservacionPaso1] = useState("");
-  
+
   const formularioEnviado = data.formulario_enviado
+  const observacionesEnviadas = data.observacion_enviada
 
   useEffect(() => {
     updateStepNumber(stepNumber);
@@ -68,9 +69,12 @@ const PasoUno = () => {
             maxLength={500}
             value={observacionPaso1}
             onChange={(e) => setObservacionPaso1(e.target.value)}
+            readOnly={observacionesEnviadas}
             />
             {/* aqui reemplazar boton por metodo automatico */}
-            <button onClick={handleGuardarObservacion}>Guardar Observaciones</button>
+            {!observacionesEnviadas && (
+            <button className="btn-primario-s" onClick={handleGuardarObservacion}>Guardar Observaciones</button>
+            )}
           </div>
           )}
 

@@ -20,6 +20,7 @@ const PasoCinco = () => {
   const [observacionPaso5, setObservacionPaso5] = useState("");
 
   const formularioEnviado = data.formulario_enviado
+  const observacionesEnviadas = data.observacion_enviada
 
   useEffect(() => {
     updateStepNumber(stepNumber);
@@ -105,20 +106,23 @@ const PasoCinco = () => {
             data_personal_indirecto={p_5_3_b_personal_indirecto}
             listado_estamentos={listado_estamentos}
             listado_calidades_juridicas={listado_calidades_juridicas} 
-            />
+          />
 
           {userSubdere && formularioEnviado && (
             <div className="mt-5 my-4">
             <CustomTextarea 
-              label="Observaciones (Opcional)"
-              placeholder="Escribe tus observaciones de este paso del formulario"
-              rows={5}
-              maxLength={500}
-              value={observacionPaso5}
-              onChange={(e) => setObservacionPaso5(e.target.value)}
+            label="Observaciones (Opcional)"
+            placeholder="Escribe tus observaciones de este paso del formulario"
+            rows={5}
+            maxLength={500}
+            value={observacionPaso5}
+            onChange={(e) => setObservacionPaso5(e.target.value)}
+            readOnly={observacionesEnviadas}
             />
             {/* aqui reemplazar boton por metodo automatico */}
-            <button onClick={handleGuardarObservacion}>Guardar Observaciones</button>
+            {!observacionesEnviadas && (
+            <button className="btn-primario-s" onClick={handleGuardarObservacion}>Guardar Observaciones</button>
+            )}
           </div>
           )}
 
