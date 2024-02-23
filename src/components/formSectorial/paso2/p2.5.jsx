@@ -25,8 +25,8 @@ export const Subpaso_dosPuntoCinco = ({ id, stepNumber, data, flujograma, solo_l
   const ver = true;
 
   const handleViewFile = (path) => {
-    const baseUrl = import.meta.env.VITE_REACT_APP_API_URL;
-    const url = `${baseUrl}${path}`;
+    // const baseUrl = import.meta.env.VITE_REACT_APP_API_URL;
+    const url = `${path}`;
     setIframeSrc(url);
   };
 

@@ -12,8 +12,9 @@ import CustomTextarea from '../../components/forms/custom_textarea';
 import { useAuth } from '../../context/AuthContext';
 import { useObservacionesSubdere } from '../../hooks/formulario/useObSubdereSectorial';
 
-const PasoDos = () => {
-  const { pasoData, loadingPaso, errorPaso, updateStepNumber, data } = useContext(FormularioContext);
+const PasoDos = () =>
+{
+  const { pasoData, errorPaso, updateStepNumber, data } = useContext(FormularioContext);
   const stepNumber = 2;
   const [ refreshSubpasoDos_dos, setRefreshSubpasoDos_dos ] = useState(false);
   const [ refreshSubpasoDos_tres, setRefreshSubpasoDos_tres ] = useState(false);
@@ -36,7 +37,6 @@ const PasoDos = () => {
     }
   }, [updateStepNumber, stepNumber, observaciones, fetchObservaciones]);
 
-  if (loadingPaso) return <div>Cargando...</div>;
   if (errorPaso) return <div>Error: {errorPaso.message || "Error desconocido"}</div>;
   if (!pasoData) return <div>No hay datos disponibles para el Paso 2</div>;
 
