@@ -5,7 +5,7 @@ import CustomTextarea from "../../forms/custom_textarea";
 import { useUpdateFormRefresh } from "../../../hooks/formulario/useUpdateFormRefresh";
 import { FormularioContext } from "../../../context/FormSectorial";
 
-export const Subpaso_CuatroUno = ({ data, listaIndicadores, id, stepNumber }) =>
+export const Subpaso_CuatroUno = ({ data, listaIndicadores, id, stepNumber, solo_lectura }) =>
 {
   const { patchStep } = useUpdateFormRefresh((datosActualizados) =>
   {
@@ -263,9 +263,10 @@ export const Subpaso_CuatroUno = ({ data, listaIndicadores, id, stepNumber }) =>
                   options={opcionesIndicadores}
                   selected={indicador.indicador}
                   onSelectionChange={(valorSeleccionado) => handleDropdownChange(indicador.id, valorSeleccionado)}
+                  readOnly={solo_lectura}
                 />
               </div>
-              <div className="col me-1 ms-3 mt-2">
+              <div className="col me-1 ms-3 my-2">
                 <CustomTextarea
                   placeholder="Formula de cálculo"
                   maxLength={300}
@@ -274,10 +275,11 @@ export const Subpaso_CuatroUno = ({ data, listaIndicadores, id, stepNumber }) =>
                   onBlur={() => indicador.id ? inputSave(indicador.id, 'formula_calculo') : null}
                   loading={inputStatus[ indicador.id ]?.formula_calculo?.loading || false}
                   saved={inputStatus[ indicador.id ]?.formula_calculo?.saved || false}
+                  readOnly={solo_lectura}
                 />
               </div>
 
-              {index >= 0 && indicadores.length > 1 && (
+              {index >= 0 && indicadores.length > 1 && !solo_lectura && (
                 <div className="col-1 me-4">
                   <button
                     className="btn-terciario-ghost mt-3"
@@ -290,7 +292,7 @@ export const Subpaso_CuatroUno = ({ data, listaIndicadores, id, stepNumber }) =>
               )}
             </div>
 
-            <div className="mt-4 mx-3">
+            <div className="mt-4 mx-3 my-4">
               <CustomTextarea
                 label="Descripción (Obligatorio)"
                 placeholder="Describe el indicador de desempeño"
@@ -300,9 +302,10 @@ export const Subpaso_CuatroUno = ({ data, listaIndicadores, id, stepNumber }) =>
                 onBlur={() => indicador.id ? inputSave(indicador.id, 'descripcion_indicador') : null}
                 loading={inputStatus[ indicador.id ]?.descripcion_indicador?.loading || false}
                 saved={inputStatus[ indicador.id ]?.descripcion_indicador?.saved || false}
+                readOnly={solo_lectura}
               />
             </div>
-            <div className="mt-2 mx-3">
+            <div className="mt-2 mx-3 my-4">
               <CustomTextarea
                 label="Medios utilizados para su cálculo (Obligatorio)"
                 placeholder="Describe los medios utilizados para su cálculo"
@@ -312,10 +315,10 @@ export const Subpaso_CuatroUno = ({ data, listaIndicadores, id, stepNumber }) =>
                 onBlur={() => indicador.id ? inputSave(indicador.id, 'medios_calculo') : null}
                 loading={inputStatus[ indicador.id ]?.medios_calculo?.loading || false}
                 saved={inputStatus[ indicador.id ]?.medios_calculo?.saved || false}
-
+                readOnly={solo_lectura}
               />
             </div>
-            <div className="mt-2 mx-3 ">
+            <div className="mt-2 mx-3 my-4">
               <CustomTextarea
                 label="Verificador asociado al indicador (Obligatorio)"
                 placeholder="Describe los medios de verificación del indicador"
@@ -325,11 +328,13 @@ export const Subpaso_CuatroUno = ({ data, listaIndicadores, id, stepNumber }) =>
                 onBlur={() => indicador.id ? inputSave(indicador.id, 'verificador_asociado') : null}
                 loading={inputStatus[ indicador.id ]?.verificador_asociado?.loading || false}
                 saved={inputStatus[ indicador.id ]?.verificador_asociado?.saved || false}
+                readOnly={solo_lectura}
               />
             </div>
 
           </div>
         ))}
+        {!solo_lectura && (
         <div className="d-flex">
           {todosIndicadoresGuardados ? (
             <button
@@ -356,6 +361,7 @@ export const Subpaso_CuatroUno = ({ data, listaIndicadores, id, stepNumber }) =>
             </div>
           )}
         </div>
+        )}
       </div>
     </>
   )

@@ -16,6 +16,7 @@ export const Subpaso_dosPuntoCuatro = ({
   listado_etapas,
   setRefreshSubpasoDos_cuatro,
   refreshSubpasoDos_cuatro,
+  solo_lectura
 }) => {
 
   const initialState = data.map(item => ({
@@ -297,6 +298,7 @@ export const Subpaso_dosPuntoCuatro = ({
                         loading={plataforma.estados?.nombre_plataforma?.loading ?? false}
                         saved={plataforma.estados?.nombre_plataforma?.saved ?? false}
                         error={errors[`nombre_plataforma_${plataforma.id}`]?.message}
+                        readOnly={solo_lectura}
                       />
                     );
                   }}
@@ -344,6 +346,7 @@ export const Subpaso_dosPuntoCuatro = ({
                         loading={plataforma.estados?.descripcion_tecnica?.loading ?? false}
                         saved={plataforma.estados?.descripcion_tecnica?.saved ?? false}
                         error={errors[`descripcion_tecnica_${plataforma.id}`]?.message}
+                        readOnly={solo_lectura}
                       />
                     );
                   }}
@@ -394,6 +397,7 @@ export const Subpaso_dosPuntoCuatro = ({
                             saved={plataforma.estados?.costo_adquisicion?.saved ?? false}
                             error={errors[`costo_adquisicion_${plataforma.id}`]?.message}
                             descripcion="Campo númerico en miles de pesos."
+                            readOnly={solo_lectura}
                           />
                         );
                       }}
@@ -435,6 +439,7 @@ export const Subpaso_dosPuntoCuatro = ({
                             saved={plataforma.estados?.costo_mantencion_anual?.saved ?? false}
                             error={errors[`costo_mantencion_anual_${plataforma.id}`]?.message}
                             descripcion="Campo númerico en miles de pesos."
+                            readOnly={solo_lectura}
                           />
                         );
                       }}
@@ -477,6 +482,7 @@ export const Subpaso_dosPuntoCuatro = ({
                           loading={plataforma.estados?.descripcion_costos?.loading ?? false}
                           saved={plataforma.estados?.descripcion_costos?.saved ?? false}
                           error={errors[`descripcion_costos_${plataforma.id}`]?.message}
+                          readOnly={solo_lectura}
                         />
                       );
                     }}
@@ -525,6 +531,7 @@ export const Subpaso_dosPuntoCuatro = ({
                         loading={plataforma.estados?.funcion_plataforma?.loading ?? false}
                         saved={plataforma.estados?.funcion_plataforma?.saved ?? false}
                         error={errors[`funcion_plataforma_${plataforma.id}`]?.message}
+                        readOnly={solo_lectura}
                       />
                     );
                   }}
@@ -553,12 +560,9 @@ export const Subpaso_dosPuntoCuatro = ({
                           handleSave(plataforma.id, 'etapas', selectedOptions);
                           field.onChange(selectedOptions);
                         }}
-
-                        readOnly={false}
+                        readOnly={solo_lectura}
                         selectedValues={plataforma.etapas_label_value}
-
-                        loading={plataforma.estados?.etapas?.loading ?? false}
-                        saved={plataforma.estados?.etapas?.saved ?? false}
+                        
                       />
                     );
                   }}
@@ -580,7 +584,7 @@ export const Subpaso_dosPuntoCuatro = ({
                     return (
                       <OpcionesAB
                         id={`capacitacion_plataforma_${plataforma.id}`}
-                        readOnly={false}
+                        readOnly={solo_lectura}
                         initialState={field.value}
                         handleEstadoChange={(newValue) => handleCapacitacionChange(plataforma.id, newValue)}
                         loading={plataforma.estados?.capacitacion_plataforma?.loading ?? false}
@@ -600,6 +604,7 @@ export const Subpaso_dosPuntoCuatro = ({
               </div>
             </div>
 
+            {!solo_lectura && (
             <div className="col d-flex align-items-center">
               <button
                 className="btn-terciario-ghost ms-2 mb-2"
@@ -608,10 +613,13 @@ export const Subpaso_dosPuntoCuatro = ({
                 <p className="mb-0 text-decoration-underline">Borrar ficha</p>
               </button>
             </div>
+            )}
+            
           </div>
         ))}
 
-        <div className="row">
+        {!solo_lectura && (
+          <div className="row">
           <div className="p-2">
             <button type="submit" className="btn-secundario-s">
               <i className="material-symbols-rounded me-2">add</i>
@@ -619,6 +627,8 @@ export const Subpaso_dosPuntoCuatro = ({
             </button>
           </div>
         </div>
+        )}
+        
       </form>
 
     </div>

@@ -486,7 +486,7 @@ const agregarPersona = (calidadJuridicaLabel) => {
         </div>
       )}
 
-      {mostrarBotonFormulario && (
+      {mostrarBotonFormulario && !solo_lectura && (
         <button
           className="btn-secundario-s m-2"
           onClick={mostrarFormulario}
@@ -543,11 +543,7 @@ const agregarPersona = (calidadJuridicaLabel) => {
           <h6>En el caso de que los/as funcionarios/as identificados/as realicen funciones asociadas a otras competencias, describa brevemente sus características, y si existe relación entre ellas y el ejercicio de la competencia en estudio.</h6>
         </div>
       </div>
-
-
     </div>
-
-
   )
 }
 

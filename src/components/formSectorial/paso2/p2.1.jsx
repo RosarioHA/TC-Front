@@ -4,18 +4,22 @@ import DropdownSelect from '../../dropdown/select';
 import { FormularioContext } from '../../../context/FormSectorial';
 import { apiTransferenciaCompentencia } from '../../../services/transferenciaCompetencia';
 
-export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSubpasoDos_dos }) =>
+export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSubpasoDos_dos, solo_lectura }) =>
 {
   const [ dataDirecta, setDataDirecta ] = useState(null);
   const [ opciones, setOpciones ] = useState([]);
   const [ mostrarError, setMostrarError ] = useState(false);
   const [ mostrarErrorNuevoOrganismo, setMostrarErrorNuevoOrganismo ] = useState(false);
+  const [ controlBotones, setControlBotones ] = useState({});
+  const [ erroresPorFila, setErroresPorFila ] = useState({});
 
   const fetchDataDirecta = async () =>
   {
     try
     {
-      const response = await apiTransferenciaCompentencia.get(`/formulario-sectorial/${id}/paso-${stepNumber}/`);
+      const response = await apiTransferenciaCompentencia.get(
+        `/formulario-sectorial/${id}/paso-${stepNumber}/`
+      );
       setDataDirecta(response.data);
     } catch (error)
     {
@@ -37,14 +41,16 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
       const listaInicial = transformarEnOpciones(lista);
       setOpciones(listaInicial);
     }
-  }, [ data ]);
+  }, [ data, lista ]);
 
   useEffect(() =>
   {
     // Carga con 'dataDirecta' tras editar paso 2.1
     if (dataDirecta?.listado_organismos)
     {
-      const nuevasOpciones = transformarEnOpciones(dataDirecta.listado_organismos);
+      const nuevasOpciones = transformarEnOpciones(
+        dataDirecta.listado_organismos
+      );
       setOpciones(nuevasOpciones);
     }
   }, [ dataDirecta ]);
@@ -58,8 +64,8 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
   const [ nuevoOrganismo, setNuevoOrganismo ] = useState('');
   const [ nuevoOrganismoDisplay, setNuevoOrganismoDisplay ] = useState('');
   const [ nuevoOrganismoNombre, setNuevoOrganismoNombre ] = useState('');
-  const [ nuevoOrganismoDescripcion, setNuevoOrganismoDescripcion ] = useState('');
-
+  const [ nuevoOrganismoDescripcion, setNuevoOrganismoDescripcion ] =
+    useState('');
 
   // Efecto para agrupar datos cada vez que 'data' cambia
   useEffect(() =>
@@ -84,7 +90,7 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
     {
       ordenados[ 'MIN' ] = agrupados[ 'MIN' ];
     }
-    Object.keys(agrupados).forEach(key =>
+    Object.keys(agrupados).forEach((key) =>
     {
       if (key !== 'MIN')
       {
@@ -99,7 +105,7 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
     'Ministerio o Servicio Público': 'MIN',
     'Gobierno Regional': 'GORE',
     'Delegación Presidencial Regional': 'DPR',
-    'Otro': 'OTRO'
+    Otro: 'OTRO',
   };
 
   // Lógica para agregar una nueva fila a un organismo
@@ -113,26 +119,29 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
   const [ ultimaFilaId, setUltimaFilaId ] = useState(null);
   const [ mostrarBotonGuardar, setMostrarBotonGuardar ] = useState(false);
 
-
   const agregarFila = (organismoDisplay) =>
   {
     const nuevaFilaId = generarIdUnico();
 
-    setMostrarBotonGuardar(true);
-    const organismo = mapeoOrganismos[ organismoDisplay ] || "ValorPorDefectoSiNoExiste";
+    const organismo =
+      mapeoOrganismos[ organismoDisplay ] || 'ValorPorDefectoSiNoExiste';
+    // Activar botón de "Agregar Otro" solo para este organismo
+    setControlBotones((prev) => ({
+      ...prev,
+      [ organismoDisplay ]: { mostrarBotonGuardar: true },
+    }));
 
-    console.log('organismo', organismo)
 
     setUltimaFilaId(nuevaFilaId);
     const nuevaFila = {
       id: nuevaFilaId,
       organismo: organismo,
       nombre_ministerio_servicio: '',
-      descripcion: ''
+      descripcion: '',
     };
-    setOrganismosAgrupados(prevOrganismos => ({
+    setOrganismosAgrupados((prevOrganismos) => ({
       ...prevOrganismos,
-      [ organismoDisplay ]: [ ...prevOrganismos[ organismoDisplay ], nuevaFila ]
+      [ organismoDisplay ]: [ ...prevOrganismos[ organismoDisplay ], nuevaFila ],
     }));
   };
 
@@ -140,10 +149,12 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
   const eliminarFila = async (organismoDisplay, idFila) =>
   {
     const payload = {
-      'p_2_1_organismos_intervinientes': [ {
-        id: idFila,
-        DELETE: true
-      } ]
+      p_2_1_organismos_intervinientes: [
+        {
+          id: idFila,
+          DELETE: true,
+        },
+      ],
     };
 
     try
@@ -152,9 +163,11 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
       await handleUpdatePaso(id, stepNumber, payload);
 
       // Actualizar el estado local para reflejar la eliminación
-      setOrganismosAgrupados(prevOrganismos =>
+      setOrganismosAgrupados((prevOrganismos) =>
       {
-        const filasActualizadas = prevOrganismos[ organismoDisplay ].filter(fila => fila.id !== idFila);
+        const filasActualizadas = prevOrganismos[ organismoDisplay ].filter(
+          (fila) => fila.id !== idFila
+        );
 
         // Si después de la eliminación no quedan filas, eliminar también el organismo
         if (filasActualizadas.length === 0)
@@ -166,27 +179,28 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
 
         return {
           ...prevOrganismos,
-          [ organismoDisplay ]: filasActualizadas
+          [ organismoDisplay ]: filasActualizadas,
         };
       });
 
       setRefreshSubpasoDos_dos(true);
       fetchDataDirecta();
-      setMostrarBotonGuardar(false);
-      setMostrarError(false)
-
+      setControlBotones((prev) => ({
+        ...prev,
+        [ organismoDisplay ]: { mostrarBotonGuardar: false },
+      }));
+      setMostrarError(false);
     } catch (error)
     {
-      console.error("Error al eliminar la fila:", error);
+      console.error('Error al eliminar la fila:', error);
     }
   };
-
 
   // Lógica para agregar Nuevos Organismos
 
   const handleNombreChange = (nuevoValor) =>
   {
-    setMostrarErrorNuevoOrganismo(false); 
+    setMostrarErrorNuevoOrganismo(false);
     setNuevoOrganismoNombre(nuevoValor);
   };
 
@@ -195,7 +209,8 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
     setNuevoOrganismoDescripcion(nuevoValor);
   };
 
-  const [ mostrarFormularioNuevoOrganismo, setMostrarFormularioNuevoOrganismo ] = useState(false);
+  const [ mostrarFormularioNuevoOrganismo, setMostrarFormularioNuevoOrganismo ] =
+    useState(false);
 
   const manejarCambioDropdown = (opcionSeleccionada) =>
   {
@@ -213,17 +228,16 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
 
   const agregarNuevoOrganismo = async () =>
   {
-
-    if (!nuevoOrganismo || !nuevoOrganismoNombre || !nuevoOrganismoDescripcion)
+    if (
+      !nuevoOrganismo ||
+      !nuevoOrganismoNombre.trim() ||
+      !nuevoOrganismoDescripcion.trim()
+    )
     {
-      console.error("Faltan datos para agregar el organismo");
-      setMostrarErrorNuevoOrganismo(true); // Mostrar el mensaje de error
+      setMostrarErrorNuevoOrganismo(true);
       return;
-    } else
-    {
-      setMostrarErrorNuevoOrganismo(false); // Ocultar el mensaje si los campos están completos
     }
-
+    setMostrarErrorNuevoOrganismo(false);
     const nuevoOrganismoDatos = {
       organismo: nuevoOrganismo,
       nombre_ministerio_servicio: nuevoOrganismoNombre,
@@ -231,22 +245,20 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
     };
 
     const payload = {
-      'p_2_1_organismos_intervinientes': [ nuevoOrganismoDatos ]
+      p_2_1_organismos_intervinientes: [ nuevoOrganismoDatos ],
     };
 
     try
     {
       await handleUpdatePaso(id, stepNumber, payload);
-      // Aquí agregamos el nuevo organismo al estado
-      setOrganismosAgrupados(prevOrganismos =>
+      setOrganismosAgrupados((prevOrganismos) =>
       {
         const nuevosOrganismos = { ...prevOrganismos };
-        nuevosOrganismos[ nuevoOrganismo ] = nuevosOrganismos[ nuevoOrganismo ] || [];
+        nuevosOrganismos[ nuevoOrganismo ] =
+          nuevosOrganismos[ nuevoOrganismo ] || [];
         nuevosOrganismos[ nuevoOrganismo ].push(nuevoOrganismoDatos);
         return nuevosOrganismos;
       });
-
-      // Limpiar los campos del formulario
       setNuevoOrganismo('');
       setNuevoOrganismoNombre('');
       setNuevoOrganismoDescripcion('');
@@ -255,57 +267,66 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
       setMostrarFormularioNuevoOrganismo(false);
       setRefreshSubpasoDos_dos(true);
       fetchDataDirecta();
-
     } catch (error)
     {
-      console.error("Error al agregar el organismo:", error);
+      console.error('Error al agregar el organismo:', error);
     }
   };
-
   const cancelarAgregarOrganismo = () =>
   {
-    setMostrarFormularioNuevoOrganismo(false);
     setNuevoOrganismo('');
     setNuevoOrganismoNombre('');
     setNuevoOrganismoDescripcion('');
     setNuevoOrganismoDisplay('');
-    setMostrarError(false)
+    setMostrarErrorNuevoOrganismo(false);
   };
-
 
   // Lógica para editar sectores existentes
 
   // Actualiza el estado cuando los campos cambian
 
   const [ filaEnEdicionId, setFilaEnEdicionId ] = useState(null);
-
+  const [ campoEstado, setCampoEstado ] = useState({});
 
   const handleInputChange = (organismoDisplay, id, campo, valor) =>
   {
     setMostrarError(false);
     setFilaEnEdicionId(id);
-
-    setOrganismosAgrupados(prevOrganismos =>
+    setOrganismosAgrupados((prevOrganismos) =>
     {
       const organismosActualizados = {
         ...prevOrganismos,
-        [ organismoDisplay ]: prevOrganismos[ organismoDisplay ].map(fila =>
+        [ organismoDisplay ]: prevOrganismos[ organismoDisplay ].map((fila) =>
         {
           if (fila.id === id)
           {
             return { ...fila, [ campo ]: valor };
           }
           return fila;
-        })
+        }),
       };
       return organismosActualizados;
     });
+    setCampoEstado((prev) => ({
+      ...prev,
+      [ `${id}-${campo}` ]: { loading: false, saved: false },
+    }));
   };
 
-  const [ loadingState, setLoadingState ] = useState({});
-  const [ savedState, setSavedState ] = useState({});
+  const validarCamposFila = (fila) =>
+  {
+    return (
+      fila.nombre_ministerio_servicio.trim() !== '' &&
+      fila.descripcion.trim() !== ''
+    );
+  };
 
-  const handleSave = async (idFila, organismoDisplay, esGuardadoPorBlur) =>
+  const handleSave = async (
+    idFila,
+    organismoDisplay,
+    esGuardadoPorBlur,
+    campo
+  ) =>
   {
     if (!esGuardadoPorBlur)
     {
@@ -313,138 +334,281 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
     }
 
     // Encuentra la fila específica que se está editando
-    const filaEditada = organismosAgrupados[ organismoDisplay ]?.find(fila => fila.id === idFila);
+    const filaEditada = organismosAgrupados[ organismoDisplay ]?.find(
+      (fila) => fila.id === idFila
+    );
 
-    const camposCompletos = filaEditada && filaEditada.nombre_ministerio_servicio && filaEditada.descripcion;
-
-    if (!camposCompletos)
+    if (!filaEditada)
     {
-      setMostrarError(true); // Actualizar el estado para mostrar el mensaje de error
+      setErroresPorFila((prev) => ({
+        ...prev,
+        [ idFila ]: 'Todos los campos son obligatorios.',
+      }));
+      return;
+    }
+    if (!validarCamposFila(filaEditada))
+    {
+      setErroresPorFila((prev) => ({
+        ...prev,
+        [ idFila ]: 'Todos los campos son obligatorios.',
+      }));
       return;
     } else
     {
-      setMostrarError(false); // Asegurar que el mensaje de error no se muestre si los campos están completos
+      setErroresPorFila((prev) =>
+      {
+        const nuevoEstado = { ...prev };
+        delete nuevoEstado[ idFila ];
+        return nuevoEstado;
+      });
     }
+    if (!campo)
+    {
+      console.error(
+        'El nombre del campo no se ha pasado correctamente a handleSave:',
+        campo
+      );
+      return;
+    }
+
+    setCampoEstado((prev) => ({
+      ...prev,
+      [ `${idFila}-${campo}` ]: { loading: true, saved: false },
+    }));
+
     try
     {
-      // Encontrar la fila específica que se está editando
-      const filaEditada = organismosAgrupados[ organismoDisplay ].find(fila => fila.id === idFila);
-
-      if (!filaEditada)
-      {
-        console.error("Fila no encontrada para ID:", idFila);
-        return;
-      }
-
       const payload = {
-        'p_2_1_organismos_intervinientes': [ {
-          id: filaEditada.id,
-          organismo: filaEditada.organismo,
-          nombre_ministerio_servicio: filaEditada.nombre_ministerio_servicio,
-          descripcion: filaEditada.descripcion,
-        } ]
+        p_2_1_organismos_intervinientes: [
+          {
+            id: filaEditada.id,
+            organismo: filaEditada.organismo,
+            nombre_ministerio_servicio: filaEditada.nombre_ministerio_servicio,
+            descripcion: filaEditada.descripcion,
+          },
+        ],
       };
-
-      // Llamar a la API para actualizar los datos
       await handleUpdatePaso(id, stepNumber, payload);
-
+      setControlBotones((prevState) => ({
+        ...prevState,
+        [ organismoDisplay ]: { mostrarBotonGuardar: false },
+      }));
       setRefreshSubpasoDos_dos(true);
-      setMostrarBotonGuardar(false);
-
+      setMostrarError(false);
+      setCampoEstado((prev) => ({
+        ...prev,
+        [ `${idFila}-${campo}` ]: { loading: false, saved: true },
+      }));
     } catch (error)
     {
-      console.error("Error al guardar los datos:", error);
+      console.error('Error al guardar los datos:', error);
+      setCampoEstado((prev) => ({
+        ...prev,
+        [ `${idFila}-${campo}` ]: { loading: false, saved: false },
+      }));
+    }
+  };
+
+  const sonCamposFilaValidos = (fila) =>
+  {
+    return (
+      fila.nombre_ministerio_servicio.trim() !== '' &&
+      fila.descripcion.trim() !== ''
+    );
+  };
+
+  const intentarGuardarFila = (idFila, organismoDisplay) =>
+  {
+    const fila = organismosAgrupados[ organismoDisplay ].find(
+      (fila) => fila.id === idFila
+    );
+    if (!fila || !sonCamposFilaValidos(fila))
+    {
+      setErroresPorFila((prev) => ({
+        ...prev,
+        [ idFila ]: 'Todos los campos deben estar completos antes de guardar.',
+      }));
+    } else
+    {
+      handleSave(idFila, organismoDisplay, true, 'nombre_ministerio_servicio');
+      handleSave(idFila, organismoDisplay, true, 'descripcion');
+      setErroresPorFila((prev) =>
+      {
+        const newState = { ...prev };
+        delete newState[ idFila ];
+        return newState;
+      });
     }
   };
 
 
   return (
     <div>
-      <h4 className="text-sans-h4">2.1 Organismos intervinientes en el ejercicio de la competencia</h4>
-      <h6 className="text-sans-h6-primary">En esta sección se debe describir brevemente, según corresponda, la esfera de atribuciones que posee cada organismo que cumpla un rol en el ejercicio de la competencia. Si las atribuciones de los organismos no están establecidas por ley, o el organismo no tiene un rol en el ejercicio de la competencia, la casilla de descripción debe quedar vacía. </h6>
-      <h6 className="text-sans-h6-primary mt-3">Asegúrate de identificar correctamente los organismos intervinientes, ya que esta información será utilizada más adelante en tu formulario.</h6>
+      <h4 className="text-sans-h4">
+        2.1 Organismos intervinientes en el ejercicio de la competencia
+      </h4>
+      <h6 className="text-sans-h6-primary">
+        En esta sección se debe describir brevemente, según corresponda, la
+        esfera de atribuciones que posee cada organismo que cumpla un rol en el
+        ejercicio de la competencia. Si las atribuciones de los organismos no
+        están establecidas por ley, o el organismo no tiene un rol en el
+        ejercicio de la competencia, la casilla de descripción debe quedar
+        vacía.{' '}
+      </h6>
+      <h6 className="text-sans-h6-primary mt-3">
+        Asegúrate de identificar correctamente los organismos intervinientes, ya
+        que esta información será utilizada más adelante en tu formulario.
+      </h6>
 
       {/* Renderiza las tablas para cada organismo */}
       <div className="my-4">
-        {Object.entries(organismosAgrupados).map(([ organismoDisplay, filas ], index) => (
-          <div key={index} className="tabla-organismo">
-            <div className="row border">
-              <div className="col p-3">
-                <p>{organismoDisplay}</p>
-              </div>
+        {Object.entries(organismosAgrupados).map(
+          ([ organismoDisplay, filas ], index) => (
+            <div key={index} className="tabla-organismo">
+              <div className="row border">
+                <div className="col p-3">
+                  <p>{organismoDisplay}</p>
+                </div>
 
-              <div className="col-10 border p-2">
-                {filas.map((fila, filaIndex) => (
-                  <div key={fila.id} className="row p-1">
-                    <div className="col-10 p-3">
-                      <div className="conteo">{filaIndex + 1}</div>
-                      <CustomInputArea 
-                        label="Nombre (Obligatorio)"
-                        value={fila.nombre_ministerio_servicio || ''}
-                        placeholder="Nombre ministerio o servicio"
-                        maxLength={index === 0 && filaIndex === 0 ? undefined : 300}
-                        disabled={index === 0 && filaIndex === 0}
-                        onChange={(valor) => handleInputChange(organismoDisplay, fila.id, 'nombre_ministerio_servicio', valor)}
-                        onBlur={fila.id !== ultimaFilaId ? () => handleSave(fila.id, organismoDisplay, true) : null}
-                        loading={loadingState[ fila.id ]}
-                        saved={savedState[ fila.id ]}
-                      />
-                      {!(index === 0 && filaIndex === 0) && (
-                        <CustomInputArea 
-                          label="Descripción (Obligatorio)"
-                          value={fila.descripcion || ''}
-                          placeholder="Descripción"
-                          maxLength={300}
-                          onChange={(valor) => handleInputChange(organismoDisplay, fila.id, 'descripcion', valor)}
-                          onBlur={fila.id !== ultimaFilaId ? () => handleSave(fila.id, organismoDisplay, true) : null}
-                          loading={loadingState[ fila.id ]}
-                          saved={savedState[ fila.id ]}
+                <div className="col-10 border p-2">
+                  {filas.map((fila, filaIndex) => (
+                    <div key={fila.id} className="row p-1">
+                      <div className="col-10 p-3">
+                        <div className="conteo">{filaIndex + 1}</div>
+                        <CustomInputArea
+                          label="Nombre (Obligatorio)"
+                          value={fila.nombre_ministerio_servicio || ''}
+                          placeholder="Nombre ministerio o servicio"
+                          maxLength={
+                            index === 0 && filaIndex === 0 ? undefined : 300
+                          }
+                          disabled={index === 0 && filaIndex === 0}
+                          onChange={(valor) =>
+                            handleInputChange(
+                              organismoDisplay,
+                              fila.id,
+                              'nombre_ministerio_servicio',
+                              valor
+                            )
+                          }
+                          onBlur={
+                            fila.id !== ultimaFilaId
+                              ? () =>
+                                handleSave(
+                                  fila.id,
+                                  organismoDisplay,
+                                  true,
+                                  'nombre_ministerio_servicio'
+                                )
+                              : null
+                          }
+                          loading={
+                            campoEstado[ `${fila.id}-nombre_ministerio_servicio` ]
+                              ?.loading
+                          }
+                          saved={
+                            campoEstado[ `${fila.id}-nombre_ministerio_servicio` ]
+                              ?.saved
+                          }
                         />
+                        {!(index === 0 && filaIndex === 0) && (
+                          <CustomInputArea
+                            label="Descripción (Obligatorio)"
+                            value={fila.descripcion || ''}
+                            placeholder="Descripción"
+                            maxLength={300}
+                            onChange={(valor) =>
+                              handleInputChange(
+                                organismoDisplay,
+                                fila.id,
+                                'descripcion',
+                                valor
+                              )
+                            }
+                            onBlur={
+                              fila.id !== ultimaFilaId
+                                ? () =>
+                                  handleSave(
+                                    fila.id,
+                                    organismoDisplay,
+                                    true,
+                                    'descripcion'
+                                  )
+                                : null
+                            }
+                            loading={
+                              campoEstado[ `${fila.id}-descripcion` ]?.loading
+                            }
+                            saved={campoEstado[ `${fila.id}-descripcion` ]?.saved}
+                          />
+                        )}
+                      </div>
+                      {index !== 0 || filaIndex !== 0 ? (
+                        <div className="col d-flex align-items-center">
+                          <button
+                            className="btn-terciario-ghost"
+                            onClick={() =>
+                              eliminarFila(organismoDisplay, fila.id)
+                            }
+                          >
+                            <i className="material-symbols-rounded me-2">
+                              delete
+                            </i>
+                            <p className="mb-0 text-decoration-underline">
+                              Borrar
+                            </p>
+                          </button>
+                        </div>
+                      ) : null}
+                      <hr className="" />
+                      {erroresPorFila[ fila.id ] && (
+                        <div className="col-12">
+                          <div className="text-sans-p-bold-darkred">
+                            {erroresPorFila[ fila.id ]}
+                          </div>
+                        </div>
                       )}
-
                     </div>
-                    {index !== 0 || filaIndex !== 0 ? (
-                      <div className="col d-flex align-items-center">
+                  ))}
+                  <div className="row">
+                    <div className="p-2">
+                      {controlBotones[ organismoDisplay ]?.mostrarBotonGuardar ? (
                         <button
-                          className="btn-terciario-ghost"
-                          onClick={() => eliminarFila(organismoDisplay, fila.id)}>
-                          <i className="material-symbols-rounded me-2">delete</i>
-                          <p className="mb-0 text-decoration-underline">Borrar</p>
+                          className="btn-secundario-s m-2"
+                          onClick={() =>
+                            intentarGuardarFila(
+                              filaEnEdicionId,
+                              organismoDisplay
+                            )
+                          }
+                        >
+                          <i className="material-symbols-rounded me-2">save</i>
+                          <p className="mb-0 text-decoration-underline">
+                            Guardar
+                          </p>
                         </button>
-                      </div>
-                    ) : null}
-                    <hr className="" />
-                  </div>
-                ))}
-                <div className="row">
-                  <div className="p-2">
-                    {mostrarError && (
-                      <div className="text-sans-p-bold-darkred">
-                        Completar todos los campos obligatorios.
-                      </div>
-                    )}
-                    {mostrarBotonGuardar ? (
-                      <button className="btn-secundario-s m-2" onClick={() => handleSave(filaEnEdicionId, organismoDisplay, true)}>
-                        <i className="material-symbols-rounded me-2">save</i>
-                        <p className="mb-0 text-decoration-underline">Guardar</p>
-                      </button>
-                    ) : (
-                      <button className="btn-secundario-s" onClick={() => agregarFila(organismoDisplay)}>
-                        <i className="material-symbols-rounded me-2">add</i>
-                        <p className="mb-0 text-decoration-underline">Agregar Otro</p>
-                      </button>
-                    )}
+                      ) : (
+                        <button
+                          className="btn-secundario-s m-2 "
+                          onClick={() => agregarFila(organismoDisplay)}
+                        >
+                          <i className="material-symbols-rounded me-2">add</i>
+                          <p className="mb-0 text-decoration-underline">
+                            Agregar Otro
+                          </p>
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        ))}
+          )
+        )}
 
         {mostrarFormularioNuevoOrganismo && (
-          <div className="tabla-organismo">
+          <div className="tabla-organismo mt-2">
             <div className="row border">
-
               <div className="col-2 p-3">
                 <p>
                   <DropdownSelect
@@ -452,33 +616,37 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
                     value={nuevoOrganismoDisplay}
                     onSelectionChange={manejarCambioDropdown}
                     placeholder="Organismos"
+                    readOnly={solo_lectura}
                   />
                 </p>
               </div>
 
-              <div className="col-10 border p-2">
+              <div className="col-10 border-start p-2">
                 <div className="row">
                   <div className="col-10 p-3">
-                    <CustomInputArea 
+                    <CustomInputArea
                       label="Nombre (Obligatorio)"
                       value={nuevoOrganismoNombre}
                       onChange={handleNombreChange}
                       placeholder="Nombre ministerio o servicio"
                       maxLength={300}
+                      readOnly={solo_lectura}
                     />
 
-                    <CustomInputArea 
+                    <CustomInputArea
                       label="Descripción (Obligatorio)"
                       value={nuevoOrganismoDescripcion}
                       onChange={handleDescripcionChange}
                       placeholder="Descripción"
                       maxLength={300}
+                      readOnly={solo_lectura}
                     />
                   </div>
                   <div className="col d-flex align-items-center">
                     <button
                       className="btn-terciario-ghost"
-                      onClick={cancelarAgregarOrganismo}>
+                      onClick={cancelarAgregarOrganismo}
+                    >
                       <i className="material-symbols-rounded me-2">delete</i>
                       <p className="mb-0 text-decoration-underline">Borrar</p>
                     </button>
@@ -488,13 +656,19 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
                 <div className="row">
                   <div className="p-2">
                     {mostrarErrorNuevoOrganismo && (
-                      <div className="text-sans-p-bold-darkred" >
-                        Faltan datos para guardar el organismo
+                      <div className="text-sans-p-bold-darkred">
+                        Todos los campos son obligatorios para agregar un nuevo
+                        organismo.
                       </div>
                     )}
-                    <button className="btn-secundario-s m-2" onClick={agregarNuevoOrganismo}>
+                    <button
+                      className="btn-secundario-s m-2"
+                      onClick={agregarNuevoOrganismo}
+                    >
                       <i className="material-symbols-rounded me-2">add</i>
-                      <p className="mb-0 text-decoration-underline">Guardar Organismo</p>
+                      <p className="mb-0 text-decoration-underline">
+                        Guardar Organismo
+                      </p>
                     </button>
                   </div>
                 </div>
@@ -504,7 +678,7 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
         )}
 
         {
-          opciones.length > 0 && (
+          opciones.length > 0 && !solo_lectura && (
             <button className="btn-secundario-s mt-3" onClick={mostrarFormulario}>
               <i className="material-symbols-rounded me-2">add</i>
               <p className="mb-0 text-decoration-underline">Agregar Organismo</p>
@@ -513,5 +687,5 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
         }
       </div>
     </div>
-  )
+  );
 };

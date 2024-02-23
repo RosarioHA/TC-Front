@@ -5,7 +5,7 @@ import { FormularioContext } from "../../../context/FormSectorial";
 import { SubirArchivoRegiones } from "../../forms/subirArchivoRegiones";
 import { useFileRegional } from "../../../hooks/formulario/useFileRegional";
 
-export const Subpaso_dos = ({ pasoData, organigrama, id, stepNumber }) =>
+export const Subpaso_dos = ({ pasoData, organigrama, id, stepNumber, solo_lectura }) =>
 {
   const { updatePasoError, handleUpdatePaso, handleUploadFiles } = useContext(FormularioContext);
   const { uploadFile } = useFileRegional();
@@ -25,30 +25,24 @@ export const Subpaso_dos = ({ pasoData, organigrama, id, stepNumber }) =>
   });
 
 
-  useEffect(() =>
-  {
-    if (pasoData && pasoData.paso1)
-    {
+  useEffect(() => {
+    if (pasoData && pasoData.paso1) {
       setFormData({ paso1: pasoData.paso1 });
     }
   }, [ pasoData ]);
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     const savedData = localStorage.getItem('formData');
-    if (savedData)
-    {
+    if (savedData) {
       setFormData(JSON.parse(savedData));
     }
   }, []);
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     localStorage.setItem('formData', JSON.stringify(formData));
   }, [ formData ]);
 
-  const handleChange = (inputName, e) =>
-  {
+  const handleChange = (inputName, e) => {
     const { value } = e.target;
     setFormData(prevFormData => ({
       ...prevFormData,
@@ -63,22 +57,19 @@ export const Subpaso_dos = ({ pasoData, organigrama, id, stepNumber }) =>
     }));
   };
 
-  const handleSave = async (inputName) =>
-  {
+  const handleSave = async (inputName) => {
     setInputStatus(prevStatus => ({
       ...prevStatus,
       [ inputName ]: { ...prevStatus[ inputName ], loading: true }
     }));
 
     const success = await handleUpdatePaso(id, stepNumber, formData);
-    if (success)
-    {
+    if (success) {
       setInputStatus(prevStatus => ({
         ...prevStatus,
         [ inputName ]: { loading: false, saved: true }
       }));
-    } else
-    {
+    } else {
       setInputStatus(prevStatus => ({
         ...prevStatus,
         [ inputName ]: { loading: false, saved: false }
@@ -86,11 +77,8 @@ export const Subpaso_dos = ({ pasoData, organigrama, id, stepNumber }) =>
     }
   };
 
-
-  const handleFileSelect = async (file, fieldName) =>
-  {
-    try
-    {
+  const handleFileSelect = async (file, fieldName) => {
+    try {
       // Actualizar el estado local con el archivo seleccionado
       const archivos = new FormData();
       archivos.append(fieldName, file);
@@ -107,8 +95,7 @@ export const Subpaso_dos = ({ pasoData, organigrama, id, stepNumber }) =>
       }));
 
       console.log("Archivo recibido en el componente padre:", file.name);
-    } catch (error)
-    {
+    } catch (error) {
       console.error("Error al subir el archivo:", error);
       setInputStatus(prevStatus => ({
         ...prevStatus,
@@ -117,17 +104,14 @@ export const Subpaso_dos = ({ pasoData, organigrama, id, stepNumber }) =>
     }
   };
 
-  const handleFileSelectRegion = async (file, fieldName, regionId) =>
-  {
+  const handleFileSelectRegion = async (file, fieldName, regionId) => {
     // Asegúrate de que `id` y `stepNumber` están definidos
-    if (typeof id === 'undefined' || typeof stepNumber === 'undefined')
-    {
+    if (typeof id === 'undefined' || typeof stepNumber === 'undefined') {
       console.error("El ID del formulario o el número de paso no están definidos.");
       return;
     }
 
-    try
-    {
+    try {
       // Actualiza el estado para indicar que el archivo está cargando
       setInputStatus(prevStatus => ({
         ...prevStatus,
@@ -142,8 +126,7 @@ export const Subpaso_dos = ({ pasoData, organigrama, id, stepNumber }) =>
         ...prevStatus,
         [ fieldName ]: { loading: false, saved: true },
       }));
-    } catch (error)
-    {
+    } catch (error) {
       console.error("Error al subir el archivo:", error);
       setInputStatus(prevStatus => ({
         ...prevStatus,
@@ -152,8 +135,7 @@ export const Subpaso_dos = ({ pasoData, organigrama, id, stepNumber }) =>
     }
   };
 
-  const eliminarDocRegional = async (idRegion) =>
-  {
+  const eliminarDocRegional = async (idRegion) => {
     const payload = {
       organigramaregional: [ {
         id: idRegion,
@@ -161,20 +143,15 @@ export const Subpaso_dos = ({ pasoData, organigrama, id, stepNumber }) =>
       } ]
     };
 
-    try
-    {
+    try {
       await handleUpdatePaso(id, stepNumber, payload);
       console.log("Organigrama regional eliminado con éxito");
-    } catch (error)
-    {
+    } catch (error) {
       console.error("Error al eliminar el organigrama regional:", error);
     }
   };
 
-
-
-  if (updatePasoError)
-  {
+  if (updatePasoError) {
     return <div>Error: {updatePasoError.message}</div>;
   }
 
@@ -226,6 +203,7 @@ export const Subpaso_dos = ({ pasoData, organigrama, id, stepNumber }) =>
           loading={inputStatus.descripcion_archivo_organigrama_nacional.loading}
           saved={inputStatus.descripcion_archivo_organigrama_nacional.saved}
           maxLength={500}
+          readOnly={solo_lectura}
         />
       </div>
 
@@ -274,7 +252,8 @@ export const Subpaso_dos = ({ pasoData, organigrama, id, stepNumber }) =>
           onBlur={() => handleSave('descripcion_archivo_organigrama_regional')}
           loading={inputStatus.descripcion_archivo_organigrama_regional.loading}
           saved={inputStatus.descripcion_archivo_organigrama_regional.saved}
-          maxLength={500} />
+          maxLength={500}
+          readOnly={solo_lectura} />
       </div>
 
     </div>

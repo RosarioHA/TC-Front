@@ -5,8 +5,7 @@ import DropdownSelect from "../../dropdown/select";
 import { useAmbitos } from '../../../hooks/useAmbitos';
 
 
-export const Subpaso_tres = ({ pasoData, id, stepNumber }) =>
-{
+export const Subpaso_tres = ({ pasoData, id, stepNumber, solo_lectura }) => {
   const { handleUpdatePaso } = useContext(FormularioContext);
   const { ambitos } = useAmbitos()
   const [ ambitoSeleccionado, setAmbitoSeleccionado ] = useState(null);
@@ -31,29 +30,23 @@ export const Subpaso_tres = ({ pasoData, id, stepNumber }) =>
     organo_actual_competencia: { loading: false, saved: false },
   });
 
-  useEffect(() =>
-  {
-    if (pasoData && pasoData.paso1)
-    {
+  useEffect(() => {
+    if (pasoData && pasoData.paso1) {
       setFormData({ paso1: pasoData.paso1 });
     }
   }, [ pasoData ]);
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     const savedData = localStorage.getItem('formData');
-    if (savedData)
-    {
+    if (savedData) {
       setFormData(JSON.parse(savedData));
     }
   }, []);
-  useEffect(() =>
-  {
+  useEffect(() => {
     localStorage.setItem('formData', JSON.stringify(formData));
   }, [ formData ]);
 
-  const handleChange = (inputName, e) =>
-  {
+  const handleChange = (inputName, e) => {
     const { value } = e.target;
     setFormData(prevFormData => ({
       ...prevFormData,
@@ -68,9 +61,7 @@ export const Subpaso_tres = ({ pasoData, id, stepNumber }) =>
     }));
   };
 
-
-  const handleSave = async (inputName) =>
-  {
+  const handleSave = async (inputName) => {
     setInputStatus(prevStatus => ({
       ...prevStatus,
       [ inputName ]: { loading: true, saved: false }
@@ -85,14 +76,12 @@ export const Subpaso_tres = ({ pasoData, id, stepNumber }) =>
     };
 
     const success = await handleUpdatePaso(id, stepNumber, updatedFormData);
-    if (success)
-    {
+    if (success) {
       setInputStatus(prevStatus => ({
         ...prevStatus,
         [ inputName ]: { loading: false, saved: true }
       }));
-    } else
-    {
+    } else {
       setInputStatus(prevStatus => ({
         ...prevStatus,
         [ inputName ]: { loading: false, saved: false }
@@ -105,8 +94,7 @@ export const Subpaso_tres = ({ pasoData, id, stepNumber }) =>
     value: ambito.id,
   }));
 
-  const handleAmbitoChange = async (selectedOption) =>
-  {
+  const handleAmbitoChange = async (selectedOption) => {
     setAmbitoSeleccionado(selectedOption);
     localStorage.setItem('ambitoSeleccionado', JSON.stringify(selectedOption)); 
     const updatedFormData = {
@@ -119,11 +107,9 @@ export const Subpaso_tres = ({ pasoData, id, stepNumber }) =>
     await handleSave('ambito_paso1', updatedFormData);
   };
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     const savedSelection = localStorage.getItem('ambitoSeleccionado');
-    if (savedSelection)
-    {
+    if (savedSelection) {
       setAmbitoSeleccionado(JSON.parse(savedSelection));
     }
   }, []);
@@ -150,6 +136,7 @@ export const Subpaso_tres = ({ pasoData, id, stepNumber }) =>
             loading={inputStatus.identificacion_competencia.loading}
             saved={inputStatus.identificacion_competencia.saved}
             maxLength={500}
+            readOnly={solo_lectura}
           />
           <div className="d-flex mb-3 pt-0 text-sans-h6-primary">
             <i className="material-symbols-rounded me-2">info</i>
@@ -168,6 +155,7 @@ export const Subpaso_tres = ({ pasoData, id, stepNumber }) =>
             loading={inputStatus.fuentes_normativas.loading}
             saved={inputStatus.fuentes_normativas.saved}
             maxLength={500}
+            readOnly={solo_lectura}
           />
           <div className="d-flex mb-3 pt-0 text-sans-h6-primary col-11">
             <i className="material-symbols-rounded me-2">info</i>
@@ -186,6 +174,7 @@ export const Subpaso_tres = ({ pasoData, id, stepNumber }) =>
             loading={inputStatus.territorio_competencia.loading}
             saved={inputStatus.territorio_competencia.saved}
             maxLength={500}
+            readOnly={solo_lectura}
           />
           <div className="d-flex mb-3 mt-1 text-sans-h6-primary col-11">
             <i className="material-symbols-rounded me-2">info</i>
@@ -204,6 +193,7 @@ export const Subpaso_tres = ({ pasoData, id, stepNumber }) =>
             loading={inputStatus.enfoque_territorial_competencia.loading}
             saved={inputStatus.enfoque_territorial_competencia.saved}
             maxLength={500}
+            readOnly={solo_lectura}
           />
           <div className="d-flex mb-3 mt-1 text-sans-h6-primary col-11">
             <i className="material-symbols-rounded me-2">info</i>
@@ -217,6 +207,7 @@ export const Subpaso_tres = ({ pasoData, id, stepNumber }) =>
             options={opcionesAmbito}
             onSelectionChange={handleAmbitoChange}
             selected={ambitoSeleccionado}
+            readOnly={solo_lectura}
           />
           <div className="d-flex mb-3 mt-1 text-sans-h6-primary col-11">
             <i className="material-symbols-rounded me-2">info</i>
@@ -234,13 +225,15 @@ export const Subpaso_tres = ({ pasoData, id, stepNumber }) =>
             onBlur={() => handleSave('posibilidad_ejercicio_por_gobierno_regional')}
             loading={inputStatus.posibilidad_ejercicio_por_gobierno_regional.loading}
             saved={inputStatus.posibilidad_ejercicio_por_gobierno_regional.saved}
-            maxLength={500} />
+            maxLength={500}
+            readOnly={solo_lectura} 
+          />
           <div className="d-flex mb-3 mt-1 text-sans-h6-primary col-11">
             <i className="material-symbols-rounded me-2">info</i>
             <h6 className="mt-1">Indicar si se trata de un traspaso de competencias al “Gobierno Regional”, constituido tanto por el Gobernador como por el Consejo Regional, o se trata de un traspaso al “Gobernador Regional”, órgano ejecutivo del Gobierno Regional.</h6>
           </div>
         </div>
-        <div className="my-4">
+        <div className="my-4 pb-3 border-bottom">
           <CustomTextarea
             label="Órgano que ejerce actualmente la competencia (Obligatorio)"
             placeholder="Indicar órgano que ejerce actualmente la competencia"
@@ -251,7 +244,9 @@ export const Subpaso_tres = ({ pasoData, id, stepNumber }) =>
             onBlur={() => handleSave('organo_actual_competencia')}
             loading={inputStatus.organo_actual_competencia.loading}
             saved={inputStatus.organo_actual_competencia.saved}
-            maxLength={500} />
+            maxLength={500} 
+            readOnly={solo_lectura}
+            />
           <div className="d-flex mb-3 mt-1 text-sans-h6-primary col-11">
             <i className="material-symbols-rounded me-2">info</i>
             <h6 className="mt-1">Analizar si la competencia es actualmente ejercida por los ministerios y de los servicios públicos a que se refiere el artículo 28 de la ley N° 18.575, orgánica constitucional de Bases Generales de la Administración del Estado.</h6>
