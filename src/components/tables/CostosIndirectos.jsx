@@ -232,7 +232,7 @@ const CostosIndirectos = ({
 
     try {
       // Asume que handleUpdatePaso puede manejar ambos casos adecuadamente
-     await handleUpdatePaso(id, stepNumber, payload);
+      await handleUpdatePaso(id, stepNumber, payload);
 
       // Actualiza el estado de carga y guardado
       updateFieldState(arrayNameId, fieldName, { loading: false, saved: true });
@@ -345,7 +345,7 @@ const CostosIndirectos = ({
                   <p className="text-sans-p-bold mb-0">Total Anual</p>
                   <p>($M)</p>
                 </div>
-                  
+
                 <Controller
                   control={control}
                   name={`total_anual_${costo.id}`}
@@ -407,8 +407,8 @@ const CostosIndirectos = ({
                             field.onChange(selectedOptions);
                           }}
 
-                        readOnly={solo_lectura}
-                        selectedValues={costo.etapa_label_value}
+                          readOnly={solo_lectura}
+                          selectedValues={costo.etapa_label_value}
 
                           loading={costo.estados?.etapa?.loading ?? false}
                           saved={costo.estados?.etapa?.saved ?? false}
@@ -417,7 +417,7 @@ const CostosIndirectos = ({
                     }}
                   />
                 </div>
-                
+
               </div>
               <div className="col d-flex flex-column justify-content-between">
                 <p className="text-sans-p-bold">¿Es transversal?</p>
@@ -492,7 +492,7 @@ const CostosIndirectos = ({
             </div>
 
             <div className="d-flex justify-content-end me-2">
-              {!solo_lectura && (
+              {(!solo_lectura) && (
                 <div className="">
                   <button
                     className="btn-terciario-ghost mt-3"
@@ -508,14 +508,14 @@ const CostosIndirectos = ({
         ))}
 
         {!solo_lectura && (
-        <button
-          className="btn-secundario-s m-2"
-          type="submit">
-          <i className="material-symbols-rounded me-2">add</i>
-          <p className="mb-0 text-decoration-underline">Agregar subtítulo</p>
-        </button>
+          <button
+            className="btn-secundario-s m-2"
+            type="submit">
+            <i className="material-symbols-rounded me-2">add</i>
+            <p className="mb-0 text-decoration-underline">Agregar subtítulo</p>
+          </button>
         )}
-        
+
       </form>
     </div>
   )

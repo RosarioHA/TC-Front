@@ -41,6 +41,7 @@ const CostosDirectos = ({
   const [opcionesEtapas, setopcionesEtapas] = useState([]);
   const { handleUpdatePaso } = useContext(FormularioContext);
   const [esquemaValidacion, setEsquemaValidacion] = useState(null);
+  
 
   const defaultValues = costosDirectos.reduce((acc, costoDirecto) => {
     if (costoDirecto.item_subtitulo) {
@@ -508,7 +509,7 @@ const CostosDirectos = ({
           </div>
         ))}
 
-        {!solo_lectura && (
+        {!solo_lectura && (            
         <button
           className="btn-secundario-s m-2"
           type="submit">
