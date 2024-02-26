@@ -96,6 +96,8 @@ export const FormularioProvider = ({ children }) => {
     refetchTrigger,
   };
 
+  console.log("ID en FormularioContext:", dataFormSectorial ? dataFormSectorial.id : "No hay ID");
+
   return (
     <FormularioContext.Provider value={value}>
       {children}

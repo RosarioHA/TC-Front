@@ -17,6 +17,7 @@ const PasoUno = () => {
   const userSubdere = userData?.perfil?.includes('SUBDERE');
   const { observaciones, updateObservacion, fetchObservaciones, loadingObservaciones, saved } = useObservacionesSubdere(data ? data.id : null);
   const [observacionPaso1, setObservacionPaso1] = useState("");
+  console.log("observaciones en paso 1", observaciones)
 
   const formularioEnviado = data.formulario_enviado
   const observacionesEnviadas = data.observacion_enviada
