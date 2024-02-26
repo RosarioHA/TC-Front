@@ -6,6 +6,7 @@ import CustomTextarea from "../forms/custom_textarea";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FormularioContext } from "../../context/FormSectorial";
+import { construirValidacionPaso5_Personal } from "../../validaciones/esquemaValidarPaso5Sectorial";
 
 const PersonalDirecto = ({
   id,
@@ -22,6 +23,7 @@ const PersonalDirecto = ({
   const [mostrarFormularioNuevo, setMostrarFormularioNuevo] = useState(false);
   const [mostrarBotonFormulario, setMostrarBotonFormulario] = useState(true);
   const { handleUpdatePaso } = useContext(FormularioContext);
+  const [esquemaValidacion, setEsquemaValidacion] = useState(null);
 
   const [opcionesEstamentos, setOpcionesEstamentos] = useState([]);
   const [opcionesCalidadJuridica, setOpcionesCalidadJuridica] = useState([]);
@@ -43,18 +45,21 @@ const PersonalDirecto = ({
     agruparPorCalidadJuridica(data_personal_directo);
   }, [data_personal_directo]);
 
-  /*useEffect(() => {
-    const esquema = construirValidacionPaso5_1ab(costosIndirectos);
+  const arregloCalidadJuridica = Object.entries(personas).map(([calidadJuridica, personas]) => {
+    return { calidadJuridica, personas };
+  });  
+
+  useEffect(() => {
+    const esquema = construirValidacionPaso5_Personal(arregloCalidadJuridica);
     setEsquemaValidacion(esquema);
-  }, [costosIndirectos]);*/
+  }, [personas]);
 
   const { control, handleSubmit, trigger, clearErrors, setError, formState: { errors } } = useForm({
-    //resolver: esquemaValidacion ? yupResolver(esquemaValidacion) : undefined,
+    resolver: esquemaValidacion ? yupResolver(esquemaValidacion) : undefined,
     mode: 'onBlur',
   });
 
 
-  // Lógica para agregar una nueva personaaa calidad juridica existente
   // Lógica para agregar una nueva persona a calidad juridica existente
 const agregarPersona = (calidadJuridicaLabel) => {
   // Busca el objeto correspondiente en listado_calidades_juridicas basado en el label
@@ -317,6 +322,14 @@ const agregarPersona = (calidadJuridicaLabel) => {
     }
   };
 
+  const onSubmitAgregarPersona = () => {
+    agregarPersona();
+  };
+
+  const onSubmitAgregarCalidadJuridica = () => {
+    agregarNuevaCalidadJuridica();
+  };
+
 
 
   return (
@@ -327,7 +340,8 @@ const agregarPersona = (calidadJuridicaLabel) => {
 
 
       <div className="col my-4">
-        {/* Renderiza automáticamente basado en la presencia de datos en personas */}
+
+        <form onSubmit={handleSubmit(onSubmitAgregarPersona)}>
         {Object.entries(personas).map(([calidad_juridica, personas], index) => (
           <div key={index}>
 
@@ -477,6 +491,7 @@ const agregarPersona = (calidadJuridicaLabel) => {
 
           </div>
         ))}
+        </form>
       </div>
 
       {mostrarFormularioNuevo && (
