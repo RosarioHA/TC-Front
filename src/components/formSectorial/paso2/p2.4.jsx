@@ -562,8 +562,7 @@ export const Subpaso_dosPuntoCuatro = ({
                         }}
                         readOnly={solo_lectura}
                         selectedValues={plataforma.etapas_label_value}
-                        loading={plataforma.estados?.etapas?.loading ?? false}
-                        saved={plataforma.estados?.etapas?.saved ?? false}
+                        
                       />
                     );
                   }}

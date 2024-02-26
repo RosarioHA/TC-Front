@@ -11,7 +11,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useObservacionesSubdere } from '../../hooks/formulario/useObSubdereSectorial';
 
 const PasoCinco = () => {
-  const { updateStepNumber, pasoData, data, loadingPaso, errorPaso } = useContext(FormularioContext);
+  const { updateStepNumber, pasoData, data,  errorPaso } = useContext(FormularioContext);
   const stepNumber = 5;
   const [refreshSubpaso_CincoDos, setRefreshSubpaso_CincoDos] = useState(false);
   const { userData } = useAuth();
@@ -32,7 +32,6 @@ const PasoCinco = () => {
     }
   }, [updateStepNumber, stepNumber, observaciones, fetchObservaciones]);
 
-  if (loadingPaso) return <div>Cargando...</div>;
   if (errorPaso) return <div>Error: {errorPaso.message || "Error desconocido"}</div>;
   if (!pasoData) return <div>No hay datos disponibles para el Paso 5</div>;
 

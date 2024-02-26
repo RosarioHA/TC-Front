@@ -685,7 +685,7 @@ span.material-symbols-outlined {
 
 #visorPDF {
   width: 100%;
-  height: 250px;
+  height: 450px;
 }
 
 .avance-bar {
@@ -878,6 +878,14 @@ span.material-symbols-outlined {
   position: relative;
   width: 100%;
   height: 100%;
+}
+
+.border-success {
+  border-color: #006636;
+}
+
+.border-error {
+  border-color: #871a1a;
 }
 
 .custom-pagination-btn {

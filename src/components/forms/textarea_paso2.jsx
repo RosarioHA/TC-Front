@@ -1,4 +1,4 @@
-import { useState, forwardRef , useEffect} from "react";
+import { useState, forwardRef } from "react";
 
 const CustomInputArea = forwardRef(
   ({ loading, saved, label, placeholder, id, maxLength, error, readOnly, onChange, onBlur, initialValue, ...props }, ref) => {
@@ -31,11 +31,10 @@ const CustomInputArea = forwardRef(
         return <div className="spinner-border text-primary" role="status"></div>;
       }
       if (saved) {
-        return <i className="material-symbols-outlined text-success">check</i>; // Reemplaza esto con tu ícono de check real
+        return <i className="material-symbols-outlined text-success">check</i>;
       }
       return null;
     };
-
 
     return (
       <div className="d-flex flex-column input-container col-11">
@@ -65,12 +64,9 @@ const CustomInputArea = forwardRef(
                 {renderSpinnerOrCheck()}
               </div>
             </div>
-            <div className="d-flex justify-content-between col-11">
-              {error && (
-                <p className="text-sans-h6-darkred mt-1 mb-0">{error}</p>
-              )}
+            <div className="d-flex justify-content-end col-12">
               {maxLength !== null && maxLength !== undefined && (
-                <div className="mb-0  mt-1 ms-auto ">
+                <div className="mb-0  mt-1 ">
                   <span className={counterClass}>
                     {inputValue.length}/{maxLength} caracteres.
                   </span>
