@@ -7,8 +7,9 @@ import { useNavigate } from "react-router-dom";
 
 const ResumenOS = () => {
 	const { data } = useContext(FormularioContext);
-	const { observaciones, fetchObservaciones } = useObservacionesSubdere(data ? data.id : null);
+	const { observaciones, fetchObservaciones, updateObservacion } = useObservacionesSubdere(data ? data.id : null);
 	const navigate = useNavigate();
+	console.log(observaciones)
 
   useEffect(() => {
     const obtenerObservaciones = async () => {
@@ -23,6 +24,20 @@ const ResumenOS = () => {
 
 	const handleBackButtonClick = () => {
     navigate(-1);
+  };
+
+	const handleEnviarClick = async () => {
+    try {
+      // Aquí actualizas el valor de observacion_enviada a true
+      await updateObservacion({ observacion_enviada: true });
+
+      // Después de enviar las observaciones, podrías redirigir al usuario a otra vista
+      // navigate('/otra-vista');
+
+    } catch (error) {
+      console.error("Error al enviar observaciones:", error);
+      // Manejar el error si es necesario
+    }
   };
 
 	const titulosPasos = {
@@ -94,7 +109,7 @@ const ResumenOS = () => {
 					<i className="material-symbols-rounded me-2">arrow_back_ios</i>
 					Atrás
 				</button>
-				<button className="d-flex btn-primario-s">
+				<button className="d-flex btn-primario-s" onClick={handleEnviarClick}>
 					Enviar Observaciones
 					<i className="material-symbols-rounded me-2">arrow_forward_ios</i>
 				</button>

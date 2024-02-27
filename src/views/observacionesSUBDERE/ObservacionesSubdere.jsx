@@ -1,10 +1,14 @@
 import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { FormularioContext } from '../../context/FormSectorial';
+import { useObservacionesSubdere } from "../../hooks/formulario/useObSubdereSectorial";
 
 const ObservacionesSubdere = () => {
   const { updateFormId, data, loading } = useContext(FormularioContext);
   const [proximaEtapaDipres, setProximaEtapaGore] = useState(null);
+  const { observaciones, fetchObservaciones } = useObservacionesSubdere(data ? data.id : null);
+
+  console.log("observaciones en vista OS", observaciones)
   console.log("data", data)
  
   const navigate = useNavigate();
@@ -23,6 +27,17 @@ const ObservacionesSubdere = () => {
       updateFormId(id);
     }
   }, [id, updateFormId]);
+
+  useEffect(() => {
+    const obtenerObservaciones = async () => {
+      try {
+        await fetchObservaciones();
+      } catch (error) {
+        console.error("Error al obtener observaciones en ResumenOS:", error);
+      }
+    };
+    obtenerObservaciones();
+  }, [data, fetchObservaciones]);
 
   if (loading) {
     return <div>Cargando...</div>;
@@ -73,50 +88,50 @@ const ObservacionesSubdere = () => {
       </div>
 
       {/* condicionalidad: si ya se han enviado todas las OS, se muestra el primer div; si no, el segundo */}
-      {/* DIV 1 */}
-      <div>
-        <h3 className="text-sans-h2">Esta todo listo para que termines la etapa</h3>
-        <p className="text-sans-p mt-3 mb-5">Ya revisaste todos los formularios. </p> 
-        <p className="text-sans-p mb-2">Debes definir cual es el próximo paso en el procedo de análisis de la competencia:</p>
+      {observaciones. observacion_enviada ? (
         <div>
-          <div className="form-check">
-            <input
-              type="radio"
-              id="opcionA"
-              name="proximaEtapa"
-              className="form-check-input"
-              value="A"
-              onChange={() => handleRadioButtonChange('A')}
-              checked={proximaEtapaDipres === true}
-            />
-            <label htmlFor="opcionA" className="text-sans-p">
-              DIPRES debe pronunciarse respecto de la información del sector o sectores asociados a la competencia.
-            </label>
-          </div>
-          <div className="form-check">
-            <input
-              type="radio"
-              id="opcionB"
-              name="proximaEtapa"
-              className="form-check-input"
-              value="B"
-              onChange={() => handleRadioButtonChange('B')}
-              checked={proximaEtapaDipres === false}
-            />
-            <label htmlFor="opcionB" className="text-sans-p">
-              GORE debe entregar sus antecedentes para que luego DIPRES se pronuncie respecto a la información.
-            </label>
+          <h3 className="text-sans-h2">Esta todo listo para que termines la etapa</h3>
+          <p className="text-sans-p mt-3 mb-5">Ya revisaste todos los formularios. </p> 
+          <p className="text-sans-p mb-2">Debes definir cual es el próximo paso en el procedo de análisis de la competencia:</p>
+          <div>
+            <div className="form-check">
+              <input
+                type="radio"
+                id="opcionA"
+                name="proximaEtapa"
+                className="form-check-input"
+                value="A"
+                onChange={() => handleRadioButtonChange('A')}
+                checked={proximaEtapaDipres === true}
+              />
+              <label htmlFor="opcionA" className="text-sans-p">
+                DIPRES debe pronunciarse respecto de la información del sector o sectores asociados a la competencia.
+              </label>
+            </div>
+            <div className="form-check">
+              <input
+                type="radio"
+                id="opcionB"
+                name="proximaEtapa"
+                className="form-check-input"
+                value="B"
+                onChange={() => handleRadioButtonChange('B')}
+                checked={proximaEtapaDipres === false}
+              />
+              <label htmlFor="opcionB" className="text-sans-p">
+                GORE debe entregar sus antecedentes para que luego DIPRES se pronuncie respecto a la información.
+              </label>
+            </div>
           </div>
         </div>
-      </div>
-
-      {/* DIV 2 */}
-      <div>
-        <h3 className="text-sans-h2">Debes revisar todos los formularios antes de terminar la etapa</h3>
-        <p className="text-sans-p mt-3">Para poder terminar la etapa debes revisar todos los formularios y dejar observaciones donde consideres necesario.</p>
-      </div>
-
-      {/* Condicionalidad: segun si ya se enviaron o no todas las OS, el boton se mostrata disabled o no */}
+      ) : (
+        <div>
+          <h3 className="text-sans-h2">Debes revisar todos los formularios antes de terminar la etapa</h3>
+          <p className="text-sans-p mt-3">Para poder terminar la etapa debes revisar todos los formularios y dejar observaciones donde consideres necesario.</p>
+        </div>
+      )}
+      
+      {/* Condicionalidad: una vez que se haya escogido el paso a seguir (DIPRES o GORE), el boton se mostrara disabled o no */}
       <div className="d-flex justify-content-end my-5 me-3">
         <button className="btn-primario-s">
           Cerrar etapa
