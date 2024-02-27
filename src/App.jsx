@@ -23,6 +23,7 @@ const Error500 = React.lazy(() => import('./views/Errors/Error500'));
 const Error503 = React.lazy(() => import('./views/Errors/Error503'));
 const SuccessEdicion = React.lazy(() => import ('./views/success/success_edicion'));
 const SuccessCreacion = React.lazy(() => import ('./views/success/success_creacion'));
+const SuccessOS = React.lazy(() => import('./views/success/success_OS'));
 const PasoUno = React.lazy(() => import('./views/formularioSectorial/pasoUno'));
 const PasoDos = React.lazy(() => import('./views/formularioSectorial/pasoDos'));
 const PasoTres = React.lazy(() => import('./views/formularioSectorial/pasoTres'));
@@ -59,6 +60,7 @@ function App() {
           {createProtectedRoute("editar_usuario/:id", EditarUsuario, [ 'SUBDERE', 'Usuario Observador' ])}
           {createProtectedRoute("success_edicion", SuccessEdicion, [ 'SUBDERE', 'Usuario Observador' ])}
           {createProtectedRoute("success_creacion", SuccessCreacion, [ 'SUBDERE', 'Usuario Observador' ])}
+          {createProtectedRoute("success_creacion", SuccessOS, [ 'SUBDERE' ])}
           {createProtectedRoute("listado_competencias", GestionCompetencias, [ 'SUBDERE', 'Usuario Observador' ])}
           {createProtectedRoute("editar_competencia/:id",EditarCompetencia , [ 'SUBDERE', 'Usuario Observador' ])}
           {createProtectedRoute("crear_competencia",CreacionCompetencia, [ 'SUBDERE', 'Usuario Observador' ])}
@@ -66,6 +68,7 @@ function App() {
           <Route path="estado_competencia/:id/" element={<EstadoCompentencia />} />
           <Route path="success_edicion" element={<SuccessEdicion />} />
           <Route path="success_creacion" element={<SuccessCreacion />} />
+          <Route path="success_os/:id/" element={<FormularioProvider> <SuccessOS /> </FormularioProvider>} />
           <Route 
           path="observaciones_subdere/:id/" 
           element={

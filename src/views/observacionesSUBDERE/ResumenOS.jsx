@@ -30,9 +30,7 @@ const ResumenOS = () => {
     try {
       // Aquí actualizas el valor de observacion_enviada a true
       await updateObservacion({ observacion_enviada: true });
-
-      // Después de enviar las observaciones, podrías redirigir al usuario a otra vista
-      // navigate('/otra-vista');
+      navigate( `/home/success_os/${data.id}/`);
 
     } catch (error) {
       console.error("Error al enviar observaciones:", error);
