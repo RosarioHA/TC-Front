@@ -133,7 +133,10 @@ const ObservacionesSubdere = () => {
       
       {/* Condicionalidad: una vez que se haya escogido el paso a seguir (DIPRES o GORE), el boton se mostrara disabled o no */}
       <div className="d-flex justify-content-end my-5 me-3">
-        <button className="btn-primario-s">
+        <button 
+        className="btn-primario-s"
+        disabled={proximaEtapaDipres === null}
+        >
           Cerrar etapa
           <i className="material-symbols-rounded me-2">arrow_forward_ios</i>
         </button>
