@@ -25,6 +25,14 @@ const ResumenOS = () => {
     navigate(-1);
   };
 
+	const titulosPasos = {
+		1: "Descripción de la Institución",
+		2: "Arquitectura del Proceso",
+		3: "Cobertura de la Competencia",
+		4: "Indicadores de Desempeño",
+		5: "Costeo de la Competencia",
+	};
+
   return (
     <div className="container col-11">
       <p className="text-sans-h1 text-center">Resumen observaciones </p>
@@ -49,7 +57,10 @@ const ResumenOS = () => {
           <div key={pasoKey}>
 						<hr/>
 						<div className="d-flex justify-content-between align-items-center mb-3">
-							<p className="">Paso {pasoNumber}</p>
+							<div className="d-flex">
+								<p className="text-sans-p-semibold">Paso {pasoNumber}:</p>
+								<p className="text-sans-p ms-2">{titulosPasos[pasoNumber]}</p>
+							</div>
 							{console.log("Valor de observacion:", observacion)}
 							{observacion && !Array.isArray(observacion) && (
 							<>
