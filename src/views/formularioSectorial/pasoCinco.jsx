@@ -49,7 +49,8 @@ const PasoCinco = () => {
     listado_subtitulos, 
     listado_item_subtitulos, 
     listado_estamentos, 
-    listado_calidades_juridicas,
+    listado_calidades_juridicas_directas,
+    listado_calidades_juridicas_indirectas,
     listado_etapas,
     solo_lectura
   } = pasoData;
@@ -104,7 +105,8 @@ const PasoCinco = () => {
             data_personal_directo={p_5_3_a_personal_directo}
             data_personal_indirecto={p_5_3_b_personal_indirecto}
             listado_estamentos={listado_estamentos}
-            listado_calidades_juridicas={listado_calidades_juridicas} 
+            listado_calidades_juridicas_directas={listado_calidades_juridicas_directas}
+            listado_calidades_juridicas_indirectas={listado_calidades_juridicas_indirectas}
           />
 
           {userSubdere && formularioEnviado && (

@@ -47,7 +47,7 @@ const PersonalDirecto = ({
 
   const arregloCalidadJuridica = Object.entries(personas).map(([calidadJuridica, personas]) => {
     return { calidadJuridica, personas };
-  });  
+  });
 
   useEffect(() => {
     const esquema = construirValidacionPaso5_Personal(arregloCalidadJuridica);
@@ -61,33 +61,33 @@ const PersonalDirecto = ({
 
 
   // Lógica para agregar una nueva persona a calidad juridica existente
-const agregarPersona = (calidadJuridicaLabel) => {
-  // Busca el objeto correspondiente en listado_calidades_juridicas basado en el label
-  const calidadJuridicaObjeto = listado_calidades_juridicas.find(cj => cj.calidad_juridica === calidadJuridicaLabel);
+  const agregarPersona = (calidadJuridicaLabel) => {
+    // Busca el objeto correspondiente en listado_calidades_juridicas basado en el label
+    const calidadJuridicaObjeto = listado_calidades_juridicas.find(cj => cj.calidad_juridica === calidadJuridicaLabel);
 
-  // Asegúrate de que el objeto fue encontrado antes de proceder
-  if (!calidadJuridicaObjeto) {
-    console.error('Calidad jurídica no encontrada:', calidadJuridicaLabel);
-    return; // Termina la ejecución si no se encuentra la calidad jurídica
-  }
+    // Asegúrate de que el objeto fue encontrado antes de proceder
+    if (!calidadJuridicaObjeto) {
+      console.error('Calidad jurídica no encontrada:', calidadJuridicaLabel);
+      return; // Termina la ejecución si no se encuentra la calidad jurídica
+    }
 
-  const nuevaFilaId = Math.floor(Date.now() / 1000);
+    const nuevaFilaId = Math.floor(Date.now() / 1000);
 
-  const nuevaPersona = {
-    id: nuevaFilaId,
-    calidad_juridica: calidadJuridicaObjeto.id, // Usa el ID (value) de la calidad jurídica encontrada
+    const nuevaPersona = {
+      id: nuevaFilaId,
+      calidad_juridica: calidadJuridicaObjeto.id, // Usa el ID (value) de la calidad jurídica encontrada
+    };
+
+    // Actualiza el estado inmediatamente con la nueva persona
+    setPersonas(prevPersonas => ({
+      ...prevPersonas,
+      [calidadJuridicaLabel]: [...(prevPersonas[calidadJuridicaLabel] || []), nuevaPersona]
+    }));
+
+    // Llama a handleSave directamente con la información necesaria
+    // Ahora pasando el ID de la calidad jurídica en vez del label
+    handleSave(nuevaPersona.id, 'calidad_juridica', calidadJuridicaObjeto.id);
   };
-
-  // Actualiza el estado inmediatamente con la nueva persona
-  setPersonas(prevPersonas => ({
-    ...prevPersonas,
-    [calidadJuridicaLabel]: [...(prevPersonas[calidadJuridicaLabel] || []), nuevaPersona]
-  }));
-
-  // Llama a handleSave directamente con la información necesaria
-  // Ahora pasando el ID de la calidad jurídica en vez del label
-  handleSave(nuevaPersona.id, 'calidad_juridica', calidadJuridicaObjeto.id);
-};
 
 
 
@@ -342,155 +342,158 @@ const agregarPersona = (calidadJuridicaLabel) => {
       <div className="col my-4">
 
         <form onSubmit={handleSubmit(onSubmitAgregarPersona)}>
-        {Object.entries(personas).map(([calidad_juridica, personas], index) => (
-          <div key={index}>
+          {Object.entries(personas).map(([calidad_juridica, personas], index) => (
+            <div key={index}>
 
-            <p className="text-sans-p-bold mt-3">Calidad Jurídica</p><p>{calidad_juridica}</p>
-            {/* Encabezado para cada grupo */}
-            <div className="row">
-              <div className="col-1"> <p className="text-sans-p-bold">N°</p> </div>
-              <div className="col"> <p className="text-sans-p-bold">Estamento</p> </div>
-              <div className="col"> <p className="text-sans-p-bold">Renta bruta mensual ($M)</p> </div>
-              <div className="col"> <p className="text-sans-p-bold">Grado <br /> (Si corresponde)</p> </div>
-              {!solo_lectura && (
-              <div className="col"> <p className="text-sans-p-bold">Acción</p> </div>
-              )}
-            </div>
-            {personas.map((persona, personaIndex) => (
-              <div
-                key={persona.id}
-                className={`row py-3 ${personaIndex % 2 === 0 ? 'white-line' : 'neutral-line'} align-items-center me-3`}>
-
-                <div className="col-1"> <p className="text-sans-p-bold mt-3">{personaIndex + 1}</p> </div>
-                <div className="col">
-                  <Controller
-                    control={control}
-                    name={`estamento_${persona.id}`}
-                    render={({ field }) => {
-                      return (
-                        <DropdownSelect
-                          id={`estamento_${persona.id}`}
-                          name={`estamento_${persona.id}`}
-                          placeholder="Estamento"
-                          options={opcionesEstamentos}
-                          onSelectionChange={(selectedOption) => {
-                            handleSave(persona.id, 'estamento', selectedOption);
-                            field.onChange(selectedOption.value);
-                          }}
-
-                          readOnly={solo_lectura}
-                          selected={persona.estamento_label_value}
-                        />
-                      );
-                    }}
-                  />
-                </div>
-                <div className="col pt-3">
-                  <Controller
-                    control={control}
-                    name={`renta_bruta_${persona.id}`}
-                    defaultValue={persona?.renta_bruta || ''}
-                    render={({ field }) => {
-                      // Destructura las propiedades necesarias de field
-                      const { onChange, onBlur, value } = field;
-
-                      const handleChange = (valor) => {
-                        clearErrors(`renta_bruta_${persona.id}`);
-                        onChange(valor);
-                        handleInputChange(persona.id, 'renta_bruta', valor);
-                      };
-
-                      // Función para manejar el evento onBlur
-                      const handleBlur = async () => {
-                        const isFieldValid = await trigger(`renta_bruta_${persona.id}`);
-                        if (isFieldValid) {
-                          handleSave(persona.id, 'renta_bruta');
-                        }
-                        onBlur();
-                      };
-
-                      return (
-                        <InputCosto
-                          id={`renta_bruta_${persona.id}`}
-                          placeholder="Renta bruta (M$)"
-                          value={value}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          loading={persona.estados?.renta_bruta?.loading ?? false}
-                          saved={persona.estados?.renta_bruta?.saved ?? false}
-                          error={errors[`renta_bruta_${persona.id}`]?.message}
-                          disabled={solo_lectura}
-                        />
-                      );
-                    }}
-                  />
-                </div>
-                <div className="col pt-3">
-                  <Controller
-                    control={control}
-                    name={`grado_${persona.id}`}
-                    defaultValue={persona?.grado || ''}
-                    render={({ field }) => {
-                      // Destructura las propiedades necesarias de field
-                      const { onChange, onBlur, value } = field;
-
-                      const handleChange = (valor) => {
-                        clearErrors(`grado_${persona.id}`);
-                        onChange(valor);
-                        handleInputChange(persona.id, 'grado', valor);
-                      };
-
-                      // Función para manejar el evento onBlur
-                      const handleBlur = async () => {
-                        const isFieldValid = await trigger(`grado_${persona.id}`);
-                        if (isFieldValid) {
-                          handleSave(persona.id, 'grado');
-                        }
-                        onBlur();
-                      };
-
-                      return (
-                        <CustomInput
-                          id={`grado_${persona.id}`}
-                          placeholder="Grado"
-                          value={value}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          loading={persona.estados?.grado?.loading ?? false}
-                          saved={persona.estados?.grado?.saved ?? false}
-                          error={errors[`grado_${persona.id}`]?.message}
-                          disabled={solo_lectura}
-                        />
-                      );
-                    }}
-                  />
-                </div>
+              <div>
+                <span className="text-sans-p-bold mt-4">Calidad Jurídica: </span>
+                <span>{calidad_juridica}</span>
+              </div>
+              {/* Encabezado para cada grupo */}
+              <div className="row mt-3">
+                <div className="col-1"> <p className="text-sans-p-bold">N°</p> </div>
+                <div className="col"> <p className="text-sans-p-bold">Estamento</p> </div>
+                <div className="col"> <p className="text-sans-p-bold">Renta bruta mensual ($M)</p> </div>
+                <div className="col"> <p className="text-sans-p-bold">Grado <br /> (Si corresponde)</p> </div>
                 {!solo_lectura && (
-                <div className="col">
-                  <button
-                    className="btn-terciario-ghost"
-                    onClick={() => eliminarPersona(calidad_juridica, persona.id)}
-                  >
-                    <i className="material-symbols-rounded me-2">delete</i>
-                    <p className="mb-0 text-decoration-underline">Borrar</p>
-                  </button>
-                </div>
+                  <div className="col"> <p className="text-sans-p-bold">Acción</p> </div>
                 )}
               </div>
-            ))}
+              {personas.map((persona, personaIndex) => (
+                <div
+                  key={persona.id}
+                  className={`row py-3 ${personaIndex % 2 === 0 ? 'white-line' : 'neutral-line'} align-items-center me-3`}>
 
-            {!solo_lectura && (
-            <button
-              className="btn-secundario-s m-2"
-              onClick={() => agregarPersona(calidad_juridica)}
-            >
-              <i className="material-symbols-rounded me-2">add</i>
-              <p className="mb-0 text-decoration-underline">Agregar {personas[0]?.nombre_calidad_juridica}</p>
-            </button>
-            )}
+                  <div className="col-1"> <p className="text-sans-p-bold mt-3">{personaIndex + 1}</p> </div>
+                  <div className="col">
+                    <Controller
+                      control={control}
+                      name={`estamento_${persona.id}`}
+                      render={({ field }) => {
+                        return (
+                          <DropdownSelect
+                            id={`estamento_${persona.id}`}
+                            name={`estamento_${persona.id}`}
+                            placeholder="Estamento"
+                            options={opcionesEstamentos}
+                            onSelectionChange={(selectedOption) => {
+                              handleSave(persona.id, 'estamento', selectedOption);
+                              field.onChange(selectedOption.value);
+                            }}
 
-          </div>
-        ))}
+                            readOnly={solo_lectura}
+                            selected={persona.estamento_label_value}
+                          />
+                        );
+                      }}
+                    />
+                  </div>
+                  <div className="col pt-3">
+                    <Controller
+                      control={control}
+                      name={`renta_bruta_${persona.id}`}
+                      defaultValue={persona?.renta_bruta || ''}
+                      render={({ field }) => {
+                        // Destructura las propiedades necesarias de field
+                        const { onChange, onBlur, value } = field;
+
+                        const handleChange = (valor) => {
+                          clearErrors(`renta_bruta_${persona.id}`);
+                          onChange(valor);
+                          handleInputChange(persona.id, 'renta_bruta', valor);
+                        };
+
+                        // Función para manejar el evento onBlur
+                        const handleBlur = async () => {
+                          const isFieldValid = await trigger(`renta_bruta_${persona.id}`);
+                          if (isFieldValid) {
+                            handleSave(persona.id, 'renta_bruta');
+                          }
+                          onBlur();
+                        };
+
+                        return (
+                          <InputCosto
+                            id={`renta_bruta_${persona.id}`}
+                            placeholder="Renta bruta (M$)"
+                            value={value}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            loading={persona.estados?.renta_bruta?.loading ?? false}
+                            saved={persona.estados?.renta_bruta?.saved ?? false}
+                            error={errors[`renta_bruta_${persona.id}`]?.message}
+                            disabled={solo_lectura}
+                          />
+                        );
+                      }}
+                    />
+                  </div>
+                  <div className="col pt-3">
+                    <Controller
+                      control={control}
+                      name={`grado_${persona.id}`}
+                      defaultValue={persona?.grado || ''}
+                      render={({ field }) => {
+                        // Destructura las propiedades necesarias de field
+                        const { onChange, onBlur, value } = field;
+
+                        const handleChange = (valor) => {
+                          clearErrors(`grado_${persona.id}`);
+                          onChange(valor);
+                          handleInputChange(persona.id, 'grado', valor);
+                        };
+
+                        // Función para manejar el evento onBlur
+                        const handleBlur = async () => {
+                          const isFieldValid = await trigger(`grado_${persona.id}`);
+                          if (isFieldValid) {
+                            handleSave(persona.id, 'grado');
+                          }
+                          onBlur();
+                        };
+
+                        return (
+                          <CustomInput
+                            id={`grado_${persona.id}`}
+                            placeholder="Grado"
+                            value={value}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            loading={persona.estados?.grado?.loading ?? false}
+                            saved={persona.estados?.grado?.saved ?? false}
+                            error={errors[`grado_${persona.id}`]?.message}
+                            disabled={solo_lectura}
+                          />
+                        );
+                      }}
+                    />
+                  </div>
+                  {!solo_lectura && (
+                    <div className="col">
+                      <button
+                        className="btn-terciario-ghost"
+                        onClick={() => eliminarPersona(calidad_juridica, persona.id)}
+                      >
+                        <i className="material-symbols-rounded me-2">delete</i>
+                        <p className="mb-0 text-decoration-underline">Borrar</p>
+                      </button>
+                    </div>
+                  )}
+                </div>
+              ))}
+
+              {!solo_lectura && (
+                <button
+                  className="btn-secundario-s m-2"
+                  onClick={() => agregarPersona(calidad_juridica)}
+                >
+                  <i className="material-symbols-rounded me-2">add</i>
+                  <p className="mb-0 text-decoration-underline">Agregar {personas[0]?.nombre_calidad_juridica}</p>
+                </button>
+              )}
+
+            </div>
+          ))}
         </form>
       </div>
 
