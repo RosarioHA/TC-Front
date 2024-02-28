@@ -52,11 +52,6 @@ const SuccessOS = () => {
       <div className="d-flex justify-content-center mt-5">
         <button className="btn-secundario-s text-decoration-underline" onClick={handleVolverBtn}>Volver a Observaciones</button>
       </div>
-
-
-
-
-
     </div>
   )
 };
