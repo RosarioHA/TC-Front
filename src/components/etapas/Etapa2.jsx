@@ -104,15 +104,11 @@ export const Etapa2 = ({ etapa }) => {
     }
   };
 
-    
-
   const renderButtonForFormularioSectorial = (formulario) => {
     const buttonText = formulario.accion;
     const path = `/home/formulario_sectorial/${formulario.id}/paso_1`;
     const isButtonDisabled = userSubdere || formulario.estado  === "pendiente" 
 
-
-  
     let icon = 'edit';
     if (formulario.estado !== "pendiente") {
       icon = 'draft'; 
@@ -131,7 +127,6 @@ export const Etapa2 = ({ etapa }) => {
     );
   };
   
-
   const renderSingleFormularioSectorial = (formulario) => {
     return (
       <div className="d-flex justify-content-between text-sans-p border-top border-bottom my-2 py-1">
@@ -205,7 +200,6 @@ export const Etapa2 = ({ etapa }) => {
       return <div>No hay formularios sectoriales para mostrar.</div>;
     }
   };
-  
   
   return (
     <div className="my-3">
