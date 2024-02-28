@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import CustomInput from "../../components/forms/custom_input";
-import DropdownCheckbox from "../../components/dropdown/checkbox";
+import {CheckboxRegion} from "../../components/dropdown/checkboxRegion";
 import DropdownSelect from "../../components/dropdown/select";
 import DropdownConSecciones from "../../components/dropdown/checkbox_conSecciones_conTabla";
 import { DropdownSelectBuscadorCheck } from "../../components/dropdown/select_buscador_checkbox";
@@ -277,8 +277,8 @@ const CreacionCompetencia = () =>
             />
           </div>
 
-          <div className="mb-4">
-            <DropdownCheckbox
+          <div className="mb-4 col-11">
+            <CheckboxRegion 
               label="Región (Obligatorio)"
               placeholder="Elige la o las regiones donde se ejercerá la competencia"
               options={opcionesRegiones}
