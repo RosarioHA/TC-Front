@@ -5,11 +5,12 @@ import { useObservacionesSubdere } from "../../hooks/formulario/useObSubdereSect
 
 const ObservacionesSubdere = () => {
   const { updateFormId, data, loading } = useContext(FormularioContext);
-  const [proximaEtapaDipres, setProximaEtapaDipres] = useState(null);
+  const [ etapaOmitida, setEtapaOmitida] = useState(null);
   const { observaciones, fetchObservaciones } = useObservacionesSubdere(data ? data.id : null);
 
   console.log("observaciones en vista OS, proveniente de hook useObservacionesSubdere", observaciones)
   console.log("'data', proveniente de FormularioContext", data)
+  console.log("etapa GORE omitida", etapaOmitida)
  
   const navigate = useNavigate();
   const { id } = useParams();
@@ -19,7 +20,7 @@ const ObservacionesSubdere = () => {
   };
 
   const handleRadioButtonChange = (value) => {
-    setProximaEtapaDipres(value === 'A');
+    setEtapaOmitida(value === 'A');
   };
 
   const handleCerrarEtapa = async () => {
@@ -112,7 +113,7 @@ const ObservacionesSubdere = () => {
                 className="form-check-input"
                 value="A"
                 onChange={() => handleRadioButtonChange('A')}
-                checked={proximaEtapaDipres === true}
+                checked={etapaOmitida === true}
               />
               <label htmlFor="opcionA" className="text-sans-p">
                 DIPRES debe pronunciarse respecto de la información del sector o sectores asociados a la competencia.
@@ -126,7 +127,7 @@ const ObservacionesSubdere = () => {
                 className="form-check-input"
                 value="B"
                 onChange={() => handleRadioButtonChange('B')}
-                checked={proximaEtapaDipres === false}
+                checked={etapaOmitida === false}
               />
               <label htmlFor="opcionB" className="text-sans-p">
                 GORE debe entregar sus antecedentes para que luego DIPRES se pronuncie respecto a la información.
@@ -144,7 +145,7 @@ const ObservacionesSubdere = () => {
       <div className="d-flex justify-content-end my-5 me-3">
         <button 
         className="btn-primario-s"
-        disabled={proximaEtapaDipres === null}
+        disabled={etapaOmitida === null}
         onClick={handleCerrarEtapa}
         >
           Cerrar etapa
