@@ -30,20 +30,19 @@ const SuccessCierreOS = () => {
 
   return (
     <div className="container col-11">
-      <h1 className="text-sans-Title mt-5 ms-3">Formulario Sectorial</h1>
-      <h1 className="text-sans-h1 ms-3">{data.competencia_nombre}</h1>
-      <h2 className="text-sans-h2-grey pb-5 ms-3">{data.sector_nombre}</h2>
+      <h1 className="text-sans-Title mt-5 ms-3">Observaciones SUBDERE</h1>
+      <h1 className="text-sans-h1 ms-3">Formularios sectoriales</h1>
+      <h2 className="text-sans-h2-grey pb-5 ms-3">{data.competencia_nombre}</h2>
 
       <div className="d-flex justify-content-center">
         <div className="success-container ms-0 col-8 p-3 px-5 mt-5">
           <div className="row align-items-center">
-            <div className="col-3">
+            <div className="col-2">
               <img src={successIcon} alt="Éxito"/>
             </div>
             <div className="col-9">
-              <h2 className="text-sans-h2 mb-4">Agregaste tus observaciones con éxito</h2>
-              <p className="text-sans-p">El sector tendrá acceso a ver tus observaciones una vez que revises todos los formularios de la competencia y cierres la etapa.</p>
-              <p className="text-sans-p mt-4">Vuelve a Observaciones para poder continuar con el proceso.</p>
+              <h2 className="text-sans-h2 mb-4">Cerraste la Revisión SUBDERE con éxito</h2>
+              <p className="text-sans-p">Dependiendo de la decisión que hayas tomado sobre la siguiente etapa, el usuario correspondiente será notificado para comenzar con la etapa que le corresponda.</p>
             </div>
           </div>  
         </div>

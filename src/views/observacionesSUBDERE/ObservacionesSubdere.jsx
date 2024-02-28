@@ -5,11 +5,11 @@ import { useObservacionesSubdere } from "../../hooks/formulario/useObSubdereSect
 
 const ObservacionesSubdere = () => {
   const { updateFormId, data, loading } = useContext(FormularioContext);
-  const [proximaEtapaDipres, setProximaEtapaGore] = useState(null);
+  const [proximaEtapaDipres, setProximaEtapaDipres] = useState(null);
   const { observaciones, fetchObservaciones } = useObservacionesSubdere(data ? data.id : null);
 
-  console.log("observaciones en vista OS", observaciones)
-  console.log("data", data)
+  console.log("observaciones en vista OS, proveniente de hook useObservacionesSubdere", observaciones)
+  console.log("'data', proveniente de FormularioContext", data)
  
   const navigate = useNavigate();
   const { id } = useParams();
@@ -19,7 +19,17 @@ const ObservacionesSubdere = () => {
   };
 
   const handleRadioButtonChange = (value) => {
-    setProximaEtapaGore(value === 'A');
+    setProximaEtapaDipres(value === 'A');
+  };
+
+  const handleCerrarEtapa = async () => {
+    try {
+      // Aquí actualizar valor de proximo paso en backend
+      navigate( `/home/success_cierre_observaciones/${data.id}/`);
+
+    } catch (error) {
+      console.error("Error al enviar observaciones:", error);
+    }
   };
 
   useEffect(() => {
@@ -131,11 +141,11 @@ const ObservacionesSubdere = () => {
         </div>
       )}
       
-      {/* Condicionalidad: una vez que se haya escogido el paso a seguir (DIPRES o GORE), el boton se mostrara disabled o no */}
       <div className="d-flex justify-content-end my-5 me-3">
         <button 
         className="btn-primario-s"
         disabled={proximaEtapaDipres === null}
+        onClick={handleCerrarEtapa}
         >
           Cerrar etapa
           <i className="material-symbols-rounded me-2">arrow_forward_ios</i>

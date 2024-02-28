@@ -37,7 +37,7 @@ const SuccessOS = () => {
       <div className="d-flex justify-content-center">
         <div className="success-container ms-0 col-8 p-3 px-5 mt-5">
           <div className="row align-items-center">
-            <div className="col-3">
+            <div className="col-2">
               <img src={successIcon} alt="Éxito"/>
             </div>
             <div className="col-9">
