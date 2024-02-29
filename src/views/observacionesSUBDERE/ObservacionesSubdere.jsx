@@ -2,11 +2,13 @@ import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { FormularioContext } from '../../context/FormSectorial';
 import { useObservacionesSubdere } from "../../hooks/formulario/useObSubdereSectorial";
+import { useUpdateOmitida } from "../../hooks/competencias/useCampoOmitida";
 
 const ObservacionesSubdere = () => {
   const { updateFormId, data, loading } = useContext(FormularioContext);
   const [ etapaOmitida, setEtapaOmitida] = useState(null);
   const { observaciones, fetchObservaciones } = useObservacionesSubdere(data ? data.id : null);
+  const { updateOmitida } = useUpdateOmitida();
 
   console.log("observaciones en vista OS, proveniente de hook useObservacionesSubdere", observaciones)
   console.log("'data', proveniente de FormularioContext", data)
@@ -23,11 +25,19 @@ const ObservacionesSubdere = () => {
     setEtapaOmitida(value === 'A');
   };
 
+
   const handleCerrarEtapa = async () => {
     try {
-      // Aquí actualizar valor de proximo paso en backend
-      navigate( `/home/success_cierre_observaciones/${data.id}/`);
+      if (etapaOmitida !== null) {
+        // Aquí actualizas el valor de 'omitida' en el backend
+        await updateOmitida( id, 3, etapaOmitida);
 
+        // Luego, puedes navegar a la siguiente página
+        navigate(`/home/success_cierre_observaciones/${data.id}/`);
+      } else {
+        // Manejar el caso cuando proximaEtapaDipres es null
+        console.error("proximaEtapaDipres es null");
+      }
     } catch (error) {
       console.error("Error al enviar observaciones:", error);
     }
