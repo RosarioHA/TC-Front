@@ -187,6 +187,7 @@ export const Subpaso_dos = ({ pasoData, organigrama, id, stepNumber, solo_lectur
             loading={inputStatus.organigrama_nacional.loading}
             tituloDocumento={pasoData?.organigrama_nacional}
             ver={ver}
+            readOnly={solo_lectura}
           />
         </div>
       </div>
@@ -236,6 +237,7 @@ export const Subpaso_dos = ({ pasoData, organigrama, id, stepNumber, solo_lectur
             }
             handleFileSelect={(file) => handleFileSelectRegion(file, 'organigramaregional', region.id)}
             handleDelete={() => eliminarDocRegional(region.id)}
+            readOnly={solo_lectura}
           />
         ))}
 

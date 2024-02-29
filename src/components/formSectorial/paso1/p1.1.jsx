@@ -162,8 +162,7 @@ export const Subpaso_uno = ({ dataPaso, id, stepNumber, marcojuridico, solo_lect
             marcoJuridicoData={marcoJuridicoFiles}
             handleDelete={eliminarDocMarco}
             handleDownload={handleDownload}
-            //readOnly={solo_lectura}
-            readOnly={true}
+            readOnly={solo_lectura}
           />
           {isUploading && (
             <div className="loading-indicator col-11 w-50 mx-auto">

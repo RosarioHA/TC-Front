@@ -112,7 +112,7 @@ export const DocumentsAditionals = ({ onFilesChanged, marcoJuridicoData, handleD
         </h6>
       )}
       {files.map((fileObj, index) => (
-        <div key={index} className={`row border-top align-items-center me-5 pe-5 col-11 mt-2 ${index % 2 === 0 ? 'neutral-line' : 'white-line'}`}>
+        <div key={index} className={`row align-items-center me-5 pe-5 col-11 mt-2 ${index % 2 === 0 ? 'neutral-line' : 'white-line'}`}>
           <div className="col-1 p-3">{index + 1}</div>
           <div className="col p-3">{fileObj.title}</div>
           <div className="col p-3"></div>
