@@ -8,7 +8,7 @@ import { apiTransferenciaCompentencia } from '../../../services/transferenciaCom
 
 export const Subpaso_uno = ({ dataPaso, id, stepNumber, marcojuridico, solo_lectura }) => {
   const { handleUpdatePaso} = useContext(FormularioContext);
-  const { uploadDocumento } = useUploadMarcoJuridico(id, stepNumber); 
+  const { uploadDocumento, downloadDocumento } = useUploadMarcoJuridico(id, stepNumber); 
   const [formData, setFormData] = useState({
     marcojuridico: marcojuridico || [],
     paso1:dataPaso.paso1 || {
@@ -31,16 +31,14 @@ export const Subpaso_uno = ({ dataPaso, id, stepNumber, marcojuridico, solo_lect
     setMarcoJuridicoFiles(marcojuridico || []);
   }, [marcojuridico]);
 
-
-const fetchData = async () => {
-  try {
-    const response = await apiTransferenciaCompentencia.get(`/formulario-sectorial/${id}/paso-${stepNumber}/`);
-    setMarcoJuridicoFiles(response.data.marcojuridico);
-  } catch (error) {
-    console.error('Error fetching data:', error);
-  }
-};
-
+  const fetchData = async () => {
+    try {
+      const response = await apiTransferenciaCompentencia.get(`/formulario-sectorial/${id}/paso-${stepNumber}/`);
+      setMarcoJuridicoFiles(response.data.marcojuridico);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
 
   useEffect(() => {
     const savedData = localStorage.getItem('formData');
@@ -88,6 +86,7 @@ const fetchData = async () => {
       }));
     }
   };
+
   const uploadFile = async (file) => {
     setIsUploading(true);
     try {
@@ -100,26 +99,26 @@ const fetchData = async () => {
     }
   };
 
-  const eliminarDocMarco = async (idMarco) =>
-  {
+  const eliminarDocMarco = async (idMarco) => {
     const payload = {
       marcojuridico: [ {
         id: idMarco,
         DELETE: true
       } ]
     };
-
-    try
-    {
+    try {
       await handleUpdatePaso(id, stepNumber, payload);
       setMarcoJuridicoFiles(currentFiles => currentFiles.filter(file => file.id !== idMarco));
       await fetchData();
-    } catch (error)
-    {
+    } catch (error) {
       console.error("Error al eliminar el marco juridico:", error);
     }
   };
 
+  const handleDownload = async (documentoId) => {
+    downloadDocumento(documentoId);
+  };
+  
   return (
     <>
       <div className="pe-5 me-5 mt-4 col-12">
@@ -162,6 +161,9 @@ const fetchData = async () => {
             onFilesChanged={uploadFile}
             marcoJuridicoData={marcoJuridicoFiles}
             handleDelete={eliminarDocMarco}
+            handleDownload={handleDownload}
+            //readOnly={solo_lectura}
+            readOnly={true}
           />
           {isUploading && (
             <div className="loading-indicator col-11 w-50 mx-auto">
