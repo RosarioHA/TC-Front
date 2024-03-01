@@ -8,6 +8,7 @@ export const Etapa2 = ({ etapa }) => {
   const { userData } = useAuth();
   const userSubdere = userData?.perfil?.includes('SUBDERE');
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const usuarioSector = userData?.sector;
 
   const toggleCollapse = () => {
     setIsCollapsed(!isCollapsed);
@@ -162,6 +163,9 @@ export const Etapa2 = ({ etapa }) => {
   };
 
   const renderFormularioSectorial = () => {
+    if (!userSubdere) {
+      return null; // No renderizar nada si el usuario no es SUBDERE
+    }
     // Verifica si el array formulario_sectorial tiene un solo elemento
     if (etapa.formulario_sectorial && etapa.formulario_sectorial.length === 1) {
       const formulario = etapa.formulario_sectorial[0];
@@ -206,6 +210,34 @@ export const Etapa2 = ({ etapa }) => {
     }
   };
   
+  const renderFormularioSectorialParaUsuarioSectorial = () => {
+    // Verificación para asegurar que el usuario no es SUBDERE y es un usuario sectorial
+    if (userSubdere || !usuarioSector) {
+      return null; // No renderizar nada si el usuario es SUBDERE o no tiene sector asignado
+    }
+  
+    let formulariosFiltrados = [];
+  
+    // Verifica si etapa.formulario_sectorial es un arreglo directamente
+    if (Array.isArray(etapa.formulario_sectorial) && etapa.formulario_sectorial.length > 0) {
+      // Trata etapa.formulario_sectorial como un arreglo de formularios
+      formulariosFiltrados = etapa.formulario_sectorial.filter(formulario => formulario.sector_id === usuarioSector);
+    } else if (etapa.formulario_sectorial?.detalle_formularios_sectoriales) {
+      // Accede a detalle_formularios_sectoriales si la estructura es un objeto con esta propiedad
+      formulariosFiltrados = etapa.formulario_sectorial.detalle_formularios_sectoriales.filter(formulario => formulario.sector_id === usuarioSector);
+    }
+  
+    if (formulariosFiltrados.length > 0) {
+      return formulariosFiltrados.map((formulario, index) => (
+        <div key={index} className="d-flex justify-content-between text-sans-p border-top border-bottom my-2 py-1">
+          <div className="align-self-center">{formulario.nombre}</div>
+          {renderButtonForFormularioSectorial(formulario)}
+        </div>
+      ));
+    } else {
+      return <div>No hay formularios sectoriales asignados a tu sector.</div>;
+    }
+  };
   
   return (
     <div className="my-3">
@@ -220,7 +252,8 @@ export const Etapa2 = ({ etapa }) => {
             {renderButtonForSubetapa(oficio_inicio_sectorial)}
           </div>
         )}
-        {renderFormularioSectorial()}
+        {/* Llamada a las funciones de renderizado de formularios sectoriales */}
+        {userSubdere ? renderFormularioSectorial() : renderFormularioSectorialParaUsuarioSectorial()}
         {observaciones_sectorial.length > 0 && (
           observaciones_sectorial.map((observacion, index) => (
             <div key={index} className="d-flex justify-content-between text-sans-p border-top border-bottom my-3 py-1">
