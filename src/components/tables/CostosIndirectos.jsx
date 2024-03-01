@@ -17,6 +17,7 @@ const CostosIndirectos = ({
   listado_item_subtitulos,
   listado_etapas,
   setRefreshSubpaso_CincoDos,
+  refetchTrigger,
   setRefreshSumatoriaCostos,
   solo_lectura
 }) => {
@@ -161,6 +162,7 @@ const CostosIndirectos = ({
     try {
       await handleUpdatePaso(id, stepNumber, payload);
       setRefreshSubpaso_CincoDos(true);
+      refetchTrigger();
       setRefreshSumatoriaCostos(true);
 
     } catch (error) {
@@ -237,6 +239,7 @@ const CostosIndirectos = ({
       // Actualiza el estado de carga y guardado
       updateFieldState(arrayNameId, fieldName, { loading: false, saved: true });
       setRefreshSubpaso_CincoDos(true);
+      refetchTrigger();
       setRefreshSumatoriaCostos(true);
 
     } catch (error) {
