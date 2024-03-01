@@ -29,6 +29,37 @@ const PersonalDirecto = ({
   const [opcionesEstamentos, setOpcionesEstamentos] = useState([]);
   const [opcionesCalidadJuridica, setOpcionesCalidadJuridica] = useState([]);
 
+  const itemsJustificados = [
+    { label: '01 - Personal de Planta', informado: paso5.sub21_total_personal_planta, justificado: paso5.sub21_personal_planta_justificado, por_justificar: paso5.sub21_personal_planta_justificar },
+    { label: '02 - Personal de Contrata', informado: paso5.sub21_total_personal_contrata, justificado: paso5.sub21_personal_contrata_justificado, por_justificar: paso5.sub21_personal_contrata_justificar },
+    { label: '03 - Otras Remuneraciones', informado: paso5.sub21_total_otras_remuneraciones, justificado: paso5.sub21_otras_remuneraciones_justificado, por_justificar: paso5.sub21_otras_remuneraciones_justificar },
+    { label: '04 - Otros Gastos en Personal', informado: paso5.sub21_total_gastos_en_personal, justificado: paso5.sub21_gastos_en_personal_justificado, por_justificar: paso5.sub21_gastos_en_personal_justificar },
+  ];
+
+  const relacion_item_calidad = {
+    "Planta": "01 - Personal de Planta",
+    "Contrata": "02 - Personal de Contrata",
+    "Honorario a suma alzada": "03 - Otras Remuneraciones",
+    "Honorario asimilado a grado": "04 - Otros Gastos en Personal",
+    "Comisión de servicio": "04 - Otros Gastos en Personal",
+    "Otro": "04 - Otros Gastos en Personal",
+  };
+
+  // Función de utilidad para formatear números
+  const formatearNumero = (numero) => {
+    // Asegurarse de que el valor es un número. Convertir si es necesario.
+    const valorNumerico = Number(numero);
+    // Verificar si el valor es un número válido antes de intentar formatearlo
+    if (!isNaN(valorNumerico)) {
+      return valorNumerico.toLocaleString('es-CL', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2
+      });
+    }
+    // Devolver un valor predeterminado o el mismo valor si no es un número
+    return numero;
+  };
+
   // Función para agrupar los datos por organismo_display
   const agruparPorCalidadJuridica = (datos) => {
     const agrupados = datos.reduce((acc, item) => {
@@ -105,6 +136,7 @@ const PersonalDirecto = ({
     try {
       // Llamar a la API para actualizar los datos
       await handleUpdatePaso(id, stepNumber, payload);
+      refetchTrigger();
 
       // Actualizar el estado local para reflejar la eliminación
       setPersonas(prevPersonas => {
@@ -266,7 +298,7 @@ const PersonalDirecto = ({
           calidad_juridica: newValue,
         }]
       };
-    } else if (fieldName === 'descripcion_funciones_personal_directo'){
+    } else if (fieldName === 'descripcion_funciones_personal_directo') {
       payload = {
         'paso5': {
           'descripcion_funciones_personal_directo': newValue,
@@ -472,6 +504,7 @@ const PersonalDirecto = ({
                       }}
                     />
                   </div>
+
                   {!solo_lectura && (
                     <div className="col">
                       <button
@@ -486,6 +519,8 @@ const PersonalDirecto = ({
                 </div>
               ))}
 
+
+
               {!solo_lectura && (
                 <button
                   className="btn-secundario-s m-2"
@@ -495,6 +530,49 @@ const PersonalDirecto = ({
                   <p className="mb-0 text-decoration-underline">Agregar {personas[0]?.nombre_calidad_juridica}</p>
                 </button>
               )}
+
+              {itemsJustificados.map((item, itemIndex) => {
+                const itemCorrespondiente = Object.entries(relacion_item_calidad).find(([key, value]) =>
+                  (value === item.label && key === calidad_juridica) ||
+                  (Array.isArray(value) && value.includes(item.label) && key === calidad_juridica)
+                );
+
+                if (itemCorrespondiente) {
+                  return (
+                    <div key={itemIndex} className="my-4">
+                      <p className="text-sans-p-bold">Resumen de justificación de costos de personal directo: {item.label}</p>
+                      <h6 className="text-sans-h6-primary mt-3">Debes justificar el 100% del costo informado en el punto 5.1a para completar esta sección.</h6>
+                      <div className="ps-3 my-4">
+                        {/* Encabezado */}
+                        <div className="d-flex justify-content-between py-3 fw-bold">
+                          <div className="col-2">
+                            <p className="text-sans-p-bold">Costo informado ($M)</p>
+                          </div>
+                          <div className="col-2 d-flex">
+                            <p className="text-sans-p-bold">Costo justificado ($M)</p>
+                          </div>
+                          <div className="col-2 d-flex">
+                            <p className="text-sans-p-bold">Diferencia por justificar ($M)</p>
+                          </div>
+                        </div>
+                        {/* Items */}
+                        <div className="d-flex justify-content-between py-3 fw-bold">
+                          <div className="col-2">
+                            <p className="text-sans-p-bold">{formatearNumero(item.informado)}</p>
+                          </div>
+                          <div className="col-2">
+                            <p className="text-sans-p-bold">{formatearNumero(item.justificado)}</p>
+                          </div>
+                          <div className="col-2">
+                            <p className="text-sans-p-bold">{formatearNumero(item.por_justificar)}</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                }
+                return null;
+              })}
 
             </div>
           ))}

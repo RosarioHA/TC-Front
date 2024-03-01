@@ -19,52 +19,6 @@ export const Subpaso_CincoPuntoTres = (
   const [estamentosPindirecto, setEstamentosPindirecto] = useState([{ id: 1 }]);
 
 
-  const itemsInformados = [
-    { label: '01 - Personal de Planta', value: paso5.sub21_total_personal_planta },
-    { label: '02 - Personal de Contrata', value: paso5.sub21_total_personal_contrata },
-    { label: '03 - Otras Remuneraciones', value: paso5.sub21_total_otras_remuneraciones },
-    { label: '04 - Otros Gastos en Personal', value: paso5.sub21_total_gastos_en_personal },
-  ];
-
-  // Filtrar los items que tienen valor 0
-  const ItemsInformadosFiltrados = itemsInformados.filter(item => Number(item.value) !== 0);
-
-  // Verificar si hay items para mostrar
-  if (ItemsInformadosFiltrados.length === 0) {
-    return <p>No hay Gastos en Personal asociados</p>;
-  }
-
-  const itemsJustificados = [
-    { label: '01 - Personal de Planta', informado: paso5.sub21_total_personal_planta, justificado: paso5.sub21_personal_planta_justificado, por_justificar: paso5.sub21_personal_planta_justificar },
-    { label: '02 - Personal de Contrata', informado: paso5.sub21_total_personal_contrata, justificado: paso5.sub21_personal_contrata_justificado, por_justificar: paso5.sub21_personal_contrata_justificar },
-    { label: '03 - Otras Remuneraciones', informado: paso5.sub21_total_otras_remuneraciones, justificado: paso5.sub21_otras_remuneraciones_justificado, por_justificar: paso5.sub21_otras_remuneraciones_justificar },
-    { label: '04 - Otros Gastos en Personal', informado: paso5.sub21_total_gastos_en_personal, justificado: paso5.sub21_gastos_en_personal_justificado, por_justificar: paso5.sub21_gastos_en_personal_justificar },
-  ];
-
-  // Función de utilidad para formatear números
-  const formatearNumero = (numero) => {
-    // Asegurarse de que el valor es un número. Convertir si es necesario.
-    const valorNumerico = Number(numero);
-    // Verificar si el valor es un número válido antes de intentar formatearlo
-    if (!isNaN(valorNumerico)) {
-      return valorNumerico.toLocaleString('es-CL', {
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 2
-      });
-    }
-    // Devolver un valor predeterminado o el mismo valor si no es un número
-    return numero;
-  };
-
-
-  // Filtrar los items que tienen valor 0
-  const itemsJustificadosFiltrados = itemsJustificados.filter(item => Number(item.informado) !== 0);
-
-  // Verificar si hay items para mostrar
-  if (itemsJustificadosFiltrados.length === 0) {
-    return <p>No hay Gastos en Personal asociados</p>;
-  }
-
   const agregarCalJuridicaPindirecto = () => {
     const nuevoEstamento = { id: estamentosPindirecto.length + 1 };
     setEstamentosPindirecto([...estamentosPindirecto, nuevoEstamento]);
@@ -88,43 +42,6 @@ export const Subpaso_CincoPuntoTres = (
       <h6 className="text-sans-h6-primary mt-3">Por ejercicio directo se entenderán todas aquellas tareas y procedimientos específicos y exclusivos de la competencia. En la renta bruta se deben considerar aquellas asignaciones propias del cargo. </h6>
 
       <div className="my-4 relative-container">
-        <p className="text-sans-p-bold">Estos son los costos en personal (subtítulo 21) que declaraste en el punto 5.1a:</p>
-        <h6 className="text-sans-h6-primary mt-3">Debes justificar el 100% de los recursos declarados en la rentas del personal para completar esta sección.</h6>
-        <div className="ps-3 my-4">
-          {/* Encabezado */}
-          <div className="d-flex justify-content-between py-3 fw-bold">
-            <div className="col-1">
-              <p className="text-sans-p-bold mb-0 mt-1">#</p>
-            </div>
-            <div className="col-3">
-              <p className="text-sans-p-bold mb-0 mt-1">Ítem</p>
-            </div>
-            <div className="col-6">
-              <p className="text-sans-p-bold mb-0 mt-1">Costo informado por el sector ($M)</p>
-            </div>
-          </div>
-          {/* Items */}
-          {ItemsInformadosFiltrados.map((item, index) => (
-            <div
-              key={index}
-              className={`row ${index % 2 === 0 ? 'neutral-line' : 'white-line'} align-items-center me-3`}>
-              <div className="d-flex justify-content-between py-3 fw-bold">
-                <div className="col-1">
-                  <p className="text-sans-p-bold mb-0 mt-3 ms-4">{index + 1}</p>
-                </div>
-                <div className="col-3">
-                  <p className="text-sans-p-bold mb-0 mt-3 ms-5">{item.label}</p>
-                </div>
-                <div className="col-6">
-                  <p className="text-sans-p-bold mb-0 mt-3 ms-5">{formatearNumero(item.value)}</p>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className="my-4 relative-container">
         <PersonalDirecto
           id={id}
           paso5={paso5}
@@ -135,55 +52,6 @@ export const Subpaso_CincoPuntoTres = (
           listado_calidades_juridicas={listado_calidades_juridicas_directas}
           refetchTrigger={refetchTrigger}
         />
-      </div>
-
-      <div className="my-4 relative-container">
-        <p className="text-sans-p-bold">Resumen de justificación de costos de personal directo:</p>
-        <h6 className="text-sans-h6-primary mt-3">Debes justificar el 100% del costo informado en el punto 5.1a para completar esta sección.</h6>
-        <div className="ps-3 my-4">
-          {/* Encabezado */}
-          <div className="d-flex justify-content-between py-3 fw-bold">
-            <div className="col-1">
-              <p className="text-sans-p-bold mb-0 mt-1">#</p>
-            </div>
-            <div className="col-3">
-              <p className="text-sans-p-bold mb-0 mt-1">Ítems informados subtítulo 21</p>
-            </div>
-            <div className="col-2">
-              <p className="text-sans-p-bold mb-0 mt-1">Costo informado ($M)</p>
-            </div>
-            <div className="col-2 d-flex">
-              <p className="text-sans-p-bold mb-0 mt-1">Costo justificado ($M)</p>
-            </div>
-            <div className="col-2 d-flex">
-              <p className="text-sans-p-bold mb-0 mt-1">Diferencia por justificar ($M)</p>
-            </div>
-          </div>
-          {/* Items */}
-          {itemsJustificadosFiltrados.map((item, index) => (
-            <div
-              key={index}
-              className={`row ${index % 2 === 0 ? 'neutral-line' : 'white-line'} align-items-center me-3`}>
-              <div className="d-flex justify-content-between py-3 fw-bold">
-                <div className="col-1">
-                  <p className="text-sans-p-bold mb-0 mt-3 ms-4">{index + 1}</p>
-                </div>
-                <div className="col-3">
-                  <p className="text-sans-p-bold mb-0 mt-3 ms-4">{item.label}</p>
-                </div>
-                <div className="col-2">
-                  <p className="text-sans-p-bold mb-0 mt-3 ms-5">{formatearNumero(item.informado)}</p>
-                </div>
-                <div className="col-2">
-                  <p className="text-sans-p-bold mb-0 mt-3 ms-5">{formatearNumero(item.justificado)}</p>
-                </div>
-                <div className="col-2">
-                  <p className="text-sans-p-bold mb-0 mt-3 ms-5">{formatearNumero(item.por_justificar)}</p>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
       </div>
 
       {/* b.Personal de soporte */}
