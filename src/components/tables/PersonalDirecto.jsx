@@ -15,7 +15,8 @@ const PersonalDirecto = ({
   stepNumber,
   data_personal_directo,
   listado_estamentos,
-  listado_calidades_juridicas
+  listado_calidades_juridicas,
+  refetchTrigger
 }) => {
 
   const [personas, setPersonas] = useState([]);
@@ -265,6 +266,12 @@ const PersonalDirecto = ({
           calidad_juridica: newValue,
         }]
       };
+    } else if (fieldName === 'descripcion_funciones_personal_directo'){
+      payload = {
+        'paso5': {
+          'descripcion_funciones_personal_directo': newValue,
+        }
+      };
     } else {
 
       let personaEncontrada = null;
@@ -307,6 +314,7 @@ const PersonalDirecto = ({
 
       // Actualiza el estado de carga y guardado
       updateFieldState(arrayNameId, fieldName, { loading: false, saved: true });
+      refetchTrigger();
 
     } catch (error) {
       console.error("Error al guardar los datos:", error);
@@ -334,10 +342,6 @@ const PersonalDirecto = ({
 
   return (
     <div className="my-4">
-
-      <p className="text-sans-m-semibold mt-4">a. Personal que ejerce directamente la competencia</p>
-      <h6 className="text-sans-h6-primary mt-3">Por ejercicio directo se entenderán todas aquellas tareas y procedimientos específicos y exclusivos de la competencia. En la renta bruta se deben considerar aquellas asignaciones propias del cargo. </h6>
-
 
       <div className="col my-4">
 
@@ -498,18 +502,21 @@ const PersonalDirecto = ({
       </div>
 
       {mostrarFormularioNuevo && (
-        <div className="row">
-          <div className="col-1">
-            <p className="text-sans-p-bold mt-3">Calidad Jurídica</p>
+        <>
+          <p>Primero elige la calidad jurídica que quieres agregar:</p>
+          <div className="row">
+            <div className="col-1">
+              <p className="text-sans-p-bold mt-3">Calidad Jurídica</p>
+            </div>
+            <div className="col-2">
+              <DropdownSelect
+                placeholder="Calidad Jurídica"
+                options={opcionesCalidadJuridica}
+                onSelectionChange={manejarDropdownCalidadJuridica}
+              />
+            </div>
           </div>
-          <div className="col-2">
-            <DropdownSelect
-              placeholder="Calidad Jurídica"
-              options={opcionesCalidadJuridica}
-              onSelectionChange={manejarDropdownCalidadJuridica}
-            />
-          </div>
-        </div>
+        </>
       )}
 
       {mostrarBotonFormulario && !solo_lectura && (
@@ -542,7 +549,7 @@ const PersonalDirecto = ({
             const handleBlur = async () => {
               const isFieldValid = await trigger(`descripcion_funciones_personal_directo`);
               if (isFieldValid) {
-                handleSave(null, 'descripcion_funciones_personal_directo');
+                handleSave(null, 'descripcion_funciones_personal_directo', value);
               }
               onBlur();
             };

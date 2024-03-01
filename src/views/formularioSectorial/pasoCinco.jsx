@@ -9,15 +9,22 @@ import { Subpaso_CincoPuntoTres } from "../../components/formSectorial/paso5/p5.
 import CustomTextarea from '../../components/forms/custom_textarea';
 import { useAuth } from '../../context/AuthContext';
 import { useObservacionesSubdere } from '../../hooks/formulario/useObSubdereSectorial';
+import { usePasoForm } from '../../hooks/formulario/usePasoForm';
 
 const PasoCinco = () => {
   const { updateStepNumber, pasoData, data,  errorPaso } = useContext(FormularioContext);
   const stepNumber = 5;
   const [refreshSubpaso_CincoDos, setRefreshSubpaso_CincoDos] = useState(false);
+  const { dataPaso, refetchTrigger} = usePasoForm(data.id, stepNumber)
   const { userData } = useAuth();
   const userSubdere = userData?.perfil?.includes('SUBDERE');
   const { observaciones, updateObservacion, fetchObservaciones, loadingObservaciones, saved } = useObservacionesSubdere(data ? data.id : null);
   const [observacionPaso5, setObservacionPaso5] = useState("");
+  const [paso5Data, setPaso5Data] = useState('');
+  const [juridicasDirectasData, setJuridicasDirectasData] = useState('');
+  const [juridicasIndirectasData, setJuridicasIndirectasData] = useState('');
+  const [personalDirectoData, setPersonalDirectoData] = useState('');
+  const [personalIndirectoData, setPersonalIndirectoData] = useState('');
 
   const formularioEnviado = data.formulario_enviado
   const observacionesEnviadas = data.observacion_enviada
@@ -32,6 +39,24 @@ const PasoCinco = () => {
     }
   }, [updateStepNumber, stepNumber, observaciones, fetchObservaciones]);
 
+  useEffect(()=>
+    {
+      if (dataPaso){
+        setPaso5Data(dataPaso.paso5);
+        setJuridicasDirectasData(dataPaso.listado_calidades_juridicas_directas);
+        setJuridicasIndirectasData(dataPaso.listado_calidades_juridicas_indirectas);
+        setPersonalDirectoData(dataPaso.p_5_3_a_personal_directo);
+        setPersonalIndirectoData(dataPaso.p_5_3_b_personal_indirecto);
+      } else {
+        setPaso5Data(data.paso5);
+        setJuridicasDirectasData(data.listado_calidades_juridicas_directas);
+        setJuridicasIndirectasData(data.listado_calidades_juridicas_indirectas);
+        setPersonalDirectoData(data.p_5_3_a_personal_directo);
+        setPersonalIndirectoData(data.p_5_3_b_personal_indirecto);
+      }
+    }, [dataPaso])
+  
+
   if (errorPaso) return <div>Error: {errorPaso.message || "Error desconocido"}</div>;
   if (!pasoData) return <div>No hay datos disponibles para el Paso 5</div>;
 
@@ -43,14 +68,10 @@ const PasoCinco = () => {
     p_5_1_b_costos_indirectos,
     p_5_1_c_resumen_costos_por_subtitulo,
     p_5_2_evolucion_gasto_asociado, 
-    p_5_2_variacion_promedio, 
-    p_5_3_a_personal_directo, 
-    p_5_3_b_personal_indirecto, 
+    p_5_2_variacion_promedio,
     listado_subtitulos, 
     listado_item_subtitulos, 
-    listado_estamentos, 
-    listado_calidades_juridicas_directas,
-    listado_calidades_juridicas_indirectas,
+    listado_estamentos,
     listado_etapas,
     solo_lectura
   } = pasoData;
@@ -61,6 +82,8 @@ const PasoCinco = () => {
     };
     await updateObservacion(observacionData);
   };
+
+  
 
   return (
     <>
@@ -86,6 +109,7 @@ const PasoCinco = () => {
             listado_item_subtitulos={listado_item_subtitulos}
             listado_etapas={listado_etapas}
             setRefreshSubpaso_CincoDos={setRefreshSubpaso_CincoDos}
+            refetchTrigger={refetchTrigger}
           />
           <Subpaso_CincoDos
             id={data?.id}
@@ -99,14 +123,16 @@ const PasoCinco = () => {
             />
           <Subpaso_CincoPuntoTres
             id={data?.id}
-            paso5={paso5}
+            paso5={paso5Data}
             solo_lectura={solo_lectura}
             stepNumber={stepNumber}
-            data_personal_directo={p_5_3_a_personal_directo}
-            data_personal_indirecto={p_5_3_b_personal_indirecto}
+            data_personal_directo={personalDirectoData}
+            data_personal_indirecto={personalIndirectoData}
             listado_estamentos={listado_estamentos}
-            listado_calidades_juridicas_directas={listado_calidades_juridicas_directas}
-            listado_calidades_juridicas_indirectas={listado_calidades_juridicas_indirectas}
+            listado_calidades_juridicas_directas={juridicasDirectasData}
+            listado_calidades_juridicas_indirectas={juridicasIndirectasData}
+            refetchTrigger={refetchTrigger}
+            dataPaso={dataPaso}
           />
 
           {userSubdere && formularioEnviado && (

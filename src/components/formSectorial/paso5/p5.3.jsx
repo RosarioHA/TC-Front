@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CustomTextarea from "../../forms/custom_textarea";
 import PersonalIndirecto from "../../tables/PersonalIndirecto";
 import PersonalDirecto from "../../tables/PersonalDirecto";
@@ -13,6 +13,7 @@ export const Subpaso_CincoPuntoTres = (
     listado_estamentos,
     listado_calidades_juridicas_directas,
     listado_calidades_juridicas_indirectas,
+    refetchTrigger
    }) => {
 
   const [estamentosPindirecto, setEstamentosPindirecto] = useState([{ id: 1 }]);
@@ -83,8 +84,11 @@ export const Subpaso_CincoPuntoTres = (
 
       {/* a.Personal directo */}
 
+      <p className="text-sans-m-semibold mt-4">a. Personal que ejerce directamente la competencia</p>
+      <h6 className="text-sans-h6-primary mt-3">Por ejercicio directo se entenderán todas aquellas tareas y procedimientos específicos y exclusivos de la competencia. En la renta bruta se deben considerar aquellas asignaciones propias del cargo. </h6>
+
       <div className="my-4 relative-container">
-        <p className="text-sans-p-bold">Estos son los costos en personal (subtítulo 21) que declaraste en el punto 5.1:</p>
+        <p className="text-sans-p-bold">Estos son los costos en personal (subtítulo 21) que declaraste en el punto 5.1a:</p>
         <h6 className="text-sans-h6-primary mt-3">Debes justificar el 100% de los recursos declarados en la rentas del personal para completar esta sección.</h6>
         <div className="ps-3 my-4">
           {/* Encabezado */}
@@ -129,12 +133,13 @@ export const Subpaso_CincoPuntoTres = (
           data_personal_directo={data_personal_directo}
           listado_estamentos={listado_estamentos}
           listado_calidades_juridicas={listado_calidades_juridicas_directas}
+          refetchTrigger={refetchTrigger}
         />
       </div>
 
       <div className="my-4 relative-container">
-        <p className="text-sans-p-bold">Resumen de justificación de costos de personal directo y de soporte:</p>
-        <h6 className="text-sans-h6-primary mt-3">Debes justificar el 100% del costo informado en el punto 5.1 para completar esta sección.</h6>
+        <p className="text-sans-p-bold">Resumen de justificación de costos de personal directo:</p>
+        <h6 className="text-sans-h6-primary mt-3">Debes justificar el 100% del costo informado en el punto 5.1a para completar esta sección.</h6>
         <div className="ps-3 my-4">
           {/* Encabezado */}
           <div className="d-flex justify-content-between py-3 fw-bold">
