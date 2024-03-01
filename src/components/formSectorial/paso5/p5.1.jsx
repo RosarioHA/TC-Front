@@ -16,7 +16,8 @@ export const Subpaso_CincoPuntoUno = (
     listado_subtitulos,
     listado_item_subtitulos,
     listado_etapas,
-    setRefreshSubpaso_CincoDos, 
+    setRefreshSubpaso_CincoDos,
+    refetchTrigger
   }
 ) => {
 
@@ -94,6 +95,7 @@ export const Subpaso_CincoPuntoUno = (
           listado_item_subtitulos={listado_item_subtitulos}
           listado_etapas={listado_etapas}
           setRefreshSubpaso_CincoDos={setRefreshSubpaso_CincoDos}
+          refetchTrigger={refetchTrigger}
           setRefreshSumatoriaCostos={setRefreshSumatoriaCostos}
           solo_lectura={solo_lectura}
         />
@@ -119,6 +121,7 @@ export const Subpaso_CincoPuntoUno = (
           listado_item_subtitulos={listado_item_subtitulos}
           listado_etapas={listado_etapas}
           setRefreshSubpaso_CincoDos={setRefreshSubpaso_CincoDos}
+          refetchTrigger={refetchTrigger}
           setRefreshSumatoriaCostos={setRefreshSumatoriaCostos}
           solo_lectura={solo_lectura}
         />
