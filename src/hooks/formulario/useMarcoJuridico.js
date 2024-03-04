@@ -37,25 +37,6 @@ export const useUploadMarcoJuridico = (id, stepNumber) => {
       }
     };
 
-    //esta funcion es incorrecta y necesita apuntar a un endpoint real en el backend.
-    const downloadDocumento = async (documentoId) => {
-      try {
-          const response = await apiTransferenciaCompentencia.get(`/documento/${documentoId}/download/`, { 
-              responseType: 'blob',
-          });
-
-          const url = window.URL.createObjectURL(new Blob([response.data]));
-          const link = document.createElement('a');
-          link.href = url;
-          link.setAttribute('download', `documento_${documentoId}.pdf`);
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-      } catch (error) {
-          console.error('Error al descargar el archivo:', error);
-      }
-  };
-
-  return { uploadDocumento, downloadDocumento, isLoading, error };
+  return { uploadDocumento, isLoading, error };
 };
 

@@ -8,7 +8,7 @@ import { apiTransferenciaCompentencia } from '../../../services/transferenciaCom
 
 export const Subpaso_uno = ({ dataPaso, id, stepNumber, marcojuridico, solo_lectura }) => {
   const { handleUpdatePaso} = useContext(FormularioContext);
-  const { uploadDocumento, downloadDocumento } = useUploadMarcoJuridico(id, stepNumber); 
+  const { uploadDocumento } = useUploadMarcoJuridico(id, stepNumber); 
   const [formData, setFormData] = useState({
     marcojuridico: marcojuridico || [],
     paso1:dataPaso.paso1 || {
@@ -26,6 +26,9 @@ export const Subpaso_uno = ({ dataPaso, id, stepNumber, marcojuridico, solo_lect
   });
   const [isUploading, setIsUploading] = useState(false);
   const [marcoJuridicoFiles, setMarcoJuridicoFiles] = useState(marcojuridico || []);
+
+  console.log("pasoData en p1.1", dataPaso)
+  console.log("marco juridico", marcojuridico)
 
   useEffect(() => {
     setMarcoJuridicoFiles(marcojuridico || []);
@@ -115,8 +118,19 @@ export const Subpaso_uno = ({ dataPaso, id, stepNumber, marcojuridico, solo_lect
     }
   };
 
-  const handleDownload = async (documentoId) => {
-    downloadDocumento(documentoId);
+  // const handleDownload = async (documentoId) => {
+  //   console.log("documento id", documentoId)
+  // };
+  const handleDownload = (documentoId) => {
+    const selectedDocument = marcoJuridicoFiles.find(doc => doc.id === documentoId);
+
+    if (selectedDocument && selectedDocument.documento) {
+      console.log("docuemnto url", selectedDocument.documento)
+      console.log("selected document", selectedDocument)
+      window.open(selectedDocument.documento, "_blank");
+    } else {
+      console.error("No se pudo encontrar el documento para la descarga.");
+    }
   };
   
   return (

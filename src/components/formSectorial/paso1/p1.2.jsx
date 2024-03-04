@@ -17,6 +17,8 @@ export const Subpaso_dos = ({ pasoData, organigrama, id, stepNumber, solo_lectur
     }
   }); 
 
+  console.log("organigrama en p1.2", organigrama)
+
   const [ inputStatus, setInputStatus ] = useState({
     descripcion_archivo_organigrama_regional: { loading: false, saved: false },
     descripcion_archivo_organigrama_nacional: { loading: false, saved: false },
