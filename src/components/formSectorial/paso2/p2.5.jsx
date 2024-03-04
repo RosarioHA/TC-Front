@@ -140,7 +140,7 @@ export const Subpaso_dosPuntoCinco = ({ id, stepNumber, data, flujograma, solo_l
             tituloDocumento={flujo.flujograma_competencia}
             handleFileSelect={(file) => uploadFile(file)}
             handleDelete={() => eliminarDocFlujo(flujo.id)}
-            readOnly={false}
+            readOnly={solo_lectura}
             onViewFile={() => handleViewFile(flujo.flujograma_competencia)}
             ver={ver}
             archivoDescargaUrl={flujo.flujograma_competencia}
@@ -149,12 +149,12 @@ export const Subpaso_dosPuntoCinco = ({ id, stepNumber, data, flujograma, solo_l
           />
         ))}
 
-        {!uploading  && flujogramaFiles.length < 5 && (
+        {!uploading  && !solo_lectura && flujogramaFiles.length < 5 && (
           <SubirArchivo
             index={flujogramaFiles.length + 1}
             handleFileSelect={(file) => uploadFile(file)}
             onViewFile={handleViewFile || (() => {})}
-            readOnly={false}
+            readOnly={solo_lectura}
             ver={ver}
           />
         )}
