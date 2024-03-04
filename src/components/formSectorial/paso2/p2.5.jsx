@@ -16,11 +16,10 @@ export const Subpaso_dosPuntoCinco = ({ id, stepNumber, data, flujograma, solo_l
     descripcion_cualitativa: { loading: false, saved: false },
   });
   const [flujogramaFiles, setFlujogramaFiles] =  useState(dataPaso?.flujograma || flujograma || []);
-  const [iframeSrc, setIframeSrc] = useState(
-    'https://pdfobject.com/pdf/sample.pdf'
-  );
+  const [iframeSrc, setIframeSrc] = useState( 'https://pdfobject.com/pdf/sample.pdf');
   const [uploading, setUploading] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [showPdfViewer, setShowPdfViewer] = useState(false);
 
   //visualizar pdf
   const ver = true;
@@ -29,6 +28,7 @@ export const Subpaso_dosPuntoCinco = ({ id, stepNumber, data, flujograma, solo_l
     // const baseUrl = import.meta.env.VITE_REACT_APP_API_URL;
     const url = `${path}`;
     setIframeSrc(url);
+    setShowPdfViewer(true);
   };
 
   useEffect(() => {
@@ -140,7 +140,7 @@ export const Subpaso_dosPuntoCinco = ({ id, stepNumber, data, flujograma, solo_l
             tituloDocumento={flujo.flujograma_competencia}
             handleFileSelect={(file) => uploadFile(file)}
             handleDelete={() => eliminarDocFlujo(flujo.id)}
-            readOnly={solo_lectura}
+            readOnly={false}
             onViewFile={() => handleViewFile(flujo.flujograma_competencia)}
             ver={ver}
             archivoDescargaUrl={flujo.flujograma_competencia}
@@ -149,7 +149,7 @@ export const Subpaso_dosPuntoCinco = ({ id, stepNumber, data, flujograma, solo_l
           />
         ))}
 
-        {!uploading && !solo_lectura && flujogramaFiles.length < 5 && (
+        {!uploading  && flujogramaFiles.length < 5 && (
           <SubirArchivo
             index={flujogramaFiles.length + 1}
             handleFileSelect={(file) => uploadFile(file)}
@@ -160,13 +160,16 @@ export const Subpaso_dosPuntoCinco = ({ id, stepNumber, data, flujograma, solo_l
         )}
       </div>
 
-      <div className="my-4 col-11">
+      {showPdfViewer && (
+        <div className="my-4 col-11">
         <iframe
           id="visorPDF"
           src={iframeSrc}
           title="Vista previa del documento"
         ></iframe>
       </div>
+      )}
+      
 
       <div className="mt-4 pb-4 border-bottom">
         <CustomTextarea
