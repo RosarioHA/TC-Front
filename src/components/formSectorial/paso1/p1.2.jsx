@@ -16,7 +16,7 @@ export const Subpaso_dos = ({ pasoData, organigrama, id, stepNumber, solo_lectur
       descripcion_archivo_organigrama_nacional: pasoData.descripcion_archivo_organigrama_nacional,
       organigrama_nacional: pasoData.organigrama_nacional,
     }
-  });
+  }); 
 
   const [ inputStatus, setInputStatus ] = useState({
     descripcion_archivo_organigrama_regional: { loading: false, saved: false },
@@ -24,6 +24,8 @@ export const Subpaso_dos = ({ pasoData, organigrama, id, stepNumber, solo_lectur
     organigrama_nacional: { loading: false, saved: false },
   });
 
+  console.log("paso data en p1.2", pasoData)
+  console.log("organigrama en p1.2", organigrama)
 
   useEffect(() => {
     if (pasoData && pasoData.paso1) {
@@ -187,7 +189,9 @@ export const Subpaso_dos = ({ pasoData, organigrama, id, stepNumber, solo_lectur
             loading={inputStatus.organigrama_nacional.loading}
             tituloDocumento={pasoData?.organigrama_nacional}
             ver={ver}
-            readOnly={solo_lectura}
+            //readOnly={solo_lectura}
+            readOnly={true}
+            archivoDescargaUrl={pasoData?.organigrama_nacional}
           />
         </div>
       </div>
@@ -237,7 +241,9 @@ export const Subpaso_dos = ({ pasoData, organigrama, id, stepNumber, solo_lectur
             }
             handleFileSelect={(file) => handleFileSelectRegion(file, 'organigramaregional', region.id)}
             handleDelete={() => eliminarDocRegional(region.id)}
-            readOnly={solo_lectura}
+            //readOnly={solo_lectura}
+            readOnly={true}
+            archivoDescargaUrl={region?.documento}
           />
         ))}
 
