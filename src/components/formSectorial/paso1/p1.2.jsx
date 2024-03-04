@@ -5,8 +5,7 @@ import { FormularioContext } from "../../../context/FormSectorial";
 import { SubirArchivoRegiones } from "../../forms/subirArchivoRegiones";
 import { useFileRegional } from "../../../hooks/formulario/useFileRegional";
 
-export const Subpaso_dos = ({ pasoData, organigrama, id, stepNumber, solo_lectura }) =>
-{
+export const Subpaso_dos = ({ pasoData, organigrama, id, stepNumber, solo_lectura }) => {
   const { updatePasoError, handleUpdatePaso, handleUploadFiles } = useContext(FormularioContext);
   const { uploadFile } = useFileRegional();
   const [ formData, setFormData ] = useState({
@@ -23,9 +22,6 @@ export const Subpaso_dos = ({ pasoData, organigrama, id, stepNumber, solo_lectur
     descripcion_archivo_organigrama_nacional: { loading: false, saved: false },
     organigrama_nacional: { loading: false, saved: false },
   });
-
-  console.log("paso data en p1.2", pasoData)
-  console.log("organigrama en p1.2", organigrama)
 
   useEffect(() => {
     if (pasoData && pasoData.paso1) {
@@ -81,10 +77,8 @@ export const Subpaso_dos = ({ pasoData, organigrama, id, stepNumber, solo_lectur
 
   const handleFileSelect = async (file, fieldName) => {
     try {
-      // Actualizar el estado local con el archivo seleccionado
       const archivos = new FormData();
       archivos.append(fieldName, file);
-
       setInputStatus(prevStatus => ({
         ...prevStatus,
         [ fieldName ]: { ...prevStatus[ fieldName ], loading: true },
@@ -107,23 +101,18 @@ export const Subpaso_dos = ({ pasoData, organigrama, id, stepNumber, solo_lectur
   };
 
   const handleFileSelectRegion = async (file, fieldName, regionId) => {
-    // Asegúrate de que `id` y `stepNumber` están definidos
     if (typeof id === 'undefined' || typeof stepNumber === 'undefined') {
       console.error("El ID del formulario o el número de paso no están definidos.");
       return;
     }
 
     try {
-      // Actualiza el estado para indicar que el archivo está cargando
       setInputStatus(prevStatus => ({
         ...prevStatus,
         [ fieldName ]: { ...prevStatus[ fieldName ], loading: true },
       }));
-
-      // Llama a la función de carga del archivo
       await uploadFile(id, regionId, file);
 
-      // Actualiza el estado para indicar que el archivo se ha cargado con éxito
       setInputStatus(prevStatus => ({
         ...prevStatus,
         [ fieldName ]: { loading: false, saved: true },
@@ -189,8 +178,7 @@ export const Subpaso_dos = ({ pasoData, organigrama, id, stepNumber, solo_lectur
             loading={inputStatus.organigrama_nacional.loading}
             tituloDocumento={pasoData?.organigrama_nacional}
             ver={ver}
-            //readOnly={solo_lectura}
-            readOnly={true}
+            readOnly={solo_lectura}
             archivoDescargaUrl={pasoData?.organigrama_nacional}
           />
         </div>
@@ -216,7 +204,6 @@ export const Subpaso_dos = ({ pasoData, organigrama, id, stepNumber, solo_lectur
       <h6 className="text-sans-h6 mb-3">Máximo 1 archivo por región, peso máximo 20MB, formato PDF</h6>
       <p className="text-sans-p-semibold">Regiones asociadas a la competencia:</p>
 
-      {/* por cada region asociada debe haber una fila para subir su organigrama, encabezada por el nombre de la region */}
       <div className="col-11">
         <div className="d-flex justify-content-between py-3 fw-bold">
           <div className="d-flex mb-2">
@@ -241,8 +228,7 @@ export const Subpaso_dos = ({ pasoData, organigrama, id, stepNumber, solo_lectur
             }
             handleFileSelect={(file) => handleFileSelectRegion(file, 'organigramaregional', region.id)}
             handleDelete={() => eliminarDocRegional(region.id)}
-            //readOnly={solo_lectura}
-            readOnly={true}
+            readOnly={solo_lectura}
             archivoDescargaUrl={region?.documento}
           />
         ))}
@@ -263,7 +249,6 @@ export const Subpaso_dos = ({ pasoData, organigrama, id, stepNumber, solo_lectur
           maxLength={500}
           readOnly={solo_lectura} />
       </div>
-
     </div>
   )
 };
