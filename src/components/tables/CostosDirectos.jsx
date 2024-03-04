@@ -17,6 +17,7 @@ const CostosDirectos = ({
   listado_item_subtitulos,
   listado_etapas,
   setRefreshSubpaso_CincoDos,
+  refetchTrigger,
   setRefreshSumatoriaCostos,
   solo_lectura
 }) => {
@@ -41,6 +42,7 @@ const CostosDirectos = ({
   const [opcionesEtapas, setopcionesEtapas] = useState([]);
   const { handleUpdatePaso } = useContext(FormularioContext);
   const [esquemaValidacion, setEsquemaValidacion] = useState(null);
+  
 
   const defaultValues = costosDirectos.reduce((acc, costoDirecto) => {
     if (costoDirecto.item_subtitulo) {
@@ -161,6 +163,7 @@ const CostosDirectos = ({
     try {
       await handleUpdatePaso(id, stepNumber, payload);
       setRefreshSubpaso_CincoDos(true);
+      refetchTrigger();
       setRefreshSumatoriaCostos(true);
 
     } catch (error) {
@@ -236,7 +239,8 @@ const CostosDirectos = ({
 
       // Actualiza el estado de carga y guardado
       updateFieldState(arrayNameId, fieldName, { loading: false, saved: true });
-      setRefreshSubpaso_CincoDos(true);
+      setRefreshSubpaso_CincoDos(true);      
+      refetchTrigger();
       setRefreshSumatoriaCostos(true);
 
     } catch (error) {
@@ -508,7 +512,7 @@ const CostosDirectos = ({
           </div>
         ))}
 
-        {!solo_lectura && (
+        {!solo_lectura && (            
         <button
           className="btn-secundario-s m-2"
           type="submit">

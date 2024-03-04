@@ -2,6 +2,7 @@ import React,{ useContext, useState, useEffect } from "react";
 import { FormularioContext } from "../../context/FormSectorial";
 import CustomTextarea from "../forms/custom_textarea";
 import CustomInput from "../forms/custom_input";
+import InputCosto from "../forms/input_costo";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { construirValidacionPaso5_2evolucion } from "../../validaciones/esquemaValidarPaso5Sectorial";
@@ -175,7 +176,7 @@ export const GastosEvolucionVariacion = ({
 
           <thead>
             <tr>
-              <th scope="col" className="text-sans-p-bold px-2 pb-5">Subtítulo</th>
+              <th scope="col" className="text-sans-p-bold pt-2">Subtítulo</th>
               {headers && headers.map((year, index) => (
                 <th key={index} scope="col" className="text-sans-p text-center">
                   <u>{year}</u>
@@ -217,7 +218,7 @@ export const GastosEvolucionVariacion = ({
                               onBlur();
                             };
                             return (
-                              <CustomInput
+                              <InputCosto
                                 id={`costo_${costoAnio?.id}`}
                                 placeholder="Costo (M$)"
                                 value={value}

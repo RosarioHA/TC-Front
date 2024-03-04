@@ -3,7 +3,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { useNavigate, useParams } from "react-router-dom";
 import CustomInput from "../../components/forms/custom_input";
 import DropdownSelect from "../../components/dropdown/select";
-import DropdownCheckbox from "../../components/dropdown/checkbox";
+import {CheckboxRegion } from "../../components/dropdown/checkboxRegion";
 import DropdownConSecciones from "../../components/dropdown/checkbox_conSecciones_conTabla";
 import { useOrigenes } from "../../hooks/useOrigenes";
 import { useRegion } from "../../hooks/useRegion";
@@ -297,7 +297,7 @@ const EdicionCompetencia = () => {
             name="regiones"
             control={control}
             render={({ field }) => (
-              <DropdownCheckbox
+              <CheckboxRegion 
                 label="Región (Obligatorio)"
                 placeholder="Elige la o las regiones donde se ejercerá la competencia"
                 id="regiones"

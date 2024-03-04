@@ -16,7 +16,8 @@ export const Subpaso_CincoPuntoUno = (
     listado_subtitulos,
     listado_item_subtitulos,
     listado_etapas,
-    setRefreshSubpaso_CincoDos, 
+    setRefreshSubpaso_CincoDos,
+    refetchTrigger
   }
 ) => {
 
@@ -26,6 +27,21 @@ export const Subpaso_CincoPuntoUno = (
   const [totalCostosIndirectos, setTotalCostosIndirectos] = useState('');
   const [costosTotales, setCostosTotales] = useState('');
   const [descripcionCostosTotales, setDescripcionCostosTotales] = useState('');
+
+  // Función de utilidad para formatear números
+  const formatearNumero = (numero) => {
+    // Asegurarse de que el valor es un número. Convertir si es necesario.
+    const valorNumerico = Number(numero);
+    // Verificar si el valor es un número válido antes de intentar formatearlo
+    if (!isNaN(valorNumerico)) {
+      return valorNumerico.toLocaleString('es-CL', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2
+      });
+    }
+    // Devolver un valor predeterminado o el mismo valor si no es un número
+    return numero;
+  };
 
   // Lógica para recargar sumatoria al agregar costos directos o indirectos
   // Llamada para recargar componente
@@ -79,6 +95,7 @@ export const Subpaso_CincoPuntoUno = (
           listado_item_subtitulos={listado_item_subtitulos}
           listado_etapas={listado_etapas}
           setRefreshSubpaso_CincoDos={setRefreshSubpaso_CincoDos}
+          refetchTrigger={refetchTrigger}
           setRefreshSumatoriaCostos={setRefreshSumatoriaCostos}
           solo_lectura={solo_lectura}
         />
@@ -87,7 +104,7 @@ export const Subpaso_CincoPuntoUno = (
 
       <div className="row mt-5 d-flex align-items-center">
         <p className="text-sans-p-bold mb-0 col-2">Costos Directos <br /> Totales Anual ($M)</p>
-        <p className="text-sans-p-blue col">{totalCostosDirectos}</p>
+        <p className="text-sans-p-blue col">{formatearNumero(totalCostosDirectos)}</p>
       </div>
       <hr className="col-4"/>
 
@@ -104,6 +121,7 @@ export const Subpaso_CincoPuntoUno = (
           listado_item_subtitulos={listado_item_subtitulos}
           listado_etapas={listado_etapas}
           setRefreshSubpaso_CincoDos={setRefreshSubpaso_CincoDos}
+          refetchTrigger={refetchTrigger}
           setRefreshSumatoriaCostos={setRefreshSumatoriaCostos}
           solo_lectura={solo_lectura}
         />
@@ -112,7 +130,7 @@ export const Subpaso_CincoPuntoUno = (
 
       <div className="row mt-5 d-flex align-items-center">
         <p className="text-sans-p-bold mb-0 col-2">Costos Directos <br /> Totales Anual ($M)</p>
-        <p className="text-sans-p-blue col">{totalCostosIndirectos}</p>
+        <p className="text-sans-p-blue col">{formatearNumero(totalCostosIndirectos)}</p>
       </div>
       <hr className="col-4" />
 
