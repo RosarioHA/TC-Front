@@ -39,7 +39,7 @@ const FormularioLayout = () => {
     <div className="container-fluid col-11">
       <div className="row">
         <div className="col mb-2">
-          <FormTitle data={data} loading={loading} id={data.id} />
+          <FormTitle data={data} loading={loading} id={data.id} title="Formulario Sectorial"  />
           <div className="mx-5">
             {data && <HorizontalStepper baseUrl={baseUrl} />}
             <Timmer data={data} loading={loading} id={data.id} />
