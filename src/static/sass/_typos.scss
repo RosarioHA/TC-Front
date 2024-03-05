@@ -52,14 +52,14 @@
 .text-sans-h2-tertiary{
     @include font-sans(32px, 500, $tertiary-color);
 }
-
+.text-sans-h2-grey{
+    @include font-sans(32px, 500, $grey-c-color);
+}
 .text-sans-h2-bold-tertiary{
     @include font-sans(32px, 700, $tertiary-color);
 }
 
-.text-sans-h2-grey{
-    @include font-sans(32px, 500, $grey-c-color);
-}
+
 
 //25px
 .text-sans-25{

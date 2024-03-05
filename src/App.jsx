@@ -23,12 +23,16 @@ const Error500 = React.lazy(() => import('./views/Errors/Error500'));
 const Error503 = React.lazy(() => import('./views/Errors/Error503'));
 const SuccessEdicion = React.lazy(() => import ('./views/success/success_edicion'));
 const SuccessCreacion = React.lazy(() => import ('./views/success/success_creacion'));
+const SuccessCierreOS = React.lazy(() => import('./views/success/success_cierreObservaciones'));
+const SuccessOS = React.lazy(() => import('./views/success/success_os'));
 const PasoUno = React.lazy(() => import('./views/formularioSectorial/pasoUno'));
 const PasoDos = React.lazy(() => import('./views/formularioSectorial/pasoDos'));
 const PasoTres = React.lazy(() => import('./views/formularioSectorial/pasoTres'));
 const PasoCuatro = React.lazy(() => import('./views/formularioSectorial/pasoCuatro'));
 const PasoCinco = React.lazy(() => import('./views/formularioSectorial/pasoCinco'));
 const Resumen = React.lazy(() => import('./views/formularioSectorial/Resumen'));
+const ResumenOS = React.lazy(() => import('./views/observacionesSUBDERE/ResumenOS'));
+const ObservacionesSubdere = React.lazy(() => import('./views/observacionesSUBDERE/ObservacionesSubdere'));
 
 const createProtectedRoute = (path, Component, allowedProfiles) => (
   <Route
@@ -57,6 +61,7 @@ function App() {
           {createProtectedRoute("editar_usuario/:id", EditarUsuario, [ 'SUBDERE', 'Usuario Observador' ])}
           {createProtectedRoute("success_edicion", SuccessEdicion, [ 'SUBDERE', 'Usuario Observador' ])}
           {createProtectedRoute("success_creacion", SuccessCreacion, [ 'SUBDERE', 'Usuario Observador' ])}
+          {createProtectedRoute("success_creacion", SuccessOS, SuccessCierreOS, [ 'SUBDERE' ])}
           {createProtectedRoute("listado_competencias", GestionCompetencias, [ 'SUBDERE', 'Usuario Observador' ])}
           {createProtectedRoute("editar_competencia/:id",EditarCompetencia , [ 'SUBDERE', 'Usuario Observador' ])}
           {createProtectedRoute("crear_competencia",CreacionCompetencia, [ 'SUBDERE', 'Usuario Observador' ])}
@@ -64,6 +69,15 @@ function App() {
           <Route path="estado_competencia/:id/" element={<EstadoCompentencia />} />
           <Route path="success_edicion" element={<SuccessEdicion />} />
           <Route path="success_creacion" element={<SuccessCreacion />} />
+          <Route path="success_observaciones_subdere/:id/" element={<FormularioProvider> <SuccessOS /> </FormularioProvider>} />
+          <Route path="success_cierre_observaciones/:id/" element={<FormularioProvider> <SuccessCierreOS /> </FormularioProvider>} />
+          <Route 
+          path="observaciones_subdere/:id/" 
+          element={
+          <FormularioProvider>
+            <ObservacionesSubdere />
+          </FormularioProvider>
+          } />
           <Route
             path="formulario_sectorial/:id"
             element={
@@ -80,7 +94,9 @@ function App() {
             <Route path="paso_3" element={<PasoTres />} />
             <Route path="paso_4" element={<PasoCuatro />} />
             <Route path="paso_5" element={<PasoCinco />} />
-            <Route path="Resumen_formulario" element={<Resumen />} />
+            <Route path="resumen_formulario" element={<Resumen />} />
+            <Route path="resumen_os" element={<ResumenOS/>} />
+            
           </Route>
 
           <Route path="agregar_minuta" element={<Minuta />}></Route>

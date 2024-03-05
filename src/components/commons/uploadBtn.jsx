@@ -2,7 +2,9 @@ import { useRef } from 'react';
 
 const UploadBtn = ({ onFileChange, fileUploaded, onViewFile, ver }) => {
   const inputFile = useRef(null);
-  const handleButtonClick = () => { inputFile.current.click(); };
+  const handleButtonClick = () => {
+    inputFile.current.click();
+  };
 
   return (
     <>

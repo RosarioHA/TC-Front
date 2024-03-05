@@ -1,11 +1,12 @@
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 
-export const ButtonsNavigate = ({ step , id }) =>
-{
+export const ButtonsNavigate = ({ step , id }) => {
   const navigate = useNavigate();
+  const { userData } = useAuth();
+  const userSubdere = userData?.perfil?.includes('SUBDERE');
 
-  const getRouteForStep = (stepNumber) =>
-  {
+  const getRouteForStep = (stepNumber) => {
     const stepToRouteMap = {
       1: `/home/formulario_sectorial/${id}/paso_1`,
       2: `/home/formulario_sectorial/${id}/paso_2`,
@@ -16,14 +17,14 @@ export const ButtonsNavigate = ({ step , id }) =>
     return stepToRouteMap[ stepNumber ];
   };
 
-  const handleNextButtonClick = () =>
-  {
-    if (step < 5)
-    {
+  const handleNextButtonClick = () => {
+    if (step < 5) {
       navigate(getRouteForStep(step + 1));
-    } else
-    {
-      navigate( `/home/formulario_sectorial/${id}/resumen_formulario`);
+    } else {
+      const resumenRoute = userSubdere
+        ? `/home/formulario_sectorial/${id}/resumen_OS`
+        : `/home/formulario_sectorial/${id}/resumen_formulario`;
+      navigate(resumenRoute);
     }
   };
 

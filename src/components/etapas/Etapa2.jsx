@@ -106,6 +106,7 @@ export const Etapa2 = ({ etapa }) => {
   };
 
     
+    
 
   const renderButtonForFormularioSectorial = (formulario) => {
     const buttonText = formulario.accion;

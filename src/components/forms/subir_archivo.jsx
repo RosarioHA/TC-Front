@@ -101,7 +101,12 @@ const SubirArchivo = ({ index, tituloDocumento, readOnly, onViewFile, archivoDes
         <div>
           {!readOnly ? (
             <div className="col p-3 d-flex">
-              <UploadBtn onFileChange={handleFileChange} fileUploaded={fileUploaded} onViewFile={() => onViewFile()} ver={ver} />
+              <UploadBtn 
+              onFileChange={handleFileChange} 
+              fileUploaded={fileUploaded} 
+              onViewFile={() => onViewFile()} 
+              ver={ver}
+              />
               {fileUploaded && (
                 <button onClick={handleDeleteDoc} className="btn-terciario-ghost px-2 d-flex align-items-center mx-1">
                   <span className="text-sans-b-red">Borrar</span>
