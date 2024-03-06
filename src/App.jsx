@@ -4,7 +4,6 @@ import { ProtectedRoute } from './context/ProtectedRoute';
 import { FormularioProvider } from "./context/FormSectorial";
 import FormularioLayout from './layout/FormularioLayout';
 import { FormGoreProvider } from './context/FormGore';
-const Muestrario = React.lazy(() => import('./views/muestrario'));
 const MainLayout = React.lazy(() => import('./layout/mainLayout'));
 const Home = React.lazy(() => import('./views/home'));
 const Landing = React.lazy(() => import('./views/landing'));
@@ -24,6 +23,7 @@ const Error500 = React.lazy(() => import('./views/Errors/Error500'));
 const Error503 = React.lazy(() => import('./views/Errors/Error503'));
 const SuccessEdicion = React.lazy(() => import ('./views/success/success_edicion'));
 const SuccessCreacion = React.lazy(() => import ('./views/success/success_creacion'));
+const SuccessFormSectorial = React.lazy(() => import ('./views/success/success_formularioSectorial'));
 const SuccessCierreOS = React.lazy(() => import('./views/success/success_cierreObservaciones'));
 const SuccessOS = React.lazy(() => import('./views/success/success_os'));
 const PasoUno = React.lazy(() => import('./views/formularioSectorial/pasoUno'));
@@ -55,7 +55,6 @@ function App()
   return (
     <Suspense fallback={<div>Cargando página...</div>}>
       <Routes>
-        <Route path="/muestrario" element={<Muestrario />} />
         <Route path="/" element={<LoginLayout />}>
           <Route index element={<Landing />} />
           <Route path="/login" element={<Login />} />
@@ -75,6 +74,7 @@ function App()
           <Route path="estado_competencia/:id/" element={<EstadoCompentencia />} />
           <Route path="success_edicion" element={<SuccessEdicion />} />
           <Route path="success_creacion" element={<SuccessCreacion />} />
+          <Route path="success_formulario_sectorial/:id/" element={<FormularioProvider> <SuccessFormSectorial /> </FormularioProvider>} />
           <Route path="success_observaciones_subdere/:id/" element={<FormularioProvider> <SuccessOS /> </FormularioProvider>} />
           <Route path="success_cierre_observaciones/:id/" element={<FormularioProvider> <SuccessCierreOS /> </FormularioProvider>} />
           <Route 
