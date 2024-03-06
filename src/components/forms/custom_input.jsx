@@ -23,7 +23,7 @@ const CustomInput = forwardRef(
         return <div className="spinner-border text-primary" role="status"></div>;
       }
       if (saved) {
-        return <i className="material-symbols-outlined">check</i>; // Reemplaza esto con tu ícono de check real
+        return <i className="material-symbols-outlined text-success">check</i>; // Reemplaza esto con tu ícono de check real
       }
       return null;
     };

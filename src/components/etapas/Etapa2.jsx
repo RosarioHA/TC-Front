@@ -7,6 +7,7 @@ export const Etapa2 = ({ etapa }) => {
   const navigate = useNavigate();
   const { userData } = useAuth();
   const userSubdere = userData?.perfil?.includes('SUBDERE');
+  const userGore = userData?.perfil?.includes('GORE');
   const [isCollapsed, setIsCollapsed] = useState(false);
   const usuarioSector = userData?.sector;
 
@@ -44,6 +45,8 @@ export const Etapa2 = ({ etapa }) => {
         return null;
     }
   };
+
+  
 
   const handleNavigation = (path) => {
     navigate(path);
@@ -106,14 +109,15 @@ export const Etapa2 = ({ etapa }) => {
   };
 
     
+    
 
   const renderButtonForFormularioSectorial = (formulario) => {
     const buttonText = formulario.accion;
     const path = `/home/formulario_sectorial/${formulario.id}/paso_1`;
-    const isButtonDisabled = userSubdere || formulario.estado  === "pendiente" 
+    const isButtonDisabled = (userSubdere || userGore) || formulario.estado === "pendiente";
 
 
-  
+
     let icon = 'edit';
     if (formulario.estado !== "pendiente") {
       icon = 'draft'; 
@@ -163,8 +167,8 @@ export const Etapa2 = ({ etapa }) => {
   };
 
   const renderFormularioSectorial = () => {
-    if (!userSubdere) {
-      return null; // No renderizar nada si el usuario no es SUBDERE
+    if (!userSubdere && !userGore) {
+      return null; // No renderizar nada si el usuario no es SUBDERE ni GORE
     }
     // Verifica si el array formulario_sectorial tiene un solo elemento
     if (etapa.formulario_sectorial && etapa.formulario_sectorial.length === 1) {
@@ -175,7 +179,7 @@ export const Etapa2 = ({ etapa }) => {
     else if (etapa.formulario_sectorial.detalle_formularios_sectoriales && etapa.formulario_sectorial.detalle_formularios_sectoriales.length > 0) {
       const info = etapa.formulario_sectorial.formularios_sectoriales[0];
       return (
-        <div className='w-100'>
+        <div className='w-100 boder border-bottom'>
           <button type="button" className="btn d-flex justify-content-between w-100 px-0" onClick={toggleCollapse}>
             <span>{info.nombre}</span>
             <div className="d-flex align-items-center">
@@ -253,7 +257,7 @@ export const Etapa2 = ({ etapa }) => {
           </div>
         )}
         {/* Llamada a las funciones de renderizado de formularios sectoriales */}
-        {userSubdere ? renderFormularioSectorial() : renderFormularioSectorialParaUsuarioSectorial()}
+        {userSubdere || userGore ? renderFormularioSectorial() : renderFormularioSectorialParaUsuarioSectorial()}
         {observaciones_sectorial.length > 0 && (
           observaciones_sectorial.map((observacion, index) => (
             <div key={index} className="d-flex justify-content-between text-sans-p border-top border-bottom my-3 py-1">

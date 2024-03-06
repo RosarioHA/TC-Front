@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 
-export const FormTitle = ({ data,error}) =>
+export const FormTitle = ({ data,error, title}) =>
 {
 
   const navigate = useNavigate();
@@ -26,15 +26,15 @@ export const FormTitle = ({ data,error}) =>
           <ol className="breadcrumb breadcrumb-style d-flex my-2">
             <li className="breadcrumb-item align-self-center"><Link to="/home">Inicio</Link></li>
             <li className="breadcrumb-item align-self-center text-sans-p-lightgrey" aria-current="page">
-              <Link to={`/home/estado_competencia/${data.id}`}>Formulario Sectorial: {data.competencia_nombre}</Link></li>
-            <li className="breadcrumb-item align-self-center text-sans-p-lightgrey" aria-current="page">Formulario Sectorial</li>
+              <Link to={`/home/estado_competencia/${data.id}`}>{title}: {data.competencia_nombre}</Link></li>
+            <li className="breadcrumb-item align-self-center text-sans-p-lightgrey" aria-current="page">{title}</li>
           </ol>
         </nav>
       </div>
-      <span className="text-sans-Title mt-3">Formulario Sectorial</span>
+      <span className="text-sans-Title mt-3">{title}</span>
       <div className="my-3 mb-5">
         <div className="text-sans-h1 mb-1">{data.competencia_nombre}</div>
-        <div className="text-sans-h2-grey mb-2">{data.sector_nombre}</div>
+        <div className="text-sans-h2-grey mb-2">{data.sector_nombre||data.region_nombre}</div>
       </div>
     </div>
   )

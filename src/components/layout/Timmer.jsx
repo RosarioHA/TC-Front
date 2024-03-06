@@ -10,10 +10,10 @@ export const Timmer = ({data, error }) =>
 
   return (
     <>
-      <div className=" mt-4 border-bottom">
+      <div className=" mt-4">
         <div className="w-75 mx-auto mb-5">
           <Counter plazoDias={plazoDias} tiempoTranscurrido={tiempoTranscurrido} />
-          <div className="text-sans-p">Fecha última modificación: {data.fecha_ultima_modificacion}</div>
+          <div className="text-sans-p">Fecha última modificación: <strong>{data.fecha_ultima_modificacion}</strong></div>
         </div>
       </div>
     </>

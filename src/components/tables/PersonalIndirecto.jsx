@@ -127,7 +127,7 @@ const PersonalIndirecto = ({
   // Lógica para eliminar una fila de un organismo
   const eliminarPersona = async (persona, idFila) => {
     const payload = {
-      'p_5_3_a_personal_directo': [{
+      'p_5_3_b_personal_indirecto': [{
         id: idFila,
         DELETE: true
       }]
@@ -225,7 +225,7 @@ const PersonalIndirecto = ({
     };
 
     const payload = {
-      'p_5_3_a_personal_directo': [nuevaCalidadJuridicaDatos]
+      'p_5_3_b_personal_indirecto': [nuevaCalidadJuridicaDatos]
     };
 
     try {

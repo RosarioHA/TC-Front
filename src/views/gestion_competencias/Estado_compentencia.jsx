@@ -5,41 +5,31 @@ import { PersonsAssigned } from "../../components/tables/PersonsAssigned";
 import { VerticalStepper } from "../../components/stepers/VerticalStepper";
 import { useCompetencia } from "../../hooks/competencias/useCompetencias";
 
-const EstadoCompetencia = () =>
-{
+const EstadoCompetencia = () => {
   const { id } = useParams();
   const { competenciaDetails, loading, error } = useCompetencia(id);
   const navigate = useNavigate();
   const [ competencia, setCompetencia ] = useState(null);
 
-  useEffect(() =>
-  {
-    if (competenciaDetails)
-    {
+  useEffect(() => {
+    if (competenciaDetails) {
       setCompetencia(competenciaDetails);
     }
   }, [ competenciaDetails ]);
 
-  const handleBackButtonClick = () =>
-  {
+  const handleBackButtonClick = () => {
     navigate(-1);
   };
 
-  if (loading)
-  {
+  if (loading) {
     return <div>Cargando detalles de la competencia...</div>;
   }
-
-  if (error)
-  {
+  if (error) {
     return <div>Error al cargar los detalles: {error.message}</div>;
   }
-
-  if (!competencia)
-  {
+  if (!competencia) {
     return <div>No se encontraron detalles de la competencia</div>;
   }
-
 
   return (
     <>

@@ -1,30 +1,27 @@
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
 
-export const ButtonsNavigate = ({ step , id }) => {
+export const NavigationGore= ({ step , id }) =>
+{
   const navigate = useNavigate();
-  const { userData } = useAuth();
-  const userSubdere = userData?.perfil?.includes('SUBDERE');
 
-  const getRouteForStep = (stepNumber) => {
+  const getRouteForStep = (stepNumber) =>
+  {
     const stepToRouteMap = {
-      1: `/home/formulario_sectorial/${id}/paso_1`,
-      2: `/home/formulario_sectorial/${id}/paso_2`,
-      3: `/home/formulario_sectorial/${id}/paso_3`,
-      4: `/home/formulario_sectorial/${id}/paso_4`,
-      5: `/home/formulario_sectorial/${id}/paso_5`,
+      1: `/home/formulario_gore/${id}/paso_1`,
+      2: `/home/formulario_gore/${id}/paso_2`,
+      3: `/home/formulario_gore/${id}/paso_3`,
     };
     return stepToRouteMap[ stepNumber ];
   };
 
-  const handleNextButtonClick = () => {
-    if (step < 5) {
+  const handleNextButtonClick = () =>
+  {
+    if (step < 3)
+    {
       navigate(getRouteForStep(step + 1));
-    } else {
-      const resumenRoute = userSubdere
-        ? `/home/formulario_sectorial/${id}/resumen_OS`
-        : `/home/formulario_sectorial/${id}/resumen_formulario`;
-      navigate(resumenRoute);
+    } else
+    {
+      navigate( `/home/formulario_gore/${id}/resumen_formulario`);
     }
   };
 

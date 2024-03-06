@@ -64,5 +64,6 @@ export const construirEsquemaValidacion = (plataformasySoftwares) => {
     // Y así sucesivamente para cada tipo de campo y validación que necesites.
   });
 
+
   return yup.object().shape(schemaFields);
 };

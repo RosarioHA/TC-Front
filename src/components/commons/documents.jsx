@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-export const DocumentsAditionals = ({ onFilesChanged, marcoJuridicoData, handleDelete }) => {
+export const DocumentsAditionals = ({ onFilesChanged, marcoJuridicoData, handleDelete, handleDownload, readOnly }) => {
   const [files, setFiles] = useState([]);
   const maxFiles = 5; // Máximo número de archivos permitidos
   const maxSize = 20 * 1024 * 1024; // 20 MB
@@ -72,6 +72,26 @@ export const DocumentsAditionals = ({ onFilesChanged, marcoJuridicoData, handleD
 
   return (
     <>
+    {readOnly ? (
+      files.map((fileObj, index) => (
+        <div key={index} className={`row align-items-center me-5 pe-5 col-11 mt-2 ${index % 2 === 0 ? 'neutral-line' : 'white-line'}`}>
+          <div className="col-1 p-3">{index + 1}</div>
+          <div className="col p-3">{fileObj.title}</div>
+          <div className="col p-3"></div>
+          <div className="col-2 p-3 d-flex">
+            <button
+              type="button"
+              onClick={() => handleDownload(fileObj.id)}
+              className="btn-secundario-s px-0 d-flex align-items-center mx-0"
+            >
+              <span className="text-sans-b-green mx-2">Descargar</span>
+              <i className="material-symbols-rounded mx-2">download</i>
+            </button>
+          </div>
+        </div>
+      ))
+    ) : (
+    <>
       <input
         type="file"
         multiple
@@ -92,7 +112,7 @@ export const DocumentsAditionals = ({ onFilesChanged, marcoJuridicoData, handleD
         </h6>
       )}
       {files.map((fileObj, index) => (
-        <div key={index} className={`row border-top align-items-center me-5 pe-5 col-11 mt-2 ${index % 2 === 0 ? 'grey-table-line' : 'white-table-line'}`}>
+        <div key={index} className={`row align-items-center me-5 pe-5 col-11 mt-2 ${index % 2 === 0 ? 'neutral-line' : 'white-line'}`}>
           <div className="col-1 p-3">{index + 1}</div>
           <div className="col p-3">{fileObj.title}</div>
           <div className="col p-3"></div>
@@ -111,6 +131,9 @@ export const DocumentsAditionals = ({ onFilesChanged, marcoJuridicoData, handleD
           Alcanzaste el número máximo de archivos permitidos ({maxFiles} archivos).
         </h6>
       )}
+    </>
+    )}
+  
     </>
   );
 };

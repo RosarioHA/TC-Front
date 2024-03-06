@@ -1,9 +1,9 @@
-import { useState, useEffect, useContext } from "react";
-import CustomInput from "../../forms/custom_input";
-import DropdownCheckbox from "../../dropdown/checkbox";
-import { FormularioContext } from "../../../context/FormSectorial";
-import { apiTransferenciaCompentencia } from "../../../services/transferenciaCompetencia";
-import { useForm, Controller } from "react-hook-form";
+import { useState, useEffect, useContext } from 'react';
+import CustomInput from '../../forms/custom_input';
+import DropdownCheckbox from '../../dropdown/checkbox';
+import { FormularioContext } from '../../../context/FormSectorial';
+import { apiTransferenciaCompentencia } from '../../../services/transferenciaCompetencia';
+import { useForm, Controller } from 'react-hook-form';
 
 export const Subpaso_dosPuntoTres = ({
   id,
@@ -13,10 +13,12 @@ export const Subpaso_dosPuntoTres = ({
   refreshSubpasoDos_tres,
   setRefreshSubpasoDos_tres,
   setRefreshSubpasoDos_cuatro,
-  solo_lectura
+  solo_lectura,
 }) => {
-
-  const { control, handleSubmit, trigger, clearErrors, setError, formState: { errors } } = useForm({
+  const {
+    control,
+    formState: { errors },
+  } = useForm({
     mode: 'onBlur',
   });
 
@@ -26,14 +28,18 @@ export const Subpaso_dosPuntoTres = ({
   const { handleUpdatePaso } = useContext(FormularioContext);
   const [etapas, setEtapas] = useState(data);
   const [ultimaEtapaId, setUltimaEtapaId] = useState(null);
-  const [mostrarBotonGuardarEtapa, setMostrarBotonGuardarEtapa] = useState(false);
+  const [mostrarBotonGuardarEtapa, setMostrarBotonGuardarEtapa] =
+    useState(false);
   const [etapaEnEdicionId, setEtapaEnEdicionId] = useState(null);
-  const [procedimientoEnEdicionId, setProcedimientoEnEdicionId] = useState(null);
+  const [procedimientoEnEdicionId, setProcedimientoEnEdicionId] =
+    useState(null);
 
   // Llamada para recargar componente, en este caso a listado unidades
   const fetchDataDirecta = async () => {
     try {
-      const response = await apiTransferenciaCompentencia.get(`/formulario-sectorial/${id}/paso-${stepNumber}/`);
+      const response = await apiTransferenciaCompentencia.get(
+        `/formulario-sectorial/${id}/paso-${stepNumber}/`
+      );
       setDataDirecta(response.data);
     } catch (error) {
       console.error('Error al obtener datos directamente:', error);
@@ -42,9 +48,9 @@ export const Subpaso_dosPuntoTres = ({
 
   //convertir estructura para el select
   const transformarEnOpciones = (datos) => {
-    return datos.map(dato => ({
+    return datos.map((dato) => ({
       label: dato.nombre_unidad,
-      value: dato.id.toString() // Convertimos el ID a string para mantener consistencia
+      value: dato.id.toString(), // Convertimos el ID a string para mantener consistencia
     }));
   };
 
@@ -58,7 +64,9 @@ export const Subpaso_dosPuntoTres = ({
   // Efecto para manejar la actualización de opciones basado en dataDirecta
   useEffect(() => {
     if (dataDirecta?.listado_unidades) {
-      const nuevasOpciones = transformarEnOpciones(dataDirecta.listado_unidades);
+      const nuevasOpciones = transformarEnOpciones(
+        dataDirecta.listado_unidades
+      );
       setOpciones(nuevasOpciones);
     }
   }, [dataDirecta]);
@@ -71,14 +79,11 @@ export const Subpaso_dosPuntoTres = ({
     }
   }, [listado_unidades]);
 
-
-
   const manejarCambioDropdown = (opcionSeleccionada) => {
     // Asumiendo que opcionSeleccionada es un objeto con las propiedades 'label' y 'value'
     const idSeleccionado = opcionSeleccionada.value; // El ID es el 'value'
     setNuevaUnidadId(idSeleccionado);
   };
-
 
   // Lógica para agregar una nueva Etapa
   // Generador de ID único
@@ -86,7 +91,6 @@ export const Subpaso_dosPuntoTres = ({
     // Implementa tu lógica para generar un ID único
     return Math.floor(Date.now() / 1000);
   };
-
 
   const agregarEtapa = () => {
     const nuevaEtapaId = generarIdUnico();
@@ -96,14 +100,17 @@ export const Subpaso_dosPuntoTres = ({
       nombre_etapa: '',
       descripcion_etapa: '',
       procedimientos: [],
-      editando: false
+      editando: false,
     };
-    setEtapas(prevEtapas => [...prevEtapas, nuevaEtapa]);
+    setEtapas((prevEtapas) => [...prevEtapas, nuevaEtapa]);
     setMostrarBotonGuardarEtapa(true);
   };
 
   const [ultimoProcedimientoId, setUltimoProcedimientoId] = useState(null);
-  const [mostrarBotonGuardarProcedimiento, setMostrarBotonGuardarProcedimiento] = useState(false);
+  const [
+    mostrarBotonGuardarProcedimiento,
+    setMostrarBotonGuardarProcedimiento,
+  ] = useState(false);
 
   const agregarProcedimiento = (etapaId) => {
     const nuevoProcedimientoId = generarIdUnico();
@@ -112,55 +119,70 @@ export const Subpaso_dosPuntoTres = ({
       id: nuevoProcedimientoId,
       descripcion_procedimiento: '',
       unidades_intervinientes: [],
-      editando: false
+      editando: false,
     };
 
-    setEtapas(prevEtapas => prevEtapas.map(etapa => {
-      if (etapa.id === etapaId) {
-        return { ...etapa, procedimientos: [...etapa.procedimientos, nuevoProcedimiento] };
-      }
-      return etapa;
-    }));
+    setEtapas((prevEtapas) =>
+      prevEtapas.map((etapa) => {
+        if (etapa.id === etapaId) {
+          return {
+            ...etapa,
+            procedimientos: [...etapa.procedimientos, nuevoProcedimiento],
+          };
+        }
+        return etapa;
+      })
+    );
     setMostrarBotonGuardarProcedimiento(true);
   };
 
-
   // Lógica para eliminar una fila de un organismo
   const eliminarElemento = async (etapaId, procedimientoId = null) => {
-
     let payload;
 
     if (procedimientoId) {
       // Preparar payload para eliminar un procedimiento
       payload = {
-        'p_2_3_etapas_ejercicio_competencia': [{
-          id: etapaId,
-          'procedimientos': [{
-            id: procedimientoId,
-            DELETE: true
-          }]
-        }]
+        p_2_3_etapas_ejercicio_competencia: [
+          {
+            id: etapaId,
+            procedimientos: [
+              {
+                id: procedimientoId,
+                DELETE: true,
+              },
+            ],
+          },
+        ],
       };
 
       // Actualizar el estado local para reflejar la eliminación
-      setEtapas(prevEtapas => prevEtapas.map(etapa => {
-        if (etapa.id === etapaId) {
-          const procedimientosActualizados = etapa.procedimientos.filter(proc => proc.id !== procedimientoId);
-          return { ...etapa, procedimientos: procedimientosActualizados };
-        }
-        return etapa;
-      }));
+      setEtapas((prevEtapas) =>
+        prevEtapas.map((etapa) => {
+          if (etapa.id === etapaId) {
+            const procedimientosActualizados = etapa.procedimientos.filter(
+              (proc) => proc.id !== procedimientoId
+            );
+            return { ...etapa, procedimientos: procedimientosActualizados };
+          }
+          return etapa;
+        })
+      );
     } else {
       // Preparar payload para eliminar una etapa
       payload = {
-        'p_2_3_etapas_ejercicio_competencia': [{
-          id: etapaId,
-          DELETE: true
-        }]
+        p_2_3_etapas_ejercicio_competencia: [
+          {
+            id: etapaId,
+            DELETE: true,
+          },
+        ],
       };
 
       // Actualizar el estado local para reflejar la eliminación
-      setEtapas(prevEtapas => prevEtapas.filter(etapa => etapa.id !== etapaId));
+      setEtapas((prevEtapas) =>
+        prevEtapas.filter((etapa) => etapa.id !== etapaId)
+      );
     }
 
     // Llamar a la API para actualizar los datos
@@ -170,95 +192,123 @@ export const Subpaso_dosPuntoTres = ({
       setMostrarBotonGuardarEtapa(false);
       setMostrarBotonGuardarProcedimiento(false);
       setRefreshSubpasoDos_cuatro(true);
-
     } catch (error) {
-      console.error("Error al eliminar:", error);
+      console.error('Error al eliminar:', error);
     }
   };
+  const [campoModificado, setCampoModificado] = useState({});
 
-
-  // Lógica para editar sectores existentes
   const handleInputChange = (etapaId, procedimientoId, campo, valor) => {
-    setEtapaEnEdicionId(etapaId);
-    setProcedimientoEnEdicionId(procedimientoId);
-
-    setEtapas(prevEtapas => prevEtapas.map(etapa => {
-      if (etapa.id === etapaId) {
-        if (procedimientoId) {
-          // Actualizar un procedimiento específico
-          return {
-            ...etapa,
-            procedimientos: etapa.procedimientos.map(procedimiento => {
-              if (procedimiento.id === procedimientoId) {
-                return { ...procedimiento, [campo]: valor };
-              }
-              return procedimiento;
-            })
-          };
-        } else {
-          // Actualizar una etapa específica
-          return { ...etapa, [campo]: valor };
+    // Simplemente actualiza el estado de las etapas con el nuevo valor del campo
+    setEtapas((prevEtapas) =>
+      prevEtapas.map((etapa) => {
+        if (etapa.id === etapaId) {
+          if (procedimientoId) {
+            return {
+              ...etapa,
+              procedimientos: etapa.procedimientos.map((procedimiento) => {
+                if (procedimiento.id === procedimientoId) {
+                  return { ...procedimiento, [campo]: valor };
+                }
+                return procedimiento;
+              }),
+            };
+          } else {
+            return { ...etapa, [campo]: valor };
+          }
         }
-      }
-      return etapa;
-    }));
+        return etapa;
+      })
+    );
   };
 
+  const handleSave = async (
+    etapaId,
+    procedimientoId,
+    esGuardadoPorBlur,
+    campo,
+    newValue
+  ) => {
+    const campoClave = `${etapaId}-${campo}`;
 
-  const handleSave = async (etapaId, procedimientoId, esGuardadoPorBlur, fieldName, newValue) => {
-    if (!esGuardadoPorBlur) {
-      setMostrarBotonGuardarEtapa(false);
-    }
+    setCampoModificado((prevEstado) => ({
+      ...prevEstado,
+      [campoClave]: { loading: true, saved: false },
+    }));
 
-    const etapa = etapas.find(e => e.id === etapaId);
+    const etapa = etapas.find((e) => e.id === etapaId);
     let payload;
 
     if (procedimientoId) {
       // Preparar payload para guardar un procedimiento
-      const procedimiento = etapa.procedimientos.find(p => p.id === procedimientoId);
+      const procedimiento = etapa.procedimientos.find(
+        (p) => p.id === procedimientoId
+      );
       payload = {
-        'p_2_3_etapas_ejercicio_competencia': [{
-          id: etapaId,
-          'procedimientos': [{
-            id: procedimientoId,
-            descripcion_procedimiento: procedimiento.descripcion_procedimiento,
-            'unidades_intervinientes':
-              [{
+        p_2_3_etapas_ejercicio_competencia: [
+          {
+            id: etapaId,
+            procedimientos: [
+              {
                 id: procedimientoId,
-                unidades_intervinientes: newValue.map(option => option.value)
-              }]
-          }]
-        }]
+                descripcion_procedimiento:
+                  procedimiento.descripcion_procedimiento,
+                unidades_intervinientes: [
+                  {
+                    id: procedimientoId,
+                    unidades_intervinientes: newValue.map(
+                      (option) => option.value
+                    ),
+                  },
+                ],
+              },
+            ],
+          },
+        ],
       };
     } else {
       // Preparar payload para guardar una etapa
       payload = {
-        'p_2_3_etapas_ejercicio_competencia': [{
-          id: etapaId,
-          nombre_etapa: etapa.nombre_etapa,
-          descripcion_etapa: etapa.descripcion_etapa
-        }]
+        p_2_3_etapas_ejercicio_competencia: [
+          {
+            id: etapaId,
+            nombre_etapa: etapa.nombre_etapa,
+            descripcion_etapa: etapa.descripcion_etapa,
+          },
+        ],
       };
     }
-
     try {
-      // Llamar a la API para actualizar los datos
-      const response = await handleUpdatePaso(id, stepNumber, payload);
-      // Más código para manejar la respuesta
-
-      setMostrarBotonGuardarEtapa(false);
-      setMostrarBotonGuardarProcedimiento(false);
-      setRefreshSubpasoDos_cuatro(true);
-
+      await handleUpdatePaso(id, stepNumber, payload);
+      setCampoModificado((prev) => ({
+        ...prev,
+        [campoClave]: { loading: false, saved: true },
+      }));
     } catch (error) {
-      console.error("Error al guardar los datos:", error);
+      console.error('Error al guardar los datos:', error);
+      if (!esGuardadoPorBlur) {
+        setCampoModificado((prevEstado) => ({
+          ...prevEstado,
+          [campoClave]: { loading: false, saved: false },
+        }));
+      }
     }
   };
 
+  console.log(campoModificado);
+
   return (
     <div>
-      <h4 className="text-sans-h4">2.3 Descripción de etapas y procedimientos del ejercicio de la competencia</h4>
-      <h6 className="text-sans-h6-primary">En esta sección se deben describir las etapas que componen el ejercicio de la competencia, indicando los procedimientos que se realizan, los hitos que la componen, y las unidades que intervienen en su ejecución, y sus responsabilidades.</h6>
+      <h4 className="text-sans-h4">
+        2.3 Descripción de etapas y procedimientos del ejercicio de la
+        competencia
+      </h4>
+      <h6 className="text-sans-h6-primary">
+        En esta sección se deben describir las etapas que componen el ejercicio
+        de la competencia, indicando los procedimientos que se realizan, los
+        hitos que la componen, y las unidades que intervienen en su ejecución, y
+        sus responsabilidades.
+      </h6>
       <h6 className="text-sans-h6-primary mt-3">Este punto es opcional.</h6>
 
       {etapas.map((etapa, etapaIndex) => (
@@ -272,7 +322,7 @@ export const Subpaso_dosPuntoTres = ({
             <div className="row ">
               <div className="col-2 p-2">
                 <p className="text-sans-p-bold mb-0">Nombre de la etapa</p>
-                <p className="text-sans-p-grayc">(Opcional)</p>
+                <p className="text-sans-p-grayc">(Obligatorio)</p>
               </div>
               <div className="col p-2">
                 <CustomInput
@@ -280,8 +330,23 @@ export const Subpaso_dosPuntoTres = ({
                   value={etapa.nombre_etapa || ''}
                   placeholder="Escribe el nombre de la etapa"
                   maxLength={500}
-                  onChange={(valor) => handleInputChange(etapa.id, null, 'nombre_etapa', valor)}
-                  onBlur={etapa.id !== ultimaEtapaId ? () => handleSave(etapa.id, null, true) : null}
+                  onChange={(valor) =>
+                    handleInputChange(etapa.id, null, 'nombre_etapa', valor)
+                  }
+                  onBlur={
+                    etapa.id !== ultimaEtapaId
+                      ? () =>
+                          handleSave(
+                            etapa.id,
+                            null,
+                            true,
+                            'nombre_etapa',
+                            etapa.nombre_etapa
+                          )
+                      : null
+                  }
+                  loading={campoModificado[`${etapa.id}-nombre_etapa`]?.loading}
+                  saved={campoModificado[`${etapa.id}-nombre_etapa`]?.saved}
                   readOnly={solo_lectura}
                 />
               </div>
@@ -290,7 +355,7 @@ export const Subpaso_dosPuntoTres = ({
             <div className="row ">
               <div className="col-2 p-2">
                 <p className="text-sans-p-bold mb-0">Descripción de la etapa</p>
-                <p className="text-sans-p-grayc">(Opcional)</p>
+                <p className="text-sans-p-grayc">(Obligatorio)</p>
               </div>
               <div className="col p-2">
                 <CustomInput
@@ -298,9 +363,33 @@ export const Subpaso_dosPuntoTres = ({
                   value={etapa.descripcion_etapa || ''}
                   placeholder="Describe la etapa"
                   maxLength={500}
-                  onChange={(valor) => handleInputChange(etapa.id, null, 'descripcion_etapa', valor)}
-                  onBlur={etapa.id !== ultimaEtapaId ? () => handleSave(etapa.id, null, true) : null}
+                  onChange={(valor) =>
+                    handleInputChange(
+                      etapa.id,
+                      null,
+                      'descripcion_etapa',
+                      valor
+                    )
+                  }
+                  onBlur={
+                    etapa.id !== ultimaEtapaId
+                      ? () =>
+                          handleSave(
+                            etapa.id,
+                            null,
+                            true,
+                            'descripcion_etapa',
+                            etapa.descripcion_etapa
+                          )
+                      : null
+                  }
                   readOnly={solo_lectura}
+                  loading={
+                    campoModificado[`${etapa.id}-descripcion_etapa`]?.loading
+                  }
+                  saved={
+                    campoModificado[`${etapa.id}-descripcion_etapa`]?.saved
+                  }
                 />
               </div>
               <hr />
@@ -327,8 +416,20 @@ export const Subpaso_dosPuntoTres = ({
                           value={procedimiento.descripcion_procedimiento || ''}
                           placeholder="Describe el procedimiento"
                           maxLength={500}
-                          onChange={(valor) => handleInputChange(etapa.id, procedimiento.id, 'descripcion_procedimiento', valor)}
-                          onBlur={etapa.id !== ultimoProcedimientoId ? () => handleSave(etapa.id, procedimiento.id, true) : null}
+                          onChange={(valor) =>
+                            handleInputChange(
+                              etapa.id,
+                              procedimiento.id,
+                              'descripcion_procedimiento',
+                              valor
+                            )
+                          }
+                          onBlur={
+                            etapa.id !== ultimoProcedimientoId
+                              ? () =>
+                                  handleSave(etapa.id, procedimiento.id, true)
+                              : null
+                          }
                           readOnly={solo_lectura}
                         />
                       </div>
@@ -341,15 +442,24 @@ export const Subpaso_dosPuntoTres = ({
                               <DropdownCheckbox
                                 id={`unidades_intervinientes_${procedimiento.id}`}
                                 name={`unidades_intervinientes_${procedimiento.id}`}
-                                label="Unidades Intervinientes"
+                                label="Unidades Intervinientes (Obligatorio)"
                                 placeholder="Unidades"
                                 options={opciones}
                                 onSelectionChange={(selectedOptions) => {
-                                  handleSave(etapa.id, procedimiento.id, 'unidades_intervinientes', selectedOptions);
+                                  handleSave(
+                                    etapa.id,
+                                    procedimiento.id,
+                                    'unidades_intervinientes',
+                                    selectedOptions
+                                  );
                                   field.onChange(selectedOptions);
                                 }}
+                                loading=""
+                                saved=""
                                 readOnly={solo_lectura}
-                                selectedValues={procedimiento.unidades_intervinientes_label_value}
+                                selectedValues={
+                                  procedimiento.unidades_intervinientes_label_value
+                                }
                               />
                             );
                           }}
@@ -358,70 +468,90 @@ export const Subpaso_dosPuntoTres = ({
                       <div className="col-1">
                         <button
                           className="btn-terciario-ghost ms-3"
-                          onClick={() => eliminarElemento(etapa.id, procedimiento.id)}>
-                          <i className="material-symbols-rounded me-2">delete</i>
-                          <p className="mb-0 text-decoration-underline">Borrar</p>
+                          onClick={() =>
+                            eliminarElemento(etapa.id, procedimiento.id)
+                          }
+                        >
+                          <i className="material-symbols-rounded me-2">
+                            delete
+                          </i>
+                          <p className="mb-0 text-decoration-underline">
+                            Borrar
+                          </p>
                         </button>
                       </div>
                     </div>
-
                   </div>
                   <hr className="my-0" />
                 </div>
               ))}
               {!solo_lectura && (
-              <div className="row">
-                <div className="p-2">
-                  {mostrarBotonGuardarProcedimiento ? (
-                    <button className="btn-primario-s m-2" onClick={() => handleSave(etapa.id, procedimientoEnEdicionId, true)}>
-                      <i className="material-symbols-rounded me-2">save</i>
-                      <p className="mb-0 text-decoration-underline">Guardar Procedimiento</p>
-                    </button>
-                  ) : (
-                    <button className="btn-secundario-s" onClick={() => agregarProcedimiento(etapa.id)}>
-                      <i className="material-symbols-rounded me-2">add</i>
-                      <p className="mb-0 text-decoration-underline">Agregar Procedimiento</p>
-                    </button>
-                  )}
+                <div className="row">
+                  <div className="p-2">
+                    {mostrarBotonGuardarProcedimiento ? (
+                      <button
+                        className="btn-primario-s m-2"
+                        onClick={() =>
+                          handleSave(etapa.id, procedimientoEnEdicionId, true)
+                        }
+                      >
+                        <i className="material-symbols-rounded me-2">save</i>
+                        <p className="mb-0 text-decoration-underline">
+                          Guardar Procedimiento
+                        </p>
+                      </button>
+                    ) : (
+                      <button
+                        className="btn-secundario-s"
+                        onClick={() => agregarProcedimiento(etapa.id)}
+                      >
+                        <i className="material-symbols-rounded me-2">add</i>
+                        <p className="mb-0 text-decoration-underline">
+                          Agregar Procedimiento
+                        </p>
+                      </button>
+                    )}
+                  </div>
+                  <hr className="my-0" />
                 </div>
-                <hr className="my-0" />
-              </div>
               )}
             </div>
           </div>
 
-          {!solo_lectura &&(
-          <div className="d-flex justify-content-end p-3">
-            <button
-              className="btn-terciario-ghost"
-              onClick={() => eliminarElemento(etapa.id)}>
-              <i className="material-symbols-rounded me-2">delete</i>
-              <p className="mb-0 text-decoration-underline">Borrar Etapa</p>
-            </button>
-          </div>
+          {!solo_lectura && (
+            <div className="d-flex justify-content-end p-3">
+              <button
+                className="btn-terciario-ghost"
+                onClick={() => eliminarElemento(etapa.id)}
+              >
+                <i className="material-symbols-rounded me-2">delete</i>
+                <p className="mb-0 text-decoration-underline">Borrar Etapa</p>
+              </button>
+            </div>
           )}
         </div>
       ))}
 
       {!solo_lectura && (
-      <div className="row">
-        <div className="p-2">
-          {mostrarBotonGuardarEtapa ? (
-            <button className="btn-secundario-s m-2" onClick={() => handleSave(etapaEnEdicionId, null, false)}>
-              <i className="material-symbols-rounded me-2">save</i>
-              <p className="mb-0 text-decoration-underline">Guardar Etapa</p>
-            </button>
-          ) : (
-            <button className="btn-secundario-s" onClick={agregarEtapa}>
-              <i className="material-symbols-rounded me-2">add</i>
-              <p className="mb-0 text-decoration-underline">Agregar Etapa</p>
-            </button>
-          )}
+        <div className="row">
+          <div className="p-2">
+            {mostrarBotonGuardarEtapa ? (
+              <button
+                className="btn-secundario-s m-2"
+                onClick={() => handleSave(etapaEnEdicionId, null, false)}
+              >
+                <i className="material-symbols-rounded me-2">save</i>
+                <p className="mb-0 text-decoration-underline">Guardar Etapa</p>
+              </button>
+            ) : (
+              <button className="btn-secundario-s" onClick={agregarEtapa}>
+                <i className="material-symbols-rounded me-2">add</i>
+                <p className="mb-0 text-decoration-underline">Agregar Etapa</p>
+              </button>
+            )}
+          </div>
         </div>
-      </div>
       )}
-   
-
     </div>
-  )
+  );
 };

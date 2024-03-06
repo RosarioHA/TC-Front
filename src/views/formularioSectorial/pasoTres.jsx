@@ -72,8 +72,8 @@ const PasoTres = () => {
     // Preparar la estructura de datos esperada por el backend
     const datosParaEnviar = {
       paso3: {
-        ...pasoData.paso3, // Mantener los datos existentes de paso3
-        ...formData // Actualizar los datos específicos de los inputs
+        ...pasoData.paso3,
+        ...formData 
       }
     };
   
