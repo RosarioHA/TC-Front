@@ -7,7 +7,6 @@ const SuccessFormSectorial = () => {
   const { data, updateFormId, loading } = useContext(FormularioContext);
   const { id } = useParams();
   const navigate = useNavigate();
-  console.log("data", data)
 
   useEffect(() => {
     if (id) {

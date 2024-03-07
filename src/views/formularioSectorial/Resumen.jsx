@@ -7,8 +7,7 @@ const ResumenSectorial = () => {
   const navigate = useNavigate();
   const [ pasos, setPasos ] = useState([]);
   const { id } = useParams();
-  const { resumen } = useResumenFormulario(id);
-  console.log(resumen)
+  const { resumen, actualizarFormularioEnviado } = useResumenFormulario(id);
 
   useEffect(() => {
     if (resumen) {
@@ -26,7 +25,7 @@ const ResumenSectorial = () => {
 
   const handleEnviarClick = async () => {
     try {
-      // Aqui actualizar el valor de formulario_enviado a true
+      await actualizarFormularioEnviado(true);
       navigate( `/home/success_formulario_sectorial/${id}`);
 
     } catch (error) {
