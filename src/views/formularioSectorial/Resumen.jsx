@@ -6,9 +6,8 @@ import { useResumenFormulario } from '../../hooks/formulario/useResumenFormulari
 const ResumenSectorial = () => {
   const navigate = useNavigate();
   const [ pasos, setPasos ] = useState([]);
-  const [ todosCompletos, setTodosCompletos ] = useState(false);
   const { id } = useParams();
-  const { resumen } = useResumenFormulario(id);
+  const { resumen, actualizarFormularioEnviado } = useResumenFormulario(id);
 
   useEffect(() => {
     if (resumen) {
@@ -20,18 +19,19 @@ const ResumenSectorial = () => {
     }
   }, [resumen]);
 
-  useEffect(() => {
-    const todosPasosCompletos = pasos.every(paso => isStageComplete(paso.avance));
-    setTodosCompletos(todosPasosCompletos);
-  }, [ pasos ]);
-
   const handleBackButtonClick = () => {
     navigate(-1);
   }
 
-  const isStageComplete = (avance) => {
-    return avance === "10/10";
-  }
+  const handleEnviarClick = async () => {
+    try {
+      await actualizarFormularioEnviado(true);
+      navigate( `/home/success_formulario_sectorial/${id}`);
+
+    } catch (error) {
+      console.error("Error al enviar observaciones:", error);
+    }
+  };
 
   return (
     <>
@@ -83,7 +83,7 @@ const ResumenSectorial = () => {
             Atrás
           </button>
 
-          <button className="btn-primario-s" disabled={!todosCompletos}>
+          <button className="btn-primario-s" disabled={!resumen?.formulario_completo} onClick={handleEnviarClick}>
             <u>Enviar el formulario</u>
           </button>
         </div>

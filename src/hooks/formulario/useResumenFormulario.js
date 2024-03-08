@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { apiTransferenciaCompentencia } from '../../services/transferenciaCompetencia';
 
 export const useResumenFormulario = (id) => {
@@ -6,21 +6,30 @@ export const useResumenFormulario = (id) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchResumen = async () => {
-      try {
-        const response = await apiTransferenciaCompentencia.get(`/formulario-sectorial/${id}/resumen/`);
-        console.log('Respuesta desde la base de datos:', response.data);
-        setResumen(response.data);
-      } catch (error) {
-        setError(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchResumen();
+  const fetchResumen = useCallback(async () => {
+    try {
+      const response = await apiTransferenciaCompentencia.get(`/formulario-sectorial/${id}/resumen/`);
+      setResumen(response.data);
+    } catch (error) {
+      setError(error);
+    } finally {
+      setLoading(false);
+    }
   }, [id]);
 
-  return { resumen, loading, error };
+  useEffect(() => {
+    fetchResumen();
+  }, [fetchResumen, id]);
+
+  const actualizarFormularioEnviado = async () => {
+    try {
+      await apiTransferenciaCompentencia.patch(`/formulario-sectorial/${id}/resumen/`, { formulario_enviado: true });
+      // Recargar el resumen después de la actualización
+      fetchResumen();
+    } catch (error) {
+      console.error("Error al enviar el formulario:", error);
+    }
+  };
+
+  return { resumen, loading, error, actualizarFormularioEnviado };
 };
