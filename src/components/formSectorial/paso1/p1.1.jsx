@@ -27,21 +27,21 @@ export const Subpaso_uno = ({ dataPaso, id, stepNumber, marcojuridico, solo_lect
   const [isUploading, setIsUploading] = useState(false);
   const [marcoJuridicoFiles, setMarcoJuridicoFiles] = useState(marcojuridico || []);
 
-  console.log("pasoData en p1.1", dataPaso)
-  console.log("marco juridico", marcojuridico)
-
   useEffect(() => {
     setMarcoJuridicoFiles(marcojuridico || []);
   }, [marcojuridico]);
 
-  const fetchData = async () => {
-    try {
-      const response = await apiTransferenciaCompentencia.get(`/formulario-sectorial/${id}/paso-${stepNumber}/`);
-      setMarcoJuridicoFiles(response.data.marcojuridico);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  };
+
+
+const fetchData = async () => {
+  try {
+    const response = await apiTransferenciaCompentencia.get(`/formulario-sectorial/${id}/paso-${stepNumber}/`);
+    setMarcoJuridicoFiles(response.data.marcojuridico);
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+};
+
 
   useEffect(() => {
     const savedData = localStorage.getItem('formData');
@@ -89,7 +89,6 @@ export const Subpaso_uno = ({ dataPaso, id, stepNumber, marcojuridico, solo_lect
       }));
     }
   };
-
   const uploadFile = async (file) => {
     setIsUploading(true);
     try {
@@ -102,37 +101,26 @@ export const Subpaso_uno = ({ dataPaso, id, stepNumber, marcojuridico, solo_lect
     }
   };
 
-  const eliminarDocMarco = async (idMarco) => {
+  const eliminarDocMarco = async (idMarco) =>
+  {
     const payload = {
       marcojuridico: [ {
         id: idMarco,
         DELETE: true
       } ]
     };
-    try {
+
+    try
+    {
       await handleUpdatePaso(id, stepNumber, payload);
       setMarcoJuridicoFiles(currentFiles => currentFiles.filter(file => file.id !== idMarco));
       await fetchData();
-    } catch (error) {
+    } catch (error)
+    {
       console.error("Error al eliminar el marco juridico:", error);
     }
   };
 
-  // const handleDownload = async (documentoId) => {
-  //   console.log("documento id", documentoId)
-  // };
-  const handleDownload = (documentoId) => {
-    const selectedDocument = marcoJuridicoFiles.find(doc => doc.id === documentoId);
-
-    if (selectedDocument && selectedDocument.documento) {
-      console.log("docuemnto url", selectedDocument.documento)
-      console.log("selected document", selectedDocument)
-      window.open(selectedDocument.documento, "_blank");
-    } else {
-      console.error("No se pudo encontrar el documento para la descarga.");
-    }
-  };
-  
   return (
     <>
       <div className="pe-5 me-5 mt-4 col-12">
@@ -175,8 +163,6 @@ export const Subpaso_uno = ({ dataPaso, id, stepNumber, marcojuridico, solo_lect
             onFilesChanged={uploadFile}
             marcoJuridicoData={marcoJuridicoFiles}
             handleDelete={eliminarDocMarco}
-            handleDownload={handleDownload}
-            readOnly={solo_lectura}
           />
           {isUploading && (
             <div className="loading-indicator col-11 w-50 mx-auto">

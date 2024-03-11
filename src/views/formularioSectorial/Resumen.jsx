@@ -52,8 +52,8 @@ const ResumenSectorial = () => {
                 </div>
                 <div className="col d-flex justify-content-center">
                   {paso.completado ?
-                    <img src="/public/check.svg" alt="Check"/> :
-                    <img src="/public/warning.svg" alt="Warning"/>
+                    <img src="/check.svg" alt="Check"/> :
+                    <img src="/warning.svg" alt="Warning"/>
                   }
                 </div>
                 <div className="col-2">
