@@ -11,9 +11,9 @@ const ObservacionesSubdere = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const { competenciaDetails } = useCompetencia(id);
-  console.log("competencia details en OS", competenciaDetails)
-  console.log("data en OS", data)
-  console.log("observaciones en OS", observaciones)
+  console.log("competencia details en OS", competenciaDetails) //obtiene info correcta de Competencia
+  console.log("data en OS", data) //data formulario sectorial, se le entrega id incorrecto (id de la competencia en lugar del id de cada form sectorial)
+  console.log("observaciones en OS", observaciones) //al depender de data, vamos a asumir que tambien esta mal
 
   const handleBackButtonClick = () => {
     navigate(-1);
@@ -76,29 +76,29 @@ const ObservacionesSubdere = () => {
       <hr/>
 
       <div>
-        {competenciaDetails?.etapa2?.formulario_sectorial ? (
-          competenciaDetails.etapa2.formulario_sectorial.map((formulario, index) => (
-            <tr 
+      {competenciaDetails?.etapa2?.formulario_sectorial ? (
+        competenciaDetails.etapa2.formulario_sectorial.map((formulario, index) => (
+          <tr 
             className={`d-flex justify-content-between p-3 align-items-center ${index % 2 === 0 ? 'neutral-line' : 'white-line'}`} 
             key={formulario.id}
-            >
-              <td>{formulario.nombre}</td>
-              <td className="">
+          >
+            <td>{formulario.nombre}</td>
+            <td className="">
               <button className="btn-secundario-s text-decoration-underline" onClick={() => handleVerFormulario(formulario.id)}>
-                Ver Formulario
+                {observaciones.observacion_enviada ? 'Ver Formulario' : 'Ver observaciones'}
               </button>
-              </td>
-            </tr>
-          ))
-        ) : (
-          <p>No hay formularios disponibles.</p>
-        )}
+            </td>
+          </tr>
+        ))
+      ) : (
+        <p>No hay formularios disponibles.</p>
+      )}
       </div>
       <hr/>
 
       <div className="d-flex justify-content-between">
         <div className="d-flex">
-          <p className="text-sans-p">Plazo para completar formulario:</p><p className="text-sans-p-bold ms-2">{data.plazo_dias} días corridos</p>
+          <p className="text-sans-p">Plazo para completar formulario:</p><p className="text-sans-p-bold ms-2">{competenciaDetails.plazo_formulario_sectorial} días corridos</p>
         </div>
         <div className="d-flex pe-4">
           <p className="text-sans-p">Tiempo utilizado:</p><p className="text-sans-p-bold ms-2">{data.calcular_tiempo_transcurrido.dias} días {data.calcular_tiempo_transcurrido.horas} horas {data.calcular_tiempo_transcurrido.horas} minutos</p>
@@ -108,8 +108,7 @@ const ObservacionesSubdere = () => {
         <p className="text-sans-p">Fecha última modificación:</p><p className="text-sans-p-bold ms-2">{data.fecha_ultima_modificacion}</p>
       </div>
 
-      {/* condicionalidad: si ya se han enviado todas las OS, se muestra el primer div; si no, el segundo */}
-      {observaciones. observacion_enviada ? (
+      {observaciones.observacion_enviada ? (
         <div>
           <h3 className="text-sans-h2">Esta todo listo para que termines la etapa</h3>
           <p className="text-sans-p mt-3 mb-5">Ya revisaste todos los formularios. </p> 
