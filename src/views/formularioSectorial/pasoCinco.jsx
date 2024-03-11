@@ -25,6 +25,10 @@ const PasoCinco = () => {
   const [juridicasIndirectasData, setJuridicasIndirectasData] = useState('');
   const [personalDirectoData, setPersonalDirectoData] = useState('');
   const [personalIndirectoData, setPersonalIndirectoData] = useState('');
+  const [subtituloDirectoData, setSubtitulosDirectoData] = useState('');
+  const [subtituloIndirectoData, setSubtitulosIndirectoData] = useState('');
+  const [itemSubtitulosDirectoData, setItemSubtitulosDirectoData] = useState('');
+  const [itemSubtitulosIndirectoData, setItemSubtitulosIndirectoData] = useState('');
 
   const formularioEnviado = data.formulario_enviado
   const observacionesEnviadas = data.observacion_enviada
@@ -45,12 +49,20 @@ const PasoCinco = () => {
         setPaso5Data(dataPaso.paso5);
         setJuridicasDirectasData(dataPaso.listado_calidades_juridicas_directas);
         setJuridicasIndirectasData(dataPaso.listado_calidades_juridicas_indirectas);
+        setSubtitulosDirectoData(dataPaso.listado_subtitulos_directos);
+        setSubtitulosIndirectoData(dataPaso.listado_subtitulos_indirectos);
+        setItemSubtitulosDirectoData(dataPaso.listado_item_subtitulos_directos);
+        setItemSubtitulosIndirectoData(dataPaso.listado_item_subtitulos_indirectos);
         setPersonalDirectoData(dataPaso.p_5_3_a_personal_directo);
         setPersonalIndirectoData(dataPaso.p_5_3_b_personal_indirecto);
       } else {
         setPaso5Data(data.paso5);
         setJuridicasDirectasData(data.listado_calidades_juridicas_directas);
         setJuridicasIndirectasData(data.listado_calidades_juridicas_indirectas);
+        setSubtitulosDirectoData(data.listado_subtitulos_directos);
+        setSubtitulosIndirectoData(data.listado_subtitulos_indirectos);
+        setItemSubtitulosDirectoData(data.listado_item_subtitulos_directos);
+        setItemSubtitulosIndirectoData(data.listado_item_subtitulos_indirectos);
         setPersonalDirectoData(data.p_5_3_a_personal_directo);
         setPersonalIndirectoData(data.p_5_3_b_personal_indirecto);
       }
@@ -69,7 +81,7 @@ const PasoCinco = () => {
     p_5_1_c_resumen_costos_por_subtitulo,
     p_5_2_evolucion_gasto_asociado, 
     p_5_2_variacion_promedio,
-    listado_subtitulos, 
+    listado_subtitulos,
     listado_item_subtitulos, 
     listado_estamentos,
     listado_etapas,
@@ -105,8 +117,10 @@ const PasoCinco = () => {
             data_costos_directos={p_5_1_a_costos_directos}
             data_costos_indirectos={p_5_1_b_costos_indirectos}
             data_resumen_costos={p_5_1_c_resumen_costos_por_subtitulo}
-            listado_subtitulos={listado_subtitulos}
-            listado_item_subtitulos={listado_item_subtitulos}
+            listado_subtitulos_directos={subtituloDirectoData}
+            listado_subtitulos_indirectos={subtituloIndirectoData}
+            listado_item_subtitulos_directos={itemSubtitulosDirectoData}
+            listado_item_subtitulos_indirectos={itemSubtitulosIndirectoData}
             listado_etapas={listado_etapas}
             setRefreshSubpaso_CincoDos={setRefreshSubpaso_CincoDos}
             refetchTrigger={refetchTrigger}
