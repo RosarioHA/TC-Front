@@ -2,18 +2,18 @@ import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { FormularioContext } from '../../context/FormSectorial';
 import { useObservacionesSubdere } from "../../hooks/formulario/useObSubdereSectorial";
+import { useCompetencia } from "../../hooks/competencias/useCompetencias";
 
 const ObservacionesSubdere = () => {
   const { updateFormId, data, loading } = useContext(FormularioContext);
   const [ etapaOmitida, setEtapaOmitida] = useState(null);
   const { observaciones, fetchObservaciones } = useObservacionesSubdere(data ? data.id : null);
-
-  console.log("observaciones en vista OS, proveniente de hook useObservacionesSubdere", observaciones)
-  console.log("'data', proveniente de FormularioContext", data)
-  console.log("etapa GORE omitida", etapaOmitida)
- 
   const navigate = useNavigate();
   const { id } = useParams();
+  const { competenciaDetails } = useCompetencia(id);
+  console.log("competencia details en OS", competenciaDetails)
+  console.log("data en OS", data)
+  console.log("observaciones en OS", observaciones)
 
   const handleBackButtonClick = () => {
     navigate(-1);
@@ -21,6 +21,10 @@ const ObservacionesSubdere = () => {
 
   const handleRadioButtonChange = (value) => {
     setEtapaOmitida(value === 'A');
+  };
+
+  const handleVerFormulario = (formularioId) => {
+    navigate(`/home/formulario_sectorial/${formularioId}/paso_1`);
   };
 
   useEffect(() => {
@@ -67,12 +71,28 @@ const ObservacionesSubdere = () => {
       <div>
         <h1 className="text-sans-Title">Observaciones SUBDERE</h1>
         <h2 className="text-sans-h1">Formularios sectoriales</h2>
-        <h2 className="text-sans-h2">{data.competencia_nombre}</h2>
+        <h2 className="text-sans-h2">{competenciaDetails.nombre}</h2>
       </div>
       <hr/>
 
       <div>
-        TABLA
+        {competenciaDetails?.etapa2?.formulario_sectorial ? (
+          competenciaDetails.etapa2.formulario_sectorial.map((formulario, index) => (
+            <tr 
+            className={`d-flex justify-content-between p-3 align-items-center ${index % 2 === 0 ? 'neutral-line' : 'white-line'}`} 
+            key={formulario.id}
+            >
+              <td>{formulario.nombre}</td>
+              <td className="">
+              <button className="btn-secundario-s text-decoration-underline" onClick={() => handleVerFormulario(formulario.id)}>
+                Ver Formulario
+              </button>
+              </td>
+            </tr>
+          ))
+        ) : (
+          <p>No hay formularios disponibles.</p>
+        )}
       </div>
       <hr/>
 

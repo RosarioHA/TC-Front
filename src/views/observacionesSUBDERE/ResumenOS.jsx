@@ -1,4 +1,5 @@
 import { useContext, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import { FormularioContext } from '../../context/FormSectorial';
 import { useObservacionesSubdere } from "../../hooks/formulario/useObSubdereSectorial";
 import CustomTextarea from "../../components/forms/custom_textarea";
@@ -6,10 +7,12 @@ import successIcon from '../../static/icons/success.svg';
 import { useNavigate } from "react-router-dom";
 
 const ResumenOS = () => {
+  const {id} = useParams();
 	const { data } = useContext(FormularioContext);
 	const { observaciones, fetchObservaciones, updateObservacion } = useObservacionesSubdere(data ? data.id : null);
 	const navigate = useNavigate();
-	console.log(observaciones)
+	console.log("observaciones en ResumenOS", observaciones)
+  console.log("id en ResumenOS", id)
 
   useEffect(() => {
     const obtenerObservaciones = async () => {

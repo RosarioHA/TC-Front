@@ -5,6 +5,7 @@ export const ButtonsNavigate = ({ step , id }) => {
   const navigate = useNavigate();
   const { userData } = useAuth();
   const userSubdere = userData?.perfil?.includes('SUBDERE');
+  console.log("id en buttons navigate", id)
 
   const getRouteForStep = (stepNumber) => {
     const stepToRouteMap = {
