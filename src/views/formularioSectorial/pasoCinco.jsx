@@ -29,7 +29,6 @@ const PasoCinco = () => {
   const [subtituloIndirectoData, setSubtitulosIndirectoData] = useState('');
   const [itemSubtitulosDirectoData, setItemSubtitulosDirectoData] = useState('');
   const [itemSubtitulosIndirectoData, setItemSubtitulosIndirectoData] = useState('');
-
   const formularioEnviado = data.formulario_enviado
   const observacionesEnviadas = data.observacion_enviada
 
@@ -81,8 +80,6 @@ const PasoCinco = () => {
     p_5_1_c_resumen_costos_por_subtitulo,
     p_5_2_evolucion_gasto_asociado, 
     p_5_2_variacion_promedio,
-    listado_subtitulos,
-    listado_item_subtitulos, 
     listado_estamentos,
     listado_etapas,
     solo_lectura
@@ -106,7 +103,7 @@ const PasoCinco = () => {
         <div className="container vh-100">
           <div className="d-flex">
             <h3 className="mt-3 me-4">{paso5.nombre_paso}</h3>
-            <Avance avance={paso5.avance} />
+            <Avance avance={paso5Data.avance} />
           </div>
           <span className="text-sans-h6-primary">Texto de apoyo</span>
           <Subpaso_CincoPuntoUno
@@ -134,6 +131,7 @@ const PasoCinco = () => {
             p_5_2_variacion_promedio={p_5_2_variacion_promedio}
             refreshSubpaso_CincoDos={refreshSubpaso_CincoDos}
             setRefreshSubpaso_CincoDos={setRefreshSubpaso_CincoDos}
+            refetchTrigger={refetchTrigger}
             />
           <Subpaso_CincoPuntoTres
             id={data?.id}

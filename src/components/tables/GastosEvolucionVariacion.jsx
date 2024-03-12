@@ -1,7 +1,6 @@
 import React,{ useContext, useState, useEffect } from "react";
 import { FormularioContext } from "../../context/FormSectorial";
 import CustomTextarea from "../forms/custom_textarea";
-import CustomInput from "../forms/custom_input";
 import InputCosto from "../forms/input_costo";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -26,7 +25,8 @@ export const GastosEvolucionVariacion = ({
   solo_lectura,
   stepNumber,
   dataGastos,
-  setRefreshSubpaso_CincoDosVariacion
+  setRefreshSubpaso_CincoDosVariacion,
+  refetchTrigger
 
 }) => {
 
@@ -158,6 +158,7 @@ export const GastosEvolucionVariacion = ({
       setGlosasEspecificasLoading(false);
       setGlosasEspecificasSaved(true);
       setRefreshSubpaso_CincoDosVariacion(true);
+      refetchTrigger();
 
     } catch (error) {
       console.error("Error al guardar los datos:", error);
