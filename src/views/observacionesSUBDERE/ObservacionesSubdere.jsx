@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { FormularioContext } from '../../context/FormSectorial';
 import { useObservacionesSubdere } from "../../hooks/formulario/useObSubdereSectorial";
 import { useCompetencia } from "../../hooks/competencias/useCompetencias";
+import { usePatchCompetencia } from "../../hooks/minutaDIPRES/useEtapa3";
 
 const ObservacionesSubdere = () => {
   const { updateFormId, data, loading } = useContext(FormularioContext);
@@ -11,6 +12,7 @@ const ObservacionesSubdere = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const { competenciaDetails } = useCompetencia(id);
+  const { patchCompetenciaOmitida } = usePatchCompetencia();
   console.log("competencia details en OS", competenciaDetails) //obtiene info correcta de Competencia
   console.log("data en OS", data) //data formulario sectorial, se le entrega id incorrecto (id de la competencia en lugar del id de cada form sectorial)
   console.log("observaciones en OS", observaciones) //al depender de data, vamos a asumir que tambien esta mal
@@ -27,9 +29,14 @@ const ObservacionesSubdere = () => {
     navigate(`/home/formulario_sectorial/${formularioId}/paso_1`);
   };
 
-  const handleCerrarEtapa = () => {
-    navigate( `/home/success_cierre_observaciones/${competenciaDetails?.id}/`);
-  }
+  const handleCerrarEtapa = async () => {
+    try {
+      await patchCompetenciaOmitida(competenciaDetails?.id, etapaOmitida);
+      navigate(`/home/success_cierre_observaciones/${competenciaDetails?.id}`);
+    } catch (error) {
+      console.error("Error al cerrar la etapa:", error);
+    }
+  };
 
   useEffect(() => {
     if (id) {
@@ -112,7 +119,7 @@ const ObservacionesSubdere = () => {
         <p className="text-sans-p">Fecha última modificación:</p><p className="text-sans-p-bold ms-2">{competenciaDetails?.etapa2?.fecha_ultima_modificacion}</p>
       </div>
 
-      {observaciones.observacion_enviada ? (
+      {/* {observaciones.observacion_enviada ? (
         <div>
           <h3 className="text-sans-h2">Esta todo listo para que termines la etapa</h3>
           <p className="text-sans-p mt-3 mb-5">Ya revisaste todos los formularios. </p> 
@@ -153,12 +160,47 @@ const ObservacionesSubdere = () => {
           <h3 className="text-sans-h2">Debes revisar todos los formularios antes de terminar la etapa</h3>
           <p className="text-sans-p mt-3">Para poder terminar la etapa debes revisar todos los formularios y dejar observaciones donde consideres necesario.</p>
         </div>
-      )}
+      )} */}
+      <div>
+          <h3 className="text-sans-h2">Esta todo listo para que termines la etapa</h3>
+          <p className="text-sans-p mt-3 mb-5">Ya revisaste todos los formularios. </p> 
+          <p className="text-sans-p mb-2">Debes definir cual es el próximo paso en el procedo de análisis de la competencia:</p>
+          <div>
+            <div className="form-check">
+              <input
+                type="radio"
+                id="opcionA"
+                name="proximaEtapa"
+                className="form-check-input"
+                value="A"
+                onChange={() => handleRadioButtonChange('A')}
+                checked={etapaOmitida === true}
+              />
+              <label htmlFor="opcionA" className="text-sans-p">
+                DIPRES debe pronunciarse respecto de la información del sector o sectores asociados a la competencia.
+              </label>
+            </div>
+            <div className="form-check">
+              <input
+                type="radio"
+                id="opcionB"
+                name="proximaEtapa"
+                className="form-check-input"
+                value="B"
+                onChange={() => handleRadioButtonChange('B')}
+                checked={etapaOmitida === false}
+              />
+              <label htmlFor="opcionB" className="text-sans-p">
+                GORE debe entregar sus antecedentes para que luego DIPRES se pronuncie respecto a la información.
+              </label>
+            </div>
+          </div>
+        </div>
       
       <div className="d-flex justify-content-end my-5 me-3">
         <button 
         className="btn-primario-s"
-        // disabled={etapaOmitida === null}
+        disabled={etapaOmitida === null}
         onClick={handleCerrarEtapa}
         >
           Cerrar etapa
