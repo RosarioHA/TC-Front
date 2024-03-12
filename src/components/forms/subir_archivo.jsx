@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import UploadBtn from "../commons/uploadBtn";
 
-const SubirArchivo = ({ index, tituloDocumento, readOnly, onViewFile, archivoDescargaUrl, handleFileSelect, handleDelete, ver }) =>
+const SubirArchivo = ({ index, tituloDocumento, readOnly, onViewFile, archivoDescargaUrl,
+  handleFileSelect, handleDelete, ver }) =>
 {
   const [ fileUploaded, setFileUploaded ] = useState(false);
   const [ fileName, setFileName ] = useState('');
@@ -27,16 +28,20 @@ const SubirArchivo = ({ index, tituloDocumento, readOnly, onViewFile, archivoDes
 
   const displayFileType = fileUploaded ? "Archivo guardado" : "No seleccionado";
 
-  const handleFileChange = async (event) => {
-    const file = event.target.files[0];
-    if (file) {
+  const handleFileChange = async (event) =>
+  {
+    const file = event.target.files[ 0 ];
+    if (file)
+    {
       // Verificar que el archivo es un PDF
-      if (!file.type.includes("pdf")) {
+      if (!file.type.includes("pdf"))
+      {
         setError("Solo se permiten archivos PDF.");
         setFileUploaded(false); // Asegura que no se marca como subido un archivo no permitido
         return;
       }
-      if (file.size > maxSize) {
+      if (file.size > maxSize)
+      {
         setError("El archivo no debe superar los 20 MB.");
         return;
       }
@@ -44,12 +49,15 @@ const SubirArchivo = ({ index, tituloDocumento, readOnly, onViewFile, archivoDes
       setFileName(file.name);
       setFileUploaded(true);
       setIsUploading(true); // Indica que la carga ha comenzado
-      try {
+      try
+      {
         await handleFileSelect(file); // Suponiendo que `handleFileSelect` maneja la carga
-      } catch (error) {
+      } catch (error)
+      {
         // Opcional: manejar errores específicos de la carga
         setError("Error al subir el archivo. Por favor, inténtalo de nuevo.");
-      } finally {
+      } finally
+      {
         setIsUploading(false); // Indica que la carga ha terminado
       }
     }
@@ -101,11 +109,11 @@ const SubirArchivo = ({ index, tituloDocumento, readOnly, onViewFile, archivoDes
         <div>
           {!readOnly ? (
             <div className="col p-3 d-flex">
-              <UploadBtn 
-              onFileChange={handleFileChange} 
-              fileUploaded={fileUploaded} 
-              onViewFile={() => onViewFile()} 
-              ver={ver}
+              <UploadBtn
+                onFileChange={handleFileChange}
+                fileUploaded={fileUploaded}
+                onViewFile={() => onViewFile()}
+                ver={ver}
               />
               {fileUploaded && (
                 <button onClick={handleDeleteDoc} className="btn-terciario-ghost px-2 d-flex align-items-center mx-1">

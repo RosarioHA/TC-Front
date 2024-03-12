@@ -307,7 +307,7 @@ const EdicionCompetencia = () => {
                 prevSelection={regionesSeleccionadas}
                 onSelectionChange={handleRegionesChange}
                 selectedOptions={field.value}
-                selectedValues={regionesSeleccionadas}
+                selectedRegions={regionesSeleccionadas}
               />
             )}
           />

@@ -9,8 +9,8 @@ export const FormularioProvider = ({ children }) => {
   const [id, setId] = useState(null);
   const [stepNumber, setStepNumber] = useState(null);
 
-  const { dataFormSectorial, loadingFormSectorial, errorFormSectorial ,refetchTrigger} = useFormSectorial(id);
-  const { dataPaso, loadingPaso, errorPaso } = usePasoForm(id, stepNumber);
+  const { dataFormSectorial, loadingFormSectorial, errorFormSectorial} = useFormSectorial(id);
+  const { dataPaso, loadingPaso, errorPaso,refetchTrigger } = usePasoForm(id, stepNumber);
   const { patchStep, loading, error } = useUpdateForm();
 
   const updateFormId = useCallback((newId) => {

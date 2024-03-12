@@ -43,7 +43,7 @@ export const useFormSectorial = (id) => {
     fetch();
 
     return () => {
-      isActive = false; // Función de limpieza para cancelar la suscripción
+      isActive = false;
     };
   }, [fetchFormSectorial]);
 

@@ -16,8 +16,8 @@ export const usePasoForm = (id, stepNumber,) => {
     } finally {
       setLoadingPaso(false);
     }
-  }, [id, stepNumber]); // Aquí agregamos id y stepNumber como dependencias
-
+  }, [id, stepNumber]); 
+  
   useEffect(() => {
     if (id != null && stepNumber != null) {
       fetchData();
