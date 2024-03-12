@@ -410,7 +410,7 @@ const CostosIndirectos = ({
                             field.onChange(selectedOptions);
                           }}
 
-                          readOnly={solo_lectura}
+                          readOnly={solo_lectura || opcionesEtapas.length === 0}
                           selectedValues={costo.etapa_label_value}
 
                           loading={costo.estados?.etapa?.loading ?? false}
