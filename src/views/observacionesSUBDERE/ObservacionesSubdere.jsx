@@ -27,6 +27,10 @@ const ObservacionesSubdere = () => {
     navigate(`/home/formulario_sectorial/${formularioId}/paso_1`);
   };
 
+  const handleCerrarEtapa = () => {
+    navigate( `/home/success_cierre_observaciones/${competenciaDetails?.id}/`);
+  }
+
   useEffect(() => {
     if (id) {
       updateFormId(id);
@@ -154,7 +158,8 @@ const ObservacionesSubdere = () => {
       <div className="d-flex justify-content-end my-5 me-3">
         <button 
         className="btn-primario-s"
-        disabled={etapaOmitida === null}
+        // disabled={etapaOmitida === null}
+        onClick={handleCerrarEtapa}
         >
           Cerrar etapa
           <i className="material-symbols-rounded me-2">arrow_forward_ios</i>

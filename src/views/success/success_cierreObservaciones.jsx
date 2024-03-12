@@ -1,13 +1,14 @@
 import { useContext, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { FormularioContext } from '../../context/FormSectorial';
+import { useCompetencia } from "../../hooks/competencias/useCompetencias";
 import successIcon from '../../static/icons/success.svg';
 
 const SuccessCierreOS = () => {
   const { data, updateFormId, loading } = useContext(FormularioContext);
   const { id } = useParams();
   const navigate = useNavigate();
-  console.log("data", data)
+  const { competenciaDetails } = useCompetencia(id);
 
   useEffect(() => {
     if (id) {
@@ -32,7 +33,7 @@ const SuccessCierreOS = () => {
     <div className="container col-11">
       <h1 className="text-sans-Title mt-5 ms-3">Observaciones SUBDERE</h1>
       <h1 className="text-sans-h1 ms-3">Formularios sectoriales</h1>
-      <h2 className="text-sans-h2-grey pb-5 ms-3">{data.competencia_nombre}</h2>
+      <h2 className="text-sans-h2-grey pb-5 ms-3">{competenciaDetails?.nombre}</h2>
 
       <div className="d-flex justify-content-center">
         <div className="success-container ms-0 col-8 p-3 px-5 mt-5">
