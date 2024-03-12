@@ -19,12 +19,13 @@ const PasoTres = () => {
   const userSubdere = userData?.perfil?.includes('SUBDERE');
 
   const formularioEnviado = data.formulario_enviado
-  const observacionesEnviadas = data.observacion_enviada
+  //const observacionesEnviadas = data.observacion_enviada
   const stepNumber = 3;
   const id= data.id;
 
   const { observaciones, updateObservacion, fetchObservaciones, loadingObservaciones, saved } = useObservacionesSubdere(data ? data.id : null);
   const [observacionPaso3, setObservacionPaso3] = useState("");
+  const observacionesEnviadas = observaciones.observacion_enviada
 
   // Estado inicial basado en los datos existentes
   const [formData, setFormData] = useState({

@@ -18,9 +18,10 @@ const PasoUno = () => {
   const { observaciones, updateObservacion, fetchObservaciones, loadingObservaciones, saved } = useObservacionesSubdere(data ? data.id : null);
   const [observacionPaso1, setObservacionPaso1] = useState("");
   console.log("observaciones en paso 1", observaciones)
+  console.log("data en paso 1", data)
 
   const formularioEnviado = data.formulario_enviado
-  const observacionesEnviadas = data.observacion_enviada
+  const observacionesEnviadas = observaciones.observacion_enviada
 
   useEffect(() => {
     updateStepNumber(stepNumber);

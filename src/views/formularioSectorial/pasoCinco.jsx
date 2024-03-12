@@ -27,7 +27,7 @@ const PasoCinco = () => {
   const [personalIndirectoData, setPersonalIndirectoData] = useState('');
 
   const formularioEnviado = data.formulario_enviado
-  const observacionesEnviadas = data.observacion_enviada
+  const observacionesEnviadas = observaciones.observacion_enviada
 
   useEffect(() => {
     updateStepNumber(stepNumber);
@@ -82,8 +82,6 @@ const PasoCinco = () => {
     };
     await updateObservacion(observacionData);
   };
-
-  
 
   return (
     <>
