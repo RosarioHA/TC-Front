@@ -8,7 +8,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { FormularioContext } from "../../context/FormSectorial";
 import { construirValidacionPaso5_Personal } from "../../validaciones/esquemaValidarPaso5Sectorial";
 
-const PersonalDirecto = ({
+const PersonalDirectoGORE = ({
   id,
   paso5,
   solo_lectura,
@@ -654,4 +654,4 @@ const PersonalDirecto = ({
   )
 }
 
-export default PersonalDirecto;
+export default PersonalDirectoGORE;

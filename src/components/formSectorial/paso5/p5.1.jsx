@@ -13,8 +13,10 @@ export const Subpaso_CincoPuntoUno = (
     data_costos_directos,
     data_costos_indirectos,
     data_resumen_costos,
-    listado_subtitulos,
-    listado_item_subtitulos,
+    listado_subtitulos_directos,
+    listado_subtitulos_indirectos,
+    listado_item_subtitulos_directos,
+    listado_item_subtitulos_indirectos,
     listado_etapas,
     setRefreshSubpaso_CincoDos,
     refetchTrigger
@@ -91,8 +93,8 @@ export const Subpaso_CincoPuntoUno = (
           id={id}
           data={data_costos_directos}
           stepNumber={stepNumber}
-          listado_subtitulos={listado_subtitulos}
-          listado_item_subtitulos={listado_item_subtitulos}
+          listado_subtitulos={listado_subtitulos_directos}
+          listado_item_subtitulos={listado_item_subtitulos_directos}
           listado_etapas={listado_etapas}
           setRefreshSubpaso_CincoDos={setRefreshSubpaso_CincoDos}
           refetchTrigger={refetchTrigger}
@@ -117,8 +119,8 @@ export const Subpaso_CincoPuntoUno = (
           id={id}
           data={data_costos_indirectos}
           stepNumber={stepNumber}
-          listado_subtitulos={listado_subtitulos}
-          listado_item_subtitulos={listado_item_subtitulos}
+          listado_subtitulos={listado_subtitulos_indirectos}
+          listado_item_subtitulos={listado_item_subtitulos_indirectos}
           listado_etapas={listado_etapas}
           setRefreshSubpaso_CincoDos={setRefreshSubpaso_CincoDos}
           refetchTrigger={refetchTrigger}
