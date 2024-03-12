@@ -9,6 +9,7 @@ export const GastosPromedioAnual = ({
   solo_lectura,
   stepNumber,
   dataGastos,
+  refetchTrigger
 }) => {
 
   const [datosGastos, setDatosGastos] = useState([]);
@@ -97,6 +98,7 @@ export const GastosPromedioAnual = ({
 
       // Actualiza el estado de carga y guardado
       updateFieldState(arrayNameId, fieldName, { loading: false, saved: true });
+      refetchTrigger();
 
     } catch (error) {
       console.error("Error al guardar los datos:", error);

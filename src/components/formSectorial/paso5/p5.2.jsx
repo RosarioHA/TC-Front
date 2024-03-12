@@ -12,6 +12,7 @@ export const Subpaso_CincoDos = ({
   p_5_2_variacion_promedio,
   refreshSubpaso_CincoDos,
   setRefreshSubpaso_CincoDos,
+  refetchTrigger
 }) => {
 
   const [dataDirecta, setDataDirecta] = useState(null);
@@ -97,13 +98,16 @@ export const Subpaso_CincoDos = ({
         stepNumber={stepNumber}
         dataGastos={evolucionGastoAsociado}
         setRefreshSubpaso_CincoDosVariacion={setRefreshSubpaso_CincoDosVariacion}
+        refetchTrigger={refetchTrigger}
       />
       <GastosPromedioAnual
         id={id}
         paso5={paso5}
         solo_lectura={solo_lectura}
         stepNumber={stepNumber}
-        dataGastos={variacionPromedio} />
+        dataGastos={variacionPromedio}
+        refetchTrigger={refetchTrigger}
+      />
     </div>
   )
 }
