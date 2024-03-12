@@ -366,10 +366,6 @@ const PersonalDirecto = ({
     agregarPersona();
   };
 
-  const onSubmitAgregarCalidadJuridica = () => {
-    agregarNuevaCalidadJuridica();
-  };
-
 
 
   return (

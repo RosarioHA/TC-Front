@@ -1,5 +1,3 @@
-import { useEffect, useState } from "react";
-import CustomTextarea from "../../forms/custom_textarea";
 import PersonalIndirecto from "../../tables/PersonalIndirecto";
 import PersonalDirecto from "../../tables/PersonalDirecto";
 
