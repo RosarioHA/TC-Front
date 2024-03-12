@@ -101,11 +101,11 @@ const ObservacionesSubdere = () => {
           <p className="text-sans-p">Plazo para completar formulario:</p><p className="text-sans-p-bold ms-2">{competenciaDetails.plazo_formulario_sectorial} días corridos</p>
         </div>
         <div className="d-flex pe-4">
-          <p className="text-sans-p">Tiempo utilizado:</p><p className="text-sans-p-bold ms-2">{data.calcular_tiempo_transcurrido.dias} días {data.calcular_tiempo_transcurrido.horas} horas {data.calcular_tiempo_transcurrido.horas} minutos</p>
+          <p className="text-sans-p">Tiempo utilizado:</p><p className="text-sans-p-bold ms-2">{competenciaDetails?.etapa2?.calcular_tiempo_transcurrido.dias} días {competenciaDetails?.etapa2?.calcular_tiempo_transcurrido.horas} horas {competenciaDetails?.etapa2?.calcular_tiempo_transcurrido.horas} minutos</p>
         </div>
       </div>
       <div className="d-flex mb-4">
-        <p className="text-sans-p">Fecha última modificación:</p><p className="text-sans-p-bold ms-2">{data.fecha_ultima_modificacion}</p>
+        <p className="text-sans-p">Fecha última modificación:</p><p className="text-sans-p-bold ms-2">{competenciaDetails?.etapa2?.fecha_ultima_modificacion}</p>
       </div>
 
       {observaciones.observacion_enviada ? (
