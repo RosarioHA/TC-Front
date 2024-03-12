@@ -12,8 +12,6 @@ const FormGoreLayout = () => {
   const location = useLocation();
   const params = useParams();
 
-  console.log('datagore',dataFormGore); 
-
   useEffect(() => {
     const currentId = location.state?.id || params.id;
     if (currentId) {
