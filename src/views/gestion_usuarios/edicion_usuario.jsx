@@ -52,14 +52,16 @@ const EdicionUsuario = () => {
     },
   });
 
+  console.log(dataFiltroCompetencias)
+
   useEffect(() => {
     if (userDetails) {
       setCompetenciasAsignadas(userDetails.competencias_asignadas || []);
-      if (userDetails.perfil === 'GORE' && userDetails.regionId) {
+    if (userDetails.perfil === 'GORE' && userDetails.regionId) {
         setRegionId(userDetails.regionId);
       }
-      if (userDetails.perfil === 'Usuario Sectorial' && userDetails.sectorId) {
-        setSectorId(userDetails.sectorId);
+    if (userDetails.perfil === 'Usuario Sectorial' && userDetails.sector) {
+        setSectorId(userDetails.sector);
       }
     }
   }, [ userDetails ]);
