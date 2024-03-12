@@ -114,7 +114,8 @@ export const Etapa2 = ({ etapa }) => {
   const renderButtonForFormularioSectorial = (formulario) => {
     const buttonText = formulario.accion;
     const path = `/home/formulario_sectorial/${formulario.id}/paso_1`;
-    const isButtonDisabled = (userSubdere || userGore) || formulario.estado === "pendiente";
+    //const isButtonDisabled = (userSubdere || userGore) || formulario.estado === "pendiente";
+    const isButtonDisabled = formulario.estado === "pendiente";
     //console.log("formulario en Etapa2", formulario)
 
 
