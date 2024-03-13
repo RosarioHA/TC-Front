@@ -119,6 +119,8 @@ const ObservacionesSubdere = () => {
         <p className="text-sans-p">Fecha última modificación:</p><p className="text-sans-p-bold ms-2">{competenciaDetails?.etapa2?.fecha_ultima_modificacion}</p>
       </div>
 
+      {/* NO ELIMINAR SECCION COMENTADA, FALTA AGREGAR CONDICIONALIDAD CORRECTA */}
+
       {/* {observaciones.observacion_enviada ? (
         <div>
           <h3 className="text-sans-h2">Esta todo listo para que termines la etapa</h3>
