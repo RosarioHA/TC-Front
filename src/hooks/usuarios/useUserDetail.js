@@ -35,7 +35,7 @@ export const useUserDetails = (userId) => {
 
         setRegionOptions(dataRegiones.map((region) => ({ label: region.region, value: region.id })));
         setSectorOptions(dataSector.map((sector) => ({ label: sector.nombre, value: sector.id })));
-        console.log('dataSector', dataSector)
+        
       } catch (err) {
         console.error(err);
         setError(err);
