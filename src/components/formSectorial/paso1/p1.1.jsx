@@ -9,15 +9,17 @@ import { apiTransferenciaCompentencia } from '../../../services/transferenciaCom
 export const Subpaso_uno = ({ dataPaso, id, stepNumber, marcojuridico, solo_lectura }) => {
   const { handleUpdatePaso} = useContext(FormularioContext);
   const { uploadDocumento } = useUploadMarcoJuridico(id, stepNumber); 
-  const [formData, setFormData] = useState({
+  const initialValues = {
     marcojuridico: marcojuridico || [],
-    paso1:dataPaso.paso1 || {
-      forma_juridica_organismo: '',
-      mision_institucional: '',
-      descripcion_archivo_marco_juridico: '',
-      informacion_adicional_marco_juridico: '',
+    paso1: {
+      forma_juridica_organismo: dataPaso?.forma_juridica_organismo || '',
+      mision_institucional: dataPaso?.mision_institucional || '',
+      descripcion_archivo_marco_juridico: dataPaso?.descripcion_archivo_marco_juridico || '',
+      informacion_adicional_marco_juridico: dataPaso?.informacion_adicional_marco_juridico || '',
     },
-  });
+  };
+
+  const [formData, setFormData] = useState(initialValues);
   const [inputStatus, setInputStatus] = useState({
     forma_juridica_organismo: { loading: false, saved: false },
     mision_institucional: { loading: false, saved: false },
@@ -26,6 +28,8 @@ export const Subpaso_uno = ({ dataPaso, id, stepNumber, marcojuridico, solo_lect
   });
   const [isUploading, setIsUploading] = useState(false);
   const [marcoJuridicoFiles, setMarcoJuridicoFiles] = useState(marcojuridico || []);
+
+  
 
   useEffect(() => {
     setMarcoJuridicoFiles(marcojuridico || []);

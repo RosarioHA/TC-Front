@@ -22,26 +22,29 @@ const PasoDos = () =>
   const { userData } = useAuth();
   const userSubdere = userData?.perfil?.includes('SUBDERE');
   const { observaciones, updateObservacion, fetchObservaciones, loadingObservaciones, saved } = useObservacionesSubdere(data ? data.id : null);
-  const [observacionPaso2, setObservacionPaso2] = useState("");
+  const [ observacionPaso2, setObservacionPaso2 ] = useState("");
 
   const formularioEnviado = data.formulario_enviado
   const observacionesEnviadas = data.observacion_enviada
 
-  useEffect(() => {
+  useEffect(() =>
+  {
     updateStepNumber(stepNumber);
-    if (observaciones && Object.keys(observaciones).length === 0) {
+    if (observaciones && Object.keys(observaciones).length === 0)
+    {
       fetchObservaciones();
     }
-    if (observaciones && observaciones.observacion_paso2) {
+    if (observaciones && observaciones.observacion_paso2)
+    {
       setObservacionPaso2(observaciones.observacion_paso2);
     }
-  }, [updateStepNumber, stepNumber, observaciones, fetchObservaciones]);
+  }, [ updateStepNumber, stepNumber, observaciones, fetchObservaciones ]);
 
   if (errorPaso) return <div>Error: {errorPaso.message || "Error desconocido"}</div>;
   if (!pasoData) return <div>No hay datos disponibles para el Paso 2</div>;
 
   const paso2 = pasoData.paso2;
-  if (!paso2) return <div>No hay información de paso2 disponible</div>;
+  if (!paso2) return <div>Cargando paso 2...</div>;
 
   const {
     p_2_1_organismos_intervinientes,
@@ -55,14 +58,17 @@ const PasoDos = () =>
     solo_lectura
   } = pasoData;
 
-  const handleGuardarObservacion = async () => {
+  const handleGuardarObservacion = async () =>
+  {
     const observacionData = {
       observacion_paso2: observacionPaso2,
     };
 
     await updateObservacion(observacionData);
   };
-  
+
+  const avance = pasoData?.paso2?.avance;
+
   return (
     <>
       <div className="col-1">
@@ -72,7 +78,7 @@ const PasoDos = () =>
         <div className="container vh-100">
           <div className="d-flex">
             <h3 className="mt-3 me-4">{paso2.nombre_paso}</h3>
-            <Avance avance={paso2.avance} />
+            <Avance avance={avance} id={data.id}/>
           </div>
           <span className="text-sans-h6-primary">Texto de apoyo</span>
 
@@ -127,27 +133,27 @@ const PasoDos = () =>
               flujograma={p_2_5_flujograma_competencia}
               data={pasoData.paso2}
               stepNumber={stepNumber}
-              id={data.id} 
-              solo_lectura={solo_lectura}/>
+              id={data.id}
+              solo_lectura={solo_lectura} />
           </div>
 
           {userSubdere && formularioEnviado && (
             <div className="mt-5 my-4">
-            <CustomTextarea 
-            label="Observaciones (Opcional)"
-            placeholder="Escribe tus observaciones de este paso del formulario"
-            rows={5}
-            maxLength={500}
-            value={observacionPaso2}
-            onChange={(e) => setObservacionPaso2(e.target.value)}
-            readOnly={observacionesEnviadas}
-            onBlur={handleGuardarObservacion}
-            loading={loadingObservaciones}
-            saved={saved}
-            />
-          </div>
+              <CustomTextarea
+                label="Observaciones (Opcional)"
+                placeholder="Escribe tus observaciones de este paso del formulario"
+                rows={5}
+                maxLength={500}
+                value={observacionPaso2}
+                onChange={(e) => setObservacionPaso2(e.target.value)}
+                readOnly={observacionesEnviadas}
+                onBlur={handleGuardarObservacion}
+                loading={loadingObservaciones}
+                saved={saved}
+              />
+            </div>
           )}
-          
+
           {/*Botones navegacion  */}
           <div className="container me-5 pe-5">
             <ButtonsNavigate step={paso2.numero_paso} id={data.id} />

@@ -76,7 +76,7 @@ const PasoCinco = () => {
   if (!pasoData) return <div>No hay datos disponibles para el Paso 5</div>;
 
   const paso5 = pasoData.paso5;
-  if (!paso5) return <div>No hay información de paso5 disponible</div>;
+  if (!paso5) return <div>Cargando Paso 5...</div>;
 
   const {
     p_5_1_a_costos_directos,
@@ -96,6 +96,7 @@ const PasoCinco = () => {
     await updateObservacion(observacionData);
   };
 
+  const avance = pasoData?.paso5?.avance; 
   
 
   return (
@@ -107,7 +108,7 @@ const PasoCinco = () => {
         <div className="container vh-100">
           <div className="d-flex">
             <h3 className="mt-3 me-4">{paso5.nombre_paso}</h3>
-            <Avance avance={paso5Data.avance} />
+            <Avance avance={avance}  id={data.id}/>
           </div>
           <span className="text-sans-h6-primary">Texto de apoyo</span>
           <Subpaso_CincoPuntoUno

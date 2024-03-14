@@ -1,25 +1,32 @@
-import { useContext, useState, useEffect } from "react";
-import CustomTextarea from "../../forms/custom_textarea";
-import { SubirOrganigrama } from "../../commons/subirOrganigrama";
-import { FormularioContext } from "../../../context/FormSectorial";
-import { SubirArchivoRegiones } from "../../forms/subirArchivoRegiones";
-import { useFileRegional } from "../../../hooks/formulario/useFileRegional";
+import { useContext, useState, useEffect } from 'react';
+import CustomTextarea from '../../forms/custom_textarea';
+import { SubirOrganigrama } from '../../commons/subirOrganigrama';
+import { FormularioContext } from '../../../context/FormSectorial';
+import { SubirArchivoRegiones } from '../../forms/subirArchivoRegiones';
+import { useFileRegional } from '../../../hooks/formulario/useFileRegional';
 
-export const Subpaso_dos = ({ pasoData, organigrama, id, stepNumber, solo_lectura }) => {
-  const { updatePasoError, handleUpdatePaso, handleUploadFiles } = useContext(FormularioContext);
+export const Subpaso_dos = ({
+  pasoData,
+  organigrama,
+  id,
+  stepNumber,
+  solo_lectura,
+}) => {
+  const { updatePasoError, handleUpdatePaso, handleUploadFiles } =
+    useContext(FormularioContext);
   const { uploadFile } = useFileRegional();
-  const [ formData, setFormData ] = useState({
+  const [formData, setFormData] = useState({
     organigramaregional: organigrama?.organigramaregional,
     paso1: pasoData.paso1 || {
-      descripcion_archivo_organigrama_regional: pasoData.descripcion_archivo_organigrama_regional,
-      descripcion_archivo_organigrama_nacional: pasoData.descripcion_archivo_organigrama_nacional,
+      descripcion_archivo_organigrama_regional:
+        pasoData.descripcion_archivo_organigrama_regional,
+      descripcion_archivo_organigrama_nacional:
+        pasoData.descripcion_archivo_organigrama_nacional,
       organigrama_nacional: pasoData.organigrama_nacional,
-    }
-  }); 
+    },
+  });
 
-  console.log("organigrama en p1.2", organigrama)
-
-  const [ inputStatus, setInputStatus ] = useState({
+  const [inputStatus, setInputStatus] = useState({
     descripcion_archivo_organigrama_regional: { loading: false, saved: false },
     descripcion_archivo_organigrama_nacional: { loading: false, saved: false },
     organigrama_nacional: { loading: false, saved: false },
@@ -29,7 +36,7 @@ export const Subpaso_dos = ({ pasoData, organigrama, id, stepNumber, solo_lectur
     if (pasoData && pasoData.paso1) {
       setFormData({ paso1: pasoData.paso1 });
     }
-  }, [ pasoData ]);
+  }, [pasoData]);
 
   useEffect(() => {
     const savedData = localStorage.getItem('formData');
@@ -40,39 +47,61 @@ export const Subpaso_dos = ({ pasoData, organigrama, id, stepNumber, solo_lectur
 
   useEffect(() => {
     localStorage.setItem('formData', JSON.stringify(formData));
-  }, [ formData ]);
+  }, [formData]);
 
   const handleChange = (inputName, e) => {
     const { value } = e.target;
-    setFormData(prevFormData => ({
+    setFormData((prevFormData) => ({
       ...prevFormData,
       paso1: {
         ...prevFormData.paso1,
-        [ inputName ]: value,
-      }
+        [inputName]: value,
+      },
     }));
-    setInputStatus(prevStatus => ({
+    setInputStatus((prevStatus) => ({
       ...prevStatus,
-      [ inputName ]: { loading: false, saved: false }
+      [inputName]: {
+        ...prevStatus[inputName],
+        loading: false,
+        saved: false,
+        modified: true,
+      },
     }));
   };
 
   const handleSave = async (inputName) => {
-    setInputStatus(prevStatus => ({
+    setInputStatus((prevStatus) => ({
       ...prevStatus,
-      [ inputName ]: { ...prevStatus[ inputName ], loading: true }
+      [inputName]: { ...prevStatus[inputName], loading: true },
     }));
+    const modifiedData = Object.keys(formData.paso1).reduce((acc, key) => {
+      if (inputStatus[key] && inputStatus[key].modified) {
+        acc[key] = formData.paso1[key];
+      }
+      return acc;
+    }, {});
 
-    const success = await handleUpdatePaso(id, stepNumber, formData);
-    if (success) {
-      setInputStatus(prevStatus => ({
-        ...prevStatus,
-        [ inputName ]: { loading: false, saved: true }
-      }));
+    if (Object.keys(modifiedData).length > 0) {
+      console.log('Datos modificados que se enviarán:', modifiedData);
+      const success = await handleUpdatePaso(id, stepNumber, {
+        paso1: modifiedData,
+      });
+
+      if (success) {
+        setInputStatus((prevStatus) => ({
+          ...prevStatus,
+          [inputName]: { loading: false, saved: true, modified: false },
+        }));
+      } else {
+        setInputStatus((prevStatus) => ({
+          ...prevStatus,
+          [inputName]: { loading: false, saved: false },
+        }));
+      }
     } else {
-      setInputStatus(prevStatus => ({
+      setInputStatus((prevStatus) => ({
         ...prevStatus,
-        [ inputName ]: { loading: false, saved: false }
+        [inputName]: { loading: false, saved: false },
       }));
     }
   };
@@ -81,66 +110,70 @@ export const Subpaso_dos = ({ pasoData, organigrama, id, stepNumber, solo_lectur
     try {
       const archivos = new FormData();
       archivos.append(fieldName, file);
-      setInputStatus(prevStatus => ({
+      setInputStatus((prevStatus) => ({
         ...prevStatus,
-        [ fieldName ]: { ...prevStatus[ fieldName ], loading: true },
+        [fieldName]: { ...prevStatus[fieldName], loading: true },
       }));
 
       await handleUploadFiles(id, stepNumber, archivos, fieldName);
-      setInputStatus(prevStatus => ({
+      setInputStatus((prevStatus) => ({
         ...prevStatus,
-        [ fieldName ]: { loading: false, saved: true },
+        [fieldName]: { loading: false, saved: true },
       }));
 
-      console.log("Archivo recibido en el componente padre:", file.name);
+      console.log('Archivo recibido en el componente padre:', file.name);
     } catch (error) {
-      console.error("Error al subir el archivo:", error);
-      setInputStatus(prevStatus => ({
+      console.error('Error al subir el archivo:', error);
+      setInputStatus((prevStatus) => ({
         ...prevStatus,
-        [ fieldName ]: { loading: false, saved: false },
+        [fieldName]: { loading: false, saved: false },
       }));
     }
   };
 
   const handleFileSelectRegion = async (file, fieldName, regionId) => {
     if (typeof id === 'undefined' || typeof stepNumber === 'undefined') {
-      console.error("El ID del formulario o el número de paso no están definidos.");
+      console.error(
+        'El ID del formulario o el número de paso no están definidos.'
+      );
       return;
     }
 
     try {
-      setInputStatus(prevStatus => ({
+      setInputStatus((prevStatus) => ({
         ...prevStatus,
-        [ fieldName ]: { ...prevStatus[ fieldName ], loading: true },
+        [fieldName]: { ...prevStatus[fieldName], loading: true },
       }));
       await uploadFile(id, regionId, file);
 
-      setInputStatus(prevStatus => ({
+      setInputStatus((prevStatus) => ({
         ...prevStatus,
-        [ fieldName ]: { loading: false, saved: true },
+        [fieldName]: { loading: false, saved: true },
       }));
     } catch (error) {
-      console.error("Error al subir el archivo:", error);
-      setInputStatus(prevStatus => ({
+      console.error('Error al subir el archivo:', error);
+      setInputStatus((prevStatus) => ({
         ...prevStatus,
-        [ fieldName ]: { loading: false, saved: false },
+        [fieldName]: { loading: false, saved: false },
       }));
     }
   };
 
   const eliminarDocRegional = async (idRegion) => {
     const payload = {
-      organigramaregional: [ {
-        id: idRegion,
-        documento: null
-      } ]
+      organigramaregional: [
+        {
+          id: idRegion,
+          documento: null,
+        },
+      ],
     };
 
     try {
       await handleUpdatePaso(id, stepNumber, payload);
-      console.log("Organigrama regional eliminado con éxito");
+      console.log('Organigrama regional eliminado con éxito');
     } catch (error) {
-      console.error("Error al eliminar el organigrama regional:", error);
+      console.error('Error al eliminar el organigrama regional:', error);
     }
   };
 
@@ -155,14 +188,17 @@ export const Subpaso_dos = ({ pasoData, organigrama, id, stepNumber, solo_lectur
       <h4 className="text-sans-h4">1.2 Organización Institucional</h4>
       <div className="text-sans-h6-primary mb-4 col-11">
         <h6>
-          En esta sección se debe representar gráficamente la estructura orgánica
-          de la institución a nivel nacional y regional, incluyendo el numero de funcionarios en las unidades intervinientes
-          (departamento, division u otro) involucradas en el ejercicio de la competencia.
+          En esta sección se debe representar gráficamente la estructura
+          orgánica de la institución a nivel nacional y regional, incluyendo el
+          numero de funcionarios en las unidades intervinientes (departamento,
+          division u otro) involucradas en el ejercicio de la competencia.
         </h6>
       </div>
 
       <h5 className="text-sans-h5">Organigrama Nacional (Obligatorio)</h5>
-      <h6 className="text-sans-h6">Máximo 1 archivo, peso máximo 20MB, formato PDF</h6>
+      <h6 className="text-sans-h6">
+        Máximo 1 archivo, peso máximo 20MB, formato PDF
+      </h6>
 
       <div className="col-11">
         <div className="d-flex justify-content-between py-3 fw-bold">
@@ -193,7 +229,9 @@ export const Subpaso_dos = ({ pasoData, organigrama, id, stepNumber, solo_lectur
           id="descripcion_archivo_organigrama_nacional"
           name="descripcion_archivo_organigrama_nacional"
           value={pasoData?.descripcion_archivo_organigrama_nacional}
-          onChange={(e) => handleChange('descripcion_archivo_organigrama_nacional', e)}
+          onChange={(e) =>
+            handleChange('descripcion_archivo_organigrama_nacional', e)
+          }
           onBlur={() => handleSave('descripcion_archivo_organigrama_nacional')}
           loading={inputStatus.descripcion_archivo_organigrama_nacional.loading}
           saved={inputStatus.descripcion_archivo_organigrama_nacional.saved}
@@ -203,8 +241,12 @@ export const Subpaso_dos = ({ pasoData, organigrama, id, stepNumber, solo_lectur
       </div>
 
       <h5 className="text-sans-h5 mt-4">Organigrama Regional (Opcional)</h5>
-      <h6 className="text-sans-h6 mb-3">Máximo 1 archivo por región, peso máximo 20MB, formato PDF</h6>
-      <p className="text-sans-p-semibold">Regiones asociadas a la competencia:</p>
+      <h6 className="text-sans-h6 mb-3">
+        Máximo 1 archivo por región, peso máximo 20MB, formato PDF
+      </h6>
+      <p className="text-sans-p-semibold">
+        Regiones asociadas a la competencia:
+      </p>
 
       <div className="col-11">
         <div className="d-flex justify-content-between py-3 fw-bold">
@@ -224,17 +266,19 @@ export const Subpaso_dos = ({ pasoData, organigrama, id, stepNumber, solo_lectur
             tituloDocumento={region.documento}
             fileType={
               formData.paso1.organigramaregional &&
-                formData.paso1.organigramaregional[ region.id ]
-                ? "Archivo Seleccionado: " + formData.paso1.organigramaregional[ region.id ].name
-                : "No seleccionado"
+              formData.paso1.organigramaregional[region.id]
+                ? 'Archivo Seleccionado: ' +
+                  formData.paso1.organigramaregional[region.id].name
+                : 'No seleccionado'
             }
-            handleFileSelect={(file) => handleFileSelectRegion(file, 'organigramaregional', region.id)}
+            handleFileSelect={(file) =>
+              handleFileSelectRegion(file, 'organigramaregional', region.id)
+            }
             handleDelete={() => eliminarDocRegional(region.id)}
             readOnly={solo_lectura}
             archivoDescargaUrl={region?.documento}
           />
         ))}
-
       </div>
 
       <div className="my-4">
@@ -244,13 +288,16 @@ export const Subpaso_dos = ({ pasoData, organigrama, id, stepNumber, solo_lectur
           id="descripcion_archivo_organigrama_regional"
           name="descripcion_archivo_organigrama_regional"
           value={pasoData?.descripcion_archivo_organigrama_regional}
-          onChange={(e) => handleChange('descripcion_archivo_organigrama_regional', e)}
+          onChange={(e) =>
+            handleChange('descripcion_archivo_organigrama_regional', e)
+          }
           onBlur={() => handleSave('descripcion_archivo_organigrama_regional')}
           loading={inputStatus.descripcion_archivo_organigrama_regional.loading}
           saved={inputStatus.descripcion_archivo_organigrama_regional.saved}
           maxLength={500}
-          readOnly={solo_lectura} />
+          readOnly={solo_lectura}
+        />
       </div>
     </div>
-  )
+  );
 };

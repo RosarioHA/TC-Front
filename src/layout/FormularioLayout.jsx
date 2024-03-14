@@ -41,7 +41,7 @@ const FormularioLayout = () => {
         <div className="col mb-2">
           <FormTitle data={data} loading={loading} id={data.id} title="Formulario Sectorial"  />
           <div className="mx-5">
-            {data && <HorizontalStepper baseUrl={baseUrl} />}
+            {data && <HorizontalStepper baseUrl={baseUrl} id={data.id} />}
             <Timmer data={data} loading={loading} id={data.id} />
           </div>
         </div>

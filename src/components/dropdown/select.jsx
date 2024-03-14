@@ -69,7 +69,7 @@ const DropdownSelect = ({ label, placeholder, options, onSelectionChange, select
       </button>
 
       {isOpen && !readOnly && (
-        <div className="dropdown d-flex flex-column p-2 dropdown-container" ref={dropdownRef}>
+        <div className="dropdown d-flex flex-column p-2 dropdown-container dropdown-menu" ref={dropdownRef}>
           {options.map((option) => (
             <div
               key={option.value}
