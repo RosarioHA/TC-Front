@@ -119,11 +119,11 @@ const CostosDirectos = ({
     return Math.floor(Date.now() / 1000);
   };
 
-  const agregarCostoDirecto = () => {
-    const nuevoCostoDirectoId = generarIdUnico();
+  const agregarCostoDirecto = async () => {
+    const idTemporal = generarIdUnico();
     // Asegúrate de que la nueva costo tenga un estado inicial completo
     const nuevoCostoDirecto = {
-      id: nuevoCostoDirectoId,
+      id: idTemporal,
       etapa: [],
       item_subtitulo: [],
       nombre_item_subtitulo: [],
@@ -141,7 +141,29 @@ const CostosDirectos = ({
       },
     };
 
-    setCostosDirectos(prevCostosDirectos => [...prevCostosDirectos, nuevoCostoDirecto]);
+    const payload = {
+      'p_5_1_a_costos_directos': [{}]
+    };
+
+    setCostosDirectos(prevCostosDirectos => [...prevCostosDirectos, { ...nuevoCostoDirecto, idTemporal }]);
+
+    try {
+      // Lógica para llamar a la API
+      const respuesta = await handleUpdatePaso(id, stepNumber, payload);
+      // Asumiendo que la respuesta incluye el ID real generado por el back-end para el nuevo costo
+      const idReal = respuesta.data.id;
+  
+      // Reemplaza el ID temporal con el ID real en el estado
+      setCostosDirectos(prevCostosDirectos =>
+        prevCostosDirectos.map(costo =>
+          costo.id === idTemporal ? { ...costo, id: idReal } : costo
+        )
+      );
+  
+    } catch (error) {
+      console.error("Error al guardar:", error);
+    }
+
   };
 
 

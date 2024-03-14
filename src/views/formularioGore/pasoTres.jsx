@@ -13,6 +13,14 @@ const PasoTresGore = () => {
   const stepNumber = 3;
   const { refetchDataPaso, refetchTrigger } = usePasoForm(dataPasoGore?.id, stepNumber);
   const [paso3Data, setPaso3Data] = useState('');
+  const [juridicasDirectasData, setJuridicasDirectasData] = useState('');
+  const [juridicasIndirectasData, setJuridicasIndirectasData] = useState('');
+  const [personalDirectoData, setPersonalDirectoData] = useState('');
+  const [personalIndirectoData, setPersonalIndirectoData] = useState('');
+  const [subtituloDirectoData, setSubtitulosDirectoData] = useState('');
+  const [subtituloIndirectoData, setSubtitulosIndirectoData] = useState('');
+  const [itemSubtitulosDirectoData, setItemSubtitulosDirectoData] = useState('');
+  const [itemSubtitulosIndirectoData, setItemSubtitulosIndirectoData] = useState('');
 
 
   useEffect(() => {
@@ -22,6 +30,14 @@ const PasoTresGore = () => {
   useEffect(() => {
     if (refetchDataPaso) {
       setPaso3Data(refetchDataPaso.paso3_gore);
+      setJuridicasDirectasData(refetchDataPaso.listado_calidades_juridicas_directas);
+      setJuridicasIndirectasData(refetchDataPaso.listado_calidades_juridicas_indirectas);
+      setSubtitulosDirectoData(refetchDataPaso.listado_subtitulos_directos);
+      setSubtitulosIndirectoData(refetchDataPaso.listado_subtitulos_indirectos);
+      setItemSubtitulosDirectoData(refetchDataPaso.listado_item_subtitulos_directos);
+      setItemSubtitulosIndirectoData(refetchDataPaso.listado_item_subtitulos_indirectos);
+      setPersonalDirectoData(refetchDataPaso.p_3_1_a_personal_directo);
+      setPersonalIndirectoData(refetchDataPaso.p_3_1_b_personal_indirecto);
     } else {
       setPaso3Data(dataPasoGore?.paso3_gore);
     }
@@ -33,7 +49,11 @@ const PasoTresGore = () => {
   if (errorPasoGore) return <div>Error: {errorPasoGore.message || "Error desconocido"}</div>;
   if (!dataPasoGore || dataPasoGore.length === 0) return <div>No hay datos disponibles para el Paso 3</div>;
 
-  const { paso3_gore } = dataPasoGore;
+  const {
+    paso3_gore,
+    solo_lectura,
+    listado_estamentos,
+  } = dataPasoGore;
   const paso3 = paso3_gore || {};
 
 
@@ -55,7 +75,14 @@ const PasoTresGore = () => {
 
             <div>
               <PersonalDirectoGORE
-                
+                id={dataPasoGore?.id}
+                paso3={paso3Data}
+                solo_lectura={solo_lectura}
+                stepNumber={stepNumber}
+                data_personal_directo={personalDirectoData}
+                listado_estamentos={listado_estamentos}
+                listado_calidades_juridicas={juridicasDirectasData}
+                refetchTrigger={refetchTrigger}
               />
             </div>
 
