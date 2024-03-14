@@ -18,10 +18,9 @@ const DropdownCheckbox = ({
   const toggleRef = useRef(null);
 
   useEffect(() => {
-    if (selectedValues) {
-      setSelectedOptions(selectedValues);
-    }
+    setSelectedOptions(selectedValues || []);
   }, [selectedValues]);
+  
 
   const handleClickOutside = useCallback((event) => {
     if (
@@ -104,7 +103,7 @@ const DropdownCheckbox = ({
       return <div className="spinner-border text-primary align-self-end" role="status"></div>;
     }
     if (saved) {
-      return <i className="material-symbols-outlined align-self-end">check</i>; // Reemplaza esto con tu ícono de check real
+      return <i className="material-symbols-outlined align-self-end">check</i>;
     }
     return null;
   };
@@ -139,7 +138,7 @@ const DropdownCheckbox = ({
       </div>  
 
       {isOpen && !readOnly && (
-        <div className="dropdown d-flex flex-column dropdown-container dropdown-position p-0">
+        <div className="dropdown d-flex flex-column dropdown-menu dropdown-container p-0">
           <button
             type="button"
             className={`text-sans-p btn-option ${selectedOptions.length > 0 ? 'active' : ''
