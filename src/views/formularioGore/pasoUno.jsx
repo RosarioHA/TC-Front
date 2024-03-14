@@ -24,10 +24,13 @@ const PasoUnoGore = () =>
   const { paso1_gore, flujograma_ejercicio_competencia } = dataPasoGore;
   const paso1Data = paso1_gore || {};
 
+  console.log(paso1Data)
+  console.log(paso1_gore)
+
   return (
     <>
       <div className="col-1">
-        <MonoStepers stepNumber={paso1Data?.numero_paso} />
+        <MonoStepers stepNumber={paso1Data.numero_paso} />
       </div>
       <div className="col-11">
         <div className="container-fluid">

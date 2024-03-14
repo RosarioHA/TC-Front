@@ -45,7 +45,7 @@ const Home = () =>
           </div>
         ) : (
           <>
-            <div className="d-flex flex-row m-5">
+            {/* <div className="d-flex flex-row m-5">
               <div className="container-info p-2 mx-4">
                 <span className="text-sans-p-grey align-self-start ms-2">Tiempo promedio proceso de<br /> levantamiento de información</span>
                 <div className="d-flex justify-content-between">
@@ -64,7 +64,7 @@ const Home = () =>
                   <div className="text-sans-h3-bold align-self-start me-5  ms-3 pe-5">2.352</div><div className="align-self-end ms-5 me-3 ps-3 badge-percent px-3">+11%</div>
                 </div>
               </div>
-            </div>
+            </div> */}
             {dataCompetencia.map(competencia => (
               <>
                 <div key={competencia.id} className="container-compentencia">

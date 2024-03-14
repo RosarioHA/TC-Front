@@ -17,7 +17,6 @@ const PasoUno = () => {
   const userSubdere = userData?.perfil?.includes('SUBDERE');
   const { observaciones, updateObservacion, fetchObservaciones, loadingObservaciones, saved } = useObservacionesSubdere(data ? data.id : null);
   const [observacionPaso1, setObservacionPaso1] = useState("");
-  console.log("observaciones en paso 1", observaciones)
 
   const formularioEnviado = data.formulario_enviado
   const observacionesEnviadas = data.observacion_enviada
@@ -33,7 +32,7 @@ const PasoUno = () => {
   }, [updateStepNumber, stepNumber, observaciones, data, fetchObservaciones]);
 
   if (errorPaso) return <div>Error: {errorPaso.message || "Error desconocido"}</div>;
-  if (!pasoData || pasoData.length === 0) return <div>No hay datos disponibles para el Paso 1</div>;
+  if (!pasoData || pasoData.length === 0) return <div>Cargando paso 1...</div>;
   
   const { 
     marcojuridico, 
@@ -51,6 +50,9 @@ const PasoUno = () => {
     }
   };
 
+  const avance = pasoData?.paso1?.avance; 
+
+
   return (
     <>
       <div className="col-1">
@@ -60,7 +62,7 @@ const PasoUno = () => {
         <div className="container-fluid ">
           <div className="d-flex">
             <h3 className="mt-3 me-4">{paso1Data.nombre_paso}</h3>
-            <Avance avance={paso1Data.avance} />
+            <Avance avance={avance}/>
           </div>
           <span className="text-sans-h6-primary">Texto de apoyo</span>
           <Subpaso_uno dataPaso={paso1Data} marcojuridico={marcojuridico} id={data ? data.id : null} stepNumber={stepNumber} solo_lectura={solo_lectura}/>

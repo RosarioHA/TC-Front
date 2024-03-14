@@ -69,18 +69,18 @@
   font-weight: 500;
 }
 
-.text-sans-h2-bold-tertiary {
-  font-family: "Roboto";
-  color: #001C41;
-  font-size: 32px;
-  font-weight: 700;
-}
-
 .text-sans-h2-grey {
   font-family: "Roboto";
   color: #656565;
   font-size: 32px;
   font-weight: 500;
+}
+
+.text-sans-h2-bold-tertiary {
+  font-family: "Roboto";
+  color: #001C41;
+  font-size: 32px;
+  font-weight: 700;
 }
 
 .text-sans-25 {
@@ -206,6 +206,14 @@
 .text-sans-h6-bold-darkblue {
   font-family: "Roboto";
   color: #001C41;
+  font-size: 14px;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.text-sans-h6-bold-success {
+  font-family: "Roboto";
+  color: #006636;
   font-size: 14px;
   font-weight: 700;
   font-style: normal;
@@ -726,6 +734,11 @@ span.material-symbols-outlined {
   z-index: 1;
 }
 
+.icono-s {
+  width: 32px;
+  height: 32px;
+}
+
 #icon-inputSearch i.material-symbols-outlined,
 #icon-inputClose i.material-symbols-outlined {
   font-size: 28px;
@@ -1132,6 +1145,10 @@ a.btn-link:hover, a.btn-link:focus {
   z-index: 1000;
 }
 
+.dropdown-menu {
+  width: 100%;
+}
+
 .custom-pagination-btn {
   border: none;
   background-color: transparent;
@@ -1379,6 +1396,18 @@ a.btn-link:hover, a.btn-link:focus {
 
 .input-success {
   border: 2px solid #006636;
+}
+
+.subrayado {
+  background-color: #CFE1F3;
+  height: 40px;
+  padding-top: 8px;
+}
+
+.border-gris {
+  border: 1px solid #BBBBBB;
+  border-radius: 4px;
+  color: #656565;
 }
 
 .wrapper {

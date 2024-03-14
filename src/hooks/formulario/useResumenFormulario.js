@@ -31,5 +31,5 @@ export const useResumenFormulario = (id) => {
     }
   };
 
-  return { resumen, loading, error, actualizarFormularioEnviado };
+  return { resumen, loading, error,  fetchResumen, actualizarFormularioEnviado };
 };
