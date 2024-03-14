@@ -131,6 +131,11 @@
     font-style: normal;
 }
 
+.text-sans-h6-bold-success{
+    @include font-sans(14px, 700, $success-color);
+    font-style: normal;
+}
+
 // p
 .text-sans-p{
     @include font-sans(16px, 400, $grey-a-color);

@@ -20,8 +20,8 @@ export const SubUno_dos = ({ flujograma, id, stepNumber }) => {
     setFlujogramaGoreFiles(dataPasoGore?.flujograma_ejercicio_competencia || []);
   }, [dataPasoGore]);
 
-  const handleViewFile = (url) => {
-    setIframeSrc(url);
+  const handleViewFile = (archivoDescargaUrl) => {
+    setIframeSrc(archivoDescargaUrl);
     setShowPdfViewer(true);
   };
 
@@ -53,6 +53,8 @@ export const SubUno_dos = ({ flujograma, id, stepNumber }) => {
       setDeleting(false);
     }
   };
+
+
 
   return (
     <>

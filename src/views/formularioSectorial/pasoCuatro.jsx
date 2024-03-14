@@ -32,7 +32,7 @@ const PasoCuatro = () => {
   if (!pasoData) return <div>No hay datos disponibles para el Paso 4</div>;
 
   const { paso4: paso4Data, indicador_desempeno, lista_indicadores, solo_lectura } = pasoData;
-  if (!paso4Data) return <div>No hay información de paso 4 disponible</div>;
+  if (!paso4Data) return <div>Cargando Paso 4...</div>;
 
   const id = data?.id;
 
@@ -43,6 +43,8 @@ const PasoCuatro = () => {
     await updateObservacion(observacionData);
   };
 
+  const avance = pasoData?.paso4?.avance; 
+
   return (
     <>
       <div className="col-1">
@@ -52,7 +54,7 @@ const PasoCuatro = () => {
         <div className="container vh-100">
           <div className="d-flex">
             <h3 className="mt-3">{paso4Data.nombre_paso}</h3>
-            <Avance avance={paso4Data.avance} />
+            <Avance avance={avance}  id={id}/>
           </div>
           <div className="mt-4">
             <h6 className="text-sans-h6-primary">Los indicadores de desempeño, deben incluir una descripción de los componentes del indicador, asi como los medios utilizados para su calculo y sus medios de verificación. Si la competencia esta asociada a un programa que cuente con evaluación ex ante, se debe considerar la información incluida en su versión mas actualizada.</h6>

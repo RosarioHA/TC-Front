@@ -28,10 +28,18 @@ export const FormularioProvider = ({ children }) => {
       if (!formData || typeof formData !== 'object' || Object.keys(formData).length === 0) {
         throw new Error("Datos del paso son inválidos");
       }
-
-      await patchStep(id, stepNumber, formData); 
-      return true; 
+  
+      const response = await patchStep(id, stepNumber, formData);
+      if (response) {
+        refetchTrigger(); // Invoca aquí para refrescar el avance
+        console.log("Paso actualizado con éxito.");
+        return true;
+      } else {
+        console.error("Actualización del paso fallida. Respuesta del servidor:", response);
+        return false;
+      }
     } catch (error) {
+      console.error("Error durante la actualización del paso:", error);
       return false;
     }
   };
@@ -96,8 +104,6 @@ export const FormularioProvider = ({ children }) => {
     handleUploadFilesOrganigramaregional,
     refetchTrigger,
   };
-
-  console.log("ID en FormularioContext:", dataFormSectorial ? dataFormSectorial.id : "No hay ID");
 
   return (
     <FormularioContext.Provider value={value}>
