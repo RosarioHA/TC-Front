@@ -16,6 +16,7 @@ const ObservacionesSubdere = () => {
   console.log("competencia details en OS", competenciaDetails) //obtiene info correcta de Competencia
   console.log("data en OS", data) //data formulario sectorial, se le entrega id incorrecto (id de la competencia en lugar del id de cada form sectorial)
   console.log("observaciones en OS", observaciones) //al depender de data, vamos a asumir que tambien esta mal
+  console.log("competencia details estado en OS", competenciaDetails?.etapa2?.estado)
 
   const handleBackButtonClick = () => {
     navigate(-1);
@@ -121,7 +122,7 @@ const ObservacionesSubdere = () => {
 
       {/* NO ELIMINAR SECCION COMENTADA, FALTA AGREGAR CONDICIONALIDAD CORRECTA */}
 
-      {/* {observaciones.observacion_enviada ? (
+      {competenciaDetails?.etapa2?.estado === 'Finalizada' &&  (
         <div>
           <h3 className="text-sans-h2">Esta todo listo para que termines la etapa</h3>
           <p className="text-sans-p mt-3 mb-5">Ya revisaste todos los formularios. </p> 
@@ -157,47 +158,14 @@ const ObservacionesSubdere = () => {
             </div>
           </div>
         </div>
-      ) : (
+      )}
+
+      {competenciaDetails?.etapa2?.estado !== 'Finalizada' && (
         <div>
           <h3 className="text-sans-h2">Debes revisar todos los formularios antes de terminar la etapa</h3>
           <p className="text-sans-p mt-3">Para poder terminar la etapa debes revisar todos los formularios y dejar observaciones donde consideres necesario.</p>
         </div>
-      )} */}
-      <div>
-          <h3 className="text-sans-h2">Esta todo listo para que termines la etapa</h3>
-          <p className="text-sans-p mt-3 mb-5">Ya revisaste todos los formularios. </p> 
-          <p className="text-sans-p mb-2">Debes definir cual es el próximo paso en el procedo de análisis de la competencia:</p>
-          <div>
-            <div className="form-check">
-              <input
-                type="radio"
-                id="opcionA"
-                name="proximaEtapa"
-                className="form-check-input"
-                value="A"
-                onChange={() => handleRadioButtonChange('A')}
-                checked={etapaOmitida === true}
-              />
-              <label htmlFor="opcionA" className="text-sans-p">
-                DIPRES debe pronunciarse respecto de la información del sector o sectores asociados a la competencia.
-              </label>
-            </div>
-            <div className="form-check">
-              <input
-                type="radio"
-                id="opcionB"
-                name="proximaEtapa"
-                className="form-check-input"
-                value="B"
-                onChange={() => handleRadioButtonChange('B')}
-                checked={etapaOmitida === false}
-              />
-              <label htmlFor="opcionB" className="text-sans-p">
-                GORE debe entregar sus antecedentes para que luego DIPRES se pronuncie respecto a la información.
-              </label>
-            </div>
-          </div>
-        </div>
+      )}
       
       <div className="d-flex justify-content-end my-5 me-3">
         <button 

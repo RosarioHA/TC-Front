@@ -18,7 +18,7 @@ const SuccessCierreOS = () => {
 
   const handleVolverBtn = () => {
     return (
-      navigate( `/home/observaciones_subdere/${id}/`)
+      navigate( `/home`)
     )
   };
 
@@ -50,7 +50,7 @@ const SuccessCierreOS = () => {
       </div>
 
       <div className="d-flex justify-content-center mt-5">
-        <button className="btn-secundario-s text-decoration-underline" onClick={handleVolverBtn}>Volver a Observaciones</button>
+        <button className="btn-secundario-s text-decoration-underline" onClick={handleVolverBtn}>Volver al Incio</button>
       </div>
 
     </div>
