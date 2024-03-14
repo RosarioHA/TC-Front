@@ -124,3 +124,15 @@ border-radius: 50%;
 .input-success {
   border: 2px solid $success-color;
 }
+
+.subrayado{
+  background-color:$blue-sky;
+  height: 40px;
+  padding-top: 8px;
+}
+
+.border-gris{
+  border: 1px solid $grey-light-color; 
+  border-radius: 4px;
+  color:$grey-c-color
+}

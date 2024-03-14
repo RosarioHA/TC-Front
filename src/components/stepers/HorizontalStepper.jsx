@@ -1,31 +1,39 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect, useMemo } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useResumenFormulario } from "../../hooks/formulario/useResumenFormulario";
 
-export const HorizontalStepper = ({ baseUrl }) => {
-  const [stepsState, setStepsState] = useState(['default', 'active', 'warning', 'done', 'default']);
+export const HorizontalStepper = ({ baseUrl, id }) => {
   const navigate = useNavigate();
+  const location = useLocation(); 
+  const { resumen, fetchResumen } = useResumenFormulario(id);
 
-  const stepTitles = [
+  const [stepsState, setStepsState] = useState([]);
+
+  const stepTitles = useMemo(() => [
     'Descripción de la Institución',
     'Arquitectura del Proceso',
     'Cobertura de la Competencia',
     'Indicadores de Desempeño',
     'Costeo de la Competencia'
-  ];
+  ], []);
+
+  useEffect(() => {
+    if (resumen) {
+      const newState = stepTitles.map((title, index) => {
+        const paso = resumen[`paso${index + 1}`];
+        const estado = paso && paso.estado_stepper ? paso.estado_stepper : 'default';
+        const esPasoActual = location.pathname === `${baseUrl}/paso_${index + 1}`;
+        return esPasoActual && estado === 'default' ? 'active' : estado;
+      });
+      setStepsState(newState);
+    }
+  }, [resumen, stepTitles, location.pathname, baseUrl]);
 
   const goToStep = (stepNumber) => {
-    const newStepsState = stepsState.map((state, index) => {
-      if (index === stepNumber - 1) {
-        return state === 'active' ? 'done' : 'active';
-      }
-      return state === 'done' ? 'done' : 'default';
-    });
-
-    // Navegación dinámica usando baseUrl y el número de paso actualizado
     navigate(`${baseUrl}/paso_${stepNumber}`);
-
-    setStepsState(newStepsState);
+    fetchResumen();
   };
+
 
   return (
     <div className="stepper-pasos d-flex w-75 mx-auto">
@@ -36,9 +44,7 @@ export const HorizontalStepper = ({ baseUrl }) => {
             onClick={() => goToStep(index + 1)}
           >
             {state === 'done' && '✓'}
-            {state === 'active' && (index + 1)}
-            {state === 'warning' && '!'}
-            {state === 'default' && (index + 1)}
+            {['active', 'default'].includes(state) && (index + 1)}
           </button>
           <div className="step-text me-0 ms-0">
             {stepTitles[index]}
