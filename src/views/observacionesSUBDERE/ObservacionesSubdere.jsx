@@ -88,8 +88,8 @@ const ObservacionesSubdere = () => {
       <hr/>
 
       <div>
-      {competenciaDetails?.etapa2?.formulario_sectorial ? (
-        competenciaDetails.etapa2.formulario_sectorial.map((formulario, index) => (
+      {competenciaDetails?.etapa2?.formulario_sectorial.detalle_formularios_sectoriales ? (
+        competenciaDetails.etapa2.formulario_sectorial.detalle_formularios_sectoriales.map((formulario, index) => (
           <tr 
             className={`d-flex justify-content-between p-3 align-items-center ${index % 2 === 0 ? 'neutral-line' : 'white-line'}`} 
             key={formulario.id}

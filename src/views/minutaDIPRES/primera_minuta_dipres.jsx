@@ -11,13 +11,14 @@ const PrimeraMinuta = () => {
   console.log("id", id)
   console.log("competenciaDetails", competenciaDetails)
   console.log("observaciones", observaciones)
+  console.log("array formularios sectorial", competenciaDetails?.etapa2?.formulario_sectorial)
 
   const handleBackButtonClick = () => {
     navigate(-1);
   };
 
-  const handleVerFormulario = (formularioId) => {
-    navigate(`/home/formulario_sectorial/${formularioId}/paso_1`);
+  const handleVerFormulario = (id) => {
+    navigate(`/home/formulario_sectorial/${id}/paso_1`);
   };
 
   return (
@@ -44,8 +45,8 @@ const PrimeraMinuta = () => {
 
       <div className="border-bottom pb-3">
         <h2 className="text-sans-25 mt-5 mb-4">Formularios sectoriales</h2>
-        {competenciaDetails?.etapa2?.formulario_sectorial ? (
-          competenciaDetails.etapa2.formulario_sectorial.map((formulario, index) => (
+        {competenciaDetails?.etapa2?.formulario_sectorial.detalle_formularios_sectoriales ? (
+          competenciaDetails.etapa2.formulario_sectorial.detalle_formularios_sectoriales.map((formulario, index) => (
             <tr 
               className={`d-flex justify-content-between p-3 align-items-center ${index % 2 === 0 ? 'neutral-line' : 'white-line'}`} 
               key={formulario.id}
