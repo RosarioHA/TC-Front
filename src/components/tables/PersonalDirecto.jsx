@@ -218,32 +218,42 @@ const PersonalDirecto = ({
   };
 
   const agregarNuevaCalidadJuridica = async (calidadJuridicaSeleccionada, labelSeleccionado) => {
-    const nuevaCalidadJuridicaDatos = {
-      id: Math.floor(Date.now() / 1000),
-      calidad_juridica: calidadJuridicaSeleccionada,
-      nombre_calidad_juridica: labelSeleccionado
-    };
 
     const payload = {
-      'p_5_3_a_personal_directo': [nuevaCalidadJuridicaDatos]
+      'p_5_3_a_personal_directo': [{
+        calidad_juridica: calidadJuridicaSeleccionada,
+        nombre_calidad_juridica: labelSeleccionado
+      }]
     };
 
     try {
-      await handleUpdatePaso(id, stepNumber, payload);
+      const response = await handleUpdatePaso(id, stepNumber, payload);
 
-      // Actualiza el estado para añadir el nuevo elemento al final
-      setPersonas(prevPersonas => {
-        // Si ya existen personas con esta calidad jurídica, simplemente añade al final
-        const nuevasPersonas = { ...prevPersonas };
-        // Asegura que la nueva calidad jurídica se añada al final
-        nuevasPersonas[labelSeleccionado] = nuevasPersonas[labelSeleccionado] || [];
-        nuevasPersonas[labelSeleccionado].push(nuevaCalidadJuridicaDatos);
-        return nuevasPersonas;
-      });
+      if (response && response.data.p_5_3_a_personal_directo) {
+        const listaActualizadaPersonalDirecto = response.data.p_5_3_a_personal_directo;
 
-      // Limpia los campos del formulario y oculta el formulario
-      setNuevaCalidadJuridica('');
-      setMostrarFormularioNuevo(false); // Esto oculta el formulario
+        const nuevaCalidadJuridicaDatos = {
+          ...listaActualizadaPersonalDirecto[listaActualizadaPersonalDirecto.length - 1], // Extrayendo el último elemento
+        };
+
+        console.log('listado',nuevaCalidadJuridicaDatos)
+
+        // Actualiza el estado para añadir el nuevo elemento al final
+        setPersonas(prevPersonas => {
+          // Si ya existen personas con esta calidad jurídica, simplemente añade al final
+          const nuevasPersonas = { ...prevPersonas };
+          // Asegura que la nueva calidad jurídica se añada al final
+          nuevasPersonas[labelSeleccionado] = nuevasPersonas[labelSeleccionado] || [];
+          nuevasPersonas[labelSeleccionado].push(nuevaCalidadJuridicaDatos);
+          return nuevasPersonas;
+        });
+        // Limpia los campos del formulario y oculta el formulario
+        setNuevaCalidadJuridica('');
+        setMostrarFormularioNuevo(false); // Esto oculta el formulario
+
+      } else {
+        console.error("La actualización no fue exitosa:", response ? response.message : "Respuesta vacía");
+      }
     } catch (error) {
       console.error("Error al agregar la nueva calidad jurídica:", error);
     }

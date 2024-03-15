@@ -121,8 +121,6 @@ const CostosDirectos = ({
     try {
       const response = await handleUpdatePaso(id, stepNumber, payload);
 
-      console.log('response', response)
-
       if (response && response.data.p_5_1_a_costos_directos) {
         // Asumiendo que la respuesta del backend incluye la lista actualizada de costos directos
         const listaActualizadaDeCostosDirectos = response.data.p_5_1_a_costos_directos;
