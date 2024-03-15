@@ -93,7 +93,7 @@ const PersonalDirecto = ({
 
 
   // Lógica para agregar una nueva persona a calidad juridica existente
-  const agregarPersona = (calidadJuridicaLabel) => {
+  const agregarPersona = async (calidadJuridicaLabel) => {
     // Busca el objeto correspondiente en listado_calidades_juridicas basado en el label
     const calidadJuridicaObjeto = listado_calidades_juridicas.find(cj => cj.calidad_juridica === calidadJuridicaLabel);
 
@@ -103,25 +103,35 @@ const PersonalDirecto = ({
       return; // Termina la ejecución si no se encuentra la calidad jurídica
     }
 
-    const nuevaFilaId = Math.floor(Date.now() / 1000);
-
-    const nuevaPersona = {
-      id: nuevaFilaId,
-      calidad_juridica: calidadJuridicaObjeto.id, // Usa el ID (value) de la calidad jurídica encontrada
+    const payload = {
+      'p_5_3_a_personal_directo': [{
+        calidad_juridica: calidadJuridicaObjeto.id,
+      }]
     };
 
-    // Actualiza el estado inmediatamente con la nueva persona
-    setPersonas(prevPersonas => ({
-      ...prevPersonas,
-      [calidadJuridicaLabel]: [...(prevPersonas[calidadJuridicaLabel] || []), nuevaPersona]
-    }));
+    try {
+      const response = await handleUpdatePaso(id, stepNumber, payload);
 
-    // Llama a handleSave directamente con la información necesaria
-    // Ahora pasando el ID de la calidad jurídica en vez del label
-    handleSave(nuevaPersona.id, 'calidad_juridica', calidadJuridicaObjeto.id);
+      if (response && response.data.p_5_3_a_personal_directo) {
+        const listaActualizadaPersonal = response.data.p_5_3_a_personal_directo;
+
+        const nuevaPersona = {
+          ...listaActualizadaPersonal[listaActualizadaPersonal.length - 1], // Extrayendo el último elemento
+        };
+
+        // Actualiza el estado inmediatamente con la nueva persona
+      setPersonas(prevPersonas => ({
+        ...prevPersonas,
+        [calidadJuridicaLabel]: [...(prevPersonas[calidadJuridicaLabel] || []), nuevaPersona]
+      }));
+
+      } else {
+        console.error("La actualización no fue exitosa:", response ? response.message : "Respuesta vacía");
+      }
+    } catch (error) {
+      console.error("Error al agregar la nueva calidad jurídica:", error);
+    }   
   };
-
-
 
 
   // Lógica para eliminar una fila de un organismo
