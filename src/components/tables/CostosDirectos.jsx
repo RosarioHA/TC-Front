@@ -42,7 +42,7 @@ const CostosDirectos = ({
   const [opcionesEtapas, setopcionesEtapas] = useState([]);
   const { handleUpdatePaso } = useContext(FormularioContext);
   const [esquemaValidacion, setEsquemaValidacion] = useState(null);
-  
+
 
   const defaultValues = costosDirectos.reduce((acc, costoDirecto) => {
     if (costoDirecto.item_subtitulo) {
@@ -107,65 +107,39 @@ const CostosDirectos = ({
   };
 
   // Lógica para agregar una nueva tabla Plataformas
-  const onSubmit = data => {
-    console.log(data);
+  const onSubmit = () => {
     // Aquí puedes llamar a la función para agregar la nueva costo
     agregarCostoDirecto();
   };
 
-  // Generador de ID único
-  const generarIdUnico = () => {
-    // Implementa tu lógica para generar un ID único
-    return Math.floor(Date.now() / 1000);
-  };
 
   const agregarCostoDirecto = async () => {
-    const idTemporal = generarIdUnico();
-    // Asegúrate de que la nueva costo tenga un estado inicial completo
-    const nuevoCostoDirecto = {
-      id: idTemporal,
-      etapa: [],
-      item_subtitulo: [],
-      nombre_item_subtitulo: [],
-      total_anual: null,
-      es_transversal: null,
-      descripcion: '',
-      editando: false,
-      estados: { // Estado inicial para 'estados'
-        etapa: { loading: false, saved: false },
-        item_subtitulo: { loading: false, saved: false },
-        nombre_item_subtitulo: { loading: false, saved: false },
-        total_anual: { loading: false, saved: false },
-        es_transversal: { loading: false, saved: false },
-        descripcion: { loading: false, saved: false }
-      },
-    };
-
     const payload = {
-      'p_5_1_a_costos_directos': [{}]
+      'p_5_1_a_costos_directos': [{}], // Enviar una instancia vacía
     };
-
-    setCostosDirectos(prevCostosDirectos => [...prevCostosDirectos, { ...nuevoCostoDirecto, idTemporal }]);
 
     try {
-      // Lógica para llamar a la API
-      const respuesta = await handleUpdatePaso(id, stepNumber, payload);
-      // Asumiendo que la respuesta incluye el ID real generado por el back-end para el nuevo costo
-      const idReal = respuesta.data.id;
-  
-      // Reemplaza el ID temporal con el ID real en el estado
-      setCostosDirectos(prevCostosDirectos =>
-        prevCostosDirectos.map(costo =>
-          costo.id === idTemporal ? { ...costo, id: idReal } : costo
-        )
-      );
-  
+      const response = await handleUpdatePaso(id, stepNumber, payload);
+
+      console.log('response', response)
+
+      if (response && response.data.p_5_1_a_costos_directos) {
+        // Asumiendo que la respuesta del backend incluye la lista actualizada de costos directos
+        const listaActualizadaDeCostosDirectos = response.data.p_5_1_a_costos_directos;
+        const nuevoCostoDirecto = {
+          ...listaActualizadaDeCostosDirectos[listaActualizadaDeCostosDirectos.length - 1], // Extrayendo el último elemento
+          isItemSubtituloReadOnly: true, // Estableciendo isItemSubtituloReadOnly como true
+        };
+
+        // Actualiza el estado local añadiendo este nuevo costo directo
+        setCostosDirectos(prevCostosDirectos => [...prevCostosDirectos, nuevoCostoDirecto]);
+      } else {
+        console.error("La actualización no fue exitosa:", response ? response.message : "Respuesta vacía");
+      }
     } catch (error) {
-      console.error("Error al guardar:", error);
+      console.error("Error al agregar el costo directo:", error);
     }
-
   };
-
 
   // Lógica para eliminar una ficha de una costo
   const eliminarElemento = async (costoDirectoId) => {
@@ -261,7 +235,7 @@ const CostosDirectos = ({
 
       // Actualiza el estado de carga y guardado
       updateFieldState(arrayNameId, fieldName, { loading: false, saved: true });
-      setRefreshSubpaso_CincoDos(true);      
+      setRefreshSubpaso_CincoDos(true);
       refetchTrigger();
       setRefreshSumatoriaCostos(true);
 
@@ -288,46 +262,46 @@ const CostosDirectos = ({
               <span className="text-sans-p-bold mb-0">{index + 1}</span>
               <div className="col d-flex flex-column justify-content-between">
                 <p className="text-sans-p-bold">Subtítulo</p>
-                  <Controller
-                    control={control}
-                    name={`subtitulo_${costo.id}`}
-                    render={({ field }) => {
-                      return (
-                        <DropdownSelect
-                          id={`subtitulo_${costo.id}`}
-                          name={`subtitulo_${costo.id}`}
-                          placeholder="Subtítulos"
-                          options={opcionesSubtitulos}
-                          onSelectionChange={(selectedOption) => {
-                            const textoSubtitulo = listado_subtitulos.find(subtitulo => subtitulo.id.toString() === selectedOption.value)?.subtitulo;
-                            const opcionesDeItems = encontrarOpcionesDeItems(textoSubtitulo);
+                <Controller
+                  control={control}
+                  name={`subtitulo_${costo.id}`}
+                  render={({ field }) => {
+                    return (
+                      <DropdownSelect
+                        id={`subtitulo_${costo.id}`}
+                        name={`subtitulo_${costo.id}`}
+                        placeholder="Subtítulos"
+                        options={opcionesSubtitulos}
+                        onSelectionChange={(selectedOption) => {
+                          const textoSubtitulo = listado_subtitulos.find(subtitulo => subtitulo.id.toString() === selectedOption.value)?.subtitulo;
+                          const opcionesDeItems = encontrarOpcionesDeItems(textoSubtitulo);
 
-                            setCostosDirectos(prevCostosDirectos => prevCostosDirectos.map(costoDirecto => {
-                              if (costoDirecto.id === costo.id) {
-                                return {
-                                  ...costoDirecto,
-                                  subtituloSeleccionado: textoSubtitulo,
-                                  opcionesItems: opcionesDeItems,
-                                  isItemSubtituloReadOnly: false,
-                                };
-                              }
-                              return costoDirecto;
-                            }));
-                            field.onChange(selectedOption.value);
-                          }}
+                          setCostosDirectos(prevCostosDirectos => prevCostosDirectos.map(costoDirecto => {
+                            if (costoDirecto.id === costo.id) {
+                              return {
+                                ...costoDirecto,
+                                subtituloSeleccionado: textoSubtitulo,
+                                opcionesItems: opcionesDeItems,
+                                isItemSubtituloReadOnly: false,
+                              };
+                            }
+                            return costoDirecto;
+                          }));
+                          field.onChange(selectedOption.value);
+                        }}
 
-                          readOnly={solo_lectura}
-                          selected={costo.subtitulo_label_value}
+                        readOnly={solo_lectura}
+                        selected={costo.subtitulo_label_value && costo.subtitulo_label_value.value ? costo.subtitulo_label_value : undefined}
 
-                          loading={costo.estados?.subtitulo?.loading ?? false}
-                          saved={costo.estados?.subtitulo?.saved ?? false}
-                          error={errors[`subtitulo_${costo.id}`]?.message}
-                        />
-                      );
-                    }}
-                  />
+                        loading={costo.estados?.subtitulo?.loading ?? false}
+                        saved={costo.estados?.subtitulo?.saved ?? false}
+                        error={errors[`subtitulo_${costo.id}`]?.message}
+                      />
+                    );
+                  }}
+                />
               </div>
-              
+
               <div className="col border-end  d-flex flex-column justify-content-between">
                 <p className="text-sans-p-bold">Item</p>
                 <Controller
@@ -355,7 +329,7 @@ const CostosDirectos = ({
                         }}
 
                         readOnly={costo.isItemSubtituloReadOnly}
-                        selected={costo.item_subtitulo_label_value}
+                        selected={costo.item_subtitulo_label_value && costo.item_subtitulo_label_value.value ? costo.item_subtitulo_label_value : undefined}
 
                         loading={costo.estados?.item_subtitulo?.loading ?? false}
                         saved={costo.estados?.item_subtitulo?.saved ?? false}
@@ -370,7 +344,7 @@ const CostosDirectos = ({
                   <p className="text-sans-p-bold mb-0">Total Anual</p>
                   <p className="mb-0">($M)</p>
                 </div>
-                
+
                 <Controller
                   control={control}
                   name={`total_anual_${costo.id}`}
@@ -432,8 +406,8 @@ const CostosDirectos = ({
                             field.onChange(selectedOptions);
                           }}
 
-                        readOnly={solo_lectura || opcionesEtapas.length === 0}
-                        selectedValues={costo.etapa_label_value}
+                          readOnly={solo_lectura || opcionesEtapas.length === 0}
+                          selectedValues={costo.etapa_label_value}
 
                           loading={costo.estados?.etapa?.loading ?? false}
                           saved={costo.estados?.etapa?.saved ?? false}
@@ -442,7 +416,7 @@ const CostosDirectos = ({
                     }}
                   />
                 </div>
-                
+
               </div>
 
               <div className="col d-flex flex-column justify-content-between">
@@ -534,13 +508,13 @@ const CostosDirectos = ({
           </div>
         ))}
 
-        {!solo_lectura && (            
-        <button
-          className="btn-secundario-s m-2"
-          type="submit">
-          <i className="material-symbols-rounded me-2">add</i>
-          <p className="mb-0 text-decoration-underline">Agregar subtítulo</p>
-        </button>
+        {!solo_lectura && (
+          <button
+            className="btn-secundario-s m-2"
+            type="submit">
+            <i className="material-symbols-rounded me-2">add</i>
+            <p className="mb-0 text-decoration-underline">Agregar subtítulo</p>
+          </button>
         )}
       </form>
     </div>

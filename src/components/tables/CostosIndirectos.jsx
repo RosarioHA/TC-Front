@@ -112,35 +112,32 @@ const CostosIndirectos = ({
     agregarCostoIndirecto();
   };
 
-  // Generador de ID único
-  const generarIdUnico = () => {
-    // Implementa tu lógica para generar un ID único
-    return Math.floor(Date.now() / 1000);
-  };
-
-  const agregarCostoIndirecto = () => {
-    const nuevoCostoIndirectoId = generarIdUnico();
-    // Asegúrate de que la nueva costo tenga un estado inicial completo
-    const nuevoCostoIndirecto = {
-      id: nuevoCostoIndirectoId,
-      etapa: [],
-      item_subtitulo: [],
-      nombre_item_subtitulo: [],
-      total_anual: null,
-      es_transversal: null,
-      descripcion: '',
-      editando: false,
-      estados: { // Estado inicial para 'estados'
-        etapa: { loading: false, saved: false },
-        item_subtitulo: { loading: false, saved: false },
-        nombre_item_subtitulo: { loading: false, saved: false },
-        total_anual: { loading: false, saved: false },
-        es_transversal: { loading: false, saved: false },
-        descripcion: { loading: false, saved: false }
-      },
+  const agregarCostoIndirecto = async () => {
+    const payload = {
+      'p_5_1_b_costos_indirectos': [{}], // Enviar una instancia vacía
     };
 
-    setCostosIndirectos(prevCostosIndirectos => [...prevCostosIndirectos, nuevoCostoIndirecto]);
+    try {
+      const response = await handleUpdatePaso(id, stepNumber, payload);
+
+      console.log('response', response)
+
+      if (response && response.data.p_5_1_b_costos_indirectos) {
+        // Asumiendo que la respuesta del backend incluye la lista actualizada de costos directos
+        const listaActualizadaDeCostosIndirectos = response.data.p_5_1_b_costos_indirectos;
+        const nuevoCostoIndirecto = {
+          ...listaActualizadaDeCostosIndirectos[listaActualizadaDeCostosIndirectos.length - 1], // Extrayendo el último elemento
+          isItemSubtituloReadOnly: true, // Estableciendo isItemSubtituloReadOnly como true
+        };
+
+        // Actualiza el estado local añadiendo este nuevo costo directo
+        setCostosIndirectos(prevCostosIndirectos => [...prevCostosIndirectos, nuevoCostoIndirecto]);
+      } else {
+        console.error("La actualización no fue exitosa:", response ? response.message : "Respuesta vacía");
+      }
+    } catch (error) {
+      console.error("Error al agregar el costo directo:", error);
+    }
   };
 
 
@@ -294,7 +291,7 @@ const CostosIndirectos = ({
                         }}
 
                         readOnly={solo_lectura}
-                        selected={costo.subtitulo_label_value}
+                        selected={costo.subtitulo_label_value && costo.subtitulo_label_value.value ? costo.subtitulo_label_value : undefined}
 
                         loading={costo.estados?.subtitulo?.loading ?? false}
                         saved={costo.estados?.subtitulo?.saved ?? false}
@@ -332,7 +329,7 @@ const CostosIndirectos = ({
                         }}
 
                         readOnly={costo.isItemSubtituloReadOnly}
-                        selected={costo.item_subtitulo_label_value}
+                        selected={costo.item_subtitulo_label_value && costo.item_subtitulo_label_value.value ? costo.item_subtitulo_label_value : undefined}
 
                         loading={costo.estados?.item_subtitulo?.loading ?? false}
                         saved={costo.estados?.item_subtitulo?.saved ?? false}

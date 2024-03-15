@@ -48,7 +48,6 @@ const PasoCinco = () => {
     {
       if (dataPaso){
         setPaso5Data(dataPaso.paso5);
-        setCostosDirectosData(dataPaso.p_5_1_a_costos_directos)
         setJuridicasDirectasData(dataPaso.listado_calidades_juridicas_directas);
         setJuridicasIndirectasData(dataPaso.listado_calidades_juridicas_indirectas);
         setSubtitulosDirectoData(dataPaso.listado_subtitulos_directos);
@@ -59,7 +58,6 @@ const PasoCinco = () => {
         setPersonalIndirectoData(dataPaso.p_5_3_b_personal_indirecto);
       } else {
         setPaso5Data(data.paso5);
-        setCostosDirectosData(data.p_5_1_a_costos_directos)
         setJuridicasDirectasData(data.listado_calidades_juridicas_directas);
         setJuridicasIndirectasData(data.listado_calidades_juridicas_indirectas);
         setSubtitulosDirectoData(data.listado_subtitulos_directos);
