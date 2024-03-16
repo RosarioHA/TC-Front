@@ -5,12 +5,12 @@ import CustomInput from "../forms/custom_input";
 import CustomTextarea from "../forms/custom_textarea";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { FormularioContext } from "../../context/FormSectorial";
+import { FormGOREContext } from "../../context/FormGore";
 import { construirValidacionPaso5_Personal } from "../../validaciones/esquemaValidarPaso5Sectorial";
 
 const PersonalDirectoGORE = ({
   id,
-  paso5,
+  paso3,
   solo_lectura,
   stepNumber,
   data_personal_directo,
@@ -23,17 +23,19 @@ const PersonalDirectoGORE = ({
   const [nuevaCalidadJuridica, setNuevaCalidadJuridica] = useState('');
   const [mostrarFormularioNuevo, setMostrarFormularioNuevo] = useState(false);
   const [mostrarBotonFormulario, setMostrarBotonFormulario] = useState(true);
-  const { handleUpdatePaso } = useContext(FormularioContext);
+  const { updatePasoGore } = useContext(FormGOREContext);
   const [esquemaValidacion, setEsquemaValidacion] = useState(null);
 
   const [opcionesEstamentos, setOpcionesEstamentos] = useState([]);
   const [opcionesCalidadJuridica, setOpcionesCalidadJuridica] = useState([]);
 
+  console.log('paso 3', paso3)
+
   const itemsJustificados = [
-    { label: '01 - Personal de Planta', informado: paso5.sub21_total_personal_planta, justificado: paso5.sub21_personal_planta_justificado, por_justificar: paso5.sub21_personal_planta_justificar },
-    { label: '02 - Personal de Contrata', informado: paso5.sub21_total_personal_contrata, justificado: paso5.sub21_personal_contrata_justificado, por_justificar: paso5.sub21_personal_contrata_justificar },
-    { label: '03 - Otras Remuneraciones', informado: paso5.sub21_total_otras_remuneraciones, justificado: paso5.sub21_otras_remuneraciones_justificado, por_justificar: paso5.sub21_otras_remuneraciones_justificar },
-    { label: '04 - Otros Gastos en Personal', informado: paso5.sub21_total_gastos_en_personal, justificado: paso5.sub21_gastos_en_personal_justificado, por_justificar: paso5.sub21_gastos_en_personal_justificar },
+    { label: '01 - Personal de Planta', informado: paso3.sub21_total_personal_planta, justificado: paso3.sub21_personal_planta_justificado, por_justificar: paso3.sub21_personal_planta_justificar },
+    { label: '02 - Personal de Contrata', informado: paso3.sub21_total_personal_contrata, justificado: paso3.sub21_personal_contrata_justificado, por_justificar: paso3.sub21_personal_contrata_justificar },
+    { label: '03 - Otras Remuneraciones', informado: paso3.sub21_total_otras_remuneraciones, justificado: paso3.sub21_otras_remuneraciones_justificado, por_justificar: paso3.sub21_otras_remuneraciones_justificar },
+    { label: '04 - Otros Gastos en Personal', informado: paso3.sub21_total_gastos_en_personal, justificado: paso3.sub21_gastos_en_personal_justificado, por_justificar: paso3.sub21_gastos_en_personal_justificar },
   ];
 
   const relacion_item_calidad = {
@@ -81,13 +83,13 @@ const PersonalDirectoGORE = ({
     return { calidadJuridica, personas };
   });
 
-  useEffect(() => {
+  /*useEffect(() => {
     const esquema = construirValidacionPaso5_Personal(arregloCalidadJuridica);
     setEsquemaValidacion(esquema);
-  }, [personas]);
+  }, [personas]);*/
 
   const { control, handleSubmit, trigger, clearErrors, setError, formState: { errors } } = useForm({
-    resolver: esquemaValidacion ? yupResolver(esquemaValidacion) : undefined,
+    //resolver: esquemaValidacion ? yupResolver(esquemaValidacion) : undefined,
     mode: 'onBlur',
   });
 
@@ -127,7 +129,7 @@ const PersonalDirectoGORE = ({
   // Lógica para eliminar una fila de un organismo
   const eliminarPersona = async (persona, idFila) => {
     const payload = {
-      'p_5_3_a_personal_directo': [{
+      'p_3_1_a_personal_directo': [{
         id: idFila,
         DELETE: true
       }]
@@ -135,8 +137,8 @@ const PersonalDirectoGORE = ({
 
     try {
       // Llamar a la API para actualizar los datos
-      await handleUpdatePaso(id, stepNumber, payload);
-      refetchTrigger();
+      await updatePasoGore(id, stepNumber, payload);
+      //refetchTrigger();
 
       // Actualizar el estado local para reflejar la eliminación
       setPersonas(prevPersonas => {
@@ -225,11 +227,11 @@ const PersonalDirectoGORE = ({
     };
 
     const payload = {
-      'p_5_3_a_personal_directo': [nuevaCalidadJuridicaDatos]
+      'p_3_1_a_personal_directo': [nuevaCalidadJuridicaDatos]
     };
 
     try {
-      await handleUpdatePaso(id, stepNumber, payload);
+      await updatePasoGore(id, stepNumber, payload);
 
       // Actualiza el estado para añadir el nuevo elemento al final
       setPersonas(prevPersonas => {
@@ -293,15 +295,15 @@ const PersonalDirectoGORE = ({
 
     if (fieldName === 'calidad_juridica') {
       payload = {
-        'p_5_3_a_personal_directo': [{
+        'p_3_1_a_personal_directo': [{
           id: arrayNameId,
           calidad_juridica: newValue,
         }]
       };
-    } else if (fieldName === 'descripcion_funciones_personal_directo') {
+    } else if (fieldName === 'descripcion_perfiles_tecnicos_directo') {
       payload = {
         'paso5': {
-          'descripcion_funciones_personal_directo': newValue,
+          'descripcion_perfiles_tecnicos_directo': newValue,
         }
       };
     } else {
@@ -327,7 +329,7 @@ const PersonalDirectoGORE = ({
         // Ajuste para enviar 'estamento' como un valor único, no un array
         // Asumiendo que newValue es un objeto de la opción seleccionada
         payload = {
-          'p_5_3_a_personal_directo': [{
+          'p_3_1_a_personal_directo': [{
             id: arrayNameId,
             [fieldName]: newValue.value // Envía el valor seleccionado directamente
           }]
@@ -335,18 +337,18 @@ const PersonalDirectoGORE = ({
       } else {
         // Payload para otros campos
         payload = {
-          'p_5_3_a_personal_directo': [{ id: arrayNameId, [fieldName]: personaEncontrada[fieldName] }]
+          'p_3_1_a_personal_directo': [{ id: arrayNameId, [fieldName]: personaEncontrada[fieldName] }]
         };
       }
 
     }
     try {
       // Asume que handleUpdatePaso puede manejar ambos casos adecuadamente
-      await handleUpdatePaso(id, stepNumber, payload);
+      await updatePasoGore(id, stepNumber, payload);
 
       // Actualiza el estado de carga y guardado
       updateFieldState(arrayNameId, fieldName, { loading: false, saved: true });
-      refetchTrigger();
+      //refetchTrigger();
 
     } catch (error) {
       console.error("Error al guardar los datos:", error);
@@ -607,39 +609,39 @@ const PersonalDirectoGORE = ({
       <div className="mt-5">
         <Controller
           control={control}
-          name={`descripcion_funciones_personal_directo`}
-          defaultValue={paso5.descripcion_funciones_personal_directo || ''}
+          name={`descripcion_perfiles_tecnicos_directo`}
+          defaultValue={paso3.descripcion_perfiles_tecnicos_directo || ''}
           render={({ field }) => {
             // Destructura las propiedades necesarias de field
             const { onChange, onBlur, value } = field;
 
             const handleChange = (e) => {
-              clearErrors(`descripcion_funciones_personal_directo`);
+              clearErrors(`descripcion_perfiles_tecnicos_directo`);
               onChange(e.target.value);
-              handleInputChange(null, 'descripcion_funciones_personal_directo', e.target.value);
+              handleInputChange(null, 'descripcion_perfiles_tecnicos_directo', e.target.value);
             };
 
             // Función para manejar el evento onBlur
             const handleBlur = async () => {
-              const isFieldValid = await trigger(`descripcion_funciones_personal_directo`);
+              const isFieldValid = await trigger(`descripcion_perfiles_tecnicos_directo`);
               if (isFieldValid) {
-                handleSave(null, 'descripcion_funciones_personal_directo', value);
+                handleSave(null, 'descripcion_perfiles_tecnicos_directo', value);
               }
               onBlur();
             };
 
             return (
               <CustomTextarea
-                id={`descripcion_funciones_personal_directo`}
+                id={`descripcion_perfiles_tecnicos_directo`}
                 label="Descripción de funciones"
                 placeholder="Describe las funciones asociadas a otras competencias."
                 maxLength={1100}
                 value={value}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                loading={paso5.descripcion_funciones_personal_directo.estados?.descripcion?.loading ?? false}
-                saved={paso5.descripcion_funciones_personal_directo.estados?.descripcion?.saved ?? false}
-                error={errors[`descripcion_${paso5.descripcion_funciones_personal_directo.id}`]?.message}
+                loading={paso3.descripcion_perfiles_tecnicos_directo.estados?.descripcion?.loading ?? false}
+                saved={paso3.descripcion_perfiles_tecnicos_directo.estados?.descripcion?.saved ?? false}
+                error={errors[`descripcion_${paso3.descripcion_perfiles_tecnicos_directo.id}`]?.message}
                 readOnly={solo_lectura}
               />
             );
