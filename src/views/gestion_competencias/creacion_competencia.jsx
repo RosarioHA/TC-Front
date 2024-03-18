@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef , useEffect} from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -75,7 +75,8 @@ const CreacionCompetencia = () =>
   const [ sectorSeleccionado, setSectorSeleccionado ] = useState(null);
   const [ regionSeleccionada, setRegionSeleccionada ] = useState(null);
   const { usuarios } = useFiltroUsuarios(sectorSeleccionado, regionSeleccionada);
-
+  const [fechaMaxima, setFechaMaxima] = useState('');
+  
   const history = useNavigate();
   const handleBackButtonClick = () =>
   {
@@ -114,6 +115,13 @@ const CreacionCompetencia = () =>
     updateHasChanged(formHasChanged);
   }
 
+  useEffect(() => {
+    // Establece la fecha máxima permitida como la fecha actual
+    const hoy = new Date();
+    const fechaActual = `${hoy.getFullYear()}-${(hoy.getMonth() + 1).toString().padStart(2, '0')}-${hoy.getDate().toString().padStart(2, '0')}`;
+    setFechaMaxima(fechaActual);
+  }, []);
+ 
   const onSubmit = async (data) => {
     const competenciaData = {
       ...data,
@@ -403,6 +411,7 @@ const CreacionCompetencia = () =>
                     className="form-control py-3 my-2 border rounded border-dark-subtle"
                     onChange={handleFechaInicioChange}
                     value={fechaInicio}
+                    max={fechaMaxima}
                   />
                 </div>
                 <div className="d-flex text-sans-h6-primary">

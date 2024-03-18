@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useParams, useNavigate, useLocation,  Link } from "react-router-dom";
 import { useCompetencia } from "../../hooks/competencias/useCompetencias";
 import { useUpdateEtapa } from "../../hooks/competencias/useOficio";
 import { SuccessSOficio } from "../../components/success/oficio";
@@ -16,6 +16,9 @@ const SubirOficio = () =>
   const [ fechaInicio, setFechaInicio ] = useState('');
   const [ errorMessage, setErrorMessage ] = useState("");
   const [isSubmitSuccessful, setIsSubmitSuccessful] = useState(false);
+  const [fechaMaxima, setFechaMaxima] = useState('');
+  const location = useLocation(); 
+  const extraData = location.state?.extraData;
 
 
   useEffect(() =>
@@ -25,6 +28,13 @@ const SubirOficio = () =>
       setCompetencia(competenciaDetails);
     }
   }, [ competenciaDetails ]);
+
+  useEffect(() => {
+    // Establece la fecha máxima permitida como la fecha actual
+    const hoy = new Date();
+    const fechaActual = `${hoy.getFullYear()}-${(hoy.getMonth() + 1).toString().padStart(2, '0')}-${hoy.getDate().toString().padStart(2, '0')}`;
+    setFechaMaxima(fechaActual);
+  }, []);
 
 
   const handleFileChange = (event) =>
@@ -134,7 +144,7 @@ const SubirOficio = () =>
             </ol>
           </nav>
         </div>
-        <span className="text-sans-Title">Oficio para DIPRES</span>
+        <span className="text-sans-Title">Oficio {extraData} </span>
         <div className="my-3 col-9">
           <div className="text-sans-h1 mb-4">{competencia.nombre}</div>
         </div>
@@ -194,6 +204,7 @@ const SubirOficio = () =>
                 className="form-control"
                 onChange={handleFechaInicioChange}
                 value={fechaInicio}
+                max={fechaMaxima}
               />
             </div>
             <div className="d-flex mb-3 mt-1 text-sans-h6-primary">
@@ -212,7 +223,7 @@ const SubirOficio = () =>
           </div>
         </div>
           ) : (
-            <SuccessSOficio idCompetencia={id} />
+            <SuccessSOficio idCompetencia={id} sector={extraData} />
           )}
       </div >
     </>

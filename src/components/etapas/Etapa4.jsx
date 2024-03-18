@@ -19,11 +19,11 @@ export const Etapa4 = ({ etapa, id }) =>
   const userRegionId = userData.region;
   const userProfile = userData.perfil;
   const navigate = useNavigate();
+  const etapaNum = 4;
 
 
   const [ isUsuariosGoreCollapsed, setIsUsuariosGoreCollapsed ] = useState(false);
   const [ isFormulariosGoreCollapsed, setIsFormulariosGoreCollapsed ] = useState(false);
-
 
   // Función para alternar el collapse de Usuarios GORE
   const toggleUsuariosGoreCollapse = () =>
@@ -113,50 +113,50 @@ export const Etapa4 = ({ etapa, id }) =>
     return null;
   };
 
-  const renderButtonForSubetapa = (subetapa) =>
-  {
+  const renderButtonForSubetapa = (subetapa) => {
     const { estado, accion, nombre } = subetapa;
     let buttonText = accion;
     let icon = estado === "finalizada" ? "visibility" : "draft";
     let path = "/";
-
-
-    if (nombre.startsWith("Notificar a") && estado === "finalizada")
-    {
-      if (etapa.estado === 'Aún no puede comenzar')
-      {
-        // Cambiar el badge a pending si el estado general de la etapa es 'Aún no puede comenzar'
+    
+    // Este fragmento maneja los casos específicos y asigna el path correcto
+    if (nombre.startsWith("Notificar a") && estado === "finalizada") {
+      if (etapa.estado === 'Aún no puede comenzar') {
         return <span className="badge-status-pending">{accion}</span>;
-      } else
-      {
-        // Mantiene el badge como finish si la subetapa está finalizada
+      } else {
         return <span className="badge-status-finish">{accion}</span>;
       }
     }
-    switch (nombre)
-    {
-      case "Subir oficio y su fecha para habilitar formulario GORE":
-        path = estado === "finalizada" ? "/home/ver_minuta" : "subir_oficio";
-        break;
-      case "Completar formulario Sectorial":
-        path = estado === "finalizada" ? "/home/ver_minuta" : "/home/formulario_sectorial/";
-        break;
+  
+    if (nombre.includes("Subir oficio y su fecha para habilitar formulario GORE")) {
+      path = estado === "finalizada" ? "/home/ver_minuta" : `/home/estado_competencia/${etapa.id}/subir_oficio/${etapaNum}/${id}`;
+      buttonText = "Subir oficio";
+      icon = estado === "finalizada" ? "visibility" : "upload";
+    } else if (nombre === "Completar formulario Sectorial") {
+      path = estado === "finalizada" ? "/home/ver_minuta" : "/home/formulario_sectorial/";
     }
-
     const isDisabled = estado === "pendiente" || estado === "revision";
-
+  
+    // Función para manejar el evento de clic y realizar la navegación
+    const handleButtonClick = () => {
+      navigate(path, { state: { extraData: "GORE" } });
+    };
+  
+    // Renderizar un botón o un enlace basado en si la acción está deshabilitada o no
     return isDisabled ? (
-      <button className={`btn-secundario-s ${estado === "pendiente" ? "disabled" : ""}`} id="btn">
+      <button onClick={handleButtonClick} className='btn-secundario-s' id="btn">
         <span className="material-symbols-outlined me-1">{icon}</span>
         <u>{buttonText}</u>
       </button>
     ) : (
-      <Link to={path} className="btn-secundario-s text-decoration-none" id="btn">
+      // Usar un <button> en lugar de <Link> para consistencia y llamar a navigate directamente
+      <button onClick={handleButtonClick} className="btn-secundario-s text-decoration-none" id="btn">
         <span className="material-symbols-outlined me-1">{icon}</span>
         <u>{buttonText}</u>
-      </Link>
+      </button>
     );
   };
+  
 
   const renderButtonForFormularioGore = (formulario) =>
   {
