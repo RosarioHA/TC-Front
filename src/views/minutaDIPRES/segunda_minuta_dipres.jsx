@@ -44,41 +44,73 @@ const SegundaMinuta = () => {
 
       <div className="border-bottom pb-3">
         <h2 className="text-sans-25 mt-5 mb-4">Formularios sectoriales</h2>
-        {competenciaDetails?.etapa2?.formulario_sectorial.detalle_formularios_sectoriales ? (
-          competenciaDetails.etapa2.formulario_sectorial.detalle_formularios_sectoriales.map((formulario, index) => (
-            <tr 
-              className={`d-flex justify-content-between p-3 align-items-center ${index % 2 === 0 ? 'neutral-line' : 'white-line'}`} 
-              key={formulario.id}
-            >
-              <td>{formulario.nombre}</td>
-              <td className="">
-                <button className="btn-secundario-s text-decoration-underline" onClick={() => handleVerFormulario(formulario.id)}>
-                  Ver observaciones
-                </button>
-              </td>
-            </tr>
-          ))
+        {competenciaDetails?.etapa2?.formulario_sectorial ? (
+          Array.isArray(competenciaDetails.etapa2.formulario_sectorial) ? (
+            competenciaDetails.etapa2.formulario_sectorial.map((formulario, index) => (
+              <tr 
+                className={`d-flex justify-content-between p-3 align-items-center ${index % 2 === 0 ? 'neutral-line' : 'white-line'}`} 
+                key={formulario.id}
+              >
+                <td>{formulario.nombre}</td>
+                <td className="">
+                  <button className="btn-secundario-s text-decoration-underline" onClick={() => handleVerFormulario(formulario.id)}>
+                    Ver observaciones
+                  </button>
+                </td>
+              </tr>
+            ))
           ) : (
+            competenciaDetails.etapa2.formulario_sectorial.detalle_formularios_sectoriales.map((formulario, index) => (
+              <tr 
+                className={`d-flex justify-content-between p-3 align-items-center ${index % 2 === 0 ? 'neutral-line' : 'white-line'}`} 
+                key={formulario.id}
+              >
+                <td>{formulario.nombre}</td>
+                <td className="">
+                  <button className="btn-secundario-s text-decoration-underline" onClick={() => handleVerFormulario(formulario.id)}>
+                    Ver observaciones
+                  </button>
+                </td>
+              </tr>
+            ))
+          )
+        ) : (
           <p>No hay formularios disponibles.</p>
-        )}  
+        )}
       </div>
 
       <div className="border-bottom pb-3">
         <h2 className="text-sans-25 mt-5 mb-4">Formularios GORE</h2>
-        {competenciaDetails?.etapa4?.formularios_gore?.detalle_formularios_gore ? (
-          competenciaDetails.etapa4.formularios_gore.detalle_formularios_gore.map((formulario, index) => (
-            <tr 
-              className={`d-flex justify-content-between p-3 align-items-center ${index % 2 === 0 ? 'neutral-line' : 'white-line'}`} 
-              key={formulario.id}
-            >
-              <td>{formulario.nombre}</td>
-              <td className="">
-                <button className="btn-secundario-s text-decoration-underline" onClick={() => handleVerFormulario(formulario.id)}>
-                  Ver observaciones
-                </button>
-              </td>
-            </tr>
-          ))
+        {competenciaDetails?.etapa4?.formularios_gore ? (
+          Array.isArray(competenciaDetails.etapa4.formularios_gore) ? (
+            competenciaDetails.etapa4.formularios_gore.map((formulario, index) => (
+              <tr 
+                className={`d-flex justify-content-between p-3 align-items-center ${index % 2 === 0 ? 'neutral-line' : 'white-line'}`} 
+                key={formulario.id}
+              >
+                <td>{formulario.nombre}</td>
+                <td className="">
+                  <button className="btn-secundario-s text-decoration-underline" onClick={() => handleVerFormulario(formulario.id)}>
+                    Ver observaciones
+                  </button>
+                </td>
+              </tr>
+            ))
+            ) : (
+            competenciaDetails.etapa4.formularios_gore.detalle_formularios_gore.map((formulario, index) => (
+              <tr 
+                className={`d-flex justify-content-between p-3 align-items-center ${index % 2 === 0 ? 'neutral-line' : 'white-line'}`} 
+                key={formulario.id}
+              >
+                <td>{formulario.nombre}</td>
+                <td className="">
+                  <button className="btn-secundario-s text-decoration-underline" onClick={() => handleVerFormulario(formulario.id)}>
+                    Ver observaciones
+                  </button>
+                </td>
+              </tr>
+            ))
+          )
         ) : (
           <p>No hay formularios disponibles.</p>
         )}
