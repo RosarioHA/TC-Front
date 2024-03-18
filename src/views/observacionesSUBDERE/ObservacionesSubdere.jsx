@@ -1,21 +1,17 @@
-import { useContext, useEffect, useState } from "react";
+import {  useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { FormularioContext } from '../../context/FormSectorial';
-import { useObservacionesSubdere } from "../../hooks/formulario/useObSubdereSectorial";
 import { useCompetencia } from "../../hooks/competencias/useCompetencias";
 import { usePatchCompetencia } from "../../hooks/minutaDIPRES/useEtapa3";
 
 const ObservacionesSubdere = () => {
-  const { updateFormId, data, loading } = useContext(FormularioContext);
   const [ etapaOmitida, setEtapaOmitida] = useState(null);
-  const { observaciones, fetchObservaciones } = useObservacionesSubdere(data ? data.id : null);
   const navigate = useNavigate();
   const { id } = useParams();
   const { competenciaDetails } = useCompetencia(id);
   const { patchCompetenciaOmitida } = usePatchCompetencia();
-  console.log("competencia details en OS", competenciaDetails) //obtiene info correcta de Competencia
-  console.log("data en OS", data) //data formulario sectorial, se le entrega id incorrecto (id de la competencia en lugar del id de cada form sectorial)
-  console.log("observaciones en OS", observaciones) //al depender de data, vamos a asumir que tambien esta mal
+  console.log("competencia details en OS", competenciaDetails)
+  
+
   console.log("competencia details estado en OS", competenciaDetails?.etapa2?.estado)
 
   const handleBackButtonClick = () => {
@@ -39,30 +35,6 @@ const ObservacionesSubdere = () => {
     }
   };
 
-  useEffect(() => {
-    if (id) {
-      updateFormId(id);
-    }
-  }, [id, updateFormId]);
-
-  useEffect(() => {
-    const obtenerObservaciones = async () => {
-      try {
-        await fetchObservaciones();
-      } catch (error) {
-        console.error("Error al obtener observaciones en ResumenOS:", error);
-      }
-    };
-    obtenerObservaciones();
-  }, [data, fetchObservaciones]);
-
-  if (loading) {
-    return <div>Cargando...</div>;
-  }
-  if (!data) {
-    return <div>No hay datos disponibles.</div>;
-  }
-
   return (
     <div className="container col-11">
       <div className="py-3 d-flex">
@@ -75,7 +47,7 @@ const ObservacionesSubdere = () => {
         <nav className="container mx-5" aria-label="breadcrumb">
           <ol className="breadcrumb breadcrumb-style d-flex my-2">
             <li className="breadcrumb-item align-self-center"><Link to="/home">Inicio</Link></li>
-            <li className="breadcrumb-item align-self-center"><Link to={`/home/estado_competencia/${data.id}`}>Estado de la Competencia: {data.competencia_nombre} </Link></li>
+            <li className="breadcrumb-item align-self-center"><Link to={`/home/estado_competencia/${competenciaDetails.id}`}>Estado de la Competencia: {competenciaDetails.nombre} </Link></li>
             <li className="breadcrumb-item align-self-center text-sans-p-lightgrey" aria-current="page">Observaciones SUBDERE</li>
           </ol>
         </nav>
@@ -88,23 +60,40 @@ const ObservacionesSubdere = () => {
       <hr/>
 
       <div>
-      {competenciaDetails?.etapa2?.formulario_sectorial.detalle_formularios_sectoriales ? (
-        competenciaDetails.etapa2.formulario_sectorial.detalle_formularios_sectoriales.map((formulario, index) => (
-          <tr 
-            className={`d-flex justify-content-between p-3 align-items-center ${index % 2 === 0 ? 'neutral-line' : 'white-line'}`} 
-            key={formulario.id}
-          >
-            <td>{formulario.nombre}</td>
-            <td className="">
+      {/* aqui no deberia tomar la info de formulario sectorial; sino de observaciones subdere. */}
+      {competenciaDetails?.etapa2?.formulario_sectorial ? (
+        Array.isArray(competenciaDetails.etapa2.formulario_sectorial) ? (
+          competenciaDetails.etapa2.formulario_sectorial.map((formulario, index) => (
+            <tr 
+              className={`d-flex justify-content-between p-3 align-items-center ${index % 2 === 0 ? 'neutral-line' : 'white-line'}`} 
+              key={formulario.id}
+            >
+              <td>{formulario.nombre}</td>
+              <td className="">
               <button className="btn-secundario-s text-decoration-underline" onClick={() => handleVerFormulario(formulario.id)}>
-                {observaciones.observacion_enviada ? 'Ver Formulario' : 'Ver observaciones'}
+                Ver observaciones
               </button>
-            </td>
-          </tr>
-        ))
-      ) : (
-        <p>No hay formularios disponibles.</p>
-      )}
+              </td>
+            </tr>
+            ))
+          ) : (
+            competenciaDetails.etapa2.formulario_sectorial.detalle_formularios_sectoriales.map((formulario, index) => (
+              <tr 
+                className={`d-flex justify-content-between p-3 align-items-center ${index % 2 === 0 ? 'neutral-line' : 'white-line'}`} 
+                key={formulario.id}
+              >
+                <td>{formulario.nombre}</td>
+                <td className="">
+                  <button className="btn-secundario-s text-decoration-underline" onClick={() => handleVerFormulario(formulario.id)}>
+                    Ver observaciones
+                  </button>
+                </td>
+              </tr>
+            ))
+          )
+        ) : (
+          <p>No hay formularios disponibles.</p>
+        )}
       </div>
       <hr/>
 
@@ -119,8 +108,6 @@ const ObservacionesSubdere = () => {
       <div className="d-flex mb-4">
         <p className="text-sans-p">Fecha última modificación:</p><p className="text-sans-p-bold ms-2">{competenciaDetails?.etapa2?.fecha_ultima_modificacion}</p>
       </div>
-
-      {/* NO ELIMINAR SECCION COMENTADA, FALTA AGREGAR CONDICIONALIDAD CORRECTA */}
 
       {competenciaDetails?.etapa2?.estado === 'Finalizada' &&  (
         <div>
