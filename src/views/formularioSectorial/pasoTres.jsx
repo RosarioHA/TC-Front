@@ -76,35 +76,33 @@ const PasoTres = () =>
     }));
   };
 
-  const handleSave = async (inputName) =>
-  {
+  const handleSave = async (inputName) => {
     setInputStatus(prevStatus => ({
       ...prevStatus,
-      [ inputName ]: { ...prevStatus[ inputName ], loading: true }
+      [inputName]: { ...prevStatus[inputName], loading: true }
     }));
-
-    const datosParaEnviar = {
+  
+    let datosParaEnviar = {
       paso3: {
-        ...pasoData.paso3,
-        ...formData
+        // Incluye solo el campo que está siendo editado
+        [inputName]: formData[inputName]
       }
     };
-
+  
     const success = await handleUpdatePaso(id, stepNumber, datosParaEnviar);
-    if (success)
-    {
+    if (success) {
       setInputStatus(prevStatus => ({
         ...prevStatus,
-        [ inputName ]: { loading: false, saved: true }
+        [inputName]: { loading: false, saved: true }
       }));
-    } else
-    {
+    } else {
       setInputStatus(prevStatus => ({
         ...prevStatus,
-        [ inputName ]: { loading: false, saved: false }
+        [inputName]: { loading: false, saved: false }
       }));
     }
   };
+  
 
   if (!pasoData || !pasoData.paso3)
   {
