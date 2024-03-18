@@ -1592,11 +1592,11 @@ a.btn-link:hover, a.btn-link:focus {
 
 .vertical-line {
   width: 4px;
-  height: 95.5%;
+  height: 100vh;
   background-color: #0F69C4;
   position: absolute;
-  top: 81%;
-  bottom: 40%;
+  top: 78%;
+  bottom: 10%;
   left: 23, 5%;
 }
 

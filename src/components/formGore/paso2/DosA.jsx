@@ -1,15 +1,12 @@
 import { CostosDirectosSector } from "../componentes/CostosDirectosSector"
+import { ResumenDirectos } from "../componentes/ResumenDirectos"
 import { SubAdicionales } from "../componentes/SubAdicionales"
 import { Subtitulo21 } from "../componentes/Subtitulo21"
 
-export const DosA = ({ costosDirectos, costosDirecSector, PersonalDirecto, costosDircGore, id, stepNumber }) =>
+export const DosA = ({ costosDirecSectorGet, id, resumen }) =>
 {
 
-  console.log('cost',costosDirectos)
-  console.log(costosDirecSector)
-  console.log(PersonalDirecto)
-  console.log(costosDircGore)
-  console.log(id, stepNumber)
+
 
   return (
     <>
@@ -25,16 +22,20 @@ export const DosA = ({ costosDirectos, costosDirecSector, PersonalDirecto, costo
             Se debe informar si el costo informado es transitorio o no. Un costo transitorio es aquel que es efectivo solo durante el tiempo de traspaso de la competencia, mientras que un costo no transitorio es aquel que se sostiene de manera permanente.
           </h6>
         </div>
-        <div className="my-4 ">
-            <CostosDirectosSector
-              costoDirectos={costosDirectos}
-            />
+        <div className="my-4">
+          <CostosDirectosSector
+            costoDirectosGet={costosDirecSectorGet}
+            id={id}
+          />
         </div>
         <div className="my-4 ">
-        <Subtitulo21/>
+          <Subtitulo21 />
         </div>
         <div className="my-4 ">
-        <SubAdicionales/>
+          <SubAdicionales  titulo="Subtítulos adicionales costos directos informados por GORE" />
+        </div>
+        <div className="my-4 ">
+          <ResumenDirectos resumen={resumen} />
         </div>
       </div>
     </>

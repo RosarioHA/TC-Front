@@ -92,7 +92,7 @@ export const Etapa2 = ({ etapa }) => {
 
     if (isButtonEnabledForAll || isButtonEnabledForSubdere) {
       return (
-        <button onClick={() => handleNavigation(path)} className="btn-secundario-s text-decoration-none" id="btn">
+        <button onClick={() => handleNavigation(path ,{ state: { extraData: "Sectorial" } })} className="btn-secundario-s text-decoration-none" id="btn">
           <span className="material-symbols-outlined me-1">{icon}</span>
           <u>{buttonText}</u>
         </button>

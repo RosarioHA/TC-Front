@@ -26,7 +26,6 @@ const FormGoreLayout = () => {
   if (!dataFormGore) {
     return <div>Cargando...</div>;
   }
-
   return (
     <div className="container-fluid col-11">
       <div className="row">
