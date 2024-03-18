@@ -19,37 +19,54 @@ import { FormGOREContext } from '../../../context/FormGore';
 //   },
 // };
 
-export const Fluctuaciones = ({ id, dataGastos, solo_lectura, stepNumber }) => {
+export const Fluctuaciones = ({ id, dataGastos, solo_lectura }) => {
   const [datosGastos, setDatosGastos] = useState([]);
   const { updatePasoGore, refetchTriggerGore } = useContext(FormGOREContext);
   const [esquemaValidacion, setEsquemaValidacion] = useState(null);
 
+
   useEffect(() => {
+    // Intenta leer los datos almacenados de localStorage
+    const storedDataJSON = localStorage.getItem('datosGastosState');
+    const storedData = storedDataJSON ? JSON.parse(storedDataJSON) : null;
+  
     if (Array.isArray(dataGastos)) {
-      const formattedData = dataGastos.map((item) => ({
-        ...item,
-        costo_anio_gore: item.costo_anio_gore?.map((costo) => ({
-          ...costo,
-          estados: {
-            loading: false,
-            saved: false,
+      const formattedData = dataGastos.map((item) => {
+        // Encuentra el item correspondiente en el estado almacenado, si existe
+        const storedItem = storedData ? storedData.find(storedItem => storedItem.id === item.id) : null;
+  
+        return {
+          ...item,
+          costo_anio_gore: item.costo_anio_gore?.map((costo) => {
+            const storedCosto = storedItem?.costo_anio_gore.find(storedCosto => storedCosto.id === costo.id);
+            return {
+              ...costo,
+              estados: storedCosto?.estados || {
+                loading: false,
+                saved: false,
+              },
+            };
+          }),
+          estados: storedItem?.estados || {
+            descripcion: {
+              loading: false,
+              saved: false,
+            },
           },
-        })),
-        estados: {
-          descripcion: {
-            loading: false,
-            saved: false,
-          },
-        },
-      }));
+        };
+      });
+  
+      // Actualiza el estado con los datos formateados
       setDatosGastos(formattedData);
     }
-  }, [dataGastos]);
+  }, [dataGastos]); 
+
 
   useEffect(() => {
     const esquema = validacionFluctuacion(datosGastos);
     setEsquemaValidacion(esquema);
   }, [datosGastos]);
+
 
   const {
     control,
@@ -67,34 +84,38 @@ export const Fluctuaciones = ({ id, dataGastos, solo_lectura, stepNumber }) => {
 
   // Función para recargar campos por separado
   const updateFieldState = (subtituloId, costoAnioId, fieldName, newState) => {
-    setDatosGastos((prevDatosGastos) =>
-      prevDatosGastos.map((subtitulo) => {
+    setDatosGastos((prevDatosGastos) => {
+      const newDatosGastos = prevDatosGastos.map((subtitulo) => {
         if (subtitulo.id === subtituloId) {
+          // Clonando subtitulo para evitar mutaciones directas del estado
+          let updatedSubtitulo = { ...subtitulo };
+  
           if (fieldName === 'costo' && costoAnioId) {
-            // Encuentra el costo específico para actualizar su estado
-            const updatedCostoAnio = subtitulo.costo_anio_gore.map(
-              (costoAnio) => {
-                if (costoAnio.id === costoAnioId) {
-                  return {
-                    ...costoAnio,
-                    estados: { ...costoAnio.estados, ...newState },
-                  };
-                }
-                return costoAnio;
+            // Actualizando el estado del costo específico
+            updatedSubtitulo.costo_anio_gore = subtitulo.costo_anio_gore.map((costoAnio) => {
+              if (costoAnio.id === costoAnioId) {
+                return {
+                  ...costoAnio,
+                  estados: { ...costoAnio.estados, ...newState },
+                };
               }
-            );
-            return { ...subtitulo, costo_anio_gore: updatedCostoAnio };
-          } else {
-            // Actualiza el estado de la descripción del subtitulo
-            return {
-              ...subtitulo,
-              estados: { ...subtitulo.estados, descripcion: { ...newState } },
-            };
+              return costoAnio;
+            });
+          } else if (fieldName === 'descripcion') {
+            // Actualizando el estado de la descripción
+            updatedSubtitulo.estados = { ...subtitulo.estados, descripcion: { ...newState } };
           }
+  
+          return updatedSubtitulo;
         }
         return subtitulo;
-      })
-    );
+      });
+  
+      // Almacenar el nuevo estado en Local Storage para persistencia entre recargas
+      localStorage.setItem('datosGastosState', JSON.stringify(newDatosGastos));
+  
+      return newDatosGastos;
+    });
   };
 
   console.log(dataGastos);
@@ -112,52 +133,58 @@ export const Fluctuaciones = ({ id, dataGastos, solo_lectura, stepNumber }) => {
   };
 
   // Función de guardado
-  const handleSave = async (
-    subtituloId,
-    costoAnioId,
-    fieldName,
-    fieldValue
-  ) => {
-    // Simula el inicio de una operación de guardado
+  const handleSave = async (subtituloId, costoAnioId, fieldName, fieldValue) => {
+    // Indica que el guardado está en proceso
     updateFieldState(subtituloId, costoAnioId, fieldName, {
       loading: true,
       saved: false,
     });
-
-    let payload;
-
+  
+    // Prepara el payload específico para el campo actualizado
+    let specificPayload;
     if (fieldName === 'descripcion') {
-      payload = {
-        p_2_1_c_fluctuaciones_presupuestarias: [
-          { id: subtituloId, descripcion: fieldValue },
-        ],
-      };
+      specificPayload = { descripcion: fieldValue };
     } else if (fieldName === 'costo') {
-      payload = {
-        p_2_1_c_fluctuaciones_presupuestarias: [
-          {
-            id: subtituloId,
-            costo_anio_gore: [{ id: costoAnioId, costo: fieldValue }],
-          },
-        ],
+      specificPayload = { 
+        costo_anio_gore: [{
+          id: costoAnioId, 
+          costo: fieldValue
+        }]
       };
     }
-
+  
+    // Payload general para el envío
+    const payload = {
+      id: id, // El ID del formulario o entidad a actualizar
+      p_2_1_c_fluctuaciones_presupuestarias: [{
+        id: subtituloId,
+        ...specificPayload,
+      }],
+    };
+  
     try {
-      await updatePasoGore(id, stepNumber, payload);
+      // Envío de la actualización al backend
+      await updatePasoGore(payload);
+  
+      // Si la actualización es exitosa, actualiza el estado para reflejar el éxito
       updateFieldState(subtituloId, costoAnioId, fieldName, {
         loading: false,
         saved: true,
       });
+  
+      // Opcional: refrescar los datos para reflejar los cambios
       refetchTriggerGore();
     } catch (error) {
       console.error('Error al guardar los datos:', error);
+      
+      // En caso de error, actualiza el estado para reflejar el fallo
       updateFieldState(subtituloId, costoAnioId, fieldName, {
         loading: false,
         saved: false,
       });
     }
   };
+
 
   // Asume que tienes una lista de headers para los años, necesaria para renderizar las columnas
   const headers =

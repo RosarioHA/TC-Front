@@ -137,7 +137,7 @@ export const SubAdicionales = ({ solo_lectura , titulo}) => {
               <div className="d-flex justify-content-end me-2">
                 {!solo_lectura && (
                   <div className="">
-                    <button className="btn-terciario-ghost mt-3" onClick="">
+                    <button className="btn-terciario-ghost mt-3" >
                       <i className="material-symbols-rounded me-2">delete</i>
                       <p className="mb-0 text-decoration-underline">
                         Borrar subtítulo

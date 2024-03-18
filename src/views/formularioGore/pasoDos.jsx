@@ -28,13 +28,13 @@ const PasoDosGore = () => {
   return (
     <>
     <div className="col-1">
-      <MonoStepers stepNumber={paso2_gore?.numero_paso} />
+      <MonoStepers stepNumber={paso2_gore.numero_paso} />
     </div>
     <div className="col-11">
       <div className="container-fluid">
         <div className="d-flex">
-          <h3 className="mt-3 me-4">{paso2_gore?.nombre_paso}</h3>
-          <Avance avance={paso2_gore?.avance} />
+          <h3 className="mt-3 me-4">{paso2_gore.nombre_paso}</h3>
+          <Avance avance={paso2_gore.avance} />
         </div>
         <div className='col-11 text-sans-h6-primary'>
         <h6>Se deben estimar los gastos necesarios para el ejercicio de la competencia por el Gobierno Regional, considerando los costos directos e indirectos informados por el Ministerio o Servicio de origen, y complementados por la DIPRES. En el caso de los costos indirectos, se debe considerar que corresponden a tareas de soporte nacional, por lo que no son replicables region a region.</h6>

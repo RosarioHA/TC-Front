@@ -74,7 +74,7 @@ export const CostosDirectosSector = ({ costoDirectosGet }) =>
                   {costodirecto.sector}
                 </span>
               </div>
-              {costodirecto?.costos.map((costo) => (
+              {costodirecto?.items.map((costo) => (
                 <div
                   className="col d-flex flex-column justify-content-between my-5 col-11"
                   key={costo.id}
