@@ -211,10 +211,10 @@ $line-thickness: 2px;
 
 .vertical-line {
   width: 4px; 
-  height:95.5%;
+  height:100vh; 
   background-color: $blue-color; 
   position: absolute;
-  top: 81%; 
-  bottom:40%;
+  top: 78%; 
+  bottom:10%;
   left: 23,5%; 
 }

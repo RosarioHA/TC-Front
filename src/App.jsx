@@ -24,9 +24,9 @@ const SegundaMinutaDipres = React.lazy(() => import('./views/minutaDIPRES/segund
 const Error404 = React.lazy(() => import('./views/Errors/Error404'));
 const Error500 = React.lazy(() => import('./views/Errors/Error500'));
 const Error503 = React.lazy(() => import('./views/Errors/Error503'));
-const SuccessEdicion = React.lazy(() => import ('./views/success/success_edicion'));
-const SuccessCreacion = React.lazy(() => import ('./views/success/success_creacion'));
-const SuccessFormSectorial = React.lazy(() => import ('./views/success/success_formularioSectorial'));
+const SuccessEdicion = React.lazy(() => import('./views/success/success_edicion'));
+const SuccessCreacion = React.lazy(() => import('./views/success/success_creacion'));
+const SuccessFormSectorial = React.lazy(() => import('./views/success/success_formularioSectorial'));
 const SuccessCierreOS = React.lazy(() => import('./views/success/success_cierreObservaciones'));
 const SuccessOS = React.lazy(() => import('./views/success/success_os'));
 const PasoUno = React.lazy(() => import('./views/formularioSectorial/pasoUno'));
@@ -36,11 +36,14 @@ const PasoCuatro = React.lazy(() => import('./views/formularioSectorial/pasoCuat
 const PasoCinco = React.lazy(() => import('./views/formularioSectorial/pasoCinco'));
 const Resumen = React.lazy(() => import('./views/formularioSectorial/Resumen'));
 const FormGoreLayout = React.lazy(() => import('./layout/FormGore'));
+const RevisionSubdere = React.lazy(() => import('./layout/RevisionSubdere'));
 const PasoUnoGore = React.lazy(() => import('./views/formularioGore/pasoUno'));
 const PasoDosGore = React.lazy(() => import('./views/formularioGore/pasoDos'));
 const PasoTresGore = React.lazy(() => import('./views/formularioGore/pasoTres'));
 const ResumenOS = React.lazy(() => import('./views/observacionesSUBDERE/ResumenOS'));
 const ObservacionesSubdere = React.lazy(() => import('./views/observacionesSUBDERE/ObservacionesSubdere'));
+const Paso_1_Revision = React.lazy(() => import("./views/revisionSubdere/Paso_1_revision"));
+const Paso_2_Revision = React.lazy(() => import("./views/revisionSubdere/Paso_2_revision.jsx"));
 
 const createProtectedRoute = (path, Component, allowedProfiles) => (
   <Route
@@ -123,6 +126,22 @@ function App()
               <Route path="paso_3" element={<PasoTresGore />} />
               <Route path="Resumen_formulario_gore" element={<Resumen />} />
             </Route>
+            <Route
+              path="revision_subdere/:id"
+              element={
+                // <FormGoreProvider>
+                <ProtectedRoute allowedProfiles={[ 'Usuario Sectorial', 'SUBDERE', 'Usuario Observador', 'GORE' ]}>
+                  <RevisionSubdere />
+                </ProtectedRoute>
+                // </FormGoreProvider>
+              }
+            >
+              <Route index element={<PasoUno />} />
+              <Route path="paso_1" element={<Paso_1_Revision />} />
+              <Route path="paso_2" element={<Paso_2_Revision />} />
+              <Route path="resumen_revision_final" element={<Resumen />} />
+            </Route>
+
 
             {/* <Route path="minuta_dipres/:id" >
               <Route index element={<PrimeraMinutaDipres />} />

@@ -23,6 +23,7 @@ export const SummaryDetail = ({ competencia }) =>
     const badgeClasses = {
       'Finalizada': 'badge-status-finish',
       'En Estudio': 'badge-status-review',
+      'En revisión SUBDERE': 'badge-status-review',
       'Aún no puede comenzar': 'badge-status-pending',
     };
 
