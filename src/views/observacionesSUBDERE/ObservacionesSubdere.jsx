@@ -10,8 +10,6 @@ const ObservacionesSubdere = () => {
   const { competenciaDetails } = useCompetencia(id);
   const { patchCompetenciaOmitida } = usePatchCompetencia();
   console.log("competencia details en OS", competenciaDetails)
-  
-
   console.log("competencia details estado en OS", competenciaDetails?.etapa2?.estado)
 
   const handleBackButtonClick = () => {
