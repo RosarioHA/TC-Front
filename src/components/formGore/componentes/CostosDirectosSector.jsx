@@ -1,9 +1,9 @@
-import React, { useContext, useState, useEffect} from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import CustomTextarea from '../../forms/custom_textarea';
 import InputCosto from '../../forms/input_costo';
 import { OpcionesAB } from '../../forms/opciones_AB';
 import { FormGOREContext } from '../../../context/FormGore';
-import { Monto } from './MOnto';
+import { Monto } from './Monto';
 
 export const CostosDirectosSector = ({ costoDirectosGet }) =>
 {
@@ -13,7 +13,6 @@ export const CostosDirectosSector = ({ costoDirectosGet }) =>
     total_anual_gore: { loading: false, saved: false },
     es_transitorio: { loading: false, saved: false },
   });
-
 
   useEffect(() =>
   {
@@ -114,7 +113,7 @@ export const CostosDirectosSector = ({ costoDirectosGet }) =>
                       <InputCosto
                         id={`total_anual_gore-${costo.id}`}
                         placeholder="Costo (M$)"
-                        value={costo.total_anual_gore|| ''}
+                        value={costo.total_anual_gore || ''}
                         onBlur={(e) => handleUpdate(costo.id, 'total_anual_gore', e.target.value, true)}
                         loading={inputStatus[ costo.id ]?.total_anual_gore?.loading}
                         saved={inputStatus[ costo.id ]?.total_anual_gore?.saved}

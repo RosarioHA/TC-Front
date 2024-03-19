@@ -1,6 +1,6 @@
 import CustomInputArea from '../../forms/textarea_paso2';
 import { CostoPersonal } from '../componentes/CostoPersonal';
-import { PersonalInformado } from '../componentes/PersonalINformado';
+import { PersonalInformado } from '../componentes/PersonalInformado';
 
 export const Sub1_a = () => {
   return (

@@ -2,7 +2,7 @@ import { CostosIndirectosSector } from "../componentes/CostosIndirectos"
 import { ResumenIndirectos } from "../componentes/ResumenIndirectos"
 import { SubAdicionales } from "../componentes/SubAdicionales"
 import { Subtitulo21 } from "../componentes/Subtitulo21"
-export const DosB = ({ costosIndirectos , resumen}) =>
+export const DosB = ({ costosIndirectos , resumen, personalIndirecto}) =>
 {
   return (
     <>
@@ -19,10 +19,11 @@ export const DosB = ({ costosIndirectos , resumen}) =>
           <CostosIndirectosSector costosIndirectos={costosIndirectos} />
         </div>
         <div>
-          <Subtitulo21/>
+          <Subtitulo21 personal={personalIndirecto} />
         </div>
         <div className="my-4">
-          <SubAdicionales titulo="Subtítulos adicionales costos indirectos informados por GORE"/>
+          <SubAdicionales titulo="Subtítulos adicionales costos indirectos informados por GORE"
+          />
         </div>
         <div className="my-4 ">
           <ResumenIndirectos resumen={resumen} />

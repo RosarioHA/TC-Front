@@ -4,7 +4,13 @@ import DropdownCheckbox from '../../dropdown/checkbox';
 import CustomTextarea from '../../forms/custom_textarea';
 import { OpcionesAB } from '../../forms/opciones_AB';
 
-export const SubAdicionales = ({ solo_lectura , titulo}) => {
+export const SubAdicionales = ({ solo_lectura , titulo, etapas, itemSub, subtitulos,seccion}) => {
+
+
+  console.log('e',etapas)
+  console.log('item',itemSub)
+  console.log('sub',  subtitulos); 
+  console.log(seccion)
   return (
     <>
       <div className="mt-4 col-11">
@@ -21,7 +27,7 @@ export const SubAdicionales = ({ solo_lectura , titulo}) => {
           </h6>
         </div>
         <div>
-          <form onSubmit="">
+          <form>
             <div key="" className="col mt-4">
               <div className="row">
                 <span className="text-sans-p-bold mb-0"></span>
@@ -149,7 +155,7 @@ export const SubAdicionales = ({ solo_lectura , titulo}) => {
             </div>
 
             {!solo_lectura && (
-              <button className="btn-secundario-s m-2" type="submit">
+              <button className="btn-secundario-s m-2" >
                 <i className="material-symbols-rounded me-2">add</i>
                 <p className="mb-0 text-decoration-underline">
                   Agregar subtítulo
