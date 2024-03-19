@@ -107,7 +107,7 @@ const ObservacionesSubdere = () => {
         <p className="text-sans-p">Fecha última modificación:</p><p className="text-sans-p-bold ms-2">{competenciaDetails?.etapa2?.fecha_ultima_modificacion}</p>
       </div>
 
-      {competenciaDetails?.etapa2?.estado === 'Finalizada' &&  (
+      {competenciaDetails?.etapa2?.estado === 'Finalizada' && competenciaDetails?.etapa3?.omitida !== true || false &&  (
         <div>
           <h3 className="text-sans-h2">Esta todo listo para que termines la etapa</h3>
           <p className="text-sans-p mt-3 mb-5">Ya revisaste todos los formularios. </p> 
@@ -145,24 +145,24 @@ const ObservacionesSubdere = () => {
         </div>
       )}
 
-      {competenciaDetails?.etapa2?.estado !== 'Finalizada' && (
-        <div>
-          <h3 className="text-sans-h2">Debes revisar todos los formularios antes de terminar la etapa</h3>
-          <p className="text-sans-p mt-3">Para poder terminar la etapa debes revisar todos los formularios y dejar observaciones donde consideres necesario.</p>
-        </div>
+      {competenciaDetails?.etapa3?.omitida == true || false && (
+        <>
+          <div>
+            <h3 className="text-sans-h2">Debes revisar todos los formularios antes de terminar la etapa</h3>
+            <p className="text-sans-p mt-3">Para poder terminar la etapa debes revisar todos los formularios y dejar observaciones donde consideres necesario.</p>
+          </div>
+          <div className="d-flex justify-content-end my-5 me-3">
+            <button
+              className="btn-primario-s"
+              disabled={etapaOmitida === null}
+              onClick={handleCerrarEtapa}
+            >
+              Cerrar etapa
+              <i className="material-symbols-rounded me-2">arrow_forward_ios</i>
+            </button>
+          </div>
+        </>
       )}
-      
-      <div className="d-flex justify-content-end my-5 me-3">
-        <button 
-        className="btn-primario-s"
-        disabled={etapaOmitida === null}
-        onClick={handleCerrarEtapa}
-        >
-          Cerrar etapa
-          <i className="material-symbols-rounded me-2">arrow_forward_ios</i>
-        </button>
-      </div>
-
     </div>
   )
 }
