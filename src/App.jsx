@@ -142,11 +142,6 @@ function App()
               <Route path="resumen_revision_final" element={<Resumen />} />
             </Route>
 
-
-            {/* <Route path="minuta_dipres/:id" >
-              <Route index element={<PrimeraMinutaDipres />} />
-              <Route path="segunda_minuta_dipres" element={<SegundaMinutaDipres />} />
-            </Route> */}
             <Route path="minuta_dipres/:id">
               {createProtectedRoute("", PrimeraMinutaDipres, ['SUBDERE', 'Usuario Observador', 'DIPRES'])}
               {createProtectedRoute("segunda_minuta_dipres", SegundaMinutaDipres, ['SUBDERE', 'Usuario Observador', 'DIPRES'])}
