@@ -90,13 +90,6 @@ const PrimeraMinuta = () => {
       <div>
         <h2 className="text-sans-25 mt-5">Subir minuta (Obligatorio)</h2>
         <h6 className="text-sans-h6 mb-4">Mínimo 1 archivo, peso máximo 20MB, formato PDF</h6>
-
-        <tr>
-          <th scope="col">#</th>
-          <th scope="col" htmlFor="fileUploadInput" className="form-label">Documento</th>
-          <th scope="col"></th>
-          <th scope="col">Acción</th>
-        </tr>
         <SubirOrganigrama 
         handleFileSelect={handleFileSelect}
         />

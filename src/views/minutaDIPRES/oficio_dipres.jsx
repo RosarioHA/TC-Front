@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import { useParams, useNavigate, useLocation,  Link } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { useCompetencia } from "../../hooks/competencias/useCompetencias";
 import { useUpdateEtapa } from "../../hooks/competencias/useOficio";
-import { SuccessSOficioDipres } from "../../components/success/oficioDipres";
+import { SuccessSOficio } from "../../components/success/oficio";
 
 const OficioDipres = () => {
   const updateEtapa = useUpdateEtapa();
@@ -16,8 +16,8 @@ const OficioDipres = () => {
   const [ errorMessage, setErrorMessage ] = useState("");
   const [isSubmitSuccessful, setIsSubmitSuccessful] = useState(false);
   const [fechaMaxima, setFechaMaxima] = useState('');
-  const location = useLocation(); 
-  const extraData = location.state?.extraData;
+  //const location = useLocation(); 
+  //const extraData = location.state?.extraData;
 
   console.log("etapa num en oficio Dipres", etapaNum)
 
@@ -199,7 +199,7 @@ const OficioDipres = () => {
           </div>
         </div>
           ) : (
-            <SuccessSOficioDipres idCompetencia={id} sector={extraData} />
+            <SuccessSOficio idCompetencia={id} sector='DIPRES' />
           )}
       </div >
     </>

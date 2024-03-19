@@ -1,12 +1,10 @@
 import { useNavigate } from 'react-router-dom';
 import successIcon from '../../static/icons/success.svg';
 
-export const SuccessSOficio = ({ idCompetencia , sector }) =>
-{
+export const SuccessSOficio = ({ idCompetencia , sector }) => {
   const history = useNavigate();
 
-  const handleBackButtonClick = () =>
-  {
+  const handleBackButtonClick = () => {
     history(`/home/estado_competencia/${idCompetencia}`);
   };
 
@@ -20,7 +18,7 @@ export const SuccessSOficio = ({ idCompetencia , sector }) =>
           </div>
           <div className="col-9">
             <h2 className="text-sans-h2 mb-4">Subiste el oficio {sector} con éxito</h2>
-            <p className="text-sans-p">Con esto,{sector} tienen hábilitada la plataforma para subir su minuta.<br/> También, los plazos establecidos para el llenado de este comienzan a correr.</p>
+            <p className="text-sans-p">Con esto,{sector} tienen habilitada la plataforma para subir su minuta.<br/> También, los plazos establecidos para el llenado de este comienzan a correr.</p>
           </div>
         </div>
       </div>
@@ -34,4 +32,3 @@ export const SuccessSOficio = ({ idCompetencia , sector }) =>
     </div>
   );
 }
-
