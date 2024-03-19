@@ -14,11 +14,10 @@ const PasoTres = () =>
   const { userData } = useAuth();
   const userSubdere = userData?.perfil?.includes('SUBDERE');
   const formularioEnviado = data.formulario_enviado;
-  const observacionesEnviadas = data.observacion_enviada;
   const stepNumber = 3;
   const id = data.id;
   const { observaciones, updateObservacion, fetchObservaciones, loadingObservaciones, saved } = useObservacionesSubdere(data ? data.id : null);
-
+  const observacionesEnviadas = observaciones?.observacion_enviada
   const [observacionPaso3, setObservacionPaso3] = useState("");
   const [formData, setFormData] = useState({
     universo_cobertura: "",

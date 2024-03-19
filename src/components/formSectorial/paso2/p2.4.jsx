@@ -256,7 +256,7 @@ export const Subpaso_dosPuntoCuatro = ({
       <form onSubmit={handleSubmit(onSubmit)}>
         {/* Renderiza las tablas para cada plataforma */}
         {plataformasySoftwares.map((plataforma, index) => (
-          <div key={plataforma.id} className="col border">
+          <div key={plataforma.id} className="col border mb-4">
             <div className="row p-3">
               <div className="col-2  d-flex">
                 <span className="text-sans-p-bold mb-0">{index + 1}</span>

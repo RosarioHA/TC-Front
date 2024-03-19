@@ -19,6 +19,8 @@ const EditarCompetencia = React.lazy(() => import('./views/gestion_competencias/
 const EstadoCompentencia = React.lazy(() => import('./views/gestion_competencias/Estado_compentencia'));
 const SubirOficio = React.lazy(() => import('./views/gestion_competencias/Subir_oficio'));
 const Minuta = React.lazy(() => import('./views/gestion_competencias/Minuta'));
+const PrimeraMinutaDipres = React.lazy(() => import('./views/minutaDIPRES/primera_minuta_dipres'));
+const SegundaMinutaDipres = React.lazy(() => import('./views/minutaDIPRES/segunda_minuta_dipres'));
 const Error404 = React.lazy(() => import('./views/Errors/Error404'));
 const Error500 = React.lazy(() => import('./views/Errors/Error500'));
 const Error503 = React.lazy(() => import('./views/Errors/Error503'));
@@ -98,7 +100,7 @@ function App()
                   </ProtectedRoute>
                 </FormularioProvider>
               }
-            >
+              >
               <Route index element={<PasoUno />} />
               <Route path="paso_1" element={<PasoUno />} />
               <Route path="paso_2" element={<PasoDos />} />
@@ -140,6 +142,15 @@ function App()
               <Route path="resumen_revision_final" element={<Resumen />} />
             </Route>
 
+
+            {/* <Route path="minuta_dipres/:id" >
+              <Route index element={<PrimeraMinutaDipres />} />
+              <Route path="segunda_minuta_dipres" element={<SegundaMinutaDipres />} />
+            </Route> */}
+            <Route path="minuta_dipres/:id">
+              {createProtectedRoute("", PrimeraMinutaDipres, ['SUBDERE', 'Usuario Observador', 'DIPRES'])}
+              {createProtectedRoute("segunda_minuta_dipres", SegundaMinutaDipres, ['SUBDERE', 'Usuario Observador', 'DIPRES'])}
+            </Route>
 
             <Route path="agregar_minuta" element={<Minuta />}></Route>
             <Route path="*" element={<Error404 />} />

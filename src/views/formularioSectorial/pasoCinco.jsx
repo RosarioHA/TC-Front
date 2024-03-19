@@ -32,7 +32,7 @@ const PasoCinco = () => {
   const [itemSubtitulosDirectoData, setItemSubtitulosDirectoData] = useState('');
   const [itemSubtitulosIndirectoData, setItemSubtitulosIndirectoData] = useState('');
   const formularioEnviado = data.formulario_enviado
-  const observacionesEnviadas = data.observacion_enviada
+  const observacionesEnviadas = observaciones.observacion_enviada
 
   useEffect(() => {
     updateStepNumber(stepNumber);

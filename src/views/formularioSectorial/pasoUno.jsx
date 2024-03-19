@@ -19,7 +19,7 @@ const PasoUno = () => {
   const [observacionPaso1, setObservacionPaso1] = useState("");
 
   const formularioEnviado = data.formulario_enviado
-  const observacionesEnviadas = data.observacion_enviada
+  const observacionesEnviadas = observaciones.observacion_enviada
 
   useEffect(() => {
     updateStepNumber(stepNumber);

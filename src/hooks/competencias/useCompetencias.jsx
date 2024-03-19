@@ -153,4 +153,5 @@ export const useCompetencia = (id) =>
     setCurrentPageListaHome ,
     currentPageListaHome
   };
+  
 };

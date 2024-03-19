@@ -7,7 +7,8 @@ const SuccessOS = () => {
   const { data, updateFormId, loading } = useContext(FormularioContext);
   const { id } = useParams();
   const navigate = useNavigate();
-  console.log("data", data)
+  console.log("data en success os", data)
+  console.log("id en success os", id)
 
   useEffect(() => {
     if (id) {
@@ -16,9 +17,10 @@ const SuccessOS = () => {
   }, [id, updateFormId]);
 
   const handleVolverBtn = () => {
-    return (
-      navigate( `/home/observaciones_subdere/${id}/`)
-    )
+    if (data && data.competencia_id) {
+      const competenciaId = data.competencia_id;
+      return navigate(`/home/observaciones_subdere/${competenciaId}/`);
+    }
   };
 
   if (loading) {

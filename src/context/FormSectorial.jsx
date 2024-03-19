@@ -8,6 +8,7 @@ export const FormularioContext = createContext();
 export const FormularioProvider = ({ children }) => {
   const [id, setId] = useState(null);
   const [stepNumber, setStepNumber] = useState(null);
+  console.log("id en formulario context", id)
 
   const { dataFormSectorial, loadingFormSectorial, errorFormSectorial} = useFormSectorial(id);
   const { dataPaso, loadingPaso, errorPaso,refetchTrigger } = usePasoForm(id, stepNumber);

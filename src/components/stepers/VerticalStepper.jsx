@@ -1,6 +1,7 @@
 import { Etapa1, Etapa2, Etapa3, Etapa4, Etapa5 } from "../etapas";
 
 const Etapa = ({ etapaInfo, index, id, usuarios}) => {
+  //console.log("etapa info", etapaInfo)
   switch (index) {
     case 0: return <Etapa1 etapa={etapaInfo.etapa1} id={id}/>;
     case 1: return <Etapa2 etapa={etapaInfo.etapa2}  sectoriales={usuarios.usuarios_sectoriales}/>;
