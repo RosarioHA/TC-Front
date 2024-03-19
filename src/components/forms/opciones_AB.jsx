@@ -24,12 +24,15 @@ export const OpcionesAB = ({
       const newState = estado === 'activo' ? true : false;
       setActiveButton(estado);
       handleEstadoChange(newState);
-      field.onChange(newState);
-
+      
+      // Verifica si `field` y `field.onChange` existen antes de llamar a `field.onChange`
+      if (field && typeof field.onChange === 'function') {
+        field.onChange(newState);
+      }
+  
       await handleSave(arrayNameId, fieldName, newState);
     }
   };
-
   const renderSpinnerOrCheck = (buttonState) => {
     // Solo muestra el spinner o el check si el estado del botón coincide con el estado activo/inactivo
     if (loading && activeButton === buttonState) {

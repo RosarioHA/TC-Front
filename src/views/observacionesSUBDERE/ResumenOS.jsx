@@ -9,7 +9,6 @@ const ResumenOS = () => {
 	const { data } = useContext(FormularioContext);
 	const { observaciones, fetchObservaciones, updateObservacion } = useObservacionesSubdere(data ? data.id : null);
 	const navigate = useNavigate();
-	console.log(observaciones)
 
   useEffect(() => {
     const obtenerObservaciones = async () => {
@@ -25,16 +24,17 @@ const ResumenOS = () => {
 	const handleBackButtonClick = () => {
     navigate(-1);
   };
+  const handleClickOSCerrada = () => {
+    navigate(`/home/observaciones_subdere/${data.competencia_id}/`);
+  };
 
 	const handleEnviarClick = async () => {
     try {
-      // Aquí actualizas el valor de observacion_enviada a true
       await updateObservacion({ observacion_enviada: true });
       navigate( `/home/success_observaciones_subdere/${data.id}/`);
 
     } catch (error) {
       console.error("Error al enviar observaciones:", error);
-      // Manejar el error si es necesario
     }
   };
 
@@ -67,7 +67,7 @@ const ResumenOS = () => {
         }
 
         return (
-          <div key={pasoKey}>
+          <div key={pasoKey} className="mb-5">
 						<hr/>
 						<div className="d-flex justify-content-between align-items-center mb-3">
 							<div className="d-flex">
@@ -100,17 +100,31 @@ const ResumenOS = () => {
         );
       })}
 
-			<h2 className="text-sans-h2 mt-5">Esta todo listo para que envies las observaciones</h2>
-			<p className="text-sans-p">Asegurate que las observaciones que ingresaste son suficientes, ya que una vez que las envíes, no podrás editarlas.</p>
+      {!observaciones.observacion_enviada && (
+        <>
+          <h2 className="text-sans-h2">Esta todo listo para que envies las observaciones</h2>
+          <p className="text-sans-p">Asegurate que las observaciones que ingresaste son suficientes, ya que una vez que las envíes, no podrás editarlas.</p>
+        </>
+      )}
 			<div className="d-flex justify-content-between p-2 mb-5 pb-5">
 				<button className="d-flex btn-secundario-s"  onClick={handleBackButtonClick}>
 					<i className="material-symbols-rounded me-2">arrow_back_ios</i>
-					Atrás
+					<p className="text-decoration-underline mb-0">Atrás</p>
 				</button>
-				<button className="d-flex btn-primario-s" onClick={handleEnviarClick}>
-					Enviar Observaciones
-					<i className="material-symbols-rounded me-2">arrow_forward_ios</i>
-				</button>
+        <div>
+          {observaciones.observacion_enviada ? (
+            <button 
+            className="d-flex btn-primario-s text-decoration-underline" 
+            onClick={handleClickOSCerrada}>
+              Volver a Observaciones
+            </button>
+          ) : (
+            <button className="d-flex btn-primario-s" onClick={handleEnviarClick}>
+              <p className="text-decoration-underline mb-0">Enviar Observaciones</p>
+              <i className="material-symbols-rounded me-2">arrow_forward_ios</i>
+            </button>
+          )}
+        </div>
 			</div>
     </div>
   );

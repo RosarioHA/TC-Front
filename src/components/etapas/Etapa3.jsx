@@ -12,6 +12,8 @@ export const Etapa3 = ({ etapa }) => {
     oficio_inicio_dipres
   } = etapa;
 
+  console.log("etapa en etapa3", etapa)
+
   if (!etapa) {
     return <div>Loading...</div>;
   }

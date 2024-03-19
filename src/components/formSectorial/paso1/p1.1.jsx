@@ -167,6 +167,7 @@ const fetchData = async () => {
             onFilesChanged={uploadFile}
             marcoJuridicoData={marcoJuridicoFiles}
             handleDelete={eliminarDocMarco}
+            readOnly={solo_lectura}
           />
           {isUploading && (
             <div className="loading-indicator col-11 w-50 mx-auto">

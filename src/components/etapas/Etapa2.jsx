@@ -11,6 +11,8 @@ export const Etapa2 = ({ etapa }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const usuarioSector = userData?.sector;
 
+  console.log("etapa en etapa2", etapa)
+
   const toggleCollapse = () => {
     setIsCollapsed(!isCollapsed);
   };
@@ -45,8 +47,6 @@ export const Etapa2 = ({ etapa }) => {
         return null;
     }
   };
-
-  
 
   const handleNavigation = (path) => {
     navigate(path);
@@ -92,7 +92,7 @@ export const Etapa2 = ({ etapa }) => {
 
     if (isButtonEnabledForAll || isButtonEnabledForSubdere) {
       return (
-        <button onClick={() => handleNavigation(path)} className="btn-secundario-s text-decoration-none" id="btn">
+        <button onClick={() => handleNavigation(path ,{ state: { extraData: "Sectorial" } })} className="btn-secundario-s text-decoration-none" id="btn">
           <span className="material-symbols-outlined me-1">{icon}</span>
           <u>{buttonText}</u>
         </button>
@@ -109,14 +109,14 @@ export const Etapa2 = ({ etapa }) => {
   };
 
     
-    
+  // AQUI DECIR A LA FUNCION QUE RECONOZCA SI EL BOTON ESTA EN ESTADO FINALIZADO  
 
   const renderButtonForFormularioSectorial = (formulario) => {
     const buttonText = formulario.accion;
     const path = `/home/formulario_sectorial/${formulario.id}/paso_1`;
-    const isButtonDisabled = (userSubdere || userGore) || formulario.estado === "pendiente";
-
-
+    //const isButtonDisabled = (userSubdere || userGore) || formulario.estado === "pendiente";
+    const isButtonDisabled = formulario.estado === "pendiente";
+    console.log("formulario.estado en Etapa2", formulario.estado)
 
     let icon = 'edit';
     if (formulario.estado !== "pendiente") {
@@ -136,7 +136,6 @@ export const Etapa2 = ({ etapa }) => {
     );
   };
   
-
   const renderSingleFormularioSectorial = (formulario) => {
     return (
       <div className="d-flex justify-content-between text-sans-p border-top border-bottom my-2 py-1">
@@ -173,6 +172,7 @@ export const Etapa2 = ({ etapa }) => {
     // Verifica si el array formulario_sectorial tiene un solo elemento
     if (etapa.formulario_sectorial && etapa.formulario_sectorial.length === 1) {
       const formulario = etapa.formulario_sectorial[0];
+      console.log("formulario", formulario)
       return renderSingleFormularioSectorial(formulario);
     }
     // Verifica si el array detalle_formularios_sectoriales tiene elementos
@@ -197,7 +197,7 @@ export const Etapa2 = ({ etapa }) => {
                     <tr key={index}>
                       <td className="d-flex justify-content-between">
                         <span className="align-self-center">{formulario.nombre}</span>
-                        {formulario.estado === "pendiente"
+                        {formulario.estado === "pendiente" 
                           ? renderButtonForFormularioSectorial(formulario)
                           : formulario.accion}
                       </td>
@@ -258,6 +258,7 @@ export const Etapa2 = ({ etapa }) => {
         )}
         {/* Llamada a las funciones de renderizado de formularios sectoriales */}
         {userSubdere || userGore ? renderFormularioSectorial() : renderFormularioSectorialParaUsuarioSectorial()}
+        {console.log("observaciones sectorial en Etapa2",observaciones_sectorial)}
         {observaciones_sectorial.length > 0 && (
           observaciones_sectorial.map((observacion, index) => (
             <div key={index} className="d-flex justify-content-between text-sans-p border-top border-bottom my-3 py-1">

@@ -14,11 +14,10 @@ const PasoTres = () =>
   const { userData } = useAuth();
   const userSubdere = userData?.perfil?.includes('SUBDERE');
   const formularioEnviado = data.formulario_enviado;
-  const observacionesEnviadas = data.observacion_enviada;
   const stepNumber = 3;
   const id = data.id;
   const { observaciones, updateObservacion, fetchObservaciones, loadingObservaciones, saved } = useObservacionesSubdere(data ? data.id : null);
-
+  const observacionesEnviadas = observaciones?.observacion_enviada
   const [observacionPaso3, setObservacionPaso3] = useState("");
   const [formData, setFormData] = useState({
     universo_cobertura: "",
@@ -76,35 +75,33 @@ const PasoTres = () =>
     }));
   };
 
-  const handleSave = async (inputName) =>
-  {
+  const handleSave = async (inputName) => {
     setInputStatus(prevStatus => ({
       ...prevStatus,
-      [ inputName ]: { ...prevStatus[ inputName ], loading: true }
+      [inputName]: { ...prevStatus[inputName], loading: true }
     }));
-
-    const datosParaEnviar = {
+  
+    let datosParaEnviar = {
       paso3: {
-        ...pasoData.paso3,
-        ...formData
+        // Incluye solo el campo que está siendo editado
+        [inputName]: formData[inputName]
       }
     };
-
+  
     const success = await handleUpdatePaso(id, stepNumber, datosParaEnviar);
-    if (success)
-    {
+    if (success) {
       setInputStatus(prevStatus => ({
         ...prevStatus,
-        [ inputName ]: { loading: false, saved: true }
+        [inputName]: { loading: false, saved: true }
       }));
-    } else
-    {
+    } else {
       setInputStatus(prevStatus => ({
         ...prevStatus,
-        [ inputName ]: { loading: false, saved: false }
+        [inputName]: { loading: false, saved: false }
       }));
     }
   };
+  
 
   if (!pasoData || !pasoData.paso3)
   {

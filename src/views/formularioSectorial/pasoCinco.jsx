@@ -21,6 +21,8 @@ const PasoCinco = () => {
   const { observaciones, updateObservacion, fetchObservaciones, loadingObservaciones, saved } = useObservacionesSubdere(data ? data.id : null);
   const [observacionPaso5, setObservacionPaso5] = useState("");
   const [paso5Data, setPaso5Data] = useState('');
+  
+  const [costosDirectosData, setCostosDirectosData] = useState('');
   const [juridicasDirectasData, setJuridicasDirectasData] = useState('');
   const [juridicasIndirectasData, setJuridicasIndirectasData] = useState('');
   const [personalDirectoData, setPersonalDirectoData] = useState('');
@@ -30,7 +32,7 @@ const PasoCinco = () => {
   const [itemSubtitulosDirectoData, setItemSubtitulosDirectoData] = useState('');
   const [itemSubtitulosIndirectoData, setItemSubtitulosIndirectoData] = useState('');
   const formularioEnviado = data.formulario_enviado
-  const observacionesEnviadas = data.observacion_enviada
+  const observacionesEnviadas = observaciones.observacion_enviada
 
   useEffect(() => {
     updateStepNumber(stepNumber);
