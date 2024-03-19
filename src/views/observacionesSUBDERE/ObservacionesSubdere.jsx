@@ -1,14 +1,14 @@
 import {  useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useCompetencia } from "../../hooks/competencias/useCompetencias";
-import { usePatchCompetencia } from "../../hooks/minutaDIPRES/useEtapa3";
+import { useEtapa3 } from "../../hooks/minutaDIPRES/useEtapa3";
 
 const ObservacionesSubdere = () => {
   const [ etapaOmitida, setEtapaOmitida] = useState(null);
   const navigate = useNavigate();
   const { id } = useParams();
   const { competenciaDetails } = useCompetencia(id);
-  const { patchCompetenciaOmitida } = usePatchCompetencia();
+  const { patchCompetenciaOmitida } = useEtapa3();
   console.log("competencia details en OS", competenciaDetails)
   console.log("competencia details estado en OS", competenciaDetails?.etapa2?.estado)
 

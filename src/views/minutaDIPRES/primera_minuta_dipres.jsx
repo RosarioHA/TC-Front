@@ -2,13 +2,13 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { useCompetencia } from "../../hooks/competencias/useCompetencias";
 import { useObservacionesSubdere } from "../../hooks/formulario/useObSubdereSectorial";
 import { SubirOrganigrama } from "../../components/commons/subirOrganigrama";
-import { usePatchCompetencia } from "../../hooks/minutaDIPRES/useEtapa3";
+import { useEtapa3 } from "../../hooks/minutaDIPRES/useEtapa3";
 
 const PrimeraMinuta = () => {
   const { id } = useParams();
   const { competenciaDetails } = useCompetencia(id);
   const { observaciones } = useObservacionesSubdere(id);
-  const { patchArchivoMinuta, archivoSubido, loadingPatch, errorPatch } = usePatchCompetencia();
+  const { patchArchivoMinuta, archivoSubido, loadingPatch, errorPatch } = useEtapa3();
   const navigate = useNavigate();
   console.log("id", id)
   console.log("archivo subido en minuta dipress", archivoSubido)
@@ -90,8 +90,16 @@ const PrimeraMinuta = () => {
       <div>
         <h2 className="text-sans-25 mt-5">Subir minuta (Obligatorio)</h2>
         <h6 className="text-sans-h6 mb-4">Mínimo 1 archivo, peso máximo 20MB, formato PDF</h6>
+
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col" htmlFor="fileUploadInput" className="form-label">Documento</th>
+          <th scope="col"></th>
+          <th scope="col">Acción</th>
+        </tr>
         <SubirOrganigrama 
-        handleFileSelect={handleFileSelect}/>
+        handleFileSelect={handleFileSelect}
+        />
         {/* ESTOS MENSAJES DE ERROR ELIMINARLOS O MEJORARLOS, SON POR MIENTRAS */}
         {loadingPatch && <p>Cargando...</p>}
         {errorPatch && <p>Error: {errorPatch.message}</p>}

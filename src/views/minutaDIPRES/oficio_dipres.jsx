@@ -2,10 +2,9 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate, useLocation,  Link } from "react-router-dom";
 import { useCompetencia } from "../../hooks/competencias/useCompetencias";
 import { useUpdateEtapa } from "../../hooks/competencias/useOficio";
-import { SuccessSOficio } from "../../components/success/oficio";
+import { SuccessSOficioDipres } from "../../components/success/oficioDipres";
 
-const SubirOficio = () =>
-{
+const OficioDipres = () => {
   const updateEtapa = useUpdateEtapa();
   const { etapaNum, id } = useParams();
   const { competenciaDetails } = useCompetencia(id);
@@ -20,11 +19,10 @@ const SubirOficio = () =>
   const location = useLocation(); 
   const extraData = location.state?.extraData;
 
+  console.log("etapa num en oficio Dipres", etapaNum)
 
-  useEffect(() =>
-  {
-    if (competenciaDetails)
-    {
+  useEffect(() => {
+    if (competenciaDetails) {
       setCompetencia(competenciaDetails);
     }
   }, [ competenciaDetails ]);
@@ -36,18 +34,13 @@ const SubirOficio = () =>
     setFechaMaxima(fechaActual);
   }, []);
 
-
-  const handleFileChange = (event) =>
-  {
+  const handleFileChange = (event) => {
     const file = event.target.files[ 0 ];
-    if (file)
-    {
-      if (file.size > 20971520)
-      { // 20 MB en bytes
+    if (file) {
+      if (file.size > 20971520) { // 20 MB en bytes
         setErrorMessage("Archivo no cumple con el peso permitido");
         setSelectedFile(null);
-      } else
-      {
+      } else {
         setSelectedFile(file);
         setButtonText('Modificar');
         setErrorMessage(""); // Limpiar el mensaje de error si el archivo es válido
@@ -55,77 +48,58 @@ const SubirOficio = () =>
     }
   };
 
-
-  const handleDelete = () =>
-  {
+  const handleDelete = () => {
     setSelectedFile(null);
     setButtonText('Subir archivo');
   };
 
-  const handleUploadClick = () =>
-  {
+  const handleUploadClick = () => {
     document.getElementById('fileUploadInput').click();
   };
 
-  const handleFechaInicioChange = (event) =>
-  {
+  const handleFechaInicioChange = (event) => {
     setFechaInicio(event.target.value);
   };
 
-  const prepareDataForSubmission = () =>
-  {
+  const prepareDataForSubmission = () => {
     const formData = new FormData();
-
     // Agregar el archivo cargado solo si existe
-    if (selectedFile)
-    {
+    if (selectedFile) {
       formData.append('oficio_origen', selectedFile, selectedFile.name);
     }
-
     // Agregar la fecha de inicio
     formData.append('fecha_inicio', fechaInicio);
-
     return formData;
   };
 
-
-
-  const handleSubmission = async () =>
-  {
+  const handleSubmission = async () => {
     // Verificar si el archivo y la fecha han sido seleccionados
-    if (!selectedFile || fechaInicio === '')
-    {
+    if (!selectedFile || fechaInicio === '') {
       setErrorMessage("Por favor, selecciona un archivo y una fecha.");
       return; // No continuar si falta alguno de los dos
     }
 
     const formData = prepareDataForSubmission();
 
-    if (!etapaNum || !id)
-    {
+    if (!etapaNum || !id) {
       console.error("etapaNum o competenciaId están indefinidos o son nulos");
       return; // No continuar si los parámetros son inválidos
     }
 
-    try
-    {
+    try {
       await updateEtapa(etapaNum, id, formData);
       setIsSubmitSuccessful(true);
-    } catch (error)
-    {
+    } catch (error) {
       console.error('Error al realizar la solicitud:', error);
       // Manejar errores...
     }
   };
 
-  const handleBackButtonClick = () =>
-  {
+  const handleBackButtonClick = () => {
     navigate(-1);
   };
 
-
-  if (!competencia)
-  {
+  if (!competencia) {
     return <div>Cargando datos de la competencia...</div>;
   }
 
@@ -144,10 +118,11 @@ const SubirOficio = () =>
             </ol>
           </nav>
         </div>
-        <span className="text-sans-Title">Oficio {extraData} </span>
+        <span className="text-sans-Title">Oficio DIPRES</span>
         <div className="my-3">
           <div className="text-sans-h1 mb-4">{competencia.nombre}</div>
         </div>
+
         {!isSubmitSuccessful ? (
         <div>
           <div className="mt-3">
@@ -195,6 +170,7 @@ const SubirOficio = () =>
               </tbody>
             </table>
           </div>
+
           <div className="mt-5">
             <span className="text-sans-h5">Elige la fecha del oficio (Obligatorio)</span>
             <div className="my-3 col-3">
@@ -223,11 +199,11 @@ const SubirOficio = () =>
           </div>
         </div>
           ) : (
-            <SuccessSOficio idCompetencia={id} sector={extraData} />
+            <SuccessSOficioDipres idCompetencia={id} sector={extraData} />
           )}
       </div >
     </>
   )
 }
 
-export default SubirOficio; 
+export default OficioDipres; 
