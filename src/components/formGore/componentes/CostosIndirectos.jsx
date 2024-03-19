@@ -3,7 +3,7 @@ import CustomTextarea from '../../forms/custom_textarea';
 import InputCosto from '../../forms/input_costo';
 import { FormGOREContext } from '../../../context/FormGore';
 import { OpcionesAB } from '../../forms/opciones_AB';
-import { Monto } from './MOnto';
+import { Monto } from './Monto';
 
 export const CostosIndirectosSector = ({ costosIndirectos }) => {
   const { updatePasoGore, refetchTriggerGore } = useContext(FormGOREContext);
