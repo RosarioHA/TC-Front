@@ -1,17 +1,20 @@
+
+import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useCompetencia } from "../../hooks/competencias/useCompetencias";
 import { useObservacionesSubdere } from "../../hooks/formulario/useObSubdereSectorial";
-import { SubirOrganigrama } from "../../components/commons/subirOrganigrama";
+import { SubirArchivo } from "../../components/commons/subirArchivo";
 import { useEtapa3 } from "../../hooks/minutaDIPRES/useEtapa3";
 
 const PrimeraMinuta = () => {
   const { id } = useParams();
   const { competenciaDetails } = useCompetencia(id);
   const { observaciones } = useObservacionesSubdere(id);
-  const { patchArchivoMinuta, archivoSubido, loadingPatch, errorPatch } = useEtapa3();
+  const { patchArchivoMinuta, loadingPatch, errorPatch } = useEtapa3();
+  const [archivoSeleccionado, setArchivoSeleccionado] = useState(null);
   const navigate = useNavigate();
   console.log("id", id)
-  console.log("archivo subido en minuta dipress", archivoSubido)
+  console.log("archivo seleccionado", archivoSeleccionado)
   console.log("competenciaDetails", competenciaDetails)
   console.log("observaciones", observaciones)
   console.log("array formularios sectorial", competenciaDetails?.etapa2?.formulario_sectorial)
@@ -25,7 +28,15 @@ const PrimeraMinuta = () => {
   };
 
   const handleFileSelect = (file) => {
-    patchArchivoMinuta(id, file);
+    setArchivoSeleccionado(file);
+  };
+
+  const handleEnviarMinuta = () => {
+    if (archivoSeleccionado) {
+      patchArchivoMinuta(id, archivoSeleccionado);
+      //cambiar valor etapa3.estado
+      //redirigir a vista success
+    }
   };
 
   return (
@@ -75,7 +86,10 @@ const PrimeraMinuta = () => {
               >
                 <td>{formulario.nombre}</td>
                 <td className="">
-                  <button className="btn-secundario-s text-decoration-underline" onClick={() => handleVerFormulario(formulario.id)}>
+                  <button 
+                  className="btn-secundario-s text-decoration-underline" 
+                  onClick={() => handleVerFormulario(formulario.id)}
+                  >
                     Ver observaciones
                   </button>
                 </td>
@@ -90,7 +104,7 @@ const PrimeraMinuta = () => {
       <div>
         <h2 className="text-sans-25 mt-5">Subir minuta (Obligatorio)</h2>
         <h6 className="text-sans-h6 mb-4">Mínimo 1 archivo, peso máximo 20MB, formato PDF</h6>
-        <SubirOrganigrama 
+        <SubirArchivo 
         handleFileSelect={handleFileSelect}
         />
         {/* ESTOS MENSAJES DE ERROR ELIMINARLOS O MEJORARLOS, SON POR MIENTRAS */}
@@ -101,7 +115,8 @@ const PrimeraMinuta = () => {
       <div className="d-flex justify-content-end my-5 me-3">
         <button 
         className="btn-primario-s"
-        disabled={!archivoSubido}
+        disabled={!archivoSeleccionado}
+        onClick={handleEnviarMinuta}
         >
           Enviar minuta
           <i className="material-symbols-rounded me-2">arrow_forward_ios</i>
