@@ -31,6 +31,8 @@ export const useEtapa3 = () => {
 
       console.log("Archivo subido:", response.data);
       setArchivoSubido(true);
+      await apiTransferenciaCompentencia.patch(`/etapa3/${competenciaId}/`, { estado: "Finalizada" });
+
     } catch (error) {
       console.error("Error al subir el archivo:", error);
       setErrorPatch(error);

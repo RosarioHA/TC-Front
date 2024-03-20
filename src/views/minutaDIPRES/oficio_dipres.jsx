@@ -43,7 +43,7 @@ const OficioDipres = () => {
       } else {
         setSelectedFile(file);
         setButtonText('Modificar');
-        setErrorMessage(""); // Limpiar el mensaje de error si el archivo es válido
+        setErrorMessage("");
       }
     }
   };
@@ -63,11 +63,9 @@ const OficioDipres = () => {
 
   const prepareDataForSubmission = () => {
     const formData = new FormData();
-    // Agregar el archivo cargado solo si existe
     if (selectedFile) {
       formData.append('oficio_origen', selectedFile, selectedFile.name);
     }
-    // Agregar la fecha de inicio
     formData.append('fecha_inicio', fechaInicio);
     return formData;
   };
@@ -76,22 +74,19 @@ const OficioDipres = () => {
     // Verificar si el archivo y la fecha han sido seleccionados
     if (!selectedFile || fechaInicio === '') {
       setErrorMessage("Por favor, selecciona un archivo y una fecha.");
-      return; // No continuar si falta alguno de los dos
+      return; 
     }
-
     const formData = prepareDataForSubmission();
 
     if (!etapaNum || !id) {
       console.error("etapaNum o competenciaId están indefinidos o son nulos");
-      return; // No continuar si los parámetros son inválidos
+      return; 
     }
-
     try {
       await updateEtapa(etapaNum, id, formData);
       setIsSubmitSuccessful(true);
     } catch (error) {
       console.error('Error al realizar la solicitud:', error);
-      // Manejar errores...
     }
   };
 

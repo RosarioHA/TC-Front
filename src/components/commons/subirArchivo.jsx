@@ -54,12 +54,15 @@ export const SubirArchivo = ({ index, tituloDocumento, readOnly, archivoDescarga
   return (
     <>
       <div className="d-flex justify-content-between align-items-center gap-2 neutral-line align-items-center">
-        <div className="p-3 ps-3 me-0">{index}</div>
-        {fileName && (
-          <div className="py-3 text-wrap col-5">{fileName}</div>
-        )
-        }
-        <div className="py-3 px-2">{error ? <div className="text-sans-p-bold-darkred">{error}</div> : displayFileType}</div>
+        <div className="d-flex mb-2">
+          <div className="p-3">{index}</div>
+          {fileName && (
+            <div className="py-3 text-wrap ms-4">{fileName}</div>
+          )}
+          {!readOnly && (
+          <div className="py-3 px-2">{error ? <div className="text-sans-p-bold-darkred">{error}</div> : displayFileType}</div>
+          )}
+        </div>
         <div>
           {!readOnly ? (
             <div className="col p-3 d-flex">
@@ -75,7 +78,7 @@ export const SubirArchivo = ({ index, tituloDocumento, readOnly, archivoDescarga
 
             </div>
           ) : archivoDescargaUrl && (
-            <button onClick={handleDownload} className="btn-secundario-s px-2 d-flex align-items-center">
+            <button onClick={handleDownload} className="btn-secundario-s px-2 d-flex align-items-center m-3">
               <span className="text-sans-b-green text-decoration-underline mx-1">Descargar</span>
               <i className="material-symbols-rounded ms-2">download</i>
             </button>

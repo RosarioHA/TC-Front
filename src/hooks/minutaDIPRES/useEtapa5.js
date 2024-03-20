@@ -6,7 +6,6 @@ export const useEtapa5 = () => {
   const [errorPatch, setErrorPatch] = useState(null);
   const [archivoSubido, setArchivoSubido] = useState(false);
 
-
   const patchArchivoMinuta = useCallback(async (competenciaId, file) => {
     setLoadingPatch(true);
     try {
@@ -18,6 +17,8 @@ export const useEtapa5 = () => {
       // Puedes manejar la respuesta aquí según tus necesidades
       console.log("Archivo subido:", response.data);
       setArchivoSubido(true);
+      await apiTransferenciaCompentencia.patch(`/etapa5/${competenciaId}/`, { estado: "Finalizada" });
+
     } catch (error) {
       console.error("Error al subir el archivo:", error);
       setErrorPatch(error);

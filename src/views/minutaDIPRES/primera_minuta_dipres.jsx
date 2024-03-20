@@ -5,6 +5,7 @@ import { useCompetencia } from "../../hooks/competencias/useCompetencias";
 import { useObservacionesSubdere } from "../../hooks/formulario/useObSubdereSectorial";
 import { SubirArchivo } from "../../components/commons/subirArchivo";
 import { useEtapa3 } from "../../hooks/minutaDIPRES/useEtapa3";
+import { SuccessMinutaDipres } from "../../components/success/minutaDipres";
 
 const PrimeraMinuta = () => {
   const { id } = useParams();
@@ -12,7 +13,10 @@ const PrimeraMinuta = () => {
   const { observaciones } = useObservacionesSubdere(id);
   const { patchArchivoMinuta, loadingPatch, errorPatch } = useEtapa3();
   const [archivoSeleccionado, setArchivoSeleccionado] = useState(null);
+  const [isSubmitSuccessful, setIsSubmitSuccessful] = useState(false);
   const navigate = useNavigate();
+  const etapaFinalizada = !!competenciaDetails?.etapa3?.archivo_minuta_etapa3;
+
   console.log("id", id)
   console.log("archivo seleccionado", archivoSeleccionado)
   console.log("competenciaDetails", competenciaDetails)
@@ -34,8 +38,7 @@ const PrimeraMinuta = () => {
   const handleEnviarMinuta = () => {
     if (archivoSeleccionado) {
       patchArchivoMinuta(id, archivoSeleccionado);
-      //cambiar valor etapa3.estado
-      //redirigir a vista success
+      setIsSubmitSuccessful(true);
     }
   };
 
@@ -61,68 +64,93 @@ const PrimeraMinuta = () => {
         <h2 className="text-sans-h1">{competenciaDetails.nombre}</h2>
       </div>
 
+      {!isSubmitSuccessful ? (
+      <>
       <div className="border-bottom pb-3">
-        <h2 className="text-sans-25 mt-5 mb-4">Formularios sectoriales</h2>
-        {competenciaDetails?.etapa2?.formulario_sectorial ? (
-          Array.isArray(competenciaDetails.etapa2.formulario_sectorial) ? (
-            competenciaDetails.etapa2.formulario_sectorial.map((formulario, index) => (
-              <tr 
-                className={`d-flex justify-content-between p-3 align-items-center ${index % 2 === 0 ? 'neutral-line' : 'white-line'}`} 
-                key={formulario.id}
-              >
-                <td>{formulario.nombre}</td>
-                <td className="">
-                  <button className="btn-secundario-s text-decoration-underline" onClick={() => handleVerFormulario(formulario.id)}>
-                    Ver observaciones
-                  </button>
-                </td>
-              </tr>
-            ))
+          <h2 className="text-sans-25 mt-5 mb-4">Formularios sectoriales</h2>
+          {competenciaDetails?.etapa2?.formulario_sectorial ? (
+            Array.isArray(competenciaDetails.etapa2.formulario_sectorial) ? (
+              competenciaDetails.etapa2.formulario_sectorial.map((formulario, index) => (
+                <tr
+                  className={`d-flex justify-content-between p-3 align-items-center ${index % 2 === 0 ? 'neutral-line' : 'white-line'}`}
+                  key={formulario.id}
+                >
+                  <td>{formulario.nombre}</td>
+                  <td className="">
+                    <button className="btn-secundario-s text-decoration-underline" onClick={() => handleVerFormulario(formulario.id)}>
+                      Ver observaciones
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              competenciaDetails.etapa2.formulario_sectorial.detalle_formularios_sectoriales.map((formulario, index) => (
+                <tr
+                  className={`d-flex justify-content-between p-3 align-items-center ${index % 2 === 0 ? 'neutral-line' : 'white-line'}`}
+                  key={formulario.id}
+                >
+                  <td>{formulario.nombre}</td>
+                  <td className="">
+                    <button
+                      className="btn-secundario-s text-decoration-underline"
+                      onClick={() => handleVerFormulario(formulario.id)}
+                    >
+                      Ver observaciones
+                    </button>
+                  </td>
+                </tr>
+              ))
+            )
           ) : (
-            competenciaDetails.etapa2.formulario_sectorial.detalle_formularios_sectoriales.map((formulario, index) => (
-              <tr 
-                className={`d-flex justify-content-between p-3 align-items-center ${index % 2 === 0 ? 'neutral-line' : 'white-line'}`} 
-                key={formulario.id}
-              >
-                <td>{formulario.nombre}</td>
-                <td className="">
-                  <button 
-                  className="btn-secundario-s text-decoration-underline" 
-                  onClick={() => handleVerFormulario(formulario.id)}
-                  >
-                    Ver observaciones
-                  </button>
-                </td>
-              </tr>
-            ))
-          )
-        ) : (
-          <p>No hay formularios disponibles.</p>
-        )}
-      </div>
+            <p>No hay formularios disponibles.</p>
+          )}
+        </div>
 
-      <div>
-        <h2 className="text-sans-25 mt-5">Subir minuta (Obligatorio)</h2>
-        <h6 className="text-sans-h6 mb-4">Mínimo 1 archivo, peso máximo 20MB, formato PDF</h6>
-        <SubirArchivo 
-        handleFileSelect={handleFileSelect}
+        <div>
+          {etapaFinalizada ? (
+            <h2 className="text-sans-25 mt-5">Minuta DIPRES</h2>
+            ) : (
+            <h2 className="text-sans-25 mt-5">Subir minuta (Obligatorio)</h2>
+          )}
+          <h6 className="text-sans-h6 mb-4">Mínimo 1 archivo, peso máximo 20MB, formato PDF</h6>
+
+          <div className="d-flex justify-content-between py-3 fw-bold">
+            <div className="d-flex mb-2">
+              <div className="ms-2">#</div>
+              <div className="ms-5">Documento</div>
+            </div>
+            <div className="me-5">Acción</div>
+          </div>
+          <SubirArchivo
+            index="1"
+            handleFileSelect={handleFileSelect}
+            readOnly={!etapaFinalizada}
+            archivoDescargaUrl={competenciaDetails?.etapa3?.archivo_minuta_etapa3}
+            tituloDocumento={competenciaDetails?.etapa3?.archivo_minuta_etapa3} 
+          />
+          {/* ESTOS MENSAJES DE ERROR ELIMINARLOS O MEJORARLOS, SON POR MIENTRAS */}
+          {loadingPatch && <p>Cargando...</p>}
+          {errorPatch && <p>Error: {errorPatch.message}</p>}
+        </div>
+
+        <div className="d-flex justify-content-end my-5 me-3">
+          {!etapaFinalizada && (
+            <button
+              className="btn-primario-s"
+              disabled={!archivoSeleccionado}
+              onClick={handleEnviarMinuta}
+            >
+              Enviar minuta
+              <i className="material-symbols-rounded me-2">arrow_forward_ios</i>
+            </button>
+          )}
+        </div>
+      </>
+      ) : (
+        <SuccessMinutaDipres 
+        idCompetencia={competenciaDetails?.id}
         />
-        {/* ESTOS MENSAJES DE ERROR ELIMINARLOS O MEJORARLOS, SON POR MIENTRAS */}
-        {loadingPatch && <p>Cargando...</p>}
-        {errorPatch && <p>Error: {errorPatch.message}</p>}
-      </div>
-
-      <div className="d-flex justify-content-end my-5 me-3">
-        <button 
-        className="btn-primario-s"
-        disabled={!archivoSeleccionado}
-        onClick={handleEnviarMinuta}
-        >
-          Enviar minuta
-          <i className="material-symbols-rounded me-2">arrow_forward_ios</i>
-        </button>
-      </div>
-      
+      )}
     </div>
   );
 };
