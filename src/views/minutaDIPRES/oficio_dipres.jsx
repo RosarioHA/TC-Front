@@ -16,8 +16,6 @@ const OficioDipres = () => {
   const [ errorMessage, setErrorMessage ] = useState("");
   const [isSubmitSuccessful, setIsSubmitSuccessful] = useState(false);
   const [fechaMaxima, setFechaMaxima] = useState('');
-  //const location = useLocation(); 
-  //const extraData = location.state?.extraData;
 
   console.log("etapa num en oficio Dipres", etapaNum)
 
@@ -184,6 +182,7 @@ const OficioDipres = () => {
                 DIPRES recibió la información, así los plazos previamente establecidos
                 para el llenado de la minuta comienzan a correr.</h6>
             </div>
+            
             <div className="d-flex justify-content-end">
               {errorMessage && <div className="text-sans-h6-darkred me-4">{errorMessage}</div>}
               <button className="btn-primario-s ps-3" onClick={handleSubmission}>
