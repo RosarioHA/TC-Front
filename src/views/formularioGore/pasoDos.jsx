@@ -20,7 +20,7 @@ const PasoDosGore = () => {
   if (errorPasoGore)
     return <div>Error: {errorPasoGore.message || 'Error desconocido'}</div>;
   if (!dataPasoGore || dataPasoGore.length === 0)
-    return <div>No hay datos disponibles para el Paso 1</div>;
+    return <div>No hay datos disponibles para el Paso 2</div>;
 
   // Asegurarse de que paso2_gore exista antes de continuar.
   const {
@@ -30,6 +30,8 @@ const PasoDosGore = () => {
     costos_indirectos_sector,
     costos_directos_gore,
     resumen_costos,
+    personal_indirecto_sector,
+    costos_indirectos_gore,
     p_2_1_c_fluctuaciones_presupuestarias,
   } = dataPasoGore;
 
@@ -58,14 +60,18 @@ const PasoDosGore = () => {
             costosDirecSectorGet={costos_directos_sector}
             PersonalDirecto={personal_directo_sector}
             costosDircGore={costos_directos_gore}
+            data={dataPasoGore}
             resumen={resumen_costos}
             id={dataFormGore?.id}
             stepNumber={stepNumber}
           />
           <DosB
             costosIndirectos={costos_indirectos_sector}
+            constIndiGore={costos_indirectos_gore}
             resumen={resumen_costos}
+            personalIndirecto={personal_indirecto_sector}
             id={dataFormGore?.id}
+            data={dataPasoGore}
             stepNumber={stepNumber}
           />
           <ResumenTotal resumen={resumen_costos} />

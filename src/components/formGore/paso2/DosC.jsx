@@ -118,7 +118,6 @@ export const Fluctuaciones = ({ id, dataGastos, solo_lectura }) => {
     });
   };
 
-  console.log(dataGastos);
   // Manejadora de CustomInput y CustomTextArea
   const handleInputChange = (subtituloId, campo, valor) => {
     // Actualiza el estado con la nueva estructura
