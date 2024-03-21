@@ -26,8 +26,7 @@ export const FormGoreProvider = ({ children }) => {
   const updatePasoGore = useCallback(async (formData) => {
     try {
       await patchData(id, stepNumber, formData);
-      // Después de actualizar, podrías querer refrescar los datos relevantes
-      refetchTriggerGore(); // Asume que esta función refresca los datos de los pasos
+      refetchTriggerGore(); 
     } catch (error) {
       console.error('Error updating data', error);
     }

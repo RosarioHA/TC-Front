@@ -3,10 +3,9 @@ import { ResumenDirectos } from "../componentes/ResumenDirectos"
 import { SubAdicionales } from "../componentes/SubAdicionales"
 import { Subtitulo21 } from "../componentes/Subtitulo21"
 
-export const DosA = ({ costosDirecSectorGet, id, resumen , PersonalDirecto, data}) =>
+export const DosA = ({ costosDirecSectorGet, id, resumen, PersonalDirecto, data, costosDircGore }) =>
 {
 
-console.log('data',data)
 
   return (
     <>
@@ -37,7 +36,9 @@ console.log('data',data)
             etapas={data.listado_etapas}
             itemSub={data.listado_item_subtitulos_directos}
             subtitulos={data.listado_subtitulos_directos}
-            seccion="p_2_1_a_costos_directos" />
+            seccion="p_2_1_a_costos_directos"
+            data={costosDircGore}
+          />
         </div>
         <div className="my-4 ">
           <ResumenDirectos resumen={resumen} />
