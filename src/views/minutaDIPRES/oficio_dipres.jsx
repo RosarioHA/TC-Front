@@ -16,8 +16,11 @@ const OficioDipres = () => {
   const [ errorMessage, setErrorMessage ] = useState("");
   const [isSubmitSuccessful, setIsSubmitSuccessful] = useState(false);
   const [fechaMaxima, setFechaMaxima] = useState('');
+  const oficioEnviado = !!competenciaDetails?.etapa3?.oficio_inicio_dipres;
 
   console.log("etapa num en oficio Dipres", etapaNum)
+  console.log("competenciaDetails en oficio Dipres", competenciaDetails)
+  console.log("oficio enviado", oficioEnviado)
 
   useEffect(() => {
     if (competenciaDetails) {
@@ -112,16 +115,19 @@ const OficioDipres = () => {
           </nav>
         </div>
         <span className="text-sans-Title">Oficio DIPRES</span>
-        <div className="my-3">
-          <div className="text-sans-h1 mb-4">{competencia.nombre}</div>
-        </div>
+        <div className="text-sans-h1 mb-4">{competencia.nombre}</div>
 
         {!isSubmitSuccessful ? (
         <div>
           <div className="mt-3">
-            <span className="text-sans-24">Subir oficio (Obligatorio)</span>
+          {oficioEnviado ? (
+            <h2 className="text-sans-25 mt-5">Oficio DIPRES</h2>
+            ) : (
+            <h2 className="text-sans-25 mt-5">Subir oficio (Obligatorio)</h2>
+          )}
             <p className="text-sans-h6-grey">Máximo 1 archivo, peso máximo 20MB, formato PDF</p>
           </div>
+          
           <div className="mt-5">
             <table className="table table-striped table align-middle">
               <thead>

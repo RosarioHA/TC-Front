@@ -15,7 +15,7 @@ const PrimeraMinuta = () => {
   const [archivoSeleccionado, setArchivoSeleccionado] = useState(null);
   const [isSubmitSuccessful, setIsSubmitSuccessful] = useState(false);
   const navigate = useNavigate();
-  const etapaFinalizada = !!competenciaDetails?.etapa3?.archivo_minuta_etapa3;
+  const minutaEnviada = !!competenciaDetails?.etapa3?.archivo_minuta_etapa3;
 
   console.log("id", id)
   console.log("archivo seleccionado", archivoSeleccionado)
@@ -107,7 +107,7 @@ const PrimeraMinuta = () => {
         </div>
 
         <div>
-          {etapaFinalizada ? (
+          {minutaEnviada ? (
             <h2 className="text-sans-25 mt-5">Minuta DIPRES</h2>
             ) : (
             <h2 className="text-sans-25 mt-5">Subir minuta (Obligatorio)</h2>
@@ -124,7 +124,7 @@ const PrimeraMinuta = () => {
           <SubirArchivo
             index="1"
             handleFileSelect={handleFileSelect}
-            readOnly={!etapaFinalizada}
+            readOnly={minutaEnviada}
             archivoDescargaUrl={competenciaDetails?.etapa3?.archivo_minuta_etapa3}
             tituloDocumento={competenciaDetails?.etapa3?.archivo_minuta_etapa3} 
           />
@@ -134,7 +134,7 @@ const PrimeraMinuta = () => {
         </div>
 
         <div className="d-flex justify-content-end my-5 me-3">
-          {!etapaFinalizada && (
+          {!minutaEnviada && (
             <button
               className="btn-primario-s"
               disabled={!archivoSeleccionado}
