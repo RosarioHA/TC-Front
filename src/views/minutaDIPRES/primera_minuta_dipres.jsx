@@ -141,7 +141,7 @@ const PrimeraMinuta = () => {
               onClick={handleEnviarMinuta}
             >
               Enviar minuta
-              <i className="material-symbols-rounded me-2">arrow_forward_ios</i>
+              <i className="material-symbols-rounded ms-2">arrow_forward_ios</i>
             </button>
           )}
         </div>

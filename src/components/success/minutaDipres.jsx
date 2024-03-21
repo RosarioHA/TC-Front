@@ -17,9 +17,8 @@ export const SuccessMinutaDipres = ({ idCompetencia }) => {
             <img src={successIcon} />
           </div>
           <div className="col-9">
-            <h2 className="text-sans-h2 mb-4">Enviaste la Minuta DIPRES con éxito</h2>
-            {/* FALTA MENSAJE SUCCESS ENVIO MINUTA DIPRESS */}
-            <p className="text-sans-p"> </p>
+            <h2 className="text-sans-h2 mb-4">Subiste la Minuta DIPRES con éxito</h2>
+            <p className="text-sans-p">SUBDERE y otros usuarios asociados a la competencia revisarán este documento para seguir con el proceso de levantamiento de antecedentes de la competencia.</p>
           </div>
         </div>
       </div>
