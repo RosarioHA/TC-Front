@@ -1,6 +1,55 @@
+import { FichaInformatico } from "../componentes/FichaInformatico"
+import { FisicoInfraestructura } from "../componentes/FisicoInfraestructura"
+import { JustificarCostos } from "../componentes/justificarCostos"
+import { ResumenSubtitulos } from "../componentes/ResumenSubtitulos"
 
-export const Sub_2 = () => {
+export const Sub_2 = ({ data, paso3 }) =>
+{
+
+  console.log(data);
+  console.log(paso3);
+  const {
+    subtitulo_22_diferencia_sector,
+    subtitulo_22_justificados_gore,
+    subtitulo_22_por_justificar,
+    subtitulo_29_diferencia_sector,
+    subtitulo_29_justificados_gore,
+    subtitulo_29_por_justificar,
+
+  } = paso3;
+
+  const { p_3_2_recursos_comparados } = data
   return (
-    <div>Sub_2</div>
+    <>
+      <div className="pe-5 me-5 mt-5 col-11">
+        <span className="my-4 text-sans-h4">
+          3.2 Estimación razonada de la capacidad administrativa de sistemas informáticos y recursos físicos del Gobierno Regional
+        </span>
+        <div className="text-sans-h6-primary my-3 col-11">
+          <h6>
+            El objetivo de este apartado es cuantificar el personal necesario para realizar los procedimientos y tareas identificadas en el paso 2, Arquitectura de Procesos.
+          </h6>
+        </div>
+        <div className="my-4 col-11">
+          <JustificarCostos recursos={p_3_2_recursos_comparados} />
+        </div>
+        <div className="my-4 ">
+          <FichaInformatico />
+        </div>
+        <div className="my-4 ">
+          <FisicoInfraestructura />
+        </div>
+        <div className="my-4 ">
+          <ResumenSubtitulos
+            sub22Diferencia={subtitulo_22_diferencia_sector}
+            sub22Justificados={subtitulo_22_justificados_gore}
+            sub22Jutificar={subtitulo_22_por_justificar}
+            sub29Diferencia={subtitulo_29_diferencia_sector}
+            sub29Justificados={subtitulo_29_justificados_gore}
+            sub29Justificar={subtitulo_29_por_justificar}
+          />
+        </div>
+      </div>
+    </>
   )
 }
