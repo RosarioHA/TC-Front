@@ -15,7 +15,7 @@ export const Sub_1 = () =>
           </h6>
         </div>
         <div className="my-4 ">
-        <Sub1_a/>
+        <Sub1_a />
         <Sub1_b/>
         </div>
       </div>
