@@ -3,13 +3,15 @@ import { Outlet, useLocation, useParams} from 'react-router-dom';
 import { Timmer } from "../components/layout/Timmer"
 import { FormTitle } from "../components/layout/FormTitle"
 import { HorizontalRevision} from "../components/stepers/HorizontalRevision";
-import { FormRevFinalSubdereContext } from '../context/RevisionFinalSubdere';
+import { FormSubdereContext } from '../context/RevisionFinalSubdere';
 
 
-const FormRevFinalLayout = () =>{
-  const{dataFormRevFinalSubdere, loadingFormRevFinalSubdere, errorFormRevFinalSubdere, updateFormId} = useContext(FormRevFinalSubdereContext);
+const FormLayout = () =>{
+  const{ dataFormSubdere, loadingFormSubdere, errorFormSubdere, updateFormId } = useContext(FormSubdereContext);
   const location = useLocation();
   const params = useParams();
+
+  console.log('data', dataFormSubdere)
 
   useEffect(() => {
     const currentId = location.state?.id || params.id;
@@ -20,11 +22,11 @@ const FormRevFinalLayout = () =>{
 
   const baseUrl = `/home/revision-final-competencia/${params.id}`;
 
-  if (errorFormRevFinalSubdere) {
-    return <div>Error: {errorFormRevFinalSubdere.message}</div>;
+  if (errorFormSubdere) {
+    return <div>Error: {errorFormSubdere.message}</div>;
   }
 
-  if (!dataFormRevFinalSubdere) {
+  if (!dataFormSubdere) {
     return <div>Cargando...</div>;
   }
 
@@ -32,18 +34,18 @@ const FormRevFinalLayout = () =>{
     <div className="container-fluid col-11">
     <div className="row">
       <div className="col mb-2">
-        <FormTitle data={dataFormRevFinalSubdere} title="Revision Final SUBDERE" loading={loadingFormRevFinalSubdere} id={dataFormRevFinalSubdere.id} />
+        <FormTitle data={dataFormSubdere} title="Revision Final SUBDERE" loading={loadingFormSubdere} id={dataFormSubdere.id} />
         <div className="mx-5">
-          {dataFormRevFinalSubdere && <HorizontalRevision baseUrl={baseUrl} />}
-          <Timmer data={dataFormRevFinalSubdere} loading={loadingFormRevFinalSubdere} id={dataFormRevFinalSubdere.id} />
+          {dataFormSubdere && <HorizontalRevision baseUrl={baseUrl} />}
+          <Timmer data={dataFormSubdere} loading={loadingFormSubdere} id={dataFormSubdere.id} />
         </div>
       </div>
     </div>
     <div className="row">
-      <Outlet key={params.id} context={{ id: dataFormRevFinalSubdere.id, ...dataFormRevFinalSubdere }}  />
+      <Outlet key={params.id} context={{ id: dataFormSubdere.id, ...dataFormSubdere }}  />
     </div>
   </div>
   )
 }
 
-export default FormRevFinalLayout;
+export default FormLayout;

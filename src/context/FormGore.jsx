@@ -11,7 +11,7 @@ export const FormGoreProvider = ({ children }) => {
 
 
   const { dataFormGore, loadingFormGore, errorFormGore } = useFormularioGore(id);
-  const { dataPasoGore, loadingPasoGore, errorPasoGore ,refetchTriggerGore } = useGorePasos(id, stepNumber);
+  const { dataPasoGore, loadingPasoGore, errorPasoGore, refetchTriggerGore } = useGorePasos(id, stepNumber);
   const { patchData, isLoading, error, response } = usePatchGorePaso();
 
   const updateFormId = useCallback((newId) => {

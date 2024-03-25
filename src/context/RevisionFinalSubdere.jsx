@@ -1,19 +1,19 @@
 import { createContext, useCallback, useState } from "react";
-import { useFormularioRevFinalSubdere } from "../hooks/revisionFinalSubdere/useFormularioRevFinalSubdere";
-import { useRevFinalSubderePasos } from "../hooks/revisionFinalSubdere/useFormRevFinalPaso";
-import { usePatchRevFinalSubderePaso } from "../hooks/revisionFinalSubdere/useFormRevFinalUpdate";
+import { useFormularioSubdere } from "../hooks/revisionFinalSubdere/useFormularioSubdere";
+import { useSubderePasos } from "../hooks/revisionFinalSubdere/useFormRevFinalPaso";
+import { usePatchSubderePaso } from "../hooks/revisionFinalSubdere/useFormRevFinalUpdate";
 
 
-export const FormRevFinalSubdereContext = createContext();
+export const FormSubdereContext = createContext();
 
-export const FormRevFinalSubdereProvider = ({ children }) => {
+export const FormSubdereProvider = ({ children }) => {
   const [id, setId] = useState(null);
   const [stepNumber, setStepNumber] = useState(null);
 
 
-  const { dataFormRevFinalSubdere, loadingFormRevFinalSubdere, errorFormRevFinalSubdere } = useFormularioRevFinalSubdere(id);
-  const { dataPasoRevFinalSubdere, loadingPasoRevFinalSubdere, errorPasoRevFinalSubdere, refetchTriggerSubdere } = useRevFinalSubderePasos(id, stepNumber);
-  const { patchData, isLoading, error, response } = usePatchRevFinalSubderePaso();
+  const { dataFormSubdere, loadingFormSubdere, errorFormSubdere } = useFormularioSubdere(id);
+  const { dataPasoSubdere, loadingPasoSubdere, errorPasoSubdere, refetchTriggerSubdere } = useSubderePasos(id, stepNumber);
+  const { patchData, isLoading, error, response } = usePatchSubderePaso();
 
   const updateFormId = useCallback((newId) => {
     setId(newId);
@@ -24,10 +24,9 @@ export const FormRevFinalSubdereProvider = ({ children }) => {
     setStepNumber(newStepNumber);
   }, []);
 
-  const updatePasoRevFinalSubdere = useCallback(async (formData) => {
+  const updatePasoSubdere = useCallback(async (formData) => {
     try {
       await patchData(id, stepNumber, formData);
-      // Después de actualizar, podrías querer refrescar los datos relevantes
       refetchTriggerSubdere();
     } catch (error) {
       console.error('Error updating data', error);
@@ -55,25 +54,25 @@ export const FormRevFinalSubdereProvider = ({ children }) => {
   
 
   const value = {
-    dataFormRevFinalSubdere,
-    loadingFormRevFinalSubdere,
-    errorFormRevFinalSubdere,
-    dataPasoRevFinalSubdere,
-    loadingPasoRevFinalSubdere,
-    errorPasoRevFinalSubdere,
+    dataFormSubdere,
+    loadingFormSubdere,
+    errorFormSubdere,
+    dataPasoSubdere,
+    loadingPasoSubdere,
+    errorPasoSubdere,
     updateFormId,
     updateStepNumber, 
     patchLoading: isLoading,
     patchError: error,
     patchResponse: response,
-    updatePasoRevFinalSubdere,
+    updatePasoSubdere,
     handleUploadFiles,
     refetchTriggerSubdere
   };
 
   return (
-    <FormRevFinalSubdereContext.Provider value={value}>
+    <FormSubdereContext.Provider value={value}>
       {children}
-    </FormRevFinalSubdereContext.Provider>
+    </FormSubdereContext.Provider>
   );
 };

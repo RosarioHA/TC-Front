@@ -5,6 +5,7 @@ import { FormularioProvider } from "./context/FormSectorial";
 import FormularioLayout from './layout/FormularioLayout';
 import { FormGoreProvider } from './context/FormGore';
 import { CompetenciaProvider } from './context/competencias';
+import { FormSubdereProvider } from './context/RevisionFinalSubdere.jsx';
 const MainLayout = React.lazy(() => import('./layout/mainLayout'));
 const Home = React.lazy(() => import('./views/home'));
 const Landing = React.lazy(() => import('./views/landing'));
@@ -129,11 +130,11 @@ function App()
             <Route
               path="revision_subdere/:id"
               element={
-                // <FormGoreProvider>
+                <FormSubdereProvider>
                 <ProtectedRoute allowedProfiles={[ 'Usuario Sectorial', 'SUBDERE', 'Usuario Observador', 'GORE' ]}>
                   <RevisionSubdere />
                 </ProtectedRoute>
-                // </FormGoreProvider>
+                </FormSubdereProvider>
               }
             >
               <Route index element={<PasoUno />} />

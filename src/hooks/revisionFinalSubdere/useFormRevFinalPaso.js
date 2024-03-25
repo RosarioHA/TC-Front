@@ -2,20 +2,20 @@ import { useCallback, useEffect, useState } from "react";
 import { apiTransferenciaCompentencia } from "../../services/transferenciaCompetencia";
 
 
-export const useRevFinalSubderePasos = (id, stepNumber) => {
-  const [ dataPasoRevFinalSubdere , setDataPasoRevFinalSubdere]= useState(null);
-  const [ loadingPasoRevFinalSubdere, setLoadingPasoRevFinalSubdere] = useState(true); 
-  const [ errorPasoRevFinalSubdere, setErrorPasoRevFinalSubdere] = useState(null); 
+export const useSubderePasos = (id, stepNumber) => {
+  const [ dataPasoSubdere , setDataPasoSubdere]= useState(null);
+  const [ loadingPasoSubdere, setLoadingPasoSubdere] = useState(true); 
+  const [ errorPasoSubdere, setErrorPasoSubdere] = useState(null); 
 
   const fetchData = useCallback( async ()=>{
     try{
-      setLoadingPasoRevFinalSubdere(true); 
+      setLoadingPasoSubdere(true); 
       const response = await apiTransferenciaCompentencia.get(`/revision-final-competencia/${id}/paso-${stepNumber}/`);
-      setDataPasoRevFinalSubdere(response.data);
+      setDataPasoSubdere(response.data);
     } catch(err){
-      setErrorPasoRevFinalSubdere(err.response ? err.response.daa : err.message); 
+      setErrorPasoSubdere(err.response ? err.response.daa : err.message); 
     } finally {
-      setLoadingPasoRevFinalSubdere(false);
+      setLoadingPasoSubdere(false);
     }
   }, [id, stepNumber]);
 
@@ -23,12 +23,12 @@ export const useRevFinalSubderePasos = (id, stepNumber) => {
     if (id != null && stepNumber != null){
       fetchData();
     }else {
-      setDataPasoRevFinalSubdere(null);
-      setLoadingPasoRevFinalSubdere(false);
-      setErrorPasoRevFinalSubdere(null); 
+      setDataPasoSubdere(null);
+      setLoadingPasoSubdere(false);
+      setErrorPasoSubdere(null); 
     }
   }, [id, stepNumber, fetchData]);
 
-  return {dataPasoRevFinalSubdere, loadingPasoRevFinalSubdere, errorPasoRevFinalSubdere, refetchTriggerGore: fetchData}; 
+  return { dataPasoSubdere, loadingPasoSubdere, errorPasoSubdere, refetchTriggerSubdere: fetchData}; 
 
 }

@@ -1,23 +1,23 @@
 import { useCallback, useEffect, useState } from "react";
 import { apiTransferenciaCompentencia } from "../../services/transferenciaCompetencia";
 
-export const useFormularioRevFinalSubdere = (id) => {
-  const [dataFormRevFinalSubdere, setDataFormRevFinalSubdere] = useState(null);
-  const [loadingFormRevFinalSubdere, setLoadingFormRevFinalSubdere] = useState(false);
-  const [errorFormRevFinalSubdere, setErrorFormRevFinalSubdere] = useState(null);
+export const useFormularioSubdere = (id) => {
+  const [dataFormSubdere, setDataFormSubdere] = useState(null);
+  const [loadingFormSubdere, setLoadingFormSubdere] = useState(false);
+  const [errorFormSubdere, setErrorFormSubdere] = useState(null);
 
-  const fetchFormRevFinalSubdere = useCallback(async () => {
+  const fetchFormSubdere = useCallback(async () => {
     if (!id) {
-      setDataFormRevFinalSubdere(null);
-      setLoadingFormRevFinalSubdere(false);
+      setDataFormSubdere(null);
+      setLoadingFormSubdere(false);
       return;
     }
-    setLoadingFormRevFinalSubdere(true);
+    setLoadingFormSubdere(true);
     try {
       const response = await apiTransferenciaCompentencia.get(`/revision-final-competencia/${id}/`);
       // Asegurarse de que la respuesta contiene los datos esperados
       if (response && response.data) {
-        setDataFormRevFinalSubdere(response.data);
+        setDataFormSubdere(response.data);
       } else {
         // Si la respuesta no tiene el formato esperado, manejar como error
         throw new Error("Respuesta no válida del servidor");
@@ -27,13 +27,13 @@ export const useFormularioRevFinalSubdere = (id) => {
       // Verifica si el error tiene una estructura específica que esperas (p.ej., errores HTTP)
       if (err.response) {
         // Maneja errores específicos de la API, si es necesario
-        setErrorFormRevFinalSubdere(new Error(`Error ${err.response.status}: ${err.response.statusText}`));
+        setErrorFormSubdere(new Error(`Error ${err.response.status}: ${err.response.statusText}`));
       } else {
         // Manejo general de errores
-        setErrorFormRevFinalSubdere(err);
+        setErrorFormSubdere(err);
       }
     } finally {
-      setLoadingFormRevFinalSubdere(false);
+      setLoadingFormSubdere(false);
     }
   }, [id]);
 
@@ -41,7 +41,7 @@ export const useFormularioRevFinalSubdere = (id) => {
     let isActive = true;
     const fetch = async () => {
       if (isActive) {
-        await fetchFormRevFinalSubdere();
+        await fetchFormSubdere();
       }
     };
     fetch();
@@ -49,7 +49,7 @@ export const useFormularioRevFinalSubdere = (id) => {
     return () => {
       isActive = false;
     };
-  }, [fetchFormRevFinalSubdere]);
+  }, [fetchFormSubdere]);
 
-  return { dataFormRevFinalSubdere, loadingFormRevFinalSubdere, errorFormRevFinalSubdere };
+  return { dataFormSubdere, loadingFormSubdere, errorFormSubdere };
 };

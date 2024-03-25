@@ -1,7 +1,7 @@
 import { useState} from 'react';
 import { apiTransferenciaCompentencia } from "../../services/transferenciaCompetencia";
 
-export const usePatchRevFinalSubderePaso = () => {
+export const usePatchSubderePaso = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [response, setResponse] = useState(null);
