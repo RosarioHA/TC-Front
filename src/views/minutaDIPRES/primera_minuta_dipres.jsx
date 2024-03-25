@@ -6,15 +6,17 @@ import { useObservacionesSubdere } from "../../hooks/formulario/useObSubdereSect
 import { SubirArchivo } from "../../components/commons/subirArchivo";
 import { useEtapa3 } from "../../hooks/minutaDIPRES/useEtapa3";
 import { SuccessMinutaDipres } from "../../components/success/minutaDipres";
+import { useAuth } from "../../context/AuthContext";
 
 const PrimeraMinuta = () => {
   const { id } = useParams();
   const { competenciaDetails } = useCompetencia(id);
   const { observaciones } = useObservacionesSubdere(id);
-  const { patchArchivoMinuta, loadingPatch, errorPatch } = useEtapa3();
+  const { patchArchivoMinuta } = useEtapa3();
   const [archivoSeleccionado, setArchivoSeleccionado] = useState(null);
   const [isSubmitSuccessful, setIsSubmitSuccessful] = useState(false);
   const navigate = useNavigate();
+  const { userData } = useAuth();
   const minutaEnviada = !!competenciaDetails?.etapa3?.archivo_minuta_etapa3;
 
   console.log("id", id)
@@ -114,23 +116,38 @@ const PrimeraMinuta = () => {
           )}
           <h6 className="text-sans-h6 mb-4">Mínimo 1 archivo, peso máximo 20MB, formato PDF</h6>
 
-          <div className="d-flex justify-content-between py-3 fw-bold">
-            <div className="d-flex mb-2">
-              <div className="ms-2">#</div>
-              <div className="ms-5">Documento</div>
-            </div>
-            <div className="me-5">Acción</div>
-          </div>
-          <SubirArchivo
-            index="1"
-            handleFileSelect={handleFileSelect}
-            readOnly={minutaEnviada}
-            archivoDescargaUrl={competenciaDetails?.etapa3?.archivo_minuta_etapa3}
-            tituloDocumento={competenciaDetails?.etapa3?.archivo_minuta_etapa3} 
-          />
-          {/* ESTOS MENSAJES DE ERROR ELIMINARLOS O MEJORARLOS, SON POR MIENTRAS */}
-          {loadingPatch && <p>Cargando...</p>}
-          {errorPatch && <p>Error: {errorPatch.message}</p>}
+          {userData?.perfil === 'DIPRES' && (
+            <>
+              <div className="d-flex justify-content-between py-3 fw-bold">
+                <div className="d-flex mb-2">
+                  <div className="ms-2">#</div>
+                  <div className="ms-5">Documento</div>
+                </div>
+                <div className="me-5">Acción</div>
+              </div>
+              <SubirArchivo
+                index="1"
+                handleFileSelect={handleFileSelect}
+                readOnly={minutaEnviada}
+                archivoDescargaUrl={competenciaDetails?.etapa3?.archivo_minuta_etapa3}
+                tituloDocumento={competenciaDetails?.etapa3?.archivo_minuta_etapa3} 
+              />
+            </>
+          )}
+
+          {userData?.perfil !== 'DIPRES' && minutaEnviada && (
+            <SubirArchivo
+              index="1"
+              handleFileSelect={handleFileSelect}
+              readOnly={minutaEnviada}
+              archivoDescargaUrl={competenciaDetails?.etapa3?.archivo_minuta_etapa3}
+              tituloDocumento={competenciaDetails?.etapa3?.archivo_minuta_etapa3} 
+            />
+          )}
+
+          {userData?.perfil !== 'DIPRES' && !minutaEnviada && (
+            <p>Aun no se ha subido Minuta DIPRES.</p>
+          )}
         </div>
 
         <div className="d-flex justify-content-end my-5 me-3">
