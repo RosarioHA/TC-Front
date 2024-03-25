@@ -38,7 +38,7 @@ export const FormRevFinalSubdereProvider = ({ children }) => {
     try {
       const formData = new FormData();
       // Asegúrate de usar la clave correcta según lo espera el backend.
-      formData.append(`paso${stepNumber}_gore.${fieldName}`, archivo);
+      formData.append(`paso${stepNumber}.${fieldName}`, archivo);
   
       const response = await patchData(id, stepNumber, {}, archivo); 
       if (response) {

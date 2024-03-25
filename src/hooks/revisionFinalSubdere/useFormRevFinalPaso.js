@@ -7,7 +7,7 @@ export const useRevFinalSubderePasos = (id, stepNumber) => {
   const [ loadingPasoRevFinalSubdere, setLoadingPasoRevFinalSubdere] = useState(true); 
   const [ errorPasoRevFinalSubdere, setErrorPasoRevFinalSubdere] = useState(null); 
 
-  const fecthData = useCallback( async ()=>{
+  const fetchData = useCallback( async ()=>{
     try{
       setLoadingPasoRevFinalSubdere(true); 
       const response = await apiTransferenciaCompentencia.get(`/revision-final-competencia/${id}/paso-${stepNumber}/`);
@@ -21,14 +21,14 @@ export const useRevFinalSubderePasos = (id, stepNumber) => {
 
   useEffect(()=>{
     if (id != null && stepNumber != null){
-      fecthData();
+      fetchData();
     }else {
       setDataPasoRevFinalSubdere(null);
       setLoadingPasoRevFinalSubdere(false);
       setErrorPasoRevFinalSubdere(null); 
     }
-  }, [id, stepNumber, fecthData]);
+  }, [id, stepNumber, fetchData]);
 
-  return {dataPasoRevFinalSubdere, loadingPasoRevFinalSubdere, errorPasoRevFinalSubdere, refetchTriggerGore: fecthData}; 
+  return {dataPasoRevFinalSubdere, loadingPasoRevFinalSubdere, errorPasoRevFinalSubdere, refetchTriggerGore: fetchData}; 
 
 }

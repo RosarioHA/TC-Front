@@ -36,7 +36,7 @@ const PasoCuatro = React.lazy(() => import('./views/formularioSectorial/pasoCuat
 const PasoCinco = React.lazy(() => import('./views/formularioSectorial/pasoCinco'));
 const Resumen = React.lazy(() => import('./views/formularioSectorial/Resumen'));
 const FormGoreLayout = React.lazy(() => import('./layout/FormGore'));
-const RevisionSubdere = React.lazy(() => import('./layout/RevisionSubdere'));
+const RevisionSubdere = React.lazy(() => import('./layout/RevisionSubdereLayout'));
 const PasoUnoGore = React.lazy(() => import('./views/formularioGore/pasoUno'));
 const PasoDosGore = React.lazy(() => import('./views/formularioGore/pasoDos'));
 const PasoTresGore = React.lazy(() => import('./views/formularioGore/pasoTres'));
