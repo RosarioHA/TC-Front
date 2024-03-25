@@ -33,6 +33,7 @@ const PasoCinco = () => {
 
   const formularioEnviado = data.formulario_enviado
   const observacionesEnviadas = observaciones.observacion_enviada
+  console.log("formulario enviado", formularioEnviado)
 
   useEffect(() => {
     updateStepNumber(stepNumber);
@@ -172,7 +173,7 @@ const PasoCinco = () => {
           )}
 
           <div className="container me-5 pe-5">
-            <ButtonsNavigate step={paso5.numero_paso} id={data.id} />
+            <ButtonsNavigate step={paso5.numero_paso} id={data.id} ocultarEnviarBtn={formularioEnviado}/>
           </div>
         </div>
       </div>
