@@ -17,8 +17,7 @@ const OficioDipres = () => {
   const [ errorMessage, setErrorMessage ] = useState("");
   const [isSubmitSuccessful, setIsSubmitSuccessful] = useState(false);
   const [fechaMaxima, setFechaMaxima] = useState('');
-  const oficioEnviado = !!competenciaDetails?.etapa3?.oficio_inicio_dipres;
-  //const oficioEnviado = false;
+  const oficioEnviado = !!competenciaDetails?.etapa3?.oficio_origen;
 
   console.log("etapa num en oficio Dipres", etapaNum)
   console.log("competenciaDetails en oficio Dipres", competenciaDetails)
