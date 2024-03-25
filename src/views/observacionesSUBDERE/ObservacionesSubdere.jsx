@@ -151,18 +151,19 @@ const ObservacionesSubdere = () => {
             <h3 className="text-sans-h2">Debes revisar todos los formularios antes de terminar la etapa</h3>
             <p className="text-sans-p mt-3">Para poder terminar la etapa debes revisar todos los formularios y dejar observaciones donde consideres necesario.</p>
           </div>
-          <div className="d-flex justify-content-end my-5 me-3">
-            <button
-              className="btn-primario-s"
-              disabled={etapaOmitida === null}
-              onClick={handleCerrarEtapa}
-            >
-              Cerrar etapa
-              <i className="material-symbols-rounded me-2">arrow_forward_ios</i>
-            </button>
-          </div>
         </>
       )}
+
+      <div className="d-flex justify-content-end my-5 me-3">
+        <button
+        className="btn-primario-s"
+        disabled={etapaOmitida === null}
+        onClick={handleCerrarEtapa}
+        >
+          Cerrar etapa
+          <i className="material-symbols-rounded me-2">arrow_forward_ios</i>
+        </button>
+      </div>
     </div>
   )
 }
