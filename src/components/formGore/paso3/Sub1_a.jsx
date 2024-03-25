@@ -1,8 +1,15 @@
+import { useContext } from 'react';
+import { FormGOREContext } from '../../../context/FormGore';
 import CustomInputArea from '../../forms/textarea_paso2';
 import { CostoPersonal } from '../componentes/CostoPersonal';
 import { PersonalInformado } from '../componentes/PersonalInformado';
 
 export const Sub1_a = () => {
+  const { dataPasoGore } = useContext(FormGOREContext);
+
+  const { paso3_gore, p3_personal_directo_sector } = dataPasoGore;
+
+
   return (
     <>
       <div className="pe-5 me-5 mt-4 col-12">
@@ -17,8 +24,18 @@ export const Sub1_a = () => {
           </h6>
         </div>
         <div>
-          <CostoPersonal title="directos" />
-          <PersonalInformado />
+          <CostoPersonal
+            title="directos"
+            plantaJustificado={paso3_gore?.sub21_personal_planta_justificado}
+            plantaJustificar={paso3_gore?.sub21_personal_planta_justificar}
+            contrataJustificado={paso3_gore?.sub21_personal_contrata_justificado}
+            contrataJustificar={paso3_gore?.sub21_personal_contrata_justificar}
+            otrasJustificado={paso3_gore?.sub21_otras_remuneraciones_justificado}
+            otrasJustificar={paso3_gore?.sub21_otras_remuneraciones_justificar}
+            gastoPersonalJustificado={paso3_gore?.sub21_gastos_en_personal_justificado}
+            gastosPersonalJustificar={paso3_gore?.sub21_gastos_en_personal_justificar}
+          />
+          <PersonalInformado personal={p3_personal_directo_sector} />
         </div>
         <CustomInputArea
           label="Descripción de perfiles técnicos"
