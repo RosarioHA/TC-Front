@@ -8,6 +8,8 @@ const ObservacionesSubdereDipres = () => {
   const { id } = useParams();
   const { competenciaDetails } = useCompetencia(id);
 
+  console.log("competenciaDetails en OS Minuta Dipres", competenciaDetails);
+
   const handleBackButtonClick = () => {
     navigate(-1);
   };
