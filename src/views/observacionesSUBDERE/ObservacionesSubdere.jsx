@@ -145,7 +145,7 @@ const ObservacionesSubdere = () => {
         </div>
       )}
 
-      {competenciaDetails?.etapa3?.omitida === true &&  (
+      {competenciaDetails?.etapa2?.estado !== 'Finalizada' &&  (
         <>
           <div>
             <h3 className="text-sans-h2">Debes revisar todos los formularios antes de terminar la etapa</h3>
