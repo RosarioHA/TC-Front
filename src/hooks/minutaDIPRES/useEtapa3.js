@@ -41,5 +41,23 @@ export const useEtapa3 = () => {
     }
   }, []);
 
-  return { patchCompetenciaOmitida, patchArchivoMinuta, archivoSubido, loadingPatch, errorPatch };
+  const patchComentarioMinuta = useCallback(async (competenciaId, comentarios) => {
+    console.log("data en el patch OS minuta dipres", comentarios)
+    setLoadingPatch(true);
+    try {
+      const data = {
+        comentario_minuta_etapa3: comentarios,
+        observacion_minuta_sectorial_enviada: true,
+      };
+      const response = await apiTransferenciaCompentencia.patch(`/etapa3/${competenciaId}/`, data);
+      console.log("Comentario de minuta actualizado:", response.data);
+    } catch (error) {
+      console.error("Error al actualizar el comentario de la minuta:", error);
+      setErrorPatch(error);
+    } finally {
+      setLoadingPatch(false);
+    }
+  }, []);
+
+  return { patchCompetenciaOmitida, patchArchivoMinuta, patchComentarioMinuta, archivoSubido, loadingPatch, errorPatch };
 };

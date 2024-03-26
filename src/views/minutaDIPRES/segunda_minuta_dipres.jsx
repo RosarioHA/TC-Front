@@ -1,25 +1,21 @@
 import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useCompetencia } from "../../hooks/competencias/useCompetencias";
-import { useObservacionesSubdere } from "../../hooks/formulario/useObSubdereSectorial";
 import { SubirArchivo } from "../../components/commons/subirArchivo";
 import { useEtapa5 } from "../../hooks/minutaDIPRES/useEtapa5";
 import { SuccessMinutaDipres } from "../../components/success/minutaDipres";
+import { useAuth } from "../../context/AuthContext";
 
 const SegundaMinuta = () => {
   const { id } = useParams();
   const { competenciaDetails } = useCompetencia(id);
-  const { observaciones } = useObservacionesSubdere(id);
-  const { patchArchivoMinuta, loadingPatch, errorPatch } = useEtapa5();
+  const { patchArchivoMinuta } = useEtapa5();
   const [archivoSeleccionado, setArchivoSeleccionado] = useState(null);
   const [isSubmitSuccessful, setIsSubmitSuccessful] = useState(false);
   const navigate = useNavigate();
-  const etapaFinalizada = !!competenciaDetails?.etapa5?.archivo_minuta_etapa5;
-
-
-  console.log("id", id)
-  console.log("competenciaDetails", competenciaDetails)
-  console.log("observaciones", observaciones)
+  const { userData } = useAuth();
+  const minutaEnviada = !!competenciaDetails?.etapa5?.archivo_minuta_etapa5;
+  const etapa3omitida = competenciaDetails?.etapa3?.omitida
 
   const handleBackButtonClick = () => {
     navigate(-1);
@@ -64,7 +60,8 @@ const SegundaMinuta = () => {
 
       {!isSubmitSuccessful ? (
       <>
-      <div className="border-bottom pb-3">
+        {etapa3omitida && (
+        <div className="border-bottom pb-3">
           <h2 className="text-sans-25 mt-5 mb-4">Formularios sectoriales</h2>
           {competenciaDetails?.etapa2?.formulario_sectorial ? (
             Array.isArray(competenciaDetails.etapa2.formulario_sectorial) ? (
@@ -99,7 +96,10 @@ const SegundaMinuta = () => {
           ) : (
             <p>No hay formularios disponibles.</p>
           )}
-        </div><div className="border-bottom pb-3">
+        </div>
+        )}
+
+        <div className="border-bottom pb-3">
             <h2 className="text-sans-25 mt-5 mb-4">Formularios GORE</h2>
             {competenciaDetails?.etapa4?.formularios_gore ? (
               Array.isArray(competenciaDetails.etapa4.formularios_gore) ? (
@@ -134,25 +134,52 @@ const SegundaMinuta = () => {
             ) : (
               <p>No hay formularios disponibles.</p>
             )}
-          </div><div>
-            {etapaFinalizada ? (
+          </div>
+
+          <div>
+            {minutaEnviada ? (
               <h2 className="text-sans-25 mt-5">Minuta DIPRES</h2>
               ) : (
               <h2 className="text-sans-25 mt-5">Subir minuta (Obligatorio)</h2>
             )}
             <h6 className="text-sans-h6 mb-4">Mínimo 1 archivo, peso máximo 20MB, formato PDF</h6>
-            <SubirArchivo
-              index="1"
-              handleFileSelect={handleFileSelect}
-              readOnly={etapaFinalizada}
-              archivoDescargaUrl={competenciaDetails?.etapa5?.archivo_minuta_etapa5}
-              tituloDocumento={competenciaDetails?.etapa5?.archivo_minuta_etapa5} 
-            />
-            {/* ESTOS MENSAJES DE ERROR ELIMINARLOS O MEJORARLOS, SON POR MIENTRAS */}
-            {loadingPatch && <p>Cargando...</p>}
-            {errorPatch && <p>Error: {errorPatch.message}</p>}
-          </div><div className="d-flex justify-content-end my-5 me-3">
-            {!etapaFinalizada && (
+
+            {userData?.perfil === 'DIPRES' && (
+              <>
+                <div className="d-flex justify-content-between py-3 fw-bold">
+                  <div className="d-flex mb-2">
+                    <div className="ms-2">#</div>
+                    <div className="ms-5">Documento</div>
+                  </div>
+                  <div className="me-5">Acción</div>
+                </div>
+                <SubirArchivo
+                  index="1"
+                  handleFileSelect={handleFileSelect}
+                  readOnly={minutaEnviada}
+                  archivoDescargaUrl={competenciaDetails?.etapa5?.archivo_minuta_etapa5}
+                  tituloDocumento={competenciaDetails?.etapa5?.archivo_minuta_etapa5} 
+                />
+              </>
+            )}
+
+            {userData?.perfil !== 'DIPRES' && minutaEnviada && (
+              <SubirArchivo
+                index="1"
+                handleFileSelect={handleFileSelect}
+                readOnly={minutaEnviada}
+                archivoDescargaUrl={competenciaDetails?.etapa5?.archivo_minuta_etapa5}
+                tituloDocumento={competenciaDetails?.etapa5?.archivo_minuta_etapa5} 
+              />
+            )}
+
+            {userData?.perfil !== 'DIPRES' && !minutaEnviada && (
+              <p>Aun no se ha subido Minuta DIPRES.</p>
+            )}
+          </div>
+          
+          <div className="d-flex justify-content-end my-5 me-3">
+            {!minutaEnviada && (
               <button
                 className="btn-primario-s"
                 disabled={!archivoSeleccionado}
@@ -163,7 +190,7 @@ const SegundaMinuta = () => {
               </button>
             )}
           </div>
-          </>
+      </>
       ) : (
         <SuccessMinutaDipres 
         idCompetencia={competenciaDetails?.id}
