@@ -1,8 +1,6 @@
-
 import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useCompetencia } from "../../hooks/competencias/useCompetencias";
-import { useObservacionesSubdere } from "../../hooks/formulario/useObSubdereSectorial";
 import { SubirArchivo } from "../../components/commons/subirArchivo";
 import { useEtapa3 } from "../../hooks/minutaDIPRES/useEtapa3";
 import { SuccessMinutaDipres } from "../../components/success/minutaDipres";
@@ -11,19 +9,12 @@ import { useAuth } from "../../context/AuthContext";
 const PrimeraMinuta = () => {
   const { id } = useParams();
   const { competenciaDetails } = useCompetencia(id);
-  const { observaciones } = useObservacionesSubdere(id);
   const { patchArchivoMinuta } = useEtapa3();
   const [archivoSeleccionado, setArchivoSeleccionado] = useState(null);
   const [isSubmitSuccessful, setIsSubmitSuccessful] = useState(false);
   const navigate = useNavigate();
   const { userData } = useAuth();
   const minutaEnviada = !!competenciaDetails?.etapa3?.archivo_minuta_etapa3;
-
-  console.log("id", id)
-  console.log("archivo seleccionado", archivoSeleccionado)
-  console.log("competenciaDetails", competenciaDetails)
-  console.log("observaciones", observaciones)
-  console.log("array formularios sectorial", competenciaDetails?.etapa2?.formulario_sectorial)
 
   const handleBackButtonClick = () => {
     navigate(-1);

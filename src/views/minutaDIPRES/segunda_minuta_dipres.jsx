@@ -9,7 +9,7 @@ import { useAuth } from "../../context/AuthContext";
 const SegundaMinuta = () => {
   const { id } = useParams();
   const { competenciaDetails } = useCompetencia(id);
-  const { patchArchivoMinuta, loadingPatch, errorPatch } = useEtapa5();
+  const { patchArchivoMinuta } = useEtapa5();
   const [archivoSeleccionado, setArchivoSeleccionado] = useState(null);
   const [isSubmitSuccessful, setIsSubmitSuccessful] = useState(false);
   const navigate = useNavigate();
@@ -143,17 +143,41 @@ const SegundaMinuta = () => {
               <h2 className="text-sans-25 mt-5">Subir minuta (Obligatorio)</h2>
             )}
             <h6 className="text-sans-h6 mb-4">Mínimo 1 archivo, peso máximo 20MB, formato PDF</h6>
-            <SubirArchivo
-              index="1"
-              handleFileSelect={handleFileSelect}
-              readOnly={minutaEnviada}
-              archivoDescargaUrl={competenciaDetails?.etapa5?.archivo_minuta_etapa5}
-              tituloDocumento={competenciaDetails?.etapa5?.archivo_minuta_etapa5} 
-            />
-            {/* ESTOS MENSAJES DE ERROR ELIMINARLOS O MEJORARLOS, SON POR MIENTRAS */}
-            {loadingPatch && <p>Cargando...</p>}
-            {errorPatch && <p>Error: {errorPatch.message}</p>}
+
+            {userData?.perfil === 'DIPRES' && (
+              <>
+                <div className="d-flex justify-content-between py-3 fw-bold">
+                  <div className="d-flex mb-2">
+                    <div className="ms-2">#</div>
+                    <div className="ms-5">Documento</div>
+                  </div>
+                  <div className="me-5">Acción</div>
+                </div>
+                <SubirArchivo
+                  index="1"
+                  handleFileSelect={handleFileSelect}
+                  readOnly={minutaEnviada}
+                  archivoDescargaUrl={competenciaDetails?.etapa5?.archivo_minuta_etapa5}
+                  tituloDocumento={competenciaDetails?.etapa5?.archivo_minuta_etapa5} 
+                />
+              </>
+            )}
+
+            {userData?.perfil !== 'DIPRES' && minutaEnviada && (
+              <SubirArchivo
+                index="1"
+                handleFileSelect={handleFileSelect}
+                readOnly={minutaEnviada}
+                archivoDescargaUrl={competenciaDetails?.etapa5?.archivo_minuta_etapa5}
+                tituloDocumento={competenciaDetails?.etapa5?.archivo_minuta_etapa5} 
+              />
+            )}
+
+            {userData?.perfil !== 'DIPRES' && !minutaEnviada && (
+              <p>Aun no se ha subido Minuta DIPRES.</p>
+            )}
           </div>
+          
           <div className="d-flex justify-content-end my-5 me-3">
             {!minutaEnviada && (
               <button
