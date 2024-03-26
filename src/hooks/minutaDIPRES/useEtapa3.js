@@ -42,6 +42,7 @@ export const useEtapa3 = () => {
   }, []);
 
   const patchComentarioMinuta = useCallback(async (competenciaId, comentarios) => {
+    console.log("data en el patch OS minuta dipres", comentarios)
     setLoadingPatch(true);
     try {
       const data = {
