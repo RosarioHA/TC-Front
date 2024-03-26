@@ -204,6 +204,9 @@ const PasoTres = () =>
 
           {userSubdere && formularioEnviado && (
             <div className="mt-5 my-4">
+              {!observacionPaso3.trim() && observacionesEnviadas ? (
+                <p>No se han dejado observaciones en este paso.</p>
+              ) : (
               <CustomTextarea
                 label="Observaciones (Opcional)"
                 placeholder="Escribe tus observaciones de este paso del formulario"
@@ -216,6 +219,7 @@ const PasoTres = () =>
                 loading={loadingObservaciones}
                 saved={saved}
               />
+              )}
             </div>
           )}
 

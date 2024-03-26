@@ -79,19 +79,23 @@ const PasoCuatro = () => {
 
           {userSubdere && formularioEnviado && (
             <div className="mt-5 my-4">
-            <CustomTextarea 
-            label="Observaciones (Opcional)"
-            placeholder="Escribe tus observaciones de este paso del formulario"
-            rows={5}
-            maxLength={500}
-            value={observacionPaso4}
-            onChange={(e) => setObservacionPaso4(e.target.value)}
-            readOnly={observacionesEnviadas}
-            onBlur={handleGuardarObservacion}
-            loading={loadingObservaciones}
-            saved={saved}
-            />
-          </div>
+              {!observacionPaso4.trim() && observacionesEnviadas ? (
+                <p>No se han dejado observaciones en este paso.</p>
+              ) : (
+              <CustomTextarea 
+              label="Observaciones (Opcional)"
+              placeholder="Escribe tus observaciones de este paso del formulario"
+              rows={5}
+              maxLength={500}
+              value={observacionPaso4}
+              onChange={(e) => setObservacionPaso4(e.target.value)}
+              readOnly={observacionesEnviadas}
+              onBlur={handleGuardarObservacion}
+              loading={loadingObservaciones}
+              saved={saved}
+              />
+              )}
+            </div>
           )}
 
           {/*Botones navegacion*/}

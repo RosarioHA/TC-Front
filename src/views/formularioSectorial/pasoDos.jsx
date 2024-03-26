@@ -139,6 +139,9 @@ const PasoDos = () =>
 
           {userSubdere && formularioEnviado && (
             <div className="mt-5 my-4">
+              {!observacionPaso2.trim() && observacionesEnviadas ? (
+                <p>No se han dejado observaciones en este paso.</p>
+              ) : (
               <CustomTextarea
                 label="Observaciones (Opcional)"
                 placeholder="Escribe tus observaciones de este paso del formulario"
@@ -151,10 +154,10 @@ const PasoDos = () =>
                 loading={loadingObservaciones}
                 saved={saved}
               />
+              )}
             </div>
           )}
 
-          {/*Botones navegacion  */}
           <div className="container me-5 pe-5">
             <ButtonsNavigate step={paso2.numero_paso} id={data.id} />
           </div>

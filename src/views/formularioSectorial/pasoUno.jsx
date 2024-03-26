@@ -52,7 +52,6 @@ const PasoUno = () => {
 
   const avance = pasoData?.paso1?.avance; 
 
-
   return (
     <>
       <div className="col-1">
@@ -71,19 +70,23 @@ const PasoUno = () => {
 
           {userSubdere && formularioEnviado && (
             <div className="mt-5 my-4">
-            <CustomTextarea 
-            label="Observaciones (Opcional)"
-            placeholder="Escribe tus observaciones de este paso del formulario"
-            rows={5}
-            maxLength={500}
-            value={observacionPaso1}
-            onChange={(e) => setObservacionPaso1(e.target.value)}
-            readOnly={observacionesEnviadas}
-            onBlur={handleGuardarObservacion}
-            loading={loadingObservaciones}
-            saved={saved}
-            />
-          </div>
+              {!observacionPaso1.trim() && observacionesEnviadas ? (
+                <p>No se han dejado observaciones en este paso.</p>
+              ) : (
+                <CustomTextarea 
+                  label="Observaciones (Opcional)"
+                  placeholder="Escribe tus observaciones de este paso del formulario"
+                  rows={5}
+                  maxLength={500}
+                  value={observacionPaso1}
+                  onChange={(e) => setObservacionPaso1(e.target.value)}
+                  readOnly={observacionesEnviadas}
+                  onBlur={handleGuardarObservacion}
+                  loading={loadingObservaciones}
+                  saved={saved}
+                />
+              )}
+            </div>
           )}
 
           <ButtonsNavigate step={paso1Data.numero_paso} id={data ? data.id : null} />

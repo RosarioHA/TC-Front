@@ -1,11 +1,12 @@
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 
-export const ButtonsNavigate = ({ step , id }) => {
+export const ButtonsNavigate = ({ step, id, ocultarEnviarBtn }) => {
   const navigate = useNavigate();
   const { userData } = useAuth();
   const userSubdere = userData?.perfil?.includes('SUBDERE');
   console.log("id en buttons navigate", id)
+  console.log("user data", userData)
 
   const getRouteForStep = (stepNumber) => {
     const stepToRouteMap = {
@@ -29,7 +30,8 @@ export const ButtonsNavigate = ({ step , id }) => {
     }
   };
 
-  return ( <div className={`px-5 me-5 pt-3 pb-4 d-flex ${step === 1 ? "justify-content-end" : "justify-content-between"}`}>
+  return ( 
+  <div className={`px-5 me-5 pt-3 pb-4 d-flex ${step === 1 ? "justify-content-end" : "justify-content-between"}`}>
       {/* El botón "Atrás" solo se muestra si no estamos en el primer paso */}
       {step > 1 ? (
         <button className="btn-secundario-s" onClick={() => navigate(getRouteForStep(step - 1))}>
@@ -39,12 +41,12 @@ export const ButtonsNavigate = ({ step , id }) => {
       ) : <div></div> /* Elemento vacío para mantener el espacio */}
 
       {/* Botón "Siguiente" o "Ir a resumen de formulario" */}
-      {step < 5 ? (
+      {step < 5 && !ocultarEnviarBtn ? (
         <button className="btn-primario-s" onClick={handleNextButtonClick}>
           Siguiente
           <i className="material-symbols-rounded me-2">arrow_forward_ios</i>
         </button>
-      ) : (
+      ) : !ocultarEnviarBtn && (
         <button className="btn-primario-s" onClick={handleNextButtonClick}>
           Ir a resumen de formulario
         </button>
