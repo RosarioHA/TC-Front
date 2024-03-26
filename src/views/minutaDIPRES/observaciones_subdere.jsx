@@ -34,7 +34,7 @@ const ObservacionesSubdereDipres = () => {
 
       <div className="border-bottom pb-3">
         <h1 className="text-sans-Title mt-5">Observaciones SUBDERE</h1>
-        <h2 className="text-sans-h1 mt-4">Minuta DIPRES</h2>
+        <h2 className="text-sans-h1 mt-4">Formularios GORE y Minuta DIPRES</h2>
         <h2 className="text-sans-h2">{competenciaDetails.nombre}</h2>
       </div>
 
@@ -60,18 +60,12 @@ const ObservacionesSubdereDipres = () => {
         />
       </div>
 
-      <div className="mt-5">
-        <h2 className="text-sans-h2">Debes revisar todos los formularios antes de terminar la etapa</h2>
-        <p className="text-sans-p">Para poder terminar la etapa debes revisar todos los formularios y dejar observaciones donde consideres necesario.</p>
-      </div>
       <div className="d-flex justify-content-end my-5">
-        <button className="btn-primario-s">
+        <button className="btn-primario-s" disabled={false}>
           <p className="mb-0 text-decoration-underline">Cerrar etapa</p>
           <i className="material-symbols-rounded ms-2">arrow_forward_ios</i>
         </button>
       </div>
-
-
     </div>
   )
 };
