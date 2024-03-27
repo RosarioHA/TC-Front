@@ -19,6 +19,7 @@ const EditarCompetencia = React.lazy(() => import('./views/gestion_competencias/
 const EstadoCompentencia = React.lazy(() => import('./views/gestion_competencias/Estado_compentencia'));
 const SubirOficio = React.lazy(() => import('./views/gestion_competencias/Subir_oficio'));
 const SubirOficioDipres = React.lazy(() => import('./views/minutaDIPRES/oficio_dipres.jsx'));
+const SubirOficioGore = React.lazy(() => import('./views/formularioGore/oficio_gore.jsx'));
 const Minuta = React.lazy(() => import('./views/gestion_competencias/Minuta'));
 const PrimeraMinutaDipres = React.lazy(() => import('./views/minutaDIPRES/primera_minuta_dipres'));
 const SegundaMinutaDipres = React.lazy(() => import('./views/minutaDIPRES/segunda_minuta_dipres'));
@@ -82,6 +83,7 @@ function App()
             {createProtectedRoute("crear_competencia", CreacionCompetencia, [ 'SUBDERE', 'Usuario Observador' ])}
             {createProtectedRoute("estado_competencia/:id/subir_oficio/:etapaNum/:subetapaId", SubirOficio, [ 'SUBDERE', 'Usuario Observador' ])}
             {createProtectedRoute("estado_competencia/:id/subir_oficio_dipres/:etapaNum/", SubirOficioDipres, [ 'SUBDERE', 'Usuario Observador' ])}
+            {createProtectedRoute("estado_competencia/:id/subir_oficio_gore/:etapaNum/", SubirOficioGore, [ 'SUBDERE', 'Usuario Observador' ])}
             <Route path="estado_competencia/:id/" element={<EstadoCompentencia />} />
             <Route path="success_edicion" element={<SuccessEdicion />} />
             <Route path="success_creacion" element={<SuccessCreacion />} />
