@@ -27,5 +27,24 @@ export const useEtapa5 = () => {
     }
   }, []);
 
-  return { patchArchivoMinuta, archivoSubido, loadingPatch, errorPatch };
+  const patchComentarioMinuta = useCallback(async (competenciaId, comentarios) => {
+    console.log("data en el patch OS minuta GORE", comentarios)
+    setLoadingPatch(true);
+    try {
+      const data = {
+        comentario_minuta_etapa5: comentarios,
+        // comentario_minuta_gore: comentarios,
+        observacion_minuta_gore_enviada: true,
+      };
+      const response = await apiTransferenciaCompentencia.patch(`/etapa5/${competenciaId}/`, data);
+      console.log("Comentario de minuta actualizado:", response.data);
+    } catch (error) {
+      console.error("Error al actualizar el comentario de la minuta:", error);
+      setErrorPatch(error);
+    } finally {
+      setLoadingPatch(false);
+    }
+  }, []);
+
+  return { patchArchivoMinuta, patchComentarioMinuta, archivoSubido, loadingPatch, errorPatch };
 };

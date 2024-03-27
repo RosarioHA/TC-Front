@@ -100,7 +100,9 @@ const ObservacionesSubdereDipres = () => {
       </>
       ) : (
         <SuccessOSminutaDIPRES 
-        idCompetencia={competenciaDetails?.id}/>
+        idCompetencia={competenciaDetails?.id}
+        mensaje="Para continuar con la sigueinte etapa del proceso asegurate de subir el oficio que notifica al grupo de usuarios GORE."
+        />
       )}
 
     </div>

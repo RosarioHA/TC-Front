@@ -22,7 +22,7 @@ const SegundaMinuta = () => {
   };
 
   const handleVerFormulario = (formularioId) => {
-    navigate(`/home/formulario_sectorial/${formularioId}/paso_1`);
+    navigate(`/home/formulario_gore/${formularioId}/paso_1`);
   };
 
   const handleFileSelect = (file) => {
