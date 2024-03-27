@@ -15,7 +15,7 @@ export const JustificarCostos = ({ recursos }) =>
           </tr>
         </thead>
         <tbody>
-          {recursos.map((recurso) => (
+          {Array.isArray(recursos) &&recursos.map((recurso) => (
             <tr key={recurso.id}>
               <th className="">{recurso.subtitulo_label_value.label}</th>
               <td className="col-2">

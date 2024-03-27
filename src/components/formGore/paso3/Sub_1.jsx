@@ -1,7 +1,7 @@
 import { Sub1_a } from "./Sub1_a"
 import { Sub1_b } from "./Sub1_b"
 
-export const Sub_1 = () =>
+export const Sub_1 = ({data}) =>
 {
   return (
     <>
@@ -15,8 +15,8 @@ export const Sub_1 = () =>
           </h6>
         </div>
         <div className="my-4 ">
-        <Sub1_a />
-        <Sub1_b/>
+        <Sub1_a data={data}/>
+        <Sub1_b data={data}/>
         </div>
       </div>
     </>

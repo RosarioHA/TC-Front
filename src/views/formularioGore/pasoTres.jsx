@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect , useCallback} from "react";
 import { FormGOREContext } from "../../context/FormGore";
 import { MonoStepers } from "../../components/stepers/MonoStepers";
 import { Avance } from "../../components/tables/Avance";
@@ -13,15 +13,20 @@ const PasoTresGore = () =>
   const { dataFormGore, dataPasoGore, errorPasoGore, updateStepNumber } = useContext(FormGOREContext);
   const stepNumber = 3;
 
+  const handleUpdateStepNumber = useCallback(() =>
+  {
+    const stepNumber = 3;
+    updateStepNumber(stepNumber);
+  }, [ updateStepNumber ]);
+
   useEffect(() =>
   {
-    updateStepNumber(stepNumber);
-  }, [ updateStepNumber, stepNumber, dataFormGore ])
+    handleUpdateStepNumber();
+  }, [ handleUpdateStepNumber ]);
+
 
   if (errorPasoGore) return <div>Error: {errorPasoGore.message || "Error desconocido"}</div>;
   if (!dataPasoGore || dataPasoGore.length === 0) return <div>No hay datos disponibles para el Paso 3</div>;
-
-  console.log(dataPasoGore);
 
   const { paso3_gore = {},
     costos_informados_gore,
@@ -29,7 +34,6 @@ const PasoTresGore = () =>
     costos_justificar_gore
   } = dataPasoGore;
 
-  console.log("3", paso3_gore)
 
   return (
     <>
@@ -42,7 +46,7 @@ const PasoTresGore = () =>
             <h3 className="mt-3 me-4">{paso3_gore?.nombre_paso}</h3>
             <Avance avance={paso3_gore?.avance} />
           </div>
-          <Sub_1 />
+          <Sub_1 data={dataPasoGore} />
           <Sub_2 data={dataPasoGore} paso3={paso3_gore} />
           <ResumenDiferencial
             informada={costos_informados_gore}

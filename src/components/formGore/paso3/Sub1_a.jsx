@@ -1,14 +1,13 @@
-import { useContext } from 'react';
-import { FormGOREContext } from '../../../context/FormGore';
+// import { useContext } from 'react';
+// import { FormGOREContext } from '../../../context/FormGore';
 import CustomInputArea from '../../forms/textarea_paso2';
 import { CostoPersonal } from '../componentes/CostoPersonal';
 import { PersonalInformado } from '../componentes/PersonalInformado';
 
-export const Sub1_a = () => {
-  const { dataPasoGore } = useContext(FormGOREContext);
+export const Sub1_a = ({data}) => {
 
-  const { paso3_gore, p3_personal_directo_sector } = dataPasoGore;
 
+  const { paso3_gore, p3_personal_directo_sector } = data;
 
   return (
     <>

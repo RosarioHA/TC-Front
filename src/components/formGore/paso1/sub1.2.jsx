@@ -7,7 +7,7 @@ import { FormGOREContext } from "../../../context/FormGore";
 export const SubUno_dos = ({ flujograma, id, stepNumber }) => {
   const { uploadDocumento } = useFlujograma(id, stepNumber);
   const { updatePasoGore } = useContext(FormGOREContext);
-  const {dataPasoGore,  refetchTriggerGore } = useGorePasos(id, stepNumber);
+  const {dataPasoGore } = useGorePasos(id, stepNumber);
   const [flujogramaGoreFiles, setFlujogramaGoreFiles] = useState(dataPasoGore?.flujograma_ejercicio_competencia || flujograma || []);
   const [iframeSrc, setIframeSrc] = useState('https://pdfobject.com/pdf/sample.pdf');
   const [uploading, setUploading] = useState(false);
@@ -30,7 +30,6 @@ export const SubUno_dos = ({ flujograma, id, stepNumber }) => {
       setUploading(true);
       try {
         await uploadDocumento(file); 
-        refetchTriggerGore(); 
       } catch (error) {
         console.error('Error uploading file:', error);
       } finally {
@@ -46,7 +45,6 @@ export const SubUno_dos = ({ flujograma, id, stepNumber }) => {
         flujograma_ejercicio_competencia: [{ id: idFlujo, DELETE: true }]
       };
       await updatePasoGore(payload);
-      await refetchTriggerGore(); 
     } catch (error) {
       console.error('Error al eliminar el documento', error);
     } finally {

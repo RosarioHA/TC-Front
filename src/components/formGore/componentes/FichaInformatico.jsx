@@ -1,6 +1,126 @@
+import { useContext, useState , useEffect} from 'react';
+import { useForm, Controller } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 import CustomTextarea from '../../forms/custom_textarea';
+import { validacionFichaInformaticos } from '../../../validaciones/esquemasFichas';
+import { FormGOREContext } from '../../../context/FormGore';
 
-export const FichaInformatico = () => {
+
+export const FichaInformatico = ({ dataInformatico }) => {
+  const [fichasTecnicas, setFichasTecnicas] = useState(dataInformatico);
+  const { updatePasoGore } = useContext(FormGOREContext);
+  const { control, handleSubmit } = useForm({
+    resolver: yupResolver(validacionFichaInformaticos),
+    mode: 'onBlur',
+  });
+
+
+
+  useEffect(() => {
+    setFichasTecnicas(Array.isArray(dataInformatico) ? dataInformatico : []);
+  }, [dataInformatico]);
+
+  const [inputStatus, setInputStatus] = useState({
+    nombre_plataforma: { loading: false, saved: false },
+    descripcion_tecnica: { loading: false, saved: false },
+    costo: { loading: false, saved: false },
+    funcion: { loading: false, saved: false },
+  });
+
+  const agregarFichaTecnica = async () => {
+    const nuevaFichaPayload = {
+      nombre_plataforma: '',
+      descripcion_tecnica: '',
+      costo: null,
+      funcion: '',
+      sector: null,
+      sector_nombre: '',
+      subtitulo_label_value: { label: 'Sub. 29', value: '9' },
+      item_subtitulo: 43,
+      item_subtitulo_label_value: {
+        label: '07 - Programas Informáticos',
+        value: '43',
+      },
+    };
+  
+    try {
+      const respuesta = await updatePasoGore({
+        p_3_2_a_sistemas_informaticos: [nuevaFichaPayload]
+      });
+      if (respuesta && respuesta.fichaCreada) {
+        setFichasTecnicas(fichasActuales => [...fichasActuales, respuesta.fichaCreada]);
+      } else {
+        console.error('La ficha técnica no fue creada correctamente');
+      }
+    } catch (error) {
+      console.error('Error al agregar la ficha técnica', error);
+    }
+  };
+
+  const handleUpdate = async (fichaId, field, value) => {
+    setInputStatus((prev) => ({
+      ...prev,
+      [fichaId]: {
+        ...prev[fichaId],
+        [field]: { value, loading: true, saved: false },
+      },
+    }));
+
+    try {
+      const payload = {
+        p_3_2_a_sistemas_informaticos: [
+          {
+            id: fichaId,
+            [field]: value,
+          },
+        ],
+      };
+      await updatePasoGore(payload);
+      setInputStatus((prevStatus) => ({
+        ...prevStatus,
+        [fichaId]: {
+          ...prevStatus[fichaId],
+          [field]: {
+            ...prevStatus[fichaId][field],
+            loading: false,
+            saved: true,
+          },
+        },
+      }));
+    } catch (error) {
+      console.error('Error updating data', error);
+      setInputStatus((prevStatus) => ({
+        ...prevStatus,
+        [fichaId]: {
+          ...prevStatus[fichaId],
+          [field]: { loading: false, saved: false },
+        },
+      }));
+    }
+  };
+
+  const eliminarFichaTecnica = async (idFicha) => {
+
+    const nuevasFichas = fichasTecnicas.filter(ficha => ficha.id !== idFicha);
+    setFichasTecnicas(nuevasFichas);
+    try {
+      await updatePasoGore({
+        p_3_2_a_sistemas_informaticos: [
+          {
+            id: idFicha,
+            DELETE: true,
+          },
+        ],
+      });
+    } catch (error) {
+      console.error('Error eliminando la ficha:', error);
+    }
+  };
+
+  const onSubmit = (data) => {
+    console.log(data);
+  };
+
   return (
     <>
       <div>
@@ -8,77 +128,217 @@ export const FichaInformatico = () => {
           <span className="my-4 text-sans-h4">
             a. Ficha de sistemas informáticos
           </span>
-          <div className="text-sans-h6-primary my-3 col-11">
-            <h6>
-              Tomando como base la informacion aportada por el Ministerio o
-              Servicio de origen, agregue todas aquellas fichas técnicas de
-              programas o softwares requeridos y que el Gobierno Regional no
-              posee:
-            </h6>
-          </div>
-          <div className="col-10 mt-5 mb-3 border-bottom">
-            <div className="d-flex flex-row col">
-              <div className="mt-2 me-3">1</div>
-              <div className="my-2 col-3 text-sans-p-bold">
-                Nombre de Plataforma o Sofware
-              </div>
-              <div className="mb-2 pt-3 col ms-3">
-                <CustomTextarea placeholder="Escribe el nombre de la plataforma o software" />
-              </div>
-            </div>
-            <div className="d-flex flex-row col">
-              <div className="my-3 col-3 pe-2 ms-4 me-3 text-sans-p-bold">
-                Descripción técnica y versiones
-              </div>
-              <div className="my-3 col">
-                <CustomTextarea placeholder="Indice la versión y una descripción técnica del software o plataforma" />
-              </div>
-            </div>
-            <div className="d-flex flex-row col">
-              <div className="my-3 col-3 pe-2 ms-4 me-3 text-sans-p-bold">
-                Costo
-              </div>
-              <div className="d-flex flex-row col">
-                <div className="my-3 col-5">
-                  <CustomTextarea
-                    placeholder="Costo del recurso"
-                    descripcion="Campo númerico en miles de pesos."
-                  />
-                </div>
-                <div className="d-flex col-11 mb-5 mt-3">
-                  <div className="border border-1 col-3  py-3">
-                    <span className="text-sans-p-grayc mx-4">Subtitulo</span>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            {Array.isArray(fichasTecnicas) &&
+              fichasTecnicas?.map((ficha, index) => (
+                <div key={ficha.id} className="col-10 mt-5 mb-3 border-bottom">
+                  {/* Nombre de Plataforma o Software */}
+                  <div className="d-flex flex-row col">
+                    <div className="mt-2 me-3">{index + 1}</div>
+                    <div className="my-2 col-3 text-sans-p-bold">
+                      Nombre de Plataforma o Software
+                    </div>
+                    <div className="mb-2 pt-2 col ms-3">
+                      <Controller
+                        control={control}
+                        name={`fichas[${index}].nombre_plataforma`}
+                        defaultValue={ficha.nombre_plataforma || ''}
+                        render={({ field, fieldState: { error } }) => (
+                          <CustomTextarea
+                            {...field}
+                            placeholder="Escribe el nombre de la plataforma o software"
+                            error={error?.message}
+                            maxLength={500}
+                            loading={
+                              inputStatus[ficha.id]?.nombre_plataforma
+                                ?.loading && !error
+                            }
+                            saved={
+                              inputStatus[ficha.id]?.nombre_plataforma?.saved &&
+                              !error
+                            }
+                            onBlur={(e) => {
+                              field.onBlur();
+                              if (
+                                ficha.nombre_plataforma !== e.target.value &&
+                                !error
+                              ) {
+                                handleUpdate(
+                                  ficha.id,
+                                  'nombre_plataforma',
+                                  e.target.value
+                                );
+                              }
+                            }}
+                          />
+                        )}
+                      />
+                    </div>
                   </div>
-                  <div className="border border-1 col-3 py-3 ms-3">
-                    <span className="text-sans-p-grayc mx-3">Item</span>
+
+                  {/* Descripción técnica y versiones */}
+                  <div className="d-flex flex-row col">
+                    <div className="my-3 col-3 pe-2 ms-4 me-3 text-sans-p-bold">
+                      Descripción técnica y versiones
+                    </div>
+                    <div className="my-3 col">
+                      <Controller
+                        control={control}
+                        name={`fichas[${index}].descripcion_tecnica`}
+                        defaultValue={ficha.descripcion_tecnica || ''}
+                        render={({ field, fieldState: { error } }) => (
+                          <CustomTextarea
+                            {...field}
+                            placeholder="Indice la versión y una descripción técnica del software o plataforma"
+                            error={error?.message}
+                            maxLength={500}
+                            loading={
+                              inputStatus[ficha.id]?.descripcion_tecnica
+                                ?.loading && !error
+                            }
+                            saved={
+                              inputStatus[ficha.id]?.descripcion_tecnica
+                                ?.saved && !error
+                            }
+                            onBlur={(e) => {
+                              field.onBlur();
+                              if (
+                                ficha.descripcion_tecnica !== e.target.value &&
+                                !error
+                              ) {
+                                handleUpdate(
+                                  ficha.id,
+                                  'descripcion_tecnica',
+                                  e.target.value
+                                );
+                              }
+                            }}
+                          />
+                        )}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Costo */}
+                  <div className="d-flex flex-row col">
+                    <div className="my-3 col-3 pe-2 ms-4 me-3 text-sans-p-bold">
+                      Costo
+                    </div>
+                    <div className="d-flex flex-row col">
+                      <div className="my-3 col-5 me-3">
+                        <Controller
+                          name={`fichas[${index}].costo`}
+                          control={control}
+                          defaultValue={ficha.costo || ''}
+                          render={({ field, fieldState: { error } }) => (
+                            <CustomTextarea
+                              {...field}
+                              placeholder="Costo del recurso"
+                              descripcion="Campo numérico en miles de pesos."
+                              error={error?.message}
+                              loading={
+                                inputStatus[ficha.id]?.costo?.loading && !error
+                              }
+                              saved={
+                                inputStatus[ficha.id]?.costo?.saved && !error
+                              }
+                              onBlur={(e) => {
+                                field.onBlur();
+                                if (ficha.costo !== e.target.value && !error) {
+                                  handleUpdate(
+                                    ficha.id,
+                                    'costo',
+                                    Number(e.target.value)
+                                  );
+                                }
+                              }}
+                            />
+                          )}
+                        />
+                      </div>
+                      <div className="d-flex col-10 mb-5 mt-3">
+                        <div className="border border-1 col-3  py-1 px-1 ms-3">
+                          <div className="text-sans-p-grayc px-2 my-3 text-center">
+                            {ficha.subtitulo_label_value?.label}
+                          </div>
+                        </div>
+                        <div className="border border-1 col-3 py-1 px-1 ms-3">
+                          <div className="text-sans-p-grayc  px-1 m-1">
+                            {ficha.item_subtitulo_label_value?.label}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Función en el ejercicio de la competencia identificando perfiles de usuario */}
+                  <div className="d-flex flex-row col">
+                    <div className="my-3 col-3 pe-2 ms-4 me-3 text-sans-p-bold">
+                      Función en el ejercicio de la competencia identificando
+                      perfiles de usuario
+                    </div>
+                    <div className="my-3 col">
+                      <Controller
+                        name={`fichas[${index}].funcion`}
+                        control={control}
+                        defaultValue={ficha.funcion || ''}
+                        render={({ field, fieldState: { error } }) => (
+                          <CustomTextarea
+                            {...field}
+                            placeholder="Describe la función en el ejercicio de la competencia y los perfiles de usuario."
+                            maxLength={500}
+                            error={error?.message}
+                            loading={
+                              inputStatus[ficha.id]?.funcion?.loading && !error
+                            }
+                            saved={
+                              inputStatus[ficha.id]?.funcion?.saved && !error
+                            }
+                            onBlur={(e) => {
+                              field.onBlur();
+                              if (ficha.funcion !== e.target.value && !error) {
+                                handleUpdate(
+                                  ficha.id,
+                                  'funcion',
+                                  e.target.value
+                                );
+                              }
+                            }}
+                          />
+                        )}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Botón para borrar la ficha */}
+                  <div className="col-12 d-flex justify-content-end">
+                    {fichasTecnicas.length > 1 && (
+                      <button
+                        className="btn-terciario-ghost ms-2 mb-2"
+                        onClick={() => eliminarFichaTecnica(ficha.id)}
+                      >
+                        <i className="material-symbols-rounded me-2">delete</i>
+                        <p className="mb-0 text-decoration-underline">
+                          Borrar ficha
+                        </p>
+                      </button>
+                    )}
                   </div>
                 </div>
-              </div>
-            </div>
-            <div className="d-flex flex-row col">
-              <div className="my-3 col-3 pe-2 ms-4 me-3 text-sans-p-bold">
-                Función en el ejercicio de la competencia identificando perfiles
-                de usuario
-              </div>
-              <div className="my-3 col">
-                <CustomTextarea placeholder="Describe la función en el ejercicio de la competencia y los perfiles de usuario" />
-              </div>
-            </div>
-            <div className="col-12 d-flex justify-content-end">
-              <button className="btn-terciario-ghost ms-2 mb-2">
-                <i className="material-symbols-rounded me-2">delete</i>
-                <p className="mb-0 text-decoration-underline">Borrar ficha</p>
+              ))}
+            <div>
+              <button
+                className="btn-secundario-s m-2"
+                type="button"
+                onClick={agregarFichaTecnica}
+              >
+                <i className="material-symbols-rounded me-2">add</i>
+                <p className="mb-0 text-decoration-underline">
+                  Agregar ficha técnica
+                </p>
               </button>
             </div>
-          </div>
-          <div>
-            <button className="btn-secundario-s m-2" type="submit">
-              <i className="material-symbols-rounded me-2">add</i>
-              <p className="mb-0 text-decoration-underline">
-                Agregar ficha técnica
-              </p>
-            </button>
-          </div>
+          </form>
         </div>
       </div>
     </>

@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState} from 'react';
 import CustomTextarea from '../../forms/custom_textarea';
 import InputCosto from '../../forms/input_costo';
 import { OpcionesAB } from '../../forms/opciones_AB';
@@ -7,17 +7,13 @@ import { Monto } from './Monto';
 
 export const CostosDirectosSector = ({ costoDirectosGet }) =>
 {
-  const { updatePasoGore, refetchTriggerGore } = useContext(FormGOREContext);
+  const { updatePasoGore} = useContext(FormGOREContext);
   const [ inputStatus, setInputStatus ] = useState({
     descripcion: { loading: false, saved: false },
     total_anual_gore: { loading: false, saved: false },
     es_transitorio: { loading: false, saved: false },
   });
 
-  useEffect(() =>
-  {
-    refetchTriggerGore();
-  }, [ refetchTriggerGore ]);
 
 
   const handleUpdate = async (costoId, field, value, saveImmediately = false) =>
