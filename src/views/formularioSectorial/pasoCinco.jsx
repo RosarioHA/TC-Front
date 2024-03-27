@@ -12,7 +12,7 @@ import { useObservacionesSubdere } from '../../hooks/formulario/useObSubdereSect
 import { usePasoForm } from '../../hooks/formulario/usePasoForm';
 
 const PasoCinco = () => {
-  const { updateStepNumber, pasoData, data,  errorPaso } = useContext(FormularioContext);
+  const { updateStepNumber, pasoData, data, errorPaso } = useContext(FormularioContext);
   const stepNumber = 5;
   const [refreshSubpaso_CincoDos, setRefreshSubpaso_CincoDos] = useState(false);
   const { dataPaso, refetchTrigger} = usePasoForm(data.id, stepNumber)
@@ -31,9 +31,11 @@ const PasoCinco = () => {
   const [itemSubtitulosDirectoData, setItemSubtitulosDirectoData] = useState('');
   const [itemSubtitulosIndirectoData, setItemSubtitulosIndirectoData] = useState('');
 
-  const formularioEnviado = data.formulario_enviado
+  const formularioEnviado = data.formulario_enviado //data de formulario sectorial, esta mal
   const observacionesEnviadas = observaciones.observacion_enviada
   console.log("formulario enviado", formularioEnviado)
+  console.log("data", data)
+  console.log("observaciones", observaciones)
 
   useEffect(() => {
     updateStepNumber(stepNumber);
@@ -151,7 +153,7 @@ const PasoCinco = () => {
             dataPaso={dataPaso}
           />
 
-          {userSubdere && formularioEnviado && (
+          {userSubdere && observacionesEnviadas && (
             <div className="mt-5 my-4">
               {!observacionPaso5.trim() && observacionesEnviadas ? (
                 <p>No se han dejado observaciones en este paso.</p>
@@ -173,7 +175,7 @@ const PasoCinco = () => {
           )}
 
           <div className="container me-5 pe-5">
-            <ButtonsNavigate step={paso5.numero_paso} id={data.id} ocultarEnviarBtn={formularioEnviado}/>
+            <ButtonsNavigate step={paso5.numero_paso} id={data.id} ocultarEnviarBtn={observacionesEnviadas}/>
           </div>
         </div>
       </div>

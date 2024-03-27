@@ -16,7 +16,6 @@ const PasoCuatro = () => {
   const { observaciones, updateObservacion, fetchObservaciones, loadingObservaciones, saved } = useObservacionesSubdere(data ? data.id : null);
   const [observacionPaso4, setObservacionPaso4] = useState("");
 
-  const formularioEnviado = data.formulario_enviado
   const observacionesEnviadas = observaciones.observacion_enviada
 
   useEffect(() => {
@@ -77,7 +76,7 @@ const PasoCuatro = () => {
             </div>
           </div>
 
-          {userSubdere && formularioEnviado && (
+          {userSubdere && observacionesEnviadas && (
             <div className="mt-5 my-4">
               {!observacionPaso4.trim() && observacionesEnviadas ? (
                 <p>No se han dejado observaciones en este paso.</p>

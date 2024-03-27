@@ -18,7 +18,6 @@ const PasoUno = () => {
   const { observaciones, updateObservacion, fetchObservaciones, loadingObservaciones, saved } = useObservacionesSubdere(data ? data.id : null);
   const [observacionPaso1, setObservacionPaso1] = useState("");
 
-  const formularioEnviado = data.formulario_enviado
   const observacionesEnviadas = observaciones.observacion_enviada
 
   useEffect(() => {
@@ -68,7 +67,7 @@ const PasoUno = () => {
           <Subpaso_dos pasoData={paso1Data} organigrama={organigramaregional}  id={data ? data.id : null} stepNumber={stepNumber} solo_lectura={solo_lectura}/>
           <Subpaso_tres pasoData={paso1Data}   id={data ? data.id : null} stepNumber={stepNumber} solo_lectura={solo_lectura}/>
 
-          {userSubdere && formularioEnviado && (
+          {userSubdere && observacionesEnviadas && (
             <div className="mt-5 my-4">
               {!observacionPaso1.trim() && observacionesEnviadas ? (
                 <p>No se han dejado observaciones en este paso.</p>
