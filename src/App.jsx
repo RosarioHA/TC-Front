@@ -23,6 +23,7 @@ const Minuta = React.lazy(() => import('./views/gestion_competencias/Minuta'));
 const PrimeraMinutaDipres = React.lazy(() => import('./views/minutaDIPRES/primera_minuta_dipres'));
 const SegundaMinutaDipres = React.lazy(() => import('./views/minutaDIPRES/segunda_minuta_dipres'));
 const ObservacionesSubdereDipres = React.lazy(() => import('./views/minutaDIPRES/observaciones_subdere.jsx'));
+const ObservacionesSubdereGore = React.lazy(() => import('./views/formularioGore/observaciones_subdere_gore.jsx'));
 const Error404 = React.lazy(() => import('./views/Errors/Error404'));
 const Error500 = React.lazy(() => import('./views/Errors/Error500'));
 const Error503 = React.lazy(() => import('./views/Errors/Error503'));
@@ -128,6 +129,7 @@ function App()
               <Route path="paso_2" element={<PasoDosGore />} />
               <Route path="paso_3" element={<PasoTresGore />} />
               <Route path="Resumen_formulario_gore" element={<Resumen />} />
+              <Route path="observaciones_subdere" element={<ObservacionesSubdereGore />} />
             </Route>
             <Route
               path="revision_subdere/:id"
