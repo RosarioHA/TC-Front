@@ -114,6 +114,7 @@ function App()
               <Route path="resumen_formulario" element={<Resumen />} />
               <Route path="resumen_os" element={<ResumenOS />} />
             </Route>
+
             <Route
               path="formulario_gore/:id"
               element={
@@ -123,14 +124,22 @@ function App()
                   </ProtectedRoute>
                 </FormGoreProvider>
               }
-            >
+              >
               <Route index element={<PasoUno />} />
               <Route path="paso_1" element={<PasoUnoGore />} />
               <Route path="paso_2" element={<PasoDosGore />} />
               <Route path="paso_3" element={<PasoTresGore />} />
               <Route path="Resumen_formulario_gore" element={<Resumen />} />
-              <Route path="observaciones_subdere" element={<ObservacionesSubdereGore />} />
             </Route>
+            
+            <Route 
+            path="formulario_gore/:id/observaciones_subdere" 
+            element={
+              <ProtectedRoute allowedProfiles={[ 'Usuario Sectorial', 'SUBDERE', 'Usuario Observador', 'GORE' ]}>
+                <ObservacionesSubdereGore />
+              </ProtectedRoute>
+            } />
+
             <Route
               path="revision_subdere/:id"
               element={

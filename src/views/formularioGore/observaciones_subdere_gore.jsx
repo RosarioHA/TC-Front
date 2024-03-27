@@ -6,7 +6,7 @@ import CustomTextarea from "../../components/forms/custom_textarea";
 import { useEtapa3 } from "../../hooks/minutaDIPRES/useEtapa3";
 import { SuccessOSminutaDIPRES } from "../../components/success/OSminutaDipres";
 
-const ObservacionesSubdereDipres = () => {
+const ObservacionesSubdereGore = () => {
   const { id } = useParams();
   const { competenciaDetails } = useCompetencia(id);
   const { patchComentarioMinuta, loadingPatch } = useEtapa3();
@@ -41,6 +41,10 @@ const ObservacionesSubdereDipres = () => {
     setIsSubmitSuccessful(true);
   }
 
+  const handleVerFormulario = (formularioId) => {
+    navigate(`/home/formulario_sectorial/${formularioId}/paso_1`);
+  };
+
   return(
     <div className="container col-11">
       <div className="py-3 d-flex">
@@ -61,13 +65,53 @@ const ObservacionesSubdereDipres = () => {
 
       <div className="border-bottom pb-3">
         <h1 className="text-sans-Title mt-5">Observaciones SUBDERE</h1>
-        <h2 className="text-sans-h1 mt-4">Minuta DIPRES</h2>
+        <h2 className="text-sans-h1 mt-4">Formularios GORE y Minuta DIPRES</h2>
         <h2 className="text-sans-h2">{competenciaDetails.nombre}</h2>
       </div>
 
+      {/* FORMULARIOS GORE */}
+      <div className="border-bottom pb-3">
+        <h2 className="text-sans-25 mt-5 mb-4">Formularios GORE</h2>
+        {competenciaDetails?.etapa4?.formularios_gore ? (
+          Array.isArray(competenciaDetails.etapa4.formularios_gore) ? (
+            competenciaDetails.etapa4.formularios_gore.map((formulario, index) => (
+              <tr
+                className={`d-flex justify-content-between p-3 align-items-center ${index % 2 === 0 ? 'neutral-line' : 'white-line'}`}
+                key={formulario.id}
+                >
+                <td>{formulario.nombre}</td>
+                <td className="">
+                  <button className="btn-secundario-s text-decoration-underline" onClick={() => handleVerFormulario(formulario.id)}>
+                    Ver observaciones
+                  </button>
+                </td>
+              </tr>
+            ))
+          ) : (
+          competenciaDetails.etapa4.formularios_gore.detalle_formularios_gore.map((formulario, index) => (
+            <tr
+              className={`d-flex justify-content-between p-3 align-items-center ${index % 2 === 0 ? 'neutral-line' : 'white-line'}`}
+              key={formulario.id}
+            >
+              <td>{formulario.nombre}</td>
+              <td className="">
+                <button className="btn-secundario-s text-decoration-underline" onClick={() => handleVerFormulario(formulario.id)}>
+                  Ver observaciones
+                </button>
+              </td>
+            </tr>
+            ))
+          )
+        ) : (
+        <p>No hay formularios disponibles.</p>
+        )}
+      </div>
+
+      {/* MINUTA DIPRES */}
       {!isSubmitSuccessful ? (
       <>
         <div className="mt-5 border-bottom pb-3">
+        <h2 className="text-sans-25 mt-5 mb-4">Formularios GORE</h2>
           <SubirArchivo
             readOnly={true}
             archivoDescargaUrl={competenciaDetails?.etapa3?.archivo_minuta_etapa3}
@@ -89,6 +133,18 @@ const ObservacionesSubdereDipres = () => {
           />
         </div>
 
+        { !observacionEnviada ? (
+          <div className="mt-4">
+            <h2 className="text-sans-h2">Debes revisar todos los formularios y escribir observaciones para DIPRES antes de terminar la etapa</h2>
+            <p className="text-sans-p">Para poder terminar la etapa debes revisar todos los formularios y dejar observaciones donde consideres necesario.</p>
+          </div>
+        ):(
+          <div className="mt-4">
+            <h2 className="text-sans-h2">Esta todo listo para que termines la etapa</h2>
+            <p className="text-sans-p">Ya revisaste todos los formularios. </p>
+          </div>
+        )}
+
         { !observacionesEnviadas && (
         <div className="d-flex justify-content-end my-5">
           <button className="btn-primario-s" disabled={!observacionEnviada} onClick={handleCerrarEtapa}>
@@ -107,4 +163,4 @@ const ObservacionesSubdereDipres = () => {
   )
 };
 
-export default ObservacionesSubdereDipres;
+export default ObservacionesSubdereGore;
