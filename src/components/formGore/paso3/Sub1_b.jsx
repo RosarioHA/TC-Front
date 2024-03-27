@@ -1,10 +1,8 @@
-import { useContext } from 'react';
 import { CostoPersonal } from '../componentes/CostoPersonal';
-import { FormGOREContext } from '../../../context/FormGore';
-export const Sub1_b = () =>
+
+export const Sub1_b = ({data}) =>
 {
-  const {dataPasoGore} = useContext(FormGOREContext)
-  const {paso3_gore}= dataPasoGore
+  const {paso3_gore}= data
   return (
     <>
       <div className="pe-5 me-5 mt-4 col-12">

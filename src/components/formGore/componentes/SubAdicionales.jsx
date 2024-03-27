@@ -19,7 +19,7 @@ export const SubAdicionales = ({
   const [subAdicionales, setSubAdicionales] = useState(
     Array.isArray(data) ? data : []
   );
-  const { updatePasoGore, refetchTriggerGore, patchResponse, patchError } =
+  const { updatePasoGore, patchResponse, patchError } =
     useContext(FormGOREContext);
   const [esquemaValidacion, setEsquemaValidacion] = useState(null);
   const [opcionesSubtitulos, setOpcionesSubtitulos] = useState([]);
@@ -29,7 +29,6 @@ export const SubAdicionales = ({
 
   
   useEffect(() => {
-    console.log("Data inicial:", data);
     setSubAdicionales(Array.isArray(data) ? data : []);
   }, [data]);
   
@@ -153,7 +152,6 @@ export const SubAdicionales = ({
           ...nuevoSubAdicional,
         },
       ]);
-      refetchTriggerGore();
     } catch (error) {
       console.error('Error al intentar agregar un subtítulo:', error);
     }
@@ -161,7 +159,6 @@ export const SubAdicionales = ({
 
   // Lógica para eliminar una ficha de una costo
   const eliminarElemento = async (subAdicionalId) => {
-    console.log('id', subAdicionalId);
     const payload = {
       [seccion]: [
         {
@@ -188,7 +185,7 @@ export const SubAdicionales = ({
       prevSubAdicionales.map((subAdicional) => {
         if (subAdicional.id === subAdicionalId) {
           if (campo === 'item_subtitulo') {
-            return { ...subAdicional, subtitulo_label_value: valor }; // Actualiza subtitulo_label_value con el objeto {label, value}
+            return { ...subAdicional, subtitulo_label_value: valor }; 
           }
           return { ...subAdicional, [campo]: valor };
         }
