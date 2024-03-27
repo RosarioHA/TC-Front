@@ -42,7 +42,7 @@ const ObservacionesSubdereGore = () => {
   }
 
   const handleVerFormulario = (formularioId) => {
-    navigate(`/home/formulario_sectorial/${formularioId}/paso_1`);
+    navigate(`/home/formulario_gore/${formularioId}/paso_1`);
   };
 
   return(
@@ -111,7 +111,7 @@ const ObservacionesSubdereGore = () => {
       {!isSubmitSuccessful ? (
       <>
         <div className="mt-5 border-bottom pb-3">
-        <h2 className="text-sans-25 mt-5 mb-4">Formularios GORE</h2>
+        <h2 className="text-sans-25 mt-5 mb-4">Minuta DIPRES</h2>
           <SubirArchivo
             readOnly={true}
             archivoDescargaUrl={competenciaDetails?.etapa3?.archivo_minuta_etapa3}
