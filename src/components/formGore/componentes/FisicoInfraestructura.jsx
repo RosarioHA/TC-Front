@@ -4,26 +4,27 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { validacionInfraestructura } from '../../../validaciones/esquemasFichas';
 import CustomTextarea from '../../forms/custom_textarea';
 import { FormGOREContext } from '../../../context/FormGore';
+import InputCosto from '../../forms/input_costo';
 
 export const FisicoInfraestructura = ({ dataRecursosFisicos }) => {
   const { control, handleSubmit } = useForm({
     resolver: yupResolver(validacionInfraestructura),
     mode: 'onBlur',
   });
-  const { updatePasoGore} = useContext(FormGOREContext);
+  const { updatePasoGore } = useContext(FormGOREContext);
   const [inputStatus, setInputStatus] = useState({
     cantidad: { loading: false, saved: false },
     costo_total: { loading: false, saved: false },
     fundamentacion: { loading: false, saved: false },
   });
 
-
-  const handleUpdate = async (fichaId, field, value) => {
+  const handleUpdate = async (fichaId, field, rawValue) => {
+    const cleanValue = rawValue.replace(/\./g, '');
     setInputStatus((prev) => ({
       ...prev,
       [fichaId]: {
         ...prev[fichaId],
-        [field]: { value, loading: true, saved: false },
+        [field]: { value: cleanValue, loading: true, saved: false },
       },
     }));
 
@@ -32,7 +33,7 @@ export const FisicoInfraestructura = ({ dataRecursosFisicos }) => {
         p_3_2_b_recursos_fisicos_infraestructura: [
           {
             id: fichaId,
-            [field]: value,
+            [field]: cleanValue,
           },
         ],
       };
@@ -124,9 +125,16 @@ export const FisicoInfraestructura = ({ dataRecursosFisicos }) => {
                                   !error
                                 }
                                 onBlur={(e) => {
-                                  field.onBlur(); 
-                                  if (ficha.cantidad !== e.target.value && !error) {
-                                    handleUpdate(ficha.id, `cantidad`, e.target.value);
+                                  field.onBlur();
+                                  if (
+                                    ficha.cantidad !== e.target.value &&
+                                    !error
+                                  ) {
+                                    handleUpdate(
+                                      ficha.id,
+                                      `cantidad`,
+                                      e.target.value
+                                    );
                                   }
                                 }}
                               />
@@ -136,13 +144,14 @@ export const FisicoInfraestructura = ({ dataRecursosFisicos }) => {
                       </div>
                       <div className="d-flex flex-row col">
                         <div className="my-3 col-6 ms-5 ps-2">
+                        <div className="text-start my-1">Costo (M$)</div>
                           <Controller
                             name={`fichas[${index}].costo_total`}
                             control={control}
-                            defaultValue={ficha.costo_total || ''}
                             render={({ field, fieldState: { error } }) => (
-                              <CustomTextarea
+                              <InputCosto
                                 {...field}
+                                value={ficha.costo_total || ''}
                                 label="Costo total (M$)"
                                 placeholder="Costo del recurso"
                                 descripcion="Campo numérico en miles de pesos."
@@ -164,7 +173,7 @@ export const FisicoInfraestructura = ({ dataRecursosFisicos }) => {
                                     handleUpdate(
                                       ficha.id,
                                       'costo_total',
-                                      Number(e.target.value)
+                                      e.target.value
                                     );
                                   }
                                 }}
@@ -175,7 +184,11 @@ export const FisicoInfraestructura = ({ dataRecursosFisicos }) => {
                         <div className="col-3  py-1 px-1 ms-3">
                           <div className="text-center">Costo Unitario (M$)</div>
                           <div className="text-sans-p-bold-blue px-2 my-2 text-center">
-                            {ficha.costo_unitario || '-'}
+                            {ficha.costo_unitario
+                              ? new Intl.NumberFormat('es-CL').format(
+                                  ficha.costo_unitario
+                                )
+                              : '-'}
                           </div>
                         </div>
                       </div>

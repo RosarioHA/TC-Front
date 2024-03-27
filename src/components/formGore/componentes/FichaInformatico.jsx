@@ -1,10 +1,10 @@
-import { useContext, useState , useEffect} from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import CustomTextarea from '../../forms/custom_textarea';
+import InputCosto from '../../forms/input_costo';
 import { validacionFichaInformaticos } from '../../../validaciones/esquemasFichas';
 import { FormGOREContext } from '../../../context/FormGore';
-
 
 export const FichaInformatico = ({ dataInformatico }) => {
   const [fichasTecnicas, setFichasTecnicas] = useState(dataInformatico);
@@ -13,8 +13,6 @@ export const FichaInformatico = ({ dataInformatico }) => {
     resolver: yupResolver(validacionFichaInformaticos),
     mode: 'onBlur',
   });
-
-
 
   useEffect(() => {
     setFichasTecnicas(Array.isArray(dataInformatico) ? dataInformatico : []);
@@ -42,13 +40,16 @@ export const FichaInformatico = ({ dataInformatico }) => {
         value: '43',
       },
     };
-  
+
     try {
       const respuesta = await updatePasoGore({
-        p_3_2_a_sistemas_informaticos: [nuevaFichaPayload]
+        p_3_2_a_sistemas_informaticos: [nuevaFichaPayload],
       });
       if (respuesta && respuesta.fichaCreada) {
-        setFichasTecnicas(fichasActuales => [...fichasActuales, respuesta.fichaCreada]);
+        setFichasTecnicas((fichasActuales) => [
+          ...fichasActuales,
+          respuesta.fichaCreada,
+        ]);
       } else {
         console.error('La ficha técnica no fue creada correctamente');
       }
@@ -57,12 +58,15 @@ export const FichaInformatico = ({ dataInformatico }) => {
     }
   };
 
-  const handleUpdate = async (fichaId, field, value) => {
+  const handleUpdate = async (fichaId, field, rawValue) => {
+    // Aquí asumimos que rawValue es el valor con formato, por ejemplo, "1.234.567"
+    const cleanValue = rawValue.replace(/\./g, ''); 
+
     setInputStatus((prev) => ({
       ...prev,
       [fichaId]: {
         ...prev[fichaId],
-        [field]: { value, loading: true, saved: false },
+        [field]: { value: cleanValue, loading: true, saved: false },
       },
     }));
 
@@ -71,7 +75,7 @@ export const FichaInformatico = ({ dataInformatico }) => {
         p_3_2_a_sistemas_informaticos: [
           {
             id: fichaId,
-            [field]: value,
+            [field]: cleanValue,
           },
         ],
       };
@@ -100,8 +104,7 @@ export const FichaInformatico = ({ dataInformatico }) => {
   };
 
   const eliminarFichaTecnica = async (idFicha) => {
-
-    const nuevasFichas = fichasTecnicas.filter(ficha => ficha.id !== idFicha);
+    const nuevasFichas = fichasTecnicas.filter((ficha) => ficha.id !== idFicha);
     setFichasTecnicas(nuevasFichas);
     try {
       await updatePasoGore({
@@ -222,19 +225,18 @@ export const FichaInformatico = ({ dataInformatico }) => {
                   {/* Costo */}
                   <div className="d-flex flex-row col">
                     <div className="my-3 col-3 pe-2 ms-4 me-3 text-sans-p-bold">
-                      Costo
+                      Costo (M$)
                     </div>
                     <div className="d-flex flex-row col">
                       <div className="my-3 col-5 me-3">
                         <Controller
                           name={`fichas[${index}].costo`}
                           control={control}
-                          defaultValue={ficha.costo || ''}
                           render={({ field, fieldState: { error } }) => (
-                            <CustomTextarea
+                            <InputCosto
                               {...field}
+                              value={ficha.costo || ''}
                               placeholder="Costo del recurso"
-                              descripcion="Campo numérico en miles de pesos."
                               error={error?.message}
                               loading={
                                 inputStatus[ficha.id]?.costo?.loading && !error
@@ -248,7 +250,7 @@ export const FichaInformatico = ({ dataInformatico }) => {
                                   handleUpdate(
                                     ficha.id,
                                     'costo',
-                                    Number(e.target.value)
+                                    e.target.value
                                   );
                                 }
                               }}
