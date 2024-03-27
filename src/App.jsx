@@ -19,10 +19,12 @@ const EditarCompetencia = React.lazy(() => import('./views/gestion_competencias/
 const EstadoCompentencia = React.lazy(() => import('./views/gestion_competencias/Estado_compentencia'));
 const SubirOficio = React.lazy(() => import('./views/gestion_competencias/Subir_oficio'));
 const SubirOficioDipres = React.lazy(() => import('./views/minutaDIPRES/oficio_dipres.jsx'));
+const SubirOficioGore = React.lazy(() => import('./views/formularioGore/oficio_gore.jsx'));
 const Minuta = React.lazy(() => import('./views/gestion_competencias/Minuta'));
 const PrimeraMinutaDipres = React.lazy(() => import('./views/minutaDIPRES/primera_minuta_dipres'));
 const SegundaMinutaDipres = React.lazy(() => import('./views/minutaDIPRES/segunda_minuta_dipres'));
 const ObservacionesSubdereDipres = React.lazy(() => import('./views/minutaDIPRES/observaciones_subdere.jsx'));
+const ObservacionesSubdereGore = React.lazy(() => import('./views/formularioGore/observaciones_subdere_gore.jsx'));
 const Error404 = React.lazy(() => import('./views/Errors/Error404'));
 const Error500 = React.lazy(() => import('./views/Errors/Error500'));
 const Error503 = React.lazy(() => import('./views/Errors/Error503'));
@@ -81,6 +83,7 @@ function App()
             {createProtectedRoute("crear_competencia", CreacionCompetencia, [ 'SUBDERE', 'Usuario Observador' ])}
             {createProtectedRoute("estado_competencia/:id/subir_oficio/:etapaNum/:subetapaId", SubirOficio, [ 'SUBDERE', 'Usuario Observador' ])}
             {createProtectedRoute("estado_competencia/:id/subir_oficio_dipres/:etapaNum/", SubirOficioDipres, [ 'SUBDERE', 'Usuario Observador' ])}
+            {createProtectedRoute("estado_competencia/:id/subir_oficio_gore/:etapaNum/", SubirOficioGore, [ 'SUBDERE', 'Usuario Observador' ])}
             <Route path="estado_competencia/:id/" element={<EstadoCompentencia />} />
             <Route path="success_edicion" element={<SuccessEdicion />} />
             <Route path="success_creacion" element={<SuccessCreacion />} />
@@ -113,6 +116,7 @@ function App()
               <Route path="resumen_formulario" element={<Resumen />} />
               <Route path="resumen_os" element={<ResumenOS />} />
             </Route>
+
             <Route
               path="formulario_gore/:id"
               element={
@@ -122,13 +126,22 @@ function App()
                   </ProtectedRoute>
                 </FormGoreProvider>
               }
-            >
+              >
               <Route index element={<PasoUno />} />
               <Route path="paso_1" element={<PasoUnoGore />} />
               <Route path="paso_2" element={<PasoDosGore />} />
               <Route path="paso_3" element={<PasoTresGore />} />
               <Route path="Resumen_formulario_gore" element={<Resumen />} />
             </Route>
+            
+            <Route 
+            path="formulario_gore/:id/observaciones_subdere" 
+            element={
+              <ProtectedRoute allowedProfiles={[ 'Usuario Sectorial', 'SUBDERE', 'Usuario Observador', 'GORE' ]}>
+                <ObservacionesSubdereGore />
+              </ProtectedRoute>
+            } />
+
             <Route
               path="revision_subdere/:id"
               element={

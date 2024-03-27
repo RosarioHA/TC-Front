@@ -5,7 +5,7 @@ import { useUpdateEtapa } from "../../hooks/competencias/useOficio";
 import { SuccessSOficio } from "../../components/success/oficio";
 import { SubirArchivo } from "../../components/commons/subirArchivo";
 
-const OficioDipres = () => {
+const OficioGore = () => {
   const updateEtapa = useUpdateEtapa();
   const { etapaNum, id } = useParams();
   const { competenciaDetails } = useCompetencia(id);
@@ -115,7 +115,7 @@ const OficioDipres = () => {
             </ol>
           </nav>
         </div>
-        <span className="text-sans-Title">Oficio DIPRES</span>
+        <span className="text-sans-Title">Oficio GORE</span>
         <div className="text-sans-h1 mb-4">{competencia.nombre}</div>
 
         {!isSubmitSuccessful ? (
@@ -142,8 +142,8 @@ const OficioDipres = () => {
               <SubirArchivo
                 index="1"
                 readOnly={true}
-                archivoDescargaUrl={competenciaDetails?.etapa3?.oficio_origen}
-                tituloDocumento={competenciaDetails?.etapa3?.oficio_origen} 
+                archivoDescargaUrl={competenciaDetails?.etapa4?.oficio_origen}
+                tituloDocumento={competenciaDetails?.etapa4?.oficio_origen} 
                 />
               </>
               ) : (
@@ -221,11 +221,11 @@ const OficioDipres = () => {
         </div>
 
         ) : (
-          <SuccessSOficio idCompetencia={id} sector='DIPRES' siguientePaso="su minuta"/>
+          <SuccessSOficio idCompetencia={id} sector='GORE' siguientePaso="información al formulario"/>
         )}
     </div >
     </>
   )
 }
 
-export default OficioDipres; 
+export default OficioGore; 

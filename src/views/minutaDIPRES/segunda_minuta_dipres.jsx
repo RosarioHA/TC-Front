@@ -22,7 +22,7 @@ const SegundaMinuta = () => {
   };
 
   const handleVerFormulario = (formularioId) => {
-    navigate(`/home/formulario_sectorial/${formularioId}/paso_1`);
+    navigate(`/home/formulario_gore/${formularioId}/paso_1`);
   };
 
   const handleFileSelect = (file) => {
@@ -134,9 +134,9 @@ const SegundaMinuta = () => {
             ) : (
               <p>No hay formularios disponibles.</p>
             )}
-          </div>
+        </div>
 
-          <div>
+        <div>
             {minutaEnviada ? (
               <h2 className="text-sans-25 mt-5">Minuta DIPRES</h2>
               ) : (
@@ -174,11 +174,11 @@ const SegundaMinuta = () => {
             )}
 
             {userData?.perfil !== 'DIPRES' && !minutaEnviada && (
-              <p>Aun no se ha subido Minuta DIPRES.</p>
+              <p className="text-sans-25 mt-5">Aun no se ha subido Minuta DIPRES.</p>
             )}
-          </div>
+        </div>
           
-          <div className="d-flex justify-content-end my-5 me-3">
+        <div className="d-flex justify-content-end my-5 me-3">
             {!minutaEnviada && (
               <button
                 className="btn-primario-s"
@@ -189,7 +189,7 @@ const SegundaMinuta = () => {
                 <i className="material-symbols-rounded me-2">arrow_forward_ios</i>
               </button>
             )}
-          </div>
+        </div>
       </>
       ) : (
         <SuccessMinutaDipres 

@@ -223,7 +223,7 @@ const SubirOficio = () =>
           </div>
         </div>
           ) : (
-            <SuccessSOficio idCompetencia={id} sector={extraData} />
+            <SuccessSOficio idCompetencia={id} sector={extraData} siguientePaso="información al formulario sectorial"/>
           )}
       </div >
     </>

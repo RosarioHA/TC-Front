@@ -58,7 +58,6 @@ const ObservacionesSubdere = () => {
       <hr/>
 
       <div>
-      {/* aqui no deberia tomar la info de formulario sectorial; sino de observaciones subdere. */}
       {competenciaDetails?.etapa2?.observaciones_sectorial ? (
         Array.isArray(competenciaDetails.etapa2.observaciones_sectorial) ? (
           competenciaDetails.etapa2.observaciones_sectorial.map((observaciones, index) => (
@@ -69,7 +68,7 @@ const ObservacionesSubdere = () => {
               <td>{observaciones.nombre}</td>
               <td className="">
               <button className="btn-secundario-s text-decoration-underline" onClick={() => handleVerFormulario(observaciones.id)}>
-                Ver observaciones
+                {observaciones.accion}
               </button>
               </td>
             </tr>
