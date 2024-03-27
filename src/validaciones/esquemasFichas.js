@@ -1,28 +1,28 @@
-import * as yup from 'yup'; 
+import * as yup from 'yup';
 
 export const validacionFichaInformaticos = yup.object({
   fichas: yup.array().of(
     yup.object().shape({
-    nombre_plataforma: yup.string()
-      .required('El nombre de la plataforma es requerido')
-      .min(3, 'El nombre debe tener al menos 3 caracteres') 
-      .max(500, 'El nombre no debe exceder los 30 caracteres'),
-    descripcion_tecnica: yup.string()
-      .required('La descripción técnica es requerida')
-      .min(20, 'La descripción  debe tener al menos 20 caracteres') 
-      .max(500, 'La descripción  no debe exceder los 30 caracteres'),
-    costo: yup.number()
-      .typeError('El costo debe ser un número')
-      .positive('El costo debe ser un número positivo')
-      .integer('El costo debe ser un número entero')
-      .required('El costo es requerido'),
-    funcion: yup.string()
-      .required('La función es requerida')    
-      .min(20, 'La descripción  debe tener al menos 20 caracteres') 
-      .max(500, 'La descripción  no debe exceder los 30 caracteres'),
+      nombre_plataforma: yup.string()
+        .required('El nombre de la plataforma es requerido')
+        .min(3, 'El nombre debe tener al menos 3 caracteres')
+        .max(500, 'El nombre no debe exceder los 30 caracteres'),
+      descripcion_tecnica: yup.string()
+        .required('La descripción técnica es requerida')
+        .min(20, 'La descripción  debe tener al menos 20 caracteres')
+        .max(500, 'La descripción  no debe exceder los 30 caracteres'),
+      costo: yup.number()
+        .typeError('El costo debe ser un número')
+        .min(0, 'El costo no debe ser un número negativo')
+        .nullable(true)
+        .required('El costo es obligatorio'),
+      funcion: yup.string()
+        .required('La función es requerida')
+        .min(20, 'La descripción  debe tener al menos 20 caracteres')
+        .max(500, 'La descripción  no debe exceder los 30 caracteres'),
     })
-    )
-  });
+  )
+});
 
 export const validacionInfraestructura = yup.object({
   fichas: yup.array().of(

@@ -6,9 +6,14 @@ export const ResumenSubtitulos = ({
   sub29Justificados,
   sub29Justificar,
 }) => {
+  // Función para formatear los números con separadores de miles
+  const formatNumber = (number) => {
+    return new Intl.NumberFormat('es-CL').format(number);
+  };
+
   return (
     <>
-      <table className="table  my-4">
+      <table className="table my-4">
         <thead>
           <tr className="table-secondary">
             <th scope="col align-items-center">
@@ -36,13 +41,13 @@ export const ResumenSubtitulos = ({
               <span className="mx-3">Subtítulo 22</span>
             </td>
             <td className="py-3">
-              <span className="text-sans-p-bold-blue pe-5">{sub22Diferencia || 0 }</span>
+              <span className="text-sans-p-bold-blue pe-5">{formatNumber(sub22Diferencia || 0)}</span>
             </td>
             <td className="py-3">
-              <span className="text-sans-p-bold-blue pe-5">{sub22Justificados || 0}</span>
+              <span className="text-sans-p-bold-blue pe-5">{formatNumber(sub22Justificados || 0)}</span>
             </td>
             <td className="py-3">
-              <span className="text-sans-p-bold-blue pe-5">{sub22Jutificar || 0}</span>
+              <span className="text-sans-p-bold-blue pe-5">{formatNumber(sub22Jutificar || 0)}</span>
             </td>
           </tr>
           <tr className="text-center py-5 table-secondary ">
@@ -50,13 +55,13 @@ export const ResumenSubtitulos = ({
               <span className="mx-3">Subtítulo 29</span>
             </td>
             <td className="py-3">
-              <span className="text-sans-p-bold-blue pe-5">{sub29Diferencia || 0}</span>
+              <span className="text-sans-p-bold-blue pe-5">{formatNumber(sub29Diferencia || 0)}</span>
             </td>
             <td className="py-3">
-              <span className="text-sans-p-bold-blue pe-5">{sub29Justificados || 0}</span>
+              <span className="text-sans-p-bold-blue pe-5">{formatNumber(sub29Justificados || 0)}</span>
             </td>
             <td className="py-3">
-              <span className="text-sans-p-bold-blue pe-5">{sub29Justificar || 0}</span>
+              <span className="text-sans-p-bold-blue pe-5">{formatNumber(sub29Justificar || 0)}</span>
             </td>
           </tr>
         </tbody>
