@@ -174,7 +174,7 @@ const SegundaMinuta = () => {
             )}
 
             {userData?.perfil !== 'DIPRES' && !minutaEnviada && (
-              <p>Aun no se ha subido Minuta DIPRES.</p>
+              <p className="text-sans-25 mt-5">Aun no se ha subido Minuta DIPRES.</p>
             )}
         </div>
           
