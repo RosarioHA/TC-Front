@@ -18,6 +18,7 @@ const PasoCinco = () => {
   const { dataPaso, refetchTrigger} = usePasoForm(data.id, stepNumber)
   const { userData } = useAuth();
   const userSubdere = userData?.perfil?.includes('SUBDERE');
+  const userDIPRES = userData?.perfil?.includes('DIPRES');
   const { observaciones, updateObservacion, fetchObservaciones, loadingObservaciones, saved } = useObservacionesSubdere(data ? data.id : null);
   const [observacionPaso5, setObservacionPaso5] = useState("");
   const [paso5Data, setPaso5Data] = useState('');
@@ -153,7 +154,7 @@ const PasoCinco = () => {
             dataPaso={dataPaso}
           />
 
-          {userSubdere && observacionesEnviadas && (
+          {observacionesEnviadas && (userSubdere || userDIPRES) && (
             <div className="mt-5 my-4">
               {!observacionPaso5.trim() && observacionesEnviadas ? (
                 <p>No se han dejado observaciones en este paso.</p>

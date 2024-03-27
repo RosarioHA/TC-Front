@@ -8,11 +8,11 @@ import { MonoStepers } from "../../components/stepers/MonoStepers";
 import { useAuth } from '../../context/AuthContext';
 import { useObservacionesSubdere } from '../../hooks/formulario/useObSubdereSectorial';
 
-const PasoTres = () =>
-{
+const PasoTres = () => {
   const { handleUpdatePaso, updateStepNumber, pasoData, data } = useContext(FormularioContext);
   const { userData } = useAuth();
   const userSubdere = userData?.perfil?.includes('SUBDERE');
+  const userDIPRES = userData?.perfil?.includes('DIPRES');
   const stepNumber = 3;
   const id = data.id;
   const { observaciones, updateObservacion, fetchObservaciones, loadingObservaciones, saved } = useObservacionesSubdere(data ? data.id : null);
@@ -201,7 +201,7 @@ const PasoTres = () =>
             </div>
           </div>
 
-          {userSubdere && observacionesEnviadas && (
+          {observacionesEnviadas && (userSubdere || userDIPRES) && (
             <div className="mt-5 my-4">
               {!observacionPaso3.trim() && observacionesEnviadas ? (
                 <p>No se han dejado observaciones en este paso.</p>
