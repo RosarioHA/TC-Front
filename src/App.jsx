@@ -5,6 +5,7 @@ import { FormularioProvider } from "./context/FormSectorial";
 import FormularioLayout from './layout/FormularioLayout';
 import { FormGoreProvider } from './context/FormGore';
 import { CompetenciaProvider } from './context/competencias';
+import { FormSubdereProvider } from './context/RevisionFinalSubdere.jsx';
 const MainLayout = React.lazy(() => import('./layout/mainLayout'));
 const Home = React.lazy(() => import('./views/home'));
 const Landing = React.lazy(() => import('./views/landing'));
@@ -40,14 +41,14 @@ const PasoCuatro = React.lazy(() => import('./views/formularioSectorial/pasoCuat
 const PasoCinco = React.lazy(() => import('./views/formularioSectorial/pasoCinco'));
 const Resumen = React.lazy(() => import('./views/formularioSectorial/Resumen'));
 const FormGoreLayout = React.lazy(() => import('./layout/FormGore'));
-const RevisionSubdere = React.lazy(() => import('./layout/RevisionSubdere'));
+const RevisionSubdere = React.lazy(() => import('./layout/RevisionSubdereLayout'));
 const PasoUnoGore = React.lazy(() => import('./views/formularioGore/pasoUno'));
 const PasoDosGore = React.lazy(() => import('./views/formularioGore/pasoDos'));
 const PasoTresGore = React.lazy(() => import('./views/formularioGore/pasoTres'));
 const ResumenOS = React.lazy(() => import('./views/observacionesSUBDERE/ResumenOS'));
 const ObservacionesSubdere = React.lazy(() => import('./views/observacionesSUBDERE/ObservacionesSubdere'));
 const Paso_1_Revision = React.lazy(() => import("./views/revisionSubdere/Paso_1_revision"));
-const Paso_2_Revision = React.lazy(() => import("./views/revisionSubdere/Paso_2_revision.jsx"));
+const Paso_2_Revision = React.lazy(() => import("./views/revisionSubdere/Paso_2_revision"));
 
 const createProtectedRoute = (path, Component, allowedProfiles) => (
   <Route
@@ -145,14 +146,13 @@ function App()
             <Route
               path="revision_subdere/:id"
               element={
-                // <FormGoreProvider>
+                <FormSubdereProvider>
                 <ProtectedRoute allowedProfiles={[ 'Usuario Sectorial', 'SUBDERE', 'Usuario Observador', 'GORE' ]}>
                   <RevisionSubdere />
                 </ProtectedRoute>
-                // </FormGoreProvider>
+                </FormSubdereProvider>
               }
             >
-              <Route index element={<PasoUno />} />
               <Route path="paso_1" element={<Paso_1_Revision />} />
               <Route path="paso_2" element={<Paso_2_Revision />} />
               <Route path="resumen_revision_final" element={<Resumen />} />
