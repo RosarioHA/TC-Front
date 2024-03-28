@@ -18,13 +18,16 @@ export const FisicoInfraestructura = ({ dataRecursosFisicos }) => {
     fundamentacion: { loading: false, saved: false },
   });
 
-  const handleUpdate = async (fichaId, field, rawValue) => {
-    const cleanValue = rawValue.replace(/\./g, '');
+  const handleUpdate = async (fichaId, field, value) => {
+    let finalValue = value;
+    if (field === 'costo_total') {
+      finalValue = value.replace(/\./g, '');
+    }
     setInputStatus((prev) => ({
       ...prev,
       [fichaId]: {
         ...prev[fichaId],
-        [field]: { value: cleanValue, loading: true, saved: false },
+        [field]: { value, loading: false, saved: false },
       },
     }));
 
@@ -33,7 +36,7 @@ export const FisicoInfraestructura = ({ dataRecursosFisicos }) => {
         p_3_2_b_recursos_fisicos_infraestructura: [
           {
             id: fichaId,
-            [field]: cleanValue,
+            [field]: finalValue,
           },
         ],
       };
