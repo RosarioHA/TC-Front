@@ -1,13 +1,14 @@
 // import { useContext } from 'react';
 // import { FormGOREContext } from '../../../context/FormGore';
-import CustomInputArea from '../../forms/textarea_paso2';
 import { CostoPersonal } from '../componentes/CostoPersonal';
 import { PersonalInformado } from '../componentes/PersonalInformado';
 
 export const Sub1_a = ({data}) => {
 
 
-  const { paso3_gore, p3_personal_directo_sector } = data;
+  const { paso3_gore, p3_personal_directo_sector , 
+    p3_personal_directo_gore
+    } = data;
 
   return (
     <>
@@ -34,14 +35,15 @@ export const Sub1_a = ({data}) => {
             gastoPersonalJustificado={paso3_gore?.sub21_gastos_en_personal_justificado}
             gastosPersonalJustificar={paso3_gore?.sub21_gastos_en_personal_justificar}
           />
-          <PersonalInformado personal={p3_personal_directo_sector} />
+
+          <PersonalInformado 
+          personalSector={p3_personal_directo_sector}
+          personalGore={p3_personal_directo_gore}
+          title="directo"
+          seccion="p_3_1_a_personal_directo"
+          />
+
         </div>
-        <CustomInputArea
-          label="Descripción de perfiles técnicos"
-          placeholder="Describe los perfiles técnicos necesarios"
-          name="descripcion_ejercicio_competencia"
-          maxLength={1100}
-        />
         <div className="d-flex mb-3 mt-1 text-sans-h6-primary col-11">
           <i className="material-symbols-rounded me-2">info</i>
           <h6 className="mt-0">

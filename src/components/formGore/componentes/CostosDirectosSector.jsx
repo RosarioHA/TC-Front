@@ -1,4 +1,4 @@
-import React, { useContext, useState} from 'react';
+import React, { useContext, useState } from 'react';
 import CustomTextarea from '../../forms/custom_textarea';
 import InputCosto from '../../forms/input_costo';
 import { OpcionesAB } from '../../forms/opciones_AB';
@@ -7,7 +7,7 @@ import { Monto } from './Monto';
 
 export const CostosDirectosSector = ({ costoDirectosGet }) =>
 {
-  const { updatePasoGore} = useContext(FormGOREContext);
+  const { updatePasoGore } = useContext(FormGOREContext);
   const [ inputStatus, setInputStatus ] = useState({
     descripcion: { loading: false, saved: false },
     total_anual_gore: { loading: false, saved: false },
@@ -18,6 +18,11 @@ export const CostosDirectosSector = ({ costoDirectosGet }) =>
 
   const handleUpdate = async (costoId, field, value, saveImmediately = false) =>
   {
+    let finalValue = value;
+    if (field === 'total_anual_gore')
+    {
+      finalValue = value.replace(/\./g, '');
+    }
     setInputStatus((prev) => ({
       ...prev,
       [ costoId ]: {
@@ -33,7 +38,7 @@ export const CostosDirectosSector = ({ costoDirectosGet }) =>
         const payload = {
           p_2_1_a_costos_directos: [ {
             id: costoId,
-            [ field ]: value,
+            [ field ]: finalValue, // Usa el valor limpio si es necesario.
           } ],
         };
         await updatePasoGore(payload);
@@ -95,9 +100,8 @@ export const CostosDirectosSector = ({ costoDirectosGet }) =>
                       <p className="text-sans-p-bold">
                         Total Anual ($M) <br /> informado por el sector
                       </p>
-
                       <div className="border-gris col-6 py-2 px-3">
-                        ${costo.total_anual_sector}
+                        ${costo.total_anual_sector ? parseInt(costo.total_anual_sector).toLocaleString('es-CL') : '0'}
                       </div>
                     </div>
                   </div>
