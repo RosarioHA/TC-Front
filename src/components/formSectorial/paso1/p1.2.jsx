@@ -16,13 +16,11 @@ export const Subpaso_dos = ({
     useContext(FormularioContext);
   const { uploadFile } = useFileRegional();
   const [formData, setFormData] = useState({
-    organigramaregional: organigrama?.organigramaregional,
     paso1: pasoData.paso1 || {
       descripcion_archivo_organigrama_regional:
         pasoData.descripcion_archivo_organigrama_regional,
       descripcion_archivo_organigrama_nacional:
         pasoData.descripcion_archivo_organigrama_nacional,
-      organigrama_nacional: pasoData.organigrama_nacional,
     },
   });
 

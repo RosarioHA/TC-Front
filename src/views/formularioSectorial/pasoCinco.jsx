@@ -12,17 +12,17 @@ import { useObservacionesSubdere } from '../../hooks/formulario/useObSubdereSect
 import { usePasoForm } from '../../hooks/formulario/usePasoForm';
 
 const PasoCinco = () => {
-  const { updateStepNumber, pasoData, data,  errorPaso } = useContext(FormularioContext);
+  const { updateStepNumber, pasoData, data, errorPaso } = useContext(FormularioContext);
   const stepNumber = 5;
   const [refreshSubpaso_CincoDos, setRefreshSubpaso_CincoDos] = useState(false);
   const { dataPaso, refetchTrigger} = usePasoForm(data.id, stepNumber)
   const { userData } = useAuth();
   const userSubdere = userData?.perfil?.includes('SUBDERE');
+  const userDIPRES = userData?.perfil?.includes('DIPRES');
   const { observaciones, updateObservacion, fetchObservaciones, loadingObservaciones, saved } = useObservacionesSubdere(data ? data.id : null);
   const [observacionPaso5, setObservacionPaso5] = useState("");
   const [paso5Data, setPaso5Data] = useState('');
-  
-  const [costosDirectosData, setCostosDirectosData] = useState('');
+  //const [costosDirectosData, setCostosDirectosData] = useState('');
   const [juridicasDirectasData, setJuridicasDirectasData] = useState('');
   const [juridicasIndirectasData, setJuridicasIndirectasData] = useState('');
   const [personalDirectoData, setPersonalDirectoData] = useState('');
@@ -31,8 +31,12 @@ const PasoCinco = () => {
   const [subtituloIndirectoData, setSubtitulosIndirectoData] = useState('');
   const [itemSubtitulosDirectoData, setItemSubtitulosDirectoData] = useState('');
   const [itemSubtitulosIndirectoData, setItemSubtitulosIndirectoData] = useState('');
-  const formularioEnviado = data.formulario_enviado
+
+  const formularioEnviado = data.formulario_enviado //data de formulario sectorial, esta mal
   const observacionesEnviadas = observaciones.observacion_enviada
+  console.log("formulario enviado", formularioEnviado)
+  console.log("data", data)
+  console.log("observaciones", observaciones)
 
   useEffect(() => {
     updateStepNumber(stepNumber);
@@ -150,25 +154,29 @@ const PasoCinco = () => {
             dataPaso={dataPaso}
           />
 
-          {userSubdere && formularioEnviado && (
+          {observacionesEnviadas && (userSubdere || userDIPRES) && (
             <div className="mt-5 my-4">
-            <CustomTextarea 
-            label="Observaciones (Opcional)"
-            placeholder="Escribe tus observaciones de este paso del formulario"
-            rows={5}
-            maxLength={500}
-            value={observacionPaso5}
-            onChange={(e) => setObservacionPaso5(e.target.value)}
-            readOnly={observacionesEnviadas}
-            onBlur={handleGuardarObservacion}
-            loading={loadingObservaciones}
-            saved={saved}
-            />
-          </div>
+              {!observacionPaso5.trim() && observacionesEnviadas ? (
+                <p>No se han dejado observaciones en este paso.</p>
+              ) : (
+              <CustomTextarea 
+              label="Observaciones (Opcional)"
+              placeholder="Escribe tus observaciones de este paso del formulario"
+              rows={5}
+              maxLength={500}
+              value={observacionPaso5}
+              onChange={(e) => setObservacionPaso5(e.target.value)}
+              readOnly={observacionesEnviadas}
+              onBlur={handleGuardarObservacion}
+              loading={loadingObservaciones}
+              saved={saved}
+              />
+              )}
+            </div>
           )}
 
           <div className="container me-5 pe-5">
-            <ButtonsNavigate step={paso5.numero_paso} id={data.id} />
+            <ButtonsNavigate step={paso5.numero_paso} id={data.id} ocultarEnviarBtn={observacionesEnviadas}/>
           </div>
         </div>
       </div>

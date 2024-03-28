@@ -13,10 +13,10 @@ const PasoCuatro = () => {
   const stepNumber = 4;
   const { userData } = useAuth();
   const userSubdere = userData?.perfil?.includes('SUBDERE');
+  const userDIPRES = userData?.perfil?.includes('DIPRES');
   const { observaciones, updateObservacion, fetchObservaciones, loadingObservaciones, saved } = useObservacionesSubdere(data ? data.id : null);
   const [observacionPaso4, setObservacionPaso4] = useState("");
 
-  const formularioEnviado = data.formulario_enviado
   const observacionesEnviadas = observaciones.observacion_enviada
 
   useEffect(() => {
@@ -77,21 +77,25 @@ const PasoCuatro = () => {
             </div>
           </div>
 
-          {userSubdere && formularioEnviado && (
+          {observacionesEnviadas && (userSubdere || userDIPRES) && (
             <div className="mt-5 my-4">
-            <CustomTextarea 
-            label="Observaciones (Opcional)"
-            placeholder="Escribe tus observaciones de este paso del formulario"
-            rows={5}
-            maxLength={500}
-            value={observacionPaso4}
-            onChange={(e) => setObservacionPaso4(e.target.value)}
-            readOnly={observacionesEnviadas}
-            onBlur={handleGuardarObservacion}
-            loading={loadingObservaciones}
-            saved={saved}
-            />
-          </div>
+              {!observacionPaso4.trim() && observacionesEnviadas ? (
+                <p>No se han dejado observaciones en este paso.</p>
+              ) : (
+              <CustomTextarea 
+              label="Observaciones (Opcional)"
+              placeholder="Escribe tus observaciones de este paso del formulario"
+              rows={5}
+              maxLength={500}
+              value={observacionPaso4}
+              onChange={(e) => setObservacionPaso4(e.target.value)}
+              readOnly={observacionesEnviadas}
+              onBlur={handleGuardarObservacion}
+              loading={loadingObservaciones}
+              saved={saved}
+              />
+              )}
+            </div>
           )}
 
           {/*Botones navegacion*/}

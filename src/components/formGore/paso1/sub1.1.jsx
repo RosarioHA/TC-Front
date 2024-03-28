@@ -6,14 +6,12 @@ export const SubUno_Uno = ({ dataPaso }) => {
   const id = dataPaso ? dataPaso.id : null;
   const [descripcion, setDescripcion] = useState('');
 
-  const { updatePasoGore,refetchTriggerGore } = useContext(FormGOREContext);
+  const { updatePasoGore} = useContext(FormGOREContext);
   const [inputStatus, setInputStatus] = useState({
     descripcion_ejercicio_competencia: { loading: false, saved: false },
   });
 
-  useEffect(() => {
-    refetchTriggerGore();
-  }, [refetchTriggerGore]);
+
 
 
   useEffect(() => {
@@ -80,7 +78,7 @@ export const SubUno_Uno = ({ dataPaso }) => {
             placeholder="Describe el ejercicio de la competencia en el Gobierno Regional."
             name="descripcion_ejercicio_competencia"
             maxLength={8800}
-            value={dataPaso.descripcion_ejercicio_competencia} // Se usa el estado local `descripcion`
+            value={dataPaso.descripcion_ejercicio_competencia}
             onChange={handleDescripcionChange}
             onBlur={handleBlur}
             loading={inputStatus.descripcion_ejercicio_competencia.loading}

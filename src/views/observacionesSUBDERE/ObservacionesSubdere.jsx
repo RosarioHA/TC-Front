@@ -1,14 +1,14 @@
 import {  useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useCompetencia } from "../../hooks/competencias/useCompetencias";
-import { usePatchCompetencia } from "../../hooks/minutaDIPRES/useEtapa3";
+import { useEtapa3 } from "../../hooks/minutaDIPRES/useEtapa3";
 
 const ObservacionesSubdere = () => {
   const [ etapaOmitida, setEtapaOmitida] = useState(null);
   const navigate = useNavigate();
   const { id } = useParams();
   const { competenciaDetails } = useCompetencia(id);
-  const { patchCompetenciaOmitida } = usePatchCompetencia();
+  const { patchCompetenciaOmitida } = useEtapa3();
   console.log("competencia details en OS", competenciaDetails)
   console.log("competencia details estado en OS", competenciaDetails?.etapa2?.estado)
 
@@ -58,37 +58,36 @@ const ObservacionesSubdere = () => {
       <hr/>
 
       <div>
-      {/* aqui no deberia tomar la info de formulario sectorial; sino de observaciones subdere. */}
-      {competenciaDetails?.etapa2?.formulario_sectorial ? (
-        Array.isArray(competenciaDetails.etapa2.formulario_sectorial) ? (
-          competenciaDetails.etapa2.formulario_sectorial.map((formulario, index) => (
+      {competenciaDetails?.etapa2?.observaciones_sectorial ? (
+        Array.isArray(competenciaDetails.etapa2.observaciones_sectorial) ? (
+          competenciaDetails.etapa2.observaciones_sectorial.map((observaciones, index) => (
             <tr 
               className={`d-flex justify-content-between p-3 align-items-center ${index % 2 === 0 ? 'neutral-line' : 'white-line'}`} 
-              key={formulario.id}
+              key={observaciones.id}
             >
-              <td>{formulario.nombre}</td>
+              <td>{observaciones.nombre}</td>
               <td className="">
-              <button className="btn-secundario-s text-decoration-underline" onClick={() => handleVerFormulario(formulario.id)}>
-                Ver observaciones
+              <button className="btn-secundario-s text-decoration-underline" onClick={() => handleVerFormulario(observaciones.id)}>
+                {observaciones.accion}
               </button>
               </td>
             </tr>
             ))
           ) : (
-            competenciaDetails.etapa2.formulario_sectorial.detalle_formularios_sectoriales.map((formulario, index) => (
+            competenciaDetails.etapa2.observaciones_sectorial.detalle_observaciones_sectoriales.map((observaciones, index) => (
               <tr 
                 className={`d-flex justify-content-between p-3 align-items-center ${index % 2 === 0 ? 'neutral-line' : 'white-line'}`} 
-                key={formulario.id}
+                key={observaciones.id}
               >
-                <td>{formulario.nombre}</td>
+                <td>{observaciones.nombre}</td>
                 <td className="">
-                  <button className="btn-secundario-s text-decoration-underline" onClick={() => handleVerFormulario(formulario.id)}>
-                    Ver observaciones
+                  <button className="btn-secundario-s text-decoration-underline" onClick={() => handleVerFormulario(observaciones.id)}>
+                    <p>{observaciones.accion}</p>
                   </button>
                 </td>
               </tr>
             ))
-          )
+          ) 
         ) : (
           <p>No hay formularios disponibles.</p>
         )}
@@ -107,7 +106,7 @@ const ObservacionesSubdere = () => {
         <p className="text-sans-p">Fecha última modificación:</p><p className="text-sans-p-bold ms-2">{competenciaDetails?.etapa2?.fecha_ultima_modificacion}</p>
       </div>
 
-      {competenciaDetails?.etapa2?.estado === 'Finalizada' &&  (
+      {competenciaDetails?.etapa2?.estado === 'Finalizada' && (competenciaDetails?.etapa3?.omitida !== true) && (
         <div>
           <h3 className="text-sans-h2">Esta todo listo para que termines la etapa</h3>
           <p className="text-sans-p mt-3 mb-5">Ya revisaste todos los formularios. </p> 
@@ -145,15 +144,17 @@ const ObservacionesSubdere = () => {
         </div>
       )}
 
-      {competenciaDetails?.etapa2?.estado !== 'Finalizada' && (
-        <div>
-          <h3 className="text-sans-h2">Debes revisar todos los formularios antes de terminar la etapa</h3>
-          <p className="text-sans-p mt-3">Para poder terminar la etapa debes revisar todos los formularios y dejar observaciones donde consideres necesario.</p>
-        </div>
+      {competenciaDetails?.etapa2?.estado !== 'Finalizada' &&  (
+        <>
+          <div>
+            <h3 className="text-sans-h2">Debes revisar todos los formularios antes de terminar la etapa</h3>
+            <p className="text-sans-p mt-3">Para poder terminar la etapa debes revisar todos los formularios y dejar observaciones donde consideres necesario.</p>
+          </div>
+        </>
       )}
-      
+
       <div className="d-flex justify-content-end my-5 me-3">
-        <button 
+        <button
         className="btn-primario-s"
         disabled={etapaOmitida === null}
         onClick={handleCerrarEtapa}
@@ -162,7 +163,6 @@ const ObservacionesSubdere = () => {
           <i className="material-symbols-rounded me-2">arrow_forward_ios</i>
         </button>
       </div>
-
     </div>
   )
 }
