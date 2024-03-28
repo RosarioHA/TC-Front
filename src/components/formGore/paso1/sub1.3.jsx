@@ -4,7 +4,7 @@ import CustomTextarea from '../../forms/custom_textarea';
 import { FormGOREContext } from '../../../context/FormGore';
 
 export const SubUno_Tres = ({ pasoData, id, stepNumber }) => {
-  const { updatePasoGore, handleUploadFiles, refetchTriggerGore } = useContext(FormGOREContext);
+  const { updatePasoGore, handleUploadFiles } = useContext(FormGOREContext);
   const [descripcionGore, setDescripcionGore] = useState(
     pasoData?.descripcion_organigrama_gore
   );
@@ -13,9 +13,6 @@ export const SubUno_Tres = ({ pasoData, id, stepNumber }) => {
     organigrama_gore: { loading: false, saved: false },
   });
 
-  useEffect(() => {
-    refetchTriggerGore();
-  }, [refetchTriggerGore]);
 
   useEffect(() => {
     if (pasoData && pasoData.paso1_gore) {
@@ -25,9 +22,7 @@ export const SubUno_Tres = ({ pasoData, id, stepNumber }) => {
     }
   }, [pasoData]);
 
-  useEffect(() => {
-    refetchTriggerGore();
-  }, [refetchTriggerGore]);
+
 
   const ver = false;
 

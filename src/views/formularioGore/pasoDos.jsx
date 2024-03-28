@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useCallback } from 'react';
 import { FormGOREContext } from '../../context/FormGore';
 import { MonoStepers } from '../../components/stepers/MonoStepers';
 import { Avance } from '../../components/tables/Avance';
@@ -13,9 +13,16 @@ const PasoDosGore = () => {
     useContext(FormGOREContext);
   const stepNumber = 2;
 
-  useEffect(() => {
+  const handleUpdateStepNumber = useCallback(() =>
+  {
+    const stepNumber = 2;
     updateStepNumber(stepNumber);
-  }, [updateStepNumber, stepNumber]);
+  }, [ updateStepNumber ]);
+
+  useEffect(() =>
+  {
+    handleUpdateStepNumber();
+  }, [ handleUpdateStepNumber ]);
 
   if (errorPasoGore)
     return <div>Error: {errorPasoGore.message || 'Error desconocido'}</div>;
@@ -38,7 +45,7 @@ const PasoDosGore = () => {
   return (
     <>
       <div className="col-1">
-        <MonoStepers stepNumber={paso2_gore.numero_paso} />
+        <MonoStepers stepNumber={stepNumber} />
       </div>
       <div className="col-11">
         <div className="container-fluid">

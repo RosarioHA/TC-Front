@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import successIcon from '../../static/icons/success.svg';
 
-export const SuccessSOficio = ({ idCompetencia , sector, siguientePaso }) => {
+export const SuccessOSminutaDIPRES = ({ idCompetencia, mensaje }) => {
   const history = useNavigate();
 
   const handleBackButtonClick = () => {
@@ -11,15 +11,14 @@ export const SuccessSOficio = ({ idCompetencia , sector, siguientePaso }) => {
   return (
     <div className="container view-container ms-5">
 
-      <div className="success-container col-7 p-3 px-5 mt-5">
+      <div className="success-container col-8 p-3 px-5 mt-5">
         <div className="row align-items-center">
           <div className="col-3">
             <img src={successIcon} />
           </div>
           <div className="col-9">
-            <h2 className="text-sans-h2 mb-4">Subiste el oficio {sector} con éxito</h2>
-            <p className="text-sans-p">Con esto, {sector} tienen habilitada la plataforma para subir {siguientePaso}.</p> 
-            <p className="text-sans-p mt-2"> También, los plazos establecidos para el llenado de este comienzan a correr.</p>
+            <h2 className="text-sans-h2 mb-4">Cerraste la Revisión SUBDERE con éxito</h2>
+            <p className="text-sans-p">{mensaje}</p>
           </div>
         </div>
       </div>

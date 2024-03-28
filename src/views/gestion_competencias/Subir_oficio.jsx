@@ -131,7 +131,7 @@ const SubirOficio = () =>
 
   return (
     <>
-      <div className="my-3 mx-5">
+      <div className="container col-11">
         <div className="py-3 d-flex">
           <button className="btn-secundario-s" onClick={handleBackButtonClick}>
             <i className="material-symbols-rounded me-2">arrow_back_ios</i>
@@ -145,7 +145,7 @@ const SubirOficio = () =>
           </nav>
         </div>
         <span className="text-sans-Title">Oficio {extraData} </span>
-        <div className="my-3 col-9">
+        <div className="my-3">
           <div className="text-sans-h1 mb-4">{competencia.nombre}</div>
         </div>
         {!isSubmitSuccessful ? (
@@ -154,7 +154,7 @@ const SubirOficio = () =>
             <span className="text-sans-24">Subir oficio (Obligatorio)</span>
             <p className="text-sans-h6-grey">Máximo 1 archivo, peso máximo 20MB, formato PDF</p>
           </div>
-          <div className="col-9 mt-3">
+          <div className="mt-5">
             <table className="table table-striped table align-middle">
               <thead>
                 <tr>
@@ -195,7 +195,7 @@ const SubirOficio = () =>
               </tbody>
             </table>
           </div>
-          <div className="mt-4 col-9">
+          <div className="mt-5">
             <span className="text-sans-h5">Elige la fecha del oficio (Obligatorio)</span>
             <div className="my-3 col-3">
               <input
@@ -211,7 +211,7 @@ const SubirOficio = () =>
               <i className="material-symbols-rounded me-2">info</i>
               <h6 className="mt-1">La fecha del oficio debe coincidir con la fecha en que
                 DIPRES recibió la información, así los plazos previamente establecidos
-                para el<br /> llenado de la minuta comienzan a correr.</h6>
+                para el llenado de la minuta comienzan a correr.</h6>
             </div>
             <div className="d-flex justify-content-end">
               {errorMessage && <div className="text-sans-h6-darkred me-4">{errorMessage}</div>}
@@ -223,7 +223,7 @@ const SubirOficio = () =>
           </div>
         </div>
           ) : (
-            <SuccessSOficio idCompetencia={id} sector={extraData} />
+            <SuccessSOficio idCompetencia={id} sector={extraData} siguientePaso="información al formulario sectorial"/>
           )}
       </div >
     </>

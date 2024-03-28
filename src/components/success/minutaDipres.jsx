@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import successIcon from '../../static/icons/success.svg';
 
-export const SuccessSOficio = ({ idCompetencia , sector, siguientePaso }) => {
+export const SuccessMinutaDipres = ({ idCompetencia }) => {
   const history = useNavigate();
 
   const handleBackButtonClick = () => {
@@ -17,9 +17,8 @@ export const SuccessSOficio = ({ idCompetencia , sector, siguientePaso }) => {
             <img src={successIcon} />
           </div>
           <div className="col-9">
-            <h2 className="text-sans-h2 mb-4">Subiste el oficio {sector} con éxito</h2>
-            <p className="text-sans-p">Con esto, {sector} tienen habilitada la plataforma para subir {siguientePaso}.</p> 
-            <p className="text-sans-p mt-2"> También, los plazos establecidos para el llenado de este comienzan a correr.</p>
+            <h2 className="text-sans-h2 mb-4">Subiste la Minuta DIPRES con éxito</h2>
+            <p className="text-sans-p">SUBDERE y otros usuarios asociados a la competencia revisarán este documento para seguir con el proceso de levantamiento de antecedentes de la competencia.</p>
           </div>
         </div>
       </div>

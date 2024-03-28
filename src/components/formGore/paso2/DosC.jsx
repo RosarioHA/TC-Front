@@ -21,7 +21,7 @@ import { FormGOREContext } from '../../../context/FormGore';
 
 export const Fluctuaciones = ({ id, dataGastos, solo_lectura }) => {
   const [datosGastos, setDatosGastos] = useState([]);
-  const { updatePasoGore, refetchTriggerGore } = useContext(FormGOREContext);
+  const { updatePasoGore } = useContext(FormGOREContext);
   const [esquemaValidacion, setEsquemaValidacion] = useState(null);
 
 
@@ -170,9 +170,6 @@ export const Fluctuaciones = ({ id, dataGastos, solo_lectura }) => {
         loading: false,
         saved: true,
       });
-  
-      // Opcional: refrescar los datos para reflejar los cambios
-      refetchTriggerGore();
     } catch (error) {
       console.error('Error al guardar los datos:', error);
       

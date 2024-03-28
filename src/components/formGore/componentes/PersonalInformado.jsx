@@ -3,8 +3,6 @@ import { OpcionesAB } from '../../forms/opciones_AB';
 
 export const PersonalInformado = ({ personal }) =>
 {
-
-  console.log(personal);
   return (
     <>
       <div className="my-5 col-11">
@@ -37,7 +35,7 @@ export const PersonalInformado = ({ personal }) =>
             </tr>
           </thead>
           <tbody>
-            {personal.map((persona, index) => (
+            {Array.isArray(personal) && personal.map((persona, index) => (
               <tr key={persona.id}>
                 <th scope="row ">{index + 1}</th>
                 <td className="col-2">{persona.nombre_estamento}</td>

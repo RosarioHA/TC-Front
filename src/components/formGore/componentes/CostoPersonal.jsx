@@ -9,12 +9,17 @@ export const CostoPersonal = ({
   gastoPersonalJustificado,
   gastosPersonalJustificar,
 }) => {
-  // Lista de filas con sus respectivos datos
+  // Función para formatear los números con separadores de miles
+  const formatNumber = (number) => {
+    return new Intl.NumberFormat('es-CL').format(Number(number));
+  };
+
+  // Lista de filas con sus respectivos datos, ya formateados
   const filas = [
-    { nombre: '01 - Personal de Planta', justificado: plantaJustificado, justificar: plantaJustificar },
-    { nombre: '02 - Personal Contrata', justificado: contrataJustificado, justificar: contrataJustificar },
-    { nombre: '03 - Otras Remuneraciones', justificado: otrasJustificado, justificar: otrasJustificar },
-    { nombre: '04 - Otras Gastos en Personal', justificado: gastoPersonalJustificado, justificar: gastosPersonalJustificar },
+    { nombre: '01 - Personal de Planta', justificado: formatNumber(plantaJustificado), justificar: formatNumber(plantaJustificar) },
+    { nombre: '02 - Personal Contrata', justificado: formatNumber(contrataJustificado), justificar: formatNumber(contrataJustificar) },
+    { nombre: '03 - Otras Remuneraciones', justificado: formatNumber(otrasJustificado), justificar: formatNumber(otrasJustificar) },
+    { nombre: '04 - Otras Gastos en Personal', justificado: formatNumber(gastoPersonalJustificado), justificar: formatNumber(gastosPersonalJustificar) },
   ];
 
   // Filtrar primero las filas que deben mostrarse
@@ -35,11 +40,10 @@ export const CostoPersonal = ({
                 <th scope="col">#</th>
                 <th scope="col-5">item</th>
                 <th scope="col-6">
-                  Costo adicional <br /> informado por GORE ($M)
+                  Costo adicional informado por GORE ($M)
                 </th>
                 <th scope="col-4">
-                  Pendiente por
-                  <br /> justificar
+                  Pendiente por justificar
                 </th>
               </tr>
             </thead>
