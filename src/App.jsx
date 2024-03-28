@@ -48,7 +48,7 @@ const PasoTresGore = React.lazy(() => import('./views/formularioGore/pasoTres'))
 const ResumenOS = React.lazy(() => import('./views/observacionesSUBDERE/ResumenOS'));
 const ObservacionesSubdere = React.lazy(() => import('./views/observacionesSUBDERE/ObservacionesSubdere'));
 const Paso_1_Revision = React.lazy(() => import("./views/revisionSubdere/Paso_1_revision"));
-const Paso_2_Revision = React.lazy(() => import("./views/revisionSubdere/Paso_2_revision.jsx"));
+const Paso_2_Revision = React.lazy(() => import("./views/revisionSubdere/Paso_2_revision"));
 
 const createProtectedRoute = (path, Component, allowedProfiles) => (
   <Route
@@ -153,7 +153,6 @@ function App()
                 </FormSubdereProvider>
               }
             >
-              <Route index element={<PasoUno />} />
               <Route path="paso_1" element={<Paso_1_Revision />} />
               <Route path="paso_2" element={<Paso_2_Revision />} />
               <Route path="resumen_revision_final" element={<Resumen />} />

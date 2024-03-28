@@ -11,8 +11,6 @@ const FormLayout = () =>{
   const location = useLocation();
   const params = useParams();
 
-  console.log('data', dataFormSubdere)
-
   useEffect(() => {
     const currentId = location.state?.id || params.id;
     if (currentId) {
@@ -20,7 +18,7 @@ const FormLayout = () =>{
     }
   }, [location, params.id, updateFormId]);
 
-  const baseUrl = `/home/revision-final-competencia/${params.id}`;
+  const baseUrl = `/home/revision_subdere/${params.id}`;
 
   if (errorFormSubdere) {
     return <div>Error: {errorFormSubdere.message}</div>;

@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState, useCallback } from "react";
+import { useContext, useEffect, useCallback } from "react";
 import { Avance } from "../../components/tables/Avance";
 import { MonoStepers } from "../../components/stepers/MonoStepers";
 import { FormSubdereContext } from "../../context/RevisionFinalSubdere";
@@ -30,8 +30,10 @@ const Paso_1_revision = () => {
   if (!dataPasoSubdere?.paso1_revision_final_subdere) return <div>Cargando...</div>;
   if (!dataPasoSubdere || dataPasoSubdere.length === 0) return <div>No hay datos disponibles para el Paso 1</div>;
 
-  const { paso1_revision_final_subdere = {} } = dataPasoSubdere;
-  const { ambito_definitivo_competencia = ""} = dataPasoSubdere;
+  const { 
+    paso1_revision_final_subdere = {},
+    ambito_definitivo_competencia
+   } = dataPasoSubdere;
 
   return (
     <>

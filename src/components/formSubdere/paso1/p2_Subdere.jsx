@@ -28,10 +28,6 @@ export const RecomendacionTransferencia = () => {
               Texto de apoyo.
             </h6>
           </div>
-
-
-
-
         </div>
       </div>
     </>
