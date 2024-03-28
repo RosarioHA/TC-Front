@@ -5,6 +5,8 @@ import { OpcionesAB } from "../../forms/opciones_AB";
 import { FormSubdereContext } from "../../../context/RevisionFinalSubdere";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 
 export const RestoCampos = ({
@@ -75,7 +77,7 @@ export const RestoCampos = ({
             </h6>
           </div>
           <div className="mb-4 col-11">
-            <CustomTextarea
+            <ReactQuill
               label="Descripción"
               placeholder="Describe el costo por subtítulo e ítem"
               name="recursos_requeridos"
