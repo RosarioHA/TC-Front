@@ -10,13 +10,12 @@ export const HorizontalRevision = ({ baseUrl }) => {
   const stepTitles = [
     'Ámbito y recomendación de transferencia',
     'Condiciones de transferencia',
-
   ];
 
   const goToStep = (stepNumber) => {
     const newStepsState = stepsState.map((state, index) => index === stepNumber ? 'active' : index < stepNumber ? 'done' : 'default');
     
-    navigate(`${baseUrl}/paso_${stepNumber + 1}`);
+    navigate(`${baseUrl}/paso_${stepNumber + 1}/`);
     setStepsState(newStepsState);
 
   };

@@ -17,14 +17,15 @@ export const CostosIndirectosSector = ({ costosIndirectos }) => {
   const handleUpdate = async (
     costoId,
     field,
-    value,
+    rawValue,
     saveImmediately = false
   ) => {
+    const cleanValue = rawValue.replace(/\./g, ''); 
     setInputStatus((prev) => ({
       ...prev,
       [costoId]: {
         ...prev[costoId],
-        [field]: { value, loading: false, saved: false },
+        [field]: { value: cleanValue, loading: false, saved: false },
       },
     }));
 
@@ -34,7 +35,7 @@ export const CostosIndirectosSector = ({ costosIndirectos }) => {
           p_2_1_b_costos_indirectos: [
             {
               id: costoId,
-              [field]: value,
+              [field]: cleanValue,
             },
           ],
         };

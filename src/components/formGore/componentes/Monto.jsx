@@ -16,8 +16,8 @@ export const Monto = ({ monto }) => {
     claseCss = "text-sans-p-bold";
   }
 
-  // Calcular el valor absoluto del monto para asegurarse de que no se muestre el signo negativo
-  const montoMostrado = monto !== null ? Math.abs(monto) : '';
+  // Calcular el valor absoluto del monto y aplicar formato de número
+  const montoMostrado = monto !== null ? Math.abs(monto).toLocaleString('es-CL') : '';
 
   return (
     <>
@@ -26,7 +26,7 @@ export const Monto = ({ monto }) => {
         <br /> informado por el sector
       </p>
       {monto !== null && (
-        // Usar montoMostrado para mostrar el valor absoluto sin el signo negativo
+        // Usar montoMostrado para mostrar el valor formateado
         <div className={`mx-5 ${claseCss} text-center`}>${montoMostrado}</div>
       )}
       <div className={`${claseCss} text-center`}>

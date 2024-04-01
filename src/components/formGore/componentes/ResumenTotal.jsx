@@ -9,18 +9,13 @@ export const ResumenTotal = ({ resumen }) => {
         </div>
         <div className="text-sans-h6-primary my-3 col-11">
           <h6>
-            La tabla muestra, la suma de costos directos e indirectos, tanto
-            informados por ele sector, como los informados por GORE. Las
-            diferencias que tengas en los subtítulos 21 (Gastos en personal), 22
-            (Bienes y servicios de consumo) y 29 (Adquisición de activos no
-            financieros) deberás justificarlas en el paso 3 (Estimación de
-            personal y de administración).
+            La tabla muestra, la suma de costos directos e indirectos, tanto informados por el sector, como los informados por GORE. Las diferencias que tengas en los subtítulos 21 (Gastos en personal), 22 (Bienes y servicios de consumo) y 29 (Adquisición de activos no financieros) deberás justificarlas en el paso 3 (Estimación de personal y de administración).
           </h6>
         </div>
         <div>
           <table className="table table-secondary my-4">
             <thead>
-              <tr>
+            <tr>
                 <th scope="col align-items-center">
                   <span className="py-2">
                   Costos Totales  <br/>Anual ($M)
@@ -42,21 +37,21 @@ export const ResumenTotal = ({ resumen }) => {
             </thead>
             <tbody>
               {Array.isArray(resumen) && resumen.map((item) => (
-                <tr className="table-light text-center py-5 " key={item.id}>
+                <tr className="table-light text-center py-5" key={item.id}>
                   <td></td>
                   <td className="py-3">
                     <span className="text-sans-p-bold-blue pe-5">
-                      {item.costos_sector}
+                      $ {Number(item.costos_sector).toLocaleString('es-CL')}
                     </span>
                   </td>
                   <td className="py-3">
                     <span className="text-sans-p-bold-blue pe-5">
-                      {item.costos_gore}
+                    $ {Number(item.costos_gore).toLocaleString('es-CL')}
                     </span>
                   </td>
                   <td className="py-3">
                     <span className="text-sans-p-bold-blue pe-5">
-                      {item.diferencia_costos}
+                      $ {Number(item.diferencia_costos).toLocaleString('es-CL')}
                     </span>
                   </td>
                 </tr>

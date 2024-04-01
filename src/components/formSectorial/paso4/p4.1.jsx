@@ -309,7 +309,7 @@ export const Subpaso_CuatroUno = ({ data, listaIndicadores, id, stepNumber, solo
               <CustomTextarea
                 label="Medios utilizados para su cálculo (Obligatorio)"
                 placeholder="Describe los medios utilizados para su cálculo"
-                maxLength={300}
+                maxLength={1000}
                 value={indicador.medios_calculo || ""}
                 onChange={(evento) => handleChangeInput(indicador.id, 'medios_calculo', evento)}
                 onBlur={() => indicador.id ? inputSave(indicador.id, 'medios_calculo') : null}

@@ -22,9 +22,9 @@ export const ResumenDirectos = ({ resumen }) => {
               {resumen?.map((item) => (
                 <tr className="table-light text-center py-5 " key={item.id}>
                   <td></td>
-                  <td className="py-3"><span className="text-sans-p-bold-blue pe-5">{item.directos_por_sector}</span></td>
-                  <td className="py-3"><span className="text-sans-p-bold-blue pe-5">{item.directos_por_gore}</span></td>
-                  <td className="py-3"><span className="text-sans-p-bold-blue pe-5">{item.diferencia_directos}</span></td>
+                  <td className="py-3"><span className="text-sans-p-bold-blue pe-5">$ {Number(item.directos_por_sector).toLocaleString('es-CL')}</span></td>
+                  <td className="py-3"><span className="text-sans-p-bold-blue pe-5">$ {Number(item.directos_por_gore).toLocaleString('es-CL')}</span></td>
+                  <td className="py-3"><span className="text-sans-p-bold-blue pe-5">$ {Number(item.diferencia_directos).toLocaleString('es-CL')}</span></td>
                 </tr>
               ))}
             </tbody>
