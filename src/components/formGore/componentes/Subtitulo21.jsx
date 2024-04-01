@@ -1,7 +1,8 @@
 import React from 'react';
 import CustomTextarea from '../../forms/custom_textarea';
 
-export const Subtitulo21 = ({ personal }) => {
+export const Subtitulo21 = ({ personal }) =>
+{
   return (
     <>
       <div className="mt-4 col-11">
@@ -30,13 +31,14 @@ export const Subtitulo21 = ({ personal }) => {
                       <span className="text-sans-p-grayc">{item.item_subtitulo_label_value.label}</span>
                     </div>
                   </div>
-                  <div className="col-5 pe-2">
-                    <p className="text-sans-p-bold">
+                  <div className="col-4 pe-2">
+                    <p className="text-sans-p-bold pe-2">
                       Total Anual ($M) <br /> informado por el sector
                     </p>
-                    <div className="border-gris col-5 py-2 px-3">
-                      ${item.total_anual_sector}
+                    <div className="border-gris col-6 py-2 px-3">
+                      ${item.total_anual_sector ? parseInt(item.total_anual_sector).toLocaleString('es-CL') : '0'}
                     </div>
+
                   </div>
                 </div>
                 <div className="d-flex flex-row mt-4">

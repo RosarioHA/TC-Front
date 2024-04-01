@@ -58,15 +58,16 @@ export const FichaInformatico = ({ dataInformatico }) => {
     }
   };
 
-  const handleUpdate = async (fichaId, field, rawValue) => {
-    // Aquí asumimos que rawValue es el valor con formato, por ejemplo, "1.234.567"
-    const cleanValue = rawValue.replace(/\./g, ''); 
-
+  const handleUpdate = async (fichaId, field, value) => {
+    let finalValue = value;
+    if (field === 'costo') {
+      finalValue = value.replace(/\./g, '');
+    }
     setInputStatus((prev) => ({
       ...prev,
       [fichaId]: {
         ...prev[fichaId],
-        [field]: { value: cleanValue, loading: true, saved: false },
+        [field]: { value, loading: false, saved: false },
       },
     }));
 
@@ -75,7 +76,7 @@ export const FichaInformatico = ({ dataInformatico }) => {
         p_3_2_a_sistemas_informaticos: [
           {
             id: fichaId,
-            [field]: cleanValue,
+            [field]: finalValue,
           },
         ],
       };

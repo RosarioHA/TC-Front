@@ -1,8 +1,11 @@
 import { CostoPersonal } from '../componentes/CostoPersonal';
-
+import { PersonalInformado } from '../componentes/PersonalInformado';
 export const Sub1_b = ({data}) =>
 {
-  const {paso3_gore}= data
+  const {paso3_gore, 
+    p3_personal_indirecto_sector,
+    p3_personal_indirecto_gore
+    }= data
   return (
     <>
       <div className="pe-5 me-5 mt-4 col-12">
@@ -26,6 +29,12 @@ export const Sub1_b = ({data}) =>
             otrasJustificar={paso3_gore?.sub21b_otras_remuneraciones_justificar}
             gastoPersonalJustificado={paso3_gore?.sub21b_gastos_en_personal_justificado}
             gastosPersonalJustificar={paso3_gore?.sub21b_gastos_en_personal_justificar} />
+            <PersonalInformado 
+            personalSector={p3_personal_indirecto_sector}
+            personalGore={p3_personal_indirecto_gore}
+            title="indirecto"
+            seccion="p_3_1_b_personal_indirecto"
+            />
         </div>
       </div>
     </>
