@@ -1,4 +1,4 @@
-import { useContext, useEffect, useCallback } from 'react';
+import { useContext, useEffect, useCallback, useState } from 'react';
 import { FormGOREContext } from '../../context/FormGore';
 import { MonoStepers } from '../../components/stepers/MonoStepers';
 import { Avance } from '../../components/tables/Avance';
@@ -7,11 +7,21 @@ import { DosA } from '../../components/formGore/paso2/DosA';
 import { DosB } from '../../components/formGore/paso2/DosB';
 import { ResumenTotal } from '../../components/formGore/componentes/ResumenTotal';
 import { Fluctuaciones } from '../../components/formGore/paso2/DosC';
+import CustomTextarea from '../../components/forms/custom_textarea';
+import { useObservacionesGORE } from "../../hooks/fomularioGore/useObSubdereGore";
+import { useAuth } from '../../context/AuthContext';
 
 const PasoDosGore = () => {
-  const { dataFormGore, dataPasoGore, errorPasoGore, updateStepNumber } =
-    useContext(FormGOREContext);
+  const { dataFormGore, dataPasoGore, errorPasoGore, updateStepNumber } = useContext(FormGOREContext);
   const stepNumber = 2;
+  const { userData } = useAuth();
+  const { observaciones, loadingObservaciones, updateObservacion, fetchObservaciones, saved } = useObservacionesGORE(dataFormGore ? dataFormGore.id : null);
+  const [observacionPaso2, setObservacionPaso2] = useState("");
+  const userSubdere = userData?.perfil?.includes('SUBDERE');
+
+    //const formularioEnviado = dataFormGore?.formulario_enviado
+    const observacionesEnviadas = observaciones?.observacion_enviada;
+    const formularioEnviado = true;
 
   const handleUpdateStepNumber = useCallback(() =>
   {
@@ -23,6 +33,15 @@ const PasoDosGore = () => {
   {
     handleUpdateStepNumber();
   }, [ handleUpdateStepNumber ]);
+
+  useEffect(() => {
+    if (observaciones && Object.keys(observaciones).length === 0) {
+      fetchObservaciones();
+    }
+    if (observaciones && observaciones.observacion_paso2) {
+      setObservacionPaso2(observaciones.observacion_paso2);
+    }
+  }, [updateStepNumber, stepNumber, observaciones, fetchObservaciones]);
 
   if (errorPasoGore)
     return <div>Error: {errorPasoGore.message || 'Error desconocido'}</div>;
@@ -41,6 +60,15 @@ const PasoDosGore = () => {
     costos_indirectos_gore,
     p_2_1_c_fluctuaciones_presupuestarias,
   } = dataPasoGore;
+
+  const handleGuardarObservacion = async () => {
+    if (!observacionesEnviadas) {
+      const observacionData = {
+        observacion_paso2: observacionPaso2,
+      };
+      await updateObservacion(observacionData);
+    }
+  };
 
   return (
     <>
@@ -87,6 +115,29 @@ const PasoDosGore = () => {
             id={dataFormGore?.id}
             stepNumber={stepNumber}
           />
+
+          {userSubdere && formularioEnviado && (
+            <div className="mt-5 my-4">
+              {!observacionPaso2.trim() && observacionesEnviadas ? (
+                <p>No se han dejado observaciones en este paso.</p>
+              ) : (
+                <CustomTextarea 
+                  label="Observaciones (Opcional)"
+                  placeholder="Escribe tus observaciones de este paso del formulario"
+                  rows={5}
+                  maxLength={500}
+                  value={observacionPaso2}
+                  onChange={(e) => setObservacionPaso2(e.target.value)}
+                  readOnly={observacionesEnviadas}
+                  onBlur={handleGuardarObservacion}
+                  loading={loadingObservaciones}
+                  saved={saved}
+                />
+              )}
+            </div>
+          )}
+
+
           <NavigationGore
             step={paso2_gore?.numero_paso}
             id={dataFormGore?.id}
