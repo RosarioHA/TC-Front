@@ -131,6 +131,7 @@ function App()
               <Route path="Resumen_formulario_gore" element={<Resumen />} />
               <Route path="observaciones_subdere" element={<ObservacionesSubdereGore />} />
             </Route>
+            
             <Route
               path="revision_subdere/:id"
               element={
