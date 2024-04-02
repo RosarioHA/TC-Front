@@ -21,7 +21,6 @@ const PasoDos = () =>
   const [ refreshSubpasoDos_cuatro, setRefreshSubpasoDos_cuatro ] = useState(false);
   const { userData } = useAuth();
   const userSubdere = userData?.perfil?.includes('SUBDERE');
-  const userDIPRES = userData?.perfil?.includes('DIPRES');
   const { observaciones, updateObservacion, fetchObservaciones, loadingObservaciones, saved } = useObservacionesSubdere(data ? data.id : null);
   const [ observacionPaso2, setObservacionPaso2 ] = useState("");
 
@@ -138,7 +137,7 @@ const PasoDos = () =>
               solo_lectura={solo_lectura} />
           </div>
 
-          {formSectorialEnviado && (userSubdere || userDIPRES) && (
+          {formSectorialEnviado && userSubdere && (
             <div className="mt-5 my-4">
               {!observacionPaso2.trim() && observacionesEnviadas ? (
                 <p>No se han dejado observaciones en este paso.</p>
