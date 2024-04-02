@@ -184,7 +184,7 @@ export const PersonalInformado = ({
                               <CustomInput
                                 id={`numero_personas-${persona.id}`}
                                 placeholder="Número"
-                                defaultValue={persona.numero_personas_gore} 
+                                value={persona.numero_personas_gore} 
                                 loading={
                                   inputStatus[persona.id]?.numero_personas_gore
                                     ?.loading
