@@ -18,6 +18,7 @@ const PasoCuatro = () => {
   const [observacionPaso4, setObservacionPaso4] = useState("");
 
   const observacionesEnviadas = observaciones.observacion_enviada
+  const formSectorialEnviado = data?.formulario_enviado
 
   useEffect(() => {
     updateStepNumber(stepNumber);
@@ -77,7 +78,7 @@ const PasoCuatro = () => {
             </div>
           </div>
 
-          {observacionesEnviadas && (userSubdere || userDIPRES) && (
+          {formSectorialEnviado && (userSubdere || userDIPRES) && (
             <div className="mt-5 my-4">
               {!observacionPaso4.trim() && observacionesEnviadas ? (
                 <p>No se han dejado observaciones en este paso.</p>

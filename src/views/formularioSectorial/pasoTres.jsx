@@ -17,6 +17,8 @@ const PasoTres = () => {
   const id = data.id;
   const { observaciones, updateObservacion, fetchObservaciones, loadingObservaciones, saved } = useObservacionesSubdere(data ? data.id : null);
   const observacionesEnviadas = observaciones?.observacion_enviada
+  const formSectorialEnviado = data?.formulario_enviado
+
   const [observacionPaso3, setObservacionPaso3] = useState("");
   const [formData, setFormData] = useState({
     universo_cobertura: "",
@@ -201,7 +203,7 @@ const PasoTres = () => {
             </div>
           </div>
 
-          {observacionesEnviadas && (userSubdere || userDIPRES) && (
+          {formSectorialEnviado && (userSubdere || userDIPRES) && (
             <div className="mt-5 my-4">
               {!observacionPaso3.trim() && observacionesEnviadas ? (
                 <p>No se han dejado observaciones en este paso.</p>
