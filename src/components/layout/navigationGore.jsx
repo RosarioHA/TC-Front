@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 
-export const NavigationGore= ({ step , id }) => {
+export const NavigationGore= ({ step , id, ocultarEnviarBtn }) => {
   const navigate = useNavigate();
   const { userData } = useAuth();
   const userSubdere = userData?.perfil?.includes('SUBDERE');
@@ -36,14 +36,14 @@ export const NavigationGore= ({ step , id }) => {
       ) : <div></div> /* Elemento vacío para mantener el espacio */}
 
       {/* Botón "Siguiente" o "Ir a resumen de formulario" */}
-      {step < 5 ? (
+      {step < 3 && !ocultarEnviarBtn ? (
         <button className="btn-primario-s" onClick={handleNextButtonClick}>
           Siguiente
           <i className="material-symbols-rounded me-2">arrow_forward_ios</i>
         </button>
-      ) : (
+      ) : !ocultarEnviarBtn && (
         <button className="btn-primario-s" onClick={handleNextButtonClick}>
-          Ir a resumen de formulario
+          {userSubdere ? 'Ir a resumen Observaciones Subdere' : 'Ir a resumen de formulario'}
         </button>
       )}
     </div>

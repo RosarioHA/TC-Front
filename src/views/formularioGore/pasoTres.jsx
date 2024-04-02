@@ -101,7 +101,7 @@ const PasoTresGore = () =>
           )}
 
 
-          <NavigationGore step={stepNumber} id={dataFormGore ? dataFormGore.id : null} />
+          <NavigationGore step={stepNumber} id={dataFormGore ? dataFormGore.id : null} ocultarEnviarBtn={observacionesEnviadas} />
         </div>
       </div>
     </>
