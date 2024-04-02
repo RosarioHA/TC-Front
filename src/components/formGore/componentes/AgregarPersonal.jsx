@@ -15,10 +15,13 @@ export const AgregarPersonal = ({
   seccion,
   idCalidad,
   dataPersonal,
+  title,
 }) => {
   const [nuevoPersonal, setNuevoPersonal] = useState([]);
   const { updatePasoGore } = useContext(FormGOREContext);
   const [opcionesEstamentos, setOpcionesEstamentos] = useState([]);
+
+  console.log(personalGore);
 
   const { control, handleSubmit } = useForm({
     resolver: yupResolver(validacionesCalidadJuridica),
@@ -205,21 +208,44 @@ export const AgregarPersonal = ({
           <div className="col">
             <p className="text-sans-p-bold">Estamento</p>
           </div>
+          {title === 'indirecto' && (
+            <div className="col">
+              <p className="text-sans-p-bold">
+                Número de
+                <br /> personas
+              </p>
+            </div>
+          )}
           <div className="col">
-            <p className="text-sans-p-bold">Renta bruta mensual ($M)</p>
-          </div>
-          <div className="col-2">
-            <p className="text-sans-p-bold mx-2">
-              Grado<br/>(Si corresponde)
+            <p className="text-sans-p-bold">
+              Renta bruta
+              <br /> mensual ($M)
             </p>
           </div>
-          <div className="col-2">
-            <p className="text-sans-p-bold ms-3">
-              Comision <br />de servicio
+          <div className="col">
+            <p className="text-sans-p-bold ">
+              Grado
+              <br />
+              (Si
+              <br />
+              corresponde)
             </p>
           </div>
+          {title === 'directo' && (
+            <div className="col">
+              <p className="text-sans-p-bold ms-3">
+                Comision <br />
+                de servicio
+              </p>
+            </div>
+          )}
+          {title === 'indirecto' && (
+            <div className="col-2 pe-5">
+              <p className="text-sans-p-bold ms-3">Total  <br/>rentas</p>
+            </div>
+          )}
           {!solo_lectura && (
-            <div className="col-2">
+            <div className="col">
               <p className="text-sans-p-bold">Acción</p>
             </div>
           )}
@@ -233,7 +259,7 @@ export const AgregarPersonal = ({
                     {' '}
                     <p className="text-sans-p-bold mt-3">{index + 1}</p>{' '}
                   </div>
-                  <div className="col">
+                  <div className="col pe-2 ps-2">
                     <Controller
                       control={control}
                       name={`estamento_${personal.id}`}
@@ -257,7 +283,35 @@ export const AgregarPersonal = ({
                       )}
                     />
                   </div>
-                  <div className="col px-5">
+                  {title === 'indirecto' && (
+                    <div className="col-1 px-2 ">
+                      <CustomInput
+                        id={`numero_personas_gore${personal.id}`}
+                        placeholder="Número"
+                        value={personal.numero_personas_gore}
+                        loading={
+                          inputStatus[personal.id]?.numero_personas_gore
+                            ?.loading
+                        }
+                        saved={
+                          inputStatus[personal.id]?.numero_personas_gore?.saved
+                        }
+                        onBlur={(e) => {
+                          if (
+                            personal.numero_personas_gore !== e.target.value
+                          ) {
+                            handleUpdate(
+                              personal.id,
+                              'numero_personas_gore',
+                              e.target.value,
+                              true
+                            );
+                          }
+                        }}
+                      />
+                    </div>
+                  )}
+                  <div className="col  px-4">
                     <Controller
                       name={`personal[${index}].renta_bruta`}
                       control={control}
@@ -293,7 +347,7 @@ export const AgregarPersonal = ({
                       )}
                     />
                   </div>
-                  <div className="col-1 px-2">
+                  <div className="col-1">
                     <Controller
                       name={`personal[${index}].grado`}
                       control={control}
@@ -324,13 +378,24 @@ export const AgregarPersonal = ({
                       )}
                     />
                   </div>
-                  <div className="col-2 ">
-                    <span className="text-sans-p-bold-blue px-5 mx-4">
-                      {personal.comision_servicio ? 'Sí' : 'No'}
-                    </span>
-                  </div>
-                  {!solo_lectura && (
+                  {title === 'directo' && (
                     <div className="col">
+                      <span className="text-sans-p-bold-blue px-5 mx-4">
+                        {personal.comision_servicio ? 'Sí' : 'No'}
+                      </span>
+                    </div>
+                  )}
+                  {title === 'indirecto' && (
+                    <div className="col-2 px-4">
+                      <span className="text-sans-p-bold-blue px-3">
+                        ${' '}
+                        {Number(personal.total_rentas).toLocaleString('es-CL')}
+                      </span>
+                    </div>
+                  )}
+
+                  {!solo_lectura && (
+                    <div className="col mx-auto">
                       <button
                         className="btn-terciario-ghost"
                         onClick={() => eliminarPersonal(personal.id)}
@@ -356,7 +421,7 @@ export const AgregarPersonal = ({
 
         <div className="my-4">
           <p className="subrayado text-sans-p-bold">
-            Resumen de justificación de costos de personal directo:{' '}
+            Resumen de justificación de costos de personal {title} : {''}
             {calidadJuridica}
           </p>
           <h6 className="text-sans-h6-primary mt-3">
