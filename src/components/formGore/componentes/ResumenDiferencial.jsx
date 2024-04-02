@@ -42,13 +42,13 @@ export const ResumenDiferencial = ({ informada, justificados, justificar }) => {
               <tr className="table-light text-center py-5 " key="">
                 <td className="text-start">Costos informados <br/> total</td>
                 <td className="py-3">
-                  <span className="text-sans-p-bold-blue pe-5">{formatNumber(informada || 0)}</span>
+                  <span className="text-sans-p-bold-blue pe-5">$ {formatNumber(informada || 0)}</span>
                 </td>
                 <td className="py-3">
-                  <span className="text-sans-p-bold-blue pe-5">{formatNumber(justificados || 0)}</span>
+                  <span className="text-sans-p-bold-blue pe-5">$ {formatNumber(justificados || 0)}</span>
                 </td>
                 <td className="py-3">
-                  <span className="text-sans-p-bold-blue pe-5">{formatNumber(justificar || 0)}</span>
+                  <span className="text-sans-p-bold-blue pe-5">$ {formatNumber(justificar || 0)}</span>
                 </td>
               </tr>
             </tbody>
