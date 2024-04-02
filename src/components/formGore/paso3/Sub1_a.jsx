@@ -1,14 +1,27 @@
 // import { useContext } from 'react';
 // import { FormGOREContext } from '../../../context/FormGore';
 import { CostoPersonal } from '../componentes/CostoPersonal';
-import { PersonalInformado } from '../componentes/PersonalInformado';
+import {Personal} from "../componentes/Personal"; 
 
 export const Sub1_a = ({data}) => {
 
 
   const { paso3_gore, p3_personal_directo_sector , 
-    p3_personal_directo_gore
+    p3_personal_directo_gore,
+    listado_estamentos
     } = data;
+
+  
+    let directos = {};
+  
+    // Separación de los datos
+    for (let key in paso3_gore) {
+      if (key.startsWith("sub21_")) {
+        directos[key] = paso3_gore[key];
+      }
+    }
+
+    console.log('di',directos); 
 
   return (
     <>
@@ -36,21 +49,17 @@ export const Sub1_a = ({data}) => {
             gastosPersonalJustificar={paso3_gore?.sub21_gastos_en_personal_justificar}
           />
 
-          <PersonalInformado 
+          <Personal
           personalSector={p3_personal_directo_sector}
           personalGore={p3_personal_directo_gore}
           title="directo"
           seccion="p_3_1_a_personal_directo"
+          seccionGore3="paso3_gore"
+          estamentos={listado_estamentos}
+          dataPersonal={directos}
+          dataPaso={data}
           />
 
-        </div>
-        <div className="d-flex mb-3 mt-1 text-sans-h6-primary col-11">
-          <i className="material-symbols-rounded me-2">info</i>
-          <h6 className="mt-0">
-            Una vez definido el nimero de personas por estamento y calidad
-            juridica para el ejercicio de la competencia, señale en el siguiente
-            recuadro los perfiles técnicos requeridos.
-          </h6>
         </div>
       </div>
     </>
