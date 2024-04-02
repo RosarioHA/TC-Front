@@ -18,13 +18,10 @@ const PasoTresGore = () =>
   const { observaciones, loadingObservaciones, updateObservacion, fetchObservaciones, saved } = useObservacionesGORE(dataFormGore ? dataFormGore.id : null);
   const [observacionPaso3, setObservacionPaso3] = useState("");
   const userSubdere = userData?.perfil?.includes('SUBDERE');
+  const userDIPRES = userData?.perfil?.includes('DIPRES');
 
-  //const formularioEnviado = dataFormGore?.formulario_enviado
+  const formularioEnviado = dataFormGore?.formulario_enviado
   const observacionesEnviadas = observaciones?.observacion_enviada;
-  const formularioEnviado = true;
-
-
-  console.log("observaciones en form gore", observaciones);
 
   const handleUpdateStepNumber = useCallback(() =>
   {
@@ -83,7 +80,7 @@ const PasoTresGore = () =>
             justificar={costos_justificar_gore}
           />
 
-          {userSubdere && formularioEnviado && (
+          {formularioEnviado && (userSubdere || userDIPRES) && (
             <div className="mt-5 my-4 border-top pt-5">
               {!observacionPaso3.trim() && observacionesEnviadas ? (
                 <p>No se han dejado observaciones en este paso.</p>

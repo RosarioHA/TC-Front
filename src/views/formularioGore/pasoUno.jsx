@@ -18,14 +18,10 @@ const PasoUnoGore = () =>
   const { observaciones, loadingObservaciones, updateObservacion, fetchObservaciones, saved } = useObservacionesGORE(dataFormGore ? dataFormGore.id : null);
   const [observacionPaso1, setObservacionPaso1] = useState("");
   const userSubdere = userData?.perfil?.includes('SUBDERE');
-  console.log("dataFormGore en form gore", dataFormGore);
-  console.log("observaciones en form gore", observaciones);
+  const userDIPRES = userData?.perfil?.includes('DIPRES');
 
-  
-  //const formularioEnviado = dataFormGore?.formulario_enviado
+  const formularioEnviado = dataFormGore?.formulario_enviado
   const observacionesEnviadas = observaciones?.observacion_enviada;
-  const formularioEnviado = true;
-
 
   const handleUpdateStepNumber = useCallback(() =>
   {
@@ -91,7 +87,7 @@ const PasoUnoGore = () =>
             stepNumber={stepNumber}
           />
 
-          {userSubdere && formularioEnviado && (
+          {formularioEnviado && (userSubdere || userDIPRES) && (
             <div className="mt-5 my-4 border-top pt-5">
               {!observacionPaso1.trim() && observacionesEnviadas ? (
                 <p>No se han dejado observaciones en este paso.</p>

@@ -10,9 +10,6 @@ const ResumenOS_Gore = () => {
 	const { observaciones, fetchObservaciones, updateObservacion } = useObservacionesGORE(dataFormGore ? dataFormGore.id : null);
 	const navigate = useNavigate();
 
-  console.log("observaciones en resumen os gore", observaciones)
-  console.log("dataFormGore en os gore", dataFormGore)
-
   useEffect(() => {
     const obtenerObservaciones = async () => {
       try {
@@ -28,13 +25,13 @@ const ResumenOS_Gore = () => {
     navigate(-1);
   };
   const handleClickOSCerrada = () => {
-    navigate(`/home/observaciones_subdere/${dataFormGore.competencia_id}/`);
+    navigate(`/home/formulario_gore/${dataFormGore.competencia_id}/observaciones_subdere/`);
   };
 
 	const handleEnviarClick = async () => {
     try {
       await updateObservacion({ observacion_enviada: true });
-      navigate( `/home/success_observaciones_subdere/${dataFormGore.id}/`);
+      navigate( `/home/success_observaciones_subdere/${dataFormGore.competencia_id}/`);
 
     } catch (error) {
       console.error("Error al enviar observaciones:", error);

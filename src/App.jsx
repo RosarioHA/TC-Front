@@ -125,7 +125,7 @@ function App()
               path="formulario_gore/:id"
               element={
                 <FormGoreProvider>
-                  <ProtectedRoute allowedProfiles={[ 'Usuario Sectorial', 'SUBDERE', 'Usuario Observador', 'GORE' ]}>
+                  <ProtectedRoute allowedProfiles={[ 'Usuario Sectorial', 'SUBDERE', 'Usuario Observador', 'GORE', 'DIPRES' ]}>
                     <FormGoreLayout />
                   </ProtectedRoute>
                 </FormGoreProvider>
