@@ -1,11 +1,12 @@
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 
-export const NavigationGore= ({ step , id }) =>
-{
+export const NavigationGore= ({ step , id }) => {
   const navigate = useNavigate();
+  const { userData } = useAuth();
+  const userSubdere = userData?.perfil?.includes('SUBDERE');
 
-  const getRouteForStep = (stepNumber) =>
-  {
+  const getRouteForStep = (stepNumber) => {
     const stepToRouteMap = {
       1: `/home/formulario_gore/${id}/paso_1`,
       2: `/home/formulario_gore/${id}/paso_2`,
@@ -14,14 +15,14 @@ export const NavigationGore= ({ step , id }) =>
     return stepToRouteMap[ stepNumber ];
   };
 
-  const handleNextButtonClick = () =>
-  {
-    if (step < 3)
-    {
+  const handleNextButtonClick = () => {
+    if (step < 3) {
       navigate(getRouteForStep(step + 1));
-    } else
-    {
-      navigate( `/home/formulario_gore/${id}/resumen_formulario`);
+    } else {
+      const resumenRoute = userSubdere
+        ? `/home/formulario_gore/${id}/resumen_observaciones_subdere`
+        : `/home/formulario_gore/${id}/resumen_formulario`;
+      navigate(resumenRoute);
     }
   };
 

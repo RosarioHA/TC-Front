@@ -1,5 +1,5 @@
 import { useContext, useEffect } from "react";
-import { FormularioContext } from '../../context/FormSectorial';
+import { FormGOREContext } from "../../context/FormGore";
 import { useObservacionesSubdere } from "../../hooks/formulario/useObSubdereSectorial";
 import CustomTextarea from "../../components/forms/custom_textarea";
 import successIcon from '../../static/icons/success.svg';
@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 
 const ResumenOS_Gore = () => {
   //COPIA DE RESUMEN OS SECTORIAL, FALTA CORREGIR DATA Y CONECCIONES AL BACKEND
-	const { data } = useContext(FormularioContext);
+	const { data } = useContext(FormGOREContext);
 	const { observaciones, fetchObservaciones, updateObservacion } = useObservacionesSubdere(data ? data.id : null);
 	const navigate = useNavigate();
 
@@ -49,7 +49,7 @@ const ResumenOS_Gore = () => {
 
   return (
     <div className="container col-11">
-      <p className="text-sans-h1 text-center">Resumen observaciones </p>
+      <h1 className="text-sans-h1 text-center">Resumen observaciones OS SOBRE GORE</h1>
 
       {Object.keys(observaciones).map((pasoKey) => {
         // Excluir claves no deseadas
