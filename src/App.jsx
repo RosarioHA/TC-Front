@@ -33,6 +33,7 @@ const SuccessEdicion = React.lazy(() => import('./views/success/success_edicion'
 const SuccessCreacion = React.lazy(() => import('./views/success/success_creacion'));
 const SuccessFormSectorial = React.lazy(() => import('./views/success/success_formularioSectorial'));
 const SuccessCierreOS = React.lazy(() => import('./views/success/success_cierreObservaciones'));
+const SuccessOS_Gore = React.lazy(() => import('./views/success/success_OS_formGore.jsx'));
 const SuccessOS = React.lazy(() => import('./views/success/success_os'));
 const PasoUno = React.lazy(() => import('./views/formularioSectorial/pasoUno'));
 const PasoDos = React.lazy(() => import('./views/formularioSectorial/pasoDos'));
@@ -92,6 +93,7 @@ function App()
             <Route path="success_formulario_sectorial/:id/" element={<FormularioProvider> <SuccessFormSectorial /> </FormularioProvider>} />
             <Route path="success_observaciones_subdere/:id/" element={<FormularioProvider> <SuccessOS /> </FormularioProvider>} />
             <Route path="success_cierre_observaciones/:id/" element={<FormularioProvider> <SuccessCierreOS /> </FormularioProvider>} />
+            <Route path="success_cierre_observaciones_gore/:id/" element={<FormGoreProvider> <SuccessOS_Gore /> </FormGoreProvider>} />
             <Route
               path="observaciones_subdere/:id/"
               element={
@@ -134,6 +136,7 @@ function App()
               <Route path="paso_2" element={<PasoDosGore />} />
               <Route path="paso_3" element={<PasoTresGore />} />
               <Route path="Resumen_formulario_gore" element={<Resumen />} />
+              <Route path="resumen_observaciones_subdere" element={<ResumenOS_Gore />} />
             </Route>
             
             <Route 
@@ -145,15 +148,6 @@ function App()
                 </ProtectedRoute>
               </FormGoreProvider>
 
-            } />
-            <Route 
-            path="formulario_gore/:id/resumen_observaciones_subdere" 
-            element={
-              <FormGoreProvider>
-                <ProtectedRoute allowedProfiles={[ 'Usuario Sectorial', 'SUBDERE', 'Usuario Observador', 'GORE' ]}>
-                  <ResumenOS_Gore />
-                </ProtectedRoute>
-              </FormGoreProvider>
             } />
 
             <Route

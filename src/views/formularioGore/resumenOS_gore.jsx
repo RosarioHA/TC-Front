@@ -1,15 +1,17 @@
 import { useContext, useEffect } from "react";
 import { FormGOREContext } from "../../context/FormGore";
-import { useObservacionesSubdere } from "../../hooks/formulario/useObSubdereSectorial";
+import { useObservacionesGORE } from "../../hooks/fomularioGore/useObSubdereGore";
 import CustomTextarea from "../../components/forms/custom_textarea";
 import successIcon from '../../static/icons/success.svg';
 import { useNavigate } from "react-router-dom";
 
 const ResumenOS_Gore = () => {
-  //COPIA DE RESUMEN OS SECTORIAL, FALTA CORREGIR DATA Y CONECCIONES AL BACKEND
-	const { data } = useContext(FormGOREContext);
-	const { observaciones, fetchObservaciones, updateObservacion } = useObservacionesSubdere(data ? data.id : null);
+	const { dataFormGore } = useContext(FormGOREContext);
+	const { observaciones, fetchObservaciones, updateObservacion } = useObservacionesGORE(dataFormGore ? dataFormGore.id : null);
 	const navigate = useNavigate();
+
+  console.log("observaciones en resumen os gore", observaciones)
+  console.log("dataFormGore en os gore", dataFormGore)
 
   useEffect(() => {
     const obtenerObservaciones = async () => {
@@ -20,19 +22,19 @@ const ResumenOS_Gore = () => {
       }
     };
     obtenerObservaciones();
-  }, [data, fetchObservaciones]);
+  }, [dataFormGore, fetchObservaciones]);
 
 	const handleBackButtonClick = () => {
     navigate(-1);
   };
   const handleClickOSCerrada = () => {
-    navigate(`/home/observaciones_subdere/${data.competencia_id}/`);
+    navigate(`/home/observaciones_subdere/${dataFormGore.competencia_id}/`);
   };
 
 	const handleEnviarClick = async () => {
     try {
       await updateObservacion({ observacion_enviada: true });
-      navigate( `/home/success_observaciones_subdere/${data.id}/`);
+      navigate( `/home/success_observaciones_subdere/${dataFormGore.id}/`);
 
     } catch (error) {
       console.error("Error al enviar observaciones:", error);
@@ -40,16 +42,14 @@ const ResumenOS_Gore = () => {
   };
 
 	const titulosPasos = {
-		1: "Descripción de la Institución",
-		2: "Arquitectura del Proceso",
-		3: "Cobertura de la Competencia",
-		4: "Indicadores de Desempeño",
-		5: "Costeo de la Competencia",
+		1: "Proyección del ejercicio de la competencia",
+		2: "Estimación de recursos económicos",
+		3: "Incidencia en la capacidad administrativa",
 	};
 
   return (
     <div className="container col-11">
-      <h1 className="text-sans-h1 text-center">Resumen observaciones OS SOBRE GORE</h1>
+      <h1 className="text-sans-h1 text-center">Resumen observaciones</h1>
 
       {Object.keys(observaciones).map((pasoKey) => {
         // Excluir claves no deseadas
@@ -107,7 +107,7 @@ const ResumenOS_Gore = () => {
           <p className="text-sans-p">Asegurate que las observaciones que ingresaste son suficientes, ya que una vez que las envíes, no podrás editarlas.</p>
         </>
       )}
-			<div className="d-flex justify-content-between p-2 mb-5 pb-5">
+			<div className="d-flex justify-content-between p-2 mb-5 pb-5 mt-5">
 				<button className="d-flex btn-secundario-s"  onClick={handleBackButtonClick}>
 					<i className="material-symbols-rounded me-2">arrow_back_ios</i>
 					<p className="text-decoration-underline mb-0">Atrás</p>
