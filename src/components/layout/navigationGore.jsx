@@ -21,7 +21,7 @@ export const NavigationGore= ({ step , id }) =>
       navigate(getRouteForStep(step + 1));
     } else
     {
-      navigate( `/home/formulario_gore/${id}/resumen_formulario`);
+      navigate( `/home/formulario_gore/${id}/resumen_formulario_gore`);
     }
   };
 
@@ -35,7 +35,7 @@ export const NavigationGore= ({ step , id }) =>
       ) : <div></div> /* Elemento vacío para mantener el espacio */}
 
       {/* Botón "Siguiente" o "Ir a resumen de formulario" */}
-      {step < 5 ? (
+      {step < 3 ? (
         <button className="btn-primario-s" onClick={handleNextButtonClick}>
           Siguiente
           <i className="material-symbols-rounded me-2">arrow_forward_ios</i>
