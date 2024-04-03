@@ -40,6 +40,7 @@ const PasoTres = React.lazy(() => import('./views/formularioSectorial/pasoTres')
 const PasoCuatro = React.lazy(() => import('./views/formularioSectorial/pasoCuatro'));
 const PasoCinco = React.lazy(() => import('./views/formularioSectorial/pasoCinco'));
 const Resumen = React.lazy(() => import('./views/formularioSectorial/Resumen'));
+const ResumenGore = React.lazy(()=> import('./views/formularioGore/ResumenGore')); 
 const FormGoreLayout = React.lazy(() => import('./layout/FormGore'));
 const RevisionSubdere = React.lazy(() => import('./layout/RevisionSubdereLayout'));
 const PasoUnoGore = React.lazy(() => import('./views/formularioGore/pasoUno'));
@@ -132,7 +133,7 @@ function App()
               <Route path="paso_1" element={<PasoUnoGore />} />
               <Route path="paso_2" element={<PasoDosGore />} />
               <Route path="paso_3" element={<PasoTresGore />} />
-              <Route path="Resumen_formulario_gore" element={<Resumen />} />
+              <Route path="resumen_formulario_gore" element={<ResumenGore />} />
             </Route>
             
             <Route 
