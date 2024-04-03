@@ -41,7 +41,7 @@ const PasoTres = React.lazy(() => import('./views/formularioSectorial/pasoTres')
 const PasoCuatro = React.lazy(() => import('./views/formularioSectorial/pasoCuatro'));
 const PasoCinco = React.lazy(() => import('./views/formularioSectorial/pasoCinco'));
 const Resumen = React.lazy(() => import('./views/formularioSectorial/Resumen'));
-const ResumenGore = React.lazy(()=> import('./views/formularioGore/ResumenGore')); 
+const ResumenGore = React.lazy(() => import('./views/formularioGore/ResumenGore'));
 const FormGoreLayout = React.lazy(() => import('./layout/FormGore'));
 const RevisionSubdere = React.lazy(() => import('./layout/RevisionSubdereLayout'));
 const PasoUnoGore = React.lazy(() => import('./views/formularioGore/pasoUno'));
@@ -111,7 +111,7 @@ function App()
                   </ProtectedRoute>
                 </FormularioProvider>
               }
-              >
+            >
               <Route index element={<PasoUno />} />
               <Route path="paso_1" element={<PasoUno />} />
               <Route path="paso_2" element={<PasoDos />} />
@@ -131,34 +131,33 @@ function App()
                   </ProtectedRoute>
                 </FormGoreProvider>
               }
-              >
+            >
               <Route index element={<PasoUno />} />
               <Route path="paso_1" element={<PasoUnoGore />} />
               <Route path="paso_2" element={<PasoDosGore />} />
               <Route path="paso_3" element={<PasoTresGore />} />
-              <Route path="resumen_formulario_gore" element={<Resumen />} />
               <Route path="resumen_observaciones_subdere" element={<ResumenOS_Gore />} />
               <Route path="resumen_formulario_gore" element={<ResumenGore />} />
             </Route>
-            
-            <Route 
-            path="formulario_gore/:id/observaciones_subdere" 
-            element={
-              <FormGoreProvider>
-                <ProtectedRoute allowedProfiles={[ 'Usuario Sectorial', 'SUBDERE', 'Usuario Observador', 'GORE' ]}>
-                  <ObservacionesSubdereGore />
-                </ProtectedRoute>
-              </FormGoreProvider>
 
-            } />
+            <Route
+              path="formulario_gore/:id/observaciones_subdere"
+              element={
+                <FormGoreProvider>
+                  <ProtectedRoute allowedProfiles={[ 'Usuario Sectorial', 'SUBDERE', 'Usuario Observador', 'GORE' ]}>
+                    <ObservacionesSubdereGore />
+                  </ProtectedRoute>
+                </FormGoreProvider>
+
+              } />
 
             <Route
               path="revision_subdere/:id"
               element={
                 <FormSubdereProvider>
-                <ProtectedRoute allowedProfiles={[ 'Usuario Sectorial', 'SUBDERE', 'Usuario Observador', 'GORE' ]}>
-                  <RevisionSubdere />
-                </ProtectedRoute>
+                  <ProtectedRoute allowedProfiles={[ 'Usuario Sectorial', 'SUBDERE', 'Usuario Observador', 'GORE' ]}>
+                    <RevisionSubdere />
+                  </ProtectedRoute>
                 </FormSubdereProvider>
               }
             >
@@ -168,9 +167,9 @@ function App()
             </Route>
 
             <Route path="minuta_dipres/:id">
-              {createProtectedRoute("", PrimeraMinutaDipres, ['SUBDERE', 'Usuario Observador', 'DIPRES'])}
-              {createProtectedRoute("segunda_minuta_dipres", SegundaMinutaDipres, ['SUBDERE', 'Usuario Observador', 'DIPRES'])}
-              {createProtectedRoute("observaciones_subdere", ObservacionesSubdereDipres, ['SUBDERE', 'Usuario Observador'])}
+              {createProtectedRoute("", PrimeraMinutaDipres, [ 'SUBDERE', 'Usuario Observador', 'DIPRES' ])}
+              {createProtectedRoute("segunda_minuta_dipres", SegundaMinutaDipres, [ 'SUBDERE', 'Usuario Observador', 'DIPRES' ])}
+              {createProtectedRoute("observaciones_subdere", ObservacionesSubdereDipres, [ 'SUBDERE', 'Usuario Observador' ])}
             </Route>
 
             <Route path="agregar_minuta" element={<Minuta />}></Route>
