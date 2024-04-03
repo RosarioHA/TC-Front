@@ -5,8 +5,6 @@ export const ButtonsNavigate = ({ step, id, ocultarEnviarBtn }) => {
   const navigate = useNavigate();
   const { userData } = useAuth();
   const userSubdere = userData?.perfil?.includes('SUBDERE');
-  console.log("id en buttons navigate", id)
-  console.log("user data", userData)
 
   const getRouteForStep = (stepNumber) => {
     const stepToRouteMap = {
@@ -48,7 +46,7 @@ export const ButtonsNavigate = ({ step, id, ocultarEnviarBtn }) => {
         </button>
       ) : !ocultarEnviarBtn && (
         <button className="btn-primario-s" onClick={handleNextButtonClick}>
-          Ir a resumen de formulario
+          {userSubdere ? 'Ir a resumen Observaciones Subdere' : 'Ir a resumen de formulario'}
         </button>
       )}
     </div>

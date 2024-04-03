@@ -1,11 +1,13 @@
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 
-export const NavigationGore= ({ step , id }) =>
-{
+export const NavigationGore= ({ step , id }) => {
   const navigate = useNavigate();
+  const { userData } = useAuth();
+  const userSubdere = userData?.perfil?.includes('SUBDERE');
+  const userDipres = userData?.perfil?.includes('DIPRES');
 
-  const getRouteForStep = (stepNumber) =>
-  {
+  const getRouteForStep = (stepNumber) => {
     const stepToRouteMap = {
       1: `/home/formulario_gore/${id}/paso_1`,
       2: `/home/formulario_gore/${id}/paso_2`,
@@ -14,14 +16,14 @@ export const NavigationGore= ({ step , id }) =>
     return stepToRouteMap[ stepNumber ];
   };
 
-  const handleNextButtonClick = () =>
-  {
-    if (step < 3)
-    {
+  const handleNextButtonClick = () => {
+    if (step < 3) {
       navigate(getRouteForStep(step + 1));
-    } else
-    {
-      navigate( `/home/formulario_gore/${id}/resumen_formulario_gore`);
+    } else {
+      const resumenRoute = userSubdere
+        ? `/home/formulario_gore/${id}/resumen_observaciones_subdere`
+        : `/home/formulario_gore/${id}/resumen_formulario_gore`;
+      navigate(resumenRoute);
     }
   };
 
@@ -34,15 +36,18 @@ export const NavigationGore= ({ step , id }) =>
         </button>
       ) : <div></div> /* Elemento vacío para mantener el espacio */}
 
-      {/* Botón "Siguiente" o "Ir a resumen de formulario" */}
-      {step < 3 ? (
+      {/* Botón "Siguiente" */}
+      {step < 3 && (
         <button className="btn-primario-s" onClick={handleNextButtonClick}>
           Siguiente
           <i className="material-symbols-rounded me-2">arrow_forward_ios</i>
         </button>
-      ) : (
+      )}
+
+      {/* Botón "Ir a resumen de formulario" */}
+      {step === 3 && !userDipres && (
         <button className="btn-primario-s" onClick={handleNextButtonClick}>
-          Ir a resumen de formulario
+          {userSubdere ? 'Ir a resumen de observaciones Subdere' : 'Ir a resumen de formulario'}
         </button>
       )}
     </div>

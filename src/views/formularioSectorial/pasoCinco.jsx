@@ -18,7 +18,6 @@ const PasoCinco = () => {
   const { dataPaso, refetchTrigger} = usePasoForm(data.id, stepNumber)
   const { userData } = useAuth();
   const userSubdere = userData?.perfil?.includes('SUBDERE');
-  const userDIPRES = userData?.perfil?.includes('DIPRES');
   const { observaciones, updateObservacion, fetchObservaciones, loadingObservaciones, saved } = useObservacionesSubdere(data ? data.id : null);
   const [observacionPaso5, setObservacionPaso5] = useState("");
   const [paso5Data, setPaso5Data] = useState('');
@@ -32,11 +31,8 @@ const PasoCinco = () => {
   const [itemSubtitulosDirectoData, setItemSubtitulosDirectoData] = useState('');
   const [itemSubtitulosIndirectoData, setItemSubtitulosIndirectoData] = useState('');
 
-  const formularioEnviado = data.formulario_enviado //data de formulario sectorial, esta mal
+  const formSectorialEnviado = data?.formulario_enviado
   const observacionesEnviadas = observaciones.observacion_enviada
-  console.log("formulario enviado", formularioEnviado)
-  console.log("data", data)
-  console.log("observaciones", observaciones)
 
   useEffect(() => {
     updateStepNumber(stepNumber);
@@ -154,7 +150,7 @@ const PasoCinco = () => {
             dataPaso={dataPaso}
           />
 
-          {observacionesEnviadas && (userSubdere || userDIPRES) && (
+          {formSectorialEnviado && userSubdere && (
             <div className="mt-5 my-4">
               {!observacionPaso5.trim() && observacionesEnviadas ? (
                 <p>No se han dejado observaciones en este paso.</p>

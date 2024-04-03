@@ -33,6 +33,7 @@ const SuccessEdicion = React.lazy(() => import('./views/success/success_edicion'
 const SuccessCreacion = React.lazy(() => import('./views/success/success_creacion'));
 const SuccessFormSectorial = React.lazy(() => import('./views/success/success_formularioSectorial'));
 const SuccessCierreOS = React.lazy(() => import('./views/success/success_cierreObservaciones'));
+const SuccessOS_Gore = React.lazy(() => import('./views/success/success_OS_formGore.jsx'));
 const SuccessOS = React.lazy(() => import('./views/success/success_os'));
 const PasoUno = React.lazy(() => import('./views/formularioSectorial/pasoUno'));
 const PasoDos = React.lazy(() => import('./views/formularioSectorial/pasoDos'));
@@ -47,6 +48,7 @@ const PasoUnoGore = React.lazy(() => import('./views/formularioGore/pasoUno'));
 const PasoDosGore = React.lazy(() => import('./views/formularioGore/pasoDos'));
 const PasoTresGore = React.lazy(() => import('./views/formularioGore/pasoTres'));
 const ResumenOS = React.lazy(() => import('./views/observacionesSUBDERE/ResumenOS'));
+const ResumenOS_Gore = React.lazy(() => import('./views/formularioGore/resumenOS_gore.jsx'));
 const ObservacionesSubdere = React.lazy(() => import('./views/observacionesSUBDERE/ObservacionesSubdere'));
 const Paso_1_Revision = React.lazy(() => import("./views/revisionSubdere/Paso_1_revision"));
 const Paso_2_Revision = React.lazy(() => import("./views/revisionSubdere/Paso_2_revision"));
@@ -92,6 +94,7 @@ function App()
             <Route path="success_formulario_sectorial/:id/" element={<FormularioProvider> <SuccessFormSectorial /> </FormularioProvider>} />
             <Route path="success_observaciones_subdere/:id/" element={<FormularioProvider> <SuccessOS /> </FormularioProvider>} />
             <Route path="success_cierre_observaciones/:id/" element={<FormularioProvider> <SuccessCierreOS /> </FormularioProvider>} />
+            <Route path="success_cierre_observaciones_gore/:id/" element={<FormGoreProvider> <SuccessOS_Gore /> </FormGoreProvider>} />
             <Route
               path="observaciones_subdere/:id/"
               element={
@@ -123,7 +126,7 @@ function App()
               path="formulario_gore/:id"
               element={
                 <FormGoreProvider>
-                  <ProtectedRoute allowedProfiles={[ 'Usuario Sectorial', 'SUBDERE', 'Usuario Observador', 'GORE' ]}>
+                  <ProtectedRoute allowedProfiles={[ 'Usuario Sectorial', 'SUBDERE', 'Usuario Observador', 'GORE', 'DIPRES' ]}>
                     <FormGoreLayout />
                   </ProtectedRoute>
                 </FormGoreProvider>
@@ -133,15 +136,20 @@ function App()
               <Route path="paso_1" element={<PasoUnoGore />} />
               <Route path="paso_2" element={<PasoDosGore />} />
               <Route path="paso_3" element={<PasoTresGore />} />
+              <Route path="resumen_formulario_gore" element={<Resumen />} />
+              <Route path="resumen_observaciones_subdere" element={<ResumenOS_Gore />} />
               <Route path="resumen_formulario_gore" element={<ResumenGore />} />
             </Route>
             
             <Route 
             path="formulario_gore/:id/observaciones_subdere" 
             element={
-              <ProtectedRoute allowedProfiles={[ 'Usuario Sectorial', 'SUBDERE', 'Usuario Observador', 'GORE' ]}>
-                <ObservacionesSubdereGore />
-              </ProtectedRoute>
+              <FormGoreProvider>
+                <ProtectedRoute allowedProfiles={[ 'Usuario Sectorial', 'SUBDERE', 'Usuario Observador', 'GORE' ]}>
+                  <ObservacionesSubdereGore />
+                </ProtectedRoute>
+              </FormGoreProvider>
+
             } />
 
             <Route

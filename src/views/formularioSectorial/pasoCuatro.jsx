@@ -13,11 +13,11 @@ const PasoCuatro = () => {
   const stepNumber = 4;
   const { userData } = useAuth();
   const userSubdere = userData?.perfil?.includes('SUBDERE');
-  const userDIPRES = userData?.perfil?.includes('DIPRES');
   const { observaciones, updateObservacion, fetchObservaciones, loadingObservaciones, saved } = useObservacionesSubdere(data ? data.id : null);
   const [observacionPaso4, setObservacionPaso4] = useState("");
 
   const observacionesEnviadas = observaciones.observacion_enviada
+  const formSectorialEnviado = data?.formulario_enviado
 
   useEffect(() => {
     updateStepNumber(stepNumber);
@@ -77,7 +77,7 @@ const PasoCuatro = () => {
             </div>
           </div>
 
-          {observacionesEnviadas && (userSubdere || userDIPRES) && (
+          {formSectorialEnviado && userSubdere && (
             <div className="mt-5 my-4">
               {!observacionPaso4.trim() && observacionesEnviadas ? (
                 <p>No se han dejado observaciones en este paso.</p>

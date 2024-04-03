@@ -15,10 +15,6 @@ const ObservacionesSubdereGore = () => {
   const [isSubmitSuccessful, setIsSubmitSuccessful] = useState(false);
   const navigate = useNavigate();
   const observacionesEnviadas = competenciaDetails?.etapa5?.observacion_minuta_gore_enviada;
- 
-  console.log("competenciaDetails en OS Minuta Dipres", competenciaDetails);
-  console.log("observacionMinutaDipres en OS Minuta Dipres", observacionMinutaDipres);
-  console.log("observacionesEnviadas en OS Minuta Dipres", observacionesEnviadas);
 
   useEffect(() => {
     // Verificar si las observaciones ya han sido enviadas

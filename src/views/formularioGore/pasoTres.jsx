@@ -1,4 +1,4 @@
-import { useContext, useEffect , useCallback} from "react";
+import { useContext, useEffect , useCallback, useState} from "react";
 import { FormGOREContext } from "../../context/FormGore";
 import { MonoStepers } from "../../components/stepers/MonoStepers";
 import { Avance } from "../../components/tables/Avance";
@@ -6,12 +6,21 @@ import { NavigationGore } from "../../components/layout/navigationGore";
 import { Sub_1 } from "../../components/formGore/paso3/Sub_1";
 import { Sub_2 } from "../../components/formGore/paso3/Sub_2";
 import { ResumenDiferencial } from "../../components/formGore/componentes/ResumenDiferencial";
-
+import CustomTextarea from "../../components/forms/custom_textarea";
+import { useObservacionesGORE } from "../../hooks/fomularioGore/useObSubdereGore";
+import { useAuth } from '../../context/AuthContext';
 
 const PasoTresGore = () =>
 {
   const { dataFormGore, dataPasoGore, errorPasoGore, updateStepNumber } = useContext(FormGOREContext);
   const stepNumber = 3;
+  const { userData } = useAuth();
+  const { observaciones, loadingObservaciones, updateObservacion, fetchObservaciones, saved } = useObservacionesGORE(dataFormGore ? dataFormGore.id : null);
+  const [observacionPaso3, setObservacionPaso3] = useState("");
+  const userSubdere = userData?.perfil?.includes('SUBDERE');
+
+  const formularioEnviado = dataFormGore?.formulario_enviado
+  const observacionesEnviadas = observaciones?.observacion_enviada;
 
   const handleUpdateStepNumber = useCallback(() =>
   {
@@ -24,6 +33,14 @@ const PasoTresGore = () =>
     handleUpdateStepNumber();
   }, [ handleUpdateStepNumber ]);
 
+  useEffect(() => {
+    if (observaciones && Object.keys(observaciones).length === 0) {
+      fetchObservaciones();
+    }
+    if (observaciones && observaciones.observacion_paso3) {
+      setObservacionPaso3(observaciones.observacion_paso3);
+    }
+  }, [updateStepNumber, stepNumber, observaciones, fetchObservaciones]);
 
   if (errorPasoGore) return <div>Error: {errorPasoGore.message || "Error desconocido"}</div>;
   if (!dataPasoGore || dataPasoGore.length === 0) return <div>No hay datos disponibles para el Paso 3</div>;
@@ -32,6 +49,14 @@ const PasoTresGore = () =>
 
   console.log(dataPasoGore)
 
+  const handleGuardarObservacion = async () => {
+    if (!observacionesEnviadas) {
+      const observacionData = {
+        observacion_paso3: observacionPaso3,
+      };
+      await updateObservacion(observacionData);
+    }
+  };
 
   return (
     <>
@@ -51,6 +76,27 @@ const PasoTresGore = () =>
             justificados={paso3_gore.costos_justificados_gore}
             justificar={paso3_gore.costos_justificar_gore}
           />
+
+          {formularioEnviado && userSubdere && (
+            <div className="mt-5 my-4 border-top pt-5">
+              {!observacionPaso3.trim() && observacionesEnviadas ? (
+                <p>No se han dejado observaciones en este paso.</p>
+              ) : (
+                <CustomTextarea 
+                  label="Observaciones (Opcional)"
+                  placeholder="Escribe tus observaciones de este paso del formulario"
+                  rows={5}
+                  maxLength={500}
+                  value={observacionPaso3}
+                  onChange={(e) => setObservacionPaso3(e.target.value)}
+                  readOnly={observacionesEnviadas}
+                  onBlur={handleGuardarObservacion}
+                  loading={loadingObservaciones}
+                  saved={saved}
+                />
+              )}
+            </div>
+          )}
           <NavigationGore step={stepNumber} id={dataFormGore ? dataFormGore.id : null} />
         </div>
       </div>
