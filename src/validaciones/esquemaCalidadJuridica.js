@@ -13,8 +13,12 @@ export const validacionesCalidadJuridica = yup.object({
       grado: yup.number()
         .nullable(true)
         .typeError('El grado debe ser un número')
-        .min(1, 'El grado debe tener igual o mayor a 1 ')
-        .max(25, 'EL grado  no debe exceder al numero 25')
+        .min(1, 'El grado debe ser igual o mayor a 1 ')
+        .max(25, 'EL grado  no debe exceder al numero 25'),
+      numero_personas_gore: yup.number()
+      .nullable(true)
+      .typeError('Debe ser un número')
+      .min(1, 'Debe ser igual o mayor a 1 ')
     })
   )
 });
