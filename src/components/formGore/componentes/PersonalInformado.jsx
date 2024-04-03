@@ -1,8 +1,23 @@
 import React, { useContext, useState, useMemo } from 'react';
+import { useForm, Controller } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
+import CustomInput from '../../forms/custom_input';
 import { OpcionesAB } from '../../forms/opciones_AB';
 import { AgregarPersonal } from './AgregarPersonal';
 import { FormGOREContext } from '../../../context/FormGore';
-import CustomInput from '../../forms/custom_input';
+
+const schema = yup
+  .object({
+    utilizar_recurso: yup.boolean().required('Debe indicar una opción'),
+    numero_personas_gore: yup
+      .number()
+      .typeError('Debe ser un número')
+      .integer('Debe ser un número entero')
+      .positive('Debe ser un número positivo')
+      .min(1, 'Debe ser igual o mayor a 1'),
+  })
+  .required();
 
 export const PersonalInformado = ({
   personalSector,
@@ -13,18 +28,16 @@ export const PersonalInformado = ({
   dataPersonal,
 }) => {
   const { updatePasoGore } = useContext(FormGOREContext);
-  const [inputStatus, setInputStatus] = useState({
-    utilizara_recurso: { loading: false, saved: false },
-    numero_personas: { loading: false, saved: false },
+  const [inputStatus, setInputStatus] = useState({});
+  const { control, handleSubmit } = useForm({
+    resolver: yupResolver(schema),
+    mode: 'onBlur',
   });
 
-  console.log(personalSector);
-  // Agrupar datos por calidad_juridica
   const datosAgrupadosPorCalidadJuridica = useMemo(() => {
     if (!Array.isArray(personalSector)) {
       return {};
     }
-
     return personalSector.reduce((acc, persona) => {
       if (!acc[persona.calidad_juridica]) {
         acc[persona.calidad_juridica] = [];
@@ -34,200 +47,220 @@ export const PersonalInformado = ({
     }, {});
   }, [personalSector]);
 
-  const handleUpdate = async (
-    costoId,
-    field,
-    value,
-    saveImmediately = false
-  ) => {
+  const handleUpdate = async (personaId, field, value) => {
     setInputStatus((prev) => ({
       ...prev,
-      [costoId]: {
-        ...prev[costoId],
-        [field]: { value, loading: false, saved: false },
+      [personaId]: {
+        ...prev[personaId],
+        [field]: { loading: true, saved: false },
       },
     }));
 
-    if (saveImmediately) {
-      try {
-        const payload = {
-          [seccion]: [
-            {
-              id: costoId,
-              [field]: value,
-            },
-          ],
-        };
-        await updatePasoGore(payload);
-        setInputStatus((prevStatus) => ({
-          ...prevStatus,
-          [costoId]: {
-            ...prevStatus[costoId],
-            [field]: {
-              ...prevStatus[costoId][field],
-              loading: false,
-              saved: true,
-            },
-          },
-        }));
-      } catch (error) {
-        console.error('Error updating data', error);
-        setInputStatus((prevStatus) => ({
-          ...prevStatus,
-          [costoId]: {
-            ...prevStatus[costoId],
-            [field]: { loading: false, saved: false },
-          },
-        }));
-      }
+    try {
+      const payload = {
+        [seccion]: [{ id: personaId, [field]: value }],
+      };
+      await updatePasoGore(payload);
+      setInputStatus((prev) => ({
+        ...prev,
+        [personaId]: {
+          ...prev[personaId],
+          [field]: { loading: false, saved: true },
+        },
+      }));
+    } catch (error) {
+      console.error('Error updating data', error);
+      setInputStatus((prev) => ({
+        ...prev,
+        [personaId]: {
+          ...prev[personaId],
+          [field]: { loading: false, saved: false },
+        },
+      }));
     }
   };
 
+  const onSubmit = (data) => {
+    Object.entries(data).forEach(([key, value]) => {
+      const [fieldName, personaId] = key.split('-');
+      if (fieldName && personaId) {
+        handleUpdate(personaId, fieldName, value);
+      }
+    });
+  };
   return (
     <>
       <div className="my-5 col-11">
         <span className="mt-3">Personal {title} informado por el sector:</span>
-        {Object.entries(datosAgrupadosPorCalidadJuridica).map(
-          ([calidadJuridica, personas]) => (
-            <React.Fragment key={calidadJuridica}>
-              <div key={calidadJuridica}>
-                <p className="my-4">
-                  <strong>Calidad Jurídica </strong>
-                  <span className="mx-2">
-                    {personas[0].nombre_calidad_juridica}
-                  </span>
-                </p>
-                <table className="table table-striped align-middle">
-                  <thead>
-                    <tr>
-                      <th>#</th>
-                      <th>Estamento</th>
-                      <th>Renta bruta mensual</th>
-                      <th>
-                        Grado <br />
-                        (Si corresponde)
-                      </th>
-                      <th>Sector</th>
-                      <th>
-                        Comisión <br /> de servicio
-                      </th>
-                      {title === 'directo' && (
+        <form onSubmit={handleSubmit(onSubmit)}>
+          {Object.entries(datosAgrupadosPorCalidadJuridica).map(
+            ([calidadJuridica, personas]) => (
+              <React.Fragment key={calidadJuridica}>
+                <div key={calidadJuridica}>
+                  <p className="my-4">
+                    <strong>Calidad Jurídica </strong>
+                    <span className="mx-2">
+                      {personas[0].nombre_calidad_juridica}
+                    </span>
+                  </p>
+                  <table className="table table-striped align-middle">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Estamento</th>
+                        <th>Renta bruta mensual</th>
                         <th>
-                          ¿GORE <br /> utilizará este recurso?
+                          Grado <br />
+                          (Si corresponde)
                         </th>
-                      )}
-                      {title === 'indirecto' && (
-                        <>
-                          <th>
-                            N° personas <br /> informado
-                          </th>
-                          <th>
-                            ¿Cuántas <br /> personas <br />
-                            utilizará GORE?
-                          </th>
-                        </>
-                      )}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {personas.map((persona, index) => (
-                      <tr key={persona.id}>
-                        <th scope="row">{index + 1}</th>
-                        <td>{persona.nombre_estamento}</td>
-                        <td>
-                          {persona.renta_bruta
-                            ? parseInt(persona.renta_bruta, 10).toLocaleString(
-                                'es-CL'
-                              )
-                            : 'sin información'}
-                        </td>
-                        <td className="text-center">{persona.grado || '-'}</td>
-                        <td>{persona.sector_nombre}</td>
-                        <td className="col-2 px-5">
-                          <span className="text-sans-p-bold-blue">
-                            {persona.comision_servicio ? 'Sí' : 'No'}
-                          </span>
-                        </td>
+                        <th>Sector</th>
+                        <th>
+                          Comisión <br /> de servicio
+                        </th>
                         {title === 'directo' && (
-                          <td>
-                            <OpcionesAB
-                              id={`utilizara_recurso-${persona.id}`}
-                              initialState={persona.utilizara_recurso}
-                              handleEstadoChange={(value) =>
-                                handleUpdate(
-                                  persona.id,
-                                  'utilizara_recurso',
-                                  value,
-                                  true
-                                )
-                              }
-                              loading={
-                                inputStatus[persona.id]?.utilizara_recurso
-                                  ?.loading
-                              }
-                              saved={
-                                inputStatus[persona.id]?.utilizara_recurso
-                                  ?.saved
-                              }
-                              altA="Si"
-                              altB="No"
-                              field="utilizara_recurso"
-                              arrayNameId={persona.id}
-                              fieldName="utilizara_recurso"
-                            />
-                          </td>
+                          <th>
+                            ¿GORE <br /> utilizará este recurso?
+                          </th>
                         )}
                         {title === 'indirecto' && (
                           <>
-                            <td className="col-2 pe-3 text-center">{persona.numero_personas_sectorial}</td>
-                            <td className="col-2 pe-5">
-                              <CustomInput
-                                id={`numero_personas-${persona.id}`}
-                                placeholder="Número"
-                                value={persona.numero_personas_gore} 
-                                loading={
-                                  inputStatus[persona.id]?.numero_personas_gore
-                                    ?.loading
-                                }
-                                saved={
-                                  inputStatus[persona.id]?.numero_personas_gore
-                                    ?.saved
-                                }
-                                onBlur={(e) => {
-                                  
-                                  if (
-                                    persona.numero_personas_gore !== e.target.value
-                                  ) {
-                                    handleUpdate(
-                                      persona.id,
-                                      'numero_personas_gore',
-                                      e.target.value,
-                                      true 
-                                    );
-                                  }
-                                }}
-                              />
-                            </td>
+                            <th>
+                              N° personas <br /> informado
+                            </th>
+                            <th>
+                              ¿Cuántas <br /> personas <br />
+                              utilizará GORE?
+                            </th>
                           </>
                         )}
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-              <AgregarPersonal
-                calidadJuridica={personas[0].nombre_calidad_juridica}
-                estamentos={estamentos}
-                seccion={seccion}
-                idCalidad={calidadJuridica}
-                personalGore={personalGore}
-                dataPersonal={dataPersonal}
-                title={title}
-              />
-            </React.Fragment>
-          )
-        )}
-        <div></div>
+                    </thead>
+                    <tbody>
+                      {personas.map((persona, index) => (
+                        <tr key={persona.id}>
+                          <th scope="row">{index + 1}</th>
+                          <td>{persona.nombre_estamento}</td>
+                          <td>
+                            {persona.renta_bruta
+                              ? parseInt(
+                                  persona.renta_bruta,
+                                  10
+                                ).toLocaleString('es-CL')
+                              : 'sin información'}
+                          </td>
+                          <td className="text-center">
+                            {persona.grado || '-'}
+                          </td>
+                          <td>{persona.sector_nombre}</td>
+                          <td className="col-2 px-5">
+                            <span className="text-sans-p-bold-blue">
+                              {persona.comision_servicio ? 'Sí' : 'No'}
+                            </span>
+                          </td>
+                          {title === 'directo' && (
+                            <td>
+                              <Controller
+                                name={`utilizar_recurso-${persona.id}`}
+                                control={control}
+                                defaultValue={persona.utilizara_recurso}
+                                render={({ field, fieldState: { error } }) => (
+                                  <OpcionesAB
+                                    {...field}
+                                    id={`utilizara_recurso-${persona.id}`}
+                                    initialState={persona.utilizara_recurso}
+                                    handleEstadoChange={(value) => {
+                                      field.onChange(value);
+                                      handleUpdate(
+                                        persona.id,
+                                        'utilizara_recurso',
+                                        value,
+                                        true
+                                      );
+                                    }}
+                                    loading={
+                                      inputStatus[persona.id]?.utilizara_recurso
+                                        ?.loading
+                                    }
+                                    saved={
+                                      inputStatus[persona.id]?.utilizara_recurso
+                                        ?.saved
+                                    }
+                                    altA="Si"
+                                    altB="No"
+                                    error={error?.message}
+                                  />
+                                )}
+                              />
+                            </td>
+                          )}
+                          {title === 'indirecto' && (
+                            <>
+                              <td className="col-2 pe-3 text-center">
+                                {persona.numero_personas_sectorial}
+                              </td>
+                              <td className="col-2 pe-5">
+                                <Controller
+                                  name={`numero_personas_gore-${persona.id}`}
+                                  control={control}
+                                  rules={{ required: true }} 
+                                  defaultValue={
+                                    persona.numero_personas_gore || ''
+                                  }
+                                  render={({
+                                    field,
+                                    fieldState: { error },
+                                  }) => (
+                                    <CustomInput
+                                      {...field}
+                                      placeholder="número"
+                                      loading={
+                                        inputStatus[persona.id]
+                                          ?.numero_personas_gore?.loading
+                                      }
+                                      saved={
+                                        inputStatus[persona.id]
+                                          ?.numero_personas_gore?.saved
+                                      }
+                                      error={error ? error.message : null}
+                                      onBlur={(e) => {
+                                        field.onBlur();
+                                        const newValue = e.target.value;
+                                        if (
+                                          persona.numero_personas_gore !==
+                                            newValue &&
+                                          !error
+                                        ) {
+                                          handleUpdate(
+                                            persona.id,
+                                            'numero_personas_gore',
+                                            newValue
+                                          );
+                                        }
+                                      }}
+                                    />
+                                  )}
+                                />
+                              </td>
+                            </>
+                          )}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                <AgregarPersonal
+                  calidadJuridica={personas[0].nombre_calidad_juridica}
+                  estamentos={estamentos}
+                  seccion={seccion}
+                  idCalidad={calidadJuridica}
+                  personalGore={personalGore}
+                  dataPersonal={dataPersonal}
+                  title={title}
+                />
+              </React.Fragment>
+            )
+          )}
+        </form>
       </div>
     </>
   );
