@@ -45,11 +45,9 @@ const PasoTresGore = () =>
   if (errorPasoGore) return <div>Error: {errorPasoGore.message || "Error desconocido"}</div>;
   if (!dataPasoGore || dataPasoGore.length === 0) return <div>No hay datos disponibles para el Paso 3</div>;
 
-  const { paso3_gore = {},
-    costos_informados_gore,
-    costos_justificados_gore,
-    costos_justificar_gore
-  } = dataPasoGore;
+  const { paso3_gore = {}} = dataPasoGore;
+
+  console.log(dataPasoGore)
 
   const handleGuardarObservacion = async () => {
     if (!observacionesEnviadas) {
@@ -74,9 +72,9 @@ const PasoTresGore = () =>
           <Sub_1 data={dataPasoGore} />
           <Sub_2 data={dataPasoGore} paso3={paso3_gore} />
           <ResumenDiferencial
-            informada={costos_informados_gore}
-            justificados={costos_justificados_gore}
-            justificar={costos_justificar_gore}
+            informada={paso3_gore.costos_informados_gore}
+            justificados={paso3_gore.costos_justificados_gore}
+            justificar={paso3_gore.costos_justificar_gore}
           />
 
           {formularioEnviado && userSubdere && (

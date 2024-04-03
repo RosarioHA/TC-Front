@@ -22,7 +22,7 @@ export const NavigationGore= ({ step , id }) => {
     } else {
       const resumenRoute = userSubdere
         ? `/home/formulario_gore/${id}/resumen_observaciones_subdere`
-        : `/home/formulario_gore/${id}/resumen_formulario`;
+        : `/home/formulario_gore/${id}/resumen_formulario_gore`;
       navigate(resumenRoute);
     }
   };
