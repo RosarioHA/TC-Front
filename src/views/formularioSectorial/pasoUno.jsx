@@ -15,11 +15,16 @@ const PasoUno = () => {
   const stepNumber = 1;
   const { userData } = useAuth();
   const userSubdere = userData?.perfil?.includes('SUBDERE');
-  const userDIPRES = userData?.perfil?.includes('DIPRES');
   const { observaciones, updateObservacion, fetchObservaciones, loadingObservaciones, saved } = useObservacionesSubdere(data ? data.id : null);
   const [observacionPaso1, setObservacionPaso1] = useState("");
 
-  const observacionesEnviadas = observaciones.observacion_enviada
+  const observacionesEnviadas = observaciones?.observacion_enviada
+  const formSectorialEnviado = data?.formulario_enviado
+  console.log("formSectorialEnviado en paso 1", formSectorialEnviado)
+
+  console.log("observaciones en paso 1", observaciones)
+  console.log("pasoData en paso 1", pasoData)
+  console.log("data en paso 1", data)
 
   useEffect(() => {
     updateStepNumber(stepNumber);
@@ -68,7 +73,7 @@ const PasoUno = () => {
           <Subpaso_dos pasoData={paso1Data} organigrama={organigramaregional}  id={data ? data.id : null} stepNumber={stepNumber} solo_lectura={solo_lectura}/>
           <Subpaso_tres pasoData={paso1Data}   id={data ? data.id : null} stepNumber={stepNumber} solo_lectura={solo_lectura}/>
 
-          {observacionesEnviadas && (userSubdere || userDIPRES) && (
+          {formSectorialEnviado && userSubdere && (
             <div className="mt-5 my-4">
               {!observacionPaso1.trim() && observacionesEnviadas ? (
                 <p>No se han dejado observaciones en este paso.</p>
