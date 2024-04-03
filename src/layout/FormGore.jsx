@@ -32,7 +32,7 @@ const FormGoreLayout = () => {
         <div className="col mb-2">
           <FormTitle data={dataFormGore} title="Formulario Gobierno Regional" loading={loadingFormGore} id={dataFormGore.id} />
           <div className="mx-5">
-            {dataFormGore && <HorizontalGore baseUrl={baseUrl} />}
+            {dataFormGore && <HorizontalGore baseUrl={baseUrl} id={params.id} />}
             <Timmer data={dataFormGore} loading={loadingFormGore} id={dataFormGore.id} />
           </div>
         </div>

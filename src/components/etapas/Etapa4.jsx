@@ -12,7 +12,8 @@ export const Etapa4 = ({ etapa, id }) =>
     oficio_inicio_gore,
     usuarios_gore,
     formularios_gore,
-    fecha_ultima_modificacion
+    fecha_ultima_modificacion,
+    oficio_origen
   } = etapa;
 
   const { userData } = useAuth();
@@ -129,17 +130,24 @@ export const Etapa4 = ({ etapa, id }) =>
     }
   
     if (nombre.includes("Subir oficio y su fecha para habilitar formulario GORE")) {
-      path = estado === "finalizada" ? "/home/ver_minuta" : `/home/estado_competencia/${etapa.id}/subir_oficio/${etapaNum}/${id}`;
-      buttonText = "Subir oficio";
-      icon = estado === "finalizada" ? "visibility" : "upload";
-    } else if (nombre === "Completar formulario Sectorial") {
-      path = estado === "finalizada" ? "/home/ver_minuta" : "/home/formulario_sectorial/";
+      if (estado === "finalizada") {
+        // Cuando la subetapa está finalizada, se configura el botón para abrir el PDF en una nueva pestaña
+        return (
+          <button onClick={() => window.open(oficio_origen, '_blank')} className="btn-secundario-s text-decoration-none" id="btn">
+            <span className="material-symbols-outlined me-1">{icon}</span>
+            <u>{buttonText}</u>
+          </button>
+        );
+      } else {
+        // Aquí manejas los casos en los que la subetapa no está finalizada, ajusta según necesites
+        path = `/home/estado_competencia/${etapa.id}/subir_oficio_gore/${etapaNum}/`;
+      }
     }
     const isDisabled = estado === "pendiente" || estado === "revision";
   
     // Función para manejar el evento de clic y realizar la navegación
     const handleButtonClick = () => {
-      navigate(path, { state: { extraData: "GORE" } });
+      navigate(path, { state: { extraData: "GORE", seccion:'etapa4' } });
     };
   
     // Renderizar un botón o un enlace basado en si la acción está deshabilitada o no

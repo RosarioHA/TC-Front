@@ -1,4 +1,4 @@
-import { useContext, useEffect, useCallback } from "react";
+import { useContext, useEffect, useCallback, useState } from "react";
 import { FormGOREContext } from "../../context/FormGore";
 import { MonoStepers } from "../../components/stepers/MonoStepers";
 import { Avance } from "../../components/tables/Avance";
@@ -6,12 +6,21 @@ import { NavigationGore } from "../../components/layout/navigationGore";
 import { SubUno_Uno } from "../../components/formGore/paso1/sub1.1";
 import { SubUno_dos } from "../../components/formGore/paso1/sub1.2";
 import { SubUno_Tres } from "../../components/formGore/paso1/sub1.3";
-
+import CustomTextarea from "../../components/forms/custom_textarea";
+import { useObservacionesGORE } from "../../hooks/fomularioGore/useObSubdereGore";
+import { useAuth } from '../../context/AuthContext';
 
 const PasoUnoGore = () =>
 {
   const { dataFormGore, dataPasoGore, errorPasoGore, updateStepNumber } = useContext(FormGOREContext);
   const stepNumber = 1;
+  const { userData } = useAuth();
+  const { observaciones, loadingObservaciones, updateObservacion, fetchObservaciones, saved } = useObservacionesGORE(dataFormGore ? dataFormGore.id : null);
+  const [observacionPaso1, setObservacionPaso1] = useState("");
+  const userSubdere = userData?.perfil?.includes('SUBDERE');
+
+  const formularioEnviado = dataFormGore?.formulario_enviado
+  const observacionesEnviadas = observaciones?.observacion_enviada;
 
   const handleUpdateStepNumber = useCallback(() =>
   {
@@ -24,6 +33,15 @@ const PasoUnoGore = () =>
     handleUpdateStepNumber();
   }, [ handleUpdateStepNumber ]);
 
+  useEffect(() => {
+    if (observaciones && Object.keys(observaciones).length === 0) {
+      fetchObservaciones();
+    }
+    if (observaciones && observaciones.observacion_paso1) {
+      setObservacionPaso1(observaciones.observacion_paso1);
+    }
+  }, [updateStepNumber, stepNumber, observaciones, fetchObservaciones]);
+
 
   if (errorPasoGore) return <div>Error: {errorPasoGore.message || "Error desconocido"}</div>;
   if (!dataPasoGore?.paso1_gore) return <div>Cargando...</div>;
@@ -31,6 +49,14 @@ const PasoUnoGore = () =>
 
   const { paso1_gore = {}, flujograma_ejercicio_competencia } = dataPasoGore;
 
+  const handleGuardarObservacion = async () => {
+    if (!observacionesEnviadas) {
+      const observacionData = {
+        observacion_paso1: observacionPaso1,
+      };
+      await updateObservacion(observacionData);
+    }
+  };
 
   return (
     <>
@@ -59,6 +85,28 @@ const PasoUnoGore = () =>
             id={dataFormGore.id}
             stepNumber={stepNumber}
           />
+
+          {formularioEnviado && userSubdere && (
+            <div className="mt-5 my-4 border-top pt-5">
+              {!observacionPaso1.trim() && observacionesEnviadas ? (
+                <p>No se han dejado observaciones en este paso.</p>
+              ) : (
+                <CustomTextarea 
+                  label="Observaciones (Opcional)"
+                  placeholder="Escribe tus observaciones de este paso del formulario"
+                  rows={5}
+                  maxLength={500}
+                  value={observacionPaso1}
+                  onChange={(e) => setObservacionPaso1(e.target.value)}
+                  readOnly={observacionesEnviadas}
+                  onBlur={handleGuardarObservacion}
+                  loading={loadingObservaciones}
+                  saved={saved}
+                />
+              )}
+            </div>
+          )}
+
           <NavigationGore step={paso1_gore.numero_paso} id={dataFormGore?.id} />
         </div>
       </div>
