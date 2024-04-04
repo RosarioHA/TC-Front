@@ -6,7 +6,7 @@ import CustomTextarea from '../../forms/custom_textarea';
 import { FormGOREContext } from '../../../context/FormGore';
 import InputCosto from '../../forms/input_costo';
 
-export const FisicoInfraestructura = ({ dataRecursosFisicos }) => {
+export const FisicoInfraestructura = ({ dataRecursosFisicos , solo_lectura}) => {
   const { control, handleSubmit } = useForm({
     resolver: yupResolver(validacionInfraestructura),
     mode: 'onBlur',
@@ -119,6 +119,7 @@ export const FisicoInfraestructura = ({ dataRecursosFisicos }) => {
                                 placeholder="Cantidad del recurso seleccionado"
                                 descripcion="Campo numérico en miles de pesos."
                                 error={error?.message}
+                                readOnly={solo_lectura}
                                 loading={
                                   inputStatus[ficha.id]?.cantidad?.loading &&
                                   !error
@@ -156,6 +157,7 @@ export const FisicoInfraestructura = ({ dataRecursosFisicos }) => {
                                 {...field}
                                 value={ficha.costo_total || ''}
                                 label="Costo total (M$)"
+                                disabled={solo_lectura}
                                 placeholder="Costo del recurso"
                                 descripcion="Campo numérico en miles de pesos."
                                 error={error?.message}
@@ -207,6 +209,7 @@ export const FisicoInfraestructura = ({ dataRecursosFisicos }) => {
                               placeholder="Fundamentos del uso y cantidad de este recurso."
                               maxLength={300}
                               error={error?.message}
+                              readOnly={solo_lectura}
                               loading={
                                 inputStatus[ficha.id]?.fundamentacion
                                   ?.loading && !error

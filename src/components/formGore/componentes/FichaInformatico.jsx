@@ -238,10 +238,10 @@ export const FichaInformatico = ({ dataInformatico, solo_lectura }) => {
                           render={({ field, fieldState: { error } }) => (
                             <InputCosto
                               {...field}
-                              readOnly={solo_lectura}
                               value={ficha.costo || ''}
                               placeholder="Costo del recurso"
                               error={error?.message}
+                              disabled={solo_lectura}
                               loading={
                                 inputStatus[ficha.id]?.costo?.loading && !error
                               }

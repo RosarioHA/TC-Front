@@ -16,7 +16,7 @@ export const Sub_2 = ({ data, paso3, solo_lectura }) => {
 
   const { p_3_2_recursos_comparados,
     p_3_2_a_sistemas_informaticos,
-    p_3_2_b_recursos_fisicos_infraestructura,
+    p_3_2_b_recursos_fisicos_infraestructura
   } = data
 
   return (
@@ -39,6 +39,7 @@ export const Sub_2 = ({ data, paso3, solo_lectura }) => {
         <div className="my-4 ">
           <FisicoInfraestructura
             dataRecursosFisicos={p_3_2_b_recursos_fisicos_infraestructura}
+            solo_lectura={solo_lectura}
           />
         </div>
         <div className="my-4 ">

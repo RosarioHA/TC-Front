@@ -302,7 +302,7 @@ export const AgregarPersonal = ({
                             inputStatus[personal.id]?.numero_personas_gore?.saved && !error
                           }
                           error={error?.message}
-                          readOnly={solo_lectura}
+                          disabled={solo_lectura}
                           onBlur={(e) => {
                             field.onBlur();
                             if (personal.numero_personas_gore !== e.target.value && !error) {
@@ -328,7 +328,6 @@ export const AgregarPersonal = ({
                           value={personal.renta_bruta || ''}
                           placeholder="Costo (M$)"
                           error={error?.message}
-                          readOnly={solo_lectura}
                           disabled={solo_lectura}
                           loading={
                             inputStatus[personal.id]?.renta_bruta?.loading &&
@@ -372,7 +371,6 @@ export const AgregarPersonal = ({
                           }
                           error={error?.message}
                           disabled={solo_lectura}
-                          readOnly={solo_lectura}
                           onBlur={(e) => {
                             field.onBlur();
                             if (personal.grado !== e.target.value && !error) {
