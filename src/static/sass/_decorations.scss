@@ -137,3 +137,86 @@ border-radius: 50%;
   color:$grey-c-color; 
   background-color: $white-color;
 }
+
+//alertas regiones 
+
+.message-container {
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.message{
+  background-color: $blue-sky;
+  color: $blue-color;
+}
+.message-container-favorable {
+  background-color: $success-light;
+  color:$success-color;
+}
+
+.message-container-parcial {
+  background-color: $orange-ligth;
+  color: $alert-danger;
+}
+
+.message-container-desfavorable {
+  background-color: $red-light;
+  color:$dark-red;
+}
+
+.rdl-filter, .rdl-control {
+  font-size: 18px !important;
+  padding: 8px 6px;
+
+} 
+
+
+.react-dual-listbox button, .react-dual-listbox select {
+  font-family: inherit;
+  line-height: 1.42857;
+  color: $primary-color;
+}
+
+.rdl-actions {
+  flex-direction: column;
+  align-self: flex-end;
+  width: 260px !important;
+  margin: 0 10px;
+}
+
+.rdl-btn {
+  padding: 5px 5px;
+  margin: 0 3px;
+  font-size: 16px !important;
+  color: $primary-color;
+  cursor: pointer;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 2px;
+}
+
+.rdl-icon, .rdl-icon {
+  font-family: sans-serif;
+  font-weight: 900;
+}
+.react-dual-listbox select option:checked:focus {
+  background-color: $blue-color;
+  color:$white-color;
+}
+.react-dual-listbox select option:checked:active {
+  background-color: $blue-color;
+  color:$white-color;
+}
+
+
+.react-dual-listbox select option:checked:hover {
+  background-color: $blue-color;
+  color:$white-color;
+}
+
+.react-dual-listbox select option:checked {
+  background-color: $blue-color;
+  color: $white-color;
+}
