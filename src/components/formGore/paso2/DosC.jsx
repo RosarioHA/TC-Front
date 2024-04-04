@@ -267,7 +267,7 @@ export const Fluctuaciones = ({ id, dataGastos, solo_lectura }) => {
                                 id={`costo_${costoAnio?.id}`}
                                 placeholder="Costo (M$)"
                                 value={value}
-                                // style={inputNumberStyle}
+                                //style={inputNumberStyle}
                                 //disabled={solo_lectura}
                                 readOnly={solo_lectura}
                                 onChange={handleChange}
