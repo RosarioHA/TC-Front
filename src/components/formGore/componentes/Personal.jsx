@@ -12,6 +12,7 @@ export const Personal = ({
   estamentos,
   dataPersonal,
   dataPaso,
+  campoDestino,
   seccionGore3,
   solo_lectura,
 }) => {
@@ -19,13 +20,13 @@ export const Personal = ({
   const [descripcionInicial, setDescripcionInicial] = useState('');
   // Agregar estados para loading y saved
   const [estadoGuardado, setEstadoGuardado] = useState({ loading: false, saved: false });
-
   const { updatePasoGore } = useContext(FormGOREContext);
-
   const id = dataPaso ? dataPaso.id : null;
 
+  console.log("title desde Personal", title);
+
   useEffect(() => {
-    const campoDescripcion = title.includes("Directo") ? 'descripcion_perfiles_tecnicos_directo' : 'descripcion_perfiles_tecnicos_indirecto';
+    const campoDescripcion = title.includes("directo") ? 'descripcion_perfiles_tecnicos_directo' : 'descripcion_perfiles_tecnicos_indirecto';
     const valorInicial = dataPaso && dataPaso[campoDescripcion] ? dataPaso[campoDescripcion] : '';
     setDescripcion(valorInicial);
     setDescripcionInicial(valorInicial); // Establecer el valor inicial
@@ -34,7 +35,8 @@ export const Personal = ({
   const handleBlur = async () => {
     if (descripcion !== descripcionInicial) {
       setEstadoGuardado({ loading: true, saved: false });
-      const campoDescripcion = title.includes("Directo") ? 'descripcion_perfiles_tecnicos_directo' : 'descripcion_perfiles_tecnicos_indirecto';
+      //const campoDescripcion = title.includes("directo") ? 'descripcion_perfiles_tecnicos_directo' : 'descripcion_perfiles_tecnicos_indirecto';
+      const campoDescripcion = campoDestino
 
       const payload = {
         id,

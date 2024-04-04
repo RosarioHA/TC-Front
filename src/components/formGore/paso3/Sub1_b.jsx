@@ -1,5 +1,6 @@
 import { CostoPersonal } from '../componentes/CostoPersonal';
 import { Personal } from '../componentes/Personal';
+
 export const Sub1_b = ({ data, solo_lectura }) => {
   const { paso3_gore,
     p3_personal_indirecto_sector,
@@ -46,6 +47,7 @@ export const Sub1_b = ({ data, solo_lectura }) => {
             personalGore={p3_personal_indirecto_gore}
             estamentos={listado_estamentos}
             title="indirecto"
+            campoDestino="descripcion_perfiles_tecnicos_indirecto"
             seccion="p_3_1_b_personal_indirecto"
             seccionGore3="paso3_gore"
             dataPersonal={indirectos}
