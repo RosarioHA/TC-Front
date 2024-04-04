@@ -18,18 +18,16 @@ const PasoDosGore = () => {
   const { observaciones, loadingObservaciones, updateObservacion, fetchObservaciones, saved } = useObservacionesGORE(dataFormGore ? dataFormGore.id : null);
   const [observacionPaso2, setObservacionPaso2] = useState("");
   const userSubdere = userData?.perfil?.includes('SUBDERE');
-
+  const solo_lectura = dataPasoGore?.solo_lectura;
   const formularioEnviado = dataFormGore?.formulario_enviado
   const observacionesEnviadas = observaciones?.observacion_enviada;
 
-  const handleUpdateStepNumber = useCallback(() =>
-  {
+  const handleUpdateStepNumber = useCallback(() => {
     const stepNumber = 2;
     updateStepNumber(stepNumber);
   }, [ updateStepNumber ]);
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     handleUpdateStepNumber();
   }, [ handleUpdateStepNumber ]);
 
@@ -98,6 +96,7 @@ const PasoDosGore = () => {
             resumen={resumen_costos}
             id={dataFormGore?.id}
             stepNumber={stepNumber}
+            solo_lectura={solo_lectura}
           />
           <DosB
             costosIndirectos={costos_indirectos_sector}
@@ -107,12 +106,14 @@ const PasoDosGore = () => {
             id={dataFormGore?.id}
             data={dataPasoGore}
             stepNumber={stepNumber}
+            solo_lectura={solo_lectura}
           />
           <ResumenTotal resumen={resumen_costos} />
           <Fluctuaciones
             dataGastos={p_2_1_c_fluctuaciones_presupuestarias}
             id={dataFormGore?.id}
             stepNumber={stepNumber}
+            solo_lectura={solo_lectura}
           />
 
           {formularioEnviado && userSubdere && (

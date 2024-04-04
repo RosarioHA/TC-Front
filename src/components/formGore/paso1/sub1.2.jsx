@@ -4,7 +4,7 @@ import { useFlujograma } from "../../../hooks/fomularioGore/useFlujograma";
 import { useGorePasos } from "../../../hooks/fomularioGore/useFormGorePaso";
 import { FormGOREContext } from "../../../context/FormGore";
 
-export const SubUno_dos = ({ flujograma, id, stepNumber }) => {
+export const SubUno_dos = ({ flujograma, id, stepNumber, solo_lectura }) => {
   const { uploadDocumento } = useFlujograma(id, stepNumber);
   const { updatePasoGore } = useContext(FormGOREContext);
   const {dataPasoGore } = useGorePasos(id, stepNumber);
@@ -84,7 +84,7 @@ export const SubUno_dos = ({ flujograma, id, stepNumber }) => {
           tituloDocumento={flujo.documento} 
           handleFileSelect={(file) => uploadFile(file)}
           handleDelete={() => eliminarDocFlujo(flujo.id)}
-          readOnly={false}
+          readOnly={solo_lectura}
           onViewFile={() => handleViewFile(flujo.documento)} 
           ver={ver}
           archivoDescargaUrl={flujo.documento} 
@@ -97,7 +97,7 @@ export const SubUno_dos = ({ flujograma, id, stepNumber }) => {
           index={flujogramaGoreFiles.length + 1}
           handleFileSelect={(file) => uploadFile(file)}
           onViewFile={handleViewFile}
-          readOnly={false}
+          readOnly={solo_lectura}
           ver={ver}
         />
       )}

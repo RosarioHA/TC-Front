@@ -1,24 +1,21 @@
 import { CostoPersonal } from '../componentes/CostoPersonal';
 import { Personal } from '../componentes/Personal';
-export const Sub1_b = ({ data }) =>
-{
+export const Sub1_b = ({ data, solo_lectura }) => {
   const { paso3_gore,
     p3_personal_indirecto_sector,
     p3_personal_indirecto_gore,
     listado_estamentos
   } = data
   
-
-      let indirectos = {};
+  let indirectos = {};
     
-      // Separación de los datos
-      for (let key in paso3_gore) {
-        if (key.startsWith("sub21b_")) {
-          indirectos[key] = paso3_gore[key];
-        }
-      }
+  // Separación de los datos
+  for (let key in paso3_gore) {
+    if (key.startsWith("sub21b_")) {
+      indirectos[key] = paso3_gore[key];
+    }
+  }
 
-  
   return (
     <>
       <div className="pe-5 me-5 mt-4 col-12">
@@ -33,7 +30,8 @@ export const Sub1_b = ({ data }) =>
           </h6>
         </div>
         <div>
-          <CostoPersonal title="indirectos"
+          <CostoPersonal 
+            title="indirectos"
             plantaJustificado={paso3_gore?.sub21b_personal_planta_justificado}
             plantaJustificar={paso3_gore?.sub21b_personal_planta_justificar}
             contrataJustificado={paso3_gore?.sub21b_personal_contrata_justificado}
@@ -41,7 +39,8 @@ export const Sub1_b = ({ data }) =>
             otrasJustificado={paso3_gore?.sub21b_otras_remuneraciones_justificado}
             otrasJustificar={paso3_gore?.sub21b_otras_remuneraciones_justificar}
             gastoPersonalJustificado={paso3_gore?.sub21b_gastos_en_personal_justificado}
-            gastosPersonalJustificar={paso3_gore?.sub21b_gastos_en_personal_justificar} />
+            gastosPersonalJustificar={paso3_gore?.sub21b_gastos_en_personal_justificar} 
+          />
           <Personal
             personalSector={p3_personal_indirecto_sector}
             personalGore={p3_personal_indirecto_gore}
@@ -50,6 +49,7 @@ export const Sub1_b = ({ data }) =>
             seccion="p_3_1_b_personal_indirecto"
             seccionGore3="paso3_gore"
             dataPersonal={indirectos}
+            solo_lectura={solo_lectura} 
           />
         </div>
       </div>

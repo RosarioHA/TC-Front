@@ -2,8 +2,9 @@ import { CostosIndirectosSector } from "../componentes/CostosIndirectos"
 import { ResumenIndirectos } from "../componentes/ResumenIndirectos"
 import { SubAdicionales } from "../componentes/SubAdicionales"
 import { Subtitulo21 } from "../componentes/Subtitulo21"
-export const DosB = ({ costosIndirectos , resumen, personalIndirecto, data,constIndiGore}) =>
-{
+
+export const DosB = ({ costosIndirectos, resumen, personalIndirecto, data, constIndiGore, solo_lectura}) => {
+
   return (
     <>
       <div className="pe-5 me-5 mt-4 col-12">
@@ -16,10 +17,10 @@ export const DosB = ({ costosIndirectos , resumen, personalIndirecto, data,const
           </h6>
         </div>
         <div className="my-4 ">
-          <CostosIndirectosSector costosIndirectos={costosIndirectos} />
+          <CostosIndirectosSector costosIndirectos={costosIndirectos} solo_lectura={solo_lectura}/>
         </div>
         <div>
-          <Subtitulo21 personal={personalIndirecto} />
+          <Subtitulo21 personal={personalIndirecto} solo_lectura={solo_lectura} />
         </div>
         <div className="my-4">
           <SubAdicionales 
@@ -28,7 +29,8 @@ export const DosB = ({ costosIndirectos , resumen, personalIndirecto, data,const
           itemSub={data.listado_item_subtitulos_indirectos}
           subtitulos={data.listado_subtitulos_indirectos}
           seccion="p_2_1_b_costos_indirectos"
-          data={constIndiGore}
+          data={constIndiGore} 
+          solo_lectura={solo_lectura}
           />
         </div>
         <div className="my-4 ">
