@@ -215,7 +215,7 @@ export const PersonalInformado = ({
                                     <CustomInput
                                       {...field}
                                       placeholder="número"
-                                      readOnly={solo_lectura}
+                                      disabled={solo_lectura}
                                       loading={
                                         inputStatus[persona.id]
                                           ?.numero_personas_gore?.loading

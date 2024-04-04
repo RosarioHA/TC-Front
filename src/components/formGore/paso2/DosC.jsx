@@ -6,18 +6,18 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { validacionFluctuacion } from '../../../validaciones/esquemaFluctuacion';
 import { FormGOREContext } from '../../../context/FormGore';
 
-// const inputNumberStyle = {
-//   // Estilos para ocultar flechas en navegadores que usan Webkit y Mozilla
-//   MozAppearance: 'textfield',
-//   '&::-webkit-outer-spin-button': {
-//     WebkitAppearance: 'none',
-//     margin: 0,
-//   },
-//   '&::WebkitOuterSpinButton': {
-//     WebkitAppearance: 'none',
-//     margin: 0,
-//   },
-// };
+const inputNumberStyle = {
+  // Estilos para ocultar flechas en navegadores que usan Webkit y Mozilla
+  MozAppearance: 'textfield',
+  '&::-webkit-outer-spin-button': {
+    WebkitAppearance: 'none',
+    margin: 0,
+  },
+  '&::WebkitOuterSpinButton': {
+    WebkitAppearance: 'none',
+    margin: 0,
+  },
+};
 
 export const Fluctuaciones = ({ id, dataGastos, solo_lectura }) => {
   const [datosGastos, setDatosGastos] = useState([]);
@@ -267,9 +267,8 @@ export const Fluctuaciones = ({ id, dataGastos, solo_lectura }) => {
                                 id={`costo_${costoAnio?.id}`}
                                 placeholder="Costo (M$)"
                                 value={value}
-                                //style={inputNumberStyle}
-                                //disabled={solo_lectura}
-                                readOnly={solo_lectura}
+                                style={inputNumberStyle}
+                                disabled={solo_lectura}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
                                 loading={costoAnio.estados?.loading ?? false}

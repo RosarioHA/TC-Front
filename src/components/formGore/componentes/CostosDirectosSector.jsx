@@ -109,7 +109,7 @@ export const CostosDirectosSector = ({ costoDirectosGet, solo_lectura }) => {
                         onBlur={(e) => handleUpdate(costo.id, 'total_anual_gore', e.target.value, true)}
                         loading={inputStatus[ costo.id ]?.total_anual_gore?.loading}
                         saved={inputStatus[ costo.id ]?.total_anual_gore?.saved}
-                        readOnly={solo_lectura}
+                        disabled={solo_lectura}
                       />
                     </div>
                     <div className="col-6 ms-5 ps-3">
