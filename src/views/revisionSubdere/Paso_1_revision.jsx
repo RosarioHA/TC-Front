@@ -4,13 +4,14 @@ import { MonoStepers } from "../../components/stepers/MonoStepers";
 import { FormSubdereContext } from "../../context/RevisionFinalSubdere";
 import { AmbitoDefinitivo } from "../../components/formSubdere/paso1/p1_Subdere";
 import { RecomendacionTransferencia } from "../../components/formSubdere/paso1/p2_Subdere";
+import { NavigationSubdere } from "../../components/layout/navigationSubdere";
 
 
 const Paso_1_revision = () => {
   const {
-    dataFormSubdere,
+    // dataFormSubdere,
     dataPasoSubdere,
-    loadingPasoSubdere,
+    // loadingPasoSubdere,
     errorPasoSubdere,
     updateStepNumber,
   } = useContext(FormSubdereContext)
@@ -32,8 +33,11 @@ const Paso_1_revision = () => {
 
   const { 
     paso1_revision_final_subdere = {},
-    ambito_definitivo_competencia
-   } = dataPasoSubdere;
+    ambito_definitivo_competencia,
+    regiones_recomendadas_listado,
+    regiones_recomendadas, 
+    solo_lectura
+  } = dataPasoSubdere;
 
   return (
     <>
@@ -49,13 +53,16 @@ const Paso_1_revision = () => {
           <div className="my-4 ">
             <AmbitoDefinitivo
               ambito_definitivo_competencia = {ambito_definitivo_competencia}
-             />
+              solo_lectura={solo_lectura}
+            />
           </div>
           <div className="my-4 ">
-            <RecomendacionTransferencia />
+            <RecomendacionTransferencia regionesListado={regiones_recomendadas_listado} regionesRecomendadas={regiones_recomendadas} solo_lectura={solo_lectura}/>
           </div>
         </div>
       </div>
+      <NavigationSubdere step={paso1_revision_final_subdere.numero_paso} id={dataPasoSubdere?.id}
+      permisoSiguiente={paso1_revision_final_subdere.regiones_seleccionadas}/>
     </>
   );
 }
