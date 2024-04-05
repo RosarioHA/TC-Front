@@ -51,10 +51,10 @@ export const Sub1_a = ({data, solo_lectura}) => {
           <Personal
           personalSector={p3_personal_directo_sector}
           personalGore={p3_personal_directo_gore}
+          estamentos={listado_estamentos}
           title="directo"
           seccion="p_3_1_a_personal_directo"
           seccionGore3="paso3_gore"
-          estamentos={listado_estamentos}
           dataPersonal={directos}
           dataPaso={data}
           solo_lectura={solo_lectura}
