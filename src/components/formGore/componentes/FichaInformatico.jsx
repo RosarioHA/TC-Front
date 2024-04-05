@@ -194,7 +194,7 @@ export const FichaInformatico = ({ dataInformatico, solo_lectura }) => {
                         render={({ field, fieldState: { error } }) => (
                           <CustomTextarea
                             {...field}
-                            placeholder="Indice la versión y una descripción técnica del software o plataforma"
+                            placeholder="Indique la versión y una descripción técnica del software o plataforma"
                             error={error?.message}
                             readOnly={solo_lectura}
                             maxLength={500}
