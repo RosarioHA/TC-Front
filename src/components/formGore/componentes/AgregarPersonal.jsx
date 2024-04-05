@@ -205,31 +205,31 @@ export const AgregarPersonal = ({
             <p className="text-sans-p-bold ms-3">Estamento</p>
           </div>
           {title === 'indirecto' && (
-            <div className="col-1 ps-0">
+            <div className="col ps-0">
               <p className="text-sans-p-bold">
                 Número de personas
               </p>
             </div>
           )}
-          <div className="col-2">
+          <div className="col">
             <p className="text-sans-p-bold">
               Renta bruta <br/> mensual ($M)
             </p>
           </div>
-          <div className="col-2">
+          <div className="col">
             <p className="text-sans-p-bold ">
               Grado (Si <br/> corresponde)
             </p>
           </div>
           {title === 'directo' && (
-            <div className="col-3 pe-5">
+            <div className="col pe-5">
               <p className="text-sans-p-bold ms-3">
                 Comision de servicio
               </p>
             </div>
           )}
           {title === 'indirecto' && (
-            <div className="col-2">
+            <div className="col">
               <p className="text-sans-p-bold ms-3">
                 Total rentas
               </p>
@@ -278,7 +278,7 @@ export const AgregarPersonal = ({
                   </div>
                 </div>
                 {title === 'indirecto' && (
-                  <div className="d-flex col-1 px-2">
+                  <div className="d-flex col px-2">
                     <Controller
                       name={`personal[${index}].numero_personas_gore`}
                       control={control}
@@ -316,7 +316,7 @@ export const AgregarPersonal = ({
                     />
                   </div>
                 )}
-                <div className="col-2">
+                <div className="col">
                   <Controller
                     name={`personal[${index}].renta_bruta`}
                     control={control}
@@ -351,7 +351,7 @@ export const AgregarPersonal = ({
                     )}
                   />
                 </div>
-                <div className="col-2">
+                <div className="col">
                   <Controller
                     name={`personal[${index}].grado`}
                     control={control}
@@ -377,22 +377,22 @@ export const AgregarPersonal = ({
                   />
                 </div>
                 {title === 'directo' && (
-                  <div className="col-3">
-                    <span className="text-sans-p-bold-blue px-5 mx-4">
+                  <div className="col">
+                    <span className="text-sans-p-bold-blue">
                       {personal.comision_servicio ? 'Sí' : 'No'}
                     </span>
                   </div>
                 )}
                 {title === 'indirecto' && (
-                  <div className="col-3">
-                    <span className="text-sans-p-bold-blue px-3">
+                  <div className="col-2 border">
+                    <span className="text-sans-p-bold-blue">
                       $ {Number(personal.total_rentas).toLocaleString('es-CL')}
                     </span>
                   </div>
                 )}
 
                 {!solo_lectura && (
-                  <div className="col-1 ps-0">
+                  <div className="col ps-0">
                     <button
                       className="btn-terciario-ghost"
                       onClick={() => eliminarPersonal(personal.id)}
@@ -432,7 +432,7 @@ export const AgregarPersonal = ({
                   <th scope="col">
                     <span className="py-2">#</span>
                   </th>
-                  <th scope="col-2">
+                  <th scope="col">
                     <span className="py-2">item</span>
                   </th>
                   <th scope="col">
@@ -456,7 +456,7 @@ export const AgregarPersonal = ({
                     .map((dato, index) => (
                       <tr key={index} className="my-5">
                         <td>{index + 1}</td>
-                        <td className="col-3">{calidadJuridica}</td>
+                        <td className="col">{calidadJuridica}</td>
                         <td>{dato.datos.total || ''}</td>
                         <td>{dato.datos.justificado || ''}</td>
                         <td>{dato.datos.justificar || ''}</td>
