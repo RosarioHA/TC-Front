@@ -78,48 +78,37 @@ export const Subpaso_Tres = ({ esquemaDatos, id, stepNumber, solo_lectura }) =>
       }
     } else
     {
-      setShowErrorMessage("Por favor, ingrese un número válido o deje el campo vacío para limpiar.");
+      setShowErrorMessage("");
       setErrorField(null);
     }
   }, [ datos, setDatos, setUltimoCampoModificado, setUltimoGuardadoExitoso, setShowErrorMessage ]);
 
   const handleBlur = useCallback(async (index, campo, value) => {
-    // Intenta convertir el valor del input a un número, o usa null si está vacío
     const inputValue = value.trim() === '' ? null : Number(value.replace(/\$|\./g, ''));
-
-    // Recupera el valor inicial para la comparación
     const valorInicialKey = `${index}-${campo}`;
     const valorInicialInput = valorInicial[valorInicialKey];
     const valorInicialNumeric = valorInicialInput ? Number(valorInicialInput.replace(/\$|\./g, '')) : null;
 
-    // Si el valor no ha cambiado, no se realiza la actualización
     if (inputValue === valorInicialNumeric) {
-        return;
+      return;
     }
 
-    // Procede con la lógica existente si hay cambios
-    if (inputValue !== null && !isNaN(inputValue) && !(campo === 'recursos_ejecutados' && inputValue < 0)) {
-        try {
-            const updatedData = [...datos];
-            updatedData[index][campo] = inputValue;
+    const updatedData = [...datos];
+    updatedData[index][campo] = inputValue;
 
-            await handleUpdatePaso(id, stepNumber, { cobertura_anual: updatedData });
-
-            setDatos(updatedData);
-            setUltimoGuardadoExitoso(true);
-            setShowErrorMessage('');
-            setErrorField(null);
-            refetchTrigger();
-        } catch (error) {
-            console.error("Error al actualizar:", error);
-            setUltimoGuardadoExitoso(false);
-            setShowErrorMessage("Error al guardar los cambios. Intente de nuevo.");
-        }
-    } else {
-        setShowErrorMessage("Por favor, ingrese un número válido mayor o igual a 0 o deje el campo vacío para limpiar.");
-        setErrorField(`${index}-${campo}`);
+    try {
+      await handleUpdatePaso(id, stepNumber, { cobertura_anual: updatedData });
+      setDatos(updatedData);
+      setUltimoGuardadoExitoso(true);
+      setShowErrorMessage('');
+      setErrorField(null);
+      refetchTrigger();
+    } catch (error) {
+      console.error("Error al actualizar:", error);
+      setUltimoGuardadoExitoso(false);
+      setShowErrorMessage("Error al guardar los cambios. Intente de nuevo.");
     }
-}, [datos, handleUpdatePaso, id, stepNumber, refetchTrigger, setShowErrorMessage, valorInicial]);
+  }, [datos, handleUpdatePaso, id, stepNumber, refetchTrigger, valorInicial]);
 
 
 
@@ -164,7 +153,7 @@ export const Subpaso_Tres = ({ esquemaDatos, id, stepNumber, solo_lectura }) =>
       <div className="text-sans-h6-primary">
         <h6>
           En función a lo descrito se debe cuantificar el universo de cobertura y la cobertura efectivamente abordada en los últimos 5 años. Luego cuantificar los recursos ejecutados anualmente (en M$) respecto a la cobertura efectivamente abordada.<br /><br />
-          En caso de que un año no se hayan ejecutado recursos, llenar con 0.
+          Solo llenar con números enteros. En caso de que un año no se hayan ejecutado recursos, llenar con 0.
         </h6>
       </div>
       <div className="my-4">
