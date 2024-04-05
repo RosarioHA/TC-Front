@@ -200,25 +200,25 @@ export const AgregarPersonal = ({
       <div className="col my-4">
         {/* Encabezado para cada grupo */}
         <div className="row mt-3">
-          <div className="col d-flex">
+          <div className="col-3 d-flex">
             <p className="text-sans-p-bold">N°</p>
             <p className="text-sans-p-bold ms-3">Estamento</p>
           </div>
           {title === 'indirecto' && (
-            <div className="col">
+            <div className="col-1 ps-0">
               <p className="text-sans-p-bold">
                 Número de personas
               </p>
             </div>
           )}
-          <div className="col">
+          <div className="col-2">
             <p className="text-sans-p-bold">
-              Renta bruta mensual ($M)
+              Renta bruta <br/> mensual ($M)
             </p>
           </div>
-          <div className="col">
+          <div className="col-2">
             <p className="text-sans-p-bold ">
-              Grado (Si corresponde)
+              Grado (Si <br/> corresponde)
             </p>
           </div>
           {title === 'directo' && (
@@ -229,7 +229,7 @@ export const AgregarPersonal = ({
             </div>
           )}
           {title === 'indirecto' && (
-            <div className="col-3 pe-5">
+            <div className="col-2">
               <p className="text-sans-p-bold ms-3">
                 Total rentas
               </p>
@@ -237,7 +237,7 @@ export const AgregarPersonal = ({
           )}
           {!solo_lectura && (
             <div className="col">
-              <p className="text-sans-p-bold">Acción</p>
+              <p className="text-sans-p-bold ps-4">Acción</p>
             </div>
           )}
         </div>
@@ -251,7 +251,7 @@ export const AgregarPersonal = ({
                 <div className="col-3 d-flex">
                   <span className="text-sans-p-bold me-3 mt-3">{index + 1}</span>
 
-                  <div className=" col-10">
+                  <div className="col-10">
                     <Controller
                       control={control}
                       name={`estamento_${personal.id}`}
@@ -278,7 +278,7 @@ export const AgregarPersonal = ({
                   </div>
                 </div>
                 {title === 'indirecto' && (
-                  <div className="d-flex col-1 px-2 ">
+                  <div className="d-flex col-1 px-2">
                     <Controller
                       name={`personal[${index}].numero_personas_gore`}
                       control={control}
@@ -316,7 +316,7 @@ export const AgregarPersonal = ({
                     />
                   </div>
                 )}
-                <div className="col-3 ">
+                <div className="col-2">
                   <Controller
                     name={`personal[${index}].renta_bruta`}
                     control={control}
@@ -351,7 +351,7 @@ export const AgregarPersonal = ({
                     )}
                   />
                 </div>
-                <div className="col-1">
+                <div className="col-2">
                   <Controller
                     name={`personal[${index}].grado`}
                     control={control}
@@ -377,14 +377,14 @@ export const AgregarPersonal = ({
                   />
                 </div>
                 {title === 'directo' && (
-                  <div className="col">
+                  <div className="col-3">
                     <span className="text-sans-p-bold-blue px-5 mx-4">
                       {personal.comision_servicio ? 'Sí' : 'No'}
                     </span>
                   </div>
                 )}
                 {title === 'indirecto' && (
-                  <div className="col-3 px-5">
+                  <div className="col-3">
                     <span className="text-sans-p-bold-blue px-3">
                       $ {Number(personal.total_rentas).toLocaleString('es-CL')}
                     </span>
@@ -392,7 +392,7 @@ export const AgregarPersonal = ({
                 )}
 
                 {!solo_lectura && (
-                  <div className="col-1">
+                  <div className="col-1 ps-0">
                     <button
                       className="btn-terciario-ghost"
                       onClick={() => eliminarPersonal(personal.id)}
