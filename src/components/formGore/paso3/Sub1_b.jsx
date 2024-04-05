@@ -49,6 +49,7 @@ export const Sub1_b = ({ data, solo_lectura }) => {
             seccion="p_3_1_b_personal_indirecto"
             seccionGore3="paso3_gore"
             dataPersonal={indirectos}
+            dataPaso={data}
             solo_lectura={solo_lectura} 
           />
         </div>
