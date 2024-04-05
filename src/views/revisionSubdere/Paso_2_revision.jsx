@@ -33,6 +33,7 @@ const Paso_2_Revision = () => {
   if (!dataPasoSubdere || dataPasoSubdere.length === 0) return <div>No hay datos disponibles para el Paso 2</div>;
 
   const {
+    solo_lectura,
     paso2_revision_final_subdere = {},
     recomendaciones_desfavorables,
     temporalidad,
@@ -87,6 +88,7 @@ const Paso_2_Revision = () => {
             </div>
             <div className="my-4 ">
               <RestoCampos
+                solo_lectura={solo_lectura}
                 recursos_requeridos={recursos_requeridos}
                 modalidad_ejercicio={modalidad_ejercicio}
                 modalidad_ejercicio_opciones={modalidad_ejercicio_opciones}
