@@ -52,39 +52,37 @@ export const Subpaso_tres = ({ pasoData, id, stepNumber, solo_lectura }) => {
       ...prevFormData,
       paso1: {
         ...prevFormData.paso1,
-        [ inputName ]: value,
+        [inputName]: value,
       }
     }));
-    setInputStatus(prevStatus => ({
-      ...prevStatus,
-      [ inputName ]: { loading: false, saved: false }
-    }));
   };
+
 
   const handleSave = async (inputName) => {
     setInputStatus(prevStatus => ({
       ...prevStatus,
-      [ inputName ]: { loading: true, saved: false }
+      [inputName]: { loading: true, saved: false }
     }));
 
-    const updatedFormData = {
-      ...formData,
-      paso1: {
-        ...formData.paso1,
-        ambito_paso1: ambitoSeleccionado ? ambitoSeleccionado.value : formData.paso1.ambito_paso1
-      }
+    // Construye el payload solo con el campo específico que se está guardando.
+    const payload = {
+      [inputName]: formData.paso1[inputName]
     };
 
-    const success = await handleUpdatePaso(id, stepNumber, updatedFormData);
+    if (inputName === 'ambito_paso1') {
+      payload['ambito_paso1'] = ambitoSeleccionado ? ambitoSeleccionado.value : formData.paso1.ambito_paso1;
+    }
+
+    const success = await handleUpdatePaso(id, stepNumber, { paso1: payload });
     if (success) {
       setInputStatus(prevStatus => ({
         ...prevStatus,
-        [ inputName ]: { loading: false, saved: true }
+        [inputName]: { loading: false, saved: true }
       }));
     } else {
       setInputStatus(prevStatus => ({
         ...prevStatus,
-        [ inputName ]: { loading: false, saved: false }
+        [inputName]: { loading: false, saved: false }
       }));
     }
   };

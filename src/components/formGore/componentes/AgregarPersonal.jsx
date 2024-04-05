@@ -200,11 +200,11 @@ export const AgregarPersonal = ({
       <div className="col my-4">
         {/* Encabezado para cada grupo */}
         <div className="row mt-3">
-          <div className="col-1">
+          <div className="col-4 col-1">
             <p className="text-sans-p-bold">N°</p>
-          </div>
-          <div className="col">
-            <p className="text-sans-p-bold">Estamento</p>
+            <div className="col">
+              <p className="text-sans-p-bold">Estamento</p>
+            </div>
           </div>
           {title === 'indirecto' && (
             <div className="col">
@@ -230,7 +230,7 @@ export const AgregarPersonal = ({
             </p>
           </div>
           {title === 'directo' && (
-            <div className="col">
+            <div className="col-3 pe-5">
               <p className="text-sans-p-bold ms-3">
                 Comision <br />
                 de servicio
@@ -238,7 +238,7 @@ export const AgregarPersonal = ({
             </div>
           )}
           {title === 'indirecto' && (
-            <div className="col-2 pe-5">
+            <div className="col-3 pe-5">
               <p className="text-sans-p-bold ms-3">
                 Total <br />
                 rentas
@@ -254,13 +254,14 @@ export const AgregarPersonal = ({
         <form onSubmit={handleSubmit(onSubmit)}>
           {Array.isArray(nuevoPersonal) &&
             nuevoPersonal?.map((personal, index) => (
-              <div key={personal.id}>
-                <div className="row py-3 align-items-center me-3">
-                  <div className="col-1">
-                    {' '}
-                    <p className="text-sans-p-bold mt-3">{index + 1}</p>{' '}
-                  </div>
-                  <div className="col pe-2 ps-2">
+              <div
+                className="row  align-items-center d-flex "
+                key={personal.id}
+              >
+                <div className="col-3 pe-2">
+                  <span className="text-sans-p-bold mt-3">{index + 1}</span>
+
+                  <div className=" col-10">
                     <Controller
                       control={control}
                       name={`estamento_${personal.id}`}
@@ -280,14 +281,15 @@ export const AgregarPersonal = ({
                           }}
                           readOnly={solo_lectura}
                           selected={personal.estamento_label_value}
-                          error={error?.message} 
+                          error={error?.message}
                         />
                       )}
                     />
                   </div>
-                  {title === 'indirecto' && (
-                    <div className="col-1 px-2 ">
-                      <Controller
+                </div>
+                {title === 'indirecto' && (
+                  <div className="d-flex col-1 px-2 ">
+                    <Controller
                       name={`personal[${index}].numero_personas_gore`}
                       control={control}
                       defaultValue={personal.numero_personas_gore || ''}
@@ -296,16 +298,22 @@ export const AgregarPersonal = ({
                           {...field}
                           placeholder="número"
                           loading={
-                            inputStatus[personal.id]?.numero_personas_gore?.loading && !error
+                            inputStatus[personal.id]?.numero_personas_gore
+                              ?.loading && !error
                           }
                           saved={
-                            inputStatus[personal.id]?.numero_personas_gore?.saved && !error
+                            inputStatus[personal.id]?.numero_personas_gore
+                              ?.saved && !error
                           }
                           error={error?.message}
                           disabled={solo_lectura}
                           onBlur={(e) => {
                             field.onBlur();
-                            if (personal.numero_personas_gore !== e.target.value && !error) {
+                            if (
+                              personal.numero_personas_gore !==
+                                e.target.value &&
+                              !error
+                            ) {
                               handleUpdate(
                                 personal.id,
                                 `numero_personas_gore`,
@@ -316,103 +324,94 @@ export const AgregarPersonal = ({
                         />
                       )}
                     />
-                    </div>
-                  )}
-                  <div className="col  px-4">
-                    <Controller
-                      name={`personal[${index}].renta_bruta`}
-                      control={control}
-                      render={({ field, fieldState: { error } }) => (
-                        <InputCosto
-                          {...field}
-                          value={personal.renta_bruta || ''}
-                          placeholder="Costo (M$)"
-                          error={error?.message}
-                          disabled={solo_lectura}
-                          loading={
-                            inputStatus[personal.id]?.renta_bruta?.loading &&
-                            !error
-                          }
-                          saved={
-                            inputStatus[personal.id]?.renta_bruta?.saved &&
-                            !error
-                          }
-                          onBlur={(e) => {
-                            field.onBlur();
-                            if (
-                              personal.renta_bruta !== e.target.value &&
-                              !error
-                            ) {
-                              handleUpdate(
-                                personal.id,
-                                'renta_bruta',
-                                e.target.value
-                              );
-                            }
-                          }}
-                        />
-                      )}
-                    />
                   </div>
-                  <div className="col-1">
-                    <Controller
-                      name={`personal[${index}].grado`}
-                      control={control}
-                      defaultValue={personal.grado || ''}
-                      render={({ field, fieldState: { error } }) => (
-                        <CustomInput
-                          {...field}
-                          placeholder="Grado"
-                          loading={
-                            inputStatus[personal.id]?.grado?.loading && !error
+                )}
+                <div className="col-3 ">
+                  <Controller
+                    name={`personal[${index}].renta_bruta`}
+                    control={control}
+                    render={({ field, fieldState: { error } }) => (
+                      <InputCosto
+                        {...field}
+                        value={personal.renta_bruta || ''}
+                        placeholder="Costo (M$)"
+                        error={error?.message}
+                        disabled={solo_lectura}
+                        loading={
+                          inputStatus[personal.id]?.renta_bruta?.loading &&
+                          !error
+                        }
+                        saved={
+                          inputStatus[personal.id]?.renta_bruta?.saved && !error
+                        }
+                        onBlur={(e) => {
+                          field.onBlur();
+                          if (
+                            personal.renta_bruta !== e.target.value &&
+                            !error
+                          ) {
+                            handleUpdate(
+                              personal.id,
+                              'renta_bruta',
+                              e.target.value
+                            );
                           }
-                          saved={
-                            inputStatus[personal.id]?.grado?.saved && !error
-                          }
-                          error={error?.message}
-                          disabled={solo_lectura}
-                          onBlur={(e) => {
-                            field.onBlur();
-                            if (personal.grado !== e.target.value && !error) {
-                              handleUpdate(
-                                personal.id,
-                                `grado`,
-                                e.target.value
-                              );
-                            }
-                          }}
-                        />
-                      )}
-                    />
-                  </div>
-                  {title === 'directo' && (
-                    <div className="col">
-                      <span className="text-sans-p-bold-blue px-5 mx-4">
-                        {personal.comision_servicio ? 'Sí' : 'No'}
-                      </span>
-                    </div>
-                  )}
-                  {title === 'indirecto' && (
-                    <div className="col-2 px-4">
-                      <span className="text-sans-p-bold-blue px-3">
-                        ${' '}
-                        {Number(personal.total_rentas).toLocaleString('es-CL')}
-                      </span>
-                    </div>
-                  )}
-
-                  {!solo_lectura && (
-                    <div className="col mx-auto">
-                      <button
-                        className="btn-terciario-ghost"
-                        onClick={() => eliminarPersonal(personal.id)}
-                      >
-                        <i className="material-symbols-rounded me-2">delete</i>
-                        <p className="mb-0 text-decoration-underline">Borrar</p>
-                      </button>
-                    </div>
-                  )}
+                        }}
+                      />
+                    )}
+                  />
                 </div>
+                <div className="col-1">
+                  <Controller
+                    name={`personal[${index}].grado`}
+                    control={control}
+                    defaultValue={personal.grado || ''}
+                    render={({ field, fieldState: { error } }) => (
+                      <CustomInput
+                        {...field}
+                        placeholder="Grado"
+                        loading={
+                          inputStatus[personal.id]?.grado?.loading && !error
+                        }
+                        saved={inputStatus[personal.id]?.grado?.saved && !error}
+                        error={error?.message}
+                        disabled={solo_lectura}
+                        onBlur={(e) => {
+                          field.onBlur();
+                          if (personal.grado !== e.target.value && !error) {
+                            handleUpdate(personal.id, `grado`, e.target.value);
+                          }
+                        }}
+                      />
+                    )}
+                  />
+                </div>
+                {title === 'directo' && (
+                  <div className="col">
+                    <span className="text-sans-p-bold-blue px-5 mx-4">
+                      {personal.comision_servicio ? 'Sí' : 'No'}
+                    </span>
+                  </div>
+                )}
+                {title === 'indirecto' && (
+                  <div className="col-3 px-5">
+                    <span className="text-sans-p-bold-blue px-3">
+                      $ {Number(personal.total_rentas).toLocaleString('es-CL')}
+                    </span>
+                  </div>
+                )}
+
+                {!solo_lectura && (
+                  <div className="col-1">
+                    <button
+                      className="btn-terciario-ghost"
+                      onClick={() => eliminarPersonal(personal.id)}
+                    >
+                      <i className="material-symbols-rounded me-2">delete</i>
+                      <p className="mb-0 text-decoration-underline">Borrar</p>
+                    </button>
+                  </div>
+                )}
               </div>
             ))}
         </form>

@@ -186,7 +186,7 @@ export const Etapa4 = ({ etapa, id }) =>
       // Agrega más casos según otros estados posibles
       default:
         buttonText = "Ver Detalles";
-        path = basePath;
+        path = `${basePath}/paso_1`;
         icon = 'visibility';
         isButtonDisabled = false;
         break;
