@@ -3,7 +3,7 @@ import { SubirOrganigrama } from '../../commons/subirOrganigrama';
 import CustomTextarea from '../../forms/custom_textarea';
 import { FormGOREContext } from '../../../context/FormGore';
 
-export const SubUno_Tres = ({ pasoData, id, stepNumber }) => {
+export const SubUno_Tres = ({ pasoData, id, stepNumber, solo_lectura }) => {
   const { updatePasoGore, handleUploadFiles } = useContext(FormGOREContext);
   const [descripcionGore, setDescripcionGore] = useState(
     pasoData?.descripcion_organigrama_gore
@@ -13,7 +13,6 @@ export const SubUno_Tres = ({ pasoData, id, stepNumber }) => {
     organigrama_gore: { loading: false, saved: false },
   });
 
-
   useEffect(() => {
     if (pasoData && pasoData.paso1_gore) {
       setDescripcionGore(
@@ -21,8 +20,6 @@ export const SubUno_Tres = ({ pasoData, id, stepNumber }) => {
       );
     }
   }, [pasoData]);
-
-
 
   const ver = false;
 
@@ -74,7 +71,6 @@ export const SubUno_Tres = ({ pasoData, id, stepNumber }) => {
       }));
     }
   };
-
   
   return (
     <>
@@ -111,6 +107,7 @@ export const SubUno_Tres = ({ pasoData, id, stepNumber }) => {
               tituloDocumento={pasoData?.organigrama_gore}
               ver={ver}
               archivoDescargaUrl={pasoData?.organigrama_gore}
+              readOnly={solo_lectura}
             />
           </div>
         </div>
@@ -127,7 +124,7 @@ export const SubUno_Tres = ({ pasoData, id, stepNumber }) => {
             loading={inputStatus.descripcion_organigrama_gore.loading}
             saved={inputStatus.descripcion_organigrama_gore.saved}
             maxLength={500}
-            // readOnly={solo_lectura}
+            readOnly={solo_lectura}
           />
         </div>
       </div>

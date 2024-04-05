@@ -3,8 +3,7 @@ import { FisicoInfraestructura } from "../componentes/FisicoInfraestructura"
 import { JustificarCostos } from "../componentes/JustificarCostos"
 import { ResumenSubtitulos } from "../componentes/ResumenSubtitulos"
 
-export const Sub_2 = ({ data, paso3 }) =>
-{
+export const Sub_2 = ({ data, paso3, solo_lectura }) => {
 
   const {
     subtitulo_22_diferencia_sector,
@@ -13,14 +12,13 @@ export const Sub_2 = ({ data, paso3 }) =>
     subtitulo_29_diferencia_sector,
     subtitulo_29_justificados_gore,
     subtitulo_29_por_justificar,
-
   } = paso3;
 
   const { p_3_2_recursos_comparados,
     p_3_2_a_sistemas_informaticos,
-    p_3_2_b_recursos_fisicos_infraestructura,
-
+    p_3_2_b_recursos_fisicos_infraestructura
   } = data
+
   return (
     <>
       <div className="pe-5 me-5 mt-5 col-11">
@@ -36,11 +34,12 @@ export const Sub_2 = ({ data, paso3 }) =>
           <JustificarCostos recursos={p_3_2_recursos_comparados} />
         </div>
         <div className="my-4 ">
-          <FichaInformatico dataInformatico={p_3_2_a_sistemas_informaticos} />
+          <FichaInformatico dataInformatico={p_3_2_a_sistemas_informaticos} solo_lectura={solo_lectura} />
         </div>
         <div className="my-4 ">
           <FisicoInfraestructura
             dataRecursosFisicos={p_3_2_b_recursos_fisicos_infraestructura}
+            solo_lectura={solo_lectura}
           />
         </div>
         <div className="my-4 ">

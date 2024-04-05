@@ -9,6 +9,7 @@ export const FormSubdereContext = createContext();
 export const FormSubdereProvider = ({ children }) => {
   const [id, setId] = useState(null);
   const [stepNumber, setStepNumber] = useState(null);
+  const [permisoPaso2, setPermisoPaso2] = useState(false);
 
 
   const { dataFormSubdere, loadingFormSubdere, errorFormSubdere } = useFormularioSubdere(id);
@@ -67,7 +68,9 @@ export const FormSubdereProvider = ({ children }) => {
     patchResponse: response,
     updatePasoSubdere,
     handleUploadFiles,
-    refetchTriggerSubdere
+    refetchTriggerSubdere,
+    permisoPaso2, // Añade el estado al valor del contexto
+    setPermisoPaso2, // Añade la función para actualizar el estado
   };
 
   return (

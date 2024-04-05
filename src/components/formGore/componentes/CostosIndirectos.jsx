@@ -5,14 +5,13 @@ import { FormGOREContext } from '../../../context/FormGore';
 import { OpcionesAB } from '../../forms/opciones_AB';
 import { Monto } from './Monto';
 
-export const CostosIndirectosSector = ({ costosIndirectos }) => {
+export const CostosIndirectosSector = ({ costosIndirectos, solo_lectura }) => {
   const { updatePasoGore } = useContext(FormGOREContext);
   const [inputStatus, setInputStatus] = useState({
     descripcion: { loading: false, saved: false },
     total_anual_gore: { loading: false, saved: false },
     es_transitorio: { loading: false, saved: false },
   });
-
 
   const handleUpdate = async (
     costoId,
@@ -63,6 +62,7 @@ export const CostosIndirectosSector = ({ costosIndirectos }) => {
       }
     }
   };
+
   return (
     <>
       <div className="mt-4 col-11">
@@ -128,6 +128,7 @@ export const CostosIndirectosSector = ({ costosIndirectos }) => {
                             inputStatus[costo.id]?.total_anual_gore?.loading
                           }
                           saved={inputStatus[costo.id]?.total_anual_gore?.saved}
+                          readOnly={solo_lectura}
                         />
                       </div>
                       <div className="col-6 ms-5 ps-3">
@@ -152,6 +153,7 @@ export const CostosIndirectosSector = ({ costosIndirectos }) => {
                           field="es_transitorio"
                           arrayNameId={costo.id}
                           fieldName="es_transitorio"
+                          readOnly={solo_lectura}
                         />
                       </div>
                       <div className="col-5 ms-2">
@@ -182,6 +184,7 @@ export const CostosIndirectosSector = ({ costosIndirectos }) => {
                         }
                         loading={inputStatus[costo.id]?.descripcion?.loading}
                         saved={inputStatus[costo.id]?.descripcion?.saved}
+                        readOnly={solo_lectura}
                       />
                     </div>
                     <hr className="col-12" />

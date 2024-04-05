@@ -158,7 +158,6 @@ $line-thickness: 2px;
       align-items: center;
       margin: 0;
       
-      // Estilos para los diferentes estados de los botones
       &.default {
         background-color: $white-color;
         color: $blue-color;
@@ -181,6 +180,14 @@ $line-thickness: 2px;
         background-color: rgba(249, 213, 213, 1);
         color: $dark-red;
         border: 2px solid $dark-red;
+      }
+
+      // Estilo para botón deshabilitado
+      &.disabled {
+        background-color: #d3d3d3; // Un gris genérico, ajusta según tu paleta de colores
+        color: #a9a9a9; // Texto en un gris más oscuro para contraste
+        border: 2px solid #bababa; // Borde en un tono de gris que combine
+        cursor: not-allowed; // Cambia el cursor para indicar que está deshabilitado
       }
     }
   }

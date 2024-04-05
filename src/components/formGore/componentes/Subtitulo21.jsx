@@ -1,7 +1,7 @@
 import React from 'react';
 import CustomTextarea from '../../forms/custom_textarea';
 
-export const Subtitulo21 = ({ personal }) =>
+export const Subtitulo21 = ({ personal, solo_lectura }) =>
 {
   return (
     <>
@@ -48,7 +48,7 @@ export const Subtitulo21 = ({ personal }) =>
                       placeholder="Describe el costo por subtítulo e ítem"
                       name="descripcion"
                       value={item.descripcion || ''}
-                      readOnly="true"
+                      readOnly={solo_lectura}
                     />
                   </div>
                 </div>

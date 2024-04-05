@@ -3,25 +3,23 @@
 import { CostoPersonal } from '../componentes/CostoPersonal';
 import {Personal} from "../componentes/Personal"; 
 
-export const Sub1_a = ({data}) => {
-
+export const Sub1_a = ({data, solo_lectura}) => {
 
   const { paso3_gore, p3_personal_directo_sector , 
     p3_personal_directo_gore,
     listado_estamentos
-    } = data;
+  } = data;
 
+  let directos = {};
   
-    let directos = {};
-  
-    // Separación de los datos
-    for (let key in paso3_gore) {
-      if (key.startsWith("sub21_")) {
-        directos[key] = paso3_gore[key];
-      }
+  // Separación de los datos
+  for (let key in paso3_gore) {
+    if (key.startsWith("sub21_")) {
+      directos[key] = paso3_gore[key];
     }
+  }
 
-    console.log('di',directos); 
+  console.log('di',directos); 
 
   return (
     <>
@@ -47,6 +45,7 @@ export const Sub1_a = ({data}) => {
             otrasJustificar={paso3_gore?.sub21_otras_remuneraciones_justificar}
             gastoPersonalJustificado={paso3_gore?.sub21_gastos_en_personal_justificado}
             gastosPersonalJustificar={paso3_gore?.sub21_gastos_en_personal_justificar}
+            solo_lectura={solo_lectura}
           />
 
           <Personal
@@ -58,6 +57,7 @@ export const Sub1_a = ({data}) => {
           estamentos={listado_estamentos}
           dataPersonal={directos}
           dataPaso={data}
+          solo_lectura={solo_lectura}
           />
 
         </div>

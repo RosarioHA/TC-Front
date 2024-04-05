@@ -6,24 +6,23 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { validacionFluctuacion } from '../../../validaciones/esquemaFluctuacion';
 import { FormGOREContext } from '../../../context/FormGore';
 
-// const inputNumberStyle = {
-//   // Estilos para ocultar flechas en navegadores que usan Webkit y Mozilla
-//   MozAppearance: 'textfield',
-//   '&::-webkit-outer-spin-button': {
-//     WebkitAppearance: 'none',
-//     margin: 0,
-//   },
-//   '&::WebkitOuterSpinButton': {
-//     WebkitAppearance: 'none',
-//     margin: 0,
-//   },
-// };
+const inputNumberStyle = {
+  // Estilos para ocultar flechas en navegadores que usan Webkit y Mozilla
+  MozAppearance: 'textfield',
+  '&::-webkit-outer-spin-button': {
+    WebkitAppearance: 'none',
+    margin: 0,
+  },
+  '&::WebkitOuterSpinButton': {
+    WebkitAppearance: 'none',
+    margin: 0,
+  },
+};
 
 export const Fluctuaciones = ({ id, dataGastos, solo_lectura }) => {
   const [datosGastos, setDatosGastos] = useState([]);
   const { updatePasoGore } = useContext(FormGOREContext);
   const [esquemaValidacion, setEsquemaValidacion] = useState(null);
-
 
   useEffect(() => {
     // Intenta leer los datos almacenados de localStorage
@@ -34,7 +33,6 @@ export const Fluctuaciones = ({ id, dataGastos, solo_lectura }) => {
       const formattedData = dataGastos.map((item) => {
         // Encuentra el item correspondiente en el estado almacenado, si existe
         const storedItem = storedData ? storedData.find(storedItem => storedItem.id === item.id) : null;
-  
         return {
           ...item,
           costo_anio_gore: item.costo_anio_gore?.map((costo) => {
@@ -55,25 +53,22 @@ export const Fluctuaciones = ({ id, dataGastos, solo_lectura }) => {
           },
         };
       });
-  
       // Actualiza el estado con los datos formateados
       setDatosGastos(formattedData);
     }
   }, [dataGastos]); 
-
 
   useEffect(() => {
     const esquema = validacionFluctuacion(datosGastos);
     setEsquemaValidacion(esquema);
   }, [datosGastos]);
 
-
   const {
     control,
     trigger,
     clearErrors,
     formState: { errors },
-  } = useForm({
+    } = useForm({
     resolver: esquemaValidacion ? yupResolver(esquemaValidacion) : undefined,
     mode: 'onBlur',
   });
@@ -89,7 +84,6 @@ export const Fluctuaciones = ({ id, dataGastos, solo_lectura }) => {
         if (subtitulo.id === subtituloId) {
           // Clonando subtitulo para evitar mutaciones directas del estado
           let updatedSubtitulo = { ...subtitulo };
-  
           if (fieldName === 'costo' && costoAnioId) {
             // Actualizando el estado del costo específico
             updatedSubtitulo.costo_anio_gore = subtitulo.costo_anio_gore.map((costoAnio) => {
@@ -105,15 +99,12 @@ export const Fluctuaciones = ({ id, dataGastos, solo_lectura }) => {
             // Actualizando el estado de la descripción
             updatedSubtitulo.estados = { ...subtitulo.estados, descripcion: { ...newState } };
           }
-  
           return updatedSubtitulo;
         }
         return subtitulo;
       });
-  
       // Almacenar el nuevo estado en Local Storage para persistencia entre recargas
       localStorage.setItem('datosGastosState', JSON.stringify(newDatosGastos));
-  
       return newDatosGastos;
     });
   };
@@ -151,7 +142,6 @@ export const Fluctuaciones = ({ id, dataGastos, solo_lectura }) => {
         }]
       };
     }
-  
     // Payload general para el envío
     const payload = {
       id: id, // El ID del formulario o entidad a actualizar
@@ -164,7 +154,6 @@ export const Fluctuaciones = ({ id, dataGastos, solo_lectura }) => {
     try {
       // Envío de la actualización al backend
       await updatePasoGore(payload);
-  
       // Si la actualización es exitosa, actualiza el estado para reflejar el éxito
       updateFieldState(subtituloId, costoAnioId, fieldName, {
         loading: false,
@@ -172,7 +161,6 @@ export const Fluctuaciones = ({ id, dataGastos, solo_lectura }) => {
       });
     } catch (error) {
       console.error('Error al guardar los datos:', error);
-      
       // En caso de error, actualiza el estado para reflejar el fallo
       updateFieldState(subtituloId, costoAnioId, fieldName, {
         loading: false,
@@ -180,7 +168,6 @@ export const Fluctuaciones = ({ id, dataGastos, solo_lectura }) => {
       });
     }
   };
-
 
   // Asume que tienes una lista de headers para los años, necesaria para renderizar las columnas
   const headers =
@@ -280,7 +267,7 @@ export const Fluctuaciones = ({ id, dataGastos, solo_lectura }) => {
                                 id={`costo_${costoAnio?.id}`}
                                 placeholder="Costo (M$)"
                                 value={value}
-                                // style={inputNumberStyle}
+                                style={inputNumberStyle}
                                 disabled={solo_lectura}
                                 onChange={handleChange}
                                 onBlur={handleBlur}

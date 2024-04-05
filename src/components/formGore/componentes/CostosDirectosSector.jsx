@@ -5,8 +5,7 @@ import { OpcionesAB } from '../../forms/opciones_AB';
 import { FormGOREContext } from '../../../context/FormGore';
 import { Monto } from './Monto';
 
-export const CostosDirectosSector = ({ costoDirectosGet }) =>
-{
+export const CostosDirectosSector = ({ costoDirectosGet, solo_lectura }) => {
   const { updatePasoGore } = useContext(FormGOREContext);
   const [ inputStatus, setInputStatus ] = useState({
     descripcion: { loading: false, saved: false },
@@ -14,13 +13,9 @@ export const CostosDirectosSector = ({ costoDirectosGet }) =>
     es_transitorio: { loading: false, saved: false },
   });
 
-
-
-  const handleUpdate = async (costoId, field, value, saveImmediately = false) =>
-  {
+  const handleUpdate = async (costoId, field, value, saveImmediately = false) => {
     let finalValue = value;
-    if (field === 'total_anual_gore')
-    {
+    if (field === 'total_anual_gore') {
       finalValue = value.replace(/\./g, '');
     }
     setInputStatus((prev) => ({
@@ -31,10 +26,8 @@ export const CostosDirectosSector = ({ costoDirectosGet }) =>
       },
     }));
 
-    if (saveImmediately)
-    {
-      try
-      {
+    if (saveImmediately) {
+      try {
         const payload = {
           p_2_1_a_costos_directos: [ {
             id: costoId,
@@ -49,8 +42,7 @@ export const CostosDirectosSector = ({ costoDirectosGet }) =>
             [ field ]: { ...prevStatus[ costoId ][ field ], loading: false, saved: true },
           },
         }));
-      } catch (error)
-      {
+      } catch (error) {
         console.error('Error updating data', error);
         setInputStatus((prevStatus) => ({
           ...prevStatus,
@@ -117,6 +109,7 @@ export const CostosDirectosSector = ({ costoDirectosGet }) =>
                         onBlur={(e) => handleUpdate(costo.id, 'total_anual_gore', e.target.value, true)}
                         loading={inputStatus[ costo.id ]?.total_anual_gore?.loading}
                         saved={inputStatus[ costo.id ]?.total_anual_gore?.saved}
+                        disabled={solo_lectura}
                       />
                     </div>
                     <div className="col-6 ms-5 ps-3">
@@ -134,6 +127,7 @@ export const CostosDirectosSector = ({ costoDirectosGet }) =>
                         field="es_transitorio"
                         arrayNameId={costo.id}
                         fieldName="es_transitorio"
+                        readOnly={solo_lectura}
                       />
 
 
@@ -159,6 +153,7 @@ export const CostosDirectosSector = ({ costoDirectosGet }) =>
                       onBlur={(e) => handleUpdate(costo.id, 'descripcion', e.target.value, true)}
                       loading={inputStatus[ costo.id ]?.descripcion?.loading}
                       saved={inputStatus[ costo.id ]?.descripcion?.saved}
+                      readOnly={solo_lectura}
                     />
                   </div>
                   <hr className="col-12" />

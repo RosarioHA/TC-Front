@@ -6,13 +6,14 @@ import { JustificacionDesfavorables } from "../../components/formSubdere/paso2/p
 import { Temporalidad } from "../../components/formSubdere/paso2/p4_1_Subdere";
 import { Gradualidad } from "../../components/formSubdere/paso2/p4_2_Subdere";
 import { RestoCampos } from "../../components/formSubdere/paso2/p4_Subdere_resto";
+import { NavigationSubdere } from "../../components/layout/navigationSubdere";
 
 
 const Paso_2_Revision = () => {
   const {
-    dataFormSubdere,
+    // dataFormSubdere,
     dataPasoSubdere,
-    loadingPasoSubdere,
+    // loadingPasoSubdere,
     errorPasoSubdere,
     updateStepNumber,
   } = useContext(FormSubdereContext)
@@ -47,6 +48,7 @@ const Paso_2_Revision = () => {
     implementacion_acompanamiento,
     condiciones_ejercicio
   } = dataPasoSubdere;
+
 
   return (
     <>
@@ -99,6 +101,7 @@ const Paso_2_Revision = () => {
           </div>
         </div>
       </div>
+      <NavigationSubdere step={paso2_revision_final_subdere.numero_paso} id={dataPasoSubdere?.id}/>
     </>
   );
 }

@@ -10,26 +10,23 @@ import CustomTextarea from "../../components/forms/custom_textarea";
 import { useObservacionesGORE } from "../../hooks/fomularioGore/useObSubdereGore";
 import { useAuth } from '../../context/AuthContext';
 
-const PasoUnoGore = () =>
-{
+const PasoUnoGore = () => {
   const { dataFormGore, dataPasoGore, errorPasoGore, updateStepNumber } = useContext(FormGOREContext);
   const stepNumber = 1;
   const { userData } = useAuth();
   const { observaciones, loadingObservaciones, updateObservacion, fetchObservaciones, saved } = useObservacionesGORE(dataFormGore ? dataFormGore.id : null);
   const [observacionPaso1, setObservacionPaso1] = useState("");
   const userSubdere = userData?.perfil?.includes('SUBDERE');
-
+  const solo_lectura = dataPasoGore?.solo_lectura;
   const formularioEnviado = dataFormGore?.formulario_enviado
   const observacionesEnviadas = observaciones?.observacion_enviada;
 
-  const handleUpdateStepNumber = useCallback(() =>
-  {
+  const handleUpdateStepNumber = useCallback(() => {
     const stepNumber = 1;
     updateStepNumber(stepNumber);
   }, [ updateStepNumber ]);
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     handleUpdateStepNumber();
   }, [ handleUpdateStepNumber ]);
 
@@ -74,16 +71,19 @@ const PasoUnoGore = () =>
             dataPaso={paso1_gore}
             id={dataFormGore.id}
             stepNumber={stepNumber}
+            solo_lectura={solo_lectura}
           />
           <SubUno_dos
             flujograma={flujograma_ejercicio_competencia}
             id={dataFormGore.id}
             stepNumber={stepNumber}
+            solo_lectura={solo_lectura}
           />
           <SubUno_Tres
             pasoData={paso1_gore}
             id={dataFormGore.id}
             stepNumber={stepNumber}
+            solo_lectura={solo_lectura}
           />
 
           {formularioEnviado && userSubdere && (

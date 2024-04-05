@@ -26,6 +26,7 @@ export const PersonalInformado = ({
   seccion,
   estamentos,
   dataPersonal,
+  solo_lectura
 }) => {
   const { updatePasoGore } = useContext(FormGOREContext);
   const [inputStatus, setInputStatus] = useState({});
@@ -188,6 +189,7 @@ export const PersonalInformado = ({
                                     altA="Si"
                                     altB="No"
                                     error={error?.message}
+                                    readOnly={solo_lectura}
                                   />
                                 )}
                               />
@@ -213,6 +215,7 @@ export const PersonalInformado = ({
                                     <CustomInput
                                       {...field}
                                       placeholder="número"
+                                      disabled={solo_lectura}
                                       loading={
                                         inputStatus[persona.id]
                                           ?.numero_personas_gore?.loading
@@ -256,6 +259,7 @@ export const PersonalInformado = ({
                   personalGore={personalGore}
                   dataPersonal={dataPersonal}
                   title={title}
+                  solo_lectura={solo_lectura}
                 />
               </React.Fragment>
             )

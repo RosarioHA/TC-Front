@@ -328,7 +328,7 @@ export const AgregarPersonal = ({
                           value={personal.renta_bruta || ''}
                           placeholder="Costo (M$)"
                           error={error?.message}
-                          readOnly={solo_lectura}
+                          disabled={solo_lectura}
                           loading={
                             inputStatus[personal.id]?.renta_bruta?.loading &&
                             !error

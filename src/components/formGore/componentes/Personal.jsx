@@ -13,6 +13,7 @@ export const Personal = ({
   dataPersonal,
   dataPaso,
   seccionGore3,
+  solo_lectura,
 }) => {
   const [descripcion, setDescripcion] = useState('');
   const [descripcionInicial, setDescripcionInicial] = useState('');
@@ -68,6 +69,7 @@ export const Personal = ({
         seccion={seccion}
         estamentos={estamentos}
         dataPersonal={dataPersonal}
+        solo_lectura={solo_lectura}
       />
       {/* seccion que debe implementarse en la los item 4  */}
       <> 
@@ -81,20 +83,21 @@ export const Personal = ({
               placeholder="Calidad Jurídica"
               options=""
               onSelectionChange=""
+              readOnly={solo_lectura}
             />
           </div>
         </div>
       </>
       {/* )} */}
 
-      {/* {mostrarBotonFormulario && !solo_lectura && ( */}
+      {!solo_lectura && (
       <button className="btn-secundario-s m-2">
         <i className="material-symbols-rounded me-2">add</i>
         <p className="mb-0 text-decoration-underline">
           Agregar Calidad Juridica
         </p>
       </button>
-      {/* )} */}
+      )}
 
       <div className="mt-5">
         <CustomTextarea
@@ -109,6 +112,7 @@ export const Personal = ({
           onBlur={handleBlur}
           loading={estadoGuardado.loading}
           saved={estadoGuardado.saved}
+          readOnly={solo_lectura}
         />
         <div className="d-flex mb-3 mt-1 text-sans-h6-primary col-11">
           <i className="material-symbols-rounded me-2">info</i>

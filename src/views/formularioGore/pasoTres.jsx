@@ -10,26 +10,23 @@ import CustomTextarea from "../../components/forms/custom_textarea";
 import { useObservacionesGORE } from "../../hooks/fomularioGore/useObSubdereGore";
 import { useAuth } from '../../context/AuthContext';
 
-const PasoTresGore = () =>
-{
+const PasoTresGore = () => {
   const { dataFormGore, dataPasoGore, errorPasoGore, updateStepNumber } = useContext(FormGOREContext);
   const stepNumber = 3;
   const { userData } = useAuth();
   const { observaciones, loadingObservaciones, updateObservacion, fetchObservaciones, saved } = useObservacionesGORE(dataFormGore ? dataFormGore.id : null);
   const [observacionPaso3, setObservacionPaso3] = useState("");
   const userSubdere = userData?.perfil?.includes('SUBDERE');
-
   const formularioEnviado = dataFormGore?.formulario_enviado
   const observacionesEnviadas = observaciones?.observacion_enviada;
+  const solo_lectura = dataPasoGore?.solo_lectura;
 
-  const handleUpdateStepNumber = useCallback(() =>
-  {
+  const handleUpdateStepNumber = useCallback(() => {
     const stepNumber = 3;
     updateStepNumber(stepNumber);
   }, [ updateStepNumber ]);
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     handleUpdateStepNumber();
   }, [ handleUpdateStepNumber ]);
 
@@ -69,8 +66,8 @@ const PasoTresGore = () =>
             <h3 className="mt-3 me-4">{paso3_gore?.nombre_paso}</h3>
             <Avance avance={paso3_gore?.avance} />
           </div>
-          <Sub_1 data={dataPasoGore} />
-          <Sub_2 data={dataPasoGore} paso3={paso3_gore} />
+          <Sub_1 data={dataPasoGore} solo_lectura={solo_lectura} />
+          <Sub_2 data={dataPasoGore} paso3={paso3_gore} solo_lectura={solo_lectura} />
           <ResumenDiferencial
             informada={paso3_gore.costos_informados_gore}
             justificados={paso3_gore.costos_justificados_gore}
@@ -97,6 +94,7 @@ const PasoTresGore = () =>
               )}
             </div>
           )}
+          
           <NavigationGore step={stepNumber} id={dataFormGore ? dataFormGore.id : null} />
         </div>
       </div>
