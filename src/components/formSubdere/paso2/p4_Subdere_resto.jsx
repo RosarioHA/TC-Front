@@ -5,8 +5,7 @@ import { OpcionesAB } from "../../forms/opciones_AB";
 import { FormSubdereContext } from "../../../context/RevisionFinalSubdere";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
+import CKEditorField from "../../forms/ck_editor";
 
 
 export const RestoCampos = ({
@@ -21,6 +20,10 @@ export const RestoCampos = ({
     justificacion: { loading: false, saved: false },
   });
 
+  const handleBlur = (fieldName, value) => {
+    handleUpdate(fieldName, value, true);
+  };
+
   const handleUpdate = async (field, value, saveImmediately = false) => {
     // Actualiza el estado de inputStatus para indicar que un campo está siendo actualizado
     setInputStatus((prev) => ({
@@ -28,11 +31,18 @@ export const RestoCampos = ({
       [field]: { ...prev[field], loading: true, saved: false },
     }));
 
+    // Verifica si el campo a actualizar es 'modalidad_ejercicio'
+    // y ajusta el valor de acuerdo a 'Exclusiva' o 'Compartida'
+    let adjustedValue = value;
+    if (field === 'modalidad_ejercicio') {
+      adjustedValue = value ? 'Exclusiva' : 'Compartida';
+    }
+
     if (saveImmediately) {
       try {
-        // Construye el payload con el campo y valor proporcionados
+        // Construye el payload con el campo y el valor ajustado
         const payload = {
-          [field]: value,
+          [field]: adjustedValue,
         };
 
         // Llama a la función que actualiza los datos en el backend
@@ -45,7 +55,6 @@ export const RestoCampos = ({
         }));
       } catch (error) {
         console.error('Error updating data:', error);
-
         // En caso de error, actualiza el estado para reflejar que la actualización falló
         setInputStatus((prevStatus) => ({
           ...prevStatus,
@@ -54,13 +63,13 @@ export const RestoCampos = ({
       }
     } else {
       // Si saveImmediately no es true, simplemente actualiza el valor en el estado local
-      // Esta parte es opcional dependiendo de cómo desees manejar los cambios que no se guardan inmediatamente
       setInputStatus((prevStatus) => ({
         ...prevStatus,
-        [field]: { value, loading: false, saved: false },
+        [field]: { value: adjustedValue, loading: false, saved: false },
       }));
     }
-};
+  };
+
 
 
   return (
@@ -77,16 +86,7 @@ export const RestoCampos = ({
             </h6>
           </div>
           <div className="mb-4 col-11">
-            <ReactQuill
-              label="Descripción"
-              placeholder="Describe el costo por subtítulo e ítem"
-              name="recursos_requeridos"
-              maxLength={500}
-              value={recursos_requeridos || ''}
-              onBlur={(e) => handleUpdate('recursos_requeridos', e.target.value, true)}
-              loading={inputStatus?.recursos_requeridos?.loading}
-              saved={inputStatus?.recursos_requeridos?.saved}
-            />
+            Input
           </div>
 
           <h4 className="text-sans-h4">
@@ -123,7 +123,13 @@ export const RestoCampos = ({
           </div>
           <div className="mb-4 col-11">
             <h6>
-              El input
+            <CKEditorField
+              placeholder="Describe el costo por subtítulo e ítem"
+              data={implementacion_acompanamiento || ''}
+              onBlur={(value) => handleBlur('implementacion_acompanamiento', value)}
+              loading={inputStatus?.implementacion_acompanamiento?.loading}
+              saved={inputStatus?.implementacion_acompanamiento?.saved}
+            />
             </h6>
           </div>
 

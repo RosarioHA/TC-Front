@@ -21,8 +21,6 @@ export const AgregarPersonal = ({
   const { updatePasoGore } = useContext(FormGOREContext);
   const [opcionesEstamentos, setOpcionesEstamentos] = useState([]);
 
-  console.log(personalGore);
-
   const { control, handleSubmit } = useForm({
     resolver: yupResolver(validacionesCalidadJuridica),
     mode: 'onBlur',
@@ -241,7 +239,10 @@ export const AgregarPersonal = ({
           )}
           {title === 'indirecto' && (
             <div className="col-2 pe-5">
-              <p className="text-sans-p-bold ms-3">Total  <br/>rentas</p>
+              <p className="text-sans-p-bold ms-3">
+                Total <br />
+                rentas
+              </p>
             </div>
           )}
           {!solo_lectura && (
@@ -263,7 +264,7 @@ export const AgregarPersonal = ({
                     <Controller
                       control={control}
                       name={`estamento_${personal.id}`}
-                      render={({ field }) => (
+                      render={({ field, fieldState: { error } }) => (
                         <DropdownSelect
                           id={`estamento_${personal.id}`}
                           name={`estamento_${personal.id}`}
@@ -278,37 +279,43 @@ export const AgregarPersonal = ({
                             field.onChange(selectedOption.value);
                           }}
                           readOnly={solo_lectura}
-                          selected={personal.estamento_label_value} // Esto debe ser null/undefined o falso si no hay selección
+                          selected={personal.estamento_label_value}
+                          error={error?.message} 
                         />
                       )}
                     />
                   </div>
                   {title === 'indirecto' && (
                     <div className="col-1 px-2 ">
-                      <CustomInput
-                        id={`numero_personas_gore${personal.id}`}
-                        placeholder="Número"
-                        value={personal.numero_personas_gore}
-                        loading={
-                          inputStatus[personal.id]?.numero_personas_gore
-                            ?.loading
-                        }
-                        saved={
-                          inputStatus[personal.id]?.numero_personas_gore?.saved
-                        }
-                        onBlur={(e) => {
-                          if (
-                            personal.numero_personas_gore !== e.target.value
-                          ) {
-                            handleUpdate(
-                              personal.id,
-                              'numero_personas_gore',
-                              e.target.value,
-                              true
-                            );
+                      <Controller
+                      name={`personal[${index}].numero_personas_gore`}
+                      control={control}
+                      defaultValue={personal.numero_personas_gore || ''}
+                      render={({ field, fieldState: { error } }) => (
+                        <CustomInput
+                          {...field}
+                          placeholder="número"
+                          loading={
+                            inputStatus[personal.id]?.numero_personas_gore?.loading && !error
                           }
-                        }}
-                      />
+                          saved={
+                            inputStatus[personal.id]?.numero_personas_gore?.saved && !error
+                          }
+                          error={error?.message}
+                          disabled={solo_lectura}
+                          onBlur={(e) => {
+                            field.onBlur();
+                            if (personal.numero_personas_gore !== e.target.value && !error) {
+                              handleUpdate(
+                                personal.id,
+                                `numero_personas_gore`,
+                                e.target.value
+                              );
+                            }
+                          }}
+                        />
+                      )}
+                    />
                     </div>
                   )}
                   <div className="col  px-4">
@@ -321,7 +328,7 @@ export const AgregarPersonal = ({
                           value={personal.renta_bruta || ''}
                           placeholder="Costo (M$)"
                           error={error?.message}
-                          readOnly={solo_lectura}
+                          disabled={solo_lectura}
                           loading={
                             inputStatus[personal.id]?.renta_bruta?.loading &&
                             !error

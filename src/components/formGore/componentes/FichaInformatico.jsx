@@ -6,7 +6,7 @@ import InputCosto from '../../forms/input_costo';
 import { validacionFichaInformaticos } from '../../../validaciones/esquemasFichas';
 import { FormGOREContext } from '../../../context/FormGore';
 
-export const FichaInformatico = ({ dataInformatico }) => {
+export const FichaInformatico = ({ dataInformatico, solo_lectura }) => {
   const [fichasTecnicas, setFichasTecnicas] = useState(dataInformatico);
   const { updatePasoGore } = useContext(FormGOREContext);
   const { control, handleSubmit } = useForm({
@@ -152,6 +152,7 @@ export const FichaInformatico = ({ dataInformatico }) => {
                             {...field}
                             placeholder="Escribe el nombre de la plataforma o software"
                             error={error?.message}
+                            readOnly={solo_lectura}
                             maxLength={500}
                             loading={
                               inputStatus[ficha.id]?.nombre_plataforma
@@ -195,6 +196,7 @@ export const FichaInformatico = ({ dataInformatico }) => {
                             {...field}
                             placeholder="Indice la versión y una descripción técnica del software o plataforma"
                             error={error?.message}
+                            readOnly={solo_lectura}
                             maxLength={500}
                             loading={
                               inputStatus[ficha.id]?.descripcion_tecnica
@@ -239,6 +241,7 @@ export const FichaInformatico = ({ dataInformatico }) => {
                               value={ficha.costo || ''}
                               placeholder="Costo del recurso"
                               error={error?.message}
+                              disabled={solo_lectura}
                               loading={
                                 inputStatus[ficha.id]?.costo?.loading && !error
                               }
@@ -288,6 +291,7 @@ export const FichaInformatico = ({ dataInformatico }) => {
                         render={({ field, fieldState: { error } }) => (
                           <CustomTextarea
                             {...field}
+                            readOnly={solo_lectura}
                             placeholder="Describe la función en el ejercicio de la competencia y los perfiles de usuario."
                             maxLength={500}
                             error={error?.message}
@@ -329,17 +333,20 @@ export const FichaInformatico = ({ dataInformatico }) => {
                   </div>
                 </div>
               ))}
+
             <div>
-              <button
-                className="btn-secundario-s m-2"
-                type="button"
-                onClick={agregarFichaTecnica}
-              >
-                <i className="material-symbols-rounded me-2">add</i>
-                <p className="mb-0 text-decoration-underline">
-                  Agregar ficha técnica
-                </p>
-              </button>
+              {!solo_lectura && (
+                <button
+                  className="btn-secundario-s m-2"
+                  type="button"
+                  onClick={agregarFichaTecnica}
+                >
+                  <i className="material-symbols-rounded me-2">add</i>
+                  <p className="mb-0 text-decoration-underline">
+                    Agregar ficha técnica
+                  </p>
+                </button>
+              )}
             </div>
           </form>
         </div>

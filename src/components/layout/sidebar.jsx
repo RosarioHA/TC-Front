@@ -71,9 +71,9 @@ const Sidebar = () => {
         <li className="my-1">
           <SidebarLink to="/home" icon="home" text="Inicio" onClick={handleItemClick} hasBorder={false}/>
         </li>
-        <li className="my-1">
+        {/* <li className="my-1">
           <SidebarLink to="#" icon="mail" text="Notificaciones" badgeCount={10} onClick={handleItemClick} hasBorder={false} />
-        </li>
+        </li> */}
         {(userSubdere || userObservador) && (
           <>
             <hr className="w-85 mx-4" />

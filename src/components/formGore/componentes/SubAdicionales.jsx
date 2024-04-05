@@ -385,7 +385,7 @@ export const SubAdicionales = ({
                               );
                               field.onChange(selectedOptions.value);
                             }}
-                            readOnly={costo.isItemSubtituloReadOnly}
+                            readOnly={solo_lectura || costo.isItemSubtituloReadOnly}
                             selected={
                               costo.item_subtitulo_label_value &&
                               costo.item_subtitulo_label_value.value

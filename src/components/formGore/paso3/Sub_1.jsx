@@ -1,9 +1,7 @@
 import { Sub1_a } from "./Sub1_a"
 import { Sub1_b } from "./Sub1_b"
 
-export const Sub_1 = ({ data }) =>
-{
-
+export const Sub_1 = ({ data, solo_lectura }) => {
 
   return (
     <>
@@ -17,9 +15,8 @@ export const Sub_1 = ({ data }) =>
           </h6>
         </div>
         <div className="my-4 ">
-          <Sub1_a
-            data={data} />
-          <Sub1_b data={data} />
+          <Sub1_a data={data} solo_lectura={solo_lectura} />
+          <Sub1_b data={data} solo_lectura={solo_lectura} />
         </div>
         <div className="my-4 col-11 pe-5">
           <div className="ps-3 my-4">
