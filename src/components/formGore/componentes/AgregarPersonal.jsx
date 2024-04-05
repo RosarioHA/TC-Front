@@ -200,48 +200,38 @@ export const AgregarPersonal = ({
       <div className="col my-4">
         {/* Encabezado para cada grupo */}
         <div className="row mt-3">
-          <div className="col-4 col-1">
+          <div className="col d-flex">
             <p className="text-sans-p-bold">N°</p>
-            <div className="col">
-              <p className="text-sans-p-bold">Estamento</p>
-            </div>
+            <p className="text-sans-p-bold ms-3">Estamento</p>
           </div>
           {title === 'indirecto' && (
             <div className="col">
               <p className="text-sans-p-bold">
-                Número de
-                <br /> personas
+                Número de personas
               </p>
             </div>
           )}
           <div className="col">
             <p className="text-sans-p-bold">
-              Renta bruta
-              <br /> mensual ($M)
+              Renta bruta mensual ($M)
             </p>
           </div>
           <div className="col">
             <p className="text-sans-p-bold ">
-              Grado
-              <br />
-              (Si
-              <br />
-              corresponde)
+              Grado (Si corresponde)
             </p>
           </div>
           {title === 'directo' && (
             <div className="col-3 pe-5">
               <p className="text-sans-p-bold ms-3">
-                Comision <br />
-                de servicio
+                Comision de servicio
               </p>
             </div>
           )}
           {title === 'indirecto' && (
             <div className="col-3 pe-5">
               <p className="text-sans-p-bold ms-3">
-                Total <br />
-                rentas
+                Total rentas
               </p>
             </div>
           )}
@@ -255,11 +245,11 @@ export const AgregarPersonal = ({
           {Array.isArray(nuevoPersonal) &&
             nuevoPersonal?.map((personal, index) => (
               <div
-                className="row  align-items-center d-flex "
+                className="row align-items-center d-flex mb-3"
                 key={personal.id}
               >
-                <div className="col-3 pe-2">
-                  <span className="text-sans-p-bold mt-3">{index + 1}</span>
+                <div className="col-3 d-flex">
+                  <span className="text-sans-p-bold me-3 mt-3">{index + 1}</span>
 
                   <div className=" col-10">
                     <Controller
