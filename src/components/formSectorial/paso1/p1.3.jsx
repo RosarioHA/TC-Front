@@ -4,13 +4,12 @@ import CustomTextarea from "../../forms/custom_textarea";
 import DropdownSelect from "../../dropdown/select";
 import { useAmbitos } from '../../../hooks/useAmbitos';
 
-
 export const Subpaso_tres = ({ pasoData, id, stepNumber, solo_lectura }) => {
   const { handleUpdatePaso } = useContext(FormularioContext);
-  const { ambitos } = useAmbitos()
-  const [ ambitoSeleccionado, setAmbitoSeleccionado ] = useState(null);
+  const { ambitos } = useAmbitos();
+  const [ambitoSeleccionado, setAmbitoSeleccionado] = useState(null);
 
-  const [ formData, setFormData ] = useState({
+  const [formData, setFormData] = useState({
     paso1: pasoData.paso1 || {
       identificacion_competencia: pasoData.identificacion_competencia,
       fuentes_normativas: pasoData.fuentes_normativas,
@@ -21,7 +20,9 @@ export const Subpaso_tres = ({ pasoData, id, stepNumber, solo_lectura }) => {
     }
   });
 
-  const [ inputStatus, setInputStatus ] = useState({
+  const [lastSavedData, setLastSavedData] = useState(formData.paso1);  // Almacena los últimos datos guardados
+
+  const [inputStatus, setInputStatus] = useState({
     identificacion_competencia: { loading: false, saved: false },
     fuentes_normativas: { loading: false, saved: false },
     territorio_competencia: { loading: false, saved: false },
@@ -33,18 +34,9 @@ export const Subpaso_tres = ({ pasoData, id, stepNumber, solo_lectura }) => {
   useEffect(() => {
     if (pasoData && pasoData.paso1) {
       setFormData({ paso1: pasoData.paso1 });
+      setLastSavedData(pasoData.paso1);  // Actualiza los últimos datos guardados al cargar los datos
     }
-  }, [ pasoData ]);
-
-  useEffect(() => {
-    const savedData = localStorage.getItem('formData');
-    if (savedData) {
-      setFormData(JSON.parse(savedData));
-    }
-  }, []);
-  useEffect(() => {
-    localStorage.setItem('formData', JSON.stringify(formData));
-  }, [ formData ]);
+  }, [pasoData]);
 
   const handleChange = (inputName, e) => {
     const { value } = e.target;
@@ -57,27 +49,27 @@ export const Subpaso_tres = ({ pasoData, id, stepNumber, solo_lectura }) => {
     }));
   };
 
-
   const handleSave = async (inputName) => {
+    if (formData.paso1[inputName] === lastSavedData[inputName]) {
+      console.log("No changes to save");  // No guarda si los datos no han cambiado
+      return;
+    }
+
     setInputStatus(prevStatus => ({
       ...prevStatus,
       [inputName]: { loading: true, saved: false }
     }));
 
-    // Construye el payload solo con el campo específico que se está guardando.
-    const payload = {
-      [inputName]: formData.paso1[inputName]
-    };
-
-    if (inputName === 'ambito_paso1') {
-      payload['ambito_paso1'] = ambitoSeleccionado ? ambitoSeleccionado.value : formData.paso1.ambito_paso1;
-    }
-
+    const payload = { [inputName]: formData.paso1[inputName] };
     const success = await handleUpdatePaso(id, stepNumber, { paso1: payload });
     if (success) {
       setInputStatus(prevStatus => ({
         ...prevStatus,
         [inputName]: { loading: false, saved: true }
+      }));
+      setLastSavedData(prevData => ({
+        ...prevData,
+        [inputName]: formData.paso1[inputName]  // Actualiza los últimos datos guardados
       }));
     } else {
       setInputStatus(prevStatus => ({
@@ -94,23 +86,11 @@ export const Subpaso_tres = ({ pasoData, id, stepNumber, solo_lectura }) => {
 
   const handleAmbitoChange = async (selectedOption) => {
     setAmbitoSeleccionado(selectedOption);
-    localStorage.setItem('ambitoSeleccionado', JSON.stringify(selectedOption)); 
-    const updatedFormData = {
-      ...formData,
-      paso1: {
-        ...formData.paso1,
-        ambito_paso1: selectedOption.value,
-      },
-    };
-    await handleSave('ambito_paso1', updatedFormData);
-  };
-
-  useEffect(() => {
-    const savedSelection = localStorage.getItem('ambitoSeleccionado');
-    if (savedSelection) {
-      setAmbitoSeleccionado(JSON.parse(savedSelection));
+    localStorage.setItem('ambitoSeleccionado', JSON.stringify(selectedOption));
+    if (selectedOption.value !== formData.paso1.ambito_paso1) {
+      await handleSave('ambito_paso1');
     }
-  }, []);
+  };
 
   return (
     <>
