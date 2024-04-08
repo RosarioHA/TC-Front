@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Counter } from "../tables/Counter";
 import { useAuth } from '../../context/AuthContext';
 
 
-export const Etapa4 = ({ etapa, id }) =>
+export const Etapa4 = ({ etapa, }) =>
 {
   const {
     nombre_etapa,
@@ -15,16 +15,21 @@ export const Etapa4 = ({ etapa, id }) =>
     fecha_ultima_modificacion,
     oficio_origen
   } = etapa;
-
+  
+  const navigate = useNavigate();
   const { userData } = useAuth();
   const userRegionId = userData.region;
   const userProfile = userData.perfil;
-  const navigate = useNavigate();
   const etapaNum = 4;
+  const userSubdere = userData?.perfil?.includes('SUBDERE');
+
+  console.log('e',estado); 
 
 
   const [ isUsuariosGoreCollapsed, setIsUsuariosGoreCollapsed ] = useState(false);
   const [ isFormulariosGoreCollapsed, setIsFormulariosGoreCollapsed ] = useState(false);
+
+  const isStageDisabled = estado === "Aún no puede comenzar";
 
   // Función para alternar el collapse de Usuarios GORE
   const toggleUsuariosGoreCollapse = () =>
@@ -40,22 +45,36 @@ export const Etapa4 = ({ etapa, id }) =>
 
   const renderBadgeOrButtonForUsuario = (usuario) =>
   {
-    // Si el usuario ha sido notificado y el estado es "finalizada"
-    if (usuario.estado === "finalizada")
-    {
-      // Muestra un badge indicando que está finalizado
-      return <span className="badge-status-finish">{usuario.accion}</span>;
+    if (isStageDisabled) {
+      return <span className=" badge-status-pending" disabled>{usuario.accion}</span>;
     }
-    // Si el usuario aún no ha sido notificado y el estado es "revisión"
-    else if (usuario.estado === "revision")
+    // Decide qué mostrar basado en el estado y la acción del usuario
+    switch (usuario.estado)
     {
-      // Muestra un botón para asignar usuario, con el texto de la acción
-      return (
-        <Link className="btn-secundario-s text-decoration-none" to={`/home/editar_competencia/${id}`}>
-          <span className="material-symbols-outlined me-1">folder</span>
-          <u>{usuario.accion}</u>
-        </Link>
-      );
+      case "finalizada":
+        return <span className="badge-status-finish">{usuario.accion}</span>;
+      case "pendiente":
+        return <span className="badge-status-pending">{usuario.accion}</span>;
+      case "revision":
+        if (usuario.accion === "Asignar usuario" && userSubdere)
+        {
+          // Muestra un botón activo para asignar usuarios si el usuario autenticado es SUBDERE
+          return (
+            <button
+              className="btn-secundario-s text-decoration-none"
+              onClick={() => navigate(`/home/asignar_usuario/${usuario.nombre}`)}
+              id="btn">
+              <span className="material-symbols-outlined me-1">person_add</span>
+              <u>{usuario.accion}</u>
+            </button>
+          );
+        } else
+        {
+          // Muestra un badge de revisión si no se cumplen las condiciones para el botón de asignación
+          return <span className="badge-status-pending">{usuario.accion}</span>;
+        }
+      default:
+        return null;  // Manejar otros estados si es necesario
     }
   };
 
@@ -64,13 +83,8 @@ export const Etapa4 = ({ etapa, id }) =>
     let usuariosParaRenderizar = usuarios_gore?.detalle_usuarios_gore_notificados || usuarios_gore || [];
 
 
-    const todosFinalizados = usuariosParaRenderizar.every(usuario => usuario.estado === 'finalizada');
-    // Ajuste para mostrar el badge según el estado resumido de los usuarios
-    const badgeClass = todosFinalizados ? 'badge-status-finish' : 'badge-status-pending';
-    const accionResumenTexto = todosFinalizados ? 'Finalizada' : 'En Revisión';
     if (usuariosParaRenderizar.length === 1)
     {
-      // Manejo especial para un único usuario GORE
       const usuario = usuariosParaRenderizar[ 0 ];
       return (
         <div className="d-flex justify-content-between text-sans-p border-top border-bottom my-3 py-1">
@@ -85,7 +99,6 @@ export const Etapa4 = ({ etapa, id }) =>
           <button type="button" className="btn d-flex justify-content-between w-100 px-0 my-1" onClick={toggleUsuariosGoreCollapse}>
             <span>Usuarios GORE Notificados </span>
             <div className="d-flex align-items-center">
-              <span className={badgeClass}>{accionResumenTexto}</span>
               <span className="material-symbols-outlined text-black">
                 {isUsuariosGoreCollapsed ? 'expand_less' : 'expand_more'}
               </span>
@@ -111,26 +124,37 @@ export const Etapa4 = ({ etapa, id }) =>
       );
     }
 
-    return null;
+    return null;  // Retorna null si no hay usuarios para mostrar
   };
 
-  const renderButtonForSubetapa = (subetapa) => {
+
+  const renderButtonForSubetapa = (subetapa) =>
+  {
     const { estado, accion, nombre } = subetapa;
     let buttonText = accion;
     let icon = estado === "finalizada" ? "visibility" : "draft";
     let path = "/";
-    
+
+    if (isStageDisabled) {
+      return <button className="btn-secundario-s disabled" disabled><u>{subetapa.accion}</u></button>;
+    }
+
     // Este fragmento maneja los casos específicos y asigna el path correcto
-    if (nombre.startsWith("Notificar a") && estado === "finalizada") {
-      if (etapa.estado === 'Aún no puede comenzar') {
+    if (nombre.startsWith("Notificar a") && estado === "finalizada")
+    {
+      if (etapa.estado === 'Aún no puede comenzar')
+      {
         return <span className="badge-status-pending">{accion}</span>;
-      } else {
+      } else
+      {
         return <span className="badge-status-finish">{accion}</span>;
       }
     }
-  
-    if (nombre.includes("Subir oficio y su fecha para habilitar formulario GORE")) {
-      if (estado === "finalizada") {
+
+    if (nombre.includes("Subir oficio y su fecha para habilitar formulario GORE"))
+    {
+      if (estado === "finalizada")
+      {
         // Cuando la subetapa está finalizada, se configura el botón para abrir el PDF en una nueva pestaña
         return (
           <button onClick={() => window.open(oficio_origen, '_blank')} className="btn-secundario-s text-decoration-none" id="btn">
@@ -138,18 +162,20 @@ export const Etapa4 = ({ etapa, id }) =>
             <u>{buttonText}</u>
           </button>
         );
-      } else {
+      } else
+      {
         // Aquí manejas los casos en los que la subetapa no está finalizada, ajusta según necesites
         path = `/home/estado_competencia/${etapa.id}/subir_oficio_gore/${etapaNum}/`;
       }
     }
     const isDisabled = estado === "pendiente" || estado === "revision";
-  
+
     // Función para manejar el evento de clic y realizar la navegación
-    const handleButtonClick = () => {
-      navigate(path, { state: { extraData: "GORE", seccion:'etapa4' } });
+    const handleButtonClick = () =>
+    {
+      navigate(path, { state: { extraData: "GORE", seccion: 'etapa4' } });
     };
-  
+
     // Renderizar un botón o un enlace basado en si la acción está deshabilitada o no
     return isDisabled ? (
       <button onClick={handleButtonClick} className='btn-secundario-s' id="btn">
@@ -164,7 +190,7 @@ export const Etapa4 = ({ etapa, id }) =>
       </button>
     );
   };
-  
+
 
   const renderButtonForFormularioGore = (formulario) =>
   {
@@ -225,6 +251,7 @@ export const Etapa4 = ({ etapa, id }) =>
 
   const renderFormulariosGore = () =>
   {
+
     // Verifica si formularios_gore es un array directamente, indicando solo un formulario.
     if (Array.isArray(formularios_gore) && formularios_gore.length === 1)
     {

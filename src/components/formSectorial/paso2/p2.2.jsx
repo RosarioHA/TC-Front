@@ -307,11 +307,11 @@ export const Subpaso_dosPuntoDos = ({
                 {Object.entries(ministerios).map(([ministerio, unidades]) => (
                   <div key={ministerio} className="tabla-organismo">
                     <div className="row border-start">
-                      <div className="col p-3">
-                        <p>{ministerio}</p>
+                      <div className="col-3 p-3 border border-end">
+                        <div className="col-7">{ministerio}</div>
                       </div>
 
-                      <div className="col-10 border-start border-bottom p-2">
+                      <div className="col-9 border-start border-bottom p-2">
                         {unidades.map((unidad, unidadIndex) => (
                           <div key={unidad.id} className=" row">
                             <div className="col-10 p-3">
@@ -410,6 +410,7 @@ export const Subpaso_dosPuntoDos = ({
                               </div>
                             )}
                           </div>
+                          
                         ))}
                         {!solo_lectura && (
                           <div className="row">

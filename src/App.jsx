@@ -32,6 +32,7 @@ const Error503 = React.lazy(() => import('./views/Errors/Error503'));
 const SuccessEdicion = React.lazy(() => import('./views/success/success_edicion'));
 const SuccessCreacion = React.lazy(() => import('./views/success/success_creacion'));
 const SuccessFormSectorial = React.lazy(() => import('./views/success/success_formularioSectorial'));
+const SuccessFormGore = React.lazy(() => import('./views/success/success_formularioGore'));
 const SuccessCierreOS = React.lazy(() => import('./views/success/success_cierreObservaciones'));
 const SuccessOS_Gore = React.lazy(() => import('./views/success/success_OS_formGore.jsx'));
 const SuccessOS = React.lazy(() => import('./views/success/success_os'));
@@ -87,7 +88,7 @@ function App()
             {createProtectedRoute("editar_competencia/:id", EditarCompetencia, [ 'SUBDERE', 'Usuario Observador' ])}
             {createProtectedRoute("crear_competencia", CreacionCompetencia, [ 'SUBDERE', 'Usuario Observador' ])}
             {createProtectedRoute("estado_competencia/:id/subir_oficio/:etapaNum/:subetapaId", SubirOficio, [ 'SUBDERE', 'Usuario Observador' ])}
-            {createProtectedRoute("estado_competencia/:id/subir_oficio_dipres/:etapaNum/", SubirOficioDipres, [ 'SUBDERE', 'Usuario Observador' ])}
+            {createProtectedRoute("estado_competencia/:id/subir_oficio_dipres", SubirOficioDipres, [ 'SUBDERE', 'Usuario Observador' ])}
             {createProtectedRoute("estado_competencia/:id/subir_oficio_gore/:etapaNum/", SubirOficioGore, [ 'SUBDERE', 'Usuario Observador' ])}
             <Route path="estado_competencia/:id/" element={<EstadoCompentencia />} />
             <Route path="success_edicion" element={<SuccessEdicion />} />
@@ -96,6 +97,7 @@ function App()
             <Route path="success_observaciones_subdere/:id/" element={<FormularioProvider> <SuccessOS /> </FormularioProvider>} />
             <Route path="success_cierre_observaciones/:id/" element={<FormularioProvider> <SuccessCierreOS /> </FormularioProvider>} />
             <Route path="success_cierre_observaciones_gore/:id/" element={<FormGoreProvider> <SuccessOS_Gore /> </FormGoreProvider>} />
+            <Route path="success_formulario_gore/:id/" element={<FormGoreProvider> <SuccessFormGore /> </FormGoreProvider>} />
             <Route
               path="observaciones_subdere/:id/"
               element={

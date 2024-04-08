@@ -1,19 +1,17 @@
-import { useEffect,useContext, useState } from 'react';
+import { useEffect, useContext, useState } from 'react';
 import { FormGOREContext } from '../../../context/FormGore';
 import DropdownSelect from '../../dropdown/select';
 import CustomTextarea from '../../forms/custom_textarea';
-import { PersonalInformado } from './PersonalInformado';
-
-export const Personal = ({
-  personalSector,
-  personalGore,
-  title,
-  seccion,
-  estamentos,
-  dataPersonal,
-  dataPaso,
-  seccionGore3,
-  solo_lectura,
+import { PersonalInformado } from './PersonalInformado';export const Personal = ({
+ personalSector,
+ personalGore,
+ title,
+ seccion,
+ estamentos,
+ dataPersonal,
+ dataPaso,
+ seccionGore3,
+ solo_lectura,
 }) => {
     // Inicializamos el estado de la descripción aquí, asumiendo que puede ser actualizado por un prop externo
     const [descripcion, setDescripcion] = useState('');

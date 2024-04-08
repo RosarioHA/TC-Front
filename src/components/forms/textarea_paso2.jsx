@@ -1,9 +1,22 @@
-import { useState, forwardRef } from "react";
+import { useState, useRef, useEffect, forwardRef } from "react";
 
 const CustomInputArea = forwardRef(
   ({ loading, saved, label, placeholder, id, maxLength, error, readOnly, onChange, onBlur, initialValue, ...props }, ref) => {
-    
     const [inputValue, setInputValue] = useState(initialValue || '');
+    const [lastSavedValue, setLastSavedValue] = useState(initialValue || '');
+    const internalRef = useRef(null);
+    const effectiveRef = ref || internalRef;
+
+    useEffect(() => {
+      const adjustTextareaHeight = () => {
+        if (effectiveRef.current) {
+          effectiveRef.current.style.height = 'inherit';
+          effectiveRef.current.style.height = `${effectiveRef.current.scrollHeight}px`;
+        }
+      };
+
+      adjustTextareaHeight();
+    }, [inputValue, effectiveRef]);
 
     const handleInputChange = (e) => {
       const value = e.target.value;
@@ -17,10 +30,14 @@ const CustomInputArea = forwardRef(
       }
     };
 
-    // Añade aquí cualquier lógica adicional que desees ejecutar cuando el textarea pierda el foco
     const handleBlur = (e) => {
-      if (onBlur) {
-        onBlur(e);
+      // Comprobar si el valor ha cambiado respecto al último valor guardado
+      if (inputValue.trim() !== lastSavedValue.trim()) {
+        console.log("Guardando datos...");
+        setLastSavedValue(inputValue); // Actualiza el último valor guardado
+        if (onBlur) {
+          onBlur(e); // Llama a onBlur con el evento original
+        }
       }
     };
 
@@ -51,22 +68,21 @@ const CustomInputArea = forwardRef(
               <label className="text-sans-h5 input-label ms-3 ms-sm-0">{label}</label>
               <textarea
                 className={`input-s p-3 input-textarea col-12 ${error ? 'input-error' : ''}`}
-                type="text"
                 placeholder={placeholder}
                 id={id}
                 value={inputValue}
                 onChange={handleInputChange}
-                onBlur={handleBlur} // Aplica aquí el evento onBlur
-                ref={ref}
+                onBlur={handleBlur}
+                ref={effectiveRef}
                 {...props}
               />
-              <div className=" d-flex align-self-end align-items-center mx-2 my-3">
+              <div className="d-flex align-self-end align-items-center mx-2 my-3">
                 {renderSpinnerOrCheck()}
               </div>
             </div>
             <div className="d-flex justify-content-end col-12">
               {maxLength !== null && maxLength !== undefined && (
-                <div className="mb-0  mt-1 ">
+                <div className="mb-0 mt-1">
                   <span className={counterClass}>
                     {inputValue.length}/{maxLength} caracteres.
                   </span>

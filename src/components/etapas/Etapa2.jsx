@@ -60,67 +60,65 @@ export const Etapa2 = ({ etapa }) =>
     navigate(path);
   };
 
-  const renderButtonForSubetapa = (subetapa) =>
-  {
+  const renderButtonForSubetapa = (subetapa) => {
     const { estado, accion, nombre, id: subetapaId } = subetapa;
     let buttonText = accion;
-    let icon = estado === "finalizada" ? "visibility" : "draft";
+    let icon = "draft";  // Icono por defecto para acciones no finalizadas
     let path = "/";
-
+  
+    // Definiendo las condiciones bajo las cuales se habilitarán los botones
     const isSubirOficio = nombre.includes("Subir oficio");
-
-    // Determina si el botón debe estar habilitado para usuarios con perfil SUBDERE y estado pendiente
-    const isButtonEnabledForSubdere = isSubirOficio && userSubdere && estado !== "pendiente";
-
-    // Determina si el botón debe estar habilitado para todos los usuarios cuando la acción es "Ver oficio" y el estado es "finalizada"
-    const isButtonEnabledForAll = accion === "Ver oficio" && estado === "finalizada";
-
-    switch (true)
-    {
+    const isButtonEnabledForSubdere = (isSubirOficio || nombre.includes("Observación del formulario sectorial")) && userSubdere && (estado === "pendiente" || estado === "revision");
+    const isButtonEnabledForAll = (accion === "Ver oficio" && estado === "finalizada") || (nombre.includes("Observación del formulario sectorial") && estado === "finalizada");
+  
+    switch (true) {
       case nombre.startsWith("Notificar a") && estado === "finalizada":
-        if (etapa.estado === 'Aún no puede comenzar')
-        {
+        if (etapa.estado === 'Aún no puede comenzar') {
           return <span className="badge-status-pending">{accion}</span>;
-        } else
-        {
+        } else {
           return <span className="badge-status-finish">{accion}</span>;
         }
-
+  
       case nombre.includes("Subir oficio y su fecha para habilitar formulario sectorial"):
-        if (estado === "finalizada")
-        {
-          // Aquí se maneja el caso en que la subetapa está finalizada y se debe abrir el PDF
+        if (estado === "finalizada") {
           return (
             <button onClick={() => window.open(oficio_origen, '_blank')} className="btn-secundario-s text-decoration-none" id="btn">
               <span className="material-symbols-outlined me-1">{icon}</span>
               <u>{buttonText}</u>
             </button>
           );
-        } else
-        {
-          // Aquí se maneja el caso en que la subetapa no está finalizada y se debe seguir el flujo original
+        } else {
           path = `/home/estado_competencia/${etapa.id}/subir_oficio/${etapaNum}/${subetapaId}`;
         } break;
+  
       case nombre.includes("Observación del formulario sectorial"):
-        path = estado === "finalizada" ? "/home/ver_observaciones" : "/home/ingresar_observaciones";
+        // Configura el botón según si el estado es 'revision', 'finalizada' o cualquier otro estado
+        if (estado === "revision" && userSubdere) {
+          path = `/home/observaciones_subdere/${subetapaId}/`;
+          buttonText = "Subir Observación";
+          icon = "upload_file";
+        } else if (estado === "finalizada") {
+          path = `/home/observaciones_subdere/${etapa.id}/`;
+          buttonText = "Ver Observación";
+          icon = "visibility";
+        } else {
+          path = "/home/ingresar_observaciones";
+        }
         break;
-
-      // Puedes agregar más casos según sea necesario
+  
       default:
         break;
     }
-
-    if (isButtonEnabledForAll || isButtonEnabledForSubdere)
-    {
+  
+    if (isButtonEnabledForAll || isButtonEnabledForSubdere) {
       return (
-        <button onClick={() => handleNavigation(path, { state: { extraData: "Sectorial", seccion:"etapa2" } })} className="btn-secundario-s text-decoration-none" id="btn">
+        <button onClick={() => handleNavigation(path, { state: { extraData: "Sectorial", seccion: "etapa2" } })} className="btn-secundario-s text-decoration-none" id="btn">
           <span className="material-symbols-outlined me-1">{icon}</span>
           <u>{buttonText}</u>
         </button>
       );
-    } else
-    {
-      // Para otros casos, desactiva el botón si no se cumplen las condiciones
+    } else {
+      // Desactiva el botón si no se cumplen las condiciones
       return (
         <button className="btn-secundario-s disabled" id="btn">
           <span className="material-symbols-outlined me-1">{icon}</span>
@@ -129,6 +127,7 @@ export const Etapa2 = ({ etapa }) =>
       );
     }
   };
+  
 
 
   // AQUI DECIR A LA FUNCION QUE RECONOZCA SI EL BOTON ESTA EN ESTADO FINALIZADO  

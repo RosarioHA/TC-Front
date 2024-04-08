@@ -7,7 +7,6 @@ import { Temporalidad } from "../../components/formSubdere/paso2/p4_1_Subdere";
 import { RestoCampos } from "../../components/formSubdere/paso2/p4_Subdere_resto";
 import { NavigationSubdere } from "../../components/layout/navigationSubdere";
 
-
 const Paso_2_Revision = () => {
   const {
     // dataFormSubdere,
@@ -36,7 +35,7 @@ const Paso_2_Revision = () => {
     solo_lectura,
     paso2_revision_final_subdere = {},
     recomendaciones_desfavorables,
-temporalidad_gradualidad,
+    temporalidad_gradualidad,
     regiones_temporalidad,
     temporalidad_opciones,
     recursos_requeridos,
@@ -45,7 +44,6 @@ temporalidad_gradualidad,
     implementacion_acompanamiento,
     condiciones_ejercicio
   } = dataPasoSubdere;
-
 
   return (
     <>
@@ -61,6 +59,7 @@ temporalidad_gradualidad,
           <div className="my-4 ">
             <JustificacionDesfavorables
               recomendaciones_desfavorables={recomendaciones_desfavorables}
+              solo_lectura = {solo_lectura}
             />
           </div>
           <div className="my-4 ">
@@ -77,6 +76,7 @@ temporalidad_gradualidad,
                 temporalidad={temporalidad_gradualidad}
                 regiones_temporalidad={regiones_temporalidad}
                 temporalidad_opciones={temporalidad_opciones}
+                solo_lectura={solo_lectura}
               />
             </div>
             <div className="my-4 ">
@@ -92,7 +92,9 @@ temporalidad_gradualidad,
           </div>
         </div>
       </div>
-      <NavigationSubdere step={paso2_revision_final_subdere.numero_paso} id={dataPasoSubdere?.id}/>
+      <NavigationSubdere step={paso2_revision_final_subdere.numero_paso} id={dataPasoSubdere?.id} 
+      permisoSiguiente={paso2_revision_final_subdere?.campos_obligatorios_completados} 
+      solo_lectura={solo_lectura}/>
     </>
   );
 }
