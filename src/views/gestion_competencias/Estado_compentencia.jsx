@@ -12,7 +12,7 @@ const EstadoCompetencia = () => {
   const navigate = useNavigate();
   const [ competencia, setCompetencia ] = useState(null);
   const {dataFormSubdere} = useFormularioSubdere(id);
-  const mostrarMensaje = true; //aqui agregar el valor formulario_enviado o simil proveniente del backend
+  const mostrarMensajeFinalizada = competenciaDetails.estado === 'Finalizada';
 
   useEffect(() => {
     if (competenciaDetails) {
@@ -24,7 +24,7 @@ const EstadoCompetencia = () => {
     navigate(-1);
   };
 
-  const verRevisionSubdere = () => {
+  const handleVerRevisionSubdere = () => {
     navigate(`/home/revision_subdere/${id}/paso_1/`)
   }
 
@@ -70,12 +70,12 @@ const EstadoCompetencia = () => {
           />
         </div>
 
-        { mostrarMensaje && (
-          <div className="bluesky-container p-3">
+        { mostrarMensajeFinalizada && (
+          <div className="bluesky-container p-3 mt-4">
             <h3 className="text-sans-h3-blue mb-3">Revisión SUBDERE finalizada.</h3>
             <div className="d-flex pt-4 justify-content-between blue-border-top">
               <p className="text-sans-p-blue ">Realizada por {dataFormSubdere?.ultimo_editor?.nombre_completo} (SUBDERE) - {dataFormSubdere?.fecha_ultima_modificacion}</p>
-              <button className="text-decoration-underline btn-secundario-s" onClick={verRevisionSubdere}>Ver Revisión SUBDERE</button>
+              <button className="text-decoration-underline btn-secundario-s" onClick={handleVerRevisionSubdere}>Ver Revisión SUBDERE</button>
             </div> 
           </div>
         )}

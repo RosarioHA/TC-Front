@@ -147,6 +147,7 @@ export const Temporalidad = ({ temporalidad, solo_lectura }) => {
                               options=""
                               onSelectionChange=""
                               selected=""
+                              readOnly={solo_lectura}
                             />
                             {/* {errors.regiones && (
                               <p className="text-sans-h6-darkred mt-2 mb-0">
