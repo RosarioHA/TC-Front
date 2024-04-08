@@ -194,8 +194,6 @@ export const Subpaso_CuatroUno = ({ data, listaIndicadores, id, stepNumber, solo
       if (exito) {
         setMessage({ text: "Datos guardados exitosamente", type: 'success' });
         // setDatosGuardados(true);
-      } else {
-        setMessage({ text: "Error al guardar los datos", type: 'error' });
       }
     } catch (error) {
       console.error("Error en handleSave:", error);

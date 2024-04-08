@@ -9,6 +9,7 @@ import CKEditorField from "../../forms/ck_editor";
 
 
 export const RestoCampos = ({
+  solo_lectura,
   recursos_requeridos,
   modalidad_ejercicio,
   implementacion_acompanamiento,
@@ -86,7 +87,14 @@ export const RestoCampos = ({
             </h6>
           </div>
           <div className="mb-4 col-11">
-            Input
+          <CKEditorField
+              placeholder="Describe el costo por subtítulo e ítem"
+              data={recursos_requeridos || ''}
+              onBlur={(value) => handleBlur('recursos_requeridos', value)}
+              readOnly={solo_lectura}
+              loading={inputStatus?.recursos_requeridos?.loading}
+              saved={inputStatus?.recursos_requeridos?.saved}
+            />
           </div>
 
           <h4 className="text-sans-h4">
@@ -127,6 +135,7 @@ export const RestoCampos = ({
               placeholder="Describe el costo por subtítulo e ítem"
               data={implementacion_acompanamiento || ''}
               onBlur={(value) => handleBlur('implementacion_acompanamiento', value)}
+              readOnly={solo_lectura}
               loading={inputStatus?.implementacion_acompanamiento?.loading}
               saved={inputStatus?.implementacion_acompanamiento?.saved}
             />
@@ -143,7 +152,14 @@ export const RestoCampos = ({
           </div>
           <div className="mb-4 col-11">
             <h6>
-              El input
+            <CKEditorField
+              placeholder="Describe el costo por subtítulo e ítem"
+              data={condiciones_ejercicio || ''}
+              onBlur={(value) => handleBlur('condiciones_ejercicio', value)}
+              readOnly={solo_lectura}
+              loading={inputStatus?.condiciones_ejercicio?.loading}
+              saved={inputStatus?.condiciones_ejercicio?.saved}
+            />
             </h6>
           </div>
 

@@ -200,67 +200,58 @@ export const AgregarPersonal = ({
       <div className="col my-4">
         {/* Encabezado para cada grupo */}
         <div className="row mt-3">
-          <div className="col-1">
+          <div className="col-3 d-flex">
             <p className="text-sans-p-bold">N°</p>
-          </div>
-          <div className="col">
-            <p className="text-sans-p-bold">Estamento</p>
+            <p className="text-sans-p-bold ms-3">Estamento</p>
           </div>
           {title === 'indirecto' && (
-            <div className="col">
+            <div className="col ps-0">
               <p className="text-sans-p-bold">
-                Número de
-                <br /> personas
+                Número de personas
               </p>
             </div>
           )}
           <div className="col">
             <p className="text-sans-p-bold">
-              Renta bruta
-              <br /> mensual ($M)
+              Renta bruta <br/> mensual ($M)
             </p>
           </div>
           <div className="col">
             <p className="text-sans-p-bold ">
-              Grado
-              <br />
-              (Si
-              <br />
-              corresponde)
+              Grado (Si <br/> corresponde)
             </p>
           </div>
           {title === 'directo' && (
-            <div className="col">
+            <div className="col pe-5">
               <p className="text-sans-p-bold ms-3">
-                Comision <br />
-                de servicio
+                Comision de servicio
               </p>
             </div>
           )}
           {title === 'indirecto' && (
-            <div className="col-2 pe-5">
+            <div className="col">
               <p className="text-sans-p-bold ms-3">
-                Total <br />
-                rentas
+                Total rentas
               </p>
             </div>
           )}
           {!solo_lectura && (
             <div className="col">
-              <p className="text-sans-p-bold">Acción</p>
+              <p className="text-sans-p-bold ps-4">Acción</p>
             </div>
           )}
         </div>
         <form onSubmit={handleSubmit(onSubmit)}>
           {Array.isArray(nuevoPersonal) &&
             nuevoPersonal?.map((personal, index) => (
-              <div key={personal.id}>
-                <div className="row py-3 align-items-center me-3">
-                  <div className="col-1">
-                    {' '}
-                    <p className="text-sans-p-bold mt-3">{index + 1}</p>{' '}
-                  </div>
-                  <div className="col pe-2 ps-2">
+              <div
+                className="row align-items-center d-flex mb-3"
+                key={personal.id}
+              >
+                <div className="col-3 d-flex">
+                  <span className="text-sans-p-bold me-3 mt-3">{index + 1}</span>
+
+                  <div className="col-10">
                     <Controller
                       control={control}
                       name={`estamento_${personal.id}`}
@@ -280,14 +271,15 @@ export const AgregarPersonal = ({
                           }}
                           readOnly={solo_lectura}
                           selected={personal.estamento_label_value}
-                          error={error?.message} 
+                          error={error?.message}
                         />
                       )}
                     />
                   </div>
-                  {title === 'indirecto' && (
-                    <div className="col-1 px-2 ">
-                      <Controller
+                </div>
+                {title === 'indirecto' && (
+                  <div className="d-flex col px-2">
+                    <Controller
                       name={`personal[${index}].numero_personas_gore`}
                       control={control}
                       defaultValue={personal.numero_personas_gore || ''}
@@ -296,16 +288,22 @@ export const AgregarPersonal = ({
                           {...field}
                           placeholder="número"
                           loading={
-                            inputStatus[personal.id]?.numero_personas_gore?.loading && !error
+                            inputStatus[personal.id]?.numero_personas_gore
+                              ?.loading && !error
                           }
                           saved={
-                            inputStatus[personal.id]?.numero_personas_gore?.saved && !error
+                            inputStatus[personal.id]?.numero_personas_gore
+                              ?.saved && !error
                           }
                           error={error?.message}
                           disabled={solo_lectura}
                           onBlur={(e) => {
                             field.onBlur();
-                            if (personal.numero_personas_gore !== e.target.value && !error) {
+                            if (
+                              personal.numero_personas_gore !==
+                                e.target.value &&
+                              !error
+                            ) {
                               handleUpdate(
                                 personal.id,
                                 `numero_personas_gore`,
@@ -316,103 +314,94 @@ export const AgregarPersonal = ({
                         />
                       )}
                     />
-                    </div>
-                  )}
-                  <div className="col  px-4">
-                    <Controller
-                      name={`personal[${index}].renta_bruta`}
-                      control={control}
-                      render={({ field, fieldState: { error } }) => (
-                        <InputCosto
-                          {...field}
-                          value={personal.renta_bruta || ''}
-                          placeholder="Costo (M$)"
-                          error={error?.message}
-                          disabled={solo_lectura}
-                          loading={
-                            inputStatus[personal.id]?.renta_bruta?.loading &&
-                            !error
-                          }
-                          saved={
-                            inputStatus[personal.id]?.renta_bruta?.saved &&
-                            !error
-                          }
-                          onBlur={(e) => {
-                            field.onBlur();
-                            if (
-                              personal.renta_bruta !== e.target.value &&
-                              !error
-                            ) {
-                              handleUpdate(
-                                personal.id,
-                                'renta_bruta',
-                                e.target.value
-                              );
-                            }
-                          }}
-                        />
-                      )}
-                    />
                   </div>
-                  <div className="col-1">
-                    <Controller
-                      name={`personal[${index}].grado`}
-                      control={control}
-                      defaultValue={personal.grado || ''}
-                      render={({ field, fieldState: { error } }) => (
-                        <CustomInput
-                          {...field}
-                          placeholder="Grado"
-                          loading={
-                            inputStatus[personal.id]?.grado?.loading && !error
+                )}
+                <div className="col">
+                  <Controller
+                    name={`personal[${index}].renta_bruta`}
+                    control={control}
+                    render={({ field, fieldState: { error } }) => (
+                      <InputCosto
+                        {...field}
+                        value={personal.renta_bruta || ''}
+                        placeholder="Costo (M$)"
+                        error={error?.message}
+                        disabled={solo_lectura}
+                        loading={
+                          inputStatus[personal.id]?.renta_bruta?.loading &&
+                          !error
+                        }
+                        saved={
+                          inputStatus[personal.id]?.renta_bruta?.saved && !error
+                        }
+                        onBlur={(e) => {
+                          field.onBlur();
+                          if (
+                            personal.renta_bruta !== e.target.value &&
+                            !error
+                          ) {
+                            handleUpdate(
+                              personal.id,
+                              'renta_bruta',
+                              e.target.value
+                            );
                           }
-                          saved={
-                            inputStatus[personal.id]?.grado?.saved && !error
-                          }
-                          error={error?.message}
-                          disabled={solo_lectura}
-                          onBlur={(e) => {
-                            field.onBlur();
-                            if (personal.grado !== e.target.value && !error) {
-                              handleUpdate(
-                                personal.id,
-                                `grado`,
-                                e.target.value
-                              );
-                            }
-                          }}
-                        />
-                      )}
-                    />
-                  </div>
-                  {title === 'directo' && (
-                    <div className="col">
-                      <span className="text-sans-p-bold-blue px-5 mx-4">
-                        {personal.comision_servicio ? 'Sí' : 'No'}
-                      </span>
-                    </div>
-                  )}
-                  {title === 'indirecto' && (
-                    <div className="col-2 px-4">
-                      <span className="text-sans-p-bold-blue px-3">
-                        ${' '}
-                        {Number(personal.total_rentas).toLocaleString('es-CL')}
-                      </span>
-                    </div>
-                  )}
-
-                  {!solo_lectura && (
-                    <div className="col mx-auto">
-                      <button
-                        className="btn-terciario-ghost"
-                        onClick={() => eliminarPersonal(personal.id)}
-                      >
-                        <i className="material-symbols-rounded me-2">delete</i>
-                        <p className="mb-0 text-decoration-underline">Borrar</p>
-                      </button>
-                    </div>
-                  )}
+                        }}
+                      />
+                    )}
+                  />
                 </div>
+                <div className="col">
+                  <Controller
+                    name={`personal[${index}].grado`}
+                    control={control}
+                    defaultValue={personal.grado || ''}
+                    render={({ field, fieldState: { error } }) => (
+                      <CustomInput
+                        {...field}
+                        placeholder="Grado"
+                        loading={
+                          inputStatus[personal.id]?.grado?.loading && !error
+                        }
+                        saved={inputStatus[personal.id]?.grado?.saved && !error}
+                        error={error?.message}
+                        disabled={solo_lectura}
+                        onBlur={(e) => {
+                          field.onBlur();
+                          if (personal.grado !== e.target.value && !error) {
+                            handleUpdate(personal.id, `grado`, e.target.value);
+                          }
+                        }}
+                      />
+                    )}
+                  />
+                </div>
+                {title === 'directo' && (
+                  <div className="col">
+                    <span className="text-sans-p-bold-blue">
+                      {personal.comision_servicio ? 'Sí' : 'No'}
+                    </span>
+                  </div>
+                )}
+                {title === 'indirecto' && (
+                  <div className="col-2 border">
+                    <span className="text-sans-p-bold-blue">
+                      $ {Number(personal.total_rentas).toLocaleString('es-CL')}
+                    </span>
+                  </div>
+                )}
+
+                {!solo_lectura && (
+                  <div className="col ps-0">
+                    <button
+                      className="btn-terciario-ghost"
+                      onClick={() => eliminarPersonal(personal.id)}
+                    >
+                      <i className="material-symbols-rounded me-2">delete</i>
+                      <p className="mb-0 text-decoration-underline">Borrar</p>
+                    </button>
+                  </div>
+                )}
               </div>
             ))}
         </form>
@@ -443,7 +432,7 @@ export const AgregarPersonal = ({
                   <th scope="col">
                     <span className="py-2">#</span>
                   </th>
-                  <th scope="col-2">
+                  <th scope="col">
                     <span className="py-2">item</span>
                   </th>
                   <th scope="col">
@@ -467,7 +456,7 @@ export const AgregarPersonal = ({
                     .map((dato, index) => (
                       <tr key={index} className="my-5">
                         <td>{index + 1}</td>
-                        <td className="col-3">{calidadJuridica}</td>
+                        <td className="col">{calidadJuridica}</td>
                         <td>{dato.datos.total || ''}</td>
                         <td>{dato.datos.justificado || ''}</td>
                         <td>{dato.datos.justificar || ''}</td>

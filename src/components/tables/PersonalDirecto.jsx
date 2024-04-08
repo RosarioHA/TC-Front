@@ -657,9 +657,9 @@ const PersonalDirecto = ({
                 value={value}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                loading={paso5.descripcion_funciones_personal_directo.estados?.descripcion?.loading ?? false}
-                saved={paso5.descripcion_funciones_personal_directo.estados?.descripcion?.saved ?? false}
-                error={errors[`descripcion_${paso5.descripcion_funciones_personal_directo.id}`]?.message}
+                loading={paso5?.descripcion_funciones_personal_directo?.estados?.descripcion?.loading ?? false}
+                saved={paso5?.descripcion_funciones_personal_directo?.estados?.descripcion?.saved ?? false}
+                error={errors[`descripcion_${paso5.descripcion_funciones_personal_directo?.id}`]?.message}
                 readOnly={solo_lectura}
               />
             );

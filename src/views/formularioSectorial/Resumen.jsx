@@ -3,17 +3,14 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Avance } from "../../components/tables/Avance";
 import { useResumenFormulario } from '../../hooks/formulario/useResumenFormulario';
 
-const ResumenSectorial = () =>
-{
+const ResumenSectorial = () => {
   const navigate = useNavigate();
   const [ pasos, setPasos ] = useState([]);
   const { id } = useParams();
   const { resumen, actualizarFormularioEnviado } = useResumenFormulario(id);
 
-  useEffect(() =>
-  {
-    if (resumen)
-    {
+  useEffect(() => {
+    if (resumen) {
       const pasosArray = Object
         .keys(resumen)
         .filter(key => key.startsWith('paso'))
@@ -22,20 +19,15 @@ const ResumenSectorial = () =>
     }
   }, [ resumen ]);
 
-  const handleBackButtonClick = () =>
-  {
+  const handleBackButtonClick = () => {
     navigate(-1);
   }
 
-  const handleEnviarClick = async () =>
-  {
-    try
-    {
+  const handleEnviarClick = async () => {
+    try {
       await actualizarFormularioEnviado(true);
       navigate(`/home/success_formulario_sectorial/${id}`);
-
-    } catch (error)
-    {
+    } catch (error) {
       console.error("Error al enviar observaciones:", error);
     }
   };

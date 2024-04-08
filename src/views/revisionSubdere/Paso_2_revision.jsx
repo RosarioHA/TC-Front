@@ -4,7 +4,6 @@ import { MonoStepers } from "../../components/stepers/MonoStepers";
 import { FormSubdereContext } from "../../context/RevisionFinalSubdere";
 import { JustificacionDesfavorables } from "../../components/formSubdere/paso2/p3_Subdere";
 import { Temporalidad } from "../../components/formSubdere/paso2/p4_1_Subdere";
-import { Gradualidad } from "../../components/formSubdere/paso2/p4_2_Subdere";
 import { RestoCampos } from "../../components/formSubdere/paso2/p4_Subdere_resto";
 import { NavigationSubdere } from "../../components/layout/navigationSubdere";
 
@@ -34,13 +33,12 @@ const Paso_2_Revision = () => {
   if (!dataPasoSubdere || dataPasoSubdere.length === 0) return <div>No hay datos disponibles para el Paso 2</div>;
 
   const {
+    solo_lectura,
     paso2_revision_final_subdere = {},
     recomendaciones_desfavorables,
-    temporalidad,
+temporalidad_gradualidad,
     regiones_temporalidad,
     temporalidad_opciones,
-    gradualidad,
-    regiones_gradualidad,
     recursos_requeridos,
     modalidad_ejercicio,
     modalidad_ejercicio_opciones,
@@ -76,19 +74,14 @@ const Paso_2_Revision = () => {
             </div>
             <div className="my-4 ">
               <Temporalidad
-                temporalidad={temporalidad}
+                temporalidad={temporalidad_gradualidad}
                 regiones_temporalidad={regiones_temporalidad}
                 temporalidad_opciones={temporalidad_opciones}
               />
             </div>
             <div className="my-4 ">
-              <Gradualidad
-                gradualidad={gradualidad}
-                regiones_gradualidad={regiones_gradualidad}
-              />
-            </div>
-            <div className="my-4 ">
               <RestoCampos
+                solo_lectura={solo_lectura}
                 recursos_requeridos={recursos_requeridos}
                 modalidad_ejercicio={modalidad_ejercicio}
                 modalidad_ejercicio_opciones={modalidad_ejercicio_opciones}

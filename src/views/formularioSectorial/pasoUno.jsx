@@ -22,9 +22,6 @@ const PasoUno = () => {
   const formSectorialEnviado = data?.formulario_enviado
   console.log("formSectorialEnviado en paso 1", formSectorialEnviado)
 
-  console.log("observaciones en paso 1", observaciones)
-  console.log("pasoData en paso 1", pasoData)
-  console.log("data en paso 1", data)
 
   useEffect(() => {
     updateStepNumber(stepNumber);

@@ -9,6 +9,7 @@ import { apiTransferenciaCompentencia } from '../../../services/transferenciaCom
 export const Subpaso_uno = ({ dataPaso, id, stepNumber, marcojuridico, solo_lectura }) => {
   const { handleUpdatePaso} = useContext(FormularioContext);
   const { uploadDocumento } = useUploadMarcoJuridico(id, stepNumber); 
+  const [hasChanged, setHasChanged] = useState(false);
   const initialValues = {
     marcojuridico: marcojuridico || [],
     paso1: {
@@ -71,9 +72,12 @@ const fetchData = async () => {
       ...prevStatus,
       [inputName]: { loading: false, saved: false },
     }));
-  };
+    setHasChanged(true); 
+  }
 
   const handleSave = async (inputName) => {
+    if (!hasChanged) return; 
+    
     setInputStatus(prevStatus => ({
       ...prevStatus,
       [inputName]: { ...prevStatus[inputName], loading: true },
@@ -81,6 +85,9 @@ const fetchData = async () => {
 
     try {
       const success = await handleUpdatePaso(id, stepNumber, formData);
+      if (success) {
+        setHasChanged(false); 
+      }
       setInputStatus(prevStatus => ({
         ...prevStatus,
         [inputName]: { loading: false, saved: success },
@@ -93,6 +100,7 @@ const fetchData = async () => {
       }));
     }
   };
+
   const uploadFile = async (file) => {
     setIsUploading(true);
     try {

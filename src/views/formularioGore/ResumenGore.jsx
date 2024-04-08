@@ -3,17 +3,14 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Avance } from "../../components/tables/Avance";
 import { useResumenGore } from "../../hooks/fomularioGore/useResumenGore";
 
-const ResumenGore = () =>
-{
+const ResumenGore = () => {
   const navigate = useNavigate();
   const [ pasos, setPasos ] = useState([]);
   const { id } = useParams();
   const { resumen, loading, error, actualizarFormularioEnviado } = useResumenGore(id);
-
-  useEffect(() =>
-  {
-    if (resumen)
-    {
+  
+  useEffect(() => {
+    if (resumen) {
       const pasosArray = Object.keys(resumen)
         .filter(key => key.startsWith('paso'))
         .map(key => resumen[ key ]);
@@ -21,19 +18,15 @@ const ResumenGore = () =>
     }
   }, [ resumen ]);
 
-  const handleBackButtonClick = () =>
-  {
-    navigate(-1); // Navega a la página anterior
+  const handleBackButtonClick = () => {
+    navigate(-1); 
   };
 
-  const handleEnviarClick = async () =>
-  {
-    try
-    {
+  const handleEnviarClick = async () => {
+    try {
       await actualizarFormularioEnviado();
       navigate(`/home/success_formulario_gore/${id}`);
-    } catch (error)
-    {
+    } catch (error) {
       console.error("Error al enviar el formulario:", error);
     }
   };
@@ -97,7 +90,11 @@ const ResumenGore = () =>
           Atrás
         </button>
 
-        <button className="btn-primario-s" disabled={!resumen?.formulario_completo} onClick={handleEnviarClick}>
+        <button 
+        className="btn-primario-s" 
+        disabled={!resumen?.formulario_completo} 
+        onClick={handleEnviarClick}
+        >
           <u>Enviar el formulario</u>
         </button>
       </div>
