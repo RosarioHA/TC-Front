@@ -7,7 +7,7 @@ import { SubirArchivo } from "../../components/commons/subirArchivo";
 
 const OficioDipres = () => {
   const updateEtapa = useUpdateEtapa();
-  const { etapaNum, id } = useParams();
+  const { id } = useParams();
   const { competenciaDetails } = useCompetencia(id);
   const navigate = useNavigate();
   const [ competencia, setCompetencia ] = useState(null);
@@ -18,6 +18,8 @@ const OficioDipres = () => {
   const [isSubmitSuccessful, setIsSubmitSuccessful] = useState(false);
   const [fechaMaxima, setFechaMaxima] = useState('');
   const oficioEnviado = !!competenciaDetails?.etapa3?.oficio_origen;
+
+  const etapaNum = 3; 
 
   console.log("etapa num en oficio Dipres", etapaNum)
   console.log("competenciaDetails en oficio Dipres", competenciaDetails)
