@@ -53,6 +53,7 @@ export const Sub1_a = ({data, solo_lectura}) => {
           personalGore={p3_personal_directo_gore}
           estamentos={listado_estamentos}
           title="directo"
+          campoDestino="descripcion_perfiles_tecnicos_directo"
           seccion="p_3_1_a_personal_directo"
           seccionGore3="paso3_gore"
           dataPersonal={directos}
