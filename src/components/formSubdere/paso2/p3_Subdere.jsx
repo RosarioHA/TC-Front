@@ -2,19 +2,13 @@ import React, { useContext, useState } from "react";
 import CustomTextarea from "../../forms/custom_textarea";
 import { FormSubdereContext } from "../../../context/RevisionFinalSubdere";
 
-
-export const JustificacionDesfavorables = ({ recomendaciones_desfavorables }) =>
-{
-
+export const JustificacionDesfavorables = ({ recomendaciones_desfavorables, solo_lectura }) => {
   const { updatePasoSubdere } = useContext(FormSubdereContext);
   const [ inputStatus, setInputStatus ] = useState({
     justificacion: { loading: false, saved: false },
   });
 
-
-
-  const handleUpdate = async (justificacionId, field, value, saveImmediately = false) =>
-  {
+  const handleUpdate = async (justificacionId, field, value, saveImmediately = false) => {
     setInputStatus((prev) => ({
       ...prev,
       [ justificacionId ]: {
@@ -23,10 +17,8 @@ export const JustificacionDesfavorables = ({ recomendaciones_desfavorables }) =>
       },
     }));
 
-    if (saveImmediately)
-    {
-      try
-      {
+    if (saveImmediately) {
+      try {
         const payload = {
           recomendaciones_desfavorables: [ {
             id: justificacionId,
@@ -41,8 +33,7 @@ export const JustificacionDesfavorables = ({ recomendaciones_desfavorables }) =>
             [ field ]: { ...prevStatus[ justificacionId ][ field ], loading: false, saved: true },
           },
         }));
-      } catch (error)
-      {
+      } catch (error) {
         console.error('Error updating data', error);
         setInputStatus((prevStatus) => ({
           ...prevStatus,
@@ -54,7 +45,6 @@ export const JustificacionDesfavorables = ({ recomendaciones_desfavorables }) =>
       }
     }
   };
-
 
   return (
     <>
@@ -94,6 +84,7 @@ export const JustificacionDesfavorables = ({ recomendaciones_desfavorables }) =>
                             onBlur={(e) => handleUpdate(region.id, 'justificacion', e.target.value, true)}
                             loading={inputStatus[ region.id ]?.justificacion?.loading}
                             saved={inputStatus[ region.id ]?.justificacion?.saved}
+                            readOnly = {solo_lectura}
                           />
                         </div>
                       </div>

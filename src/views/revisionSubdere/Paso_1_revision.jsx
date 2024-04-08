@@ -6,7 +6,6 @@ import { AmbitoDefinitivo } from "../../components/formSubdere/paso1/p1_Subdere"
 import { RecomendacionTransferencia } from "../../components/formSubdere/paso1/p2_Subdere";
 import { NavigationSubdere } from "../../components/layout/navigationSubdere";
 
-
 const Paso_1_revision = () => {
   const {
     // dataFormSubdere,
@@ -62,7 +61,7 @@ const Paso_1_revision = () => {
         </div>
       </div>
       <NavigationSubdere step={paso1_revision_final_subdere.numero_paso} id={dataPasoSubdere?.id}
-      permisoSiguiente={paso1_revision_final_subdere.regiones_seleccionadas}/>
+      permisoSiguiente={paso1_revision_final_subdere.regiones_seleccionadas} solo_lectura={solo_lectura}/>
     </>
   );
 }
