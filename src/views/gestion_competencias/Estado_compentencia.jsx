@@ -4,12 +4,15 @@ import { SummaryDetail } from "../../components/tables/SummaryDetail";
 import { PersonsAssigned } from "../../components/tables/PersonsAssigned";
 import { VerticalStepper } from "../../components/stepers/VerticalStepper";
 import { useCompetencia } from "../../hooks/competencias/useCompetencias";
+import { useFormularioSubdere } from "../../hooks/revisionFinalSubdere/useFormularioSubdere";
 
 const EstadoCompetencia = () => {
   const { id } = useParams();
   const { competenciaDetails, loading, error } = useCompetencia(id);
   const navigate = useNavigate();
   const [ competencia, setCompetencia ] = useState(null);
+  const {dataFormSubdere} = useFormularioSubdere(id);
+  const mostrarMensaje = true; //aqui agregar el valor formulario_enviado o simil proveniente del backend
 
   useEffect(() => {
     if (competenciaDetails) {
@@ -20,6 +23,10 @@ const EstadoCompetencia = () => {
   const handleBackButtonClick = () => {
     navigate(-1);
   };
+
+  const verRevisionSubdere = () => {
+    navigate(`/home/revision_subdere/${id}/paso_1/`)
+  }
 
   if (loading) {
     return <div>Cargando detalles de la competencia...</div>;
@@ -62,6 +69,17 @@ const EstadoCompetencia = () => {
             usuariosGore={competencia.usuarios_gore}
           />
         </div>
+
+        { mostrarMensaje && (
+          <div className="bluesky-container p-3">
+            <h3 className="text-sans-h3-blue mb-3">Revisión SUBDERE finalizada.</h3>
+            <div className="d-flex pt-4 justify-content-between blue-border-top">
+              <p className="text-sans-p-blue ">Realizada por {dataFormSubdere?.ultimo_editor?.nombre_completo} (SUBDERE) - {dataFormSubdere?.fecha_ultima_modificacion}</p>
+              <button className="text-decoration-underline btn-secundario-s" onClick={verRevisionSubdere}>Ver Revisión SUBDERE</button>
+            </div> 
+          </div>
+        )}
+          
         <div className="mt-5 mx-0">
           <div className="text-sans-h2 my-3">Etapas de levantamiento de información</div>
           <VerticalStepper etapasObjeto={competencia.resumen_competencia} etapaDatos={competencia} id={id} />

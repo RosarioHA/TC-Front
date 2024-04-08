@@ -16,6 +16,12 @@
   margin-left: 10%;
 }
 
+.bluesky-container{
+  border: 1px solid $blue-border;
+  border-radius: 4px;
+  background-color: $blue-sky;
+}
+
 .container-home{
   background-color:rgba(207, 225, 243, 0.35);;
   width:83.2%;
