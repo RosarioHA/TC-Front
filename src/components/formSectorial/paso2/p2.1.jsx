@@ -572,31 +572,28 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
                   ))}
                   <div className="row">
                     <div className="p-2">
-                      {controlBotones[ organismoDisplay ]?.mostrarBotonGuardar ? (
-                        <button
-                          className="btn-secundario-s m-2"
-                          onClick={() =>
-                            intentarGuardarFila(
-                              filaEnEdicionId,
-                              organismoDisplay
-                            )
-                          }
-                        >
-                          <i className="material-symbols-rounded me-2">save</i>
-                          <p className="mb-0 text-decoration-underline">
-                            Guardar
-                          </p>
-                        </button>
-                      ) : (
-                        <button
-                          className="btn-secundario-s m-2 "
-                          onClick={() => agregarFila(organismoDisplay)}
-                        >
-                          <i className="material-symbols-rounded me-2">add</i>
-                          <p className="mb-0 text-decoration-underline">
-                            Agregar Otro
-                          </p>
-                        </button>
+                      {!solo_lectura && (
+                        controlBotones[ organismoDisplay ]?.mostrarBotonGuardar ? (
+                          <button
+                            className="btn-secundario-s m-2"
+                            onClick={() => intentarGuardarFila(filaEnEdicionId, organismoDisplay)}
+                          >
+                            <i className="material-symbols-rounded me-2">save</i>
+                            <p className="mb-0 text-decoration-underline">
+                              Guardar
+                            </p>
+                          </button>
+                        ) : (
+                          <button
+                            className="btn-secundario-s m-2"
+                            onClick={() => agregarFila(organismoDisplay)}
+                          >
+                            <i className="material-symbols-rounded me-2">add</i>
+                            <p className="mb-0 text-decoration-underline">
+                              Agregar Otro
+                            </p>
+                          </button>
+                        )
                       )}
                     </div>
                   </div>
