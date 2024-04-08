@@ -207,6 +207,7 @@ const ResumenCostos = ({
                         loading={subtitulo.estados?.descripcion?.loading ?? false}
                         saved={subtitulo.estados?.descripcion?.saved ?? false}
                         readOnly={solo_lectura}
+                        maxLength={300}
                       />
                     );
                   }}
@@ -260,6 +261,7 @@ const ResumenCostos = ({
                       loading={descripcionCostosTotalesLoading}
                       saved={descripcionCostosTotalesSaved}
                       readOnly={solo_lectura}
+                      maxLength={300}
                     />
                   );
                 }}
