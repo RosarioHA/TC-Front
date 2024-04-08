@@ -88,7 +88,7 @@ function App()
             {createProtectedRoute("editar_competencia/:id", EditarCompetencia, [ 'SUBDERE', 'Usuario Observador' ])}
             {createProtectedRoute("crear_competencia", CreacionCompetencia, [ 'SUBDERE', 'Usuario Observador' ])}
             {createProtectedRoute("estado_competencia/:id/subir_oficio/:etapaNum/:subetapaId", SubirOficio, [ 'SUBDERE', 'Usuario Observador' ])}
-            {createProtectedRoute("estado_competencia/:id/subir_oficio_dipres/:etapaNum/", SubirOficioDipres, [ 'SUBDERE', 'Usuario Observador' ])}
+            {createProtectedRoute("estado_competencia/:id/subir_oficio_dipres", SubirOficioDipres, [ 'SUBDERE', 'Usuario Observador' ])}
             {createProtectedRoute("estado_competencia/:id/subir_oficio_gore/:etapaNum/", SubirOficioGore, [ 'SUBDERE', 'Usuario Observador' ])}
             <Route path="estado_competencia/:id/" element={<EstadoCompentencia />} />
             <Route path="success_edicion" element={<SuccessEdicion />} />
