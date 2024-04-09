@@ -27,6 +27,7 @@ export const useEtapa3 = () => {
     try {
       const formData = new FormData();
       formData.append('archivo_minuta_etapa3', file);
+      formData.append('estado', 'Finalizada');
       const response = await apiTransferenciaCompentencia.patch(`/etapa3/${competenciaId}/`, formData);
 
       console.log("Archivo subido:", response.data);
