@@ -115,7 +115,7 @@ export const CostosIndirectosSector = ({ costosIndirectos, solo_lectura }) => {
                         <InputCosto
                           id={`total_anual_gore-${costo.id}`}
                           placeholder="Costo (M$)"
-                          value={costo.total_anual_gore || ''}
+                          value={costo.total_anual_gore}
                           onBlur={(e) =>
                             handleUpdate(
                               costo.id,

@@ -64,7 +64,7 @@ export const FisicoInfraestructura = ({ dataRecursosFisicos , solo_lectura}) => 
     }
   };
 
-  const onSubmit = (data) => console.log(data);
+  const onSubmit = () => handleUpdate();
 
   return (
     <>
@@ -148,7 +148,7 @@ export const FisicoInfraestructura = ({ dataRecursosFisicos , solo_lectura}) => 
                       </div>
                       <div className="d-flex flex-row col">
                         <div className="my-3 col-6 ms-5 ps-2">
-                        <div className="text-start my-1">Costo (M$)</div>
+                        <div className="text-start my-1">Costo total (M$)</div>
                           <Controller
                             name={`fichas[${index}].costo_total`}
                             control={control}

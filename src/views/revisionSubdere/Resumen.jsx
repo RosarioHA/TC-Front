@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams} from 'react-router-dom'; 
+import { useNavigate, useParams } from 'react-router-dom';
 import { Avance } from "../../components/tables/Avance";
 import { useResumenFinal } from "../../hooks/revisionFinalSubdere/useResumenFinal";
 
-const ResumenFinal = () => {
+const ResumenFinal = () =>
+{
   const navigate = useNavigate();
   const [ pasos, setPasos ] = useState([]);
   const { id } = useParams();
