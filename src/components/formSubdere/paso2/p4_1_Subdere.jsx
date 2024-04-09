@@ -1,22 +1,35 @@
 import { useContext, useState, useEffect } from 'react';
 import CustomTextarea from '../../forms/custom_textarea';
 import DropdownSelect from '../../dropdown/select';
-import { CheckboxRegion } from '../../dropdown/checkboxRegion';
+import { CheckboxRegion2 } from '../../dropdown/checkboxRegiones2.0';
 import { FormSubdereContext } from '../../../context/RevisionFinalSubdere';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { validacionTemporalidadGradualidad } from '../../../validaciones/temporalidadGradualidad';
 
-export const Temporalidad = ({ temporalidad, solo_lectura }) => {
+export const Temporalidad = ({
+  temporalidad,
+  solo_lectura,
+  regiones_recomendadas,
+  temporalidad_opciones,
+  regiones_temporalidad,
+}) => {
   const { updatePasoSubdere } = useContext(FormSubdereContext);
-  const [grupos, setGrupos] = useState(temporalidad);
-  const { control, handleSubmit } = useForm({
+  const [grupos, setGrupos] = useState(temporalidad || []);
+  const {
+    control,
+    handleSubmit,
+  } = useForm({
     resolver: yupResolver(validacionTemporalidadGradualidad),
     mode: 'onBlur',
+    reValidateMode: 'onChange',
   });
 
   useEffect(() => {
-    setGrupos(Array.isArray(temporalidad) ? temporalidad : []);
+    const gruposOrdenados = Array.isArray(temporalidad)
+      ? temporalidad.sort((a, b) => a.id - b.id)
+      : [];
+    setGrupos(gruposOrdenados);
   }, [temporalidad]);
 
   const [inputStatus, setInputStatus] = useState({
@@ -24,7 +37,7 @@ export const Temporalidad = ({ temporalidad, solo_lectura }) => {
     gradualidad_meses: { loading: false, saved: false },
     justificacion_gradualidad: { loading: false, saved: false },
     temporalidad: { loading: false, saved: false },
-    region_label_value: { loading: false, saved: false },
+    region: { loading: false, saved: false },
   });
 
   const agregarGrupo = async () => {
@@ -35,10 +48,10 @@ export const Temporalidad = ({ temporalidad, solo_lectura }) => {
         temporalidad_gradualidad: [nuevoGrupoPayload],
       });
       if (respuesta && respuesta.grupoCreado) {
-        setGrupos((gruposActuales) => [
-          ...gruposActuales,
-          respuesta.grupoCreado,
-        ]);
+        setGrupos((gruposActuales) => {
+          const nuevosGrupos = [...gruposActuales, respuesta.grupoCreado];
+          return nuevosGrupos.sort((a, b) => a.id - b.id);
+        });
       } else {
         console.error('El grupo no fue creada correctamente');
       }
@@ -48,6 +61,15 @@ export const Temporalidad = ({ temporalidad, solo_lectura }) => {
   };
 
   const handleUpdate = async (grupoId, field, value) => {
+    // Obtener el estado actual del grupo que se va a actualizar
+    const grupoActual = grupos.find((grupo) => grupo.id === grupoId);
+
+    // Crear un nuevo objeto con todas las propiedades existentes del grupo más la nueva propiedad actualizada
+    const nuevoGrupo = {
+      ...grupoActual, // Esto copia todas las propiedades existentes
+      [field]: value, // Esto actualiza la propiedad específica con el nuevo valor
+    };
+
     setInputStatus((prev) => ({
       ...prev,
       [grupoId]: {
@@ -58,12 +80,7 @@ export const Temporalidad = ({ temporalidad, solo_lectura }) => {
 
     try {
       const payload = {
-        temporalidad_gradualidad: [
-          {
-            id: grupoId,
-            [field]: value,
-          },
-        ],
+        temporalidad_gradualidad: [nuevoGrupo],
       };
       await updatePasoSubdere(payload);
       setInputStatus((prevStatus) => ({
@@ -110,7 +127,10 @@ export const Temporalidad = ({ temporalidad, solo_lectura }) => {
     agregarGrupo();
   };
 
-  console.log();
+  const opcionesRegion = regiones_temporalidad.map((region) => ({
+    label: region.label,
+    value: region.value,
+  }));
 
   return (
     <>
@@ -131,219 +151,339 @@ export const Temporalidad = ({ temporalidad, solo_lectura }) => {
               <form onSubmit={handleSubmit(onSubmit)}>
                 {Array.isArray(grupos) && grupos.length > 0 ? (
                   grupos.map((grupo, index) => (
-                    <div key={grupo.id}>
-                      <div className="row border my-4">
-                        <div className="col-1 border-end border-bottom">
-                          <p className="text-sans-p-bold my-2">
-                            Grupo {index + 1}
-                          </p>
-                        </div>
-
-                        <div className="col">
-                          <div className="col-8 mt-2 mb-4 mx-3 p-2">
-                            <CheckboxRegion
-                              label="Región (Obligatorio)"
-                              placeholder="Elige la o las regiones donde se ejercerá la competencia"
-                              options=""
-                              onSelectionChange=""
-                              selected=""
-                            />
-                            {/* {errors.regiones && (
-                              <p className="text-sans-h6-darkred mt-2 mb-0">
-                                {errors.regiones.message}
-                              </p>
-                            )} */}
-                          </div>
-                          <div className="col">
-                            <span className="mx-4 my-5 text-sans-h5">
-                              Temporalidad
-                            </span>
-                            <div className="col-8 my-2 mx-3 p-2">
-                              <Controller
-                                name="temporalidad"
-                                control={control}
-                                render={() => (
-                                  <DropdownSelect
-                                    id="ambito_competencia"
-                                    label="Elige el ámbito de la competencia (Obligatorio)"
-                                    placeholder="Definitiva o temporal"
-                                    name="temporalidad"
-                                    options=""
-                                    onSelectionChange=""
-                                    selected=""
-                                    readOnly={solo_lectura}
-                                  />
-                                )}
-                              />
-                            </div>
-                            <div className="col-11 my-2 mx-3 p-2">
-                              <Controller
-                                control={control}
-                                name={`grupos[${index}].justificacion_temporalidad`}
-                                defaultValue={
-                                  grupo.justificacion_temporalidad || ''
-                                }
-                                render={({ field, fieldState: { error } }) => (
-                                  <CustomTextarea
-                                    {...field}
-                                    label="Justifica la temporalidad de este grupo"
-                                    placeholder="Describe los costos de la plataforma o software"
-                                    error={error?.message}
-                                    readOnly={solo_lectura}
-                                    maxLength={500}
-                                    loading={
-                                      inputStatus[grupo.id]
-                                        ?.justificacion_temporalidad?.loading &&
-                                      !error
-                                    }
-                                    saved={
-                                      inputStatus[grupo.id]
-                                        ?.justificacion_temporalidad?.saved &&
-                                      !error
-                                    }
-                                    onBlur={(e) => {
-                                      field.onBlur();
-                                      if (
-                                        grupo.justificacion_temporalidad !==
-                                          e.target.value &&
-                                        !error
-                                      ) {
-                                        handleUpdate(
-                                          grupo.id,
-                                          'justificacion_temporalidad',
-                                          e.target.value
-                                        );
-                                      }
-                                    }}
-                                  />
-                                )}
-                              />
-                            </div>
+                    <>
+                      <div key={grupo.id}>
+                        <div className="row border my-4">
+                          <div className="col-1 border-end border-bottom">
+                            <p className="text-sans-p-bold my-2">
+                              Grupo {index + 1}
+                            </p>
                           </div>
 
                           <div className="col">
-                            <span className="mx-4 my-5 text-sans-h5">
-                              Gradualidad
-                            </span>
-                            <div className="col-8 my-2 mx-3 p-2">
-                              <Controller
-                                control={control}
-                                name={`grupos[${index}].gradualidad_meses`}
-                                defaultValue={grupo.gradualidad_meses || ''}
-                                render={({ field, fieldState: { error } }) => (
-                                  <CustomTextarea
-                                    {...field}
-                                    label="Gradualidad en meses para este grupo"
-                                    placeholder="meses"
-                                    descripcion="Campo númerico"
-                                    error={error?.message}
-                                    readOnly={solo_lectura}
-                                    maxLength={500}
-                                    loading={
-                                      inputStatus[grupo.id]?.gradualidad_meses
-                                        ?.loading && !error
-                                    }
-                                    saved={
-                                      inputStatus[grupo.id]?.gradualidad_meses
-                                        ?.saved && !error
-                                    }
-                                    onBlur={(e) => {
-                                      field.onBlur();
-                                      if (
-                                        grupo.gradualidad_meses !==
-                                          e.target.value &&
-                                        !error
-                                      ) {
-                                        handleUpdate(
-                                          grupo.id,
-                                          'gradualidad_meses',
-                                          e.target.value
-                                        );
-                                      }
+                            <div className="col-8 mt-2 mb-4 p-2">
+                              {regiones_recomendadas.length === 1 ? (
+                                <>
+                                  Región:{' '}
+                                  <div className="border-gris my-2 px-3 py-3">
+                                    {grupo.region_label_value[0].label}
+                                  </div>
+                                </>
+                              ) : (
+                                <>
+                                  <CheckboxRegion2
+                                    label="Región (Obligatorio)"
+                                    options={opcionesRegion}
+                                    selectedRegions={grupo.region_label_value.map(
+                                      (item) => ({
+                                        label: item.label,
+                                        value: item.value,
+                                      })
+                                    )}
+                                    onSelectionChange={(selectedOptions) => {
+                                      handleUpdate(
+                                        grupo.id,
+                                        'region',
+                                        selectedOptions.map(
+                                          (option) => option.value
+                                        )
+                                      );
                                     }}
+                                    readOnly={solo_lectura}
                                   />
-                                )}
-                              />
+                                  {grupo.region_label_value.length > 1 && (
+                                    <div className="mt-3">
+                                      Regiones seleccionadas :{' '}
+                                      <ol className="border-gris mt-2 px-3 py-3">
+                                        {grupo.region_label_value.map(
+                                          (item, index) => (
+                                            <li
+                                              key={index}
+                                              className="px-2 mx-3"
+                                            >
+                                              {item.label}
+                                            </li>
+                                          )
+                                        )}
+                                      </ol>
+                                    </div>
+                                  )}
+                                </>
+                              )}
                             </div>
-                            <div className="col-11 my-2 mx-3 p-2">
-                              <Controller
-                                control={control}
-                                name={`grupos[${index}].justificacion_gradualidad`}
-                                defaultValue={
-                                  grupo.justificacion_gradualidad || ''
-                                }
-                                render={({ field, fieldState: { error } }) => (
-                                  <CustomTextarea
-                                    {...field}
-                                    label="Justifica la gradualidadn de este grupo"
-                                    placeholder="Describe los costos de la plataforma o software"
-                                    error={error?.message}
-                                    readOnly={solo_lectura}
-                                    maxLength={500}
-                                    loading={
-                                      inputStatus[grupo.id]
-                                        ?.justificacion_gradualidad?.loading &&
-                                      !error
-                                    }
-                                    saved={
-                                      inputStatus[grupo.id]
-                                        ?.justificacion_gradualidad?.saved &&
-                                      !error
-                                    }
-                                    onBlur={(e) => {
-                                      field.onBlur();
-                                      if (
-                                        grupo.justificacion_gradualidad !==
-                                          e.target.value &&
-                                        !error
-                                      ) {
-                                        handleUpdate(
-                                          grupo.id,
-                                          'justificacion_gradualidad',
-                                          e.target.value
-                                        );
-                                      }
-                                    }}
+                            <div className="col">
+                              <span className="mx-4 my-5 text-sans-h5">
+                                Temporalidad
+                              </span>
+                              <div className=" d-flex  flex-row col my-2 mx-3 p-2">
+                                <div className="col-5 me-2">
+                                  <Controller
+                                    name={`grupos[${index}].temporalidad`}
+                                    control={control}
+                                    defaultValue={grupo.temporalidad} // Asegúrate de que este valor inicial refleje el estado actual
+                                    render={({ field }) => (
+                                      <DropdownSelect
+                                        id="temporalidad"
+                                        label="Elige la temporalidad para este grupo"
+                                        placeholder="Definitiva o temporal"
+                                        name={`grupos[${index}].temporalidad`}
+                                        options={temporalidad_opciones.map(
+                                          (opcion) => ({
+                                            label: opcion.key,
+                                            value: opcion.value,
+                                          })
+                                        )}
+                                        onSelectionChange={(selectedOption) => {
+                                          const selectedValue =
+                                            selectedOption.value; // Solo el valor
+                                          field.onChange(selectedValue);
+                                          handleUpdate(
+                                            grupo.id,
+                                            'temporalidad',
+                                            selectedValue
+                                          );
+                                        }}
+                                        selected={
+                                          field.value || grupo.temporalidad
+                                        } // Asegúrate de que este valor se inicializa correctamente con el estado actual
+                                        readOnly={solo_lectura}
+                                      />
+                                    )}
                                   />
+                                </div>
+                                {grupo.temporalidad === 'Temporal' && (
+                                  <div className="col-5 ms-3">
+                                    <Controller
+                                      control={control}
+                                      name={`grupos[${index}].anios`}
+                                      defaultValue={grupo.anios || ''}
+                                      render={({
+                                        field,
+                                        fieldState: { error },
+                                      }) => (
+                                        <CustomTextarea
+                                          {...field}
+                                          label="Temporalidad en años"
+                                          placeholder="Años"
+                                          descripcion="Campo numérico"
+                                          error={error?.message}
+                                          readOnly={solo_lectura}
+                                          loading={
+                                            inputStatus[grupo.id]?.anios
+                                              ?.loading && !error
+                                          }
+                                          saved={
+                                            inputStatus[grupo.id]?.anios
+                                              ?.saved && !error
+                                          }
+                                          onBlur={(e) => {
+                                            field.onBlur();
+                                            if (
+                                              grupo.anios !== e.target.value &&
+                                              !error
+                                            ) {
+                                              handleUpdate(
+                                                grupo.id,
+                                                'anios',
+                                                e.target.value
+                                              );
+                                            }
+                                          }}
+                                        />
+                                      )}
+                                    />
+                                  </div>
                                 )}
-                              />
+                              </div>
+                              <div className="col-11 my-2 mx-3 p-2">
+                                <Controller
+                                  control={control}
+                                  name={`grupos[${index}].justificacion_temporalidad`}
+                                  defaultValue={
+                                    grupo.justificacion_temporalidad || ''
+                                  }
+                                  render={({
+                                    field,
+                                    fieldState: { error },
+                                  }) => (
+                                    <CustomTextarea
+                                      {...field}
+                                      label="Justifica la temporalidad de este grupo"
+                                      placeholder="Describe los costos de la plataforma o software"
+                                      error={error?.message}
+                                      readOnly={solo_lectura}
+                                      maxLength={500}
+                                      loading={
+                                        inputStatus[grupo.id]
+                                          ?.justificacion_temporalidad
+                                          ?.loading && !error
+                                      }
+                                      saved={
+                                        inputStatus[grupo.id]
+                                          ?.justificacion_temporalidad?.saved &&
+                                        !error
+                                      }
+                                      onBlur={(e) => {
+                                        field.onBlur();
+                                        if (
+                                          grupo.justificacion_temporalidad !==
+                                            e.target.value &&
+                                          !error
+                                        ) {
+                                          handleUpdate(
+                                            grupo.id,
+                                            'justificacion_temporalidad',
+                                            e.target.value
+                                          );
+                                        }
+                                      }}
+                                    />
+                                  )}
+                                />
+                              </div>
+                            </div>
+
+                            <div className="col">
+                              <span className="mx-4 my-5 text-sans-h5">
+                                Gradualidad
+                              </span>
+                              <div className="col-8 my-2 mx-3 p-2">
+                                <Controller
+                                  control={control}
+                                  name={`grupos[${index}].gradualidad_meses`}
+                                  defaultValue={grupo.gradualidad_meses || ''}
+                                  render={({
+                                    field,
+                                    fieldState: { error },
+                                  }) => (
+                                    <CustomTextarea
+                                      {...field}
+                                      label="Gradualidad en meses para este grupo"
+                                      placeholder="meses"
+                                      descripcion="Campo númerico"
+                                      error={error?.message}
+                                      readOnly={solo_lectura}
+                                      loading={
+                                        inputStatus[grupo.id]?.gradualidad_meses
+                                          ?.loading && !error
+                                      }
+                                      saved={
+                                        inputStatus[grupo.id]?.gradualidad_meses
+                                          ?.saved && !error
+                                      }
+                                      onBlur={(e) => {
+                                        field.onBlur();
+                                        if (
+                                          grupo.gradualidad_meses !==
+                                            e.target.value &&
+                                          !error
+                                        ) {
+                                          handleUpdate(
+                                            grupo.id,
+                                            'gradualidad_meses',
+                                            e.target.value
+                                          );
+                                        }
+                                      }}
+                                    />
+                                  )}
+                                />
+                              </div>
+                              <div className="col-11 my-2 mx-3 p-2">
+                                <Controller
+                                  control={control}
+                                  name={`grupos[${index}].justificacion_gradualidad`}
+                                  defaultValue={
+                                    grupo.justificacion_gradualidad || ''
+                                  }
+                                  render={({
+                                    field,
+                                    fieldState: { error },
+                                  }) => (
+                                    <CustomTextarea
+                                      {...field}
+                                      label="Justifica la gradualidadn de este grupo"
+                                      placeholder="Describe los costos de la plataforma o software"
+                                      error={error?.message}
+                                      readOnly={solo_lectura}
+                                      maxLength={500}
+                                      loading={
+                                        inputStatus[grupo.id]
+                                          ?.justificacion_gradualidad
+                                          ?.loading && !error
+                                      }
+                                      saved={
+                                        inputStatus[grupo.id]
+                                          ?.justificacion_gradualidad?.saved &&
+                                        !error
+                                      }
+                                      onBlur={(e) => {
+                                        field.onBlur();
+                                        if (
+                                          grupo.justificacion_gradualidad !==
+                                            e.target.value &&
+                                          !error
+                                        ) {
+                                          handleUpdate(
+                                            grupo.id,
+                                            'justificacion_gradualidad',
+                                            e.target.value
+                                          );
+                                        }
+                                      }}
+                                    />
+                                  )}
+                                />
+                              </div>
                             </div>
                           </div>
+                          <hr />
+                          {!solo_lectura && (
+                            <div className="d-flex justify-content-end p-3">
+                              {regiones_recomendadas.length > 1 &&
+                                temporalidad.length > 1 && (
+                                  <button
+                                    className="btn-terciario-ghost"
+                                    onClick={() => eliminarGrupo(grupo.id)}
+                                  >
+                                    <i className="material-symbols-rounded me-2">
+                                      delete
+                                    </i>
+                                    <p className="mb-0 text-decoration-underline">
+                                      Borrar 
+                                    </p>
+                                  </button>
+                                )}
+                            </div>
+                          )}
                         </div>
-                        <hr />
-                        {/* {!solo_lectura && ( */}
-                        <div className="d-flex justify-content-end p-3">
-                          <button
-                            className="btn-terciario-ghost"
-                            onClick={() => eliminarGrupo(grupo.id)}
-                          >
-                            <i className="material-symbols-rounded me-2">
-                              delete
-                            </i>
-                            <p className="mb-0 text-decoration-underline">
-                              Borrar Etapa
-                            </p>
-                          </button>
-                        </div>
-                        {/* )} */}
-                        {!solo_lectura && (
-                          <button
-                            className="btn-secundario-s m-2"
-                            type="button"
-                            onClick={agregarGrupo}
-                          >
-                            <i className="material-symbols-rounded me-2">add</i>
-                            <p className="mb-0 text-decoration-underline">
-                              Agregar ficha técnica
-                            </p>
-                          </button>
-                        )}
                       </div>
-                    </div>
+                      {index === grupos.length - 1 &&
+                        !solo_lectura &&
+                        regiones_recomendadas.length > 1 &&
+                        regiones_temporalidad.length > 0 && (
+                          <>
+                            <div className="d-flex justify-content-start ">
+                              <button
+                                className="btn-secundario-s m-2"
+                                type="button"
+                                onClick={agregarGrupo}
+                              >
+                                <i className="material-symbols-rounded me-2">
+                                  add
+                                </i>
+                                <u>Agregar grupo</u>
+                              </button>
+                            </div>
+                          </>
+                        )}
+                    </>
                   ))
                 ) : (
-                  <div className="alert alert-info" >
-                   No hay regiones con recomendación favorable en la selección. Esta sección del formulario es solo para las regiones con recomendación favorable.
+                  <div className="alert alert-info">
+                    No hay regiones con recomendación favorable en la selección.
+                    Esta sección del formulario es solo para las regiones con
+                    recomendación favorable.
                   </div>
                 )}
               </form>

@@ -1,10 +1,10 @@
-import React, { useContext, useState } from "react";
-import CustomTextarea from "../../forms/custom_textarea";
-import DropdownSelect from "../../dropdown/select";
+import { useContext, useState } from "react";
+// import CustomTextarea from "../../forms/custom_textarea";
+// import DropdownSelect from "../../dropdown/select";
 import { OpcionesAB } from "../../forms/opciones_AB";
 import { FormSubdereContext } from "../../../context/RevisionFinalSubdere";
-import { useForm, Controller } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
+// import { useForm, Controller } from "react-hook-form";
+// import { yupResolver } from "@hookform/resolvers/yup";
 import CKEditorField from "../../forms/ck_editor";
 
 
@@ -13,27 +13,28 @@ export const RestoCampos = ({
   recursos_requeridos,
   modalidad_ejercicio,
   implementacion_acompanamiento,
-  condiciones_ejercicio
-}) => {
+  condiciones_ejercicio,
+  nombre_compentencia
+}) =>
+{
 
   const { updatePasoSubdere } = useContext(FormSubdereContext);
-  const [inputStatus, setInputStatus] = useState({
+  const [ inputStatus, setInputStatus ] = useState({
     justificacion: { loading: false, saved: false },
   });
+
+  const modalidadEjercicioInicial = modalidad_ejercicio === "Exclusiva";
 
   const handleBlur = (fieldName, value) => {
     handleUpdate(fieldName, value, true);
   };
 
   const handleUpdate = async (field, value, saveImmediately = false) => {
-    // Actualiza el estado de inputStatus para indicar que un campo está siendo actualizado
     setInputStatus((prev) => ({
       ...prev,
-      [field]: { ...prev[field], loading: true, saved: false },
+      [ field ]: { ...prev[ field ], loading: true, saved: false },
     }));
 
-    // Verifica si el campo a actualizar es 'modalidad_ejercicio'
-    // y ajusta el valor de acuerdo a 'Exclusiva' o 'Compartida'
     let adjustedValue = value;
     if (field === 'modalidad_ejercicio') {
       adjustedValue = value ? 'Exclusiva' : 'Compartida';
@@ -41,32 +42,25 @@ export const RestoCampos = ({
 
     if (saveImmediately) {
       try {
-        // Construye el payload con el campo y el valor ajustado
         const payload = {
-          [field]: adjustedValue,
+          [ field ]: adjustedValue,
         };
-
-        // Llama a la función que actualiza los datos en el backend
         await updatePasoSubdere(payload);
-
-        // Actualiza el estado de inputStatus para indicar que el campo ha sido guardado exitosamente
         setInputStatus((prevStatus) => ({
           ...prevStatus,
-          [field]: { loading: false, saved: true },
+          [ field ]: { loading: false, saved: true },
         }));
       } catch (error) {
         console.error('Error updating data:', error);
-        // En caso de error, actualiza el estado para reflejar que la actualización falló
         setInputStatus((prevStatus) => ({
           ...prevStatus,
-          [field]: { loading: false, saved: false },
+          [ field ]: { loading: false, saved: false },
         }));
       }
     } else {
-      // Si saveImmediately no es true, simplemente actualiza el valor en el estado local
       setInputStatus((prevStatus) => ({
         ...prevStatus,
-        [field]: { value: adjustedValue, loading: false, saved: false },
+        [ field ]: { value: adjustedValue, loading: false, saved: false },
       }));
     }
   };
@@ -87,7 +81,7 @@ export const RestoCampos = ({
             </h6>
           </div>
           <div className="mb-4 col-11">
-          <CKEditorField
+            <CKEditorField
               placeholder="Describe el costo por subtítulo e ítem"
               data={recursos_requeridos || ''}
               onBlur={(value) => handleBlur('recursos_requeridos', value)}
@@ -105,20 +99,34 @@ export const RestoCampos = ({
               Texto de apoyo
             </h6>
           </div>
-          <div className="mb-4 col-11">
-            <OpcionesAB
-              id={`modalidad_ejercicio`}
-              initialState={modalidad_ejercicio}
-              handleEstadoChange={(value) =>
-                handleUpdate('modalidad_ejercicio', value, true)
-              }
-              loading={inputStatus?.modalidad_ejercicio?.loading}
-              saved={inputStatus?.modalidad_ejercicio?.saved}
-              altA="Exclusiva"
-              altB="Compartida"
-              field="modalidad_ejercicio"
-              fieldName="modalidad_ejercicio"
-            />
+          <div className=" d-flex  justify-content-between mb-4 col-11 ">
+            <div className="col-1 mx-4 my-0 text-sans-p-bold"> #</div>
+            <div className="col-4 mx-4 my-0 text-sans-p-bold">
+
+              Competencias
+            </div>
+            <div className="col-6 my-0 mx-5 text-sans-p-bold">
+              Elige la modalidad de ejercicio
+            </div>
+          </div>
+          <div className=" d-flex  justify-content-between mb-4 col-11 subrayado-gris">
+            <div className="col-1 mx-4 my-3"> 1</div>
+            <div className="col-4 mx-4 my-3">
+              {nombre_compentencia}
+            </div>
+            <div className="col-6 my-2 mx-5">
+              <OpcionesAB
+                id={`modalidad_ejercicio`}
+                initialState={modalidadEjercicioInicial} // Usar el valor booleano convertido
+                handleEstadoChange={(value) => handleUpdate('modalidad_ejercicio', value, true)}
+                loading={inputStatus?.modalidad_ejercicio?.loading}
+                saved={inputStatus?.modalidad_ejercicio?.saved}
+                altA="Exclusiva"
+                altB="Compartida"
+                field="modalidad_ejercicio"
+                fieldName="modalidad_ejercicio"
+              />
+            </div>
           </div>
 
           <h4 className="text-sans-h4">
@@ -131,14 +139,14 @@ export const RestoCampos = ({
           </div>
           <div className="mb-4 col-11">
             <h6>
-            <CKEditorField
-              placeholder="Describe el costo por subtítulo e ítem"
-              data={implementacion_acompanamiento || ''}
-              onBlur={(value) => handleBlur('implementacion_acompanamiento', value)}
-              readOnly={solo_lectura}
-              loading={inputStatus?.implementacion_acompanamiento?.loading}
-              saved={inputStatus?.implementacion_acompanamiento?.saved}
-            />
+              <CKEditorField
+                placeholder="Describe el costo por subtítulo e ítem"
+                data={implementacion_acompanamiento || ''}
+                onBlur={(value) => handleBlur('implementacion_acompanamiento', value)}
+                readOnly={solo_lectura}
+                loading={inputStatus?.implementacion_acompanamiento?.loading}
+                saved={inputStatus?.implementacion_acompanamiento?.saved}
+              />
             </h6>
           </div>
 
@@ -152,14 +160,14 @@ export const RestoCampos = ({
           </div>
           <div className="mb-4 col-11">
             <h6>
-            <CKEditorField
-              placeholder="Describe el costo por subtítulo e ítem"
-              data={condiciones_ejercicio || ''}
-              onBlur={(value) => handleBlur('condiciones_ejercicio', value)}
-              readOnly={solo_lectura}
-              loading={inputStatus?.condiciones_ejercicio?.loading}
-              saved={inputStatus?.condiciones_ejercicio?.saved}
-            />
+              <CKEditorField
+                placeholder="Describe el costo por subtítulo e ítem"
+                data={condiciones_ejercicio || ''}
+                onBlur={(value) => handleBlur('condiciones_ejercicio', value)}
+                readOnly={solo_lectura}
+                loading={inputStatus?.condiciones_ejercicio?.loading}
+                saved={inputStatus?.condiciones_ejercicio?.saved}
+              />
             </h6>
           </div>
 
