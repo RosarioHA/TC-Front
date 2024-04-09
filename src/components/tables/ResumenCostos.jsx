@@ -173,7 +173,7 @@ const ResumenCostos = ({
               <div className="col">
                 <p className="text-sans-p-bold mb-0 mt-3 ms-5">{formatearNumero(subtitulo.total_anual)}</p>
               </div>
-              <div className="col-7 ps-2 d-flex">
+              <div className="col-7 ps-2">
                 <Controller
                   control={control}
                   name={`descripcion_${subtitulo.id}`}
@@ -207,6 +207,7 @@ const ResumenCostos = ({
                         loading={subtitulo.estados?.descripcion?.loading ?? false}
                         saved={subtitulo.estados?.descripcion?.saved ?? false}
                         readOnly={solo_lectura}
+                        maxLength={300}
                       />
                     );
                   }}
@@ -225,7 +226,7 @@ const ResumenCostos = ({
               {/* sumatoria de los valores de todos los subtitulos de la tabla */}
               <p className="text-sans-p-bold mb-0 mt-3 ms-5">{formatearNumero(costosTotales)}</p>
             </div>
-            <div className="col-7 ps-2 d-flex">
+            <div className="col-7 ps-2">
               <Controller
                 control={control}
                 name="descripcionCostosTotales"
@@ -260,6 +261,7 @@ const ResumenCostos = ({
                       loading={descripcionCostosTotalesLoading}
                       saved={descripcionCostosTotalesSaved}
                       readOnly={solo_lectura}
+                      maxLength={300}
                     />
                   );
                 }}
