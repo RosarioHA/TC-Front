@@ -28,6 +28,7 @@ export const SummaryDetail = ({ competencia }) => {
       'En Estudio': 'badge-status-review',
       'En revisión SUBDERE': 'badge-status-review',
       'Aún no puede comenzar': 'badge-status-pending',
+      'Omitida':'badge-status-pending'
     };
 
     const classForState = badgeClasses[estado] || '';
