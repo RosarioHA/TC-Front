@@ -17,7 +17,7 @@ const FormLayout = () =>
     const currentId = location.state?.id || params.id;
     if (currentId) {
       updateFormId(currentId);
-      setPermisoPaso2(true); // Actualiza el estado en el contexto
+      setPermisoPaso2(true); 
     }
   }, [location, params.id, updateFormId, setPermisoPaso2]);
 
@@ -41,7 +41,7 @@ const FormLayout = () =>
           <FormTitle data={dataFormSubdere} title="Revision Final SUBDERE" loading={loadingFormSubdere} id={dataFormSubdere.id} />
           <div className="mx-5">
             {dataFormSubdere && <HorizontalRevision baseUrl={baseUrl}
-              permisoSiguiente={dataPasoSubdere} permisoPaso2={permisoPaso2}
+              permisoSiguiente={dataPasoSubdere} permisoPaso2={permisoPaso2} id={dataFormSubdere.id}
             />}
             <Timmer data={dataFormSubdere} loading={loadingFormSubdere} id={dataFormSubdere.id} />
           </div>
