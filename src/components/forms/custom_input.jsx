@@ -48,6 +48,7 @@ const CustomInput = forwardRef(
                 id={id}
                 value={inputValue}
                 onChange={handleInputChange}
+                maxLength={maxLength} 
                 ref={ref}
                 {...props}
               />
