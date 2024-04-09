@@ -1,29 +1,33 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useResumenFinal } from "../../hooks/revisionFinalSubdere/useResumenFinal";
 
-export const HorizontalRevision = ({ baseUrl, permisoSiguiente, permisoPaso2 }) => {
+export const HorizontalRevision = ({ baseUrl, permisoSiguiente, permisoPaso2 , id}) => {
   const navigate = useNavigate();
   const location = useLocation();
-
-  const stepTitles = [
-    'Ámbito y recomendación de transferencia',
-    'Condiciones de transferencia',
-  ];
-
-  const regionesSeleccionadas = permisoSiguiente?.paso1_revision_final_subdere?.regiones_seleccionadas;
-
-  const [stepsState, setStepsState] = useState(['active', 'default']);
+  const {resumen, fetchResumen} = useResumenFinal(id);
+  const [stepsState, setStepsState] = useState([]);
 
   useEffect(() => {
-    const currentStep = location.pathname.includes("/paso_2") ? 2 : 1;
-    if (currentStep === 2) {
-      setStepsState(['default', 'active']);
-    } else if (regionesSeleccionadas && permisoPaso2) {
-      // Asumiendo que quieres hacer algo con permisoPaso2 y regionesSeleccionadas para habilitar el paso 2
-      // Ajustamos según sea necesario.
-      setStepsState(['default', 'active']);
+    fetchResumen();
+  }, [fetchResumen, id]);
+
+  useEffect(() => {
+    if (resumen) {
+      const newStepsState = [
+        resumen.paso1_revision_final_subdere.estado_stepper === 'done' ? 'done' : 'default',
+        resumen.paso2_revision_final_subdere.estado_stepper === 'done' ? 'done' : 'default',
+      ];
+      setStepsState(newStepsState);
     }
-  }, [location, regionesSeleccionadas, permisoPaso2]);
+  }, [resumen]);
+
+  const stepTitles = useMemo(() => [
+    'Ámbito y recomendación de transferencia',
+    'Condiciones de transferencia',
+  ], []);
+
+  const regionesSeleccionadas = permisoSiguiente?.paso1_revision_final_subdere?.regiones_seleccionadas;
 
   const goToStep = (stepNumber) => {
     navigate(`${baseUrl}/paso_${stepNumber + 1}/`);
@@ -32,7 +36,6 @@ export const HorizontalRevision = ({ baseUrl, permisoSiguiente, permisoPaso2 }) 
     );
   };
 
-  // Ajustamos la lógica aquí para que el botón del paso 2 esté habilitado si estamos en el paso 2
   const isStepTwoDisabled = location.pathname.includes("/paso_1") && !(regionesSeleccionadas === permisoPaso2);
 
   return (

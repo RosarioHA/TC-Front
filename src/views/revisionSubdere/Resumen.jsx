@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams} from 'react-router-dom'; 
 import { Avance } from "../../components/tables/Avance";
-import { useResumenGore } from "../../hooks/fomularioGore/useResumenGore";
+import { useResumenFinal } from "../../hooks/revisionFinalSubdere/useResumenFinal";
 
 const ResumenFinal = () => {
   const navigate = useNavigate();
   const [ pasos, setPasos ] = useState([]);
   const { id } = useParams();
-  const { resumen, loading, error, actualizarFormularioEnviado } = useResumenGore(id);
+  const { resumen, loading, error, actualizarFormularioEnviado } = useResumenFinal(id);
 
   useEffect(() =>
   {
@@ -97,7 +97,8 @@ const ResumenFinal = () => {
         </button>
 
         <button className="btn-primario-s" disabled={!resumen?.formulario_completo} onClick={handleEnviarClick}>
-          <u>Enviar el formulario</u>
+          <u>Cerrar Proceso</u>
+          <i className="material-symbols-rounded me-2">arrow_forward_ios</i>
         </button>
       </div>
     </div>

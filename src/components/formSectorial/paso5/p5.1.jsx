@@ -69,12 +69,12 @@ export const Subpaso_CincoPuntoUno = (
       setTotalCostosDirectos(dataDirecta.paso5.total_costos_directos || '0');
       setTotalCostosIndirectos(dataDirecta.paso5.total_costos_indirectos || '0');
       setCostosTotales(dataDirecta.paso5.costos_totales || '0');
-      setDescripcionCostosTotales(dataDirecta.paso5.descripcion_costos_totales || '0');
+      setDescripcionCostosTotales(dataDirecta.paso5.descripcion_costos_totales || '');
     } else {
       setTotalCostosDirectos(paso5.total_costos_directos || '0');
       setTotalCostosIndirectos(paso5.total_costos_indirectos || '0');
       setCostosTotales(paso5.costos_totales || '0');
-      setDescripcionCostosTotales(paso5.descripcion_costos_totales || '0');
+      setDescripcionCostosTotales(paso5.descripcion_costos_totales || '');
     }
   }, [dataDirecta]);
   

@@ -77,6 +77,9 @@
 .text-sans-h3-greyc{
     @include font-sans(24px, 500, $grey-c-color);
 }
+.text-sans-h3-blue{
+    @include font-sans(24px, 500, $blue-color);
+}
 
 .text-sans-h3-bold{
     @include font-sans(24px, 700, $dark-grey);

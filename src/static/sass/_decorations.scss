@@ -135,6 +135,11 @@ border-radius: 50%;
   height: 40px;
   padding-top: 8px;
 }
+.subrayado-gris{
+  background-color:$neutral-color;
+  height: 80px;
+  padding-top: 8px;
+}
 
 .border-gris{
   border: 1px solid $grey-light-color; 
@@ -226,4 +231,8 @@ border-radius: 50%;
 .react-dual-listbox select option:checked {
   background-color: $blue-color;
   color: $white-color;
+}
+
+.blue-border-top{
+  border-top: 1px solid $blue-border;
 }
