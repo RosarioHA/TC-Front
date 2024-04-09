@@ -67,6 +67,7 @@ const Paso_2_Revision = () =>
           <div className="my-4 ">
             <JustificacionDesfavorables
               recomendaciones_desfavorables={recomendaciones_desfavorables}
+              solo_lectura = {solo_lectura}
             />
           </div>
           <div className="my-4 ">
@@ -83,6 +84,7 @@ const Paso_2_Revision = () =>
                 temporalidad={temporalidad_gradualidad}
                 regiones_temporalidad={regiones_temporalidad}
                 temporalidad_opciones={temporalidad_opciones}
+                solo_lectura={solo_lectura}
                 regiones_recomendadas={regiones_recomendadas}
               />
             </div>
@@ -100,7 +102,9 @@ const Paso_2_Revision = () =>
           </div>
         </div>
       </div>
-      <NavigationSubdere step={paso2_revision_final_subdere.numero_paso} id={dataPasoSubdere?.id} />
+      <NavigationSubdere step={paso2_revision_final_subdere.numero_paso} id={dataPasoSubdere?.id} 
+      permisoSiguiente={paso2_revision_final_subdere?.campos_obligatorios_completados} 
+      solo_lectura={solo_lectura}/>
     </>
   );
 }

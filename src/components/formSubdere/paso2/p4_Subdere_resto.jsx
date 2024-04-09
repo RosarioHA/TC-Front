@@ -7,7 +7,6 @@ import { FormSubdereContext } from "../../../context/RevisionFinalSubdere";
 // import { yupResolver } from "@hookform/resolvers/yup";
 import CKEditorField from "../../forms/ck_editor";
 
-
 export const RestoCampos = ({
   solo_lectura,
   recursos_requeridos,
@@ -65,8 +64,6 @@ export const RestoCampos = ({
     }
   };
 
-
-
   return (
     <>
       <div className="col-11">
@@ -76,9 +73,9 @@ export const RestoCampos = ({
             4.3 Recursos requeridos
           </h4>
           <div className="text-sans-h6 my-3 col-11">
-            <h6>
+            {/* <h6>
               Texto de apoyo
-            </h6>
+            </h6> */}
           </div>
           <div className="mb-4 col-11">
             <CKEditorField
@@ -95,9 +92,9 @@ export const RestoCampos = ({
             4.4 Modalidad de ejercicio
           </h4>
           <div className="text-sans-h6 my-3 col-11">
-            <h6>
+            {/* <h6>
               Texto de apoyo
-            </h6>
+            </h6> */}
           </div>
           <div className=" d-flex  justify-content-between mb-4 col-11 ">
             <div className="col-1 mx-4 my-0 text-sans-p-bold"> #</div>
@@ -133,9 +130,9 @@ export const RestoCampos = ({
             4.5 Implementación y acompañamiento
           </h4>
           <div className="text-sans-h6 my-3 col-11">
-            <h6>
+            {/* <h6>
               Texto de apoyo
-            </h6>
+            </h6> */}
           </div>
           <div className="mb-4 col-11">
             <h6>
@@ -154,9 +151,9 @@ export const RestoCampos = ({
             4.6 Condiciones de ejercicio
           </h4>
           <div className="text-sans-h6 my-3 col-11">
-            <h6>
+            {/* <h6>
               Texto de apoyo
-            </h6>
+            </h6> */}
           </div>
           <div className="mb-4 col-11">
             <h6>
@@ -175,37 +172,35 @@ export const RestoCampos = ({
             4.7 Condiciones cuyo incumplimiento dan lugar a la revocación de la transferencia
           </h4>
           <div className="text-sans-h6 my-3 col-11">
-            <h6>
+            <p className="text-sans-p">
               Según establece el reglamento que fija las condiciones, plazos y demás materias concernientes al procedimiento
               de transferencia de competencias, el Presidente de la República podrá revocar de oficio y fundadamente la
               transferencia de las competencias efectuada en forma temporal, cuando se constate la concurrencia de alguna de
               las siguientes causales:
-            </h6>
+            </p>
           </div>
           <div className="mb-4 col-11">
-            <h6>
+            <p className="text-sans-p ms-3">
               a. Incumplimiento de las condiciones que se hayan establecido para el ejercicio de la competencia transferida
               en el decreto supremo que la dispuso, o sus modificaciones, según lo dispuesto en el artículo 29 literal e)
               del reglamento aprobado por el Decreto N° 656, de 2019, que fija las condiciones, plazos y demás materias
               concernientes al procedimiento de transferencia de competencias.
-            </h6>
-            <h6>
+            </p>
+            <p className="text-sans-p ms-3">
               b. Deficiente prestación del servicio a la comunidad.
-            </h6>
-            <h6>
+            </p>
+            <p className="text-sans-p ms-3">
               c. Ejercicio de las competencias transferidas de una forma que sea incompatible con las políticas nacionales
               cuando éstas hayan sido dictadas en forma posterior a la transferencia, sin que se realizaren los ajustes
               necesarios. Para ello, en caso de un cambio en la política nacional, el gobierno regional tendrá un plazo de
               seis meses para efectuar la adecuación respectiva.
-            </h6>
-            <h6>
+            </p>
+            <p className="text-sans-p ms-3">
               d. No cumplir con los estándares de resguardo técnico establecidos en Protocolo de Coordinación Internivel
               con organismos encargados de movilidad, y que serán supervisados por el Ministerio de Transportes y
               Telecomunicaciones.
-            </h6>
+            </p>
           </div>
-
-
 
         </div>
       </div>
