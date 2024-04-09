@@ -22,7 +22,7 @@ const ResumenFinal = () => {
 
   const handleBackButtonClick = () =>
   {
-    navigate(-1); // Navega a la página anterior
+    navigate(-1);
   };
 
   const handleEnviarClick = async () =>
@@ -30,7 +30,7 @@ const ResumenFinal = () => {
     try
     {
       await actualizarFormularioEnviado();
-      navigate(`/home/success_formulario_gore/${id}`);
+      navigate(`/home/success_revision_final/${id}`);
     } catch (error)
     {
       console.error("Error al enviar el formulario:", error);
@@ -40,10 +40,13 @@ const ResumenFinal = () => {
   if (loading) return <div>Cargando...</div>;
   if (error) return <div>Error: {error}</div>;
 
+  const formulario_completo=true; 
+
+
   return (
     <div className="container-fluid">
       <div className="text-center">
-        <span className="text-sans-h1">Resumen Formulario </span>
+        <span className="text-sans-h1">Resumen Formulario Final Subdere  </span>
       </div>
       <div className="mb-5 me-5">
         {pasos.map((paso) => (
@@ -68,7 +71,7 @@ const ResumenFinal = () => {
                 ) : (
                   <button
                     className="btn-secundario-s my-2"
-                    onClick={() => navigate(`/home/formulario_gore/${id}/paso_${paso.numero_paso}`)}
+                    onClick={() => navigate(`/home/revision_subdere/${id}/paso_${paso.numero_paso}`)}
                   >
                     Completar paso
                   </button>
@@ -96,7 +99,10 @@ const ResumenFinal = () => {
           Atrás
         </button>
 
-        <button className="btn-primario-s" disabled={!resumen?.formulario_completo} onClick={handleEnviarClick}>
+        <button className="btn-primario-s" 
+        // disabled={!resumen?.formulario_completo}
+        disabled={!formulario_completo}
+        onClick={handleEnviarClick}>
           <u>Cerrar Proceso</u>
           <i className="material-symbols-rounded me-2">arrow_forward_ios</i>
         </button>
