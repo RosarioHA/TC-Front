@@ -74,6 +74,7 @@ const CustomInputArea = forwardRef(
                 onChange={handleInputChange}
                 onBlur={handleBlur}
                 ref={effectiveRef}
+                maxLength={maxLength} 
                 {...props}
               />
               <div className="d-flex align-self-end align-items-center mx-2 my-3">

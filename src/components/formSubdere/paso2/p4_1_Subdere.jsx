@@ -161,7 +161,7 @@ export const Temporalidad = ({
                           </div>
 
                           <div className="col">
-                            <div className="col-8 mt-2 mb-4 p-2">
+                            <div className="col-8 mt-4 mb-4 p-2 mx-3">
                               {regiones_recomendadas.length === 1 ? (
                                 <>
                                   Región:{' '}
