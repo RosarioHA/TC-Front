@@ -134,6 +134,25 @@ const EdicionCompetencia = () => {
     }
   }, [ editMode, competencia ]);
 
+  useEffect(() => {
+    const handleBeforeUnload = (event) => {
+      // Cancela el evento de cierre predeterminado
+      event.preventDefault();
+      // Firefox requiere la asignación del mensaje al evento
+      event.returnValue = '';
+      // Muestra el modal de advertencia
+      setIsModalOpen(true);
+    };
+    // Agrega el evento beforeunload al cargar el componente
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    // Remueve el evento beforeunload al desmontar el componente
+    return () => {
+      updateEditMode(false);
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   //opciones sector 
   const opcionesSectores = dataSector.map(ministerio => ({
     label: ministerio.nombre,
