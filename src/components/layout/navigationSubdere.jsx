@@ -15,11 +15,6 @@ export const NavigationSubdere = ({ step, id, permisoSiguiente, solo_lectura }) 
   };
 
   const handleNextButtonClick = () => {
-    // Solo navegar si permisoSiguiente es true
-    if (!permisoSiguiente) {
-      alert('Por favor, completa los requisitos necesarios para avanzar al siguiente paso.'); // O cualquier otra forma de feedback al usuario
-      return; // No hacer nada si no se tienen los permisos
-    }
     if (step < 2) {
       navigate(getRouteForStep(step + 1));
     } else {
