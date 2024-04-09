@@ -326,6 +326,7 @@ export const GastosEvolucionVariacion = ({
                   loading={glosasEspecificasLoading}
                   saved={glosasEspecificasSaved}
                   readOnly={solo_lectura}
+                  maxLength={1100}
                 />
               );
             }}

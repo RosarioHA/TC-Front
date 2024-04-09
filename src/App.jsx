@@ -54,6 +54,7 @@ const ObservacionesSubdere = React.lazy(() => import('./views/observacionesSUBDE
 const Paso_1_Revision = React.lazy(() => import("./views/revisionSubdere/Paso_1_revision"));
 const Paso_2_Revision = React.lazy(() => import("./views/revisionSubdere/Paso_2_revision"));
 const ResumenFinal = React.lazy(()=> import('./views/revisionSubdere/Resumen')); 
+const SuccessRevisionFinal = React.lazy(()=> import('./views/success/success_revision_final')); 
 
 const createProtectedRoute = (path, Component, allowedProfiles) => (
   <Route
@@ -98,6 +99,7 @@ function App()
             <Route path="success_cierre_observaciones/:id/" element={<FormularioProvider> <SuccessCierreOS /> </FormularioProvider>} />
             <Route path="success_cierre_observaciones_gore/:id/" element={<FormGoreProvider> <SuccessOS_Gore /> </FormGoreProvider>} />
             <Route path="success_formulario_gore/:id/" element={<FormGoreProvider> <SuccessFormGore /> </FormGoreProvider>} />
+            <Route path="success_revision_final/:id/" element={<FormSubdereProvider> <SuccessRevisionFinal/> </FormSubdereProvider>} />
             <Route
               path="observaciones_subdere/:id/"
               element={

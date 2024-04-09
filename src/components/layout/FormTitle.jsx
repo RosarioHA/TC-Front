@@ -14,6 +14,8 @@ export const FormTitle = ({ data, error, title }) =>
   if (!data) return <div>No hay datos disponibles</div>;
 
 
+  console.log('titlke',data); 
+
 
   return (
     <div className="my-3 mx-3">
@@ -28,7 +30,7 @@ export const FormTitle = ({ data, error, title }) =>
           <ol className="breadcrumb breadcrumb-style d-flex my-2">
             <li className="breadcrumb-item align-self-center"><Link to="/home">Inicio</Link></li>
             <li className="breadcrumb-item align-self-center text-sans-p-lightgrey" aria-current="page">
-              <Link to={`/home/estado_competencia/${data.competencia_id}`}>{title}: {data.competencia_nombre}</Link>
+              <Link to={`/home/estado_competencia/${data.competencia_id || data.id}`}>{title}: {data.competencia_nombre}</Link>
             </li>
             <li className="breadcrumb-item align-self-center text-sans-p-lightgrey" aria-current="page">{title}</li>
           </ol>

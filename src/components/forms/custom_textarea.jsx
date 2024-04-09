@@ -16,51 +16,70 @@ const CustomTextarea = ({
   readOnly,
   name,
   containerSize
-}) => {
-  const [inputValue, setInputValue] = useState(value); // Inicialización segura de inputValue
+}) =>
+{
+  const [ inputValue, setInputValue ] = useState(value); // Inicialización segura de inputValue
   const textareaRef = useRef(null);
   const lastSavedValueRef = useRef(value); // Referencia para almacenar el valor al momento del último guardado
 
-  useEffect(() => {
+  useEffect(() =>
+  {
     adjustHeight();
-  }, [inputValue]);
+  }, [ inputValue ]);
 
-  const handleChange = (event) => {
+  const handleChange = (event) =>
+  {
     event.preventDefault();
-    setInputValue(event.target.value);
+    const newText = event.target.value;
+    // Limita la longitud del texto a `maxLength` caracteres si se ha definido maxLength
+    if (maxLength !== undefined && newText.length > maxLength)
+    {
+      setInputValue(newText.slice(0, maxLength));
+    } else
+    {
+      setInputValue(newText);
+    }
     onChange(event); // Pasa el evento completo
   };
 
-  const handleBlur = (e) => {
+  const handleBlur = (e) =>
+  {
     console.log("Input Blurred");
     e.preventDefault();
     // Solo invoca onBlur si el valor ha cambiado desde el último guardado
-    if (inputValue !== lastSavedValueRef.current && onBlur) {
+    if (inputValue !== lastSavedValueRef.current && onBlur)
+    {
       onBlur(e);
       lastSavedValueRef.current = inputValue; // Actualiza el valor de referencia al momento del último guardado
     }
   };
 
-  const adjustHeight = () => {
-    if (textareaRef.current) {
+  const adjustHeight = () =>
+  {
+    if (textareaRef.current)
+    {
       textareaRef.current.style.height = 'inherit';
       textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
     }
   };
 
-  useEffect(() => {
+  useEffect(() =>
+  {
     setInputValue(value); // Actualiza el inputValue cuando el prop 'value' cambia
-  }, [value]);
+  }, [ value ]);
 
   const counterClass = maxLength !== undefined && inputValue.length === maxLength
     ? "text-sans-h6-darkred"
     : "text-sans-h6";
 
-  const renderSpinnerOrCheck = () => {
-    if (loading) {
+  const renderSpinnerOrCheck = () =>
+  {
+    if (loading)
+    {
       return <div className="spinner-border text-primary my-4 mx-3" role="status"></div>;
     }
-    if (saved) {
+    if (saved)
+    {
       return <i className="material-symbols-outlined my-4 mx-3 text-success">check</i>;
     }
     return null;
@@ -85,6 +104,7 @@ const CustomTextarea = ({
               placeholder={placeholder}
               id={id}
               value={inputValue}
+              maxLength={maxLength} 
               onChange={handleChange}
               onBlur={handleBlur}
               rows={rows}

@@ -7,9 +7,11 @@ import { Temporalidad } from "../../components/formSubdere/paso2/p4_1_Subdere";
 import { RestoCampos } from "../../components/formSubdere/paso2/p4_Subdere_resto";
 import { NavigationSubdere } from "../../components/layout/navigationSubdere";
 
-const Paso_2_Revision = () => {
+
+const Paso_2_Revision = () =>
+{
   const {
-    // dataFormSubdere,
+    dataFormSubdere,
     dataPasoSubdere,
     // loadingPasoSubdere,
     errorPasoSubdere,
@@ -18,14 +20,16 @@ const Paso_2_Revision = () => {
 
   const stepNumber = 2;
 
-  const handleUpdateStepNumber = useCallback(() => {
+  const handleUpdateStepNumber = useCallback(() =>
+  {
     const stepNumber = 2;
     updateStepNumber(stepNumber);
-  }, [updateStepNumber]);
+  }, [ updateStepNumber ]);
 
-  useEffect(() => {
+  useEffect(() =>
+  {
     handleUpdateStepNumber();
-  }, [handleUpdateStepNumber]);
+  }, [ handleUpdateStepNumber ]);
 
   if (errorPasoSubdere) return <div>Error: {errorPasoSubdere.message || "Error desconocido"}</div>;
   if (!dataPasoSubdere?.paso2_revision_final_subdere) return <div>Cargando...</div>;
@@ -42,8 +46,12 @@ const Paso_2_Revision = () => {
     modalidad_ejercicio,
     modalidad_ejercicio_opciones,
     implementacion_acompanamiento,
-    condiciones_ejercicio
+    condiciones_ejercicio,
+    regiones_recomendadas
   } = dataPasoSubdere;
+
+  const { competencia_nombre } = dataFormSubdere;
+  console.log(dataFormSubdere);
 
   return (
     <>
@@ -77,6 +85,7 @@ const Paso_2_Revision = () => {
                 regiones_temporalidad={regiones_temporalidad}
                 temporalidad_opciones={temporalidad_opciones}
                 solo_lectura={solo_lectura}
+                regiones_recomendadas={regiones_recomendadas}
               />
             </div>
             <div className="my-4 ">
@@ -87,6 +96,7 @@ const Paso_2_Revision = () => {
                 modalidad_ejercicio_opciones={modalidad_ejercicio_opciones}
                 implementacion_acompanamiento={implementacion_acompanamiento}
                 condiciones_ejercicio={condiciones_ejercicio}
+                nombre_compentencia={competencia_nombre}
               />
             </div>
           </div>
