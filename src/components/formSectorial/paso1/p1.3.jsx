@@ -85,9 +85,21 @@ export const Subpaso_tres = ({ pasoData, id, stepNumber, solo_lectura }) => {
   }));
 
   const handleAmbitoChange = async (selectedOption) => {
+    console.log(selectedOption); // Para depuración
     setAmbitoSeleccionado(selectedOption);
     localStorage.setItem('ambitoSeleccionado', JSON.stringify(selectedOption));
-    if (selectedOption.value !== formData.paso1.ambito_paso1) {
+    
+    // Asegúrate de actualizar formData antes de llamar a handleSave
+    setFormData(prevFormData => ({
+      ...prevFormData,
+      paso1: {
+        ...prevFormData.paso1,
+        ambito_paso1: selectedOption.value,
+      }
+    }));
+  
+    // Ahora llama a handleSave con el valor actualizado
+    if (selectedOption.value !== lastSavedData.ambito_paso1) {
       await handleSave('ambito_paso1');
     }
   };
