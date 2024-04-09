@@ -24,10 +24,11 @@ export const construirValidacionPaso5_1ab = (modeloCostos) => {
 
     // Validación para Total Anual
     schemaFields[`total_anual_${id}`] = yup
-      .number()
-      .typeError('El Total Anual debe ser un número')
-      .positive('El Total Anual debe ser un número positivo')
-      .required('El Total Anual es obligatorio');
+    .number()
+    .typeError('El Total Anual debe ser un número')
+    .positive('El Total Anual debe ser un número positivo')
+    .integer('El Total Anual debe ser un número entero')
+    .required('El Total Anual es obligatorio');
 
     // Validación para opcíon Transversal:
     schemaFields[`es_transversal_${id}`] = yup

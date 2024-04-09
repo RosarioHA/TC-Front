@@ -253,11 +253,12 @@ const CostosDirectos = ({
                 <Controller
                   control={control}
                   name={`subtitulo_${costo.id}`}
+                  defaultValue={costo.subtitulo_label_value ? costo.subtitulo_label_value.value : ''}
                   render={({ field }) => {
                     return (
                       <DropdownSelect
                         id={`subtitulo_${costo.id}`}
-                        name={`subtitulo_${costo.id}`}
+                        
                         placeholder="Subtítulos"
                         options={opcionesSubtitulos}
                         onSelectionChange={(selectedOption) => {
@@ -272,6 +273,7 @@ const CostosDirectos = ({
                                 ...costoDirecto,
                                 subtituloSeleccionado: textoSubtitulo,
                                 opcionesItems: opcionesDeItems,
+                                item_subtitulo_label_value: null,
                               };
                             }
                             return costoDirecto;
@@ -296,11 +298,11 @@ const CostosDirectos = ({
                 <Controller
                   control={control}
                   name={`item_subtitulo_${costo.id}`}
+                  defaultValue={costo.item_subtitulo_label_value ? costo.item_subtitulo_label_value.value : ''}
                   render={({ field }) => {
                     return (
                       <DropdownSelect
                         id={`item_subtitulo_${costo.id}`}
-                        name={`item_subtitulo_${costo.id}`}
                         placeholder="Ítem"
                         options={costo.opcionesItems}
                         onSelectionChange={(selectedOptions) => {
