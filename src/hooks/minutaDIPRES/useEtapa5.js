@@ -35,6 +35,7 @@ export const useEtapa5 = () => {
         comentario_minuta_etapa5: comentarios,
         // comentario_minuta_gore: comentarios,
         observacion_minuta_gore_enviada: true,
+        estado: 'Finalizada'
       };
       const response = await apiTransferenciaCompentencia.patch(`/etapa5/${competenciaId}/`, data);
       console.log("Comentario de minuta actualizado:", response.data);

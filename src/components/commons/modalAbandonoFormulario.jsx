@@ -67,7 +67,7 @@ const ModalAbandonoFormulario = forwardRef(function ModalAbandonoFormulario({ is
           <button onClick={handleCloseRef.current} className="btn-close mt-2 me-3"></button>
         </div>
         <hr/>
-        <p className="text-sans-p mb-0 ms-3">--**** mensaje con las consecuencias de salir *****---</p>
+        <p className="text-sans-p mb-0 ms-3">Si sales del formulario sin guardarlo, perderás los cambios que hayas realizado.</p>
         <hr/>
         <div className="d-flex justify-content-between">
           {renderLinkOrButton()}

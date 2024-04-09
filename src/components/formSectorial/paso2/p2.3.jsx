@@ -647,7 +647,8 @@ export const Subpaso_dosPuntoTres = ({
                         />
                       </div>
                       <div className="col-1">
-                        <button
+                        {!solo_lectura && (
+                          <button
                           className="btn-terciario-ghost ms-3"
                           onClick={() =>
                             eliminarElemento(etapa.id, procedimiento.id)
@@ -660,6 +661,7 @@ export const Subpaso_dosPuntoTres = ({
                             Borrar
                           </p>
                         </button>
+                        )}
                       </div>
                     </div>
                   </div>

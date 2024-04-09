@@ -40,8 +40,6 @@ const ResumenFinal = () => {
   if (loading) return <div>Cargando...</div>;
   if (error) return <div>Error: {error}</div>;
 
-  const formulario_completo=true; 
-
 
   return (
     <div className="container-fluid">
@@ -100,8 +98,7 @@ const ResumenFinal = () => {
         </button>
 
         <button className="btn-primario-s" 
-        // disabled={!resumen?.formulario_completo}
-        disabled={!formulario_completo}
+        disabled={!resumen?.formulario_completo}
         onClick={handleEnviarClick}>
           <u>Cerrar Proceso</u>
           <i className="material-symbols-rounded me-2">arrow_forward_ios</i>
