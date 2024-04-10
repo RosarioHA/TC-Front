@@ -44,7 +44,6 @@ const PasoTresGore = () => {
 
   const { paso3_gore = {}} = dataPasoGore;
 
-  console.log(dataPasoGore)
 
   const handleGuardarObservacion = async () => {
     if (!observacionesEnviadas) {
