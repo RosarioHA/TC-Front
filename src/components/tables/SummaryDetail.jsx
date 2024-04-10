@@ -1,7 +1,9 @@
 import { useNavigate } from 'react-router-dom';
+import { useResumenFinal } from '../../hooks/revisionFinalSubdere/useResumenFinal';
 
 export const SummaryDetail = ({ competencia }) => {
   const navigate = useNavigate();
+  const { resumen } = useResumenFinal(competencia.id);
 
   const etapas_info =
     competencia.etapas_info || competencia.resumen_competencia?.etapas_info;
@@ -17,9 +19,9 @@ export const SummaryDetail = ({ competencia }) => {
   // const ambito_competencia_origen =
   //   competencia.ambito_competencia_origen ||
   //   competencia.resumen_competencia?.ambito_competencia_origen;
-  // const recomendacion_transferencia =
-  //   competencia.recomendacion_transferencia ||
-  //   competencia.resumen_competencia?.recomendacion_transferencia;
+  const recomendacion_transferencia =
+    competencia.recomendacion_transferencia ||
+    competencia.resumen_competencia?.recomendacion_transferencia;
 
   if (!competencia || !etapas_info) {
     return <div>Cargando...</div>;
@@ -45,6 +47,9 @@ export const SummaryDetail = ({ competencia }) => {
       Omitida: 'badge-status-pending',
       Finalizado: 'badge-status-green',
       Pendiente: 'badge-status-pending',
+      Favorable: 'badge-status-finish',
+      'Favorable Parcial': 'badge-status-finish',
+      Desfavorable:'badge-status-red',
     };
 
     const classForState = badgeClasses[estado] || '';
@@ -78,7 +83,7 @@ export const SummaryDetail = ({ competencia }) => {
     },
     {
       nombre: 'Recomendación de transferencia',
-      estado: 'Pendiente',
+      estado: recomendacion_transferencia,
     },
   ];
 
@@ -88,8 +93,6 @@ export const SummaryDetail = ({ competencia }) => {
       ...data,
     })
   );
-
-  console.log(etapas_finalizada);
 
   if (estado === 'Finalizada') {
     return (
@@ -165,13 +168,25 @@ export const SummaryDetail = ({ competencia }) => {
                     <p>Documento de información levantada</p>
                   </span>
                   <div>
-                    {' '}
-                    <button
-                      className="text-decoration-underline btn-secundario-s"
-                      onClick={handleVerRevisionSubdere}
-                    >
-                      Ver Revisión SUBDERE
-                    </button>
+                    {resumen && (
+                      <>
+                        {resumen.formulario_final_enviado ? (
+                          <button className="btn-secundario-s">
+                            <i className="material-symbols-rounded ms-2">
+                              download
+                            </i>
+                            <u>Descargar</u>
+                          </button>
+                        ) : (
+                          <button
+                            className="text-decoration-underline btn-secundario-s"
+                            onClick={handleVerRevisionSubdere}
+                          >
+                            <u>Ver Revisión SUBDERE</u>
+                          </button>
+                        )}
+                      </>
+                    )}
                   </div>
                 </li>
               </ul>
