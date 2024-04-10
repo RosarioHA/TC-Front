@@ -15,8 +15,8 @@ export const HorizontalRevision = ({ baseUrl, permisoSiguiente, permisoPaso2 , i
   useEffect(() => {
     if (resumen) {
       const newStepsState = [
-        resumen.paso1_revision_final_subdere.estado_stepper === 'done' ? 'done' : 'default',
-        resumen.paso2_revision_final_subdere.estado_stepper === 'done' ? 'done' : 'default',
+        resumen.paso1_revision_final_subdere?.estado_stepper === 'done' ? 'done' : 'default',
+        resumen.paso2_revision_final_subdere?.estado_stepper === 'done' ? 'done' : 'default',
       ];
       setStepsState(newStepsState);
     }
