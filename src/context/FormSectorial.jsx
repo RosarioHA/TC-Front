@@ -8,7 +8,6 @@ export const FormularioContext = createContext();
 export const FormularioProvider = ({ children }) => {
   const [id, setId] = useState(null);
   const [stepNumber, setStepNumber] = useState(null);
-  console.log("id en formulario context", id)
 
   const { dataFormSectorial, loadingFormSectorial, errorFormSectorial} = useFormSectorial(id);
   const { dataPaso, loadingPaso, errorPaso,refetchTrigger } = usePasoForm(id, stepNumber);
@@ -52,7 +51,6 @@ export const FormularioProvider = ({ children }) => {
       formData.append(`paso${stepNumber}.${fieldName}`, archivos.get(fieldName)); 
       const response = await patchStep(id, stepNumber, formData);
       if (response) {
-        console.log("Archivo subido con éxito.");
         return true;
       } else {
         console.error("La subida del archivo falló. Respuesta del servidor:", response);
@@ -66,7 +64,6 @@ export const FormularioProvider = ({ children }) => {
   };
   
   const handleUploadFilesOrganigramaregional = async (file, regionId, id, stepNumber) => {
-    console.log('file', file)
     try {
         if (typeof id === 'undefined' || typeof stepNumber === 'undefined') {
             console.error("El ID o el stepNumber no están definidos.");

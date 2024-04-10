@@ -14,7 +14,6 @@ export const FormTitle = ({ data, error, title }) =>
   if (!data) return <div>No hay datos disponibles</div>;
 
 
-  console.log('titlke',data); 
 
 
   return (

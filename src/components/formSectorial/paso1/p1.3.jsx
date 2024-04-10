@@ -196,7 +196,7 @@ export const Subpaso_tres = ({ pasoData, id, stepNumber, solo_lectura }) => {
             placeholder="Elige el ámbito de la competencia"
             options={opcionesAmbito}
             onSelectionChange={handleAmbitoChange}
-            selected={ambitoSeleccionado}
+            selected={ambitoSeleccionado || pasoData?.ambito_paso1}
             readOnly={solo_lectura}
           />
           <div className="d-flex mb-3 mt-1 text-sans-h6-primary col-11">

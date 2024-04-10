@@ -25,8 +25,8 @@ export const SubAdicionales = ({
   const [opcionesSubtitulos, setOpcionesSubtitulos] = useState([]);
   const [inputStatus, setInputStatus] = useState({});
 
-  console.log(esquemaValidacion);
 
+  console.log(esquemaValidacion)
   
   useEffect(() => {
     setSubAdicionales(Array.isArray(data) ? data : []);
@@ -275,7 +275,6 @@ export const SubAdicionales = ({
     }
   };
 
-  console.log(inputStatus);
   return (
     <>
       <div className="mt-4 col-11">

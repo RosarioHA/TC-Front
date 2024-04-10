@@ -1,14 +1,11 @@
-import { useState, useEffect, useContext} from "react";
+import { useState,  useContext} from "react";
 import SubirArchivo from "../../forms/subir_archivo";
 import { useFlujograma } from "../../../hooks/fomularioGore/useFlujograma";
-import { useGorePasos } from "../../../hooks/fomularioGore/useFormGorePaso";
 import { FormGOREContext } from "../../../context/FormGore";
 
 export const SubUno_dos = ({ flujograma, id, stepNumber, solo_lectura }) => {
   const { uploadDocumento } = useFlujograma(id, stepNumber);
-  const { updatePasoGore } = useContext(FormGOREContext);
-  const {dataPasoGore } = useGorePasos(id, stepNumber);
-  const [flujogramaGoreFiles, setFlujogramaGoreFiles] = useState(dataPasoGore?.flujograma_ejercicio_competencia || flujograma || []);
+  const { updatePasoGore, refetchTriggerGore  } = useContext(FormGOREContext);
   const [iframeSrc, setIframeSrc] = useState('https://pdfobject.com/pdf/sample.pdf');
   const [uploading, setUploading] = useState(false);
   const [deleting, setDeleting] = useState(false);
@@ -16,20 +13,17 @@ export const SubUno_dos = ({ flujograma, id, stepNumber, solo_lectura }) => {
 
   const ver = true;
 
-  useEffect(() => {
-    setFlujogramaGoreFiles(dataPasoGore?.flujograma_ejercicio_competencia || []);
-  }, [dataPasoGore]);
-
   const handleViewFile = (archivoDescargaUrl) => {
     setIframeSrc(archivoDescargaUrl);
     setShowPdfViewer(true);
   };
 
   const uploadFile = async (file) => {
-    if (flujogramaGoreFiles.length < 3) {
+    if (flujograma.length < 3) {
       setUploading(true);
       try {
         await uploadDocumento(file); 
+        refetchTriggerGore()
       } catch (error) {
         console.error('Error uploading file:', error);
       } finally {
@@ -77,7 +71,7 @@ export const SubUno_dos = ({ flujograma, id, stepNumber, solo_lectura }) => {
         <div className="me-5">Acción</div>
       </div>
       {/* Renderiza componentes SubirArchivo para archivos existentes */}
-      {flujogramaGoreFiles.map((flujo, index) => (
+      {flujograma?.map((flujo, index) => (
         <SubirArchivo
           key={flujo.id}
           index={index + 1}
@@ -92,9 +86,9 @@ export const SubUno_dos = ({ flujograma, id, stepNumber, solo_lectura }) => {
           deleting={deleting}
         />
       ))}
-      {!uploading && flujogramaGoreFiles.length < 3 && (
+      {!uploading && flujograma?.length < 3 && (
         <SubirArchivo
-          index={flujogramaGoreFiles.length + 1}
+          index={flujograma?.length + 1}
           handleFileSelect={(file) => uploadFile(file)}
           onViewFile={handleViewFile}
           readOnly={solo_lectura}
