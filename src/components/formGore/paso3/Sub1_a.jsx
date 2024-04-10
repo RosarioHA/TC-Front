@@ -19,7 +19,6 @@ export const Sub1_a = ({data, solo_lectura}) => {
     }
   }
 
-  console.log('di',directos); 
 
   return (
     <>

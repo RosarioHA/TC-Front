@@ -1,11 +1,7 @@
-import { useContext, useState } from "react";
-// import CustomTextarea from "../../forms/custom_textarea";
-// import DropdownSelect from "../../dropdown/select";
+import { useContext, useState, useMemo } from "react";
 import { OpcionesAB } from "../../forms/opciones_AB";
-import { FormSubdereContext } from "../../../context/RevisionFinalSubdere";
-// import { useForm, Controller } from "react-hook-form";
-// import { yupResolver } from "@hookform/resolvers/yup";
 import CKEditorField from "../../forms/ck_editor";
+import { FormSubdereContext } from "../../../context/RevisionFinalSubdere";
 
 export const RestoCampos = ({
   solo_lectura,
@@ -13,57 +9,63 @@ export const RestoCampos = ({
   modalidad_ejercicio,
   implementacion_acompanamiento,
   condiciones_ejercicio,
-  nombre_compentencia
-}) =>
-{
+  nombre_compentencia,
+  regiones_recomendadas
+}) => {
 
   const { updatePasoSubdere } = useContext(FormSubdereContext);
-  const [ inputStatus, setInputStatus ] = useState({
+  const [inputStatus, setInputStatus] = useState({
     justificacion: { loading: false, saved: false },
   });
 
   const modalidadEjercicioInicial = modalidad_ejercicio === "Exclusiva";
 
+  // Determinar si todos los componentes deben estar deshabilitados
+  const disableAll = useMemo(() => regiones_recomendadas.length === 0, [regiones_recomendadas]);
+
   const handleBlur = (fieldName, value) => {
-    handleUpdate(fieldName, value, true);
+    if (!disableAll) {
+      handleUpdate(fieldName, value, true);
+    }
   };
 
   const handleUpdate = async (field, value, saveImmediately = false) => {
-    setInputStatus((prev) => ({
-      ...prev,
-      [ field ]: { ...prev[ field ], loading: true, saved: false },
-    }));
+    if (!disableAll) {
+      setInputStatus((prev) => ({
+        ...prev,
+        [field]: { ...prev[field], loading: true, saved: false },
+      }));
 
-    let adjustedValue = value;
-    if (field === 'modalidad_ejercicio') {
-      adjustedValue = value ? 'Exclusiva' : 'Compartida';
-    }
+      let adjustedValue = value;
+      if (field === 'modalidad_ejercicio') {
+        adjustedValue = value ? 'Exclusiva' : 'Compartida';
+      }
 
-    if (saveImmediately) {
-      try {
-        const payload = {
-          [ field ]: adjustedValue,
-        };
-        await updatePasoSubdere(payload);
+      if (saveImmediately) {
+        try {
+          const payload = {
+            [field]: adjustedValue,
+          };
+          await updatePasoSubdere(payload);
+          setInputStatus((prevStatus) => ({
+            ...prevStatus,
+            [field]: { loading: false, saved: true },
+          }));
+        } catch (error) {
+          console.error('Error updating data:', error);
+          setInputStatus((prevStatus) => ({
+            ...prevStatus,
+            [field]: { loading: false, saved: false },
+          }));
+        }
+      } else {
         setInputStatus((prevStatus) => ({
           ...prevStatus,
-          [ field ]: { loading: false, saved: true },
-        }));
-      } catch (error) {
-        console.error('Error updating data:', error);
-        setInputStatus((prevStatus) => ({
-          ...prevStatus,
-          [ field ]: { loading: false, saved: false },
+          [field]: { value: adjustedValue, loading: false, saved: false },
         }));
       }
-    } else {
-      setInputStatus((prevStatus) => ({
-        ...prevStatus,
-        [ field ]: { value: adjustedValue, loading: false, saved: false },
-      }));
     }
   };
-
   return (
     <>
       <div className="col-11">
@@ -82,7 +84,7 @@ export const RestoCampos = ({
               placeholder="Describe el costo por subtítulo e ítem"
               data={recursos_requeridos || ''}
               onBlur={(value) => handleBlur('recursos_requeridos', value)}
-              readOnly={solo_lectura}
+              readOnly={solo_lectura || disableAll} 
               loading={inputStatus?.recursos_requeridos?.loading}
               saved={inputStatus?.recursos_requeridos?.saved}
             />
@@ -122,6 +124,7 @@ export const RestoCampos = ({
                 altB="Compartida"
                 field="modalidad_ejercicio"
                 fieldName="modalidad_ejercicio"
+                readOnly={solo_lectura || disableAll} 
               />
             </div>
           </div>
@@ -140,7 +143,7 @@ export const RestoCampos = ({
                 placeholder="Describe el costo por subtítulo e ítem"
                 data={implementacion_acompanamiento || ''}
                 onBlur={(value) => handleBlur('implementacion_acompanamiento', value)}
-                readOnly={solo_lectura}
+                readOnly={solo_lectura || disableAll} 
                 loading={inputStatus?.implementacion_acompanamiento?.loading}
                 saved={inputStatus?.implementacion_acompanamiento?.saved}
               />
@@ -161,7 +164,7 @@ export const RestoCampos = ({
                 placeholder="Describe el costo por subtítulo e ítem"
                 data={condiciones_ejercicio || ''}
                 onBlur={(value) => handleBlur('condiciones_ejercicio', value)}
-                readOnly={solo_lectura}
+                readOnly={solo_lectura || disableAll} 
                 loading={inputStatus?.condiciones_ejercicio?.loading}
                 saved={inputStatus?.condiciones_ejercicio?.saved}
               />
