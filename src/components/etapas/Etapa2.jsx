@@ -12,7 +12,6 @@ export const Etapa2 = ({ etapa }) =>
   const [ isCollapsed, setIsCollapsed ] = useState(false);
   const usuarioSector = userData?.sector;
 
-  console.log("etapa en etapa2", etapa)
 
   const toggleCollapse = () =>
   {
@@ -138,7 +137,6 @@ export const Etapa2 = ({ etapa }) =>
     const path = `/home/formulario_sectorial/${formulario.id}/paso_1`;
     //const isButtonDisabled = (userSubdere || userGore) || formulario.estado === "pendiente";
     const isButtonDisabled = formulario.estado === "pendiente";
-    console.log("formulario.estado en Etapa2", formulario.estado)
 
     let icon = 'edit';
     if (formulario.estado !== "pendiente")
@@ -202,7 +200,6 @@ export const Etapa2 = ({ etapa }) =>
     if (etapa.formulario_sectorial && etapa.formulario_sectorial.length === 1)
     {
       const formulario = etapa.formulario_sectorial[ 0 ];
-      console.log("formulario", formulario)
       return renderSingleFormularioSectorial(formulario);
     }
     // Verifica si el array detalle_formularios_sectoriales tiene elementos
@@ -296,7 +293,6 @@ export const Etapa2 = ({ etapa }) =>
         )}
         {/* Llamada a las funciones de renderizado de formularios sectoriales */}
         {userSubdere || userGore ? renderFormularioSectorial() : renderFormularioSectorialParaUsuarioSectorial()}
-        {console.log("observaciones sectorial en Etapa2", observaciones_sectorial)}
         {observaciones_sectorial.length > 0 && (
           observaciones_sectorial.map((observacion, index) => (
             <div key={index} className="d-flex justify-content-between text-sans-p border-top border-bottom my-3 py-1">
