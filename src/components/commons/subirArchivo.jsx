@@ -75,7 +75,6 @@ export const SubirArchivo = ({ index, tituloDocumento, readOnly, archivoDescarga
                   </button>
                 </>
               )}
-
             </div>
           ) : archivoDescargaUrl && (
             <button onClick={handleDownload} className="btn-secundario-s px-2 d-flex align-items-center m-3">

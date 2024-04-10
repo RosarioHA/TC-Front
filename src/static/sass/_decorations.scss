@@ -111,6 +111,10 @@ border-radius: 50%;
   @include badge-status($dark-red,$white-color); 
 }
 
+.badge-status-green{
+  @include badge-status($success-color,$white-color); 
+}
+
 
 .badge-percent {
   background:$grey-light-b;

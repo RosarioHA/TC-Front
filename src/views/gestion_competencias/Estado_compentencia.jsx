@@ -5,14 +5,19 @@ import { PersonsAssigned } from "../../components/tables/PersonsAssigned";
 import { VerticalStepper } from "../../components/stepers/VerticalStepper";
 import { useCompetencia } from "../../hooks/competencias/useCompetencias";
 import { useFormularioSubdere } from "../../hooks/revisionFinalSubdere/useFormularioSubdere";
+import { useResumenFinal } from "../../hooks/revisionFinalSubdere/useResumenFinal";
 
 const EstadoCompetencia = () => {
   const { id } = useParams();
   const { competenciaDetails, loading, error } = useCompetencia(id);
+  const {resumen}= useResumenFinal(id); 
   const navigate = useNavigate();
   const [ competencia, setCompetencia ] = useState(null);
   const {dataFormSubdere} = useFormularioSubdere(id);
-  const mostrarMensajeFinalizada = competenciaDetails.estado === 'Finalizada';
+  const mostrarMensajeFinalizada = competenciaDetails.estado === 'Finalizada' && resumen?.formulario_final_enviado === true;
+
+
+
 
   useEffect(() => {
     if (competenciaDetails) {
@@ -74,9 +79,9 @@ const EstadoCompetencia = () => {
           <div className="bluesky-container p-3 mt-4">
             <h3 className="text-sans-h3-blue mb-3">Revisión SUBDERE finalizada.</h3>
             <div className="d-flex pt-4 justify-content-between blue-border-top">
-              <p className="text-sans-p-blue ">Realizada por {dataFormSubdere?.ultimo_editor?.nombre_completo} (SUBDERE) - {dataFormSubdere?.fecha_ultima_modificacion}</p>
+              <p className="text-sans-p-blue">Realizada por {dataFormSubdere?.ultimo_editor?.nombre_completo} (SUBDERE) - {dataFormSubdere?.fecha_ultima_modificacion}</p>
               <button className="text-decoration-underline btn-secundario-s" onClick={handleVerRevisionSubdere}>Ver Revisión SUBDERE</button>
-            </div> 
+            </div>
           </div>
         )}
           

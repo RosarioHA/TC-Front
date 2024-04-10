@@ -40,7 +40,6 @@ export const useResumenGore = (id) => {
     }
   };
 
-  console.log(resumen)
 
   return { resumen, loading, error, fetchResumen, actualizarFormularioEnviado };
 };
