@@ -89,7 +89,6 @@ export const Subpaso_CuatroUno = ({ data, listaIndicadores, id, stepNumber, solo
     const ultimoIndicador = indicadores[ indicadores.length - 1 ];
     if (!ultimoIndicador.id || !todosLosCamposCompletos(ultimoIndicador))
     {
-      alert("Por favor, completa todos los campos del último indicador antes de agregar uno nuevo.");
       return;
     }
     setIndicadores([ ...indicadores, { id: null } ]);
@@ -194,7 +193,7 @@ export const Subpaso_CuatroUno = ({ data, listaIndicadores, id, stepNumber, solo
       if (exito) {
         setMessage({ text: "Datos guardados exitosamente", type: 'success' });
         // setDatosGuardados(true);
-      }
+      } 
     } catch (error) {
       console.error("Error en handleSave:", error);
       setMessage({ text: "Error al guardar. Inténtalo de nuevo.", type: 'error' });
