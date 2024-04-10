@@ -17,7 +17,7 @@ const ObservacionesSubdere = () => {
   };
 
   const handleRadioButtonChange = (value) => {
-    setEtapaOmitida(value === 'A');
+    setEtapaOmitida(value === 'B');
   };
 
   const handleVerFormulario = (formularioId) => {
