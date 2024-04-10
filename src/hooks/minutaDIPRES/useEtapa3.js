@@ -27,7 +27,6 @@ export const useEtapa3 = () => {
     try {
       const formData = new FormData();
       formData.append('archivo_minuta_etapa3', file);
-      formData.append('estado', 'Finalizada');
       const response = await apiTransferenciaCompentencia.patch(`/etapa3/${competenciaId}/`, formData);
 
       console.log("Archivo subido:", response.data);
@@ -49,6 +48,7 @@ export const useEtapa3 = () => {
       const data = {
         comentario_minuta_etapa3: comentarios,
         observacion_minuta_sectorial_enviada: true,
+        estado: 'Finalizada'
       };
       const response = await apiTransferenciaCompentencia.patch(`/etapa3/${competenciaId}/`, data);
       console.log("Comentario de minuta actualizado:", response.data);
