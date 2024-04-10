@@ -4,7 +4,7 @@ import { Counter } from "../tables/Counter";
 import { useAuth } from '../../context/AuthContext';
 
 
-export const Etapa4 = ({ etapa, }) =>
+export const Etapa4 = ({ etapa }) =>
 {
   const {
     nombre_etapa,
@@ -23,7 +23,6 @@ export const Etapa4 = ({ etapa, }) =>
   const etapaNum = 4;
   const userSubdere = userData?.perfil?.includes('SUBDERE');
 
-  console.log('e',estado); 
 
 
   const [ isUsuariosGoreCollapsed, setIsUsuariosGoreCollapsed ] = useState(false);
@@ -267,7 +266,6 @@ export const Etapa4 = ({ etapa, }) =>
 
 
     const formularioCompleto = formularios_gore.formularios_gore_completos[ 0 ];
-    console.log(formularioCompleto)
 
     if (formulariosParaRenderizar.length === 1)
     {

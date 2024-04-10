@@ -89,8 +89,6 @@ export const SummaryDetail = ({ competencia }) => {
     })
   );
 
-  console.log(etapas_finalizada);
-
   if (estado === 'Finalizada') {
     return (
       <>
