@@ -69,6 +69,7 @@ const CreacionCompetencia = () =>
   const [ buttonText, setButtonText ] = useState('Subir archivo');
   const [ fechaInicio, setFechaInicio ] = useState('');
   const [ errorMessage, setErrorMessage ] = useState("");
+  const [ errorMessageDate, setErrorMessageDate ] = useState("");
   const { updateHasChanged } = useFormContext();
   const [ hasChanged, setHasChanged ] = useState(false);
   const [ isModalOpen, setIsModalOpen ] = useState(false);
@@ -137,7 +138,7 @@ const CreacionCompetencia = () =>
       usuarios_gore: usuariosSeleccionados.usuarios_gore,
       plazo_formulario_sectorial: data.plazo_formulario_sectorial,
       plazo_formulario_gore: data.plazo_formulario_gore,
-      fecha_inicio: formatFechaInicio(),
+      fecha_inicio: fechaInicio,
       oficio_origen: selectedFile,
     };
     try
@@ -251,18 +252,38 @@ const CreacionCompetencia = () =>
     document.getElementById('fileUploadInput').click();
   };
 
-  const handleFechaInicioChange = (event) =>
-  {
-    setFechaInicio(event.target.value);
-  };
+  // const handleFechaInicioChange = (event) =>
+  // {
+  //   setFechaInicio(event.target.value);
+  // };
 
-  const formatFechaInicio = () =>
-  {
-    if (!fechaInicio) return '';
-    return new Date(fechaInicio).toISOString();
-  };
+  // const formatFechaInicio = () =>
+  // {
+  //   if (!fechaInicio) return '';
+  //   return new Date(fechaInicio).toISOString();
+  // };
 
   const dateInputRef = useRef(null);
+
+
+  const handleFechaInicioChange = (event) =>
+  {
+    const selectedDate = event.target.value;
+    const today = new Date();
+    const formattedToday = `${today.getFullYear()}-${(today.getMonth() + 1)
+      .toString()
+      .padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}`;
+    if (selectedDate > formattedToday)
+    {
+      setErrorMessageDate("La fecha no puede ser posterior a la fecha actual.");
+      event.target.value = formattedToday;
+      setFechaInicio(formattedToday);
+    } else
+    {
+      setErrorMessageDate("");
+      setFechaInicio(selectedDate);
+    }
+  };
 
 
   const userOptions = usuarios ? groupUsersByType(usuarios) : [];
@@ -427,9 +448,11 @@ const CreacionCompetencia = () =>
                     onChange={handleFechaInicioChange}
                     value={fechaInicio}
                     max={fechaMaxima}
-
                   />
                 </div>
+                {errorMessageDate && (
+                  <p className="text-sans-h6-darkred mt-1 mb-0">{errorMessageDate}</p>
+                )}
                 <div className="d-flex text-sans-h6-primary">
                   <i className="material-symbols-rounded me-2">info</i>
                   <h6>La fecha del oficio debe coincidir con la fecha en que el sector recibió la información, así los plazos previamente establecidos para el llenado del formulario sectorial  </h6>
