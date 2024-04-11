@@ -25,7 +25,6 @@ export const AuthProvider = ({children}) => {
     setUserData(user); 
   }
 
-
   const logout = async () => {
     try {
       const token = localStorage.getItem('userToken');
@@ -36,8 +35,11 @@ export const AuthProvider = ({children}) => {
       });
     } catch (error) {
       console.error('Error al intentar cerrar sesión:', error);
+      if (error.response && error.response.data.error === 'No existe este usuario.') {
+        console.error('La sesión ha expirado.');
+      }
     } finally {
-      // Limpia el localStorage y el estado de la aplicación
+      // Aún si hay un error, limpia el localStorage y el estado de la aplicación
       localStorage.removeItem('userToken');
       localStorage.removeItem('refreshToken');
       localStorage.removeItem('userData');
@@ -46,7 +48,6 @@ export const AuthProvider = ({children}) => {
       navigate('/');
     }
   };
-
   const data={
     userData,
     isLoggedIn,

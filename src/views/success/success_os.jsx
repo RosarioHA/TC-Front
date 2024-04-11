@@ -7,8 +7,7 @@ const SuccessOS = () => {
   const { data, updateFormId, loading } = useContext(FormularioContext);
   const { id } = useParams();
   const navigate = useNavigate();
-  console.log("data en success os", data)
-  console.log("id en success os", id)
+
 
   useEffect(() => {
     if (id) {

@@ -45,7 +45,6 @@ export const useResumenFinal = (id) => {
     }
   };
 
-  console.log(resumen);
 
   return { resumen, loading, error, fetchResumen, actualizarFormularioEnviado };
 };

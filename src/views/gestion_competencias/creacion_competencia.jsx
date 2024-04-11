@@ -1,9 +1,9 @@
-import { useState, useCallback, useRef , useEffect} from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import CustomInput from "../../components/forms/custom_input";
-import {CheckboxRegion} from "../../components/dropdown/checkboxRegion";
+import { CheckboxRegion } from "../../components/dropdown/checkboxRegion";
 import DropdownSelect from "../../components/dropdown/select";
 import DropdownConSecciones from "../../components/dropdown/checkbox_conSecciones_conTabla";
 import { DropdownSelectBuscadorCheck } from "../../components/dropdown/select_buscador_checkbox";
@@ -40,7 +40,7 @@ const groupUsersByType = (usuarios) =>
 
   const grouped = usuarios.reduce((acc, user) =>
   {
-    const perfil = user.perfil; 
+    const perfil = user.perfil;
     acc[ perfil ] = acc[ perfil ] || [];
     acc[ perfil ].push(user);
     return acc;
@@ -61,7 +61,7 @@ const CreacionCompetencia = () =>
   const { ambitos } = useAmbitos();
   const [ errorGeneral, setErrorGeneral ] = useState('');
   const [ regionesSeleccionadas, setRegionesSeleccionadas ] = useState([]);
-  const [sectoresIds, setSectoresIds] = useState([]); 
+  const [ sectoresIds, setSectoresIds ] = useState([]);
   const [ origenSeleccionado, setOrigenSeleccionado ] = useState('');
   const [ ambitoSeleccionado, setAmbitoSeleccionado ] = useState('');
   const [ usuariosSeleccionados, setUsuariosSeleccionados ] = useState(initialValues);
@@ -69,14 +69,15 @@ const CreacionCompetencia = () =>
   const [ buttonText, setButtonText ] = useState('Subir archivo');
   const [ fechaInicio, setFechaInicio ] = useState('');
   const [ errorMessage, setErrorMessage ] = useState("");
+  const [ errorMessageDate, setErrorMessageDate ] = useState("");
   const { updateHasChanged } = useFormContext();
   const [ hasChanged, setHasChanged ] = useState(false);
   const [ isModalOpen, setIsModalOpen ] = useState(false);
   const [ sectorSeleccionado, setSectorSeleccionado ] = useState(null);
   const [ regionSeleccionada, setRegionSeleccionada ] = useState(null);
   const { usuarios } = useFiltroUsuarios(sectorSeleccionado, regionSeleccionada);
-  const [fechaMaxima, setFechaMaxima] = useState('');
-  
+  const [ fechaMaxima, setFechaMaxima ] = useState('');
+
   const history = useNavigate();
   const handleBackButtonClick = () =>
   {
@@ -115,14 +116,16 @@ const CreacionCompetencia = () =>
     updateHasChanged(formHasChanged);
   }
 
-  useEffect(() => {
+  useEffect(() =>
+  {
     // Establece la fecha máxima permitida como la fecha actual
     const hoy = new Date();
     const fechaActual = `${hoy.getFullYear()}-${(hoy.getMonth() + 1).toString().padStart(2, '0')}-${hoy.getDate().toString().padStart(2, '0')}`;
     setFechaMaxima(fechaActual);
   }, []);
- 
-  const onSubmit = async (data) => {
+
+  const onSubmit = async (data) =>
+  {
     const competenciaData = {
       ...data,
       sectores: sectoresIds,
@@ -135,22 +138,26 @@ const CreacionCompetencia = () =>
       usuarios_gore: usuariosSeleccionados.usuarios_gore,
       plazo_formulario_sectorial: data.plazo_formulario_sectorial,
       plazo_formulario_gore: data.plazo_formulario_gore,
-      fecha_inicio: formatFechaInicio(),
+      fecha_inicio: fechaInicio,
       oficio_origen: selectedFile,
     };
-    try {
+    try
+    {
       await createCompetencia(competenciaData);
       updateHasChanged(false);
       setHasChanged(false);
       history('/home/success_creacion', { state: { origen: "crear_competencia" } });
       setErrorGeneral('');
-    } catch (error) {
-      if (error.response && error.response.data) {
+    } catch (error)
+    {
+      if (error.response && error.response.data)
+      {
         const errores = error.response.data;
         const primerCampoError = Object.keys(errores)[ 0 ];
         const primerMensajeError = errores[ primerCampoError ][ 0 ];
         setErrorGeneral(primerMensajeError);
-      } else {
+      } else
+      {
         setErrorGeneral('Error al conectarse con el servidor.');
       }
     }
@@ -162,12 +169,13 @@ const CreacionCompetencia = () =>
     value: region.id,
   }));
 
-  const handleRegionesChange = useCallback((selectedOptions) => {
+  const handleRegionesChange = useCallback((selectedOptions) =>
+  {
     const regionIds = selectedOptions.map(option => option.value);
     setRegionesSeleccionadas(selectedOptions);
     setRegionSeleccionada(regionIds); // Asegúrate de que esta línea actualiza correctamente el estado
     setValue('regiones', regionIds);
-  }, [setValue]);
+  }, [ setValue ]);
   //opciones sector 
   const opcionesSectores = dataSector.map(ministerio => ({
     label: ministerio.nombre,
@@ -178,13 +186,13 @@ const CreacionCompetencia = () =>
     }))
   }));
 
-  const handleSectorSelectionChange = (selectedSectorValues) => {
+  const handleSectorSelectionChange = (selectedSectorValues) =>
+  {
     // Transforma y actualiza el estado con solo los IDs de los sectores
     const sectoresIds = selectedSectorValues.map(sector => sector.value);
     setSectoresIds(sectoresIds);
     setSectorSeleccionado(sectoresIds);
     setValue('sectores', selectedSectorValues, { shouldValidate: true });
-    console.log(sectoresIds)
   };
 
 
@@ -193,7 +201,8 @@ const CreacionCompetencia = () =>
     label: origen.descripcion,
     value: origen.clave,
   }));
-  const handleOrigenChange = (selectedOption) => {
+  const handleOrigenChange = (selectedOption) =>
+  {
     setOrigenSeleccionado(selectedOption.value);
     setValue('origen', selectedOption.value);
   };
@@ -203,23 +212,28 @@ const CreacionCompetencia = () =>
     label: ambito.nombre,
     value: ambito.id,
   }));
-  const handleAmbitoChange = (selectedOption) => {
-    setAmbitoSeleccionado(selectedOption.value );
-    setValue('ambito_competencia',selectedOption.value );
+  const handleAmbitoChange = (selectedOption) =>
+  {
+    setAmbitoSeleccionado(selectedOption.value);
+    setValue('ambito_competencia', selectedOption.value);
   };
 
-  const handleUsuariosTransformed = useCallback((nuevosUsuarios) => {
+  const handleUsuariosTransformed = useCallback((nuevosUsuarios) =>
+  {
     setUsuariosSeleccionados(nuevosUsuarios);
   }, []);
 
-  const handleFileChange = (event) => {
+  const handleFileChange = (event) =>
+  {
     const file = event.target.files[ 0 ];
-    if (file) {
+    if (file)
+    {
       if (file.size > 20971520)
       { // 20 MB en bytes
         setErrorMessage("Archivo no cumple con el peso permitido");
         setSelectedFile(null);
-      } else {
+      } else
+      {
         setSelectedFile(file);
         setButtonText('Modificar');
         setErrorMessage("");
@@ -227,31 +241,50 @@ const CreacionCompetencia = () =>
     }
   };
 
-  const handleDelete = () => {
+  const handleDelete = () =>
+  {
     setSelectedFile(null);
     setButtonText('Subir archivo');
   };
 
-  const handleUploadClick = () => {
+  const handleUploadClick = () =>
+  {
     document.getElementById('fileUploadInput').click();
   };
 
-  const handleFechaInicioChange = (event) => {
-    setFechaInicio(event.target.value);
-  };
+  // const handleFechaInicioChange = (event) =>
+  // {
+  //   setFechaInicio(event.target.value);
+  // };
 
-  const formatFechaInicio = () => {
-    if (!fechaInicio) return '';
-    return new Date(fechaInicio).toISOString();
-  };
+  // const formatFechaInicio = () =>
+  // {
+  //   if (!fechaInicio) return '';
+  //   return new Date(fechaInicio).toISOString();
+  // };
 
   const dateInputRef = useRef(null);
 
-  const handleDateContainerClick = () => {
-    if (dateInputRef.current) {
-      dateInputRef.current.focus();
+
+  const handleFechaInicioChange = (event) =>
+  {
+    const selectedDate = event.target.value;
+    const today = new Date();
+    const formattedToday = `${today.getFullYear()}-${(today.getMonth() + 1)
+      .toString()
+      .padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}`;
+    if (selectedDate > formattedToday)
+    {
+      setErrorMessageDate("La fecha no puede ser posterior a la fecha actual.");
+      event.target.value = formattedToday;
+      setFechaInicio(formattedToday);
+    } else
+    {
+      setErrorMessageDate("");
+      setFechaInicio(selectedDate);
     }
   };
+
 
   const userOptions = usuarios ? groupUsersByType(usuarios) : [];
 
@@ -286,7 +319,7 @@ const CreacionCompetencia = () =>
           </div>
 
           <div className="mb-4 col-11">
-            <CheckboxRegion 
+            <CheckboxRegion
               label="Región (Obligatorio)"
               placeholder="Elige la o las regiones donde se ejercerá la competencia"
               options={opcionesRegiones}
@@ -332,12 +365,12 @@ const CreacionCompetencia = () =>
               options={opcionesAmbito}
               onSelectionChange={handleAmbitoChange}
               selected={ambitoSeleccionado}
-              
+
             />
-              {errors.ambito_competencia&& (
+            {errors.ambito_competencia && (
               <p className="text-sans-h6-darkred mt-2 mb-0">{errors.ambito_competencia.message}</p>
             )}
-            
+
             <div className="d-flex mt-2 text-sans-h6-primary">
               <i className="material-symbols-rounded me-2">info</i>
               <h6> editable </h6>
@@ -346,11 +379,11 @@ const CreacionCompetencia = () =>
           <div className="mb-4">
             <div >
               <DropdownConSecciones
-                  key={sectorSeleccionado + '-' + regionSeleccionada}
-                  label="Asignar Usuarios (Opcional)"
-                  placeholder="Busca el nombre de la persona"
-                  options={userOptions}
-                  onUsuariosTransformed={handleUsuariosTransformed}
+                key={sectorSeleccionado + '-' + regionSeleccionada}
+                label="Asignar Usuarios (Opcional)"
+                placeholder="Busca el nombre de la persona"
+                options={userOptions}
+                onUsuariosTransformed={handleUsuariosTransformed}
               />
             </div>
           </div>
@@ -402,10 +435,13 @@ const CreacionCompetencia = () =>
                 </tbody>
               </table>
               <div className="my-4 py-3 col-12">
-                <div onClick={handleDateContainerClick} className="fecha-oficio-contenedor">
-                  <span className="text-sans-h5">Elige la fecha del oficio (Obligatorio)</span>
+                <div className="fecha-oficio-contenedor col-4  ">
+                  <span className="text-sans-h5">
+                    Elige la fecha del oficio (Obligatorio)
+                  </span>
                   <input
                     ref={dateInputRef}
+                    onClick={() => dateInputRef.current?.click()}
                     id="dateInput"
                     type="date"
                     className="form-control py-3 my-2 border rounded border-dark-subtle"
@@ -414,6 +450,9 @@ const CreacionCompetencia = () =>
                     max={fechaMaxima}
                   />
                 </div>
+                {errorMessageDate && (
+                  <p className="text-sans-h6-darkred mt-1 mb-0">{errorMessageDate}</p>
+                )}
                 <div className="d-flex text-sans-h6-primary">
                   <i className="material-symbols-rounded me-2">info</i>
                   <h6>La fecha del oficio debe coincidir con la fecha en que el sector recibió la información, así los plazos previamente establecidos para el llenado del formulario sectorial  </h6>
@@ -430,7 +469,6 @@ const CreacionCompetencia = () =>
                   label="Plazo para formulario sectorial (Obligatorio)"
                   placeholder="Escribe el número de días corridos"
                   id="plazo_formulario_sectorial"
-                  maxLength={null}
                   {...field} />
               )}
             />
@@ -455,7 +493,6 @@ const CreacionCompetencia = () =>
                   label="Plazo para formulario GORE (Obligatorio)"
                   placeholder="Escribe el número de días corridos"
                   id="plazo_formulario_gore"
-                  maxLength={null}
                   ref={field.ref}
                   {...field} />
               )} />

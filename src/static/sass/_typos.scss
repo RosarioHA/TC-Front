@@ -107,6 +107,9 @@
 .text-sans-h5-medium{
     @include font-sans(18px, 500, $grey-a-color);
 }
+.text-sans-h5-medium{
+    @include font-sans(18px, 500, $primary-color);
+}
 
 // h6
 .text-sans-h6{

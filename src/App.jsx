@@ -53,8 +53,9 @@ const ResumenOS_Gore = React.lazy(() => import('./views/formularioGore/resumenOS
 const ObservacionesSubdere = React.lazy(() => import('./views/observacionesSUBDERE/ObservacionesSubdere'));
 const Paso_1_Revision = React.lazy(() => import("./views/revisionSubdere/Paso_1_revision"));
 const Paso_2_Revision = React.lazy(() => import("./views/revisionSubdere/Paso_2_revision"));
-const ResumenFinal = React.lazy(()=> import('./views/revisionSubdere/Resumen')); 
-const SuccessRevisionFinal = React.lazy(()=> import('./views/success/success_revision_final')); 
+const ResumenFinal = React.lazy(() => import('./views/revisionSubdere/Resumen'));
+const SuccessRevisionFinal = React.lazy(() => import('./views/success/success_revision_final'));
+const OficioDipres2 = React.lazy(() => import("./views/minutaDIPRES/segundo_oficio"));
 
 const createProtectedRoute = (path, Component, allowedProfiles) => (
   <Route
@@ -71,13 +72,16 @@ function App()
 {
   return (
     <Suspense fallback={<div>Cargando página...</div>}>
-      <CompetenciaProvider>
-        <Routes>
-          <Route path="/" element={<LoginLayout />}>
-            <Route index element={<Landing />} />
-            <Route path="/login" element={<Login />} />
-          </Route>
-          <Route path="/home/*" element={<MainLayout />}>
+      <Routes>
+        <Route path="/" element={<LoginLayout />}>
+          <Route index element={<Landing />} />
+          <Route path="/login" element={<Login />} />
+        </Route>
+        <Route path="/home/*" element={
+          <CompetenciaProvider>
+            <MainLayout />
+          </CompetenciaProvider>
+        }>
             <Route index element={<Home />} />
             {createProtectedRoute("crear_usuario", CrearUsuario, [ 'SUBDERE' ])}
             {createProtectedRoute("administrar_usuarios", GestionUsuarios, [ 'SUBDERE', 'Usuario Observador' ])}
@@ -90,7 +94,8 @@ function App()
             {createProtectedRoute("crear_competencia", CreacionCompetencia, [ 'SUBDERE', 'Usuario Observador' ])}
             {createProtectedRoute("estado_competencia/:id/subir_oficio/:etapaNum/:subetapaId", SubirOficio, [ 'SUBDERE', 'Usuario Observador' ])}
             {createProtectedRoute("estado_competencia/:id/subir_oficio_dipres", SubirOficioDipres, [ 'SUBDERE', 'Usuario Observador' ])}
-            {createProtectedRoute("estado_competencia/:id/subir_oficio_gore/:etapaNum/", SubirOficioGore, [ 'SUBDERE', 'Usuario Observador' ])}
+            {createProtectedRoute("estado_competencia/:id/subir_segundo_oficio_dipres", OficioDipres2, [ 'SUBDERE', 'Usuario Observador' ])}
+            {createProtectedRoute("estado_competencia/:id/subir_oficio_gore", SubirOficioGore, [ 'SUBDERE', 'Usuario Observador' ])}
             <Route path="estado_competencia/:id/" element={<EstadoCompentencia />} />
             <Route path="success_edicion" element={<SuccessEdicion />} />
             <Route path="success_creacion" element={<SuccessCreacion />} />
@@ -99,7 +104,7 @@ function App()
             <Route path="success_cierre_observaciones/:id/" element={<FormularioProvider> <SuccessCierreOS /> </FormularioProvider>} />
             <Route path="success_cierre_observaciones_gore/:id/" element={<FormGoreProvider> <SuccessOS_Gore /> </FormGoreProvider>} />
             <Route path="success_formulario_gore/:id/" element={<FormGoreProvider> <SuccessFormGore /> </FormGoreProvider>} />
-            <Route path="success_revision_final/:id/" element={<FormSubdereProvider> <SuccessRevisionFinal/> </FormSubdereProvider>} />
+            <Route path="success_revision_final/:id/" element={<FormSubdereProvider> <SuccessRevisionFinal /> </FormSubdereProvider>} />
             <Route
               path="observaciones_subdere/:id/"
               element={
@@ -183,8 +188,7 @@ function App()
             <Route path="500" element={<Error500 />} />
             <Route path="503" element={<Error503 />} />
           </Route>
-        </Routes>
-      </CompetenciaProvider>
+      </Routes>
     </Suspense >
 
   );

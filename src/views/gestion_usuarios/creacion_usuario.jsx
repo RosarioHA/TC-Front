@@ -89,13 +89,10 @@ const CreacionUsuario = () => {
       const initialValue = initialValues[ name ];
       return value !== String(initialValue);
     });
-    console.log("form has changed", formHasChanged)
     setHasChanged(formHasChanged);
     // Actualiza el valor de hasChanged en el contexto
     updateHasChanged(formHasChanged);
   }
-  console.log("hasChanged", hasChanged)
-
   //opciones de perfil 
   const opcionesGroups = dataGroups.map(group => ({
     value: group.id,
@@ -135,12 +132,10 @@ const CreacionUsuario = () => {
     }))
   }));
   const handleSectorChange = (sectorId) => {
-    console.log("Estado sectorId actualizado:", sectorId);
     setSectorSeleccionado(sectorId.label);
     setSectorId(sectorId);
     setHasChanged(true);
     updateHasChanged(true);
-    console.log("Sector seleccionado:", sectorId); // Dentro de handleSectorChange
   };
 
   console.log("Estado sectorId actualizado:", sectorId);
@@ -189,8 +184,7 @@ const CreacionUsuario = () => {
       };
 
       // Omitir campos no necesarios antes de enviar
-      delete payload.password2; // Asumiendo que no necesitas enviar este campo
-      console.log("Payload enviado a la API:", payload);
+      delete payload.password2; 
 
       const isValid = await trigger();
       if (submitClicked && isValid) {

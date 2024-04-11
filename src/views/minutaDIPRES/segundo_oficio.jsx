@@ -1,11 +1,11 @@
-import { useState, useEffect , useRef} from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useCompetencia } from "../../hooks/competencias/useCompetencias";
 import { useUpdateEtapa } from "../../hooks/competencias/useOficio";
 import { SuccessSOficio } from "../../components/success/oficio";
 import { SubirArchivo } from "../../components/commons/subirArchivo";
 
-const OficioDipres = () => {
+const OficioDipres2 = () => {
   const updateEtapa = useUpdateEtapa();
   const { id } = useParams();
   const { competenciaDetails } = useCompetencia(id);
@@ -17,11 +17,10 @@ const OficioDipres = () => {
   const [ errorMessage, setErrorMessage ] = useState("");
   const [isSubmitSuccessful, setIsSubmitSuccessful] = useState(false);
   const [fechaMaxima, setFechaMaxima] = useState('');
-  const oficioEnviado = !!competenciaDetails?.etapa3?.oficio_origen;
+  const oficioEnviado = !!competenciaDetails?.etapa5?.oficio_origen;
   const [ errorMessageDate, setErrorMessageDate ] = useState("");
 
-
-  const etapaNum = 3; 
+  const etapaNum = 5; 
 
   useEffect(() => {
     if (competenciaDetails) {
@@ -209,20 +208,20 @@ const OficioDipres = () => {
             <div className="mt-5">
               <span className="text-sans-h5">Elige la fecha del oficio (Obligatorio)</span>
               <div className="my-3 col-3">
-                <input
-                  ref={dateInputRef}
-                  onClick={() => dateInputRef.current?.click()}
-                  id="dateInput"
-                  type="date"
-                  className="form-control py-3 my-2 border rounded border-dark-subtle"
-                  onChange={handleFechaInicioChange}
-                  value={fechaInicio}
-                  max={fechaMaxima}
-                />
-              </div>
-              {errorMessageDate && (
-                <p className="text-sans-h6-darkred mt-1 mb-0">{errorMessageDate}</p>
-              )}
+              <input
+                    ref={dateInputRef}
+                    onClick={() => dateInputRef.current?.click()}
+                    id="dateInput"
+                    type="date"
+                    className="form-control py-3 my-2 border rounded border-dark-subtle"
+                    onChange={handleFechaInicioChange}
+                    value={fechaInicio}
+                    max={fechaMaxima}
+                  />
+                </div>
+                {errorMessageDate && (
+                  <p className="text-sans-h6-darkred mt-1 mb-0">{errorMessageDate}</p>
+                )}
               <div className="d-flex mb-3 mt-1 text-sans-h6-primary">
                 <i className="material-symbols-rounded me-2">info</i>
                 <h6 className="mt-1">La fecha del oficio debe coincidir con la fecha en que
@@ -249,4 +248,4 @@ const OficioDipres = () => {
   )
 }
 
-export default OficioDipres; 
+export default OficioDipres2; 

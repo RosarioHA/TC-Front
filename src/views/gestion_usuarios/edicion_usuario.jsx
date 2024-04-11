@@ -52,7 +52,6 @@ const EdicionUsuario = () => {
     },
   });
 
-  console.log(dataFiltroCompetencias)
 
   useEffect(() => {
     if (userDetails) {
@@ -93,14 +92,13 @@ const EdicionUsuario = () => {
   function handleOnChange(event) {
     const data = new FormData(event.currentTarget);
     const formEntries = Array.from(data.entries());
-    console.log('Form Entries:', formEntries);
+    console.log('Form Entries:', formEntries);// no borrar
 
     // Verifica si hay cambios respecto al valor inicial
     const formHasChanged = Array.from(data.entries()).some(([ name, value ]) => {
       const initialValue = userDetails[ name ];
       return value !== String(initialValue);
     });
-    console.log('Form Has Changed:', formHasChanged);
 
     // Verificar cambios específicos
     const perfilChanged = watch('perfil') !== userDetails?.perfil;
@@ -214,7 +212,6 @@ const EdicionUsuario = () => {
       await editUser(id, payload);
       updateEditMode(false);
       updateHasChanged(false);
-      console.log("valor de id en editar usuario antes de hacer redireccion", id)
       history('/home/success_edicion', { state: { origen: "editar_usuario", id } });
     } catch (error) {
       console.error("Error al editar el usuario:", error);

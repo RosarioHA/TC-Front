@@ -20,25 +20,25 @@ export const esquemaCreacionUsuario = yup.object().shape({
   password: yup
     .string()
     .required('La contraseña es obligatoria')
-    .min(6, 'La contraseña debe tener al menos 6 caracteres') ,
+    .min(6, 'La contraseña debe tener al menos 6 caracteres'),
   password2: yup
     .string()
-    .oneOf([yup.ref('password'), null], 'Las contraseñas deben coincidir')
+    .oneOf([ yup.ref('password'), null ], 'Las contraseñas deben coincidir')
     .required('Es necesario reingresar la contraseña'),
 });
 
 export const esquemaCreacionCompetencia = yup.object().shape({
-    nombre: yup
+  nombre: yup
     .string()
     .required('El nombre de la competencia es obligatorio')
     .matches(nombreCompetenciaRegex, 'Formato de nombre inválido')
     .min(3, 'El nombre debe tener al menos 3 caracteres')
     .max(200, 'El nombre no debe exceder los 200 caracteres'),
-    regiones: yup.array().min(1, 'Debes seleccionar al menos una región'),
-    sectores: yup.array().min(1, 'Debes seleccionar al menos un sector'),
-    origen: yup.string().required('El origen de la competencia es obligatorio'),
-    ambito_competencia: yup.number().integer().required('El ámbito de la competencia es obligatorio'),
-    plazo_formulario_sectorial: yup
+  regiones: yup.array().min(1, 'Debes seleccionar al menos una región'),
+  sectores: yup.array().min(1, 'Debes seleccionar al menos un sector'),
+  origen: yup.string().required('El origen de la competencia es obligatorio'),
+  ambito_competencia: yup.number().integer().required('El ámbito de la competencia es obligatorio'),
+  plazo_formulario_sectorial: yup
     .number()
     .required('El plazo para el formulario sectorial es obligatorio')
     .integer('El plazo debe ser un número entero')
@@ -46,12 +46,12 @@ export const esquemaCreacionCompetencia = yup.object().shape({
     .positive('El plazo debe ser un número positivo')
     .min(15, 'El plazo mínimo es de 15 días.')
     .max(30, 'El plazo máximo es de 30 días.'),
-    plazo_formulario_gore: yup
+  plazo_formulario_gore: yup
     .number()
     .required('El plazo para el formulario GORE es obligatorio')
     .integer('El plazo debe ser un número entero')
     .typeError('El plazo debe ser un número válido')
     .positive('El plazo debe ser un número positivo')
     .min(15, 'El plazo mínimo es de 15 días.')
-    .max(30, 'El plazo máximo es de 30 días.'),
-  });
+    .max(30, 'El plazo máximo es de 30 días.')
+});

@@ -50,7 +50,7 @@ export const Etapa5 = ({ etapa }) =>
         }
         if (userSubdere && subetapa.accion === "Subir oficio" && subetapa.estado === "revision")
         {
-            path = `home/estado_competencia/${etapa.id}/subir_oficio_gore`;
+            path = `/home/estado_competencia/${etapa.id}/subir_segundo_oficio_dipres`;
             return (
                 <Link to={path} className="btn-secundario-s text-decoration-none" id="btn">
                     <span className="material-symbols-outlined me-1">{icon}</span>

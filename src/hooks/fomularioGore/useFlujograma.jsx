@@ -13,12 +13,11 @@ export const useFlujograma = (id) =>
     formData.append('documento', file);
   
     try {
-      const response = await apiTransferenciaCompentencia.patch(`/formulario-gore/${id}/update-flujograma-competencia/`, formData, {
+      await apiTransferenciaCompentencia.patch(`/formulario-gore/${id}/update-flujograma-competencia/`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         },
       });
-      console.log('Respuesta del servidor:', response.data);
     } catch (err) {
       setError(err);
     } finally {

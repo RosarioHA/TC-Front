@@ -32,7 +32,6 @@ const CustomInputArea = forwardRef(
 
     const handleBlur = (e) => {
       if (inputValue.trim() !== lastSavedValue.trim()) {
-        console.log("Guardando datos...");
         setLastSavedValue(inputValue);
         if (onBlur) {
           onBlur(e);
