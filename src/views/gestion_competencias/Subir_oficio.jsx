@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { useParams, useNavigate, useLocation,  Link } from "react-router-dom";
+import { useParams, useNavigate, useLocation, Link } from "react-router-dom";
 import { useCompetencia } from "../../hooks/competencias/useCompetencias";
 import { useUpdateEtapa } from "../../hooks/competencias/useOficio";
 import { SuccessSOficio } from "../../components/success/oficio";
@@ -15,9 +15,9 @@ const SubirOficio = () =>
   const [ buttonText, setButtonText ] = useState('Subir archivo');
   const [ fechaInicio, setFechaInicio ] = useState('');
   const [ errorMessage, setErrorMessage ] = useState("");
-  const [isSubmitSuccessful, setIsSubmitSuccessful] = useState(false);
-  const [fechaMaxima, setFechaMaxima] = useState('');
-  const location = useLocation(); 
+  const [ isSubmitSuccessful, setIsSubmitSuccessful ] = useState(false);
+  const [ fechaMaxima, setFechaMaxima ] = useState('');
+  const location = useLocation();
   const extraData = location.state?.extraData;
   const [ errorMessageDate, setErrorMessageDate ] = useState("");
 
@@ -30,7 +30,8 @@ const SubirOficio = () =>
     }
   }, [ competenciaDetails ]);
 
-  useEffect(() => {
+  useEffect(() =>
+  {
     // Establece la fecha máxima permitida como la fecha actual
     const hoy = new Date();
     const fechaActual = `${hoy.getFullYear()}-${(hoy.getMonth() + 1).toString().padStart(2, '0')}-${hoy.getDate().toString().padStart(2, '0')}`;
@@ -143,7 +144,10 @@ const SubirOficio = () =>
 
   if (!competencia)
   {
-    return <div>Cargando datos de la competencia...</div>;
+    return <div className="d-flex align-items-center flex-column ">
+      <div className="text-center text-sans-h5-medium-blue ">Cargando datos de la competencia...</div>
+      <span className="placeholder col-4 bg-primary"></span>
+    </div>;
   }
 
   return (
@@ -166,87 +170,87 @@ const SubirOficio = () =>
           <div className="text-sans-h1 mb-4">{competencia.nombre}</div>
         </div>
         {!isSubmitSuccessful ? (
-        <div>
-          <div className="mt-3">
-            <span className="text-sans-24">Subir oficio (Obligatorio)</span>
-            <p className="text-sans-h6-grey">Máximo 1 archivo, peso máximo 20MB, formato PDF</p>
-          </div>
-          <div className="mt-5">
-            <table className="table table-striped table align-middle">
-              <thead>
-                <tr>
-                  <th scope="col">#</th>
-                  <th scope="col" htmlFor="fileUploadInput" className="form-label">Documento</th>
-                  <th scope="col"></th>
-                  <th scope="col">Acción</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <th scope="row">1</th>
-                  <td>{selectedFile ? selectedFile.name : "No seleccionado"}</td>
-                  <td className="w-20 px-0 mx-0">{errorMessage && <div className="text-sans-h6-darkred">{errorMessage}</div>}</td>
-                  <td>
-                    <div className="d-flex">
-                      <input
-                        id="fileUploadInput"
-                        type="file"
-                        className="form-control"
-                        onChange={handleFileChange}
-                        style={{ display: 'none' }}
-                        accept=".pdf"
-                      />
-                      <button className="btn-secundario-s d-flex" onClick={handleUploadClick}>
-                        <i className="material-symbols-outlined">upgrade</i>
-                        <u className="align-self-center text-sans-b-white">{buttonText}</u>
-                      </button>
-                      {selectedFile && (
-                        <button onClick={handleDelete} className="btn-terciario-ghost px-2 d-flex align-items-center mx-1">
-                          <span className="text-sans-b-red">Borrar</span>
-                          <i className="material-symbols-rounded">delete</i>
+          <div>
+            <div className="mt-3">
+              <span className="text-sans-24">Subir oficio (Obligatorio)</span>
+              <p className="text-sans-h6-grey">Máximo 1 archivo, peso máximo 20MB, formato PDF</p>
+            </div>
+            <div className="mt-5">
+              <table className="table table-striped table align-middle">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col" htmlFor="fileUploadInput" className="form-label">Documento</th>
+                    <th scope="col"></th>
+                    <th scope="col">Acción</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row">1</th>
+                    <td>{selectedFile ? selectedFile.name : "No seleccionado"}</td>
+                    <td className="w-20 px-0 mx-0">{errorMessage && <div className="text-sans-h6-darkred">{errorMessage}</div>}</td>
+                    <td>
+                      <div className="d-flex">
+                        <input
+                          id="fileUploadInput"
+                          type="file"
+                          className="form-control"
+                          onChange={handleFileChange}
+                          style={{ display: 'none' }}
+                          accept=".pdf"
+                        />
+                        <button className="btn-secundario-s d-flex" onClick={handleUploadClick}>
+                          <i className="material-symbols-outlined">upgrade</i>
+                          <u className="align-self-center text-sans-b-white">{buttonText}</u>
                         </button>
-                      )}
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+                        {selectedFile && (
+                          <button onClick={handleDelete} className="btn-terciario-ghost px-2 d-flex align-items-center mx-1">
+                            <span className="text-sans-b-red">Borrar</span>
+                            <i className="material-symbols-rounded">delete</i>
+                          </button>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div className="mt-5">
+              <span className="text-sans-h5">Elige la fecha del oficio (Obligatorio)</span>
+              <div className="my-3 col-3">
+                <input
+                  ref={dateInputRef}
+                  onClick={() => dateInputRef.current?.click()}
+                  id="dateInput"
+                  type="date"
+                  className="form-control py-3 my-2 border rounded border-dark-subtle"
+                  onChange={handleFechaInicioChange}
+                  value={fechaInicio}
+                  max={fechaMaxima}
+                />
+              </div>
+              {errorMessageDate && (
+                <p className="text-sans-h6-darkred mt-1 mb-0">{errorMessageDate}</p>
+              )}
+              <div className="d-flex mb-3 mt-1 text-sans-h6-primary">
+                <i className="material-symbols-rounded me-2">info</i>
+                <h6 className="mt-1">La fecha del oficio debe coincidir con la fecha en que
+                  DIPRES recibió la información, así los plazos previamente establecidos
+                  para el llenado de la minuta comienzan a correr.</h6>
+              </div>
+              <div className="d-flex justify-content-end">
+                {errorMessage && <div className="text-sans-h6-darkred me-4">{errorMessage}</div>}
+                <button className="btn-primario-s ps-3" onClick={handleSubmission}>
+                  <u>Subir oficio</u>
+                  <i className="material-symbols-rounded mx-1">arrow_forward_ios</i>
+                </button>
+              </div>
+            </div>
           </div>
-          <div className="mt-5">
-            <span className="text-sans-h5">Elige la fecha del oficio (Obligatorio)</span>
-            <div className="my-3 col-3">
-            <input
-                    ref={dateInputRef}
-                    onClick={() => dateInputRef.current?.click()}
-                    id="dateInput"
-                    type="date"
-                    className="form-control py-3 my-2 border rounded border-dark-subtle"
-                    onChange={handleFechaInicioChange}
-                    value={fechaInicio}
-                    max={fechaMaxima}
-                  />
-            </div>
-            {errorMessageDate && (
-                  <p className="text-sans-h6-darkred mt-1 mb-0">{errorMessageDate}</p>
-                )}
-            <div className="d-flex mb-3 mt-1 text-sans-h6-primary">
-              <i className="material-symbols-rounded me-2">info</i>
-              <h6 className="mt-1">La fecha del oficio debe coincidir con la fecha en que
-                DIPRES recibió la información, así los plazos previamente establecidos
-                para el llenado de la minuta comienzan a correr.</h6>
-            </div>
-            <div className="d-flex justify-content-end">
-              {errorMessage && <div className="text-sans-h6-darkred me-4">{errorMessage}</div>}
-              <button className="btn-primario-s ps-3" onClick={handleSubmission}>
-                <u>Subir oficio</u>
-                <i className="material-symbols-rounded mx-1">arrow_forward_ios</i>
-              </button>
-            </div>
-          </div>
-        </div>
-          ) : (
-            <SuccessSOficio idCompetencia={id} sector={extraData} siguientePaso="información al formulario sectorial"/>
-          )}
+        ) : (
+          <SuccessSOficio idCompetencia={id} sector={extraData} siguientePaso="información al formulario sectorial" />
+        )}
       </div >
     </>
   )

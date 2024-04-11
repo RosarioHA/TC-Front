@@ -69,7 +69,7 @@ export const GastosEvolucionVariacion = ({
   });
 
   if (!datosGastos) {
-    return <div>Cargando datos...</div>;
+    return <div className="text-center text-sans-h5-medium-blue ">Cargando datos...</div>;
   }
 
   if (!datosGastos || datosGastos.length === 0) {

@@ -19,7 +19,7 @@ export const GastosAnuales = ({readOnly}) => {
   }, [ id ]);
 
   if (!datosGastos) {
-    return <div>Cargando datos...</div>;
+    return <div className="text-center text-sans-h5-medium-blue ">Cargando datos...</div>;
   }
 
   if (!datos || datos.length === 0) {

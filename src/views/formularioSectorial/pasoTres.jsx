@@ -105,7 +105,10 @@ const PasoTres = () => {
 
   if (!pasoData || !pasoData.paso3)
   {
-    return <div>Cargando paso 3...</div>;
+    return <> <div className="d-flex align-items-center flex-column my-5 px-5 ">
+    <div className="text-center text-sans-h5-medium-blue ">Cargando paso 3</div>
+    <span className="placeholder col-6 bg-primary"></span>
+  </div></>;
   }
 
 
