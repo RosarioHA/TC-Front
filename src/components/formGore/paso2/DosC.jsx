@@ -74,7 +74,7 @@ export const Fluctuaciones = ({ id, dataGastos, solo_lectura }) => {
   });
 
   if (!datosGastos.length) {
-    return <div>Cargando datos...</div>;
+    return <div className="text-center text-sans-h5-medium-blue ">Cargando datos...</div>;
   }
 
   // Función para recargar campos por separado

@@ -56,6 +56,7 @@ const Paso_2_Revision = React.lazy(() => import("./views/revisionSubdere/Paso_2_
 const ResumenFinal = React.lazy(() => import('./views/revisionSubdere/Resumen'));
 const SuccessRevisionFinal = React.lazy(() => import('./views/success/success_revision_final'));
 const OficioDipres2 = React.lazy(() => import("./views/minutaDIPRES/segundo_oficio"));
+const VistaCarga = React.lazy(() => import("./views/vistaCarga"));
 
 const createProtectedRoute = (path, Component, allowedProfiles) => (
   <Route
@@ -71,7 +72,7 @@ const createProtectedRoute = (path, Component, allowedProfiles) => (
 function App()
 {
   return (
-    <Suspense fallback={<div>Cargando página...</div>}>
+    <Suspense fallback={<VistaCarga/>}>
       <Routes>
         <Route path="/" element={<LoginLayout />}>
           <Route index element={<Landing />} />

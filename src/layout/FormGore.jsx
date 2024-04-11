@@ -24,7 +24,10 @@ const FormGoreLayout = () => {
   }
 
   if (!dataFormGore) {
-    return <div>Cargando...</div>;
+    return <div className="d-flex align-items-center flex-column ">
+    <div className="text-center text-sans-h5-medium-blue ">Cargando Formulario</div>
+    <span className="placeholder col-4 bg-primary"></span>
+  </div>;
   }
   return (
     <div className="container-fluid col-11">

@@ -7,39 +7,50 @@ import { useCompetencia } from "../../hooks/competencias/useCompetencias";
 import { useFormularioSubdere } from "../../hooks/revisionFinalSubdere/useFormularioSubdere";
 import { useResumenFinal } from "../../hooks/revisionFinalSubdere/useResumenFinal";
 
-const EstadoCompetencia = () => {
+const EstadoCompetencia = () =>
+{
   const { id } = useParams();
   const { competenciaDetails, loading, error } = useCompetencia(id);
-  const {resumen}= useResumenFinal(id); 
+  const { resumen } = useResumenFinal(id);
   const navigate = useNavigate();
   const [ competencia, setCompetencia ] = useState(null);
-  const {dataFormSubdere} = useFormularioSubdere(id);
+  const { dataFormSubdere } = useFormularioSubdere(id);
   const mostrarMensajeFinalizada = competenciaDetails.estado === 'Finalizada' && resumen?.formulario_final_enviado === true;
 
 
 
 
-  useEffect(() => {
-    if (competenciaDetails) {
+  useEffect(() =>
+  {
+    if (competenciaDetails)
+    {
       setCompetencia(competenciaDetails);
     }
   }, [ competenciaDetails ]);
 
-  const handleBackButtonClick = () => {
+  const handleBackButtonClick = () =>
+  {
     navigate(-1);
   };
 
-  const handleVerRevisionSubdere = () => {
+  const handleVerRevisionSubdere = () =>
+  {
     navigate(`/home/revision_subdere/${id}/paso_1/`)
   }
 
-  if (loading) {
-    return <div>Cargando detalles de la competencia...</div>;
+  if (loading)
+  {
+    return <div className="d-flex align-items-center flex-column ">
+      <div className="text-center text-sans-h5-medium-blue ">Cargando detalles de la competencia...</div>
+      <span className="placeholder col-4 bg-primary"></span>
+    </div>;
   }
-  if (error) {
+  if (error)
+  {
     return <div>Error al cargar los detalles: {error.message}</div>;
   }
-  if (!competencia) {
+  if (!competencia)
+  {
     return <div>No se encontraron detalles de la competencia</div>;
   }
 
@@ -47,7 +58,7 @@ const EstadoCompetencia = () => {
     <>
       <div className="container col-11 my-3 mx-5">
         <div className="py-3 d-flex">
-          <div  className="align-self-center">
+          <div className="align-self-center">
             <button className="btn-secundario-s" onClick={handleBackButtonClick}>
               <i className="material-symbols-rounded me-2">arrow_back_ios</i>
               <p className="mb-0 text-decoration-underline">Volver</p>
@@ -75,7 +86,7 @@ const EstadoCompetencia = () => {
           />
         </div>
 
-        { mostrarMensajeFinalizada && (
+        {mostrarMensajeFinalizada && (
           <div className="bluesky-container p-3 mt-4">
             <h3 className="text-sans-h3-blue mb-3">Revisión SUBDERE finalizada.</h3>
             <div className="d-flex pt-4 justify-content-between blue-border-top">
@@ -84,7 +95,7 @@ const EstadoCompetencia = () => {
             </div>
           </div>
         )}
-          
+
         <div className="mt-5 mx-0">
           <div className="text-sans-h2 my-3">Etapas de levantamiento de información</div>
           <VerticalStepper etapasObjeto={competencia.resumen_competencia} etapaDatos={competencia} id={id} />
