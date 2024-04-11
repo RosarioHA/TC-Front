@@ -123,10 +123,18 @@ const SubirArchivo = ({ index, tituloDocumento, readOnly, onViewFile, archivoDes
               )}
             </div>
           ) : archivoDescargaUrl && (
-            <button onClick={handleDownload} className="btn-secundario-s px-2 d-flex align-items-center">
-              <span className="text-sans-b-green text-decoration-underline mx-1">Descargar</span>
-              <i className="material-symbols-rounded ms-2">download</i>
-            </button>
+            <div className="d-flex flex-row ">
+              <UploadBtn
+                onFileChange={handleFileChange}
+                fileUploaded={fileUploaded}
+                onViewFile={() => onViewFile()}
+                ver={ver}
+              />
+              <button onClick={handleDownload} className="btn-secundario-s px-2 d-flex align-items-center ms-5 me-3">
+                <span className="text-sans-b-green text-decoration-underline mx-1">Descargar</span>
+                <i className="material-symbols-rounded ms-2">download</i>
+              </button>
+            </div>
           )}
         </div>
       </div>
