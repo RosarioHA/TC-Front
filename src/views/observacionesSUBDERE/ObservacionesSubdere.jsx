@@ -12,6 +12,7 @@ const ObservacionesSubdere = () => {
   console.log("competencia details en OS", competenciaDetails)
   console.log("competencia details estado en OS", competenciaDetails?.etapa2?.estado)
 
+
   const handleBackButtonClick = () => {
     navigate(-1);
   };
@@ -106,7 +107,7 @@ const ObservacionesSubdere = () => {
         <p className="text-sans-p">Fecha última modificación:</p><p className="text-sans-p-bold ms-2">{competenciaDetails?.etapa2?.fecha_ultima_modificacion}</p>
       </div>
 
-      {competenciaDetails?.etapa2?.estado === 'Finalizada' && (competenciaDetails?.etapa3?.omitida !== true) && (
+      {competenciaDetails?.etapa2?.estado === 'Finalizada' && (
         <div>
           <h3 className="text-sans-h2">Esta todo listo para que termines la etapa</h3>
           <p className="text-sans-p mt-3 mb-5">Ya revisaste todos los formularios. </p> 
@@ -120,7 +121,8 @@ const ObservacionesSubdere = () => {
                 className="form-check-input"
                 value="A"
                 onChange={() => handleRadioButtonChange('A')}
-                checked={etapaOmitida === true}
+                checked={etapaOmitida === false}
+                //disabled
               />
               <label htmlFor="opcionA" className="text-sans-p">
                 DIPRES debe pronunciarse respecto de la información del sector o sectores asociados a la competencia.
@@ -134,7 +136,7 @@ const ObservacionesSubdere = () => {
                 className="form-check-input"
                 value="B"
                 onChange={() => handleRadioButtonChange('B')}
-                checked={etapaOmitida === false}
+                checked={etapaOmitida === true}
               />
               <label htmlFor="opcionB" className="text-sans-p">
                 GORE debe entregar sus antecedentes para que luego DIPRES se pronuncie respecto a la información.
