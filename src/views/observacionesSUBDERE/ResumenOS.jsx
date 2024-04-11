@@ -74,7 +74,6 @@ const ResumenOS = () => {
 								<p className="text-sans-p-semibold">Paso {pasoNumber}:</p>
 								<p className="text-sans-p ms-2">{titulosPasos[pasoNumber]}</p>
 							</div>
-							{console.log("Valor de observacion:", observacion)}
 							{observacion && !Array.isArray(observacion) && (
 							<>
 								<img className="icono-s" src={successIcon} alt="Éxito" />

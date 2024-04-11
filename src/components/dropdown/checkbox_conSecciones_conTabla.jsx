@@ -149,7 +149,6 @@ const DropdownConSecciones = ({
   // Renderiza la tabla resumen
   const renderTablaResumen = (usuarios, tipoUsuario, tipoPerfil) => {
     if (!usuarios || usuarios.length === 0) {
-      console.log('usuarios', usuarios)
       return null; // No hay usuarios para este tipo de perfil
     }
 

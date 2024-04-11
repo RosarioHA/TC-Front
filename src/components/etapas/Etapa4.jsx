@@ -216,7 +216,6 @@ export const Etapa4 = ({ etapa }) =>
         isButtonDisabled = false;
         break;
     }
-    console.log(path)
     // Función para manejar la navegación
     const handleNavigation = () =>
     {

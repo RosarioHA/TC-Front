@@ -55,6 +55,7 @@ const Paso_1_Revision = React.lazy(() => import("./views/revisionSubdere/Paso_1_
 const Paso_2_Revision = React.lazy(() => import("./views/revisionSubdere/Paso_2_revision"));
 const ResumenFinal = React.lazy(()=> import('./views/revisionSubdere/Resumen')); 
 const SuccessRevisionFinal = React.lazy(()=> import('./views/success/success_revision_final')); 
+const OficioDipres2 = React.lazy(()=> import("./views/minutaDIPRES/segundo_oficio")); 
 
 const createProtectedRoute = (path, Component, allowedProfiles) => (
   <Route
@@ -90,7 +91,8 @@ function App()
             {createProtectedRoute("crear_competencia", CreacionCompetencia, [ 'SUBDERE', 'Usuario Observador' ])}
             {createProtectedRoute("estado_competencia/:id/subir_oficio/:etapaNum/:subetapaId", SubirOficio, [ 'SUBDERE', 'Usuario Observador' ])}
             {createProtectedRoute("estado_competencia/:id/subir_oficio_dipres", SubirOficioDipres, [ 'SUBDERE', 'Usuario Observador' ])}
-            {createProtectedRoute("estado_competencia/:id/subir_oficio_gore/:etapaNum/", SubirOficioGore, [ 'SUBDERE', 'Usuario Observador' ])}
+            {createProtectedRoute("estado_competencia/:id/subir_segundo_oficio_dipres", OficioDipres2 , [ 'SUBDERE', 'Usuario Observador' ])}
+            {createProtectedRoute("estado_competencia/:id/subir_oficio_gore", SubirOficioGore, [ 'SUBDERE', 'Usuario Observador' ])}
             <Route path="estado_competencia/:id/" element={<EstadoCompentencia />} />
             <Route path="success_edicion" element={<SuccessEdicion />} />
             <Route path="success_creacion" element={<SuccessCreacion />} />

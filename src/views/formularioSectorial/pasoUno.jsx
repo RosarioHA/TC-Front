@@ -20,7 +20,6 @@ const PasoUno = () => {
 
   const observacionesEnviadas = observaciones?.observacion_enviada
   const formSectorialEnviado = data?.formulario_enviado
-  console.log("formSectorialEnviado en paso 1", formSectorialEnviado)
 
 
   useEffect(() => {

@@ -101,7 +101,7 @@ export const Etapa2 = ({ etapa }) =>
           buttonText = "Ver Observación";
           icon = "visibility";
         } else {
-          path = "/home/ingresar_observaciones";
+          path = `/home/observaciones_subdere/${etapa.id}/`;
         }
         break;
   

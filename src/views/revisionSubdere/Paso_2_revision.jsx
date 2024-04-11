@@ -48,7 +48,6 @@ const Paso_2_Revision = () =>
   } = dataPasoSubdere;
 
   const { competencia_nombre } = dataFormSubdere;
-  console.log(dataFormSubdere);
 
   return (
     <>

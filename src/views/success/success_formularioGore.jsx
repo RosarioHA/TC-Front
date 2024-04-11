@@ -8,7 +8,6 @@ const SuccessFormGore = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  console.log("dataFormGore", dataFormGore)
 
   useEffect(() => {
     if (id) {

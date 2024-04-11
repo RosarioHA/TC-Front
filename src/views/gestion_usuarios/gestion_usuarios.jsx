@@ -159,7 +159,7 @@ const GestionUsuarios = () => {
               /> 
             </th>*/}
             <td className="pt-3 ps-3"><u className="text-sans-p my-4">{user.nombre_completo}</u></td>
-            <td className="text-primary pt-4">
+            <td className="text-primary pt-4 col-4 text-wrap">
               {renderCompetenciasAsignadas(user.competencias_asignadas)}
             </td>
             <td>

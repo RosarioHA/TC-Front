@@ -245,9 +245,6 @@ const PersonalDirecto = ({
         const nuevaCalidadJuridicaDatos = {
           ...listaActualizadaPersonalDirecto[listaActualizadaPersonalDirecto.length - 1], // Extrayendo el último elemento
         };
-
-        console.log('listado',nuevaCalidadJuridicaDatos)
-
         // Actualiza el estado para añadir el nuevo elemento al final
         setPersonas(prevPersonas => {
           // Si ya existen personas con esta calidad jurídica, simplemente añade al final
