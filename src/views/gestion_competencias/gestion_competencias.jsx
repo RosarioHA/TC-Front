@@ -109,12 +109,10 @@ const GestionCompetencias = () =>
 
   const handleVerEstado = (competencia) =>
   {
-    console.log("Navegando a detalles con competencia:", competencia);
     navigate(`/home/estado_competencia/${competencia.id}`, { state: { competencia } });
   };
   const handleVerDetalle = (competencia) =>
   {
-    console.log("Navegando a detalles competencia:", competencia);
     navigate(`/home/editar_competencia/${competencia.id}`, { state: { competencia } });
   };
 
@@ -123,7 +121,6 @@ const GestionCompetencias = () =>
   // Modificar la función para renderizar botones de paginación
   const renderPaginationButtons = () =>
   {
-    console.log("Renderizando botones de paginación. Total de páginas:", totalPages);
     if (!paginationCompetencia || totalPages <= 1)
     {
       return null;

@@ -40,7 +40,6 @@ export const FormGoreProvider = ({ children }) => {
   
       const response = await patchData(id, stepNumber, {}, archivo); 
       if (response) {
-        console.log("Archivo subido con éxito.");
         return true;
       } else {
         throw new Error("La subida del archivo falló.");

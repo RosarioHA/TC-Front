@@ -35,7 +35,6 @@ export const GastosAnuales = ({readOnly}) => {
     const validatedValue = validateInput(value);
     if (datos[ index ][ tipo ] !== validatedValue) {
       try {
-        console.log(`Guardando: ${tipo} = ${value} para el ID: ${id}`);
         await updatePaso(id, stepNumber, { [ tipo ]: value });
         const newDatos = [ ...datos ];
         newDatos[ index ][ tipo ] = validatedValue;

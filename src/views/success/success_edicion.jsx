@@ -7,7 +7,7 @@ const SuccessEdicion = () => {
   const location = useLocation();
   const origen = location.state?.origen;
   const id = location.state?.id;
-  console.log("id de usuario en vista success", id)
+
   
   const handleButtonClick = () => {
     // Verifica que id tenga un valor antes de intentar acceder a sus propiedades

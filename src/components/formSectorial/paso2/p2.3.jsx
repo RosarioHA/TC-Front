@@ -152,25 +152,22 @@ export const Subpaso_dosPuntoTres = ({
         p_2_3_etapas_ejercicio_competencia: nuevasEtapas,
       });
       if (resultado) {
-        console.log('Selecciones guardadas correctamente.');
+        console.log('Selecciones guardadas correctamente.');//no borrar 
       } else {
         throw new Error('Error al guardar selecciones.');
       }
     } catch (error) {
       console.error('Error al guardar los datos:', error);
-      // Manejar aquí los errores, por ejemplo mostrando una notificación al usuario
     }
   };
 
   useEffect(() => {
     const cargarOpcionesSeleccionadas = () => {
-      // Suponiendo que `dataDirecta` incluya información sobre las opciones seleccionadas para unidades intervinientes
+  
       const etapasConSeleccionadas = etapas.map((etapa) => {
         const procedimientosAjustados = etapa.procedimientos.map((proc) => {
-          // Encuentra las opciones seleccionadas basadas en algún criterio, como IDs guardados
           const unidadesSeleccionadas = proc.unidades_intervinientes.map(
             (unidadId) => {
-              // Encuentra el label correspondiente al ID en las opciones disponibles
               const opcionEncontrada = opciones.find(
                 (opcion) => opcion.value === unidadId.toString()
               );
@@ -203,7 +200,6 @@ export const Subpaso_dosPuntoTres = ({
   // Generador de ID único
 
   const agregarEtapa = async () => {
-    // Define la nueva etapa sin ID inicialmente
     const nuevaEtapa = {
       nombre_etapa: '',
       descripcion_etapa: '',
@@ -213,8 +209,6 @@ export const Subpaso_dosPuntoTres = ({
     // Solo realiza la validación si ya existen etapas
     if (etapas && etapas.length > 0) {
       const ultimaEtapa = etapas[etapas.length - 1];
-
-      // Verificar si la última etapa agregada tiene los campos obligatorios llenos
       if (!ultimaEtapa.nombre_etapa || !ultimaEtapa.descripcion_etapa) {
         const mensajeError =
           'Debe guardar los campos obligatorios antes de agregar una nueva etapa';
@@ -238,8 +232,7 @@ export const Subpaso_dosPuntoTres = ({
         datosActualizados
       );
       if (resultado) {
-        console.log('Etapa agregada con éxito');
-        refetchTrigger(); // Actualiza los datos para reflejar los cambios
+        refetchTrigger(); 
         setEtapas((prevEtapas) => [...prevEtapas, nuevaEtapa]);
       } else {
         console.error('Error al agregar la etapa');
@@ -273,12 +266,12 @@ export const Subpaso_dosPuntoTres = ({
             'Complete todos los campos del procedimiento antes de agregar uno nuevo.',
         }));
         procedimientoConErrores = true;
-        break; // Detiene la verificación en el primer procedimiento incompleto
+        break;
       }
     }
 
     if (procedimientoConErrores) {
-      return; // Detiene la ejecución si algún procedimiento está incompleto
+      return; 
     }
     const nuevoProcedimiento = {
       descripcion_procedimiento: '',
@@ -307,7 +300,6 @@ export const Subpaso_dosPuntoTres = ({
       if (resultado) {
         refetchTrigger(); // Si es exitoso, recarga los datos para asegurar consistencia
       } else {
-        // Manejo de caso donde no hay un error lanzado, pero la operación falla
         throw new Error('Fallo al agregar el procedimiento');
       }
     } catch (error) {
@@ -434,7 +426,6 @@ export const Subpaso_dosPuntoTres = ({
     let updatedEtapas = [...etapas];
 
     if (procedimientoId) {
-      // Si estamos actualizando un procedimiento específico
       const procedimientoIndex = etapas[etapaIndex].procedimientos.findIndex(
         (p) => p.id === procedimientoId
       );
@@ -468,7 +459,7 @@ export const Subpaso_dosPuntoTres = ({
 
     try {
       await handleUpdatePaso(id, stepNumber, payload);
-      setEtapas(updatedEtapas); // Actualiza el estado con los cambios
+      setEtapas(updatedEtapas); 
       setCampoModificado((prev) => ({
         ...prev,
         [campoClave]: { loading: false, saved: true },
@@ -484,7 +475,6 @@ export const Subpaso_dosPuntoTres = ({
     }
   };
 
-  console.log('campo', campoModificado);
 
   return (
     <div>

@@ -38,7 +38,6 @@ const CustomTextarea = forwardRef(({
   };
 
   const handleBlur = (e) => {
-    console.log("Input Blurred");
     e.preventDefault();
     if (inputValue !== lastSavedValueRef.current && onBlur) {
       onBlur(e);
