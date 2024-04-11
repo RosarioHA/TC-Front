@@ -131,7 +131,7 @@ export const Subpaso_CincoPuntoUno = (
       </div>
 
       <div className="row mt-5 d-flex align-items-center">
-        <p className="text-sans-p-bold mb-0 col-2">Costos Directos <br /> Totales Anual ($M)</p>
+        <p className="text-sans-p-bold mb-0 col-2">Costos Indirectos <br /> Totales Anual ($M)</p>
         <p className="text-sans-p-blue col">{formatearNumero(totalCostosIndirectos)}</p>
       </div>
       <hr className="col-4" />
