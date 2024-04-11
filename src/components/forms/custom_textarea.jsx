@@ -1,6 +1,7 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, forwardRef } from "react";
 
-const CustomTextarea = ({
+
+const CustomTextarea = forwardRef(({
   loading,
   descripcion,
   saved,
@@ -16,70 +17,54 @@ const CustomTextarea = ({
   readOnly,
   name,
   containerSize
-}) =>
-{
-  const [ inputValue, setInputValue ] = useState(value); // Inicialización segura de inputValue
-  const textareaRef = useRef(null);
+}, ref) => {
+  const [inputValue, setInputValue] = useState(value); // Inicialización segura de inputValue
+  const internalRef = useRef(null); // Ref interna para manipulación DOM que no necesita exposición externa
   const lastSavedValueRef = useRef(value); // Referencia para almacenar el valor al momento del último guardado
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     adjustHeight();
-  }, [ inputValue ]);
+  }, [inputValue]);
 
-  const handleChange = (event) =>
-  {
+  const handleChange = (event) => {
     event.preventDefault();
     const newText = event.target.value;
-    // Limita la longitud del texto a `maxLength` caracteres si se ha definido maxLength
-    if (maxLength !== undefined && newText.length > maxLength)
-    {
+    if (maxLength !== undefined && newText.length > maxLength) {
       setInputValue(newText.slice(0, maxLength));
-    } else
-    {
+    } else {
       setInputValue(newText);
     }
     onChange(event); // Pasa el evento completo
   };
 
-  const handleBlur = (e) =>
-  {
-    console.log("Input Blurred");
+  const handleBlur = (e) => {
     e.preventDefault();
-    // Solo invoca onBlur si el valor ha cambiado desde el último guardado
-    if (inputValue !== lastSavedValueRef.current && onBlur)
-    {
+    if (inputValue !== lastSavedValueRef.current && onBlur) {
       onBlur(e);
       lastSavedValueRef.current = inputValue; // Actualiza el valor de referencia al momento del último guardado
     }
   };
 
-  const adjustHeight = () =>
-  {
-    if (textareaRef.current)
-    {
-      textareaRef.current.style.height = 'inherit';
-      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+  const adjustHeight = () => {
+    if (internalRef.current) {
+      internalRef.current.style.height = 'inherit';
+      internalRef.current.style.height = `${internalRef.current.scrollHeight}px`;
     }
   };
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     setInputValue(value); // Actualiza el inputValue cuando el prop 'value' cambia
-  }, [ value ]);
+  }, [value]);
 
   const counterClass = maxLength !== undefined && inputValue.length === maxLength
     ? "text-sans-h6-darkred"
     : "text-sans-h6";
 
-  const renderSpinnerOrCheck = () =>
-  {
-    if (loading)
-    {
+  const renderSpinnerOrCheck = () => {
+    if (loading) {
       return <div className="spinner-border text-primary my-4 mx-3" role="status"></div>;
     }
-    if (saved)
-    {
+    if (saved) {
       return <i className="material-symbols-outlined my-4 mx-3 text-success">check</i>;
     }
     return null;
@@ -90,7 +75,7 @@ const CustomTextarea = ({
       {readOnly ? (
         <div className="d-flex flex-column textarea-container">
           <label className="text-sans-h5 input-label ms-3 ms-sm-0">{label}</label>
-          <div className={`teaxtarea-text input-textarea p-3 ${error ? 'input-error' : ''}`}>
+          <div className={`textarea-text input-textarea p-3 ${error ? 'input-error' : ''}`}>
             <p className="text-sans-p-grey mb-0">{value}</p>
           </div>
         </div>
@@ -99,7 +84,7 @@ const CustomTextarea = ({
           <div className="d-flex input-container">
             <label className="text-sans-h5 input-label ms-3 ms-sm-0">{label}</label>
             <textarea
-              ref={textareaRef}
+              ref={ref || internalRef} // Utiliza ref externa si disponible, sino usa interna
               className={`input-textarea input-s p-3 p-2 col-11 ${error ? 'input-error' : ''}`}
               placeholder={placeholder}
               id={id}
@@ -134,6 +119,8 @@ const CustomTextarea = ({
       )}
     </div>
   );
-};
+});
+
+CustomTextarea.displayName = 'CustomTextarea';
 
 export default CustomTextarea;

@@ -99,7 +99,7 @@ const SubirArchivo = ({ index, tituloDocumento, readOnly, onViewFile, archivoDes
           {error ? (
             <div className="text-sans-p-bold-darkred">{error}</div>
           ) : isUploading ? (
-            <div>Cargando archivo...</div> // Mensaje de carga
+            <div className="text-center text-sans-h5-medium-blue">Cargando archivo...</div> // Mensaje de carga
           ) : isDeleting ? (
             <div>Eliminando archivo...</div> // Mensaje de eliminación
           ) : (

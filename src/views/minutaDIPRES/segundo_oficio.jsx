@@ -5,10 +5,10 @@ import { useUpdateEtapa } from "../../hooks/competencias/useOficio";
 import { SuccessSOficio } from "../../components/success/oficio";
 import { SubirArchivo } from "../../components/commons/subirArchivo";
 
-const OficioGore = () =>
+const OficioDipres2 = () =>
 {
   const updateEtapa = useUpdateEtapa();
-  const { etapaNum, id } = useParams();
+  const { id } = useParams();
   const { competenciaDetails } = useCompetencia(id);
   const navigate = useNavigate();
   const [ competencia, setCompetencia ] = useState(null);
@@ -18,9 +18,10 @@ const OficioGore = () =>
   const [ errorMessage, setErrorMessage ] = useState("");
   const [ isSubmitSuccessful, setIsSubmitSuccessful ] = useState(false);
   const [ fechaMaxima, setFechaMaxima ] = useState('');
-  const oficioEnviado = !!competenciaDetails?.etapa3?.oficio_origen;
+  const oficioEnviado = !!competenciaDetails?.etapa5?.oficio_origen;
   const [ errorMessageDate, setErrorMessageDate ] = useState("");
 
+  const etapaNum = 5;
 
   useEffect(() =>
   {
@@ -87,7 +88,6 @@ const OficioGore = () =>
       setFechaInicio(selectedDate);
     }
   };
-
   const prepareDataForSubmission = () =>
   {
     const formData = new FormData();
@@ -152,7 +152,7 @@ const OficioGore = () =>
             </ol>
           </nav>
         </div>
-        <span className="text-sans-Title">Oficio GORE</span>
+        <span className="text-sans-Title">Oficio DIPRES</span>
         <div className="text-sans-h1 mb-4">{competencia.nombre}</div>
 
         {!isSubmitSuccessful ? (
@@ -179,8 +179,8 @@ const OficioGore = () =>
                   <SubirArchivo
                     index="1"
                     readOnly={true}
-                    archivoDescargaUrl={competenciaDetails?.etapa4?.oficio_origen}
-                    tituloDocumento={competenciaDetails?.etapa4?.oficio_origen}
+                    archivoDescargaUrl={competenciaDetails?.etapa3?.oficio_origen}
+                    tituloDocumento={competenciaDetails?.etapa3?.oficio_origen}
                   />
                 </>
               ) : (
@@ -263,11 +263,11 @@ const OficioGore = () =>
           </div>
 
         ) : (
-          <SuccessSOficio idCompetencia={id} sector='GORE' siguientePaso="información al formulario" />
+          <SuccessSOficio idCompetencia={id} sector='DIPRES' siguientePaso="su minuta" />
         )}
       </div >
     </>
   )
 }
 
-export default OficioGore; 
+export default OficioDipres2; 

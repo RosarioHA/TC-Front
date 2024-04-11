@@ -52,7 +52,7 @@ const Sidebar = () => {
 
   const handleItemClick = (e) => {
     // Puedes personalizar esta función según tus necesidades
-    console.log('Item clicked', e);
+    console.log('Item clicked', e);// no borrar
   };
 
   return (

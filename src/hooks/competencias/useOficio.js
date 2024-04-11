@@ -13,13 +13,10 @@ export const useUpdateEtapa = () =>
 
         // Construcción de la URL para la solicitud PATCH
         const url = `/etapa${etapaId}/${competenciaId}/`;
-        console.log("URL para la solicitud PATCH:", url);
-
         try
         {
             // Realizar la solicitud PATCH
             const response = await apiTransferenciaCompentencia.patch(url, datos);
-            console.log("Respuesta de la actualización:", response);
             return response.data; // Devolver los datos actualizados
         } catch (error)
         {

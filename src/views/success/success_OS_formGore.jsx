@@ -8,7 +8,7 @@ const SuccessOS_Gore = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  console.log("dataFormGore", dataFormGore)
+
 
   useEffect(() => {
     if (id) {
@@ -23,7 +23,10 @@ const SuccessOS_Gore = () => {
   };
 
   if (loading) {
-    return <div>Cargando...</div>;
+    return <div className="d-flex align-items-center flex-column ">
+    <div className="text-center text-sans-h5-medium-blue ">Cargando...</div>
+    <span className="placeholder col-4 bg-primary"></span>
+  </div>;
   }
   if (!dataFormGore) {
     return <div>No hay datos disponibles.</div>;

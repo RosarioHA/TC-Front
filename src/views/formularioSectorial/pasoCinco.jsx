@@ -76,7 +76,10 @@ const PasoCinco = () => {
   if (!pasoData) return <div>No hay datos disponibles para el Paso 5</div>;
 
   const paso5 = pasoData.paso5;
-  if (!paso5) return <div>Cargando Paso 5...</div>;
+  if (!paso5) return <> <div className="d-flex align-items-center flex-column my-5 px-5 ">
+  <div className="text-center text-sans-h5-medium-blue ">Cargando paso 5</div>
+  <span className="placeholder col-6 bg-primary"></span>
+</div></>;
 
   const {
     p_5_1_b_costos_indirectos,

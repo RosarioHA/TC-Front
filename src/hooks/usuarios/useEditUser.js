@@ -6,7 +6,6 @@ export const useEditUser = () => {
   const [error, setError] = useState(null);
 
   const editUser = async (userId, userData) => {
-    console.log('Data before formatting:', userData);
     setIsLoading(true);
     setError(null);
 
@@ -24,9 +23,7 @@ export const useEditUser = () => {
         // region: userData.region ? userData.region.id : null,
         is_active: userData.is_active,
       };
-
-      console.log('Data after formatting:', formattedData);
-
+      
       const response = await apiTransferenciaCompentencia.put(`users/${userId}/`, formattedData);
       return response.data;
     } catch (error) {

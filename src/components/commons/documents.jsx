@@ -34,7 +34,6 @@ export const DocumentsAditionals = ({ onFilesChanged, marcoJuridicoData, handleD
     const filesExceedingMaxSize = incomingFiles.filter(file => file.size > maxSize);
 
     if (filesExceedingMaxSize.length > 0) {
-      console.log('Algunos archivos exceden el límite de 20 MB y no serán procesados.');
       setFileTooLarge(true); // Establecer que hay archivos demasiado grandes
     }
 
@@ -45,7 +44,6 @@ export const DocumentsAditionals = ({ onFilesChanged, marcoJuridicoData, handleD
   
     const availableSlots = maxFiles - files.length;
     if (availableSlots <= 0) {
-      console.log('Número máximo de archivos ya alcanzado.');
       setMaxFilesReached(true);
       return;
     }

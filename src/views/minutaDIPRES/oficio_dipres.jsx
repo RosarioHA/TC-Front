@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect , useRef} from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useCompetencia } from "../../hooks/competencias/useCompetencias";
 import { useUpdateEtapa } from "../../hooks/competencias/useOficio";
@@ -18,12 +18,10 @@ const OficioDipres = () => {
   const [isSubmitSuccessful, setIsSubmitSuccessful] = useState(false);
   const [fechaMaxima, setFechaMaxima] = useState('');
   const oficioEnviado = !!competenciaDetails?.etapa3?.oficio_origen;
+  const [ errorMessageDate, setErrorMessageDate ] = useState("");
+
 
   const etapaNum = 3; 
-
-  console.log("etapa num en oficio Dipres", etapaNum)
-  console.log("competenciaDetails en oficio Dipres", competenciaDetails)
-  console.log("oficio enviado", oficioEnviado)
 
   useEffect(() => {
     if (competenciaDetails) {
@@ -61,10 +59,26 @@ const OficioDipres = () => {
     document.getElementById('fileUploadInput').click();
   };
 
-  const handleFechaInicioChange = (event) => {
-    setFechaInicio(event.target.value);
-  };
+  const dateInputRef = useRef(null);
 
+  const handleFechaInicioChange = (event) =>
+  {
+    const selectedDate = event.target.value;
+    const today = new Date();
+    const formattedToday = `${today.getFullYear()}-${(today.getMonth() + 1)
+      .toString()
+      .padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}`;
+    if (selectedDate > formattedToday)
+    {
+      setErrorMessageDate("La fecha no puede ser posterior a la fecha actual.");
+      event.target.value = formattedToday;
+      setFechaInicio(formattedToday);
+    } else
+    {
+      setErrorMessageDate("");
+      setFechaInicio(selectedDate);
+    }
+  };
   const prepareDataForSubmission = () => {
     const formData = new FormData();
     if (selectedFile) {
@@ -196,14 +210,19 @@ const OficioDipres = () => {
               <span className="text-sans-h5">Elige la fecha del oficio (Obligatorio)</span>
               <div className="my-3 col-3">
                 <input
+                  ref={dateInputRef}
+                  onClick={() => dateInputRef.current?.click()}
                   id="dateInput"
                   type="date"
-                  className="form-control"
+                  className="form-control py-3 my-2 border rounded border-dark-subtle"
                   onChange={handleFechaInicioChange}
                   value={fechaInicio}
                   max={fechaMaxima}
                 />
               </div>
+              {errorMessageDate && (
+                <p className="text-sans-h6-darkred mt-1 mb-0">{errorMessageDate}</p>
+              )}
               <div className="d-flex mb-3 mt-1 text-sans-h6-primary">
                 <i className="material-symbols-rounded me-2">info</i>
                 <h6 className="mt-1">La fecha del oficio debe coincidir con la fecha en que

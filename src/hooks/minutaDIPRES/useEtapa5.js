@@ -12,10 +12,7 @@ export const useEtapa5 = () => {
       const formData = new FormData();
       formData.append('archivo_minuta_etapa5', file);
       // Realizar la solicitud PATCH para subir el archivo
-      const response = await apiTransferenciaCompentencia.patch(`/etapa5/${competenciaId}/`, formData);
-
-      // Puedes manejar la respuesta aquí según tus necesidades
-      console.log("Archivo subido:", response.data);
+      await apiTransferenciaCompentencia.patch(`/etapa5/${competenciaId}/`, formData);
       setArchivoSubido(true);
       await apiTransferenciaCompentencia.patch(`/etapa5/${competenciaId}/`, { estado: "Finalizada" });
 
@@ -28,7 +25,6 @@ export const useEtapa5 = () => {
   }, []);
 
   const patchComentarioMinuta = useCallback(async (competenciaId, comentarios) => {
-    console.log("data en el patch OS minuta GORE", comentarios)
     setLoadingPatch(true);
     try {
       const data = {
@@ -37,8 +33,7 @@ export const useEtapa5 = () => {
         observacion_minuta_gore_enviada: true,
         estado: 'Finalizada'
       };
-      const response = await apiTransferenciaCompentencia.patch(`/etapa5/${competenciaId}/`, data);
-      console.log("Comentario de minuta actualizado:", response.data);
+      await apiTransferenciaCompentencia.patch(`/etapa5/${competenciaId}/`, data);
     } catch (error) {
       console.error("Error al actualizar el comentario de la minuta:", error);
       setErrorPatch(error);

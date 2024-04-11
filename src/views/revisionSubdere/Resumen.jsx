@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams} from 'react-router-dom'; 
+import { useNavigate, useParams } from 'react-router-dom';
 import { Avance } from "../../components/tables/Avance";
 import { useResumenFinal } from "../../hooks/revisionFinalSubdere/useResumenFinal";
 
-const ResumenFinal = () => {
+const ResumenFinal = () =>
+{
   const navigate = useNavigate();
   const [ pasos, setPasos ] = useState([]);
   const { id } = useParams();
@@ -37,7 +38,10 @@ const ResumenFinal = () => {
     }
   };
 
-  if (loading) return <div>Cargando...</div>;
+  if (loading) return <div className="d-flex align-items-center flex-column ">
+  <div className="text-center text-sans-h5-medium-blue ">Cargando Resumen</div>
+  <span className="placeholder col-4 bg-primary"></span>
+</div>;
   if (error) return <div>Error: {error}</div>;
 
 

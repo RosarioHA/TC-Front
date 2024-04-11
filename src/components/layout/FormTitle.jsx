@@ -14,6 +14,8 @@ export const FormTitle = ({ data, error, title }) =>
   if (!data) return <div>No hay datos disponibles</div>; 
 
 
+
+
   return (
     <div className="my-3 mx-3">
       <div className="py-3 d-flex">

@@ -23,9 +23,7 @@ export const useUploadMarcoJuridico = (id, stepNumber) => {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
-      });
-      console.log('Documento subido con éxito:');
-            
+      });   
       // Llama a refetchTrigger para actualizar los datos después de cargar el archivo exitosamente 
       refetchTrigger();
       } catch (err) {

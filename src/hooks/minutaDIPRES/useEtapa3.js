@@ -12,8 +12,7 @@ export const useEtapa3 = () => {
       const data = {
         omitida: omitidaValue,
       };
-      const response = await apiTransferenciaCompentencia.patch(`/etapa3/${competenciaId}/`, data);
-      console.log("PATCH response:", response.data);
+      await apiTransferenciaCompentencia.patch(`/etapa3/${competenciaId}/`, data);
     } catch (error) {
       console.error("Error en el PATCH:", error);
       setErrorPatch(error);
@@ -27,10 +26,7 @@ export const useEtapa3 = () => {
     try {
       const formData = new FormData();
       formData.append('archivo_minuta_etapa3', file);
-      formData.append('estado', 'Finalizada');
-      const response = await apiTransferenciaCompentencia.patch(`/etapa3/${competenciaId}/`, formData);
-
-      console.log("Archivo subido:", response.data);
+      await apiTransferenciaCompentencia.patch(`/etapa3/${competenciaId}/`, formData);
       setArchivoSubido(true);
       await apiTransferenciaCompentencia.patch(`/etapa3/${competenciaId}/`, { minuta_etapa3_enviada: true });
 
@@ -43,15 +39,14 @@ export const useEtapa3 = () => {
   }, []);
 
   const patchComentarioMinuta = useCallback(async (competenciaId, comentarios) => {
-    console.log("data en el patch OS minuta dipres", comentarios)
     setLoadingPatch(true);
     try {
       const data = {
         comentario_minuta_etapa3: comentarios,
         observacion_minuta_sectorial_enviada: true,
+        estado: 'Finalizada'
       };
-      const response = await apiTransferenciaCompentencia.patch(`/etapa3/${competenciaId}/`, data);
-      console.log("Comentario de minuta actualizado:", response.data);
+      await apiTransferenciaCompentencia.patch(`/etapa3/${competenciaId}/`, data);
     } catch (error) {
       console.error("Error al actualizar el comentario de la minuta:", error);
       setErrorPatch(error);

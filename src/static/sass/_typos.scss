@@ -107,6 +107,9 @@
 .text-sans-h5-medium{
     @include font-sans(18px, 500, $grey-a-color);
 }
+.text-sans-h5-medium-blue{
+    @include font-sans(18px, 500, $primary-color);
+}
 
 // h6
 .text-sans-h6{
@@ -121,6 +124,9 @@
 .text-sans-h6-darkblue{
     @include font-sans(14px, 400, $tertiary-color);
 }
+.text-sans-h6-green{
+    @include font-sans(14px, 400, $success-color);
+}
 .text-sans-h6-grey{
     @include font-sans(14px, 400, $grey-c-color);
 }
@@ -131,6 +137,10 @@
 
 .text-sans-h6-bold-darkblue{
     @include font-sans(14px, 700, $tertiary-color);
+    font-style: normal;
+}
+.text-sans-h6-bold-green{
+    @include font-sans(14px, 700,$success-color);
     font-style: normal;
 }
 

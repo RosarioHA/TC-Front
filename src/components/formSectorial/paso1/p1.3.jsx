@@ -51,7 +51,6 @@ export const Subpaso_tres = ({ pasoData, id, stepNumber, solo_lectura }) => {
 
   const handleSave = async (inputName) => {
     if (formData.paso1[inputName] === lastSavedData[inputName]) {
-      console.log("No changes to save");  // No guarda si los datos no han cambiado
       return;
     }
 
@@ -85,7 +84,6 @@ export const Subpaso_tres = ({ pasoData, id, stepNumber, solo_lectura }) => {
   }));
 
   const handleAmbitoChange = async (selectedOption) => {
-    console.log(selectedOption); // Para depuración
     setAmbitoSeleccionado(selectedOption);
     localStorage.setItem('ambitoSeleccionado', JSON.stringify(selectedOption));
     
@@ -196,7 +194,7 @@ export const Subpaso_tres = ({ pasoData, id, stepNumber, solo_lectura }) => {
             placeholder="Elige el ámbito de la competencia"
             options={opcionesAmbito}
             onSelectionChange={handleAmbitoChange}
-            selected={ambitoSeleccionado}
+            selected={ambitoSeleccionado || pasoData?.ambito_paso1}
             readOnly={solo_lectura}
           />
           <div className="d-flex mb-3 mt-1 text-sans-h6-primary col-11">
