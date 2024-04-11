@@ -80,7 +80,6 @@ export const Subpaso_dos = ({
     }, {});
 
     if (Object.keys(modifiedData).length > 0) {
-      console.log('Datos modificados que se enviarán:', modifiedData);
       const success = await handleUpdatePaso(id, stepNumber, {
         paso1: modifiedData,
       });
@@ -118,8 +117,6 @@ export const Subpaso_dos = ({
         ...prevStatus,
         [fieldName]: { loading: false, saved: true },
       }));
-
-      console.log('Archivo recibido en el componente padre:', file.name);
     } catch (error) {
       console.error('Error al subir el archivo:', error);
       setInputStatus((prevStatus) => ({
@@ -169,7 +166,6 @@ export const Subpaso_dos = ({
 
     try {
       await handleUpdatePaso(id, stepNumber, payload);
-      console.log('Organigrama regional eliminado con éxito');
     } catch (error) {
       console.error('Error al eliminar el organigrama regional:', error);
     }

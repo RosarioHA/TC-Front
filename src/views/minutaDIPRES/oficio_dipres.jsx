@@ -21,10 +21,6 @@ const OficioDipres = () => {
 
   const etapaNum = 3; 
 
-  console.log("etapa num en oficio Dipres", etapaNum)
-  console.log("competenciaDetails en oficio Dipres", competenciaDetails)
-  console.log("oficio enviado", oficioEnviado)
-
   useEffect(() => {
     if (competenciaDetails) {
       setCompetencia(competenciaDetails);

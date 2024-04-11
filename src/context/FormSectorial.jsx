@@ -31,7 +31,6 @@ export const FormularioProvider = ({ children }) => {
       const response = await patchStep(id, stepNumber, formData);
       if (response) {
         refetchTrigger(); // Para refrescar los datos
-        console.log("Paso actualizado con éxito.");
         // Devuelve un objeto con un indicador de éxito y los datos de la respuesta
         return { success: true, data: response };
       } else {

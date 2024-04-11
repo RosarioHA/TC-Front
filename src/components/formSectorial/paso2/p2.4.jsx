@@ -107,9 +107,7 @@ export const Subpaso_dosPuntoCuatro = ({
   };
 
   // Lógica para agregar una nueva tabla Plataformas
-  const onSubmit = data => {
-    console.log(data);
-    // Aquí puedes llamar a la función para agregar la nueva plataforma
+  const onSubmit = () => {
     agregarPlataforma();
   };
 
@@ -121,7 +119,6 @@ export const Subpaso_dosPuntoCuatro = ({
 
   const agregarPlataforma = () => {
     const nuevaPlataformaId = generarIdUnico();
-    // Asegúrate de que la nueva plataforma tenga un estado inicial completo
     const nuevaPlataforma = {
       id: nuevaPlataformaId,
       nombre_plataforma: '',
@@ -228,7 +225,7 @@ export const Subpaso_dosPuntoCuatro = ({
 
     try {
       // Asume que handleUpdatePaso puede manejar ambos casos adecuadamente
-      const response = await handleUpdatePaso(id, stepNumber, payload);
+      await handleUpdatePaso(id, stepNumber, payload);
 
       // Actualiza el estado de carga y guardado
       updateFieldState(arrayNameId, fieldName, { loading: false, saved: true });

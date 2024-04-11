@@ -6,8 +6,7 @@ import CustomInput from '../forms/custom_input'
 const TablaEncabezadoFijo = ({ encabezado, readOnly, data }) =>
 {
   const [ filas, setFilas ] = useState([ 1 ]);
-  console.log('enca', encabezado);
-  console.log('data sector', data);
+
 
   const { sector_ministerio_servicio, organismo_display } = data
 

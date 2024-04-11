@@ -106,9 +106,7 @@ const CostosIndirectos = ({
   };
 
   // Lógica para agregar una nueva tabla Plataformas
-  const onSubmit = data => {
-    console.log(data);
-    // Aquí puedes llamar a la función para agregar la nueva costo
+  const onSubmit = () => {
     agregarCostoIndirecto();
   };
 
@@ -119,9 +117,6 @@ const CostosIndirectos = ({
 
     try {
       const response = await handleUpdatePaso(id, stepNumber, payload);
-
-      console.log('response', response)
-
       if (response && response.data.p_5_1_b_costos_indirectos) {
         // Asumiendo que la respuesta del backend incluye la lista actualizada de costos directos
         const listaActualizadaDeCostosIndirectos = response.data.p_5_1_b_costos_indirectos;
