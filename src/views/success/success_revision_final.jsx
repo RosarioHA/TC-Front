@@ -26,7 +26,10 @@ const SuccessRevisionFinal = () =>
 
   if (loading)
   {
-    return <div>Cargando...</div>;
+    return <div className="d-flex align-items-center flex-column ">
+    <div className="text-center text-sans-h5-medium-blue ">Cargando...</div>
+    <span className="placeholder col-4 bg-primary"></span>
+  </div>;
   }
   if (!dataFormSubdere)
   {

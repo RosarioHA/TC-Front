@@ -59,74 +59,75 @@ export const Etapa2 = ({ etapa }) =>
     navigate(path);
   };
 
-  const renderButtonForSubetapa = (subetapa) => {
+  const renderButtonForSubetapa = (subetapa) =>
+  {
     const { estado, accion, nombre, id: subetapaId } = subetapa;
     let buttonText = accion;
     let icon = "draft";  // Icono por defecto para acciones no finalizadas
     let path = "/";
-  
-    // Definiendo las condiciones bajo las cuales se habilitarán los botones
-    const isSubirOficio = nombre.includes("Subir oficio");
-    const isButtonEnabledForSubdere = (isSubirOficio || nombre.includes("Observación del formulario sectorial")) && userSubdere && (estado === "pendiente" || estado === "revision");
-    const isButtonEnabledForAll = (accion === "Ver oficio" && estado === "finalizada") || (nombre.includes("Observación del formulario sectorial") && estado === "finalizada");
-  
-    switch (true) {
+    let isDisabled = estado === "pendiente";
+
+
+    const userMinisterio = userData?.perfil?.includes('Ministerio');
+    const userGobiernoRegional = userData?.perfil?.includes('Gobierno Regional');
+
+    // Condiciones de habilitación extendidas para incluir más roles
+    const isButtonEnabled = (userSubdere || userGore || userMinisterio || userGobiernoRegional) && (estado === "pendiente" || estado === "revision" || estado === "finalizada");
+
+    switch (true)
+    {
       case nombre.startsWith("Notificar a") && estado === "finalizada":
-        if (etapa.estado === 'Aún no puede comenzar') {
+        if (etapa.estado === 'Aún no puede comenzar')
+        {
           return <span className="badge-status-pending">{accion}</span>;
-        } else {
+        } else
+        {
           return <span className="badge-status-finish">{accion}</span>;
         }
-  
+
       case nombre.includes("Subir oficio y su fecha para habilitar formulario sectorial"):
-        if (estado === "finalizada") {
+        if (estado === "finalizada")
+        {
           return (
             <button onClick={() => window.open(oficio_origen, '_blank')} className="btn-secundario-s text-decoration-none" id="btn">
               <span className="material-symbols-outlined me-1">{icon}</span>
               <u>{buttonText}</u>
             </button>
           );
-        } else {
+        } else
+        {
           path = `/home/estado_competencia/${etapa.id}/subir_oficio/${etapaNum}/${subetapaId}`;
         } break;
-  
-      case nombre.includes("Observación del formulario sectorial"):
-        // Configura el botón según si el estado es 'revision', 'finalizada' o cualquier otro estado
-        if (estado === "revision" && userSubdere) {
-          path = `/home/observaciones_subdere/${subetapaId}/`;
-          buttonText = "Subir Observación";
-          icon = "upload_file";
-        } else if (estado === "finalizada") {
-          path = `/home/observaciones_subdere/${etapa.id}/`;
-          buttonText = "Ver Observación";
-          icon = "visibility";
-        } else {
-          path = `/home/observaciones_subdere/${etapa.id}/`;
-        }
-        break;
-  
+
+        case nombre.includes("Observación del formulario sectorial"):
+          // Adaptar el path y las condiciones para otros roles también, si necesario
+          path = estado === "revision" ? `/home/observaciones_subdere/${subetapaId}/` : `/home/observaciones_subdere/${etapa.id}/`;
+          buttonText = accion;
+          icon = estado === "revision" ? "upload_file" : "visibility";
+          break;
+
       default:
-        break;
+          break;
     }
-  
-    if (isButtonEnabledForAll || isButtonEnabledForSubdere) {
+    if (isButtonEnabled) {
       return (
-        <button onClick={() => handleNavigation(path, { state: { extraData: "Sectorial", seccion: "etapa2" } })} className="btn-secundario-s text-decoration-none" id="btn">
-          <span className="material-symbols-outlined me-1">{icon}</span>
-          <u>{buttonText}</u>
-        </button>
+          <button onClick={() => handleNavigation(path, { state: { extraData: "Sectorial", seccion: "etapa2" } })}
+              className={`btn-secundario-s text-decoration-none ${isDisabled ? 'disabled' : ''}`} id="btn"
+              disabled={isDisabled}>
+              <span className="material-symbols-outlined me-1">{icon}</span>
+              <u>{buttonText}</u>
+          </button>
       );
-    } else {
-      // Desactiva el botón si no se cumplen las condiciones
+  } else {
       return (
-        <button className="btn-secundario-s disabled" id="btn">
-          <span className="material-symbols-outlined me-1">{icon}</span>
-          <u>{buttonText}</u>
-        </button>
+          <button className="btn-secundario-s disabled" id="btn" disabled>
+              <span className="material-symbols-outlined me-1">{icon}</span>
+              <u>{buttonText}</u>
+          </button>
       );
-    }
+  }
   };
-  
+
 
 
   // AQUI DECIR A LA FUNCION QUE RECONOZCA SI EL BOTON ESTA EN ESTADO FINALIZADO  

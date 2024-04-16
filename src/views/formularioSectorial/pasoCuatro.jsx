@@ -32,7 +32,10 @@ const PasoCuatro = () => {
   if (!pasoData) return <div>No hay datos disponibles para el Paso 4</div>;
 
   const { paso4: paso4Data, indicador_desempeno, lista_indicadores, solo_lectura } = pasoData;
-  if (!paso4Data) return <div>Cargando Paso 4...</div>;
+  if (!paso4Data) return <> <div className="d-flex align-items-center flex-column my-5 px-5 ">
+  <div className="text-center text-sans-h5-medium-blue ">Cargando paso 4</div>
+  <span className="placeholder col-6 bg-primary"></span>
+</div></>;
 
   const id = data?.id;
 

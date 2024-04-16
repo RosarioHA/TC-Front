@@ -21,7 +21,7 @@ const PasoCinco = () => {
   const { observaciones, updateObservacion, fetchObservaciones, loadingObservaciones, saved } = useObservacionesSubdere(data ? data.id : null);
   const [observacionPaso5, setObservacionPaso5] = useState("");
   const [paso5Data, setPaso5Data] = useState('');
-  //const [costosDirectosData, setCostosDirectosData] = useState('');
+  const [costosDirectosData, setCostosDirectosData] = useState('');
   const [juridicasDirectasData, setJuridicasDirectasData] = useState('');
   const [juridicasIndirectasData, setJuridicasIndirectasData] = useState('');
   const [personalDirectoData, setPersonalDirectoData] = useState('');
@@ -48,6 +48,7 @@ const PasoCinco = () => {
     {
       if (dataPaso){
         setPaso5Data(dataPaso.paso5);
+        setCostosDirectosData(dataPaso.p_5_1_a_costos_directos)
         setJuridicasDirectasData(dataPaso.listado_calidades_juridicas_directas);
         setJuridicasIndirectasData(dataPaso.listado_calidades_juridicas_indirectas);
         setSubtitulosDirectoData(dataPaso.listado_subtitulos_directos);
@@ -58,6 +59,7 @@ const PasoCinco = () => {
         setPersonalIndirectoData(dataPaso.p_5_3_b_personal_indirecto);
       } else {
         setPaso5Data(data.paso5);
+        setCostosDirectosData(data.p_5_1_a_costos_directos)
         setJuridicasDirectasData(data.listado_calidades_juridicas_directas);
         setJuridicasIndirectasData(data.listado_calidades_juridicas_indirectas);
         setSubtitulosDirectoData(data.listado_subtitulos_directos);
@@ -74,10 +76,12 @@ const PasoCinco = () => {
   if (!pasoData) return <div>No hay datos disponibles para el Paso 5</div>;
 
   const paso5 = pasoData.paso5;
-  if (!paso5) return <div>Cargando Paso 5...</div>;
+  if (!paso5) return <> <div className="d-flex align-items-center flex-column my-5 px-5 ">
+  <div className="text-center text-sans-h5-medium-blue ">Cargando paso 5</div>
+  <span className="placeholder col-6 bg-primary"></span>
+</div></>;
 
   const {
-    p_5_1_a_costos_directos,
     p_5_1_b_costos_indirectos,
     p_5_1_c_resumen_costos_por_subtitulo,
     p_5_2_evolucion_gasto_asociado, 
@@ -114,7 +118,7 @@ const PasoCinco = () => {
             paso5={paso5}
             solo_lectura={solo_lectura}
             stepNumber={stepNumber}
-            data_costos_directos={p_5_1_a_costos_directos}
+            data_costos_directos={costosDirectosData}
             data_costos_indirectos={p_5_1_b_costos_indirectos}
             data_resumen_costos={p_5_1_c_resumen_costos_por_subtitulo}
             listado_subtitulos_directos={subtituloDirectoData}

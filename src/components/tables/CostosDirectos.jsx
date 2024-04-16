@@ -22,8 +22,8 @@ const CostosDirectos = ({
   solo_lectura
 }) => {
 
-   //convertir estructura para el select
-   const transformarEnOpciones = (datos, propiedadLabel) => {
+  //convertir estructura para el select
+  const transformarEnOpciones = (datos, propiedadLabel) => {
     return datos.map(dato => ({
       label: dato[propiedadLabel], // Usar dinámicamente la propiedad para 'label'
       value: dato.id.toString()
@@ -37,12 +37,8 @@ const CostosDirectos = ({
 
   const initialState = data?.map(item => ({
     ...item,
-    subtituloSeleccionado: item.subtitulo_label_value?.value || '',
-    opcionesItems: item.opciones_items,
+    opcionesItems: encontrarOpcionesDeItems(item.subtitulo_label_value?.value || ''),
     estados: {
-      etapa: { loading: false, saved: false },
-      item_subtitulo: { loading: false, saved: false },
-      nombre_item_subtitulo: { loading: false, saved: false },
       total_anual: { loading: false, saved: false },
       es_transversal: { loading: false, saved: false },
       descripcion: { loading: false, saved: false }
@@ -54,14 +50,14 @@ const CostosDirectos = ({
   const [opcionesEtapas, setopcionesEtapas] = useState([]);
   const { handleUpdatePaso } = useContext(FormularioContext);
   const [esquemaValidacion, setEsquemaValidacion] = useState(null);
-  
+
 
   useEffect(() => {
     const esquema = construirValidacionPaso5_1ab(costosDirectos);
     setEsquemaValidacion(esquema);
   }, [costosDirectos]);
 
-  const { control, handleSubmit, trigger, clearErrors, setError, formState: { errors } } = useForm({
+  const { control, handleSubmit, trigger, clearErrors, setError, setValue, formState: { errors } } = useForm({
     resolver: esquemaValidacion ? yupResolver(esquemaValidacion) : undefined,
     mode: 'onBlur'
   });
@@ -69,10 +65,8 @@ const CostosDirectos = ({
 
   // Efecto para manejar la carga inicial de opciones
   useEffect(() => {
-    
-      const opcionesDeSubtitulos = transformarEnOpciones(listado_subtitulos, 'subtitulo');
-      setOpcionesSubtitulos(opcionesDeSubtitulos);
-    
+    const opcionesDeSubtitulos = transformarEnOpciones(listado_subtitulos, 'subtitulo');
+    setOpcionesSubtitulos(opcionesDeSubtitulos);
   }, [listado_subtitulos]);
 
 
@@ -97,9 +91,9 @@ const CostosDirectos = ({
     );
   };
 
-  // Lógica para agregar una nueva tabla Plataformas
+  // Lógica para agregar una nueva tabla Costos
   const onSubmit = () => {
-    // Aquí puedes llamar a la función para agregar la nueva costo
+
     agregarCostoDirecto();
   };
 
@@ -159,7 +153,7 @@ const CostosDirectos = ({
   const handleInputChange = (costoDirectoId, campo, valor) => {
     setCostosDirectos(prevCostosDirectos =>
       prevCostosDirectos.map(costoDirecto => {
-        // Verifica si es la costo que estamos actualizando
+        // Verifica si es el costo que estamos actualizando
         if (costoDirecto.id === costoDirectoId) {
           // Actualiza el valor del campo específico de manera inmutable
           return { ...costoDirecto, [campo]: valor };
@@ -196,19 +190,19 @@ const CostosDirectos = ({
           [fieldName]: newValue.map(option => option.value)
         }]
       };
-    } else if (fieldName === 'item_subtitulo') {
-      // Ajuste para enviar 'item_subtitulo' como un valor único, no un array
-      // Asumiendo que newValue es un objeto de la opción seleccionada
+    } else if (fieldName === 'subtitulo') {
       payload = {
         'p_5_1_a_costos_directos': [{
           id: arrayNameId,
-          [fieldName]: newValue.value !== undefined ? newValue.value : "" // Asegurarse de enviar una cadena vacía si ese es el caso
+          [fieldName]: newValue.value !== undefined ? newValue.value : ""
         }]
       };
-    } else if (fieldName === 'es_transversal') {
+    } else if (fieldName === 'item_subtitulo') {
       payload = {
-        // Payload para 'es_transversal'
-        'p_5_1_a_costos_directos': [{ id: arrayNameId, [fieldName]: newValue }]
+        'p_5_1_a_costos_directos': [{
+          id: arrayNameId,
+          [fieldName]: newValue.value !== undefined ? newValue.value : ""
+        }]
       };
     } else {
       // Payload para otros campos
@@ -218,7 +212,6 @@ const CostosDirectos = ({
     }
 
     try {
-      // Asume que handleUpdatePaso puede manejar ambos casos adecuadamente
       await handleUpdatePaso(id, stepNumber, payload);
 
       // Actualiza el estado de carga y guardado
@@ -255,37 +248,26 @@ const CostosDirectos = ({
                   name={`subtitulo_${costo.id}`}
                   defaultValue={costo.subtitulo_label_value ? costo.subtitulo_label_value.value : ''}
                   render={({ field }) => {
+                    const { onChange } = field;
+
+                    const handleSubtituloChange = (selectedOption) => {
+                      onChange(selectedOption.value); // Actualiza react-hook-form
+                      handleSave(costo.id, 'subtitulo', selectedOption); // Guardar en backend
+                      handleSave(costo.id, 'item_subtitulo', ''); // Limpiar item_subtitulo en backend
+                      // Limpia el estado de item_subtitulo y actualiza las opciones
+                      setValue(`item_subtitulo_${costo.id}`, '');
+                      const nuevasOpciones = encontrarOpcionesDeItems(selectedOption.label);
+                      costo.opcionesItems = nuevasOpciones; // Asegúrate de que esto actualice el estado de manera adecuada
+                    };
+
                     return (
                       <DropdownSelect
                         id={`subtitulo_${costo.id}`}
-                        
                         placeholder="Subtítulos"
                         options={opcionesSubtitulos}
-                        onSelectionChange={(selectedOption) => {
-                          const textoSubtitulo = listado_subtitulos.find(subtitulo => subtitulo.id.toString() === selectedOption.value)?.subtitulo;
-                          const opcionesDeItems = encontrarOpcionesDeItems(textoSubtitulo);
-
-                          handleSave(costo.id, 'item_subtitulo', '');
-
-                          setCostosDirectos(prevCostosDirectos => prevCostosDirectos.map(costoDirecto => {
-                            if (costoDirecto.id === costo.id) {
-                              return {
-                                ...costoDirecto,
-                                subtituloSeleccionado: textoSubtitulo,
-                                opcionesItems: opcionesDeItems,
-                                item_subtitulo_label_value: null,
-                              };
-                            }
-                            return costoDirecto;
-                          }));
-                          field.onChange(selectedOption.value);
-                        }}
-
+                        onSelectionChange={handleSubtituloChange}
+                        selected={field.value}
                         readOnly={solo_lectura}
-                        selected={costo.subtitulo_label_value && costo.subtitulo_label_value.value ? costo.subtitulo_label_value : undefined}
-
-                        loading={costo.estados?.subtitulo?.loading ?? false}
-                        saved={costo.estados?.subtitulo?.saved ?? false}
                         error={errors[`subtitulo_${costo.id}`]?.message}
                       />
                     );
@@ -304,18 +286,16 @@ const CostosDirectos = ({
                       <DropdownSelect
                         id={`item_subtitulo_${costo.id}`}
                         placeholder="Ítem"
-                        options={costo.opcionesItems}
+                        options={costo.opcionesItems || encontrarOpcionesDeItems(costo.subtitulo_label_value.label)}
                         onSelectionChange={(selectedOptions) => {
                           handleSave(costo.id, 'item_subtitulo', selectedOptions);
-                         
+
                           field.onChange(selectedOptions.value);
                         }}
 
                         readOnly={solo_lectura}
                         selected={costo.item_subtitulo_label_value && costo.item_subtitulo_label_value.value ? costo.item_subtitulo_label_value : undefined}
 
-                        loading={costo.estados?.item_subtitulo?.loading ?? false}
-                        saved={costo.estados?.item_subtitulo?.saved ?? false}
                         error={errors[`item_subtitulo_${costo.id}`]?.message}
                       />
                     );
