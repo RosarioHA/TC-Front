@@ -1,4 +1,4 @@
-import {  useState } from "react";
+import {  useState, useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useCompetencia } from "../../hooks/competencias/useCompetencias";
 import { useEtapa3 } from "../../hooks/minutaDIPRES/useEtapa3";
@@ -12,12 +12,21 @@ const ObservacionesSubdere = () => {
 
   const formulariosNoEnviados = competenciaDetails?.etapa2?.estado === 'Aún no puede comenzar';
   const observacionesEnviadas = competenciaDetails?.etapa2?.observaciones_completas;
-  const estapaFinalizada = competenciaDetails?.etapa2?.estado === 'Finalizada';
+  const etapaFinalizada = competenciaDetails?.etapa2?.estado === 'Finalizada';
+  //const etapaFinalizada = true;
+
+  useEffect(() => {
+    // Obtener etapaOmitida desde competenciaDetails y establecerla en el estado
+    if (competenciaDetails && competenciaDetails.etapa3 && competenciaDetails.etapa3.omitida !== undefined) {
+      setEtapaOmitida(competenciaDetails.etapa3.omitida);
+    }
+  }, [competenciaDetails]); // Este efecto se ejecuta cada vez que competenciaDetails cambia
 
   console.log("competencia details", competenciaDetails);
-  console.log("formulariosEnviados", formulariosNoEnviados);
+  console.log("formulariosNoEnviados", formulariosNoEnviados);
   console.log("observacionesEnviadas", observacionesEnviadas);
-  console.log("estapaFinalizada", estapaFinalizada);
+  console.log("estapaFinalizada", etapaFinalizada);
+  console.log("etapaOmitida", etapaOmitida);
 
   const handleBackButtonClick = () => {
     navigate(-1);
@@ -33,7 +42,7 @@ const ObservacionesSubdere = () => {
 
   const handleCerrarEtapa = async () => {
     try {
-      await patchCompetenciaOmitida(competenciaDetails?.id, etapaOmitida);
+      await patchCompetenciaOmitida(competenciaDetails?.etapa3?.id, etapaOmitida);
       navigate(`/home/success_cierre_observaciones/${competenciaDetails?.id}`);
     } catch (error) {
       console.error("Error al cerrar la etapa:", error);
@@ -123,9 +132,13 @@ const ObservacionesSubdere = () => {
 
       {observacionesEnviadas && (
         <div>
-          <h3 className="text-sans-h2">Esta todo listo para que termines la etapa</h3>
-          <p className="text-sans-p mt-3 mb-5">Ya revisaste todos los formularios. </p> 
-          <p className="text-sans-p mb-2">Debes definir cual es el próximo paso en el procedo de análisis de la competencia:</p>
+          {!etapaFinalizada && (
+            <>
+              <h3 className="text-sans-h2">Esta todo listo para que termines la etapa</h3>
+              <p className="text-sans-p mt-3 mb-5">Ya revisaste todos los formularios. </p>
+              <p className="text-sans-p mb-2">Debes definir cual es el próximo paso en el procedo de análisis de la competencia:</p>
+            </>
+          )}
           <div>
             <div className="form-check">
               <input
@@ -136,12 +149,13 @@ const ObservacionesSubdere = () => {
                 value="A"
                 onChange={() => handleRadioButtonChange('A')}
                 checked={etapaOmitida === false}
-                //disabled
+                disabled={etapaFinalizada}
               />
               <label htmlFor="opcionA" className="text-sans-p">
                 DIPRES debe pronunciarse respecto de la información del sector o sectores asociados a la competencia.
               </label>
             </div>
+
             <div className="form-check">
               <input
                 type="radio"
@@ -150,6 +164,7 @@ const ObservacionesSubdere = () => {
                 className="form-check-input"
                 value="B"
                 onChange={() => handleRadioButtonChange('B')}
+                disabled={etapaFinalizada}
                 checked={etapaOmitida === true}
               />
               <label htmlFor="opcionB" className="text-sans-p">
@@ -169,7 +184,9 @@ const ObservacionesSubdere = () => {
         </>
       )}
 
+      
       <div className="d-flex justify-content-end my-5 me-3">
+      {!etapaFinalizada && (
         <button
         className="btn-primario-s"
         disabled={etapaOmitida === null}
@@ -178,6 +195,7 @@ const ObservacionesSubdere = () => {
           Cerrar etapa
           <i className="material-symbols-rounded me-2">arrow_forward_ios</i>
         </button>
+      )}  
       </div>
     </div>
   )

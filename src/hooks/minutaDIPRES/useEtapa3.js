@@ -6,13 +6,13 @@ export const useEtapa3 = () => {
   const [errorPatch, setErrorPatch] = useState(null);
   const [archivoSubido, setArchivoSubido] = useState(false);
 
-  const patchCompetenciaOmitida = useCallback(async (competenciaId, omitidaValue) => {
+  const patchCompetenciaOmitida = useCallback(async (etapaId, omitidaValue) => {
     setLoadingPatch(true);
     try {
       const data = {
         omitida: omitidaValue,
       };
-      await apiTransferenciaCompentencia.patch(`/etapa3/${competenciaId}/`, data);
+      await apiTransferenciaCompentencia.patch(`/etapa3/${etapaId}/`, data);
     } catch (error) {
       console.error("Error en el PATCH:", error);
       setErrorPatch(error);
