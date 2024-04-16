@@ -10,6 +10,14 @@ const ObservacionesSubdere = () => {
   const { competenciaDetails } = useCompetencia(id);
   const { patchCompetenciaOmitida } = useEtapa3();
 
+  const formulariosNoEnviados = competenciaDetails?.etapa2?.estado === 'Aún no puede comenzar';
+  const observacionesEnviadas = competenciaDetails?.etapa2?.observaciones_completas;
+  const estapaFinalizada = competenciaDetails?.etapa2?.estado === 'Finalizada';
+
+  console.log("competencia details", competenciaDetails);
+  console.log("formulariosEnviados", formulariosNoEnviados);
+  console.log("observacionesEnviadas", observacionesEnviadas);
+  console.log("estapaFinalizada", estapaFinalizada);
 
   const handleBackButtonClick = () => {
     navigate(-1);
@@ -66,8 +74,12 @@ const ObservacionesSubdere = () => {
             >
               <td>{observaciones.nombre}</td>
               <td className="">
-              <button className="btn-secundario-s text-decoration-underline" onClick={() => handleVerFormulario(observaciones.id)}>
-                {observaciones.accion}
+              <button 
+              className={`btn-secundario-s text-decoration-underline ${formulariosNoEnviados ? 'disabled' : ''}`} 
+              onClick={() => handleVerFormulario(observaciones.id)} 
+              disabled={formulariosNoEnviados}
+              >
+                <p className="mb-0">{observaciones.accion}</p>
               </button>
               </td>
             </tr>
@@ -80,8 +92,12 @@ const ObservacionesSubdere = () => {
               >
                 <td>{observaciones.nombre}</td>
                 <td className="">
-                  <button className="btn-secundario-s text-decoration-underline" onClick={() => handleVerFormulario(observaciones.id)}>
-                    <p>{observaciones.accion}</p>
+                  <button 
+                  className={`btn-secundario-s text-decoration-underline ${formulariosNoEnviados ? 'disabled' : ''}`} 
+                  onClick={() => handleVerFormulario(observaciones.id)} 
+                  disabled={formulariosNoEnviados}
+                  >
+                    <p className="mb-0">{observaciones.accion}</p>
                   </button>
                 </td>
               </tr>
@@ -105,7 +121,7 @@ const ObservacionesSubdere = () => {
         <p className="text-sans-p">Fecha última modificación:</p><p className="text-sans-p-bold ms-2">{competenciaDetails?.etapa2?.fecha_ultima_modificacion}</p>
       </div>
 
-      {competenciaDetails?.etapa2?.estado === 'Finalizada' && (
+      {observacionesEnviadas && (
         <div>
           <h3 className="text-sans-h2">Esta todo listo para que termines la etapa</h3>
           <p className="text-sans-p mt-3 mb-5">Ya revisaste todos los formularios. </p> 
@@ -144,7 +160,7 @@ const ObservacionesSubdere = () => {
         </div>
       )}
 
-      {competenciaDetails?.etapa2?.estado !== 'Finalizada' &&  (
+      {!observacionesEnviadas &&  (
         <>
           <div>
             <h3 className="text-sans-h2">Debes revisar todos los formularios antes de terminar la etapa</h3>
