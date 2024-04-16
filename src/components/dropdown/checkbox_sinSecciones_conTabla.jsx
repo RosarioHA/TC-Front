@@ -26,12 +26,21 @@ const DropdownSinSecciones = ({ label, placeholder, options, onSelectionChange, 
   };
 
   const handleCheckboxChange = (optionValue) => {
-    const isSelected = selectedOptions.includes(optionValue);
-    const updatedOptions = isSelected
-      ? selectedOptions.filter((option) => option !== optionValue)
-      : [...selectedOptions, optionValue];
-
-    onSelectionChange(updatedOptions); // Notifica al componente padre sobre el cambio
+    if (optionValue === 'Todas') {
+      // Seleccionar todas las competencias si se presiona "Todas"
+      const allOptionIds = options.map(option => option.value);
+      onSelectionChange(allOptionIds);
+    } else if (optionValue === 'Eliminar Selección') {
+      // Limpiar todas las selecciones si se presiona "Eliminar Selección"
+      onSelectionChange([]);
+    } else {
+      // Manejo normal de selección/deselección de una sola competencia
+      const isSelected = selectedOptions.includes(optionValue);
+      const updatedOptions = isSelected
+        ? selectedOptions.filter((option) => option !== optionValue)
+        : [...selectedOptions, optionValue];
+      onSelectionChange(updatedOptions);
+    }
   };
 
   const handleInputClick = (e) => {
@@ -122,7 +131,7 @@ return (
           className={`text-sans-p btn-option ${selectedOptions.length > 0 ? 'active' : ''}`}
           onClick={() => handleCheckboxChange('Todas')}
         >
-          Todos
+          Todas
         </button>
         <button
           type="button"
