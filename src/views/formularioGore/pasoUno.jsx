@@ -41,7 +41,10 @@ const PasoUnoGore = () => {
 
 
   if (errorPasoGore) return <div>Error: {errorPasoGore.message || "Error desconocido"}</div>;
-  if (!dataPasoGore?.paso1_gore) return <div>Cargando...</div>;
+  if (!dataPasoGore?.paso1_gore) return <div className="d-flex align-items-center flex-column ">
+  <div className="text-center text-sans-h5-medium-blue ">Cargando paso 1</div>
+  <span className="placeholder col-4 bg-primary"></span>
+</div>;
   if (!dataPasoGore || dataPasoGore.length === 0) return <div>No hay datos disponibles para el Paso 1</div>;
 
   const { paso1_gore = {}, flujograma_ejercicio_competencia } = dataPasoGore;

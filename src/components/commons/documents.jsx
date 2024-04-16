@@ -29,14 +29,15 @@ export const DocumentsAditionals = ({ onFilesChanged, marcoJuridicoData, handleD
   }, [marcoJuridicoData, maxFiles]);
 
   const handleFileChange = async (event) => {
-    setFileTooLarge(false); // Reiniciar el estado de archivo demasiado grande
+    setFileTooLarge(false);
     const incomingFiles = Array.from(event.target.files);
     const filesExceedingMaxSize = incomingFiles.filter(file => file.size > maxSize);
-
+  
     if (filesExceedingMaxSize.length > 0) {
-      setFileTooLarge(true); // Establecer que hay archivos demasiado grandes
+      setFileTooLarge(true);
+      return;  // Podrías decidir no retornar aquí para permitir la carga de archivos válidos en el mismo lote
     }
-
+  
     const validFiles = incomingFiles.filter(file => file.size <= maxSize);
     if (validFiles.length === 0) {
       return;
@@ -47,16 +48,19 @@ export const DocumentsAditionals = ({ onFilesChanged, marcoJuridicoData, handleD
       setMaxFilesReached(true);
       return;
     }
-
+  
     const filesToUpload = validFiles.slice(0, availableSlots);
     for (const file of filesToUpload) {
       await onFilesChanged(file);
     }
-
+  
+    document.getElementById('fileInput').value = '';  // Resetear el input de archivo
+  
     if ((files.length + filesToUpload.length) >= maxFiles) {
       setMaxFilesReached(true);
     }
   };
+  
 
   const handleDeleteDoc = (index) => {
     const documentoId = files[index].id;

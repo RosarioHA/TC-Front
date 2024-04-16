@@ -11,7 +11,7 @@ export const FormTitle = ({ data, error, title }) =>
   }
 
   if (error) return <div>Error al cargar los datos: {error.message}</div>;
-  if (!data) return <div>No hay datos disponibles</div>;
+  if (!data) return <div>No hay datos disponibles</div>; 
 
 
 

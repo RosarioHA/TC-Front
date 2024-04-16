@@ -7,7 +7,7 @@ import {useUploadMarcoJuridico} from '../../../hooks/formulario/useMarcoJuridico
 import { apiTransferenciaCompentencia } from '../../../services/transferenciaCompetencia';
 
 export const Subpaso_uno = ({ dataPaso, id, stepNumber, marcojuridico, solo_lectura }) => {
-  const { handleUpdatePaso} = useContext(FormularioContext);
+  const { handleUpdatePaso,  refetchTrigger} = useContext(FormularioContext);
   const { uploadDocumento } = useUploadMarcoJuridico(id, stepNumber); 
   const [hasChanged, setHasChanged] = useState(false);
   const initialValues = {
@@ -105,11 +105,12 @@ const fetchData = async () => {
     setIsUploading(true);
     try {
       await uploadDocumento(id, { documento: file });
-      await fetchData();
+      setMarcoJuridicoFiles(prevFiles => [...prevFiles, file]); // Asumiendo que 'file' es el archivo o un objeto representativo
     } catch (error) {
       console.error('Error uploading file:', error);
     } finally {
       setIsUploading(false);
+      refetchTrigger(); // Considera si es necesario aquí o si debería llamarse en otro lugar
     }
   };
 
@@ -126,7 +127,8 @@ const fetchData = async () => {
     {
       await handleUpdatePaso(id, stepNumber, payload);
       setMarcoJuridicoFiles(currentFiles => currentFiles.filter(file => file.id !== idMarco));
-      await fetchData();
+      fetchData();
+      refetchTrigger(); 
     } catch (error)
     {
       console.error("Error al eliminar el marco juridico:", error);

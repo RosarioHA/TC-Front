@@ -44,7 +44,10 @@ const PasoDos = () =>
   if (!pasoData) return <div>No hay datos disponibles para el Paso 2</div>;
 
   const paso2 = pasoData.paso2;
-  if (!paso2) return <div>Cargando paso 2...</div>;
+  if (!paso2) return <> <div className="d-flex align-items-center flex-column my-5 px-5 ">
+    <div className="text-center text-sans-h5-medium-blue ">Cargando paso 2</div>
+    <span className="placeholder col-6 bg-primary"></span>
+  </div></>;
 
   const {
     p_2_1_organismos_intervinientes,
@@ -78,7 +81,7 @@ const PasoDos = () =>
         <div className="container vh-100">
           <div className="d-flex">
             <h3 className="mt-3 me-4">{paso2.nombre_paso}</h3>
-            <Avance avance={avance} id={data.id}/>
+            <Avance avance={avance} id={data.id} />
           </div>
           <span className="text-sans-h6-primary">Texto de apoyo</span>
 
@@ -142,18 +145,18 @@ const PasoDos = () =>
               {!observacionPaso2.trim() && observacionesEnviadas ? (
                 <p>No se han dejado observaciones en este paso.</p>
               ) : (
-              <CustomTextarea
-                label="Observaciones (Opcional)"
-                placeholder="Escribe tus observaciones de este paso del formulario"
-                rows={5}
-                maxLength={500}
-                value={observacionPaso2}
-                onChange={(e) => setObservacionPaso2(e.target.value)}
-                readOnly={observacionesEnviadas}
-                onBlur={handleGuardarObservacion}
-                loading={loadingObservaciones}
-                saved={saved}
-              />
+                <CustomTextarea
+                  label="Observaciones (Opcional)"
+                  placeholder="Escribe tus observaciones de este paso del formulario"
+                  rows={5}
+                  maxLength={500}
+                  value={observacionPaso2}
+                  onChange={(e) => setObservacionPaso2(e.target.value)}
+                  readOnly={observacionesEnviadas}
+                  onBlur={handleGuardarObservacion}
+                  loading={loadingObservaciones}
+                  saved={saved}
+                />
               )}
             </div>
           )}

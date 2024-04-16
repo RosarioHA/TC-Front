@@ -31,25 +31,20 @@ export const Etapa5 = ({ etapa }) =>
         return <div>Loading...</div>;
     }
 
-    const renderButtonForSubetapa = (subetapa) =>
-    {
+    const renderButtonForSubetapa = (subetapa) => {
         let buttonText = subetapa.accion;
-        const isFinalizado = subetapa.estado === "finalizada";
         let icon = subetapa.estado === "finalizada" ? "visibility" : "draft";
-        let path = "/"; // Ruta por defecto
-
-        if (subetapa.nombre.includes("Notificar a") && isFinalizado)
-        {
-            if (estado === 'Aún no puede comenzar')
-            {
+        let path = "/";
+        const isDisabled = subetapa.estado === "pendiente";
+    
+        if (subetapa.nombre.includes("Notificar a") && subetapa.estado === "finalizada") {
+            if (estado === 'Aún no puede comenzar') {
                 return <span className="badge-status-pending">{buttonText}</span>;
-            } else
-            {
+            } else {
                 return <span className="badge-status-finish">{buttonText}</span>;
             }
         }
-        if (userSubdere && subetapa.accion === "Subir oficio" && subetapa.estado === "revision")
-        {
+        if (userSubdere && subetapa.accion === "Subir oficio" && subetapa.estado === "revision") {
             path = `/home/estado_competencia/${etapa.id}/subir_segundo_oficio_dipres`;
             return (
                 <Link to={path} className="btn-secundario-s text-decoration-none" id="btn">
@@ -58,10 +53,8 @@ export const Etapa5 = ({ etapa }) =>
                 </Link>
             );
         }
-
-        if (userDipres && subetapa.accion === "Subir minuta" && subetapa.estado === "revision" && subetapa.id === 77)
-        {
-            path = `/home/minuta_dipres/${etapa.id}/segunda_minuta_dipres`; // Cambiamos aquí la ruta de redirección
+        if (userDipres && subetapa.accion === "Subir minuta" && subetapa.estado === "revision" && subetapa.id === 77) {
+            path = `/home/minuta_dipres/${etapa.id}/segunda_minuta_dipres`;
             return (
                 <Link to={path} className="btn-secundario-s text-decoration-none" id="btn">
                     <span className="material-symbols-outlined me-1">{icon}</span>
@@ -69,19 +62,16 @@ export const Etapa5 = ({ etapa }) =>
                 </Link>
             );
         }
-        if (userSubdere && subetapa.accion === "Subir Observaciones" && subetapa.estado === "pendiente")
-        {
+        if (userSubdere && subetapa.accion === "Subir Observaciones" && subetapa.estado === "pendiente") {
             path = `/home/minuta_dipres/${etapa.id}/observaciones_subdere`;
             return (
-                <Link to={path} className="btn-secundario-s text-decoration-none" id="btn">
+                <button to={path} className="btn-secundario-s text-decoration-none disabled" id="btn">
                     <span className="material-symbols-outlined me-1">{icon}</span>
                     <u>{buttonText}</u>
-                </Link>
+                </button>
             );
         }
-
-        if (subetapa.estado === "finalizada")
-        {
+        if (subetapa.estado === "finalizada") {
             return (
                 <a href={oficio_origen} target="_blank" rel="noopener noreferrer" className="btn-secundario-s text-decoration-none" id="btn">
                     <span className="material-symbols-outlined me-1">{icon}</span>
@@ -89,9 +79,10 @@ export const Etapa5 = ({ etapa }) =>
                 </a>
             );
         }
-
+    
+        // Aplicar la clase disabled basado en la variable isDisabled
         return (
-            <button className="btn-secundario-s disabled" id="btn">
+            <button className={`btn-secundario-s text-decoration-none ${isDisabled ? 'disabled' : ''}`} id="btn" disabled={isDisabled}>
                 <span className="material-symbols-outlined me-1">{icon}</span>
                 <u>{buttonText}</u>
             </button>

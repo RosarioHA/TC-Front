@@ -15,7 +15,7 @@ const Etapa = ({ etapaInfo, index, id, usuarios}) => {
 export const VerticalStepper = ({ etapasObjeto, etapaDatos, id }) => {
   if (!etapasObjeto)
   {
-    return <div>Cargando...</div>;
+    return <div className="text-center text-sans-h5-medium-blue ">Cargando...</div>;
   }
   
   const etapasInfo = etapasObjeto.etapas_info;

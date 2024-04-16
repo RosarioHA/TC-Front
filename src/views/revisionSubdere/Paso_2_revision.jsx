@@ -29,7 +29,10 @@ const Paso_2_Revision = () =>
   }, [ handleUpdateStepNumber ]);
 
   if (errorPasoSubdere) return <div>Error: {errorPasoSubdere.message || "Error desconocido"}</div>;
-  if (!dataPasoSubdere?.paso2_revision_final_subdere) return <div>Cargando...</div>;
+  if (!dataPasoSubdere?.paso2_revision_final_subdere) return <div className="d-flex align-items-center flex-column ">
+    <div className="text-center text-sans-h5-medium-blue ">Cargando paso 2</div>
+    <span className="placeholder col-4 bg-primary"></span>
+  </div>;
   if (!dataPasoSubdere || dataPasoSubdere.length === 0) return <div>No hay datos disponibles para el Paso 2</div>;
 
   const {

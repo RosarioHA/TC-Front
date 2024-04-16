@@ -24,7 +24,7 @@ export const SummaryDetail = ({ competencia }) => {
     competencia.resumen_competencia?.recomendacion_transferencia;
 
   if (!competencia || !etapas_info) {
-    return <div>Cargando...</div>;
+    return <div className="text-center text-sans-h5-medium-blue ">Cargando...</div>;
   }
   // Transformar etapas_info en un arreglo para facilitar su manejo
   const etapasArray = Object.keys(etapas_info).map((key) => ({

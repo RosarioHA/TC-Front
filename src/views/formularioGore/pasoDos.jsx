@@ -11,37 +11,47 @@ import CustomTextarea from '../../components/forms/custom_textarea';
 import { useObservacionesGORE } from "../../hooks/fomularioGore/useObSubdereGore";
 import { useAuth } from '../../context/AuthContext';
 
-const PasoDosGore = () => {
+const PasoDosGore = () =>
+{
   const { dataFormGore, dataPasoGore, errorPasoGore, updateStepNumber } = useContext(FormGOREContext);
   const stepNumber = 2;
   const { userData } = useAuth();
   const { observaciones, loadingObservaciones, updateObservacion, fetchObservaciones, saved } = useObservacionesGORE(dataFormGore ? dataFormGore.id : null);
-  const [observacionPaso2, setObservacionPaso2] = useState("");
+  const [ observacionPaso2, setObservacionPaso2 ] = useState("");
   const userSubdere = userData?.perfil?.includes('SUBDERE');
   const solo_lectura = dataPasoGore?.solo_lectura;
   const formularioEnviado = dataFormGore?.formulario_enviado
   const observacionesEnviadas = observaciones?.observacion_enviada;
 
-  const handleUpdateStepNumber = useCallback(() => {
+  const handleUpdateStepNumber = useCallback(() =>
+  {
     const stepNumber = 2;
     updateStepNumber(stepNumber);
   }, [ updateStepNumber ]);
 
-  useEffect(() => {
+  useEffect(() =>
+  {
     handleUpdateStepNumber();
   }, [ handleUpdateStepNumber ]);
 
-  useEffect(() => {
-    if (observaciones && Object.keys(observaciones).length === 0) {
+  useEffect(() =>
+  {
+    if (observaciones && Object.keys(observaciones).length === 0)
+    {
       fetchObservaciones();
     }
-    if (observaciones && observaciones.observacion_paso2) {
+    if (observaciones && observaciones.observacion_paso2)
+    {
       setObservacionPaso2(observaciones.observacion_paso2);
     }
-  }, [updateStepNumber, stepNumber, observaciones, fetchObservaciones]);
+  }, [ updateStepNumber, stepNumber, observaciones, fetchObservaciones ]);
 
   if (errorPasoGore)
     return <div>Error: {errorPasoGore.message || 'Error desconocido'}</div>;
+  if (!dataPasoGore?.paso2_gore) return <div className="d-flex align-items-center flex-column ">
+    <div className="text-center text-sans-h5-medium-blue ">Cargando paso 2</div>
+    <span className="placeholder col-4 bg-primary"></span>
+  </div>;
   if (!dataPasoGore || dataPasoGore.length === 0)
     return <div>No hay datos disponibles para el Paso 2</div>;
 
@@ -58,8 +68,10 @@ const PasoDosGore = () => {
     p_2_1_c_fluctuaciones_presupuestarias,
   } = dataPasoGore;
 
-  const handleGuardarObservacion = async () => {
-    if (!observacionesEnviadas) {
+  const handleGuardarObservacion = async () =>
+  {
+    if (!observacionesEnviadas)
+    {
       const observacionData = {
         observacion_paso2: observacionPaso2,
       };
@@ -121,7 +133,7 @@ const PasoDosGore = () => {
               {!observacionPaso2.trim() && observacionesEnviadas ? (
                 <p>No se han dejado observaciones en este paso.</p>
               ) : (
-                <CustomTextarea 
+                <CustomTextarea
                   label="Observaciones (Opcional)"
                   placeholder="Escribe tus observaciones de este paso del formulario"
                   rows={5}
