@@ -15,6 +15,7 @@ const ObservacionesSubdereGore = () => {
   const [isSubmitSuccessful, setIsSubmitSuccessful] = useState(false);
   const navigate = useNavigate();
   const observacionesEnviadas = competenciaDetails?.etapa5?.observacion_minuta_gore_enviada;
+  const idEtapa = competenciaDetails?.etapa5?.id
 
   useEffect(() => {
     // Verificar si las observaciones ya han sido enviadas
@@ -33,7 +34,7 @@ const ObservacionesSubdereGore = () => {
   };
 
   const handleCerrarEtapa = async () => {
-    await patchComentarioMinuta(id, observacionMinutaDipres);
+    await patchComentarioMinuta(idEtapa, observacionMinutaDipres);
     setIsSubmitSuccessful(true);
   }
 
