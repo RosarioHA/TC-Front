@@ -83,16 +83,12 @@ export const Subpaso_CuatroUno = ({ data, listaIndicadores, id, stepNumber, solo
       )
     );
   };
-
-  const agregarIndicador = () =>
-  {
-    const ultimoIndicador = indicadores[ indicadores.length - 1 ];
-    if (!ultimoIndicador.id || !todosLosCamposCompletos(ultimoIndicador))
-    {
-      return;
+  const agregarIndicador = () => {
+    const ultimoIndicador = indicadores[indicadores.length - 1];
+    // Permite agregar un nuevo indicador si la lista está vacía o si el último indicador está completo
+    if (indicadores.length === 0 || (ultimoIndicador.id && todosLosCamposCompletos(ultimoIndicador))) {
+      setIndicadores([...indicadores,indicadores]);
     }
-    setIndicadores([ ...indicadores, { id: null } ]);
-    // setDatosGuardados(false);
   };
 
 
@@ -276,7 +272,7 @@ export const Subpaso_CuatroUno = ({ data, listaIndicadores, id, stepNumber, solo
                 />
               </div>
 
-              {index >= 0 && indicadores.length > 1 && !solo_lectura && (
+              {index >= 0 && indicadores.length >= 2 && !solo_lectura && (
                 <div className="col-1 me-4">
                   <button
                     className="btn-terciario-ghost mt-3"
