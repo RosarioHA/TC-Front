@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Counter } from "../tables/Counter";
 import { useAuth } from '../../context/AuthContext';
 
-export const Etapa2 = ({ etapa }) =>
+export const Etapa2 = ({ etapa, idCompetencia }) =>
 {
   const navigate = useNavigate();
   const { userData } = useAuth();
@@ -12,12 +12,10 @@ export const Etapa2 = ({ etapa }) =>
   const [ isCollapsed, setIsCollapsed ] = useState(false);
   const usuarioSector = userData?.sector;
 
-
   const toggleCollapse = () =>
   {
     setIsCollapsed(!isCollapsed);
   };
-  const etapaNum = 2;
   const {
     nombre_etapa,
     estado,
@@ -96,7 +94,7 @@ export const Etapa2 = ({ etapa }) =>
           );
         } else
         {
-          path = `/home/estado_competencia/${etapa.id}/subir_oficio/${etapaNum}/${subetapaId}`;
+          path = `/home/estado_competencia/${idCompetencia}/subir_oficio_sectorial`;
         } break;
 
         case nombre.includes("Observación del formulario sectorial"):
