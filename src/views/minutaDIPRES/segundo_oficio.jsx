@@ -5,8 +5,7 @@ import { useUpdateEtapa } from "../../hooks/competencias/useOficio";
 import { SuccessSOficio } from "../../components/success/oficio";
 import { SubirArchivo } from "../../components/commons/subirArchivo";
 
-const OficioDipres2 = () =>
-{
+const OficioDipres2 = () => {
   const updateEtapa = useUpdateEtapa();
   const { id } = useParams();
   const { competenciaDetails } = useCompetencia(id);
@@ -139,7 +138,7 @@ const OficioDipres2 = () =>
 
   return (
     <>
-      <div className="container col-11">
+      <div className="container col-10 col-xxl-11">
         <div className="py-3 d-flex">
           <button className="btn-secundario-s" onClick={handleBackButtonClick}>
             <i className="material-symbols-rounded me-2">arrow_back_ios</i>
