@@ -6,15 +6,15 @@ export const useEtapa5 = () => {
   const [errorPatch, setErrorPatch] = useState(null);
   const [archivoSubido, setArchivoSubido] = useState(false);
 
-  const patchArchivoMinuta = useCallback(async (competenciaId, file) => {
+  const patchArchivoMinuta = useCallback(async (idEtapa, file) => {
     setLoadingPatch(true);
     try {
       const formData = new FormData();
       formData.append('archivo_minuta_etapa5', file);
       // Realizar la solicitud PATCH para subir el archivo
-      await apiTransferenciaCompentencia.patch(`/etapa5/${competenciaId}/`, formData);
+      await apiTransferenciaCompentencia.patch(`/etapa5/${idEtapa}/`, formData);
       setArchivoSubido(true);
-      await apiTransferenciaCompentencia.patch(`/etapa5/${competenciaId}/`, { estado: "Finalizada" });
+      await apiTransferenciaCompentencia.patch(`/etapa5/${idEtapa}/`, { estado: "Finalizada" });
 
     } catch (error) {
       console.error("Error al subir el archivo:", error);
@@ -24,7 +24,7 @@ export const useEtapa5 = () => {
     }
   }, []);
 
-  const patchComentarioMinuta = useCallback(async (competenciaId, comentarios) => {
+  const patchComentarioMinuta = useCallback(async (idEtapa, comentarios) => {
     setLoadingPatch(true);
     try {
       const data = {
@@ -33,7 +33,7 @@ export const useEtapa5 = () => {
         observacion_minuta_gore_enviada: true,
         estado: 'Finalizada'
       };
-      await apiTransferenciaCompentencia.patch(`/etapa5/${competenciaId}/`, data);
+      await apiTransferenciaCompentencia.patch(`/etapa5/${idEtapa}/`, data);
     } catch (error) {
       console.error("Error al actualizar el comentario de la minuta:", error);
       setErrorPatch(error);

@@ -15,6 +15,7 @@ const PrimeraMinuta = () => {
   const navigate = useNavigate();
   const { userData } = useAuth();
   const minutaEnviada = !!competenciaDetails?.etapa3?.archivo_minuta_etapa3;
+  const idEtapa = competenciaDetails?.etapa3?.id
 
   const handleBackButtonClick = () => {
     navigate(-1);
@@ -30,7 +31,7 @@ const PrimeraMinuta = () => {
 
   const handleEnviarMinuta = () => {
     if (archivoSeleccionado) {
-      patchArchivoMinuta(id, archivoSeleccionado);
+      patchArchivoMinuta(idEtapa, archivoSeleccionado);
       setIsSubmitSuccessful(true);
     }
   };

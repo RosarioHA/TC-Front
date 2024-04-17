@@ -8,7 +8,7 @@ import { SubirArchivo } from "../../components/commons/subirArchivo";
 const OficioGore = () =>
 {
   const updateEtapa = useUpdateEtapa();
-  const { etapaNum, id } = useParams();
+  const { id } = useParams();
   const { competenciaDetails } = useCompetencia(id);
   const navigate = useNavigate();
   const [ competencia, setCompetencia ] = useState(null);
@@ -18,9 +18,10 @@ const OficioGore = () =>
   const [ errorMessage, setErrorMessage ] = useState("");
   const [ isSubmitSuccessful, setIsSubmitSuccessful ] = useState(false);
   const [ fechaMaxima, setFechaMaxima ] = useState('');
-  const oficioEnviado = !!competenciaDetails?.etapa3?.oficio_origen;
+  const oficioEnviado = !!competenciaDetails?.etapa4?.oficio_origen;
   const [ errorMessageDate, setErrorMessageDate ] = useState("");
-
+  const etapaNum = 4;
+  const etapaId = competenciaDetails?.etapa4?.id
 
   useEffect(() =>
   {
@@ -109,14 +110,14 @@ const OficioGore = () =>
     }
     const formData = prepareDataForSubmission();
 
-    if (!etapaNum || !id)
+    if (!etapaNum || !etapaId)
     {
       console.error("etapaNum o competenciaId están indefinidos o son nulos");
       return;
     }
     try
     {
-      await updateEtapa(etapaNum, id, formData);
+      await updateEtapa(etapaNum, etapaId, formData);
       setIsSubmitSuccessful(true);
     } catch (error)
     {

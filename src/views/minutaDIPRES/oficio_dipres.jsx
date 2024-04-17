@@ -19,9 +19,8 @@ const OficioDipres = () => {
   const [fechaMaxima, setFechaMaxima] = useState('');
   const oficioEnviado = !!competenciaDetails?.etapa3?.oficio_origen;
   const [ errorMessageDate, setErrorMessageDate ] = useState("");
-
-
   const etapaNum = 3; 
+  const etapaId = competenciaDetails?.etapa2?.id
 
   useEffect(() => {
     if (competenciaDetails) {
@@ -96,12 +95,12 @@ const OficioDipres = () => {
     }
     const formData = prepareDataForSubmission();
 
-    if (!etapaNum || !id) {
+    if (!etapaNum || !etapaId) {
       console.error("etapaNum o competenciaId están indefinidos o son nulos");
       return; 
     }
     try {
-      await updateEtapa(etapaNum, id, formData);
+      await updateEtapa(etapaNum, etapaId, formData);
       setIsSubmitSuccessful(true);
     } catch (error) {
       console.error('Error al realizar la solicitud:', error);

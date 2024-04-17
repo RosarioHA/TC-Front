@@ -93,7 +93,7 @@ function App()
             {createProtectedRoute("listado_competencias", GestionCompetencias, [ 'SUBDERE', 'Usuario Observador' ])}
             {createProtectedRoute("editar_competencia/:id", EditarCompetencia, [ 'SUBDERE', 'Usuario Observador' ])}
             {createProtectedRoute("crear_competencia", CreacionCompetencia, [ 'SUBDERE', 'Usuario Observador' ])}
-            {createProtectedRoute("estado_competencia/:id/subir_oficio/:etapaNum/:subetapaId", SubirOficio, [ 'SUBDERE', 'Usuario Observador' ])}
+            {createProtectedRoute("estado_competencia/:id/subir_oficio_sectorial", SubirOficio, [ 'SUBDERE', 'Usuario Observador' ])}
             {createProtectedRoute("estado_competencia/:id/subir_oficio_dipres", SubirOficioDipres, [ 'SUBDERE', 'Usuario Observador' ])}
             {createProtectedRoute("estado_competencia/:id/subir_segundo_oficio_dipres", OficioDipres2, [ 'SUBDERE', 'Usuario Observador' ])}
             {createProtectedRoute("estado_competencia/:id/subir_oficio_gore", SubirOficioGore, [ 'SUBDERE', 'Usuario Observador' ])}

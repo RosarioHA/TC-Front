@@ -7,7 +7,7 @@ import { SuccessSOficio } from "../../components/success/oficio";
 const SubirOficio = () =>
 {
   const updateEtapa = useUpdateEtapa();
-  const { etapaNum, id } = useParams();
+  const { id } = useParams();
   const { competenciaDetails } = useCompetencia(id);
   const navigate = useNavigate();
   const [ competencia, setCompetencia ] = useState(null);
@@ -20,7 +20,10 @@ const SubirOficio = () =>
   const location = useLocation();
   const extraData = location.state?.extraData;
   const [ errorMessageDate, setErrorMessageDate ] = useState("");
+  const etapaNum = 2;
+  const etapaId = competenciaDetails?.etapa2?.id
 
+  console.log("etapaId", etapaId);
 
   useEffect(() =>
   {
@@ -119,7 +122,7 @@ const SubirOficio = () =>
 
     const formData = prepareDataForSubmission();
 
-    if (!etapaNum || !id)
+    if (!etapaNum || !etapaId)
     {
       console.error("etapaNum o competenciaId están indefinidos o son nulos");
       return; // No continuar si los parámetros son inválidos
@@ -127,7 +130,7 @@ const SubirOficio = () =>
 
     try
     {
-      await updateEtapa(etapaNum, id, formData);
+      await updateEtapa(etapaNum, etapaId, formData);
       setIsSubmitSuccessful(true);
     } catch (error)
     {
