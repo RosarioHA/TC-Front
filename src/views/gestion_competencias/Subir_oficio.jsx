@@ -168,7 +168,7 @@ const SubirOficio = () =>
             </ol>
           </nav>
         </div>
-        <span className="text-sans-Title">Oficio {extraData} </span>
+        <span className="text-sans-Title">Oficio sectorial</span>
         <div className="my-3">
           <div className="text-sans-h1 mb-4">{competencia.nombre}</div>
         </div>
