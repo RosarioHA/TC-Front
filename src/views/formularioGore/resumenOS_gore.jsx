@@ -45,7 +45,7 @@ const ResumenOS_Gore = () => {
 	};
 
   return (
-    <div className="container col-11">
+    <div className="container col-10 col-xxl-11">
       <h1 className="text-sans-h1 text-center">Resumen observaciones</h1>
 
       {Object.keys(observaciones).map((pasoKey) => {

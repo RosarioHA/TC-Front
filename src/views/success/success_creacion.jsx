@@ -42,7 +42,7 @@ const SuccessCreacion = () => {
   }
 
   return (
-    <div className="container view-container ms-5">
+    <div className="container ps-5 ms-5">
       <h2 className="text-sans-h2 mt-3">{titulo}</h2>
       <h3 className="text-sans-h3 mt-3 mb-5">{subtitulo}</h3>
   

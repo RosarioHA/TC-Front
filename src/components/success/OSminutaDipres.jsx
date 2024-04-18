@@ -9,7 +9,7 @@ export const SuccessOSminutaDIPRES = ({ idCompetencia, mensaje }) => {
   };
 
   return (
-    <div className="container view-container ms-5">
+    <div className="container ps-5 ms-5">
 
       <div className="success-container col-8 p-3 px-5 mt-5">
         <div className="row align-items-center">

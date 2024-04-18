@@ -34,7 +34,7 @@ const ResumenSectorial = () => {
 
   return (
     <>
-      <div className="container-fluid">
+      <div className="container container-xxl-fluid">
         <div className="text-center">
           <span className="text-sans-h1">Resumen formulario </span>
         </div>
