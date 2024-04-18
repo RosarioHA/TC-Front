@@ -21,7 +21,7 @@ const EstadoCompentencia = React.lazy(() => import('./views/gestion_competencias
 const SubirOficio = React.lazy(() => import('./views/gestion_competencias/Subir_oficio'));
 const SubirOficioDipres = React.lazy(() => import('./views/minutaDIPRES/oficio_dipres.jsx'));
 const SubirOficioGore = React.lazy(() => import('./views/formularioGore/oficio_gore.jsx'));
-const Minuta = React.lazy(() => import('./views/gestion_competencias/Minuta'));
+
 const PrimeraMinutaDipres = React.lazy(() => import('./views/minutaDIPRES/primera_minuta_dipres'));
 const SegundaMinutaDipres = React.lazy(() => import('./views/minutaDIPRES/segunda_minuta_dipres'));
 const ObservacionesSubdereDipres = React.lazy(() => import('./views/minutaDIPRES/observaciones_subdere.jsx'));
@@ -183,7 +183,7 @@ function App()
               {createProtectedRoute("observaciones_subdere", ObservacionesSubdereDipres, [ 'SUBDERE', 'Usuario Observador' ])}
             </Route>
 
-            <Route path="agregar_minuta" element={<Minuta />}></Route>
+            
             <Route path="*" element={<Error404 />} />
             <Route path="404" element={<Error404 />} />
             <Route path="500" element={<Error500 />} />

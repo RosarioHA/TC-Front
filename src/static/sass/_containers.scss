@@ -28,6 +28,12 @@
   min-height: 92vh;
   margin-top:0; 
   position: absolute;
+  margin-left: 50px;
+}
+@media (min-width: 1350px) {
+  .container-home {
+    margin-left: 0px;
+  }
 }
 
 .container-info{
