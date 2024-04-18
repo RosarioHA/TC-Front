@@ -39,7 +39,7 @@ const FormLayout = () =>
 
 
   return (
-    <div className="container-fluid col-11">
+    <div className="container col-10 col-xxl-11">
       <div className="row">
         <div className="col mb-2">
           <FormTitle data={dataFormSubdere} title="Revision Final SUBDERE" loading={loadingFormSubdere} id={dataFormSubdere.id} />

@@ -64,7 +64,7 @@ const PasoUno = () => {
         {paso1Data.numero_paso && <MonoStepers stepNumber={paso1Data.numero_paso} />}
       </div>
       <div className="col-11">
-        <div className="container-fluid ">
+        <div className="container">
           <div className="d-flex">
             <h3 className="mt-3 me-4">{paso1Data.nombre_paso}</h3>
             <Avance avance={avance} />
