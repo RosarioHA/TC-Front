@@ -118,26 +118,26 @@ export const SummaryDetail = ({ competencia }) => {
                   <p>Etapas finalizadas</p>
                 </div>
               </ul>
-              <div className="container text-center mt-3">
-                <div className="row">
-                  <div className="col">
-                    <span className="text-sans-h6-bold-green">
-                      Proceso finalizado en:
-                    </span>
-                  </div>
+
+              <div>
+                <div className="d-flex justify-content-center mt-3">
+                  <span className="text-sans-h6-bold-darkblue">
+                  Proceso finalizado en:
+                  </span>
                 </div>
-                <div className="row mx-5 px-3 py-2 gap-1">
-                  <div className="col d-flex flex-column ms-3">
-                    <span className="text-sans-h6-bold-green">{dias}</span>
-                    <span className="text-sans-h6-green">Días</span>
+
+                <div className="d-flex justify-content-between px-4 px-xxl-5 mx-xxl-5 mt-3">
+                  <div className="d-flex flex-column align-items-center">
+                    <span className="text-sans-h6-bold-darkblue">{dias}</span>
+                    <span className="text-sans-h6-darkblue">Días</span>
                   </div>
-                  <div className="col d-flex flex-column">
-                    <span className="text-sans-h6-bold-green">{horas}</span>
-                    <span className="text-sans-h6-green">Horas</span>
+                  <div className="d-flex flex-column align-items-center">
+                    <span className="text-sans-h6-bold-darkblue">{horas}</span>
+                    <span className="text-sans-h6-darkblue">Horas</span>
                   </div>
-                  <div className="col d-flex flex-column me-3">
-                    <span className="text-sans-h6-bold-green">{minutos}</span>
-                    <span className="text-sans-h6-green">Mins</span>
+                  <div className="d-flex flex-column align-items-center">
+                    <span className="text-sans-h6-bold-darkblue">{minutos}</span>
+                    <span className="text-sans-h6-darkblue">Mins</span>
                   </div>
                 </div>
               </div>
