@@ -100,7 +100,7 @@ export const SummaryDetail = ({ competencia }) => {
         <div className="row">
           <div className="col-4">
             <div className="d-flex flex-row my-3 justify-content-center"></div>
-            <div>
+            <div className="">
               <ul className="chart-skills">
                 {Array.from({ length: totalEtapas }, (_, index) => (
                   <li
@@ -114,7 +114,7 @@ export const SummaryDetail = ({ competencia }) => {
                   </li>
                 ))}
                 <div className="chart-text">
-                  <div className="text-sans-h2-bold-tertiary">5 de 5</div>
+                  <div className="chart-numbers">5 de 5</div>
                   <p>Etapas finalizadas</p>
                 </div>
               </ul>
@@ -208,38 +208,38 @@ export const SummaryDetail = ({ competencia }) => {
               <div className="circle-color-light-blue mx-2"></div>Restante
             </span>
           </div>
-          <div>
-            <ul className="chart-skills">
+          <div className="">
+            <ul className="chart-skills border">
               {Array.from({ length: etapasFinalizadas }, (_, index) => (
                 <li key={index}>
                   <span></span>
                 </li>
               ))}
               <div className="chart-text">
-                <div className="text-sans-h2-bold-tertiary">
+                <div className="chart-numbers ">
                   {etapasFinalizadas} de {totalEtapas}
                 </div>
                 <p>Etapas finalizadas</p>
               </div>
             </ul>
-            <div className="container text-center mt-3">
-              <div className="row">
-                <div className="col">
-                  <span className="text-sans-h6-bold-darkblue">
-                    Tiempo transcurrido del proceso
-                  </span>
-                </div>
+            
+            <div>
+              <div className="d-flex justify-content-center mt-3">
+                <span className="text-sans-h6-bold-darkblue">
+                  Tiempo transcurrido del proceso
+                </span>
               </div>
-              <div className="row mx-5 px-3 py-2 gap-1">
-                <div className="col d-flex flex-column ms-3">
+
+              <div className="d-flex justify-content-between px-4 px-xxl-5 mx-xxl-5 mt-3">
+                <div className="d-flex flex-column align-items-center">
                   <span className="text-sans-h6-bold-darkblue">{dias}</span>
                   <span className="text-sans-h6-darkblue">Días</span>
                 </div>
-                <div className="col d-flex flex-column">
+                <div className="d-flex flex-column align-items-center">
                   <span className="text-sans-h6-bold-darkblue">{horas}</span>
                   <span className="text-sans-h6-darkblue">Horas</span>
                 </div>
-                <div className="col d-flex flex-column me-3">
+                <div className="d-flex flex-column align-items-center">
                   <span className="text-sans-h6-bold-darkblue">{minutos}</span>
                   <span className="text-sans-h6-darkblue">Mins</span>
                 </div>
@@ -247,6 +247,7 @@ export const SummaryDetail = ({ competencia }) => {
             </div>
           </div>
         </div>
+
         <div className="col-8">
           <div className="mb-4 ms-4">
             <ul className="list-group list-group-flush my-3">
