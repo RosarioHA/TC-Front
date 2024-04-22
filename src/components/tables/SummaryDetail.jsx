@@ -209,7 +209,7 @@ export const SummaryDetail = ({ competencia }) => {
             </span>
           </div>
           <div className="">
-            <ul className="chart-skills border">
+            <ul className="chart-skills">
               {Array.from({ length: etapasFinalizadas }, (_, index) => (
                 <li key={index}>
                   <span></span>
