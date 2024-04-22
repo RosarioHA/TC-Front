@@ -15,6 +15,7 @@ const ObservacionesSubdereGore = () => {
   const [isSubmitSuccessful, setIsSubmitSuccessful] = useState(false);
   const navigate = useNavigate();
   const observacionesEnviadas = competenciaDetails?.etapa5?.observacion_minuta_gore_enviada;
+  const idEtapa = competenciaDetails?.etapa5?.id
 
   useEffect(() => {
     // Verificar si las observaciones ya han sido enviadas
@@ -33,7 +34,7 @@ const ObservacionesSubdereGore = () => {
   };
 
   const handleCerrarEtapa = async () => {
-    await patchComentarioMinuta(id, observacionMinutaDipres);
+    await patchComentarioMinuta(idEtapa, observacionMinutaDipres);
     setIsSubmitSuccessful(true);
   }
 
@@ -42,7 +43,7 @@ const ObservacionesSubdereGore = () => {
   };
 
   return(
-    <div className="container col-11">
+    <div className="container col-10 col-xxl-11">
       <div className="py-3 d-flex">
         <div className="align-self-center">
           <button className="btn-secundario-s" onClick={handleBackButtonClick}>

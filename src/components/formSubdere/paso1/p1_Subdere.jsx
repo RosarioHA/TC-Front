@@ -65,7 +65,7 @@ export const AmbitoDefinitivo = ({ ambito_definitivo_competencia, solo_lectura }
     <>
 
       <div className="col-11">
-        <div className="container-fluid">
+        <div className="container container-xxl-fluid">
 
           <h4 className="text-sans-h4">
             1. Ámbito definitivo de la competencia:

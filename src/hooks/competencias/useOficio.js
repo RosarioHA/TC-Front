@@ -2,17 +2,17 @@ import { apiTransferenciaCompentencia } from "../../services/transferenciaCompet
 
 export const useUpdateEtapa = () =>
 {
-    const updateEtapa = async (etapaId, competenciaId, datos) =>
+    const updateEtapa = async (etapaNum, etapaId, datos) =>
     {
         // Validar que los parámetros etapaId y competenciaId no estén indefinidos
-        if (!etapaId || !competenciaId)
+        if (!etapaId || !etapaNum)
         {
             console.error("etapaId o competenciaId están indefinidos o son nulos");
             return;
         }
 
         // Construcción de la URL para la solicitud PATCH
-        const url = `/etapa${etapaId}/${competenciaId}/`;
+        const url = `/etapa${etapaNum}/${etapaId}/`;
         try
         {
             // Realizar la solicitud PATCH

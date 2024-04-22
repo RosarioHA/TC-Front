@@ -7,7 +7,7 @@ import { SuccessSOficio } from "../../components/success/oficio";
 const SubirOficio = () =>
 {
   const updateEtapa = useUpdateEtapa();
-  const { etapaNum, id } = useParams();
+  const { id } = useParams();
   const { competenciaDetails } = useCompetencia(id);
   const navigate = useNavigate();
   const [ competencia, setCompetencia ] = useState(null);
@@ -20,7 +20,10 @@ const SubirOficio = () =>
   const location = useLocation();
   const extraData = location.state?.extraData;
   const [ errorMessageDate, setErrorMessageDate ] = useState("");
+  const etapaNum = 2;
+  const etapaId = competenciaDetails?.etapa2?.id
 
+  console.log("etapaId", etapaId);
 
   useEffect(() =>
   {
@@ -119,7 +122,7 @@ const SubirOficio = () =>
 
     const formData = prepareDataForSubmission();
 
-    if (!etapaNum || !id)
+    if (!etapaNum || !etapaId)
     {
       console.error("etapaNum o competenciaId están indefinidos o son nulos");
       return; // No continuar si los parámetros son inválidos
@@ -127,7 +130,7 @@ const SubirOficio = () =>
 
     try
     {
-      await updateEtapa(etapaNum, id, formData);
+      await updateEtapa(etapaNum, etapaId, formData);
       setIsSubmitSuccessful(true);
     } catch (error)
     {
@@ -152,7 +155,7 @@ const SubirOficio = () =>
 
   return (
     <>
-      <div className="container col-11">
+      <div className="container col-10 col-xxl-11">
         <div className="py-3 d-flex">
           <button className="btn-secundario-s" onClick={handleBackButtonClick}>
             <i className="material-symbols-rounded me-2">arrow_back_ios</i>
@@ -165,7 +168,7 @@ const SubirOficio = () =>
             </ol>
           </nav>
         </div>
-        <span className="text-sans-Title">Oficio {extraData} </span>
+        <span className="text-sans-Title">Oficio sectorial</span>
         <div className="my-3">
           <div className="text-sans-h1 mb-4">{competencia.nombre}</div>
         </div>

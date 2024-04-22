@@ -95,7 +95,7 @@ export const RecomendacionTransferencia = ({ regionesListado, regionesRecomendad
   return (
     <>
       <div className="col-11">
-        <div className="container-fluid">
+        <div className="container container-xxl-fluid">
           <h4 className="text-sans-h4">
             2. Recomendación de transferencia
           </h4>

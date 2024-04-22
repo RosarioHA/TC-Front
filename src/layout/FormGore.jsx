@@ -30,7 +30,7 @@ const FormGoreLayout = () => {
   </div>;
   }
   return (
-    <div className="container-fluid col-11">
+    <div className="container col-10 col-xxl-11">
       <div className="row">
         <div className="col mb-2">
           <FormTitle data={dataFormGore} title="Formulario Gobierno Regional" loading={loadingFormGore} id={dataFormGore.id} />

@@ -13,16 +13,20 @@ const DropdownConSecciones = ({
   readOnly,
   onUsuariosTransformed,
   usuariosCompetencia,
-}) => {
-  const [selectedOptions, setSelectedOptions] = useState({});
-  const [isOpen, setIsOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
+}) =>
+{
+  const [ selectedOptions, setSelectedOptions ] = useState({});
+  const [ isOpen, setIsOpen ] = useState(false);
+  const [ searchTerm, setSearchTerm ] = useState('');
   const dropdownRef = useRef(null);
 
   // Cierra el dropdown si se hace clic fuera del componente
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+  useEffect(() =>
+  {
+    const handleClickOutside = (event) =>
+    {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target))
+      {
         setIsOpen(false);
       }
     };
@@ -35,21 +39,24 @@ const DropdownConSecciones = ({
   const onSearchTermChange = (e) => setSearchTerm(e.target.value);
 
   // Maneja el cambio de selección en las casillas de verificación
-  const handleCheckboxChange = (option) => {
+  const handleCheckboxChange = (option) =>
+  {
     const perfil = option.perfil;
     const updatedSelection = {
       ...selectedOptions,
-      [perfil]: selectedOptions[perfil] ? selectedOptions[perfil].filter(o => o.id !== option.id) : []
+      [ perfil ]: selectedOptions[ perfil ] ? selectedOptions[ perfil ].filter(o => o.id !== option.id) : []
     };
-  
-    if (!selectedOptions[perfil] || !selectedOptions[perfil].some(o => o.id === option.id)) {
-      updatedSelection[perfil] = [...(updatedSelection[perfil] || []), option];
+
+    if (!selectedOptions[ perfil ] || !selectedOptions[ perfil ].some(o => o.id === option.id))
+    {
+      updatedSelection[ perfil ] = [ ...(updatedSelection[ perfil ] || []), option ];
     }
-  
+
     setSelectedOptions(updatedSelection);
   };
   // Filtra las opciones basadas en el término de búsqueda
-  const filteredOptions = useMemo(() => {
+  const filteredOptions = useMemo(() =>
+  {
     if (!searchTerm) return options;
 
     const searchTextLower = searchTerm.toLowerCase();
@@ -63,10 +70,11 @@ const DropdownConSecciones = ({
         ),
       }))
       .filter((optionGroup) => optionGroup.options.length > 0);
-  }, [options, searchTerm]);
+  }, [ options, searchTerm ]);
 
   // Transforma las opciones seleccionadas para perfiles
-  const transformSelectedOptionsForProfiles = useCallback((selectedOptions) => {
+  const transformSelectedOptionsForProfiles = useCallback((selectedOptions) =>
+  {
     let transformed = {
       usuarios_subdere: [],
       usuarios_dipres: [],
@@ -74,27 +82,32 @@ const DropdownConSecciones = ({
       usuarios_gore: [],
     };
 
-    for (let perfil in selectedOptions) {
-      selectedOptions[perfil].forEach((option) => {
+    for (let perfil in selectedOptions)
+    {
+      selectedOptions[ perfil ].forEach((option) =>
+      {
         let key =
           perfil === 'Usuario Sectorial'
             ? 'usuarios_sectoriales'
             : `usuarios_${perfil.toLowerCase()}`;
 
         // Asegurarse de que exista el arreglo antes de hacer push
-        if (!transformed[key]) {
-          transformed[key] = [];
+        if (!transformed[ key ])
+        {
+          transformed[ key ] = [];
         }
 
-        transformed[key].push(option.id);
+        transformed[ key ].push(option.id);
       });
     }
 
     return transformed;
   }, []);
 
-  useEffect(() => {
-    if (typeof onUsuariosTransformed === 'function') {
+  useEffect(() =>
+  {
+    if (typeof onUsuariosTransformed === 'function')
+    {
       const transformed = transformSelectedOptionsForProfiles(selectedOptions);
       onUsuariosTransformed(transformed); // Directamente llamando a onUsuariosTransformed
     }
@@ -104,17 +117,21 @@ const DropdownConSecciones = ({
     onUsuariosTransformed,
   ]);
 
-  const agruparUsuariosPorPerfil = (usuarios) => {
+  const agruparUsuariosPorPerfil = (usuarios) =>
+  {
     const usuariosAgrupados = {};
 
-    usuarios.forEach((usuario) => {
+    usuarios.forEach((usuario) =>
+    {
       const perfil = usuario.perfil;
-      if (!usuariosAgrupados[perfil]) {
-        usuariosAgrupados[perfil] = [];
+      if (!usuariosAgrupados[ perfil ])
+      {
+        usuariosAgrupados[ perfil ] = [];
       }
       // Asegúrate de que no se agreguen duplicados
-      if (!usuariosAgrupados[perfil].find((u) => u.id === usuario.id)) {
-        usuariosAgrupados[perfil].push(usuario);
+      if (!usuariosAgrupados[ perfil ].find((u) => u.id === usuario.id))
+      {
+        usuariosAgrupados[ perfil ].push(usuario);
       }
     });
 
@@ -125,30 +142,38 @@ const DropdownConSecciones = ({
     ? agruparUsuariosPorPerfil(usuariosCompetencia)
     : {};
 
-  const inicializarUsuarios = (usuarios) => {
+  const inicializarUsuarios = (usuarios) =>
+  {
     const usuariosInicializados = {};
-    usuarios.forEach((usuario) => {
-      if (!usuariosInicializados[usuario.perfil]) {
-        usuariosInicializados[usuario.perfil] = [];
+    usuarios.forEach((usuario) =>
+    {
+      if (!usuariosInicializados[ usuario.perfil ])
+      {
+        usuariosInicializados[ usuario.perfil ] = [];
       }
       if (
-        !usuariosInicializados[usuario.perfil].some((u) => u.id === usuario.id)
-      ) {
-        usuariosInicializados[usuario.perfil].push(usuario);
+        !usuariosInicializados[ usuario.perfil ].some((u) => u.id === usuario.id)
+      )
+      {
+        usuariosInicializados[ usuario.perfil ].push(usuario);
       }
     });
     return usuariosInicializados;
   };
 
-  useEffect(() => {
-    if (usuariosCompetencia) {
+  useEffect(() =>
+  {
+    if (usuariosCompetencia)
+    {
       const usuariosInicializados = inicializarUsuarios(usuariosCompetencia);
       setSelectedOptions(usuariosInicializados);
     }
-  }, [usuariosCompetencia]);
+  }, [ usuariosCompetencia ]);
   // Renderiza la tabla resumen
-  const renderTablaResumen = (usuarios, tipoUsuario, tipoPerfil) => {
-    if (!usuarios || usuarios.length === 0) {
+  const renderTablaResumen = (usuarios, tipoUsuario, tipoPerfil) =>
+  {
+    if (!usuarios || usuarios.length === 0)
+    {
       return null; // No hay usuarios para este tipo de perfil
     }
 
@@ -163,7 +188,7 @@ const DropdownConSecciones = ({
               <th className="col-1">
                 <p className="ms-4">#</p>
               </th>
-              <th className="col-5">
+              <th className="col-11">
                 <p>Usuario</p>
               </th>
               {!readOnly && (
@@ -180,10 +205,13 @@ const DropdownConSecciones = ({
                 className={index % 2 === 0 ? 'neutral-line' : 'white-line'}
               >
                 <td>
-                  <p className="ms-4 my-3">{index + 1}</p>
+                  <p className="mx-4 my-3">{index + 1}</p>
                 </td>
                 <td>
-                  <p className="my-3">{user.nombre_completo}</p>
+                  <span className="my-3">
+                  {user.nombre_completo} {(user.sector_nombre || user.region_nombre) ? `- ${user.sector_nombre || user.region_nombre}` : ''}
+                    
+                  </span>
                 </td>
                 {!readOnly && (
                   <td>
@@ -215,7 +243,7 @@ const DropdownConSecciones = ({
           {readOnly &&
             (Object.keys(usuariosPorPerfil).length > 0 ? (
               Object.keys(usuariosPorPerfil).map((perfil) =>
-                renderTablaResumen(usuariosPorPerfil[perfil], perfil)
+                renderTablaResumen(usuariosPorPerfil[ perfil ], perfil)
               )
             ) : (
               <p className="text-sans-p pt-4 ms-3">Sin usuarios asignados</p>
@@ -244,13 +272,7 @@ const DropdownConSecciones = ({
               {isOpen ? 'expand_less' : 'expand_more'}
             </i>
           </div>
-          <div className="d-flex mt-3 text-sans-h6-primary">
-            <i className="material-symbols-rounded me-2">info</i>
-            <h6>
-              Si aún no creas los usuarios para esta competencia, puedes crear
-              la competencia y asignarle usuario más tarde.
-            </h6>
-          </div>
+
         </>
       )}
 
@@ -259,8 +281,8 @@ const DropdownConSecciones = ({
           className="dropdown d-flex flex-column p-2 dropdown-container"
           ref={dropdownRef}
         >
-          {filteredOptions.map((optionGroup) => (
-            <React.Fragment key={`group-${optionGroup.id}`}>
+          {filteredOptions.map((optionGroup, index) => (
+            <React.Fragment key={`group-${index}`}>
               <div key={optionGroup.id} className="group-label unselected-option py-2 ps-3 d-flex border-bottom border-top">
                 <label className="me-1 mb-0 text-sans-p-bold">
                   {optionGroup.label}
@@ -268,21 +290,20 @@ const DropdownConSecciones = ({
               </div>
               {optionGroup.options.map((option) => (
                 <label
-                  className={`${
-                    selectedOptions[option.perfil]?.includes(option)
-                      ? 'selected-option-ghost'
-                      : 'unselected-option-ghost'
-                  }`}
+                  className={`${selectedOptions[ option.perfil ]?.includes(option)
+                    ? 'selected-option-ghost'
+                    : 'unselected-option-ghost'
+                    }`}
                   key={`${optionGroup.id}-${option.id}`}
                 >
                   <input
                     className="checkbox ms-4 me-2 my-3"
                     type="checkbox"
                     value={option.id}
-                    checked={selectedOptions[option.perfil]?.some(selectedOption => selectedOption.id === option.id)}
+                    checked={selectedOptions[ option.perfil ]?.some(selectedOption => selectedOption.id === option.id)}
                     onChange={() => handleCheckboxChange(option)}
                   />
-                  {option.nombre_completo}
+                  {option.nombre_completo} {(option.sector_nombre || option.region_nombre) ? `- ${option.sector_nombre || option.region_nombre}` : ''}
                 </label>
               ))}
             </React.Fragment>
@@ -292,8 +313,8 @@ const DropdownConSecciones = ({
       {!readOnly &&
         Object.keys(selectedOptions).map(
           (tipoUsuario) =>
-            selectedOptions[tipoUsuario].length > 0 &&
-            renderTablaResumen(selectedOptions[tipoUsuario], tipoUsuario)
+            selectedOptions[ tipoUsuario ].length > 0 &&
+            renderTablaResumen(selectedOptions[ tipoUsuario ], tipoUsuario)
         )}
     </div>
   );

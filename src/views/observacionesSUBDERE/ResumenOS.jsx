@@ -47,7 +47,7 @@ const ResumenOS = () => {
 	};
 
   return (
-    <div className="container col-11">
+    <div className="container col-10 col-xxl-11">
       <p className="text-sans-h1 text-center">Resumen observaciones </p>
 
       {Object.keys(observaciones).map((pasoKey) => {

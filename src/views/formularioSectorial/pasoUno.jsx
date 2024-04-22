@@ -10,8 +10,7 @@ import CustomTextarea from '../../components/forms/custom_textarea';
 import { useAuth } from '../../context/AuthContext';
 import { useObservacionesSubdere } from '../../hooks/formulario/useObSubdereSectorial';
 
-const PasoUno = () =>
-{
+const PasoUno = () => {
   const { pasoData, errorPaso, updateStepNumber, data } = useContext(FormularioContext);
   const stepNumber = 1;
   const { userData } = useAuth();
@@ -23,8 +22,7 @@ const PasoUno = () =>
   const formSectorialEnviado = data?.formulario_enviado
 
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     updateStepNumber(stepNumber);
     if (observaciones && Object.keys(observaciones).length === 0)
     {
@@ -49,10 +47,8 @@ const PasoUno = () =>
     paso1 } = pasoData;
   const paso1Data = paso1 || {};
 
-  const handleGuardarObservacion = async () =>
-  {
-    if (!observacionesEnviadas)
-    {
+  const handleGuardarObservacion = async () => {
+    if (!observacionesEnviadas) {
       const observacionData = {
         observacion_paso1: observacionPaso1,
       };
@@ -68,7 +64,7 @@ const PasoUno = () =>
         {paso1Data.numero_paso && <MonoStepers stepNumber={paso1Data.numero_paso} />}
       </div>
       <div className="col-11">
-        <div className="container-fluid ">
+        <div className="container">
           <div className="d-flex">
             <h3 className="mt-3 me-4">{paso1Data.nombre_paso}</h3>
             <Avance avance={avance} />
