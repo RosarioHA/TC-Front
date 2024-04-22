@@ -95,7 +95,7 @@ const Sidebar = () => {
           <SidebarLink to="/home/crear_competencia" icon="post_add" text="Crear Competencia" onClick={handleItemClick} hasBorder={true} />
         )}
         {(userSubdere || userObservador) && (
-          <SidebarLink to="/home/listado_competencias" icon="library_books" text="Listado de Competencias" badgeCount={99} onClick={handleItemClick} hasBorder={false}/>
+          <SidebarLink to="/home/listado_competencias" icon="library_books" text="Listado de Competencias"  onClick={handleItemClick} hasBorder={false}/>
         )}
         <hr className="w-85 mx-4" />
 
