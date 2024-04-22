@@ -43,21 +43,22 @@ const ResumenGore = () => {
         <span className="text-sans-h1">Resumen Formulario Gore</span>
       </div>
       <div className="mb-5 me-5">
+
         {pasos.map((paso) => (
           <div className="container" key={paso.numero_paso}>
-            <div className="row align-items-center">
+            <div className="d-flex justify-content-between align-items-center">
               <div className="col-4 ps-5">
                 <span><strong>Paso {paso.numero_paso}:</strong> {paso.nombre_paso}</span>
               </div>
-              <div className="col-5 d-flex align-items-center">
+              <div className="d-flex align-items-center">
                 <Avance avance={paso.avance} />
               </div>
-              <div className="col d-flex justify-content-center">
+              <div className="d-flex justify-content-center">
                 {paso.completado ?
                   <img src="/check.svg" alt="Check" /> :
                   <img src="/warning.svg" alt="Warning" />}
               </div>
-              <div className="col-2">
+              <div className="col-2 d-flex justify-content-end">
                 {paso.completado ? (
                   <div className="d-flex justify-content-center">
                     <span className="text-sans-p-blue text-center">Listo</span>

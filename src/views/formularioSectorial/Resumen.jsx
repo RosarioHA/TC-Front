@@ -42,20 +42,20 @@ const ResumenSectorial = () => {
 
           {pasos.map(paso => (
             <div className="container" key={paso.numero_paso} >
-              <div className="row align-items-center ">
-                <div className="col-3 col-xxl-4 ps-5">
+              <div className="d-flex justify-content-between align-items-center">
+                <div className="ps-5 col-4">
                   <span className=""><strong>Paso {paso.numero_paso}:</strong> {paso.nombre_paso} </span>
                 </div>
-                <div className="col-5 col-xxl-5 d-flex align-items-center">
+                <div className="d-flex align-items-center">
                   <Avance avance={paso.avance} />
                 </div>
-                <div className="col d-flex justify-content-center ms-4 ms-xxl-0">
+                <div className="d-flex justify-content-center mx-3">
                   {paso.completado ?
                     <img src="/check.svg" alt="Check" /> :
                     <img src="/warning.svg" alt="Warning" />
                   }
                 </div>
-                <div className="col-2">
+                <div className="col-2 d-flex justify-content-end">
                   {paso.completado ? (
                     <div className="d-flex justify-content-center">
                       <span className="text-sans-p-blue text-center">Listo</span>
