@@ -35,7 +35,7 @@ const Home = () =>
 
   return (
     <>
-      <div className="container-home">
+      <div className="col-10 container-home">
         {/* Verificar si hay competencias */}
         {!tieneCompetencias ? (
           <div className="d-flex justify-content-center my-5 py-5">
@@ -67,7 +67,7 @@ const Home = () =>
             </div> */}
             {dataCompetencia.map(competencia => (
               <>
-                <div key={competencia.id} className="container-competencia">
+                <div key={competencia.id} className="container-compentencia">
                   <div className="container">
                     <h3 className="my-3">{competencia.nombre}</h3>
                     <SummaryDetail competencia={competencia} tiempoTranscurrido={competencia.tiempo_transcurrido} />
