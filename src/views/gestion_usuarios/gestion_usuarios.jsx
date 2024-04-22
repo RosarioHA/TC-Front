@@ -123,7 +123,7 @@ const GestionUsuarios = () => {
   };
 
   return (
-    <div className="container-fluid col-11 mt-2">
+    <div className="container col-10 col-xxl-11 mt-2">
       <div className="text-sans-h2 mx-3">Administrar Usuarios</div>
       <div className="d-flex flex-row px-4 mb-5 justify-content-between">
         <div className="w-50 pl-2 text-sans-24 align-self-center">Todos los usuarios</div>

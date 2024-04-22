@@ -9,7 +9,7 @@ export const SuccessMinutaDipres = ({ idCompetencia }) => {
   };
 
   return (
-    <div className="container view-container ms-5">
+    <div className="container container ps-5 ms-5">
 
       <div className="success-container col-7 p-3 px-5 mt-5">
         <div className="row align-items-center">

@@ -155,7 +155,7 @@ const SubirOficio = () =>
 
   return (
     <>
-      <div className="container col-11">
+      <div className="container col-10 col-xxl-11">
         <div className="py-3 d-flex">
           <button className="btn-secundario-s" onClick={handleBackButtonClick}>
             <i className="material-symbols-rounded me-2">arrow_back_ios</i>
@@ -168,7 +168,7 @@ const SubirOficio = () =>
             </ol>
           </nav>
         </div>
-        <span className="text-sans-Title">Oficio {extraData} </span>
+        <span className="text-sans-Title">Oficio sectorial</span>
         <div className="my-3">
           <div className="text-sans-h1 mb-4">{competencia.nombre}</div>
         </div>

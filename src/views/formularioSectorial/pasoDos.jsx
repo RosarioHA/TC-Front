@@ -78,14 +78,14 @@ const PasoDos = () =>
         <MonoStepers stepNumber={paso2.numero_paso} />
       </div>
       <div className="col-11">
-        <div className="container vh-100">
+        <div className="container">
           <div className="d-flex">
             <h3 className="mt-3 me-4">{paso2.nombre_paso}</h3>
             <Avance avance={avance} id={data.id} />
           </div>
           <span className="text-sans-h6-primary">Texto de apoyo</span>
 
-          <div className="container-fluid me-5 pe-5 my-5">
+          <div className="container me-5 pe-5 my-5">
             <Subpaso_dosPuntoUno
               data={p_2_1_organismos_intervinientes}
               lista={listado_organismos}
@@ -95,7 +95,7 @@ const PasoDos = () =>
               solo_lectura={solo_lectura}
             />
           </div>
-          <div className="container-fluid me-5 pe-5 my-5">
+          <div className="container me-5 pe-5 my-5">
             <Subpaso_dosPuntoDos
               data={p_2_2_unidades_intervinientes}
               stepNumber={stepNumber}
@@ -107,7 +107,7 @@ const PasoDos = () =>
               solo_lectura={solo_lectura}
             />
           </div>
-          <div className="container-fluid me-5 pe-5 my-5">
+          <div className="container me-5 pe-5 my-5">
             <Subpaso_dosPuntoTres
               data={p_2_3_etapas_ejercicio_competencia}
               listado_unidades={listado_unidades}
@@ -120,7 +120,7 @@ const PasoDos = () =>
               solo_lectura={solo_lectura}
             />
           </div>
-          <div className="container-fluid me-5 pe-5 my-5">
+          <div className="container me-5 pe-5 my-5">
             <Subpaso_dosPuntoCuatro
               data={p_2_4_plataformas_y_softwares}
               listado_etapas={listado_etapas}
@@ -131,7 +131,7 @@ const PasoDos = () =>
               solo_lectura={solo_lectura}
             />
           </div>
-          <div className="container-fluid me-5 pe-5 my-5">
+          <div className="container me-5 pe-5 my-5">
             <Subpaso_dosPuntoCinco
               flujograma={p_2_5_flujograma_competencia}
               data={pasoData.paso2}

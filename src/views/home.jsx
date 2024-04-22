@@ -67,7 +67,7 @@ const Home = () =>
             </div> */}
             {dataCompetencia.map(competencia => (
               <>
-                <div key={competencia.id} className="container-compentencia">
+                <div key={competencia.id} className="container-competencia">
                   <div className="container">
                     <h3 className="my-3">{competencia.nombre}</h3>
                     <SummaryDetail competencia={competencia} tiempoTranscurrido={competencia.tiempo_transcurrido} />

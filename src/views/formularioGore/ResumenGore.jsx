@@ -38,7 +38,7 @@ const ResumenGore = () => {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className="container-fluid">
+    <div className="container container-xxl-fluid">
       <div className="text-center">
         <span className="text-sans-h1">Resumen Formulario Gore</span>
       </div>

@@ -158,7 +158,7 @@ const GestionCompetencias = () =>
   };
 
   return (
-    <div className="container-fluid col-11 mt-2">
+    <div className="container col-10 container-xxl-11 container-xxl-fluid mt-2">
       <div className="text-sans-h2 mx-3">Listado de Competencias</div>
 
       <div className="d-flex flex-row me-5 ms-2 my-4">

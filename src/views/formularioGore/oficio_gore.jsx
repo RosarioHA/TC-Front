@@ -140,7 +140,7 @@ const OficioGore = () =>
 
   return (
     <>
-      <div className="container col-11">
+      <div className="container col-10 col-xxl-11">
         <div className="py-3 d-flex">
           <button className="btn-secundario-s" onClick={handleBackButtonClick}>
             <i className="material-symbols-rounded me-2">arrow_back_ios</i>

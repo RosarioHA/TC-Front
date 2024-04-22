@@ -58,7 +58,7 @@ const Paso_2_Revision = () =>
         <MonoStepers stepNumber={stepNumber} />
       </div>
       <div className="col-11">
-        <div className="container-fluid">
+        <div className="container ">
           <div className="d-flex">
             <h3 className="mt-3 me-4">{paso2_revision_final_subdere.nombre_paso}</h3>
             <Avance avance={paso2_revision_final_subdere.avance} />
@@ -112,9 +112,12 @@ const Paso_2_Revision = () =>
           </div>
         </div>
       </div>
-      <NavigationSubdere step={paso2_revision_final_subdere.numero_paso} id={dataPasoSubdere?.id}
-        permisoSiguiente={paso2_revision_final_subdere?.campos_obligatorios_completados}
-        solo_lectura={solo_lectura} />
+      <div className="ps-5">
+        <NavigationSubdere step={paso2_revision_final_subdere.numero_paso} id={dataPasoSubdere?.id}
+          permisoSiguiente={paso2_revision_final_subdere?.campos_obligatorios_completados}
+          solo_lectura={solo_lectura} />
+      </div>
+      
     </>
   );
 }
