@@ -35,7 +35,7 @@ const Home = () =>
 
   return (
     <>
-      <div className="container-home">
+      <div className="col-10 container-home">
         {/* Verificar si hay competencias */}
         {!tieneCompetencias ? (
           <div className="d-flex justify-content-center my-5 py-5">

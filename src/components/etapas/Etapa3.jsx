@@ -2,8 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { Counter } from "../tables/Counter";
 import { useAuth } from '../../context/AuthContext';
 
-export const Etapa3 = ({ etapa }) =>
-{
+export const Etapa3 = ({ etapa, idCompetencia }) => {
   const navigate = useNavigate();
   const { userData } = useAuth();
   const userSubdere = userData?.perfil?.includes('SUBDERE');
@@ -16,7 +15,6 @@ export const Etapa3 = ({ etapa }) =>
     usuario_notificado,
     fecha_ultima_modificacion,
     oficio_inicio_dipres,
-    id: etapaId,
     oficio_origen
   } = etapa;
 
@@ -49,16 +47,16 @@ export const Etapa3 = ({ etapa }) =>
         window.open(oficio_origen, '_blank');
       } else if (subetapa.accion === "Subir minuta" && subetapa.estado === "revision" && userDipres)
       {
-        navigate(`/home/minuta_dipres/${etapaId}`);
+        navigate(`/home/minuta_dipres/${idCompetencia}`);
       } else if (isFinalizado && subetapa.accion === "Ver minuta")
       {
-        navigate(`/home/minuta_dipres/${etapaId}`);
+        navigate(`/home/minuta_dipres/${idCompetencia}`);
       } else if (isFinalizado && subetapa.accion === "Ver Observaciones")
       {
-        navigate(`/home/minuta_dipres/${etapaId}/observaciones_subdere`); // Nueva ruta para "Ver Observaciones"
+        navigate(`/home/minuta_dipres/${idCompetencia}/observaciones_subdere`); // Nueva ruta para "Ver Observaciones"
       } else
       {
-        let path = `/home/estado_competencia/${etapaId}/subir_oficio_dipres`;
+        let path = `/home/estado_competencia/${idCompetencia}/subir_oficio_dipres`;
         navigate(path);
       }
     };
