@@ -99,7 +99,7 @@ export const Etapa2 = ({ etapa, idCompetencia }) =>
 
         case nombre.includes("Observación del formulario sectorial"):
           // Adaptar el path y las condiciones para otros roles también, si necesario
-          path = estado === "revision" ? `/home/observaciones_subdere/${subetapaId}/` : `/home/observaciones_subdere/${etapa.id}/`;
+          path = estado === "revision" ? `/home/observaciones_subdere/${idCompetencia}/` : `/home/observaciones_subdere/${idCompetencia}/`;
           buttonText = accion;
           icon = estado === "revision" ? "upload_file" : "visibility";
           break;
