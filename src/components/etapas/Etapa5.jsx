@@ -2,8 +2,7 @@ import { Link } from 'react-router-dom';
 import { Counter } from "../tables/Counter";
 import { useAuth } from '../../context/AuthContext';
 
-export const Etapa5 = ({ etapa }) =>
-{
+export const Etapa5 = ({ etapa, idCompetencia }) => {
     const { userData } = useAuth(); // Asumiendo que useAuth retorna un objeto que contiene userData
     const userSubdere = userData?.perfil?.includes('SUBDERE');
     const userDipres = userData?.perfil?.includes('DIPRES'); // Verificamos si el usuario pertenece a DIPRES
@@ -45,7 +44,7 @@ export const Etapa5 = ({ etapa }) =>
             }
         }
         if (userSubdere && subetapa.accion === "Subir oficio" && subetapa.estado === "revision") {
-            path = `/home/estado_competencia/${etapa.id}/subir_segundo_oficio_dipres`;
+            path = `/home/estado_competencia/${idCompetencia}/subir_segundo_oficio_dipres`;
             return (
                 <Link to={path} className="btn-secundario-s text-decoration-none" id="btn">
                     <span className="material-symbols-outlined me-1">{icon}</span>
@@ -53,8 +52,8 @@ export const Etapa5 = ({ etapa }) =>
                 </Link>
             );
         }
-        if (userDipres && subetapa.accion === "Subir minuta" && subetapa.estado === "revision" && subetapa.id === 77) {
-            path = `/home/minuta_dipres/${etapa.id}/segunda_minuta_dipres`;
+        if (userDipres && subetapa.accion === "Subir minuta" && subetapa.estado === "revision" ) {
+            path = `/home/minuta_dipres/${idCompetencia}/segunda_minuta_dipres`;
             return (
                 <Link to={path} className="btn-secundario-s text-decoration-none" id="btn">
                     <span className="material-symbols-outlined me-1">{icon}</span>
@@ -63,7 +62,7 @@ export const Etapa5 = ({ etapa }) =>
             );
         }
         if (userSubdere && subetapa.accion === "Subir Observaciones" && subetapa.estado === "pendiente") {
-            path = `/home/minuta_dipres/${etapa.id}/observaciones_subdere`;
+            path = `/home/minuta_dipres/${idCompetencia}/observaciones_subdere`;
             return (
                 <button to={path} className="btn-secundario-s text-decoration-none disabled" id="btn">
                     <span className="material-symbols-outlined me-1">{icon}</span>
