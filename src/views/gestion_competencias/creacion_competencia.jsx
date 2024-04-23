@@ -385,6 +385,16 @@ const CreacionCompetencia = () =>
                 options={userOptions}
                 onUsuariosTransformed={handleUsuariosTransformed}
               />
+              <div className="d-flex mt-3 text-sans-h6-primary col-11">
+                <i className="material-symbols-rounded me-2">info</i>
+                <h6>
+                  Esta seccion filtra usuarios de acuerdo a la/las regiones y sectores seleccionado en la parte superior.
+                  Para seleccionar usuario Sectorial y GORE, primero debe seleccionar la region y el sector.
+                  <br />
+                  Si aún no creas los usuarios para esta competencia, puedes crear
+                  la competencia y asignarle usuario más tarde.
+                </h6>
+              </div>
             </div>
           </div>
 
