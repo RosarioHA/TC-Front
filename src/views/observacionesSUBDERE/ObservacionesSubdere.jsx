@@ -13,7 +13,6 @@ const ObservacionesSubdere = () => {
   const formulariosNoEnviados = competenciaDetails?.etapa2?.estado === 'Aún no puede comenzar';
   const observacionesEnviadas = competenciaDetails?.etapa2?.observaciones_completas;
   const etapaFinalizada = competenciaDetails?.etapa2?.estado === 'Finalizada';
-  //const etapaFinalizada = true;
 
   useEffect(() => {
     // Obtener etapaOmitida desde competenciaDetails y establecerla en el estado

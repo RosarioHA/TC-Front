@@ -32,14 +32,14 @@ export const NavigationGore= ({ step , id }) => {
       {step > 1 ? (
         <button className="btn-secundario-s" onClick={() => navigate(getRouteForStep(step - 1))}>
           <i className="material-symbols-rounded me-2">arrow_back_ios</i>
-          Atrás
+          <p className="text-decoration-underline mb-0">Atrás</p>
         </button>
       ) : <div></div> /* Elemento vacío para mantener el espacio */}
 
       {/* Botón "Siguiente" */}
       {step < 3 && (
         <button className="btn-primario-s" onClick={handleNextButtonClick}>
-          Siguiente
+          <p className="text-decoration-underline mb-0">Siguiente</p>
           <i className="material-symbols-rounded me-2">arrow_forward_ios</i>
         </button>
       )}

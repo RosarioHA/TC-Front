@@ -5,6 +5,7 @@ export const ButtonsNavigate = ({ step, id, ocultarEnviarBtn }) => {
   const navigate = useNavigate();
   const { userData } = useAuth();
   const userSubdere = userData?.perfil?.includes('SUBDERE');
+  const userGore = userData?.perfil?.includes('GORE');
 
   const getRouteForStep = (stepNumber) => {
     const stepToRouteMap = {
@@ -44,7 +45,7 @@ export const ButtonsNavigate = ({ step, id, ocultarEnviarBtn }) => {
           Siguiente
           <i className="material-symbols-rounded me-2">arrow_forward_ios</i>
         </button>
-      ) : !ocultarEnviarBtn && (
+      ) : !ocultarEnviarBtn && !userGore && (
         <button className="btn-primario-s" onClick={handleNextButtonClick}>
           {userSubdere ? 'Ir a resumen Observaciones Subdere' : 'Ir a resumen de formulario'}
         </button>
