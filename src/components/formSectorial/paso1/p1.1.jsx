@@ -11,7 +11,7 @@ export const Subpaso_uno = ({ dataPaso, id, stepNumber, marcojuridico, solo_lect
   const { uploadDocumento } = useUploadMarcoJuridico(id, stepNumber); 
   const [hasChanged, setHasChanged] = useState(false);
   const initialValues = {
-    marcojuridico: marcojuridico || [],
+    // marcojuridico: marcojuridico || [],
     paso1: {
       forma_juridica_organismo: dataPaso?.forma_juridica_organismo || '',
       mision_institucional: dataPaso?.mision_institucional || '',
