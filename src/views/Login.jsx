@@ -10,7 +10,7 @@ const Login = () =>
   const [ formData, setFormData ] = useState({
     rut: '',
     password: '',
-  });
+  })
 
   const [ errorMessage, setErrorMessage ] = useState('');
 
@@ -26,9 +26,9 @@ const Login = () =>
   const handleSubmit = async (e) =>
   {
     e.preventDefault();
-    setErrorMessage(''); // Limpiar mensajes de error anteriores
+    setErrorMessage('');
     await login(formData);
-  };
+  }
 
   useEffect(() =>
   {
@@ -40,10 +40,14 @@ const Login = () =>
     if (error)
     {
       console.error('Error en el inicio de sesión:', error);
-      setErrorMessage(error); // Usar directamente el error proporcionado por el hook
+      setErrorMessage(error.response?.data?.message || 'Ocurrió un error inesperado');
     }
   }, [ data, error, navigate, authLogin ]);
 
+  if (loading)
+  {
+    return <div>Cargando...</div>;
+  }
 
   return (
     <div className="container p-0">
@@ -93,15 +97,9 @@ const Login = () =>
                 <button className="btn-primario-s mt-3 mb-2 px-5 text-decoration-underline" type="submit">Ingresar al portal</button>
               </div>
             </form>
-            {loading && (
-              <>
-                <span className="placeholder col-12 bg-primary"></span>
-                <div className="text-sans-h5-medium-blue text-center"><p>Verificando usuario</p>
-                </div>
-              </>
-            )}
+
             {/* Muestra el mensaje de error si existe */}
-            {errorMessage && <p className="text-sans-h6-darkred">{errorMessage}</p>}
+            {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
 
 
             <h3 className="text-sans-p mt-2">¿No tienes credenciales para ingresar? <br /></h3>
