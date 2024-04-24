@@ -76,25 +76,18 @@ const fetchData = async () => {
   }
 
   const handleSave = async (inputName) => {
-    if (!hasChanged) return;
-  
+    if (!hasChanged) return; 
+    
     setInputStatus(prevStatus => ({
       ...prevStatus,
       [inputName]: { ...prevStatus[inputName], loading: true },
     }));
-  
-    const payload = {
-      ...formData.paso1,
-      marcojuridico: undefined // Asumiendo que ya se maneja en otro lugar
-    };
-  
-    console.log('Enviando payload:', payload); // Log para depuración
-  
+
     try {
-      const success = await handleUpdatePaso(id, stepNumber, payload);
-      console.log('Respuesta del servidor:', success); // Log para depuración
+      console.log(formData)
+      const success = await handleUpdatePaso(id, stepNumber, formData);
       if (success) {
-        setHasChanged(false);
+        setHasChanged(false); 
       }
       setInputStatus(prevStatus => ({
         ...prevStatus,
@@ -113,7 +106,7 @@ const fetchData = async () => {
     setIsUploading(true);
     try {
       await uploadDocumento(id, { documento: file });
-      setMarcoJuridicoFiles(prevFiles => [...prevFiles, file]);
+      setMarcoJuridicoFiles(prevFiles => [...prevFiles, file]); 
     } catch (error) {
       console.error('Error uploading file:', error);
     } finally {
