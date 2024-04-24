@@ -1,35 +1,45 @@
-import { useState } from "react";
+import { useState } from "react"
 import { apiTransferenciaCompentencia } from "../services/transferenciaCompetencia";
 
-export const useLogin = () => {
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+export const useLogin = () =>
+{
 
-  const login = async ({ rut, password }) => {
-    if (!rut || !password) {
-      setError("RUT y contraseña son necesarios.");
-      return; // Evitar la ejecución si los campos necesarios están vacíos
-    }
+  const [ data, setData ] = useState(null);
+  const [ loading, setLoading ] = useState(false);
+  const [ error, setError ] = useState(null);
 
+
+  const login = async ({ rut, password }) =>
+  {
     setLoading(true);
-    setError(null); // Limpiar errores anteriores antes de una nueva solicitud
-    try {
+    try
+    {
       const response = await apiTransferenciaCompentencia.post('login/', {
-        rut,
-        password
+        rut: rut,
+        password: password
       });
       setData(response.data);
-      localStorage.setItem('userToken', response.data.token);
-      localStorage.setItem('refreshToken', response.data['refresh-token']);
-    } catch (error) {
-      const errMsg = error.response ? error.response.data.error || "Error al conectar con el servidor" : "Error en la conexión con el servidor. Intenta de nuevo más tarde.";
-      console.error('Error en login:', errMsg);
-      setError(errMsg); // Establecer mensaje de error humano-legible
-    } finally {
+      localStorage.setItem('useToken', response.data.token);
+      localStorage.setItem('refreshToken', response.data[ 'refresh-token' ]);
+    } catch (error)
+    {
+      if (error.response)
+      {
+        console.error('Error data:', error.response.data);
+        console.error('Error status:', error.response.status);
+        console.error('Error headers:', error.response.headers);
+        setError(error.response);
+      } else
+      {
+        console.error('Error:', error.message);
+        setError(error);
+      }
+    } finally
+    {
       setLoading(false);
     }
   };
+
 
   return { data, loading, error, login };
 }
