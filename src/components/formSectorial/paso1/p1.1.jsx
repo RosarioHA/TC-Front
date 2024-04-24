@@ -85,11 +85,14 @@ const fetchData = async () => {
   
     const payload = {
       ...formData.paso1,
-      marcojuridico: undefined // Excluyendo marcojuridico del payload
+      marcojuridico: undefined // Asumiendo que ya se maneja en otro lugar
     };
+  
+    console.log('Enviando payload:', payload); // Log para depuración
   
     try {
       const success = await handleUpdatePaso(id, stepNumber, payload);
+      console.log('Respuesta del servidor:', success); // Log para depuración
       if (success) {
         setHasChanged(false);
       }
