@@ -76,17 +76,22 @@ const fetchData = async () => {
   }
 
   const handleSave = async (inputName) => {
-    if (!hasChanged) return; 
-    
+    if (!hasChanged) return;
+  
     setInputStatus(prevStatus => ({
       ...prevStatus,
       [inputName]: { ...prevStatus[inputName], loading: true },
     }));
-
+  
+    const payload = {
+      ...formData.paso1,
+      marcojuridico: undefined // Excluyendo marcojuridico del payload
+    };
+  
     try {
-      const success = await handleUpdatePaso(id, stepNumber, formData);
+      const success = await handleUpdatePaso(id, stepNumber, payload);
       if (success) {
-        setHasChanged(false); 
+        setHasChanged(false);
       }
       setInputStatus(prevStatus => ({
         ...prevStatus,
@@ -105,12 +110,12 @@ const fetchData = async () => {
     setIsUploading(true);
     try {
       await uploadDocumento(id, { documento: file });
-      setMarcoJuridicoFiles(prevFiles => [...prevFiles, file]); // Asumiendo que 'file' es el archivo o un objeto representativo
+      setMarcoJuridicoFiles(prevFiles => [...prevFiles, file]);
     } catch (error) {
       console.error('Error uploading file:', error);
     } finally {
       setIsUploading(false);
-      refetchTrigger(); // Considera si es necesario aquí o si debería llamarse en otro lugar
+      refetchTrigger(); 
     }
   };
 
