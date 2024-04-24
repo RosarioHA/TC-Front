@@ -1,4 +1,3 @@
-import { CompetenciaProvider } from '../context/competencias';
 import Sidebar from '../components/layout/sidebar';
 import Navbar from '../components/layout/navbar';
 import { Outlet } from 'react-router-dom';
@@ -14,9 +13,9 @@ const MainLayout = () =>
           </div>
           <div className="col-10 px-0">
             <Navbar />
-            <CompetenciaProvider>
+            {/* <CompetenciaProvider> */}
               <Outlet /> 
-            </CompetenciaProvider>
+            {/* </CompetenciaProvider> */}
           </div>
         </div>
       </div>
