@@ -302,7 +302,7 @@ const CostosDirectos = ({
                   }}
                 />
               </div>
-              <div className="col d-flex flex-column justify-content-between border-end pe-4">
+              <div className="col-3 d-flex flex-column justify-content-between border-end pe-4">
                 <div>
                   <p className="text-sans-p-bold mb-0">Total Anual</p>
                   <p className="mb-0">($M)</p>

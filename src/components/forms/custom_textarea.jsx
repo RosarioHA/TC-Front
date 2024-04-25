@@ -82,7 +82,7 @@ const CustomTextarea = forwardRef(({
       ) : (
         <>
           <div className="d-flex input-container">
-            <label className="text-sans-h5 input-label ms-3 ms-sm-0">{label}</label>
+            <label className="text-sans-h5 input-label ms-3 ms-sm-0 ">{label}</label>
             <textarea
               ref={ref || internalRef} // Utiliza ref externa si disponible, sino usa interna
               className={`input-textarea input-s p-3 p-2 col-11 ${error ? 'input-error' : ''}`}

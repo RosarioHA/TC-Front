@@ -90,7 +90,9 @@ const Login = () =>
                 onChange={handleChange}
               />
               <div className="d-flex justify-content-end">
-                <button className="btn-primario-s mt-3 mb-2 px-5 text-decoration-underline" type="submit">Ingresar al portal</button>
+                <button className="btn-primario-s mt-3 mb-2 px-5 text-decoration-underline" type="submit">
+                  Ingresar al portal 
+                </button>
               </div>
             </form>
             {loading && (

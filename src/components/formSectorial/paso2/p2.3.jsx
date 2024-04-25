@@ -588,8 +588,9 @@ export const Subpaso_dosPuntoTres = ({
                   <div className="conteo mb-3">{index + 1}</div>
                   <div className="d-flex pb-4">
                     <div className="col-6">
+                      <p className="ms-2 mb-1 text-sans-h5">Descripción del procedimiento (Obligatorio)</p>
                       <CustomInputArea
-                        label="Descripción del procedimiento (Obligatorio)"
+                        //label="Descripción del procedimiento (Obligatorio)"
                         value={procedimiento.descripcion_procedimiento || ''}
                         placeholder="Describe el procedimiento"
                         maxLength={500}
@@ -624,6 +625,7 @@ export const Subpaso_dosPuntoTres = ({
                       />
                     </div>
                     <div className="col-4 ms-3">
+                    <p className="ms-2 mb-1 text-sans-h5">Unidades Intervinientes (Obligatorio)</p>
                       <Controller
                         control={control}
                         name={`unidades_intervinientes_${procedimiento.id}`}
@@ -631,7 +633,7 @@ export const Subpaso_dosPuntoTres = ({
                           <DropdownCheckbox2
                             id={`unidades_intervinientes_${procedimiento.id}`}
                             name={`unidades_intervinientes_${procedimiento.id}`}
-                            label="Unidades Intervinientes (Obligatorio)"
+                            //label="Unidades Intervinientes (Obligatorio)"
                             placeholder="Unidades"
                             options={opciones}
                             onSelectionChange={(selectedOptions) => {
