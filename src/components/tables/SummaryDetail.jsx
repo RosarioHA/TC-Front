@@ -53,7 +53,7 @@ export const SummaryDetail = ({ competencia }) =>
       Favorable: 'badge-status-finish',
       'Favorable Parcial': 'badge-status-study',
       Desfavorable: 'badge-status-red',
-      "Atrasada": 'badge-status-borderRed',
+      'Atrasada': 'badge-status-borderRed',
     };
 
     const classForState = badgeClasses[ estado ] || '';
