@@ -202,9 +202,13 @@ export const Subpaso_tres = ({ pasoData, id, stepNumber, solo_lectura }) => {
             <h6 className="mt-1">El ámbito de la competencia se define al final del análisis de la competencia, este campo define la postura del sector.</h6>
           </div>
         </div>
+        
         <div className="my-4">
+          <p className="ms-3 mb-0 text-sans-h5">
+            Posibilidad de ejercicio de la competencia por parte del Gobierno Regional (Obligatorio)
+          </p>
           <CustomTextarea
-            label="Posibilidad de ejercicio de la competencia por parte del Gobierno Regional (Obligatorio) "
+            //label="Posibilidad de ejercicio de la competencia por parte del Gobierno Regional (Obligatorio) "
             placeholder="Indicar posibilidad de ejercicio de la comeptencia por parte del Gobierno Regional"
             id="posibilidad_ejercicio_por_gobierno_regional"
             name="posibilidad_ejercicio_por_gobierno_regional"
@@ -214,7 +218,7 @@ export const Subpaso_tres = ({ pasoData, id, stepNumber, solo_lectura }) => {
             loading={inputStatus.posibilidad_ejercicio_por_gobierno_regional.loading}
             saved={inputStatus.posibilidad_ejercicio_por_gobierno_regional.saved}
             maxLength={500}
-            readOnly={solo_lectura} 
+            readOnly={solo_lectura}
           />
           <div className="d-flex mb-3 mt-1 text-sans-h6-primary col-11">
             <i className="material-symbols-rounded me-2">info</i>
