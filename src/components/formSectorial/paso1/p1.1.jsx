@@ -11,7 +11,6 @@ export const Subpaso_uno = ({ dataPaso, id, stepNumber, marcojuridico, solo_lect
   const { uploadDocumento } = useUploadMarcoJuridico(id, stepNumber); 
   const [hasChanged, setHasChanged] = useState(false);
   const initialValues = {
-    marcojuridico: marcojuridico || [],
     paso1: {
       forma_juridica_organismo: dataPaso?.forma_juridica_organismo || '',
       mision_institucional: dataPaso?.mision_institucional || '',
@@ -56,6 +55,7 @@ const fetchData = async () => {
   }, []);
 
   useEffect(() => {
+    console.log('efect',formData)
     localStorage.setItem('formData', JSON.stringify(formData));
   }, [formData]);
 
@@ -84,13 +84,14 @@ const fetchData = async () => {
     }));
 
     try {
+      console.log(formData)
       const success = await handleUpdatePaso(id, stepNumber, formData);
       if (success) {
         setHasChanged(false); 
       }
       setInputStatus(prevStatus => ({
         ...prevStatus,
-        [inputName]: { loading: false, saved: success },
+        [inputName]: { loading: false, saved: true },
       }));
     } catch (error) {
       console.error('Error saving:', error);
@@ -105,12 +106,12 @@ const fetchData = async () => {
     setIsUploading(true);
     try {
       await uploadDocumento(id, { documento: file });
-      setMarcoJuridicoFiles(prevFiles => [...prevFiles, file]); // Asumiendo que 'file' es el archivo o un objeto representativo
+      setMarcoJuridicoFiles(prevFiles => [...prevFiles, file]); 
     } catch (error) {
       console.error('Error uploading file:', error);
     } finally {
       setIsUploading(false);
-      refetchTrigger(); // Considera si es necesario aquí o si debería llamarse en otro lugar
+      refetchTrigger(); 
     }
   };
 

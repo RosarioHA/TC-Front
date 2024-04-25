@@ -40,7 +40,7 @@ const CustomInput = forwardRef(
         ) : (
           <>
             <div className="d-flex input-container">
-              <label className="text-sans-h5 input-label ms-3 ms-sm-0">{label}</label>
+              <label className="text-sans-h5 input-label ms-3 ms-sm-0" htmlFor={id} >{label}</label>
               <input
                 className={`input-s p-3 input-textarea col-12 ${error ? 'input-error' : ''}`}
                 type="text"

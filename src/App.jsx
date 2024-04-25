@@ -56,7 +56,6 @@ const Paso_2_Revision = React.lazy(() => import("./views/revisionSubdere/Paso_2_
 const ResumenFinal = React.lazy(() => import('./views/revisionSubdere/Resumen'));
 const SuccessRevisionFinal = React.lazy(() => import('./views/success/success_revision_final'));
 const OficioDipres2 = React.lazy(() => import("./views/minutaDIPRES/segundo_oficio"));
-const VistaCarga = React.lazy(() => import("./views/vistaCarga"));
 
 const createProtectedRoute = (path, Component, allowedProfiles) => (
   <Route
@@ -72,7 +71,12 @@ const createProtectedRoute = (path, Component, allowedProfiles) => (
 function App()
 {
   return (
-    <Suspense fallback={<VistaCarga/>}>
+    <Suspense fallback={<div className="container">
+      <div className="d-flex align-items-center flex-column my-5 px-5 ">
+        <div className="text-center text-sans-h5-medium-blue ">Cargando Página</div>
+        <span className="placeholder col-10 bg-primary"></span>
+      </div>
+    </div >}>
       <Routes>
         <Route path="/" element={<LoginLayout />}>
           <Route index element={<Landing />} />
@@ -83,112 +87,112 @@ function App()
             <MainLayout />
           </CompetenciaProvider>
         }>
-            <Route index element={<Home />} />
-            {createProtectedRoute("crear_usuario", CrearUsuario, [ 'SUBDERE' ])}
-            {createProtectedRoute("administrar_usuarios", GestionUsuarios, [ 'SUBDERE', 'Usuario Observador' ])}
-            {createProtectedRoute("editar_usuario/:id", EditarUsuario, [ 'SUBDERE', 'Usuario Observador' ])}
-            {createProtectedRoute("success_edicion", SuccessEdicion, [ 'SUBDERE', 'Usuario Observador' ])}
-            {createProtectedRoute("success_creacion", SuccessCreacion, [ 'SUBDERE', 'Usuario Observador' ])}
-            {createProtectedRoute("success_creacion", SuccessOS, SuccessCierreOS, [ 'SUBDERE' ])}
-            {createProtectedRoute("listado_competencias", GestionCompetencias, [ 'SUBDERE', 'Usuario Observador' ])}
-            {createProtectedRoute("editar_competencia/:id", EditarCompetencia, [ 'SUBDERE', 'Usuario Observador' ])}
-            {createProtectedRoute("crear_competencia", CreacionCompetencia, [ 'SUBDERE', 'Usuario Observador' ])}
-            {createProtectedRoute("estado_competencia/:id/subir_oficio_sectorial", SubirOficio, [ 'SUBDERE', 'Usuario Observador' ])}
-            {createProtectedRoute("estado_competencia/:id/subir_oficio_dipres", SubirOficioDipres, [ 'SUBDERE', 'Usuario Observador' ])}
-            {createProtectedRoute("estado_competencia/:id/subir_segundo_oficio_dipres", OficioDipres2, [ 'SUBDERE', 'Usuario Observador' ])}
-            {createProtectedRoute("estado_competencia/:id/subir_oficio_gore", SubirOficioGore, [ 'SUBDERE', 'Usuario Observador' ])}
-            <Route path="estado_competencia/:id/" element={<EstadoCompentencia />} />
-            <Route path="success_edicion" element={<SuccessEdicion />} />
-            <Route path="success_creacion" element={<SuccessCreacion />} />
-            <Route path="success_formulario_sectorial/:id/" element={<FormularioProvider> <SuccessFormSectorial /> </FormularioProvider>} />
-            <Route path="success_observaciones_subdere/:id/" element={<FormularioProvider> <SuccessOS /> </FormularioProvider>} />
-            <Route path="success_cierre_observaciones/:id/" element={<FormularioProvider> <SuccessCierreOS /> </FormularioProvider>} />
-            <Route path="success_cierre_observaciones_gore/:id/" element={<FormGoreProvider> <SuccessOS_Gore /> </FormGoreProvider>} />
-            <Route path="success_formulario_gore/:id/" element={<FormGoreProvider> <SuccessFormGore /> </FormGoreProvider>} />
-            <Route path="success_revision_final/:id/" element={<FormSubdereProvider> <SuccessRevisionFinal /> </FormSubdereProvider>} />
-            <Route
-              path="observaciones_subdere/:id/"
-              element={
-                <FormularioProvider>
-                  <ObservacionesSubdere />
-                </FormularioProvider>
-              } />
-            <Route
-              path="formulario_sectorial/:id"
-              element={
-                <FormularioProvider>
-                  <ProtectedRoute allowedProfiles={[ 'Usuario Sectorial', 'SUBDERE', 'Usuario Observador', 'DIPRES', 'GORE' ]}>
-                    <FormularioLayout />
-                  </ProtectedRoute>
-                </FormularioProvider>
-              }
-            >
-              <Route index element={<PasoUno />} />
-              <Route path="paso_1" element={<PasoUno />} />
-              <Route path="paso_2" element={<PasoDos />} />
-              <Route path="paso_3" element={<PasoTres />} />
-              <Route path="paso_4" element={<PasoCuatro />} />
-              <Route path="paso_5" element={<PasoCinco />} />
-              <Route path="resumen_formulario" element={<Resumen />} />
-              <Route path="resumen_os" element={<ResumenOS />} />
-            </Route>
-
-            <Route
-              path="formulario_gore/:id"
-              element={
-                <FormGoreProvider>
-                  <ProtectedRoute allowedProfiles={[ 'Usuario Sectorial', 'SUBDERE', 'Usuario Observador', 'GORE', 'DIPRES' ]}>
-                    <FormGoreLayout />
-                  </ProtectedRoute>
-                </FormGoreProvider>
-              }
-            >
-              <Route index element={<PasoUno />} />
-              <Route path="paso_1" element={<PasoUnoGore />} />
-              <Route path="paso_2" element={<PasoDosGore />} />
-              <Route path="paso_3" element={<PasoTresGore />} />
-              <Route path="resumen_observaciones_subdere" element={<ResumenOS_Gore />} />
-              <Route path="resumen_formulario_gore" element={<ResumenGore />} />
-            </Route>
-
-            <Route
-              path="formulario_gore/:id/observaciones_subdere"
-              element={
-                <FormGoreProvider>
-                  <ProtectedRoute allowedProfiles={[ 'Usuario Sectorial', 'SUBDERE', 'Usuario Observador', 'GORE' ]}>
-                    <ObservacionesSubdereGore />
-                  </ProtectedRoute>
-                </FormGoreProvider>
-
-              } />
-
-            <Route
-              path="revision_subdere/:id"
-              element={
-                <FormSubdereProvider>
-                  <ProtectedRoute allowedProfiles={[ 'Usuario Sectorial', 'SUBDERE', 'Usuario Observador', 'GORE' ]}>
-                    <RevisionSubdere />
-                  </ProtectedRoute>
-                </FormSubdereProvider>
-              }
-            >
-              <Route path="paso_1" element={<Paso_1_Revision />} />
-              <Route path="paso_2" element={<Paso_2_Revision />} />
-              <Route path="resumen_revision_final" element={<ResumenFinal />} />
-            </Route>
-
-            <Route path="minuta_dipres/:id">
-              {createProtectedRoute("", PrimeraMinutaDipres, [ 'SUBDERE', 'Usuario Observador', 'DIPRES' ])}
-              {createProtectedRoute("segunda_minuta_dipres", SegundaMinutaDipres, [ 'SUBDERE', 'Usuario Observador', 'DIPRES' ])}
-              {createProtectedRoute("observaciones_subdere", ObservacionesSubdereDipres, [ 'SUBDERE', 'Usuario Observador' ])}
-            </Route>
-
-            
-            <Route path="*" element={<Error404 />} />
-            <Route path="404" element={<Error404 />} />
-            <Route path="500" element={<Error500 />} />
-            <Route path="503" element={<Error503 />} />
+          <Route index element={<Home />} />
+          {createProtectedRoute("crear_usuario", CrearUsuario, [ 'SUBDERE' ])}
+          {createProtectedRoute("administrar_usuarios", GestionUsuarios, [ 'SUBDERE', 'Usuario Observador' ])}
+          {createProtectedRoute("editar_usuario/:id", EditarUsuario, [ 'SUBDERE', 'Usuario Observador' ])}
+          {createProtectedRoute("success_edicion", SuccessEdicion, [ 'SUBDERE', 'Usuario Observador' ])}
+          {createProtectedRoute("success_creacion", SuccessCreacion, [ 'SUBDERE', 'Usuario Observador' ])}
+          {createProtectedRoute("success_creacion", SuccessOS, SuccessCierreOS, [ 'SUBDERE' ])}
+          {createProtectedRoute("listado_competencias", GestionCompetencias, [ 'SUBDERE', 'Usuario Observador' ])}
+          {createProtectedRoute("editar_competencia/:id", EditarCompetencia, [ 'SUBDERE', 'Usuario Observador' ])}
+          {createProtectedRoute("crear_competencia", CreacionCompetencia, [ 'SUBDERE', 'Usuario Observador' ])}
+          {createProtectedRoute("estado_competencia/:id/subir_oficio_sectorial", SubirOficio, [ 'SUBDERE', 'Usuario Observador' ])}
+          {createProtectedRoute("estado_competencia/:id/subir_oficio_dipres", SubirOficioDipres, [ 'SUBDERE', 'Usuario Observador' ])}
+          {createProtectedRoute("estado_competencia/:id/subir_segundo_oficio_dipres", OficioDipres2, [ 'SUBDERE', 'Usuario Observador' ])}
+          {createProtectedRoute("estado_competencia/:id/subir_oficio_gore", SubirOficioGore, [ 'SUBDERE', 'Usuario Observador' ])}
+          <Route path="estado_competencia/:id/" element={<EstadoCompentencia />} />
+          <Route path="success_edicion" element={<SuccessEdicion />} />
+          <Route path="success_creacion" element={<SuccessCreacion />} />
+          <Route path="success_formulario_sectorial/:id/" element={<FormularioProvider> <SuccessFormSectorial /> </FormularioProvider>} />
+          <Route path="success_observaciones_subdere/:id/" element={<FormularioProvider> <SuccessOS /> </FormularioProvider>} />
+          <Route path="success_cierre_observaciones/:id/" element={<FormularioProvider> <SuccessCierreOS /> </FormularioProvider>} />
+          <Route path="success_cierre_observaciones_gore/:id/" element={<FormGoreProvider> <SuccessOS_Gore /> </FormGoreProvider>} />
+          <Route path="success_formulario_gore/:id/" element={<FormGoreProvider> <SuccessFormGore /> </FormGoreProvider>} />
+          <Route path="success_revision_final/:id/" element={<FormSubdereProvider> <SuccessRevisionFinal /> </FormSubdereProvider>} />
+          <Route
+            path="observaciones_subdere/:id/"
+            element={
+              <FormularioProvider>
+                <ObservacionesSubdere />
+              </FormularioProvider>
+            } />
+          <Route
+            path="formulario_sectorial/:id"
+            element={
+              <FormularioProvider>
+                <ProtectedRoute allowedProfiles={[ 'Usuario Sectorial', 'SUBDERE', 'Usuario Observador', 'DIPRES', 'GORE' ]}>
+                  <FormularioLayout />
+                </ProtectedRoute>
+              </FormularioProvider>
+            }
+          >
+            <Route index element={<PasoUno />} />
+            <Route path="paso_1" element={<PasoUno />} />
+            <Route path="paso_2" element={<PasoDos />} />
+            <Route path="paso_3" element={<PasoTres />} />
+            <Route path="paso_4" element={<PasoCuatro />} />
+            <Route path="paso_5" element={<PasoCinco />} />
+            <Route path="resumen_formulario" element={<Resumen />} />
+            <Route path="resumen_os" element={<ResumenOS />} />
           </Route>
+
+          <Route
+            path="formulario_gore/:id"
+            element={
+              <FormGoreProvider>
+                <ProtectedRoute allowedProfiles={[ 'Usuario Sectorial', 'SUBDERE', 'Usuario Observador', 'GORE', 'DIPRES' ]}>
+                  <FormGoreLayout />
+                </ProtectedRoute>
+              </FormGoreProvider>
+            }
+          >
+            <Route index element={<PasoUno />} />
+            <Route path="paso_1" element={<PasoUnoGore />} />
+            <Route path="paso_2" element={<PasoDosGore />} />
+            <Route path="paso_3" element={<PasoTresGore />} />
+            <Route path="resumen_observaciones_subdere" element={<ResumenOS_Gore />} />
+            <Route path="resumen_formulario_gore" element={<ResumenGore />} />
+          </Route>
+
+          <Route
+            path="formulario_gore/:id/observaciones_subdere"
+            element={
+              <FormGoreProvider>
+                <ProtectedRoute allowedProfiles={[ 'Usuario Sectorial', 'SUBDERE', 'Usuario Observador', 'GORE' ]}>
+                  <ObservacionesSubdereGore />
+                </ProtectedRoute>
+              </FormGoreProvider>
+
+            } />
+
+          <Route
+            path="revision_subdere/:id"
+            element={
+              <FormSubdereProvider>
+                <ProtectedRoute allowedProfiles={[ 'Usuario Sectorial', 'SUBDERE', 'Usuario Observador', 'GORE' ]}>
+                  <RevisionSubdere />
+                </ProtectedRoute>
+              </FormSubdereProvider>
+            }
+          >
+            <Route path="paso_1" element={<Paso_1_Revision />} />
+            <Route path="paso_2" element={<Paso_2_Revision />} />
+            <Route path="resumen_revision_final" element={<ResumenFinal />} />
+          </Route>
+
+          <Route path="minuta_dipres/:id">
+            {createProtectedRoute("", PrimeraMinutaDipres, [ 'SUBDERE', 'Usuario Observador', 'DIPRES' ])}
+            {createProtectedRoute("segunda_minuta_dipres", SegundaMinutaDipres, [ 'SUBDERE', 'Usuario Observador', 'DIPRES' ])}
+            {createProtectedRoute("observaciones_subdere", ObservacionesSubdereDipres, [ 'SUBDERE', 'Usuario Observador' ])}
+          </Route>
+
+
+          <Route path="*" element={<Error404 />} />
+          <Route path="404" element={<Error404 />} />
+          <Route path="500" element={<Error500 />} />
+          <Route path="503" element={<Error503 />} />
+        </Route>
       </Routes>
     </Suspense >
 

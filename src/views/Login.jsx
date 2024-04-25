@@ -98,7 +98,7 @@ const Login = () =>
             {loading && (
               <>
                 <span className="placeholder col-12 bg-primary"></span>
-                <div className="text-sans-h5-medium-blue text-center"><p>Verificando usuario</p>
+                <div className="text-sans-h5-medium text-center"><p>Verificando usuario...</p>
                 </div>
               </>
             )}

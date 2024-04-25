@@ -25,7 +25,7 @@ export const useLogin = () => {
     } catch (error) {
       const errMsg = error.response ? error.response.data.error || "Error al conectar con el servidor" : "Error en la conexión con el servidor. Intenta de nuevo más tarde.";
       console.error('Error en login:', errMsg);
-      setError(errMsg); // Establecer mensaje de error humano-legible
+      setError(errMsg); 
     } finally {
       setLoading(false);
     }
