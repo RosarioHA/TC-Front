@@ -121,7 +121,7 @@ border-radius: 50%;
 }
 
 .badge-status-borderRed{
-  @include badge-status($white-color,$dark-red,$white-color); 
+  @include badge-status($white-color,$dark-red,$dark-red); 
 }
 
 

@@ -1,7 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 import { useResumenFinal } from '../../hooks/revisionFinalSubdere/useResumenFinal';
 
-export const SummaryDetail = ({ competencia }) => {
+export const SummaryDetail = ({ competencia }) =>
+{
   const navigate = useNavigate();
   const { resumen } = useResumenFinal(competencia.id);
 
@@ -23,13 +24,14 @@ export const SummaryDetail = ({ competencia }) => {
     competencia.recomendacion_transferencia ||
     competencia.resumen_competencia?.recomendacion_transferencia;
 
-  if (!competencia || !etapas_info) {
+  if (!competencia || !etapas_info)
+  {
     return <div className="text-center text-sans-h5-medium-blue ">Cargando...</div>;
   }
   // Transformar etapas_info en un arreglo para facilitar su manejo
   const etapasArray = Object.keys(etapas_info).map((key) => ({
     id: key,
-    ...etapas_info[key],
+    ...etapas_info[ key ],
   }));
 
   // Calcula la cantidad de etapas finalizadas
@@ -38,7 +40,8 @@ export const SummaryDetail = ({ competencia }) => {
   ).length;
   const totalEtapas = etapasArray.length;
 
-  const getBadgeDetails = (estado) => {
+  const getBadgeDetails = (estado) =>
+  {
     const badgeClasses = {
       Finalizada: 'badge-status-finish',
       'En Estudio': 'badge-status-review',
@@ -49,16 +52,17 @@ export const SummaryDetail = ({ competencia }) => {
       Pendiente: 'badge-status-pending',
       Favorable: 'badge-status-finish',
       'Favorable Parcial': 'badge-status-study',
-      Desfavorable:'badge-status-red',
-      Atrasada:'badge-status-borderRed'
+      Desfavorable: 'badge-status-red',
+      "Atrasada": 'badge-status-borderRed',
     };
 
-    const classForState = badgeClasses[estado] || '';
+    const classForState = badgeClasses[ estado ] || '';
 
     return { class: classForState, text: estado };
   };
 
-  const handleVerRevisionSubdere = () => {
+  const handleVerRevisionSubdere = () =>
+  {
     navigate(`/home/revision_subdere/${competencia.id}/paso_1/`);
   };
 
@@ -89,13 +93,14 @@ export const SummaryDetail = ({ competencia }) => {
   ];
 
   const etapasFinalizadasArray = Object.entries(etapas_finalizada).map(
-    ([id, data]) => ({
+    ([ id, data ]) => ({
       id,
       ...data,
     })
   );
 
-  if (estado === 'Finalizada') {
+  if (estado === 'Finalizada')
+  {
     return (
       <>
         <div className="row">
@@ -123,7 +128,7 @@ export const SummaryDetail = ({ competencia }) => {
               <div>
                 <div className="d-flex justify-content-center mt-3">
                   <span className="text-sans-h6-bold-darkblue">
-                  Proceso finalizado en:
+                    Proceso finalizado en:
                   </span>
                 </div>
 
@@ -147,7 +152,8 @@ export const SummaryDetail = ({ competencia }) => {
           <div className="col-8">
             <div className="mb-4 ms-4">
               <ul className="list-group list-group-flush my-3">
-                {etapasFinalizadasArray.map((etapa, index) => {
+                {etapasFinalizadasArray.map((etapa, index) =>
+                {
                   const badgeDetails = getBadgeDetails(etapa.estado);
                   return (
                     <li
@@ -223,7 +229,7 @@ export const SummaryDetail = ({ competencia }) => {
                 <p>Etapas finalizadas</p>
               </div>
             </ul>
-            
+
             <div>
               <div className="d-flex justify-content-center mt-3">
                 <span className="text-sans-h6-bold-darkblue">
@@ -252,7 +258,8 @@ export const SummaryDetail = ({ competencia }) => {
         <div className="col-8">
           <div className="mb-4 ms-4">
             <ul className="list-group list-group-flush my-3">
-              {etapasArray.map((etapa) => {
+              {etapasArray.map((etapa) =>
+              {
                 const badgeDetails = getBadgeDetails(etapa.estado);
                 return (
                   <li
