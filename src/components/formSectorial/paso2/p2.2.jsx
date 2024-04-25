@@ -391,38 +391,40 @@ export const Subpaso_dosPuntoDos = ({
                                 }
                                 readOnly={solo_lectura}
                               />
-                              <CustomInputArea
-                                label="Descripción (Obligatorio)"
-                                value={unidad.descripcion_unidad || ''}
-                                placeholder="Descripción"
-                                maxLength={300}
-                                onChange={(valor) =>
-                                  handleInputChange(
-                                    organismoDisplay,
-                                    ministerio,
-                                    unidad.id,
-                                    'descripcion_unidad',
-                                    valor
-                                  )
-                                }
-                                onBlur={() =>
-                                  handleSave(
-                                    organismoDisplay,
-                                    ministerio,
-                                    unidad.id,
-                                    'descripcion_unidad' // Igual aquí, pasa el nombre del campo como un string
-                                  )
-                                }
-                                loading={
-                                  campoEstado[ `${unidad.id}-descripcion_unidad` ]
-                                    ?.loading
-                                }
-                                saved={
-                                  campoEstado[ `${unidad.id}-descripcion_unidad` ]
-                                    ?.saved
-                                }
-                                readOnly={solo_lectura}
-                              />
+                              <div className="mt-3">
+                                <CustomInputArea
+                                  label="Descripción (Obligatorio)"
+                                  value={unidad.descripcion_unidad || ''}
+                                  placeholder="Descripción"
+                                  maxLength={300}
+                                  onChange={(valor) =>
+                                    handleInputChange(
+                                      organismoDisplay,
+                                      ministerio,
+                                      unidad.id,
+                                      'descripcion_unidad',
+                                      valor
+                                    )
+                                  }
+                                  onBlur={() =>
+                                    handleSave(
+                                      organismoDisplay,
+                                      ministerio,
+                                      unidad.id,
+                                      'descripcion_unidad' // Igual aquí, pasa el nombre del campo como un string
+                                    )
+                                  }
+                                  loading={
+                                    campoEstado[ `${unidad.id}-descripcion_unidad` ]
+                                      ?.loading
+                                  }
+                                  saved={
+                                    campoEstado[ `${unidad.id}-descripcion_unidad` ]
+                                      ?.saved
+                                  }
+                                  readOnly={solo_lectura}
+                                />
+                              </div>
                             </div>
                             <div className="col-2 d-flex align-items-center justify-content-center">
                               {ministerios[ ministerio ].length >= 2 && (

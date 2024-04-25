@@ -383,19 +383,22 @@ export const Subpaso_dosPuntoCuatro = ({
                         };
 
                         return (
-                          <CustomTextarea
-                            id={`costo_adquisicion_${plataforma.id}`}
-                            label="Costo de adquisición"
-                            placeholder="Costo de adquisión M$"
-                            value={value}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            loading={plataforma.estados?.costo_adquisicion?.loading ?? false}
-                            saved={plataforma.estados?.costo_adquisicion?.saved ?? false}
-                            error={errors[`costo_adquisicion_${plataforma.id}`]?.message}
-                            descripcion="Campo númerico en miles de pesos."
-                            readOnly={solo_lectura}
-                          />
+                          <div>
+                            <p className="ms-2 mb-1 text-sans-h5">Costo de adquisición</p>
+                            <CustomTextarea
+                              id={`costo_adquisicion_${plataforma.id}`}
+                              //label="Costo de adquisición"
+                              placeholder="Costo de adquisión M$"
+                              value={value}
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              loading={plataforma.estados?.costo_adquisicion?.loading ?? false}
+                              saved={plataforma.estados?.costo_adquisicion?.saved ?? false}
+                              error={errors[`costo_adquisicion_${plataforma.id}`]?.message}
+                              descripcion="Campo númerico en miles de pesos."
+                              readOnly={solo_lectura}
+                            />
+                          </div>
                         );
                       }}
                     />
@@ -425,19 +428,22 @@ export const Subpaso_dosPuntoCuatro = ({
                         };
 
                         return (
-                          <CustomTextarea
-                            id={`costo_mantencion_anual_${plataforma.id}`}
-                            label="Costo de Mantención Anual"
-                            placeholder="Costo de mantención M$"
-                            value={value}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            loading={plataforma.estados?.costo_mantencion_anual?.loading ?? false}
-                            saved={plataforma.estados?.costo_mantencion_anual?.saved ?? false}
-                            error={errors[`costo_mantencion_anual_${plataforma.id}`]?.message}
-                            descripcion="Campo númerico en miles de pesos."
-                            readOnly={solo_lectura}
-                          />
+                          <div>
+                            <p className="ms-2 mb-1 text-sans-h5">Costo de Mantención Anual</p>
+                            <CustomTextarea
+                              id={`costo_mantencion_anual_${plataforma.id}`}
+                              //label="Costo de Mantención Anual"
+                              placeholder="Costo de mantención M$"
+                              value={value}
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              loading={plataforma.estados?.costo_mantencion_anual?.loading ?? false}
+                              saved={plataforma.estados?.costo_mantencion_anual?.saved ?? false}
+                              error={errors[`costo_mantencion_anual_${plataforma.id}`]?.message}
+                              descripcion="Campo númerico en miles de pesos."
+                              readOnly={solo_lectura}
+                            />
+                          </div>
                         );
                       }}
                     />
