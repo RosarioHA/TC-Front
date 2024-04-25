@@ -42,14 +42,15 @@ export const SummaryDetail = ({ competencia }) => {
     const badgeClasses = {
       Finalizada: 'badge-status-finish',
       'En Estudio': 'badge-status-review',
-      'En revisión SUBDERE': 'badge-status-review',
+      'En revisión SUBDERE': 'badge-status-study',
       'Aún no puede comenzar': 'badge-status-pending',
       Omitida: 'badge-status-pending',
       Finalizado: 'badge-status-green',
       Pendiente: 'badge-status-pending',
       Favorable: 'badge-status-finish',
-      'Favorable Parcial': 'badge-status-finish',
+      'Favorable Parcial': 'badge-status-study',
       Desfavorable:'badge-status-red',
+      Atrasada:'badge-status-borderRed'
     };
 
     const classForState = badgeClasses[estado] || '';
