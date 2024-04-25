@@ -91,7 +91,7 @@ const fetchData = async () => {
       }
       setInputStatus(prevStatus => ({
         ...prevStatus,
-        [inputName]: { loading: false, saved: success },
+        [inputName]: { loading: false, saved: true },
       }));
     } catch (error) {
       console.error('Error saving:', error);
