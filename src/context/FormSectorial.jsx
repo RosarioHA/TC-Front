@@ -10,7 +10,7 @@ export const FormularioProvider = ({ children }) => {
   const [stepNumber, setStepNumber] = useState(null);
 
   const { dataFormSectorial, loadingFormSectorial, errorFormSectorial} = useFormSectorial(id);
-  const { dataPaso, loadingPaso, errorPaso,refetchTrigger } = usePasoForm(id, stepNumber);
+  const { dataPaso, loadingPaso, errorPaso, refetchTrigger } = usePasoForm(id, stepNumber);
   const { patchStep, loading, error } = useUpdateForm();
 
   const updateFormId = useCallback((newId) => {
@@ -22,25 +22,18 @@ export const FormularioProvider = ({ children }) => {
   }, []);
 
 
-  const handleUpdatePaso = async (id, stepNumber, formData) => {
+
+
+  const  handleUpdatePaso = useCallback(async ( id, stepNumber,formData) => {
     try {
-      if (!formData || typeof formData !== 'object' || Object.keys(formData).length === 0) {
-        throw new Error("Datos del paso son inválidos");
-      }
-  
-      const response = await patchStep(id, stepNumber, formData);
-      if (response) {
-        refetchTrigger(); 
-        return { success: true, data: response };
-      } else {
-        console.error("Actualización del paso fallida. Respuesta del servidor:", response);
-        return { success: false, data: null };
-      }
+      console.log(formData);
+      await patchStep(id, stepNumber, formData);
+      refetchTrigger(); 
     } catch (error) {
-      console.error("Error durante la actualización del paso:", error);
-      return { success: false, data: null };
+      console.error('Error updating data', error);
     }
-  };
+  }, [patchStep, refetchTrigger]);
+
 
   const handleUploadFiles = async (id, stepNumber, archivos, fieldName) => {
     try {
