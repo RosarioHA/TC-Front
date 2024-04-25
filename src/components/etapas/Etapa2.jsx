@@ -59,7 +59,9 @@ export const Etapa2 = ({ etapa, idCompetencia }) =>
 
   const renderButtonForSubetapa = (subetapa) =>
   {
-    const { estado, accion, nombre, id: subetapaId } = subetapa;
+    const { estado, accion, nombre,
+      //  id: subetapaId 
+      } = subetapa;
     let buttonText = accion;
     let icon = "draft";  // Icono por defecto para acciones no finalizadas
     let path = "/";
