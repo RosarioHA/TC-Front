@@ -1,10 +1,12 @@
 import { useNavigate } from 'react-router-dom';
 import { useResumenFinal } from '../../hooks/revisionFinalSubdere/useResumenFinal';
+import { useDescargarDocumento } from '../../hooks/competencias/useDownloadPDFFinal';
 
 export const SummaryDetail = ({ competencia }) =>
 {
   const navigate = useNavigate();
   const { resumen } = useResumenFinal(competencia.id);
+  const { descargarDocumento, loading, error } = useDescargarDocumento(competencia.id);  
 
   const etapas_info =
     competencia.etapas_info || competencia.resumen_competencia?.etapas_info;
@@ -33,6 +35,15 @@ export const SummaryDetail = ({ competencia }) =>
     id: key,
     ...etapas_info[ key ],
   }));
+
+  const handleDownloadClick = async () => {
+    try {
+      await descargarDocumento();
+      // Handle successful download (e.g., show a success message)
+    } catch (error) {
+      // Handle error during download (e.g., show an error message)
+    }
+  };
 
   // Calcula la cantidad de etapas finalizadas
   const etapasFinalizadas = etapasArray.filter(
@@ -178,7 +189,7 @@ export const SummaryDetail = ({ competencia }) =>
                     {resumen && (
                       <>
                         {resumen.formulario_final_enviado ? (
-                          <button className="btn-secundario-s">
+                          <button className="btn-secundario-s" onClick={handleDownloadClick}>
                             <i className="material-symbols-rounded ms-2">
                               download
                             </i>
