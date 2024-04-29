@@ -63,7 +63,7 @@ export const Etapa2 = ({ etapa, idCompetencia }) =>
       //  id: subetapaId 
       } = subetapa;
     let buttonText = accion;
-    let icon = "draft";  // Icono por defecto para acciones no finalizadas
+    let icon = estado === "finalizada" ? "visibility" : "draft";
     let path = "/";
     let isDisabled = estado === "pendiente";
 
