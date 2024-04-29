@@ -4,12 +4,13 @@ import CustomTextarea from "../../forms/custom_textarea";
 import DropdownSelect from "../../dropdown/select";
 import { useAmbitos } from '../../../hooks/useAmbitos';
 
-export const Subpaso_tres = ({ pasoData, id, stepNumber, solo_lectura }) => {
+export const Subpaso_tres = ({ pasoData, id, stepNumber, solo_lectura }) =>
+{
   const { handleUpdatePaso } = useContext(FormularioContext);
   const { ambitos } = useAmbitos();
-  const [ambitoSeleccionado, setAmbitoSeleccionado] = useState(null);
+  const [ ambitoSeleccionado, setAmbitoSeleccionado ] = useState(null);
 
-  const [formData, setFormData] = useState({
+  const [ formData, setFormData ] = useState({
     paso1: pasoData.paso1 || {
       identificacion_competencia: pasoData.identificacion_competencia,
       fuentes_normativas: pasoData.fuentes_normativas,
@@ -20,9 +21,10 @@ export const Subpaso_tres = ({ pasoData, id, stepNumber, solo_lectura }) => {
     }
   });
 
-  const [lastSavedData, setLastSavedData] = useState(formData.paso1);  // Almacena los últimos datos guardados
+  const [ lastSavedData, setLastSavedData ] = useState(formData.paso1);
 
-  const [inputStatus, setInputStatus] = useState({
+
+  const [ inputStatus, setInputStatus ] = useState({
     identificacion_competencia: { loading: false, saved: false },
     fuentes_normativas: { loading: false, saved: false },
     territorio_competencia: { loading: false, saved: false },
@@ -31,21 +33,28 @@ export const Subpaso_tres = ({ pasoData, id, stepNumber, solo_lectura }) => {
     organo_actual_competencia: { loading: false, saved: false },
   });
 
-  useEffect(() => {
-    if (pasoData && pasoData.paso1) {
+  useEffect(() =>
+  {
+    if (pasoData && pasoData.paso1)
+    {
       setFormData({ paso1: pasoData.paso1 });
       setLastSavedData(pasoData.paso1);  // Actualiza los últimos datos guardados al cargar los datos
     }
-  }, [pasoData]);
+  }, [ pasoData ]);
 
-  const handleChange = (inputName, e) => {
+  const handleChange = (inputName, e) =>
+  {
     const { value } = e.target;
     setFormData(prevFormData => ({
       ...prevFormData,
       paso1: {
         ...prevFormData.paso1,
-        [inputName]: value,
+        [ inputName ]: value,
       }
+    }));
+    setInputStatus(prevStatus => ({
+      ...prevStatus,
+      [ inputName ]: { loading: false, saved: false },
     }));
   };
 
@@ -53,24 +62,34 @@ export const Subpaso_tres = ({ pasoData, id, stepNumber, solo_lectura }) => {
     if (formData.paso1[inputName] === lastSavedData[inputName]) {
       return;
     }
-
+  
     setInputStatus(prevStatus => ({
       ...prevStatus,
-      [inputName]: { loading: true, saved: false }
+      [inputName]: { ...prevStatus[inputName], loading: true },
     }));
-
-    const payload = { [inputName]: formData.paso1[inputName] };
-    const success = await handleUpdatePaso(id, stepNumber, { paso1: payload });
-    if (success) {
+  
+    const fieldData = {
+      paso1: {
+        [inputName]: formData.paso1[inputName]
+      }
+    };
+  
+    try {
+      const success = await handleUpdatePaso(id, stepNumber, fieldData);
+      
       setInputStatus(prevStatus => ({
         ...prevStatus,
         [inputName]: { loading: false, saved: true }
       }));
-      setLastSavedData(prevData => ({
-        ...prevData,
-        [inputName]: formData.paso1[inputName]  // Actualiza los últimos datos guardados
-      }));
-    } else {
+  
+      if (success) {
+        setLastSavedData(prevData => ({
+          ...prevData,
+          [inputName]: formData.paso1[inputName]
+        }));
+      }
+    } catch (error) {
+      console.error('Error saving data for', inputName, error);
       setInputStatus(prevStatus => ({
         ...prevStatus,
         [inputName]: { loading: false, saved: false }
@@ -83,10 +102,11 @@ export const Subpaso_tres = ({ pasoData, id, stepNumber, solo_lectura }) => {
     value: ambito.id,
   }));
 
-  const handleAmbitoChange = async (selectedOption) => {
+  const handleAmbitoChange = async (selectedOption) =>
+  {
     setAmbitoSeleccionado(selectedOption);
     localStorage.setItem('ambitoSeleccionado', JSON.stringify(selectedOption));
-    
+
     // Asegúrate de actualizar formData antes de llamar a handleSave
     setFormData(prevFormData => ({
       ...prevFormData,
@@ -95,12 +115,14 @@ export const Subpaso_tres = ({ pasoData, id, stepNumber, solo_lectura }) => {
         ambito_paso1: selectedOption.value,
       }
     }));
-  
+
     // Ahora llama a handleSave con el valor actualizado
-    if (selectedOption.value !== lastSavedData.ambito_paso1) {
+    if (selectedOption.value !== lastSavedData.ambito_paso1)
+    {
       await handleSave('ambito_paso1');
     }
   };
+
 
   return (
     <>
@@ -202,7 +224,7 @@ export const Subpaso_tres = ({ pasoData, id, stepNumber, solo_lectura }) => {
             <h6 className="mt-1">El ámbito de la competencia se define al final del análisis de la competencia, este campo define la postura del sector.</h6>
           </div>
         </div>
-        
+
         <div className="my-4">
           <p className="ms-3 mb-0 text-sans-h5">
             Posibilidad de ejercicio de la competencia por parte del Gobierno Regional (Obligatorio)
@@ -236,9 +258,9 @@ export const Subpaso_tres = ({ pasoData, id, stepNumber, solo_lectura }) => {
             onBlur={() => handleSave('organo_actual_competencia')}
             loading={inputStatus.organo_actual_competencia.loading}
             saved={inputStatus.organo_actual_competencia.saved}
-            maxLength={500} 
+            maxLength={500}
             readOnly={solo_lectura}
-            />
+          />
           <div className="d-flex mb-3 mt-1 text-sans-h6-primary col-11">
             <i className="material-symbols-rounded me-2">info</i>
             <h6 className="mt-1">Analizar si la competencia es actualmente ejercida por los ministerios y de los servicios públicos a que se refiere el artículo 28 de la ley N° 18.575, orgánica constitucional de Bases Generales de la Administración del Estado.</h6>

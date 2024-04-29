@@ -103,7 +103,6 @@ export const Subpaso_uno = ({ dataPaso, id, stepNumber, marcojuridico, solo_lect
 
     try
     {
-      console.log(fieldData)
       const success = await handleUpdatePaso(id, stepNumber, fieldData);
       if (success)
       {
