@@ -165,6 +165,18 @@ const CreacionUsuario = () => {
 
   const onSubmit = async (data) => {
     try {
+      // Validación de Región y Sector
+      if (!regionSeleccionada) {
+        setError("region", { type: "manual", message: "Debes seleccionar una región." });
+        console.log("tiene que elegir region")
+        return;
+      }
+
+      if (!sectorSeleccionado) {
+        setError("sector", { type: "manual", message: "Debes seleccionar un sector." });
+        return;
+      }
+
       // Preparar las competencias seleccionadas para la modificación
       const competenciasModificar = competenciasSeleccionadas.map(id => ({
         id: parseInt(id, 10),
@@ -204,7 +216,6 @@ const CreacionUsuario = () => {
       }
     }
   };
-
 
   return (
     <div className="container col-10 my-4">
