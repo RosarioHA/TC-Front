@@ -24,13 +24,17 @@ export const Subpaso_CuatroUno = ({ data, listaIndicadores, id, stepNumber, solo
   // const { dataDirecta } = useRecargaDirecta(id, stepNumber);
   const [ indicadores, setIndicadores ] = useState(data.indicador_desempeno || [ { id: generarIdTemp() } ]);
   // const [ datosGuardados, setDatosGuardados ] = useState(false);
-  const [ inputStatus, setInputStatus ] = useState({
-    formula_calculo: { loading: false, saved: false },
-    descripcion_indicador: { loading: false, saved: false },
-    medios_calculo: { loading: false, saved: false },
-    verificador_asociado: { loading: false, saved: false },
-  });
-  const [message, setMessage] = useState({ text: '', type: '' }); 
+  const [ inputStatus, setInputStatus ] = useState(indicadores.reduce((acc, indicador) =>
+  {
+    acc[ indicador.id ] = {
+      formula_calculo: { loading: false, saved: false },
+      descripcion_indicador: { loading: false, saved: false },
+      medios_calculo: { loading: false, saved: false },
+      verificador_asociado: { loading: false, saved: false },
+    };
+    return acc;
+  }, {}));
+  const [ message, setMessage ] = useState({ text: '', type: '' });
 
 
   const { handleUpdatePaso } = useContext(FormularioContext);
@@ -49,15 +53,6 @@ export const Subpaso_CuatroUno = ({ data, listaIndicadores, id, stepNumber, solo
   //   }
   // }, [ dataDirecta ]);
 
-  const handleInputChange = useCallback((idIndicador, campo, evento) =>
-  {
-    const valor = evento.target.value;
-    setIndicadores(indicadoresActuales =>
-      indicadoresActuales.map(indicador =>
-        indicador.id === idIndicador ? { ...indicador, [ campo ]: valor } : indicador
-      )
-    );
-  }, []);
 
   useEffect(() =>
   {
@@ -83,11 +78,14 @@ export const Subpaso_CuatroUno = ({ data, listaIndicadores, id, stepNumber, solo
       )
     );
   };
-  const agregarIndicador = () => {
-    const ultimoIndicador = indicadores[indicadores.length - 1];
+
+  const agregarIndicador = () =>
+  {
+    const ultimoIndicador = indicadores[ indicadores.length - 1 ];
     // Permite agregar un nuevo indicador si la lista está vacía o si el último indicador está completo
-    if (indicadores.length === 0 || (ultimoIndicador.id && todosLosCamposCompletos(ultimoIndicador))) {
-      setIndicadores([...indicadores,indicadores]);
+    if (indicadores.length === 0 || (ultimoIndicador.id && todosLosCamposCompletos(ultimoIndicador)))
+    {
+      setIndicadores([ ...indicadores, indicadores ]);
     }
   };
 
@@ -177,8 +175,9 @@ export const Subpaso_CuatroUno = ({ data, listaIndicadores, id, stepNumber, solo
           indicador.verificador_asociado
         );
       });
-      
-      if (!todosCompletos) {
+
+      if (!todosCompletos)
+      {
         setMessage({ text: "Por favor, completa todos los campos antes de guardar.", type: 'error' });
         return;
       }
@@ -186,31 +185,42 @@ export const Subpaso_CuatroUno = ({ data, listaIndicadores, id, stepNumber, solo
         indicador_desempeno: indicadores,
       };
       const exito = await patchStep(id, stepNumber, datosPaso);
-      if (exito) {
+      if (exito)
+      {
         setMessage({ text: "Datos guardados exitosamente", type: 'success' });
         // setDatosGuardados(true);
-      } 
-    } catch (error) {
+      }
+    } catch (error)
+    {
       console.error("Error en handleSave:", error);
       setMessage({ text: "Error al guardar. Inténtalo de nuevo.", type: 'error' });
     }
   };
+
+  const handleInputChange = useCallback((idIndicador, campo, evento) =>
+  {
+    const valor = evento.target.value;
+    setIndicadores(indicadoresActuales =>
+      indicadoresActuales.map(indicador =>
+        indicador.id === idIndicador ? { ...indicador, [ campo ]: valor } : indicador
+      )
+    );
+  }, []);
 
   const inputSave = async (idIndicador, campo) =>
   {
     setInputStatus(prevStatus => ({
       ...prevStatus,
       [ idIndicador ]: {
-        ...prevStatus[ idIndicador ] || {}, // Asegura que el objeto exista
+        ...prevStatus[ idIndicador ],
         [ campo ]: { loading: true, saved: false }
       }
     }));
 
-    // Aquí debes asegurarte de enviar solo los datos relevantes del indicador específico
-    const indicadorASalvar = indicadores.find(indicador => indicador.id === idIndicador);
-    const success = await handleUpdatePaso(id, stepNumber, { indicador_desempeno: [ indicadorASalvar ] });
-    if (success)
+    try
     {
+      const indicadorASalvar = indicadores.find(indicador => indicador.id === idIndicador);
+      await handleUpdatePaso(id, stepNumber, { indicador_desempeno: [ indicadorASalvar ] });
       setInputStatus(prevStatus => ({
         ...prevStatus,
         [ idIndicador ]: {
@@ -218,11 +228,15 @@ export const Subpaso_CuatroUno = ({ data, listaIndicadores, id, stepNumber, solo
           [ campo ]: { loading: false, saved: true }
         }
       }));
-    } else
+    } catch (error)
     {
+      console.error('Error saving input:', error);
       setInputStatus(prevStatus => ({
         ...prevStatus,
-        [ idIndicador ]: { ...prevStatus[ idIndicador ], [ campo ]: { loading: false, saved: false } }
+        [ idIndicador ]: {
+          ...prevStatus[ idIndicador ],
+          [ campo ]: { loading: false, saved: false }
+        }
       }));
     }
   };
@@ -230,6 +244,7 @@ export const Subpaso_CuatroUno = ({ data, listaIndicadores, id, stepNumber, solo
   const todosIndicadoresGuardados = indicadores.every(indicador => typeof indicador.id === 'number');
 
 
+  console.log(inputStatus)
 
   return (
     <>
@@ -328,32 +343,32 @@ export const Subpaso_CuatroUno = ({ data, listaIndicadores, id, stepNumber, solo
           </div>
         ))}
         {!solo_lectura && (
-        <div className="d-flex">
-          {todosIndicadoresGuardados ? (
-            <button
-              className="btn-secundario-s m-2"
-              onClick={agregarIndicador}
-            >
-              <i className="material-symbols-rounded me-2">add</i>
-              <p className="mb-0 text-decoration-underline">Agregar indicador</p>
-            </button>
-          ) : (
-            <div>
-            {message.text && (
-              <div className={`text-sans-h6-darkred mt-1 mb-0  mx-2 ${message.type}`}>
-                {message.text}
+          <div className="d-flex">
+            {todosIndicadoresGuardados ? (
+              <button
+                className="btn-secundario-s m-2"
+                onClick={agregarIndicador}
+              >
+                <i className="material-symbols-rounded me-2">add</i>
+                <p className="mb-0 text-decoration-underline">Agregar indicador</p>
+              </button>
+            ) : (
+              <div>
+                {message.text && (
+                  <div className={`text-sans-h6-darkred mt-1 mb-0  mx-2 ${message.type}`}>
+                    {message.text}
+                  </div>
+                )}
+                <button
+                  className="btn-primario-s m-2"
+                  onClick={handleSave}
+                >
+                  <i className="material-symbols-rounded me-2">save</i>
+                  Guardar Indicador
+                </button>
               </div>
             )}
-            <button
-              className="btn-primario-s m-2"
-              onClick={handleSave}
-            >
-              <i className="material-symbols-rounded me-2">save</i>
-              Guardar Indicador
-            </button>
-            </div>
-          )}
-        </div>
+          </div>
         )}
       </div>
     </>

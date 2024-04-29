@@ -3,13 +3,14 @@ import CustomTextarea from "../../forms/custom_textarea";
 import CustomInput from "../../forms/custom_input";
 import { DocumentsAditionals } from "../../commons/documents";
 import { FormularioContext } from "../../../context/FormSectorial";
-import {useUploadMarcoJuridico} from '../../../hooks/formulario/useMarcoJuridico';
+import { useUploadMarcoJuridico } from '../../../hooks/formulario/useMarcoJuridico';
 import { apiTransferenciaCompentencia } from '../../../services/transferenciaCompetencia';
 
-export const Subpaso_uno = ({ dataPaso, id, stepNumber, marcojuridico, solo_lectura }) => {
-  const { handleUpdatePaso,  refetchTrigger} = useContext(FormularioContext);
-  const { uploadDocumento } = useUploadMarcoJuridico(id, stepNumber); 
-  const [hasChanged, setHasChanged] = useState(false);
+export const Subpaso_uno = ({ dataPaso, id, stepNumber, marcojuridico, solo_lectura }) =>
+{
+  const { handleUpdatePaso, refetchTrigger } = useContext(FormularioContext);
+  const { uploadDocumento } = useUploadMarcoJuridico(id, stepNumber);
+  const [ hasChanged, setHasChanged ] = useState(false);
   const initialValues = {
     paso1: {
       forma_juridica_organismo: dataPaso?.forma_juridica_organismo || '',
@@ -19,99 +20,122 @@ export const Subpaso_uno = ({ dataPaso, id, stepNumber, marcojuridico, solo_lect
     },
   };
 
-  const [formData, setFormData] = useState(initialValues);
-  const [inputStatus, setInputStatus] = useState({
+  const [ formData, setFormData ] = useState(initialValues);
+  const [ inputStatus, setInputStatus ] = useState({
     forma_juridica_organismo: { loading: false, saved: false },
     mision_institucional: { loading: false, saved: false },
     descripcion_archivo_marco_juridico: { loading: false, saved: false },
     informacion_adicional_marco_juridico: { loading: false, saved: false },
   });
-  const [isUploading, setIsUploading] = useState(false);
-  const [marcoJuridicoFiles, setMarcoJuridicoFiles] = useState(marcojuridico || []);
+  const [ isUploading, setIsUploading ] = useState(false);
+  const [ marcoJuridicoFiles, setMarcoJuridicoFiles ] = useState(marcojuridico || []);
 
-  
 
-  useEffect(() => {
+
+  useEffect(() =>
+  {
     setMarcoJuridicoFiles(marcojuridico || []);
-  }, [marcojuridico]);
+  }, [ marcojuridico ]);
 
 
 
-const fetchData = async () => {
-  try {
-    const response = await apiTransferenciaCompentencia.get(`/formulario-sectorial/${id}/paso-${stepNumber}/`);
-    setMarcoJuridicoFiles(response.data.marcojuridico);
-  } catch (error) {
-    console.error('Error fetching data:', error);
-  }
-};
+  const fetchData = async () =>
+  {
+    try
+    {
+      const response = await apiTransferenciaCompentencia.get(`/formulario-sectorial/${id}/paso-${stepNumber}/`);
+      setMarcoJuridicoFiles(response.data.marcojuridico);
+    } catch (error)
+    {
+      console.error('Error fetching data:', error);
+    }
+  };
 
 
   useEffect(() => {
-    const savedData = localStorage.getItem('formData');
+    const uniqueKey = `formData-${id}-step${stepNumber}`;
+    const savedData = localStorage.getItem(uniqueKey);
+    console.log('get',savedData)
     if (savedData) {
       setFormData(JSON.parse(savedData));
     }
-  }, []);
+  }, [id, stepNumber]); 
 
   useEffect(() => {
-    console.log('efect',formData)
-    localStorage.setItem('formData', JSON.stringify(formData));
-  }, [formData]);
+    if (hasChanged) {
+      const uniqueKey = `formData-${id}-step${stepNumber}`;
+      console.log('set',formData)
+      localStorage.setItem(uniqueKey, JSON.stringify(formData));
+    }
+  }, [formData, hasChanged, id, stepNumber]);
 
-  const handleChange = (inputName, e) => {
+  const handleChange = (inputName, e) =>
+  {
     const { value } = e.target;
     setFormData(prevFormData => ({
       ...prevFormData,
       paso1: {
         ...prevFormData.paso1,
-        [inputName]: value,
+        [ inputName ]: value,
       },
     }));
     setInputStatus(prevStatus => ({
       ...prevStatus,
-      [inputName]: { loading: false, saved: false },
+      [ inputName ]: { loading: false, saved: false },
     }));
-    setHasChanged(true); 
+    setHasChanged(true);
   }
 
-  const handleSave = async (inputName) => {
-    if (!hasChanged) return; 
-    
+  const handleSave = async (inputName) =>
+  {
+    if (!hasChanged) return;
+
     setInputStatus(prevStatus => ({
       ...prevStatus,
-      [inputName]: { ...prevStatus[inputName], loading: true },
+      [ inputName ]: { ...prevStatus[ inputName ], loading: true },
     }));
 
-    try {
-      console.log(formData)
-      const success = await handleUpdatePaso(id, stepNumber, formData);
-      if (success) {
-        setHasChanged(false); 
+  const fieldData = {
+    paso1: {
+      [inputName]: formData.paso1[inputName]
+    }
+  };
+
+    try
+    {
+      const success = await handleUpdatePaso(id, stepNumber, fieldData);
+      if (success)
+      {
+        setHasChanged(false);
       }
       setInputStatus(prevStatus => ({
         ...prevStatus,
-        [inputName]: { loading: false, saved: true },
+        [ inputName ]: { loading: false, saved: true },
       }));
-    } catch (error) {
+    } catch (error)
+    {
       console.error('Error saving:', error);
       setInputStatus(prevStatus => ({
         ...prevStatus,
-        [inputName]: { loading: false, saved: false },
+        [ inputName ]: { loading: false, saved: false },
       }));
     }
   };
 
-  const uploadFile = async (file) => {
+  const uploadFile = async (file) =>
+  {
     setIsUploading(true);
-    try {
+    try
+    {
       await uploadDocumento(id, { documento: file });
-      setMarcoJuridicoFiles(prevFiles => [...prevFiles, file]); 
-    } catch (error) {
+      setMarcoJuridicoFiles(prevFiles => [ ...prevFiles, file ]);
+    } catch (error)
+    {
       console.error('Error uploading file:', error);
-    } finally {
+    } finally
+    {
       setIsUploading(false);
-      refetchTrigger(); 
+      refetchTrigger();
     }
   };
 
@@ -129,7 +153,7 @@ const fetchData = async () => {
       await handleUpdatePaso(id, stepNumber, payload);
       setMarcoJuridicoFiles(currentFiles => currentFiles.filter(file => file.id !== idMarco));
       fetchData();
-      refetchTrigger(); 
+      refetchTrigger();
     } catch (error)
     {
       console.error("Error al eliminar el marco juridico:", error);

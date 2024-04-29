@@ -5,112 +5,132 @@ import { FormularioContext } from '../../../context/FormSectorial';
 import { useFlujograma } from '../../../hooks/formulario/useFlujograma';
 import { usePasoForm } from '../../../hooks/formulario/usePasoForm';
 
-export const Subpaso_dosPuntoCinco = ({ id, stepNumber, data, flujograma, solo_lectura }) => {
-  const { handleUpdatePaso} = useContext(FormularioContext);
+export const Subpaso_dosPuntoCinco = ({ id, stepNumber, data, flujograma, solo_lectura }) =>
+{
+  const { handleUpdatePaso } = useContext(FormularioContext);
   const { uploadDocumento } = useFlujograma(id, stepNumber);
   const { dataPaso, refetchTrigger } = usePasoForm(id, stepNumber);
-  const [formData, setFormData] = useState({
+  const [ formData, setFormData ] = useState({
     paso2: data.paso2 || { descripcion_cualitativa: '' },
   });
-  const [inputStatus, setInputStatus] = useState({
+  const [ inputStatus, setInputStatus ] = useState({
     descripcion_cualitativa: { loading: false, saved: false },
   });
-  const [flujogramaFiles, setFlujogramaFiles] =  useState(dataPaso?.flujograma || flujograma || []);
-  const [iframeSrc, setIframeSrc] = useState( 'https://pdfobject.com/pdf/sample.pdf');
-  const [uploading, setUploading] = useState(false);
-  const [deleting, setDeleting] = useState(false);
-  const [showPdfViewer, setShowPdfViewer] = useState(false);
+  const [ flujogramaFiles, setFlujogramaFiles ] = useState(dataPaso?.flujograma || flujograma || []);
+  const [ iframeSrc, setIframeSrc ] = useState('https://pdfobject.com/pdf/sample.pdf');
+  const [ uploading, setUploading ] = useState(false);
+  const [ deleting, setDeleting ] = useState(false);
+  const [ showPdfViewer, setShowPdfViewer ] = useState(false);
 
   //visualizar pdf
   const ver = true;
 
-  const handleViewFile = (path) => {
+  const handleViewFile = (path) =>
+  {
     // const baseUrl = import.meta.env.VITE_REACT_APP_API_URL;
     const url = `${path}`;
     setIframeSrc(url);
     setShowPdfViewer(true);
   };
 
-  useEffect(() => {
+  useEffect(() =>
+  {
     setFlujogramaFiles(dataPaso?.p_2_5_flujograma_competencia || []);
-  }, [dataPaso]);
+  }, [ dataPaso ]);
 
-  useEffect(() => {
+  useEffect(() =>
+  {
     setFlujogramaFiles(flujograma || []);
-  }, [flujograma]);
+  }, [ flujograma ]);
 
-  useEffect(() => {
+  useEffect(() =>
+  {
     const savedData = localStorage.getItem('formData');
-    if (savedData) {
+    if (savedData)
+    {
       setFormData(JSON.parse(savedData));
     }
   }, []);
 
-  useEffect(() => {
+  useEffect(() =>
+  {
     localStorage.setItem('formData', JSON.stringify(formData));
-  }, [formData]);
+  }, [ formData ]);
 
-  const handleChange = (inputName, e) => {
+  const handleChange = (inputName, e) =>
+  {
     const { value } = e.target;
     setFormData((prevFormData) => ({
       ...prevFormData,
       paso2: {
         ...prevFormData.paso2,
-        [inputName]: value,
+        [ inputName ]: value,
       },
     }));
     setInputStatus((prevStatus) => ({
       ...prevStatus,
-      [inputName]: { loading: false, saved: false },
+      [ inputName ]: { loading: false, saved: false },
     }));
   };
 
-  const handleSave = async (inputName) => {
+  const handleSave = async (inputName) =>
+  {
     setInputStatus((prevStatus) => ({
       ...prevStatus,
-      [inputName]: { ...prevStatus[inputName], loading: true },
+      [ inputName ]: { ...prevStatus[ inputName ], loading: true },
     }));
-    try {
+    try
+    {
       const payload = { ...formData };
-      const success = await handleUpdatePaso(id, stepNumber, payload);
+      await handleUpdatePaso(id, stepNumber, payload);
       setInputStatus((prevStatus) => ({
         ...prevStatus,
-        [inputName]: { loading: false, saved: success },
+        [ inputName ]: { loading: false, saved: true },
       }));
-    } catch (error) {
+    } catch (error)
+    {
       console.error('Error saving:', error);
       setInputStatus((prevStatus) => ({
         ...prevStatus,
-        [inputName]: { loading: false, saved: false },
+        [ inputName ]: { loading: false, saved: false },
       }));
     }
   };
 
-  const uploadFile = async (file) => {
-    if (flujogramaFiles.length < 5) {
+  const uploadFile = async (file) =>
+  {
+    if (flujogramaFiles.length < 5)
+    {
       setUploading(true);
-      try {
+      try
+      {
         await uploadDocumento(id, file);
-        refetchTrigger(); // Refetch después de subir para obtener los archivos actualizados
-      } catch (error) {
+        refetchTrigger();
+      } catch (error)
+      {
         console.error('Error uploading file:', error);
-      } finally {
+      } finally
+      {
         setUploading(false);
       }
     }
   };
 
-  const eliminarDocFlujo = async (idFlujo) => {
+  const eliminarDocFlujo = async (idFlujo) =>
+  {
     setDeleting(true);
-    try {
+    try
+    {
       const payload = {
-        p_2_5_flujograma_competencia: [{ id: idFlujo, DELETE: true }],
+        p_2_5_flujograma_competencia: [ { id: idFlujo, DELETE: true } ],
       };
       await handleUpdatePaso(id, stepNumber, payload);
       refetchTrigger();
-    } catch (error) {
+    } catch (error)
+    {
       console.error('Error al eliminar el flujo', error);
-    } finally {
+    } finally
+    {
       setDeleting(false);
     }
   };
@@ -149,11 +169,11 @@ export const Subpaso_dosPuntoCinco = ({ id, stepNumber, data, flujograma, solo_l
           />
         ))}
 
-        {!uploading  && !solo_lectura && flujogramaFiles.length < 5 && (
+        {!uploading && !solo_lectura && flujogramaFiles.length < 5 && (
           <SubirArchivo
             index={flujogramaFiles.length + 1}
             handleFileSelect={(file) => uploadFile(file)}
-            onViewFile={handleViewFile || (() => {})}
+            onViewFile={handleViewFile || (() => { })}
             readOnly={solo_lectura}
             ver={ver}
           />
@@ -162,14 +182,14 @@ export const Subpaso_dosPuntoCinco = ({ id, stepNumber, data, flujograma, solo_l
 
       {showPdfViewer && (
         <div className="my-4 col-11">
-        <iframe
-          id="visorPDF"
-          src={iframeSrc}
-          title="Vista previa del documento"
-        ></iframe>
-      </div>
+          <iframe
+            id="visorPDF"
+            src={iframeSrc}
+            title="Vista previa del documento"
+          ></iframe>
+        </div>
       )}
-      
+
 
       <div className="mt-4 pb-4 border-bottom">
         <CustomTextarea

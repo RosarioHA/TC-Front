@@ -34,11 +34,16 @@ export const useResumenFinal = (id) => {
     try {
       await apiTransferenciaCompentencia.patch(
         `/revision-final-competencia/${id}/resumen/`,
-        { formulario_final_enviado: true}
+        {
+          formulario_final_enviado: true,
+          imprimir_formulario_final: true
+        }
+
       );
       setResumen((prevState) => ({
         ...prevState,
         formulario_final_enviado: true,
+        imprimir_formulario_final: true
       }));
     } catch (error) {
       console.error('Error al enviar el formulario:', error);
