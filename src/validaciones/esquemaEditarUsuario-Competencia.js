@@ -13,3 +13,11 @@ export const esquemaEdicionUsuarios = yup.object().shape({
     email: yup.string().email('Formato de correo electrónico inválido').required('El correo electrónico es obligatorio'),
     perfil: yup.string().required('El perfil es obligatorio'),
   });
+
+  export const esquemaEdicionCompetencias = yup.object().shape({
+    nombre: yup.string().required('El nombre de la competencia es obligatorio'),
+    regiones: yup.array().min(1, 'Debe seleccionar al menos una región'),
+    sectores: yup.array().min(1, 'Debe seleccionar al menos un sector'),
+    plazo_formulario_sectorial: yup.string().required('El plazo para el formulario sectorial es obligatorio'),
+    plazo_formulario_gore: yup.string().required('El plazo para el formulario GORE es obligatorio'),
+  });

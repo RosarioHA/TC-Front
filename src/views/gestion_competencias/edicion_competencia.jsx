@@ -14,6 +14,8 @@ import { useFormContext } from "../../context/FormAlert";
 import ModalAbandonoFormulario from "../../components/commons/modalAbandonoFormulario";
 import { DropdownSelectBuscadorCheck } from "../../components/dropdown/select_buscador_checkbox";
 import { useFiltroUsuarios } from "../../hooks/usuarios/useFiltroUsuarios";
+import { yupResolver } from '@hookform/resolvers/yup';
+import { esquemaEdicionCompetencias } from "../../validaciones/esquemaEditarUsuario-Competencia";
 
 const groupUsersByType = (usuarios) => {
   if (!usuarios || usuarios.length === 0) {
@@ -95,6 +97,7 @@ const EdicionCompetencia = () => {
   const origenSeleccionado = origenes.find(origen => origen.clave === competencia?.origen)
 
   const { control, handleSubmit, setValue, formState: { errors } } = useForm({
+    resolver: yupResolver(esquemaEdicionCompetencias),
     mode: "onSubmit",
     defaultValues: {
       nombre: "",
@@ -304,7 +307,7 @@ const EdicionCompetencia = () => {
                 id="nombre"
                 name="nombre"
                 readOnly={!editMode}
-                error={errors.nombre_completo?.message}
+                error={errors.nombre?.message}
                 {...field}
               />
             )} />
@@ -315,37 +318,49 @@ const EdicionCompetencia = () => {
             name="regiones"
             control={control}
             render={({ field }) => (
-              <CheckboxRegion
-                label="Región (Obligatorio)"
-                placeholder="Elige la o las regiones donde se ejercerá la competencia"
-                id="regiones"
-                name="regiones"
-                options={opcionesRegiones}
-                readOnly={!editMode}
-                prevSelection={regionesSeleccionadas}
-                onSelectionChange={handleRegionesChange}
-                selectedOptions={field.value}
-                selectedRegions={regionesSeleccionadas}
-              />
+              <div>
+                <CheckboxRegion
+                  label="Región (Obligatorio)"
+                  placeholder="Elige la o las regiones donde se ejercerá la competencia"
+                  id="regiones"
+                  name="regiones"
+                  options={opcionesRegiones}
+                  readOnly={!editMode}
+                  prevSelection={regionesSeleccionadas}
+                  onSelectionChange={handleRegionesChange}
+                  selectedOptions={field.value}
+                  selectedRegions={regionesSeleccionadas}
+                />
+                {errors.regiones && (
+                  <p className="text-sans-h6-darkred mt-2 mb-0">{errors.regiones.message}</p>
+                )}
+              </div>
             )}
           />
         </div>
 
         <div className="mb-4 col-11">
-          <DropdownSelectBuscadorCheck
-            label="Elige el sector de la competencia (Obligatorio)"
-            placeholder="Elige el sector de la competencia"
-            options={opcionesSectores}
-            onSelectionChange={handleSectorSelectionChange}
-            readOnly={!editMode}
-            selectedReadOnlyOptions={selectedReadOnlyOptions}
-            editMode={editMode}
-            competencia={competencia}
-          />
-
-          {errors.sectores && (
-            <p className="text-sans-h6-darkred mt-2 mb-0">{errors.sectores.message}</p>
+          <Controller 
+          name="sectores"
+          control={control}
+          render={() => (
+            <div>
+              <DropdownSelectBuscadorCheck
+                label="Elige el sector de la competencia (Obligatorio)"
+                placeholder="Elige el sector de la competencia"
+                options={opcionesSectores}
+                onSelectionChange={handleSectorSelectionChange}
+                readOnly={!editMode}
+                selectedReadOnlyOptions={selectedReadOnlyOptions}
+                editMode={editMode}
+                competencia={competencia}
+              />
+              {errors.sectores && (
+                <p className="text-sans-h6-darkred mt-2 mb-0">{errors.sectores.message}</p>
+              )}
+            </div>
           )}
+          />
         </div>
 
         <div className="mb-4 col-11">
@@ -452,7 +467,7 @@ const EdicionCompetencia = () => {
                 id="plazo_formulario_sectorial"
                 maxLength={null}
                 readOnly={!editMode}
-                error={errors.plazo_formulario_gore?.message}
+                error={errors.plazo_formulario_sectorial?.message}
                 {...field} />
             )}
           />
