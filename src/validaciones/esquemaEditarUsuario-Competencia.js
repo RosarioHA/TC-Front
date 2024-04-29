@@ -11,4 +11,5 @@ export const esquemaEdicionUsuarios = yup.object().shape({
       .min(3, 'El nombre debe tener al menos 3 caracteres')
       .max(30, 'El nombre no debe exceder los 30 caracteres'),
     email: yup.string().email('Formato de correo electrónico inválido').required('El correo electrónico es obligatorio'),
+    perfil: yup.string().required('El perfil es obligatorio'),
   });

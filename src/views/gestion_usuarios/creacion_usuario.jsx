@@ -46,6 +46,7 @@ const CreacionUsuario = () => {
   const { dataFiltroCompetencias, loadingFiltroCompetencias } = useFiltroCompetencias(regionId, sectorId);
   const [ hasChanged, setHasChanged ] = useState(false);
   const [ isModalOpen, setIsModalOpen ] = useState(false);
+  const [conditionalFieldErrors, setConditionalFieldErrors] = useState({});
 
   useEffect(() => {
     console.log("competencias seleccionadas en vista", competenciasSeleccionadas);
@@ -163,54 +164,104 @@ const CreacionUsuario = () => {
     e.stopPropagation();
   };
 
+  // const onSubmit = async (data) => {
+  //   let validationErrors = {};
+    
+  //     // Validación de Región y Sector según el perfil de usuario seleccionado
+  //     if (perfilSeleccionado === 'GORE' && !regionSeleccionada) {
+  //       validationErrors.region = "Seleccionar una región para el perfil GORE.";
+  //     }
+  //     if (perfilSeleccionado === 'Usuario Sectorial' && !sectorSeleccionado) {
+  //       validationErrors.sector = "Seleccionar un sector para el perfil de Usuario Sectorial.";
+  //     }
+  //     // Actualizar el estado de los errores
+  //     setConditionalFieldErrors(validationErrors);
+  
+  //     // Preparar las competencias seleccionadas para la modificación
+  //     const competenciasModificar = competenciasSeleccionadas.map(id => ({
+  //       id: parseInt(id, 10),
+  //       action: 'add'
+  //     }));
+
+  //     if (Object.keys(validationErrors).length === 0) {
+  //     // Construir el payload con el campo sector actualizado para solo incluir el ID
+  //     const payload = {
+  //       ...data,
+  //       nombre_completo: data.nombre,
+  //       perfil: perfilSeleccionado, // Asegúrate de que este es el ID o el valor necesario del perfil
+  //       sector: sectorId, // Usar directamente el ID del sector seleccionado
+  //       region: regionSeleccionada, // Asegúrate de que este es el ID o el valor necesario de la región
+  //       password: data.password,
+  //       is_active: estado === 'activo',
+  //       competencias_modificar: competenciasModificar,
+  //     };
+  //     // Omitir campos no necesarios antes de enviar
+  //     delete payload.password2; 
+
+  //     try {
+  //       const isValid = await trigger();
+  //       if (submitClicked && isValid) {
+  //         await createUser(payload);
+  //         updateHasChanged(false);
+  //         setHasChanged(false);
+  //         history('/home/success_creacion', { state: { origen: "crear_usuario" } });
+  //       } else {
+  //         console.log("El formulario no es válido o no se ha hecho click en 'Crear Usuario'");
+  //       }
+  //     } catch (error) {
+  //       // Verifica si el error es debido a un problema en el campo 'rut'
+  //       if (error.message && error.message.rut && error.message.rut.length > 0) {
+  //         // Utiliza el primer mensaje de error para el campo 'rut'
+  //         const mensajeErrorRut = error.message.rut[ 0 ];
+  //         setError('rut', { type: 'manual', message: mensajeErrorRut });
+  //       }
+  //     }
+  //   }
+  // };
   const onSubmit = async (data) => {
     try {
       // Validación de Región y Sector según el perfil de usuario seleccionado
+      let validationErrors = {};
       if (perfilSeleccionado === 'GORE' && !regionSeleccionada) {
-        setError('region', { type: 'manual', message: 'Debes seleccionar una región.' });
-        return;
+        validationErrors.region = "Seleccionar una región para el perfil GORE.";
       }
-  
       if (perfilSeleccionado === 'Usuario Sectorial' && !sectorSeleccionado) {
-        setError('sector', { type: 'manual', message: 'Debes seleccionar un sector.' });
-        return;
+        validationErrors.sector = "Seleccionar un sector para el perfil de Usuario Sectorial.";
       }
   
-      // Preparar las competencias seleccionadas para la modificación
-      const competenciasModificar = competenciasSeleccionadas.map(id => ({
-        id: parseInt(id, 10),
-        action: 'add'
-      }));
-
-      // Construir el payload con el campo sector actualizado para solo incluir el ID
-      const payload = {
-        ...data,
-        nombre_completo: data.nombre,
-        perfil: perfilSeleccionado, // Asegúrate de que este es el ID o el valor necesario del perfil
-        sector: sectorId, // Usar directamente el ID del sector seleccionado
-        region: regionSeleccionada, // Asegúrate de que este es el ID o el valor necesario de la región
-        password: data.password,
-        is_active: estado === 'activo',
-        competencias_modificar: competenciasModificar,
-      };
-
-      // Omitir campos no necesarios antes de enviar
-      delete payload.password2; 
-
-      const isValid = await trigger();
-      if (submitClicked && isValid) {
-        await createUser(payload);
-        updateHasChanged(false);
-        setHasChanged(false);
-        history('/home/success_creacion', { state: { origen: "crear_usuario" } });
-      } else {
-        console.log("El formulario no es válido o no se ha hecho click en 'Crear Usuario'");
+      setConditionalFieldErrors(validationErrors);
+  
+      if (Object.keys(validationErrors).length === 0) {
+        const competenciasModificar = competenciasSeleccionadas.map(id => ({
+          id: parseInt(id, 10),
+          action: 'add'
+        }));
+  
+        const payload = {
+          ...data,
+          nombre_completo: data.nombre,
+          perfil: perfilSeleccionado,
+          sector: sectorId,
+          region: regionSeleccionada,
+          password: data.password,
+          is_active: estado === 'activo',
+          competencias_modificar: competenciasModificar,
+        };
+        delete payload.password2;
+  
+        const isValid = await trigger();
+        if (submitClicked && isValid) {
+          await createUser(payload);
+          setHasChanged(false);
+          updateHasChanged(false);
+          history('/home/success_creacion', { state: { origen: "crear_usuario" } });
+        } else {
+          console.log("El formulario no es válido o no se ha hecho click en 'Crear Usuario'");
+        }
       }
     } catch (error) {
-      // Verifica si el error es debido a un problema en el campo 'rut'
       if (error.message && error.message.rut && error.message.rut.length > 0) {
-        // Utiliza el primer mensaje de error para el campo 'rut'
-        const mensajeErrorRut = error.message.rut[ 0 ];
+        const mensajeErrorRut = error.message.rut[0];
         setError('rut', { type: 'manual', message: mensajeErrorRut });
       }
     }
@@ -303,6 +354,7 @@ const CreacionUsuario = () => {
               <p className="text-sans-h6-darkred mt-2 mb-0">{errors.perfil.message}</p>
             )}
           </div>
+
           {/* Se generan condicionalmente nuevos componentes para el detalle de usuarios GORE y Sectorial */}
           {perfilSeleccionado === "Usuario Sectorial" && (
             <>
@@ -315,18 +367,27 @@ const CreacionUsuario = () => {
                   name="sector"
                   control={control}
                   render={({ field }) => (
-                    <DropdownSelectBuscadorUnico
-                      label="Elige el organismo al que pertenece (Obligatorio)"
-                      placeholder="Elige el organismo del usuario"
-                      options={opcionesSector}
-                      onSelectionChange={(value) =>
-                      {
-                        // Actualiza el campo del formulario con el valor seleccionado
-                        field.onChange(value);
-                        handleSectorChange(value); // Actualiza el estado local si es necesario
-                      }}
-                      sectorId={sectorId}
-                    />
+                    <div>
+                      <DropdownSelectBuscadorUnico
+                        label="Elige el organismo al que pertenece (Obligatorio)"
+                        placeholder="Elige el organismo del usuario"
+                        options={opcionesSector}
+                        onSelectionChange={(value) =>
+                        {
+                          // Actualiza el campo del formulario con el valor seleccionado
+                          field.onChange(value);
+                          handleSectorChange(value); // Actualiza el estado local si es necesario
+                        }}
+                        sectorId={sectorId}
+                      />
+                      {Object.keys(conditionalFieldErrors).length > 0 && (
+                        <div>
+                          {Object.entries(conditionalFieldErrors).map(([field, errorMessage]) => (
+                            <p key={field} className="text-sans-h6-darkred mt-2 mb-0">{errorMessage}</p>
+                          ))}
+                        </div>
+                      )}
+                    </div>
                   )}
                 />
               </div>
@@ -347,13 +408,22 @@ const CreacionUsuario = () => {
                     name="region"
                     control={control}
                     render={({ field }) => (
-                      <DropdownSelectBuscador
-                        label="Elige la región a la que representa (Obligatorio)"
-                        placeholder="Elige una región"
-                        options={opcionesDeRegiones}
-                        onSelectionChange={handleRegionChange}
-                        {...field}
-                      />
+                      <div>
+                        <DropdownSelectBuscador
+                          label="Elige la región a la que representa (Obligatorio)"
+                          placeholder="Elige una región"
+                          options={opcionesDeRegiones}
+                          onSelectionChange={handleRegionChange}
+                          {...field}
+                        />
+                        {Object.keys(conditionalFieldErrors).length > 0 && (
+                        <div>
+                          {Object.entries(conditionalFieldErrors).map(([field, errorMessage]) => (
+                            <p key={field} className="text-sans-h6-darkred mt-2 mb-0">{errorMessage}</p>
+                          ))}
+                        </div>
+                      )}
+                      </div>
                     )} />
 
                 ) : (
