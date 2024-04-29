@@ -7,7 +7,7 @@ import { CheckboxRegion } from "../../components/dropdown/checkboxRegion";
 import DropdownSelect from "../../components/dropdown/select";
 import DropdownConSecciones from "../../components/dropdown/checkbox_conSecciones_conTabla";
 import { DropdownSelectBuscadorCheck } from "../../components/dropdown/select_buscador_checkbox";
-import { esquemaCreacionCompetencia } from "../../validaciones/esquemaValidacion";
+import { esquemaCreacionCompetencia } from "../../validaciones/esquemaCrearUsuario_Competencia";
 import { useCrearCompetencia } from "../../hooks/competencias/useCrearCompetencia";
 import { useRegion } from "../../hooks/useRegion";
 import { useFiltroUsuarios } from "../../hooks/usuarios/useFiltroUsuarios";

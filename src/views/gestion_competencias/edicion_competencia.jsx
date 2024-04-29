@@ -14,15 +14,14 @@ import { useFormContext } from "../../context/FormAlert";
 import ModalAbandonoFormulario from "../../components/commons/modalAbandonoFormulario";
 import { DropdownSelectBuscadorCheck } from "../../components/dropdown/select_buscador_checkbox";
 import { useFiltroUsuarios } from "../../hooks/usuarios/useFiltroUsuarios";
+import { yupResolver } from '@hookform/resolvers/yup';
+import { esquemaEdicionCompetencias } from "../../validaciones/esquemaEditarUsuario-Competencia";
 
-const groupUsersByType = (usuarios) =>
-{
-  if (!usuarios || usuarios.length === 0)
-  {
+const groupUsersByType = (usuarios) => {
+  if (!usuarios || usuarios.length === 0) {
     return [];
   }
-  const grouped = usuarios.reduce((acc, user) =>
-  {
+  const grouped = usuarios.reduce((acc, user) => {
     const perfil = user.perfil;
     acc[ perfil ] = acc[ perfil ] || [];
     acc[ perfil ].push(user);
@@ -35,8 +34,7 @@ const groupUsersByType = (usuarios) =>
   }));
 };
 
-const EdicionCompetencia = () =>
-{
+const EdicionCompetencia = () => {
   const { id } = useParams();
   const history = useNavigate();
   const { dataRegiones } = useRegion();
@@ -88,8 +86,7 @@ const EdicionCompetencia = () =>
     }))
   }));
   //data competencia
-  const regionesSeleccionadas = competencia ? competencia.regiones.map(regionId =>
-  {
+  const regionesSeleccionadas = competencia ? competencia.regiones.map(regionId => {
     const region = dataRegiones.find(region => region.id === regionId);
     return {
       label: region.region,
@@ -100,6 +97,7 @@ const EdicionCompetencia = () =>
   const origenSeleccionado = origenes.find(origen => origen.clave === competencia?.origen)
 
   const { control, handleSubmit, setValue, formState: { errors } } = useForm({
+    resolver: yupResolver(esquemaEdicionCompetencias),
     mode: "onSubmit",
     defaultValues: {
       nombre: "",
@@ -116,10 +114,8 @@ const EdicionCompetencia = () =>
     },
   });
 
-  useEffect(() =>
-  {
-    if (!editMode && competencia)
-    {
+  useEffect(() => {
+    if (!editMode && competencia) {
       // Inicializar el formulario con los detalles de la competencia
       setValue("nombre", competencia.nombre || "");
       setValue("regiones", competencia.regiones || null);
@@ -136,12 +132,10 @@ const EdicionCompetencia = () =>
   }, [ editMode, competencia, setValue ]);
 
   //detecta cambios sin guardar en el formulario
-  function handleOnChange(event)
-  {
+  function handleOnChange(event) {
     const data = new FormData(event.currentTarget);
     // Verifica si hay cambios respecto al valor inicial
-    const formHasChanged = Array.from(data.entries()).some(([ name, value ]) =>
-    {
+    const formHasChanged = Array.from(data.entries()).some(([ name, value ]) => {
       const initialValue = competencia[ name ];
       return value !== String(initialValue);
     });
@@ -149,10 +143,8 @@ const EdicionCompetencia = () =>
     updateHasChanged(formHasChanged);
   }
 
-  useEffect(() =>
-  {
-    if (!editMode && competencia)
-    {
+  useEffect(() => {
+    if (!editMode && competencia) {
       // Resto de la inicialización del formulario...
       const sectorInicial = competencia.sectores?.[ 0 ]?.id; // Asumiendo que competencia.sectores es un array
       setSectorSeleccionado(sectorInicial);
@@ -166,10 +158,8 @@ const EdicionCompetencia = () =>
     }
   }, [ editMode, competencia ]);
 
-  useEffect(() =>
-  {
-    const handleBeforeUnload = (event) =>
-    {
+  useEffect(() => {
+    const handleBeforeUnload = (event) => {
       // Cancela el evento de cierre predeterminado
       event.preventDefault();
       // Firefox requiere la asignación del mensaje al evento
@@ -180,18 +170,14 @@ const EdicionCompetencia = () =>
     // Agrega el evento beforeunload al cargar el componente
     window.addEventListener('beforeunload', handleBeforeUnload);
     // Remueve el evento beforeunload al desmontar el componente
-    return () =>
-    {
+    return () => {
       updateEditMode(false);
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-
-
-  const handleSectorSelectionChange = (selectedSectorValues) =>
-  {
+  const handleSectorSelectionChange = (selectedSectorValues) => {
     const sectorId = selectedSectorValues.map(sector => sector.value);
     setSectorSeleccionado(sectorId);
     setSectoresSeleccionados(selectedSectorValues);
@@ -199,30 +185,25 @@ const EdicionCompetencia = () =>
     updateHasChanged(true);
   };
 
-  const handleRegionesChange = useCallback((selectedRegiones) =>
-  {
+  const handleRegionesChange = useCallback((selectedRegiones) => {
     const regionId = selectedRegiones.map(region => region.value);
     setRegionSeleccionada(regionId);
     setValue("regiones", regionId, { shouldValidate: true });
     updateHasChanged(true);
   }, [ setValue, updateHasChanged ]);
 
-  function handleAmbitoChange(selectedAmbito)
-  {
+  function handleAmbitoChange(selectedAmbito) {
     setValue("ambito_competencia", selectedAmbito.value);
     updateHasChanged(true);
   }
 
-  const handleOrigenChange = (selectedOrigen) =>
-  {
+  const handleOrigenChange = (selectedOrigen) => {
     setValue("origen", selectedOrigen.value);
     updateHasChanged(true);
   };
 
-  const onSubmit = async (formData) =>
-  {
-    try
-    {
+  const onSubmit = async (formData) => {
+    try {
       const sectorIds = sectoresSeleccionados.map(sector => sector.value);
       const dataToSend = {
         ...formData,
@@ -234,51 +215,38 @@ const EdicionCompetencia = () =>
       updateEditMode(false);
       updateHasChanged(false);
       history('/home/success_edicion', { state: { origen: "editar_competencia", id } });
-    } catch (error)
-    {
+    } catch (error) {
       console.error("Error al guardar la competencia:", error);
     }
   };
 
-  const handleUsuariosTransformed = useCallback((nuevosUsuarios) =>
-  {
+  const handleUsuariosTransformed = useCallback((nuevosUsuarios) => {
     setUsuariosSeleccionados(nuevosUsuarios);
   }, []);
 
-  const handleBackButtonClick = () =>
-  {
-    if (editMode)
-    {
-      if (hasChanged)
-      {
+  const handleBackButtonClick = () => {
+    if (editMode) {
+      if (hasChanged) {
         setIsModalOpen(true);
-      } else
-      {
+      } else {
         updateEditMode(false);
       }
-    } else
-    {
+    } else {
       history(-1);
     }
   };
 
-  const handleEditClick = () =>
-  {
-    if (!editMode)
-    {
+  const handleEditClick = () => {
+    if (!editMode) {
       updateEditMode(true);
-    } else if (hasChanged)
-    {
+    } else if (hasChanged) {
       setIsModalOpen(true);
-    } else
-    {
+    } else {
       updateEditMode(false);
     }
   };
 
-
-  const extractFileName = (url) =>
-  {
+  const extractFileName = (url) => {
     return url.split('/').pop();
   };
 
@@ -286,13 +254,11 @@ const EdicionCompetencia = () =>
   const userOptions = usuarios ? groupUsersByType(usuarios) : [];
   const [ combinedUsers, setCombinedUsers ] = useState([]);
 
-  const combineUsers = (competencia) =>
-  {
+  const combineUsers = (competencia) => {
     const { usuarios_dipres, usuarios_gore, usuarios_sectoriales, usuarios_subdere } = competencia;
 
     // Función para agregar el nombre del perfil a cada usuario
-    const addProfileToUsers = (users, profile) =>
-    {
+    const addProfileToUsers = (users, profile) => {
       return users.map(user => ({ ...user, perfil: profile }));
     };
 
@@ -305,10 +271,8 @@ const EdicionCompetencia = () =>
     ];
   };
 
-  useEffect(() =>
-  {
-    if (!editMode && competencia) 
-    {
+  useEffect(() => {
+    if (!editMode && competencia)  {
       const usuariosCombinados = combineUsers(competencia);
       setCombinedUsers(usuariosCombinados);
     }
@@ -343,7 +307,7 @@ const EdicionCompetencia = () =>
                 id="nombre"
                 name="nombre"
                 readOnly={!editMode}
-                error={errors.nombre_completo?.message}
+                error={errors.nombre?.message}
                 {...field}
               />
             )} />
@@ -354,37 +318,49 @@ const EdicionCompetencia = () =>
             name="regiones"
             control={control}
             render={({ field }) => (
-              <CheckboxRegion
-                label="Región (Obligatorio)"
-                placeholder="Elige la o las regiones donde se ejercerá la competencia"
-                id="regiones"
-                name="regiones"
-                options={opcionesRegiones}
-                readOnly={!editMode}
-                prevSelection={regionesSeleccionadas}
-                onSelectionChange={handleRegionesChange}
-                selectedOptions={field.value}
-                selectedRegions={regionesSeleccionadas}
-              />
+              <div>
+                <CheckboxRegion
+                  label="Región (Obligatorio)"
+                  placeholder="Elige la o las regiones donde se ejercerá la competencia"
+                  id="regiones"
+                  name="regiones"
+                  options={opcionesRegiones}
+                  readOnly={!editMode}
+                  prevSelection={regionesSeleccionadas}
+                  onSelectionChange={handleRegionesChange}
+                  selectedOptions={field.value}
+                  selectedRegions={regionesSeleccionadas}
+                />
+                {errors.regiones && (
+                  <p className="text-sans-h6-darkred mt-2 mb-0">{errors.regiones.message}</p>
+                )}
+              </div>
             )}
           />
         </div>
 
         <div className="mb-4 col-11">
-          <DropdownSelectBuscadorCheck
-            label="Elige el sector de la competencia (Obligatorio)"
-            placeholder="Elige el sector de la competencia"
-            options={opcionesSectores}
-            onSelectionChange={handleSectorSelectionChange}
-            readOnly={!editMode}
-            selectedReadOnlyOptions={selectedReadOnlyOptions}
-            editMode={editMode}
-            competencia={competencia}
-          />
-
-          {errors.sectores && (
-            <p className="text-sans-h6-darkred mt-2 mb-0">{errors.sectores.message}</p>
+          <Controller 
+          name="sectores"
+          control={control}
+          render={() => (
+            <div>
+              <DropdownSelectBuscadorCheck
+                label="Elige el sector de la competencia (Obligatorio)"
+                placeholder="Elige el sector de la competencia"
+                options={opcionesSectores}
+                onSelectionChange={handleSectorSelectionChange}
+                readOnly={!editMode}
+                selectedReadOnlyOptions={selectedReadOnlyOptions}
+                editMode={editMode}
+                competencia={competencia}
+              />
+              {errors.sectores && (
+                <p className="text-sans-h6-darkred mt-2 mb-0">{errors.sectores.message}</p>
+              )}
+            </div>
           )}
+          />
         </div>
 
         <div className="mb-4 col-11">
@@ -491,7 +467,7 @@ const EdicionCompetencia = () =>
                 id="plazo_formulario_sectorial"
                 maxLength={null}
                 readOnly={!editMode}
-                error={errors.plazo_formulario_gore?.message}
+                error={errors.plazo_formulario_sectorial?.message}
                 {...field} />
             )}
           />

@@ -12,7 +12,7 @@ import { useGroups } from "../../hooks/useGroups";
 import { useRegion } from "../../hooks/useRegion";
 import { useSector } from "../../hooks/useSector";
 import { yupResolver } from '@hookform/resolvers/yup';
-import { esquemaEdicionUsuarios } from "../../validaciones/esquemaEditarUsuario";
+import { esquemaEdicionUsuarios } from "../../validaciones/esquemaEditarUsuario-Competencia";
 import { useAuth } from "../../context/AuthContext";
 import { useFiltroCompetencias } from "../../hooks/useFiltrarCompetencias";
 import { useFormContext } from "../../context/FormAlert";
@@ -34,7 +34,7 @@ const EdicionUsuario = () => {
   const [ competenciasSeleccionadas, setCompetenciasSeleccionadas ] = useState([]);
   const { editMode, updateEditMode, hasChanged, updateHasChanged } = useFormContext();
   const [ isModalOpen, setIsModalOpen ] = useState(false);
-
+  const [conditionalFieldErrors, setConditionalFieldErrors] = useState({});
   const { userData } = useAuth();
   const userIsSubdere = userData?.perfil?.includes('SUBDERE');
 
@@ -204,17 +204,30 @@ const EdicionUsuario = () => {
   };
 
   const onSubmit = async (formData) => {
-    const payload = {
-      ...formData,
-      competencias_asignadas: competenciasSeleccionadas,
-    };
-    try {
-      await editUser(id, payload);
-      updateEditMode(false);
-      updateHasChanged(false);
-      history('/home/success_edicion', { state: { origen: "editar_usuario", id } });
-    } catch (error) {
-      console.error("Error al editar el usuario:", error);
+    // Validaciones adicionales para campos condicionales
+    let validationErrors = {};
+    if (formData.perfil === 'GORE' && !formData.region) {
+      validationErrors.region = "Seleccionar una región para el perfil GORE.";
+    }
+    if (formData.perfil === 'Usuario Sectorial' && !formData.sector) {
+      validationErrors.sector = "Seleccionar un sector para el perfil de Usuario Sectorial.";
+    }
+    // Actualizar el estado de los errores
+    setConditionalFieldErrors(validationErrors);
+
+    if (Object.keys(validationErrors).length === 0) {
+      const payload = {
+        ...formData,
+        competencias_asignadas: competenciasSeleccionadas,
+      };
+      try {
+        await editUser(id, payload);
+        updateEditMode(false);
+        updateHasChanged(false);
+        history('/home/success_edicion', { state: { origen: "editar_usuario", id } });
+      } catch (error) {
+        console.error("Error al editar el usuario:", error);
+      }
     }
   };
 
@@ -321,47 +334,67 @@ const EdicionUsuario = () => {
                   name="region"
                   control={control}
                   render={({ field }) => (
-                    <DropdownSelectBuscador
-                      label="Elige la región a la que representa (Obligatorio)"
-                      placeholder={userDetails.region || ''}
-                      id="region"
-                      name="region"
-                      readOnly={!editMode}
-                      options={loadingRegiones ? [] : opcionesDeRegiones}
-                      control={control}
-                      initialValue={userDetails?.region?.id}
-                      onSelectionChange={(selectedOption) =>
-                      {
-                        field.onChange(selectedOption.value);
-                        handleDdSelectBuscadorChange('region', selectedOption);
-                      }}
-                    />
+                    <div>
+                      <DropdownSelectBuscador
+                        label="Elige la región a la que representa (Obligatorio)"
+                        placeholder={userDetails.region || ''}
+                        id="region"
+                        name="region"
+                        readOnly={!editMode}
+                        options={loadingRegiones ? [] : opcionesDeRegiones}
+                        control={control}
+                        initialValue={userDetails?.region?.id}
+                        onSelectionChange={(selectedOption) =>
+                        {
+                          field.onChange(selectedOption.value);
+                          handleDdSelectBuscadorChange('region', selectedOption);
+                        }}
+                      />
+                      {conditionalFieldErrors.region && (
+                        <p className="text-sans-h6-darkred mt-2 mb-0">{conditionalFieldErrors.region}</p>
+                      )}
+                    </div>
                   )}
-                />) : (
+                />
+              ) : (
                 <input type="text" value="No hay regiones para mostrar" readOnly />
               )}
             </div>
           )}
+
           {renderizadoCondicional === 'Usuario Sectorial' && (
             <div className="my-4 col-11 ">
               { dataSector && dataSector.length > 0 ? (
-                <DropdownSelectBuscadorUnico
-                  label="Elige el organismo al que pertenece (Obligatorio)"
-                  placeholder={userDetails.sector || ''}
-                  id="sector"
-                  name="sector"
-                  readOnly={!editMode}
-                  options={loadingSector ? [] : opcionesSector}
-                  control={control}
-                  onSelectionChange={handleSectorSelectionChange}
-                  sectorId={userDetails.sector || ''}
-                />) : (
+                <Controller 
+                name="sector"
+                control={control}
+                render={({ field }) => (
+                  <div>
+                    <DropdownSelectBuscadorUnico
+                      label="Elige el organismo al que pertenece (Obligatorio)"
+                      placeholder={userDetails.sector || ''}
+                      id="sector"
+                      name="sector"
+                      readOnly={!editMode}
+                      options={loadingSector ? [] : opcionesSector}
+                      control={control}
+                      onSelectionChange={handleSectorSelectionChange}
+                      sectorId={userDetails.sector || ''}
+                      {...field}
+                    />
+                    {conditionalFieldErrors.sector && (
+                      <p className="text-sans-h6-darkred mt-2 mb-0">{conditionalFieldErrors.sector}</p>
+                    )}
+                  </div>
+                )}
+                />
+                ) : (
                 <input type="text" value="No hay organismos para mostrar" readOnly />
               )}
             </div>
           )}
-
         </div>
+
         <div className="my-4 col-11">
           {!editMode ? (
             <div className="mb-5">
