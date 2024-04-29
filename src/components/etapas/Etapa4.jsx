@@ -4,7 +4,7 @@ import { Counter } from "../tables/Counter";
 import { useAuth } from '../../context/AuthContext';
 
 
-export const Etapa4 = ({ etapa }) =>
+export const Etapa4 = ({ etapa, etapaTres }) =>
 {
   const {
     nombre_etapa,
@@ -15,12 +15,13 @@ export const Etapa4 = ({ etapa }) =>
     fecha_ultima_modificacion,
     oficio_origen
   } = etapa;
-  
+
+  console.log(etapaTres.estado)
+
   const navigate = useNavigate();
   const { userData } = useAuth();
   const userRegionId = userData.region;
   const userProfile = userData.perfil;
-  const etapaNum = 4;
   const userSubdere = userData?.perfil?.includes('SUBDERE');
 
 
@@ -28,7 +29,7 @@ export const Etapa4 = ({ etapa }) =>
   const [ isUsuariosGoreCollapsed, setIsUsuariosGoreCollapsed ] = useState(false);
   const [ isFormulariosGoreCollapsed, setIsFormulariosGoreCollapsed ] = useState(false);
 
-  const isStageDisabled = estado === "Aún no puede comenzar";
+  const isStageDisabled = estado === "Aún no puede comenzar" || !(etapaTres.estado === "Finalizada" || etapaTres.estado === "Omitida");
 
   // Función para alternar el collapse de Usuarios GORE
   const toggleUsuariosGoreCollapse = () =>
@@ -44,7 +45,8 @@ export const Etapa4 = ({ etapa }) =>
 
   const renderBadgeOrButtonForUsuario = (usuario) =>
   {
-    if (isStageDisabled) {
+    if (isStageDisabled)
+    {
       return <span className=" badge-status-pending" disabled>{usuario.accion}</span>;
     }
     // Decide qué mostrar basado en el estado y la acción del usuario
@@ -134,11 +136,8 @@ export const Etapa4 = ({ etapa }) =>
     let icon = estado === "finalizada" ? "visibility" : "draft";
     let path = "/";
 
-    if (isStageDisabled) {
-      return <button className="btn-secundario-s disabled" disabled><u>{subetapa.accion}</u></button>;
-    }
 
-    // Este fragmento maneja los casos específicos y asigna el path correcto
+    // Manejo de casos específicos y asignación del path correcto
     if (nombre.startsWith("Notificar a") && estado === "finalizada")
     {
       if (etapa.estado === 'Aún no puede comenzar')
@@ -150,11 +149,14 @@ export const Etapa4 = ({ etapa }) =>
       }
     }
 
+    // Condición revisada para habilitación del botón
+    const enableButtonForSubdere = (etapaTres.estado === "Finalizada" || etapaTres.estado === "Omitida") && userSubdere;
+
+    // Manejo del botón para subir oficio
     if (nombre.includes("Subir oficio y su fecha para habilitar formulario GORE"))
     {
       if (estado === "finalizada")
       {
-        // Cuando la subetapa está finalizada, se configura el botón para abrir el PDF en una nueva pestaña
         return (
           <button onClick={() => window.open(oficio_origen, '_blank')} className="btn-secundario-s text-decoration-none" id="btn">
             <span className="material-symbols-outlined me-1">{icon}</span>
@@ -163,32 +165,25 @@ export const Etapa4 = ({ etapa }) =>
         );
       } else
       {
-        // Aquí manejas los casos en los que la subetapa no está finalizada, ajusta según necesites
-        path = `/home/estado_competencia/${etapa.id}/subir_oficio_gore/${etapaNum}/`;
+        // Determinar la ruta y si el botón debe estar deshabilitado
+        path = `/home/estado_competencia/${etapa.id}/subir_oficio_gore/`;
+        const isDisabled = (estado === "pendiente" || estado === "revision") && !enableButtonForSubdere;
+
+        // Manejar el clic en el botón para navegar
+        const handleButtonClick = () =>
+        {
+          navigate(path, { state: { extraData: "GORE", seccion: 'etapa4' } });
+        };
+
+        return (
+          <button onClick={handleButtonClick} className={`btn-secundario-s text-decoration-none ${isDisabled ? 'disabled' : ''}`} id="btn">
+            <span className="material-symbols-outlined me-1">{icon}</span>
+            <u>{buttonText}</u>
+          </button>
+        );
       }
     }
-    const isDisabled = estado === "pendiente" || estado === "revision";
-
-    // Función para manejar el evento de clic y realizar la navegación
-    const handleButtonClick = () =>
-    {
-      navigate(path, { state: { extraData: "GORE", seccion: 'etapa4' } });
-    };
-
-    // Renderizar un botón o un enlace basado en si la acción está deshabilitada o no
-    return isDisabled ? (
-      <button onClick={handleButtonClick} className='btn-secundario-s' id="btn">
-        <span className="material-symbols-outlined me-1">{icon}</span>
-        <u>{buttonText}</u>
-      </button>
-    ) : (
-      // Usar un <button> en lugar de <Link> para consistencia y llamar a navigate directamente
-      <button onClick={handleButtonClick} className="btn-secundario-s text-decoration-none" id="btn">
-        <span className="material-symbols-outlined me-1">{icon}</span>
-        <u>{buttonText}</u>
-      </button>
-    );
-  };
+  }
 
 
   const renderButtonForFormularioGore = (formulario) =>
