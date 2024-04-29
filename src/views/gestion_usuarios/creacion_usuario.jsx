@@ -7,7 +7,7 @@ import DropdownSelect from "../../components/dropdown/select";
 import DropdownSelectBuscador from "../../components/dropdown/select_buscador";
 import DropdownSinSecciones from "../../components/dropdown/checkbox_sinSecciones_conTabla";
 import { RadioButtons } from "../../components/forms/radio_btns";
-import { esquemaCreacionUsuario } from "../../validaciones/esquemaValidacion";
+import { esquemaCreacionUsuario } from "../../validaciones/esquemaCrearUsuario_Competencia";
 import { useCreateUser } from "../../hooks/usuarios/useCreateUser";
 import { useRegion } from "../../hooks/useRegion";
 import { useGroups } from "../../hooks/useGroups";

@@ -12,7 +12,7 @@ import { useGroups } from "../../hooks/useGroups";
 import { useRegion } from "../../hooks/useRegion";
 import { useSector } from "../../hooks/useSector";
 import { yupResolver } from '@hookform/resolvers/yup';
-import { esquemaEdicionUsuarios } from "../../validaciones/esquemaEditarUsuario";
+import { esquemaEdicionUsuarios } from "../../validaciones/esquemaEditarUsuario-Competencia";
 import { useAuth } from "../../context/AuthContext";
 import { useFiltroCompetencias } from "../../hooks/useFiltrarCompetencias";
 import { useFormContext } from "../../context/FormAlert";
@@ -204,6 +204,16 @@ const EdicionUsuario = () => {
   };
 
   const onSubmit = async (formData) => {
+    // Validaciones adicionales para campos condicionales
+    if (formData.perfil === 'GORE' && !formData.region) {
+      console.error("Debe seleccionar una región para el perfil GORE.");
+      return; // Detener la ejecución si la validación falla
+    }
+    if (formData.perfil === 'Usuario Sectorial' && !formData.sector) {
+      console.error("Debe seleccionar un sector para el perfil de Usuario Sectorial.");
+      return; // Detener la ejecución si la validación falla
+    }
+    
     const payload = {
       ...formData,
       competencias_asignadas: competenciasSeleccionadas,
