@@ -165,18 +165,17 @@ const CreacionUsuario = () => {
 
   const onSubmit = async (data) => {
     try {
-      // Validación de Región y Sector
-      if (!regionSeleccionada) {
-        setError("region", { type: "manual", message: "Debes seleccionar una región." });
-        console.log("tiene que elegir region")
+      // Validación de Región y Sector según el perfil de usuario seleccionado
+      if (perfilSeleccionado === 'GORE' && !regionSeleccionada) {
+        setError('region', { type: 'manual', message: 'Debes seleccionar una región.' });
         return;
       }
-
-      if (!sectorSeleccionado) {
-        setError("sector", { type: "manual", message: "Debes seleccionar un sector." });
+  
+      if (perfilSeleccionado === 'Usuario Sectorial' && !sectorSeleccionado) {
+        setError('sector', { type: 'manual', message: 'Debes seleccionar un sector.' });
         return;
       }
-
+  
       // Preparar las competencias seleccionadas para la modificación
       const competenciasModificar = competenciasSeleccionadas.map(id => ({
         id: parseInt(id, 10),
