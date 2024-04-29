@@ -8,7 +8,8 @@ import { MonoStepers } from "../../components/stepers/MonoStepers";
 import { useAuth } from '../../context/AuthContext';
 import { useObservacionesSubdere } from '../../hooks/formulario/useObSubdereSectorial';
 
-const PasoTres = () => {
+const PasoTres = () =>
+{
   const { handleUpdatePaso, updateStepNumber, pasoData, data } = useContext(FormularioContext);
   const { userData } = useAuth();
   const userSubdere = userData?.perfil?.includes('SUBDERE');
@@ -18,33 +19,37 @@ const PasoTres = () => {
   const observacionesEnviadas = observaciones?.observacion_enviada
   const formSectorialEnviado = data?.formulario_enviado
 
-  const [observacionPaso3, setObservacionPaso3] = useState("");
-  const [formData, setFormData] = useState({
+  const [ observacionPaso3, setObservacionPaso3 ] = useState("");
+  const [ formData, setFormData ] = useState({
     universo_cobertura: "",
     descripcion_cobertura: ""
   });
 
-  const [inputStatus, setInputStatus] = useState({
+  const [ inputStatus, setInputStatus ] = useState({
     universo_cobertura: { loading: false, saved: false },
     descripcion_cobertura: { loading: false, saved: false },
   });
-  
-  useEffect(() => {
+
+  useEffect(() =>
+  {
     updateStepNumber(stepNumber);
-    if (observaciones && Object.keys(observaciones).length === 0) {
+    if (observaciones && Object.keys(observaciones).length === 0)
+    {
       fetchObservaciones();
     }
-    if (observaciones && observaciones.observacion_paso3) {
+    if (observaciones && observaciones.observacion_paso3)
+    {
       setObservacionPaso3(observaciones.observacion_paso3);
     }
     // Establecer datos del formulario basados en pasoData si están disponibles
-    if (pasoData && pasoData.paso3) {
+    if (pasoData && pasoData.paso3)
+    {
       setFormData({
         universo_cobertura: pasoData.paso3.universo_cobertura || "",
         descripcion_cobertura: pasoData.paso3.descripcion_cobertura || ""
       });
     }
-  }, [updateStepNumber, stepNumber, observaciones, fetchObservaciones, pasoData]);
+  }, [ updateStepNumber, stepNumber, observaciones, fetchObservaciones, pasoData ]);
 
 
   useEffect(() =>
@@ -57,7 +62,7 @@ const PasoTres = () => {
       });
     }
   }, [ pasoData ]);
-  
+
   // if (!pasoData || !pasoData.paso3) {
   //   return <div>Cargando...</div>;
   // }
@@ -75,40 +80,44 @@ const PasoTres = () => {
     }));
   };
 
-  const handleSave = async (inputName) => {
+  const handleSave = async (inputName) =>
+  {
+    // Iniciar la carga
     setInputStatus(prevStatus => ({
       ...prevStatus,
-      [inputName]: { ...prevStatus[inputName], loading: true }
+      [ inputName ]: { ...prevStatus[ inputName ], loading: true }
     }));
-  
-    let datosParaEnviar = {
-      paso3: {
-        // Incluye solo el campo que está siendo editado
-        [inputName]: formData[inputName]
-      }
-    };
-  
-    const success = await handleUpdatePaso(id, stepNumber, datosParaEnviar);
-    if (success) {
+
+    // Preparar datos para enviar
+    const datosParaEnviar = { paso3: { [ inputName ]: formData[ inputName ] } };
+
+    try
+    {
+      await handleUpdatePaso(id, stepNumber, datosParaEnviar);
+
+      // Actualizar estado basado en la operación de guardado
       setInputStatus(prevStatus => ({
         ...prevStatus,
-        [inputName]: { loading: false, saved: true }
+        [ inputName ]: { loading: false, saved: true }
       }));
-    } else {
+    } catch (error)
+    {
+      console.error('Error saving data for', inputName, ':', error);
       setInputStatus(prevStatus => ({
         ...prevStatus,
-        [inputName]: { loading: false, saved: false }
+        [ inputName ]: { loading: false, saved: false }
       }));
     }
   };
-  
+
+
 
   if (!pasoData || !pasoData.paso3)
   {
     return <> <div className="d-flex align-items-center flex-column my-5 px-5 ">
-    <div className="text-center text-sans-h5-medium-blue ">Cargando paso 3</div>
-    <span className="placeholder col-6 bg-primary"></span>
-  </div></>;
+      <div className="text-center text-sans-h5-medium-blue ">Cargando paso 3</div>
+      <span className="placeholder col-6 bg-primary"></span>
+    </div></>;
   }
 
 
@@ -122,7 +131,7 @@ const PasoTres = () => {
     await updateObservacion(observacionData);
   };
 
-  const avance = pasoData?.paso3?.avance; 
+  const avance = pasoData?.paso3?.avance;
 
   return (
     <>
@@ -210,18 +219,18 @@ const PasoTres = () => {
               {!observacionPaso3.trim() && observacionesEnviadas ? (
                 <p>No se han dejado observaciones en este paso.</p>
               ) : (
-              <CustomTextarea
-                label="Observaciones (Opcional)"
-                placeholder="Escribe tus observaciones de este paso del formulario"
-                rows={5}
-                maxLength={500}
-                value={observacionPaso3}
-                onChange={(e) => setObservacionPaso3(e.target.value)}
-                readOnly={observacionesEnviadas}
-                onBlur={handleGuardarObservacion}
-                loading={loadingObservaciones}
-                saved={saved}
-              />
+                <CustomTextarea
+                  label="Observaciones (Opcional)"
+                  placeholder="Escribe tus observaciones de este paso del formulario"
+                  rows={5}
+                  maxLength={500}
+                  value={observacionPaso3}
+                  onChange={(e) => setObservacionPaso3(e.target.value)}
+                  readOnly={observacionesEnviadas}
+                  onBlur={handleGuardarObservacion}
+                  loading={loadingObservaciones}
+                  saved={saved}
+                />
               )}
             </div>
           )}

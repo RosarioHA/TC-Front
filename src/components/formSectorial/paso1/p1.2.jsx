@@ -11,11 +11,13 @@ export const Subpaso_dos = ({
   id,
   stepNumber,
   solo_lectura,
-}) => {
+}) =>
+{
   const { updatePasoError, handleUpdatePaso, handleUploadFiles } =
     useContext(FormularioContext);
   const { uploadFile } = useFileRegional();
-  const [formData, setFormData] = useState({
+  const [ hasChanged, setHasChanged ] = useState(false);
+  const [ formData, setFormData ] = useState({
     paso1: pasoData.paso1 || {
       descripcion_archivo_organigrama_regional:
         pasoData.descripcion_archivo_organigrama_regional,
@@ -24,137 +26,148 @@ export const Subpaso_dos = ({
     },
   });
 
-  const [inputStatus, setInputStatus] = useState({
+  const [ inputStatus, setInputStatus ] = useState({
     descripcion_archivo_organigrama_regional: { loading: false, saved: false },
     descripcion_archivo_organigrama_nacional: { loading: false, saved: false },
     organigrama_nacional: { loading: false, saved: false },
   });
 
-  useEffect(() => {
-    if (pasoData && pasoData.paso1) {
+  useEffect(() =>
+  {
+    if (pasoData && pasoData.paso1)
+    {
       setFormData({ paso1: pasoData.paso1 });
     }
-  }, [pasoData]);
+  }, [ pasoData ]);
 
-  useEffect(() => {
+  useEffect(() =>
+  {
     const savedData = localStorage.getItem('formData');
-    if (savedData) {
+    if (savedData)
+    {
       setFormData(JSON.parse(savedData));
     }
   }, []);
 
-  useEffect(() => {
+  useEffect(() =>
+  {
     localStorage.setItem('formData', JSON.stringify(formData));
-  }, [formData]);
+  }, [ formData ]);
 
-  const handleChange = (inputName, e) => {
+  const handleChange = (inputName, e) =>
+  {
     const { value } = e.target;
-    setFormData((prevFormData) => ({
+    setFormData(prevFormData => ({
       ...prevFormData,
       paso1: {
         ...prevFormData.paso1,
-        [inputName]: value,
+        [ inputName ]: value,
       },
     }));
-    setInputStatus((prevStatus) => ({
+    setInputStatus(prevStatus => ({
       ...prevStatus,
-      [inputName]: {
-        ...prevStatus[inputName],
-        loading: false,
-        saved: false,
-        modified: true,
-      },
+      [ inputName ]: { loading: false, saved: false },
     }));
+    setHasChanged(true);
+  }
+
+  const handleSave = async (inputName) =>
+  {
+    if (!hasChanged) return;
+
+    setInputStatus(prevStatus => ({
+      ...prevStatus,
+      [ inputName ]: { ...prevStatus[ inputName ], loading: true },
+    }));
+
+  const fieldData = {
+    paso1: {
+      [inputName]: formData.paso1[inputName]
+    }
   };
 
-  const handleSave = async (inputName) => {
-    setInputStatus((prevStatus) => ({
-      ...prevStatus,
-      [inputName]: { ...prevStatus[inputName], loading: true },
-    }));
-    const modifiedData = Object.keys(formData.paso1).reduce((acc, key) => {
-      if (inputStatus[key] && inputStatus[key].modified) {
-        acc[key] = formData.paso1[key];
+    try
+    {
+      const success = await handleUpdatePaso(id, stepNumber, fieldData);
+      if (success)
+      {
+        setHasChanged(false);
       }
-      return acc;
-    }, {});
-
-    if (Object.keys(modifiedData).length > 0) {
-      const success = await handleUpdatePaso(id, stepNumber, {
-        paso1: modifiedData,
-      });
-
-      if (success) {
-        setInputStatus((prevStatus) => ({
-          ...prevStatus,
-          [inputName]: { loading: false, saved: true, modified: false },
-        }));
-      } else {
-        setInputStatus((prevStatus) => ({
-          ...prevStatus,
-          [inputName]: { loading: false, saved: false },
-        }));
-      }
-    } else {
-      setInputStatus((prevStatus) => ({
+      setInputStatus(prevStatus => ({
         ...prevStatus,
-        [inputName]: { loading: false, saved: false },
+        [ inputName ]: { loading: false, saved: true },
+      }));
+    } catch (error)
+    {
+      console.error('Error saving:', error);
+      setInputStatus(prevStatus => ({
+        ...prevStatus,
+        [ inputName ]: { loading: false, saved: false },
       }));
     }
   };
 
-  const handleFileSelect = async (file, fieldName) => {
-    try {
+
+  const handleFileSelect = async (file, fieldName) =>
+  {
+    try
+    {
       const archivos = new FormData();
       archivos.append(fieldName, file);
       setInputStatus((prevStatus) => ({
         ...prevStatus,
-        [fieldName]: { ...prevStatus[fieldName], loading: true },
+        [ fieldName ]: { ...prevStatus[ fieldName ], loading: true },
       }));
 
       await handleUploadFiles(id, stepNumber, archivos, fieldName);
       setInputStatus((prevStatus) => ({
         ...prevStatus,
-        [fieldName]: { loading: false, saved: true },
+        [ fieldName ]: { loading: false, saved: true },
       }));
-    } catch (error) {
+    } catch (error)
+    {
       console.error('Error al subir el archivo:', error);
       setInputStatus((prevStatus) => ({
         ...prevStatus,
-        [fieldName]: { loading: false, saved: false },
+        [ fieldName ]: { loading: false, saved: false },
       }));
     }
   };
 
-  const handleFileSelectRegion = async (file, fieldName, regionId) => {
-    if (typeof id === 'undefined' || typeof stepNumber === 'undefined') {
+  const handleFileSelectRegion = async (file, fieldName, regionId) =>
+  {
+    if (typeof id === 'undefined' || typeof stepNumber === 'undefined')
+    {
       console.error(
         'El ID del formulario o el número de paso no están definidos.'
       );
       return;
     }
 
-    try {
+    try
+    {
       setInputStatus((prevStatus) => ({
         ...prevStatus,
-        [fieldName]: { ...prevStatus[fieldName], loading: true },
+        [ fieldName ]: { ...prevStatus[ fieldName ], loading: true },
       }));
       await uploadFile(id, regionId, file);
 
       setInputStatus((prevStatus) => ({
         ...prevStatus,
-        [fieldName]: { loading: false, saved: true },
+        [ fieldName ]: { loading: false, saved: true },
       }));
-    } catch (error) {
+    } catch (error)
+    {
       console.error('Error al subir el archivo:', error);
       setInputStatus((prevStatus) => ({
         ...prevStatus,
-        [fieldName]: { loading: false, saved: false },
+        [ fieldName ]: { loading: false, saved: false },
       }));
     }
   };
 
-  const eliminarDocRegional = async (idRegion) => {
+  const eliminarDocRegional = async (idRegion) =>
+  {
     const payload = {
       organigramaregional: [
         {
@@ -164,14 +177,17 @@ export const Subpaso_dos = ({
       ],
     };
 
-    try {
+    try
+    {
       await handleUpdatePaso(id, stepNumber, payload);
-    } catch (error) {
+    } catch (error)
+    {
       console.error('Error al eliminar el organigrama regional:', error);
     }
   };
 
-  if (updatePasoError) {
+  if (updatePasoError)
+  {
     return <div>Error: {updatePasoError.message}</div>;
   }
 
@@ -260,9 +276,9 @@ export const Subpaso_dos = ({
             tituloDocumento={region.documento}
             fileType={
               formData.paso1.organigramaregional &&
-              formData.paso1.organigramaregional[region.id]
+                formData.paso1.organigramaregional[ region.id ]
                 ? 'Archivo Seleccionado: ' +
-                  formData.paso1.organigramaregional[region.id].name
+                formData.paso1.organigramaregional[ region.id ].name
                 : 'No seleccionado'
             }
             handleFileSelect={(file) =>
