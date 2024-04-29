@@ -1,15 +1,17 @@
 import { Etapa1, Etapa2, Etapa3, Etapa4, Etapa5 } from "../etapas";
 
 const Etapa = ({ etapaInfo, index, id, usuarios}) => {
+
   switch (index) {
     case 0: return <Etapa1 etapa={etapaInfo.etapa1} id={id}/>;
     case 1: return <Etapa2 etapa={etapaInfo.etapa2}  sectoriales={usuarios.usuarios_sectoriales} idCompetencia={id}/>;
-    case 2: return <Etapa3 etapa={etapaInfo.etapa3}  idCompetencia={id}/>;
-    case 3: return <Etapa4 etapa={etapaInfo.etapa4} />;
+    case 2: return <Etapa3 etapa={etapaInfo.etapa3}  idCompetencia={id} />;
+    case 3: return <Etapa4 etapa={etapaInfo.etapa4} etapaTres={etapaInfo.etapa3}  />;
     case 4: return <Etapa5 etapa={etapaInfo.etapa5} idCompetencia={id} />;
     default: return null;
   }
 };
+
 
 
 export const VerticalStepper = ({ etapasObjeto, etapaDatos, id }) => {
@@ -38,6 +40,8 @@ export const VerticalStepper = ({ etapasObjeto, etapaDatos, id }) => {
         return <span className="badge-status-review">En Estudio</span>;
       case 'Aún no puede comenzar':
         return <span className="badge-status-pending">Aún no puede comenzar</span>;
+      case 'Omitida':
+        return <span className="badge-status-pending">Omitida</span>;
       default:
         return null;
     }
