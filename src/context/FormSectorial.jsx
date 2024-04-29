@@ -2,6 +2,7 @@ import { createContext, useState, useCallback } from 'react';
 import { useFormSectorial } from '../hooks/formulario/useFormulario';
 import { usePasoForm } from '../hooks/formulario/usePasoForm';
 import { useUpdateForm } from '../hooks/formulario/useUpdateForm';
+import { useOrganigramaRegional } from '../hooks/formulario/useOrganigramaRegional';
 
 export const FormularioContext = createContext();
 
@@ -12,6 +13,7 @@ export const FormularioProvider = ({ children }) => {
   const { dataFormSectorial, loadingFormSectorial, errorFormSectorial} = useFormSectorial(id);
   const { dataPaso, loadingPaso, errorPaso, refetchTrigger } = usePasoForm(id, stepNumber);
   const { patchStep, loading, error } = useUpdateForm();
+  const {patchStepOrganigrama} = useOrganigramaRegional(); 
 
   const updateFormId = useCallback((newId) => {
     setId(newId);
@@ -40,7 +42,7 @@ export const FormularioProvider = ({ children }) => {
 
       const formData = new FormData();
       formData.append(`paso${stepNumber}.${fieldName}`, archivos.get(fieldName)); 
-      const response = await patchStep(id, stepNumber, formData);
+      const response = await patchStepOrganigrama(id, stepNumber, formData);
       if (response) {
         return true;
       } else {
