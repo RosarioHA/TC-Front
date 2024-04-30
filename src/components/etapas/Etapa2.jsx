@@ -23,8 +23,13 @@ export const Etapa2 = ({ etapa, idCompetencia }) =>
     observaciones_sectorial,
     fecha_ultima_modificacion,
     usuarios_notificados,
-    oficio_origen
+    oficio_origen,
+    formulario_sectorial
   } = etapa;
+
+  console.log(formulario_sectorial.formularios_sectoriales)
+
+  const accionFormulario = formulario_sectorial.formularios_sectoriales[0]; 
 
   const usuariosNotificadosDetalles = usuarios_notificados?.detalle_usuarios_notificados || [];
 
@@ -42,11 +47,11 @@ export const Etapa2 = ({ etapa, idCompetencia }) =>
     switch (estado)
     {
       case "finalizada":
-        return <span className="badge-status-finish">Finalizada</span>;
+        return <span className="badge-status-finish">{accionFormulario.accion}</span>;
       case "revision":
-        return <span className="badge-status-review">En Revisión</span>;
+        return <span className="badge-status-review">{accionFormulario.accion}</span>;
       case "pendiente":
-        return <span className="badge-status-pending">Pendiente</span>;
+        return <span className="badge-status-pending">{accionFormulario.accion}</span>;
       default:
         return null;
     }

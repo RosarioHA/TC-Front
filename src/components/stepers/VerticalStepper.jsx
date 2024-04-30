@@ -35,13 +35,15 @@ export const VerticalStepper = ({ etapasObjeto, etapaDatos, id }) => {
     switch (estado)
     {
       case 'Finalizada':
-        return <span className="badge-status-finish">Finalizada</span>;
+        return <span className="badge-status-finish">{estado}</span>;
       case 'En Estudio':
-        return <span className="badge-status-review">En Estudio</span>;
+        return <span className="badge-status-review">{estado}</span>;
       case 'Aún no puede comenzar':
-        return <span className="badge-status-pending">Aún no puede comenzar</span>;
+        return <span className="badge-status-pending">{estado}</span>;
       case 'Omitida':
-        return <span className="badge-status-pending">Omitida</span>;
+        return <span className="badge-status-pending">{estado}</span>;
+      case 'Atrasada':
+          return <span className="badge-status-borderRed">{estado}</span>;
       default:
         return null;
     }
