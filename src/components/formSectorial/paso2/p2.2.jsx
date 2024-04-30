@@ -320,7 +320,7 @@ export const Subpaso_dosPuntoDos = ({
       }));
     }
   };
-
+ console.log(data); 
 
   return (
     <div>
@@ -427,7 +427,7 @@ export const Subpaso_dosPuntoDos = ({
                               </div>
                             </div>
                             <div className="col-2 d-flex align-items-center justify-content-center">
-                              {ministerios[ ministerio ].length >= 2 && (
+                            {unidadIndex > 0 && ( 
                                 <button
                                   className="btn-terciario-ghost mb-2 me-5"
                                   onClick={() =>
