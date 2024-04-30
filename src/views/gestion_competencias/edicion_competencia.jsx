@@ -306,9 +306,11 @@ const EdicionCompetencia = () => {
                 placeholder={competencia ? competencia.nombre : ''}
                 id="nombre"
                 name="nombre"
+                maxLength={200}
                 readOnly={!editMode}
                 error={errors.nombre?.message}
                 {...field}
+
               />
             )} />
         </div>

@@ -19,12 +19,19 @@ const CustomTextarea = forwardRef(({
   containerSize
 }, ref) => {
   const [inputValue, setInputValue] = useState(value); // Inicialización segura de inputValue
+  const [totalCharacters, setTotalCharacters] = useState(value.length); 
   const internalRef = useRef(null); // Ref interna para manipulación DOM que no necesita exposición externa
   const lastSavedValueRef = useRef(value); // Referencia para almacenar el valor al momento del último guardado
 
   useEffect(() => {
     adjustHeight();
   }, [inputValue]);
+
+  useEffect(() => {
+    setInputValue(value); // Actualiza el inputValue cuando el prop 'value' cambia
+    setTotalCharacters(value.length); // Actualiza el contador total cuando el valor externo cambia
+  }, [value]);
+
 
   const handleChange = (event) => {
     event.preventDefault();
@@ -34,7 +41,8 @@ const CustomTextarea = forwardRef(({
     } else {
       setInputValue(newText);
     }
-    onChange(event); // Pasa el evento completo
+    onChange(event); // Pasa el evento
+    setTotalCharacters(newText.length); // Actualiza el contador total de caracteres
   };
 
   const handleBlur = (e) => {
@@ -56,9 +64,9 @@ const CustomTextarea = forwardRef(({
     setInputValue(value); // Actualiza el inputValue cuando el prop 'value' cambia
   }, [value]);
 
-  const counterClass = maxLength !== undefined && inputValue.length === maxLength
-    ? "text-sans-h6-darkred"
-    : "text-sans-h6";
+  const counterClass = maxLength !== undefined && totalCharacters === maxLength
+  ? "text-sans-h6-darkred"
+  : "text-sans-h6";
 
   const renderSpinnerOrCheck = () => {
     if (loading) {
@@ -110,7 +118,7 @@ const CustomTextarea = forwardRef(({
             {maxLength !== null && maxLength !== undefined && (
               <div className="mb-0 mt-1 ms-auto">
                 <span className={counterClass}>
-                  {inputValue.length}/{maxLength} caracteres.
+                  {totalCharacters}/{maxLength} caracteres.
                 </span>
               </div>
             )}
