@@ -66,22 +66,20 @@ const Home = () =>
               </div>
             </div> */}
             {dataCompetencia.map(competencia => (
-              <>
-                <div key={competencia.id} className="container-competencia">
-                  <div className="container">
-                    <h3 className="my-3">{competencia.nombre}</h3>
-                    <SummaryDetail competencia={competencia} tiempoTranscurrido={competencia.tiempo_transcurrido} />
-                    <div className="d-flex justify-content-end">
-                      <button onClick={() => handleDetailsCompetencia(competencia)} className="btn-secundario-s link-underline link-underline-opacity-0 py-3">
-                        <u>Ver competencia</u>
-                        <span className="material-symbols-outlined">
-                          arrow_forward_ios
-                        </span>
-                      </button>
-                    </div>
+              <div key={competencia.id} className="container-competencia">
+                <div className="container">
+                  <h3 className="my-3">{competencia.nombre}</h3>
+                  <SummaryDetail competencia={competencia} tiempoTranscurrido={competencia.tiempo_transcurrido} />
+                  <div className="d-flex justify-content-end">
+                    <button onClick={() => handleDetailsCompetencia(competencia)} className="btn-secundario-s link-underline link-underline-opacity-0 py-3">
+                      <u>Ver competencia</u>
+                      <span className="material-symbols-outlined">
+                        arrow_forward_ios
+                      </span>
+                    </button>
                   </div>
                 </div>
-              </>
+              </div>
             ))}
           </>
         )}

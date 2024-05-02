@@ -38,6 +38,8 @@ export const VerticalStepper = ({ etapasObjeto, etapaDatos, id }) => {
         return <span className="badge-status-finish">{estado}</span>;
       case 'En Estudio':
         return <span className="badge-status-review">{estado}</span>;
+      case 'En revisión SUBDERE':
+          return <span className="badge-status-study">{estado}</span>;
       case 'Aún no puede comenzar':
         return <span className="badge-status-pending">{estado}</span>;
       case 'Omitida':
