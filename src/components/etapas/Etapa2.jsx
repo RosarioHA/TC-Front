@@ -170,28 +170,36 @@ export const Etapa2 = ({ etapa, idCompetencia }) =>
     );
   };
 
-  const renderUsuariosNotificados = () =>
-  {
-    if (usuarios_notificados && usuarios_notificados.length === 1)
-    {
-      const usuario = usuarios_notificados[ 0 ];
+  const renderUsuariosNotificados = () => {
+    if (usuarios_notificados && usuarios_notificados.length === 1) {
+      const usuario = usuarios_notificados[0];
       return (
         <div className="usuario-notificado d-flex justify-content-between py-2 my-1 border-top border-bottom">
           <span>{usuario.nombre}</span>
           {renderBadge(usuario)}
         </div>
       );
-    } else if (usuariosNotificadosDetalles.length > 0)
-    {
+    } else if (usuariosNotificadosDetalles.length > 0) {
       return usuariosNotificadosDetalles.map((usuario, index) => (
         <div key={index} className="usuario-notificado d-flex justify-content-between py-2 my-1 border-top border-bottom">
           <span>{usuario.nombre}</span>
-          {renderBadge(usuario)}
+          {usuario.estado === "revision" && userSubdere ? (
+            <button
+              className="btn-secundario-s"
+              onClick={() => navigate(`/home/editar_competencia/${idCompetencia}`)}
+            >
+              <span className="material-symbols-outlined me-2">person_add</span>
+              <u>{usuario.accion}</u>
+            </button>
+          ) : (
+            renderBadge(usuario)
+          )}
         </div>
       ));
     }
     return null;
   };
+  
 
   const renderFormularioSectorial = () =>
   {
