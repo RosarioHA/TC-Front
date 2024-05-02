@@ -27,9 +27,7 @@ export const Etapa2 = ({ etapa, idCompetencia }) =>
     formulario_sectorial
   } = etapa;
 
-  console.log(formulario_sectorial.formularios_sectoriales)
-
-  const accionFormulario = formulario_sectorial.formularios_sectoriales[0]; 
+  const accionFormulario = formulario_sectorial?.formularios_sectoriales?.[0];
 
   const usuariosNotificadosDetalles = usuarios_notificados?.detalle_usuarios_notificados || [];
 
@@ -132,7 +130,6 @@ export const Etapa2 = ({ etapa, idCompetencia }) =>
       );
   }
   };
-
 
 
   // AQUI DECIR A LA FUNCION QUE RECONOZCA SI EL BOTON ESTA EN ESTADO FINALIZADO  

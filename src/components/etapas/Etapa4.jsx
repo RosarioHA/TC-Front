@@ -16,15 +16,12 @@ export const Etapa4 = ({ etapa, etapaTres }) =>
     oficio_origen
   } = etapa;
 
-  console.log(etapaTres.estado)
 
   const navigate = useNavigate();
   const { userData } = useAuth();
   const userRegionId = userData.region;
   const userProfile = userData.perfil;
   const userSubdere = userData?.perfil?.includes('SUBDERE');
-
-
 
   const [ isUsuariosGoreCollapsed, setIsUsuariosGoreCollapsed ] = useState(false);
   const [ isFormulariosGoreCollapsed, setIsFormulariosGoreCollapsed ] = useState(false);
