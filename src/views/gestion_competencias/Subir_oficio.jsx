@@ -4,8 +4,7 @@ import { useCompetencia } from "../../hooks/competencias/useCompetencias";
 import { useUpdateEtapa } from "../../hooks/competencias/useOficio";
 import { SuccessSOficio } from "../../components/success/oficio";
 
-const SubirOficio = () =>
-{
+const SubirOficio = () => {
   const updateEtapa = useUpdateEtapa();
   const { id } = useParams();
   const { competenciaDetails } = useCompetencia(id);
@@ -25,34 +24,27 @@ const SubirOficio = () =>
 
   console.log("etapaId", etapaId);
 
-  useEffect(() =>
-  {
-    if (competenciaDetails)
-    {
+  useEffect(() => {
+    if (competenciaDetails) {
       setCompetencia(competenciaDetails);
     }
   }, [ competenciaDetails ]);
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     // Establece la fecha máxima permitida como la fecha actual
     const hoy = new Date();
     const fechaActual = `${hoy.getFullYear()}-${(hoy.getMonth() + 1).toString().padStart(2, '0')}-${hoy.getDate().toString().padStart(2, '0')}`;
     setFechaMaxima(fechaActual);
   }, []);
 
-
-  const handleFileChange = (event) =>
-  {
+  const handleFileChange = (event) => {
     const file = event.target.files[ 0 ];
-    if (file)
-    {
+    if (file) {
       if (file.size > 20971520)
       { // 20 MB en bytes
         setErrorMessage("Archivo no cumple con el peso permitido");
         setSelectedFile(null);
-      } else
-      {
+      } else {
         setSelectedFile(file);
         setButtonText('Modificar');
         setErrorMessage(""); // Limpiar el mensaje de error si el archivo es válido
@@ -60,93 +52,71 @@ const SubirOficio = () =>
     }
   };
 
-
-  const handleDelete = () =>
-  {
+  const handleDelete = () => {
     setSelectedFile(null);
     setButtonText('Subir archivo');
   };
 
-  const handleUploadClick = () =>
-  {
+  const handleUploadClick = () => {
     document.getElementById('fileUploadInput').click();
   };
 
   const dateInputRef = useRef(null);
 
-  const handleFechaInicioChange = (event) =>
-  {
+  const handleFechaInicioChange = (event) => {
     const selectedDate = event.target.value;
     const today = new Date();
     const formattedToday = `${today.getFullYear()}-${(today.getMonth() + 1)
       .toString()
       .padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}`;
-    if (selectedDate > formattedToday)
-    {
+    if (selectedDate > formattedToday) {
       setErrorMessageDate("La fecha no puede ser posterior a la fecha actual.");
       event.target.value = formattedToday;
       setFechaInicio(formattedToday);
-    } else
-    {
+    } else {
       setErrorMessageDate("");
       setFechaInicio(selectedDate);
     }
   };
 
-  const prepareDataForSubmission = () =>
-  {
+  const prepareDataForSubmission = () => {
     const formData = new FormData();
-
     // Agregar el archivo cargado solo si existe
-    if (selectedFile)
-    {
+    if (selectedFile) {
       formData.append('oficio_origen', selectedFile, selectedFile.name);
     }
-
     // Agregar la fecha de inicio
     formData.append('fecha_inicio', fechaInicio);
-
     return formData;
   };
 
-
-
-  const handleSubmission = async () =>
-  {
+  const handleSubmission = async () => {
     // Verificar si el archivo y la fecha han sido seleccionados
-    if (!selectedFile || fechaInicio === '')
-    {
+    if (!selectedFile || fechaInicio === '') {
       setErrorMessage("Por favor, selecciona un archivo y una fecha.");
       return; // No continuar si falta alguno de los dos
     }
 
     const formData = prepareDataForSubmission();
 
-    if (!etapaNum || !etapaId)
-    {
+    if (!etapaNum || !etapaId) {
       console.error("etapaNum o competenciaId están indefinidos o son nulos");
       return; // No continuar si los parámetros son inválidos
     }
-
-    try
-    {
+    try {
       await updateEtapa(etapaNum, etapaId, formData);
       setIsSubmitSuccessful(true);
-    } catch (error)
-    {
+    } catch (error) {
       console.error('Error al realizar la solicitud:', error);
       // Manejar errores...
     }
   };
 
-  const handleBackButtonClick = () =>
-  {
+  const handleBackButtonClick = () => {
     navigate(-1);
   };
 
-
-  if (!competencia)
-  {
+  if (!competencia) {
     return <div className="d-flex align-items-center flex-column ">
       <div className="text-center text-sans-h5-medium-blue ">Cargando datos de la competencia...</div>
       <span className="placeholder col-4 bg-primary"></span>
