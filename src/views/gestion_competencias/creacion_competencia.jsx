@@ -27,6 +27,8 @@ const initialValues = {
   usuarios_dipres: [],
   usuarios_sectoriales: [],
   usuarios_gore: [],
+  fecha_inicio: '',
+  oficio_origen: '',
   plazo_formulario_sectorial: undefined,
   plazo_formulario_gore: undefined,
 };
@@ -77,6 +79,7 @@ const CreacionCompetencia = () =>
   const [ regionSeleccionada, setRegionSeleccionada ] = useState(null);
   const { usuarios } = useFiltroUsuarios(sectorSeleccionado, regionSeleccionada);
   const [ fechaMaxima, setFechaMaxima ] = useState('');
+  const [errorArchivo, setErrorArchivo] = useState("");
 
   const history = useNavigate();
   const handleBackButtonClick = () =>
@@ -124,8 +127,12 @@ const CreacionCompetencia = () =>
     setFechaMaxima(fechaActual);
   }, []);
 
-  const onSubmit = async (data) =>
-  {
+  const onSubmit = async (data) => {
+    if (!selectedFile) {
+      // Mostrar mensaje de error al usuario indicando que deben adjuntar un archivo
+      setErrorArchivo("Debes adjuntar un archivo antes de enviar el formulario.");
+      return;
+    }
     const competenciaData = {
       ...data,
       sectores: sectoresIds,
@@ -141,23 +148,20 @@ const CreacionCompetencia = () =>
       fecha_inicio: fechaInicio,
       oficio_origen: selectedFile,
     };
-    try
-    {
+
+    try {
       await createCompetencia(competenciaData);
       updateHasChanged(false);
       setHasChanged(false);
       history('/home/success_creacion', { state: { origen: "crear_competencia" } });
       setErrorGeneral('');
-    } catch (error)
-    {
-      if (error.response && error.response.data)
-      {
+    } catch (error) {
+      if (error.response && error.response.data) {
         const errores = error.response.data;
         const primerCampoError = Object.keys(errores)[ 0 ];
         const primerMensajeError = errores[ primerCampoError ][ 0 ];
         setErrorGeneral(primerMensajeError);
-      } else
-      {
+      } else {
         setErrorGeneral('Error al conectarse con el servidor.');
       }
     }
@@ -423,6 +427,7 @@ const CreacionCompetencia = () =>
                       <div className="d-flex">
                         <input
                           id="fileUploadInput"
+                          name="oficio_origen"
                           type="file"
                           className="form-control"
                           onChange={handleFileChange}
@@ -443,25 +448,39 @@ const CreacionCompetencia = () =>
                     </td>
                   </tr>
                 </tbody>
-              </table>
+              </table>          
+              {errorArchivo && (
+                <p className="text-sans-h6-darkred mt-1 mb-0">{errorArchivo}</p>
+              )}
+
               <div className="my-4 py-3 col-12">
                 <div className="fecha-oficio-contenedor col-4  ">
                   <span className="text-sans-h5">
                     Elige la fecha del oficio (Obligatorio)
                   </span>
-                  <input
-                    ref={dateInputRef}
-                    onClick={() => dateInputRef.current?.click()}
-                    id="dateInput"
-                    type="date"
-                    className="form-control py-3 my-2 border rounded border-dark-subtle"
-                    onChange={handleFechaInicioChange}
-                    value={fechaInicio}
-                    max={fechaMaxima}
+                  <Controller
+                    name="fecha_inicio"
+                    control={control}
+                    render={({ field }) => (
+                      <input
+                        ref={dateInputRef}
+                        onClick={() => dateInputRef.current?.click()}
+                        id="dateInput"
+                        type="date"
+                        className="form-control py-3 my-2 border rounded border-dark-subtle"
+                        onChange={handleFechaInicioChange}
+                        value={fechaInicio}
+                        max={fechaMaxima}
+                        {...field} // Pasa las propiedades del campo al input
+                      />
+                    )}
                   />
                 </div>
                 {errorMessageDate && (
                   <p className="text-sans-h6-darkred mt-1 mb-0">{errorMessageDate}</p>
+                )}
+                {errors.fecha_inicio && (
+                  <p className="text-sans-h6-darkred mt-1 mb-0">{errors.fecha_inicio.message}</p>
                 )}
                 <div className="d-flex text-sans-h6-primary">
                   <i className="material-symbols-rounded me-2">info</i>
@@ -469,6 +488,7 @@ const CreacionCompetencia = () =>
                 </div>
               </div>
             </div>
+
           </div>
           <div className="mb-4">
             <Controller

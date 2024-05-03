@@ -37,6 +37,9 @@ export const esquemaCreacionCompetencia = yup.object().shape({
   sectores: yup.array().min(1, 'Debes seleccionar al menos un sector'),
   origen: yup.string().required('El origen de la competencia es obligatorio'),
   ambito_competencia: yup.number().integer().required('El ámbito de la competencia es obligatorio'),
+  fecha_inicio: yup
+    .string()
+    .required('La fecha del oficio es obligatoria'),
   plazo_formulario_sectorial: yup
     .number()
     .required('El plazo para el formulario sectorial es obligatorio')
