@@ -21,15 +21,11 @@ const PasoUno = () => {
   const observacionesEnviadas = observaciones?.observacion_enviada
   const formSectorialEnviado = data?.formulario_enviado
 
-
   useEffect(() => {
     updateStepNumber(stepNumber);
-    if (observaciones && Object.keys(observaciones).length === 0)
-    {
+    if (observaciones && Object.keys(observaciones).length === 0) {
       fetchObservaciones();
-    }
-    if (observaciones && observaciones.observacion_paso1)
-    {
+    } if (observaciones && observaciones.observacion_paso1)  {
       setObservacionPaso1(observaciones.observacion_paso1);
     }
   }, [ updateStepNumber, stepNumber, observaciones, data, fetchObservaciones ]);

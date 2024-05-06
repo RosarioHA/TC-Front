@@ -17,6 +17,7 @@ const SegundaMinuta = () => {
   const minutaEnviada = !!competenciaDetails?.etapa5?.archivo_minuta_etapa5;
   const etapa3omitida = competenciaDetails?.etapa3?.omitida
   const idEtapa = competenciaDetails?.etapa5?.id
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleBackButtonClick = () => {
     navigate(-1);
@@ -31,10 +32,12 @@ const SegundaMinuta = () => {
   };
 
   const handleEnviarMinuta = () => {
-    if (archivoSeleccionado) {
-      patchArchivoMinuta(idEtapa, archivoSeleccionado);
-      setIsSubmitSuccessful(true);
+    if (!archivoSeleccionado) {
+      setErrorMessage("Por favor, seleccione un archivo antes de enviar la minuta.");
+      return;
     }
+    patchArchivoMinuta(idEtapa, archivoSeleccionado);
+    setIsSubmitSuccessful(true);
   };
 
   return (
@@ -101,7 +104,7 @@ const SegundaMinuta = () => {
         )}
 
         <div className="border-bottom pb-3">
-            <h2 className="text-sans-25 mt-5 mb-4">Formularios GORE</h2>
+          <h2 className="text-sans-25 mt-5 mb-4">Formularios GORE</h2>
             {competenciaDetails?.etapa4?.formularios_gore ? (
               Array.isArray(competenciaDetails.etapa4.formularios_gore) ? (
                 competenciaDetails.etapa4.formularios_gore.map((formulario, index) => (
@@ -138,33 +141,22 @@ const SegundaMinuta = () => {
         </div>
 
         <div>
-            {minutaEnviada ? (
-              <h2 className="text-sans-25 mt-5">Minuta DIPRES</h2>
-              ) : (
-              <h2 className="text-sans-25 mt-5">Subir minuta (Obligatorio)</h2>
-            )}
-            <h6 className="text-sans-h6 mb-4">Mínimo 1 archivo, peso máximo 20MB, formato PDF</h6>
+          {minutaEnviada ? (
+            <h2 className="text-sans-25 mt-5">Minuta DIPRES</h2>
+            ) : (
+            <h2 className="text-sans-25 mt-5">Subir minuta (Obligatorio)</h2>
+          )}
+          <h6 className="text-sans-h6 mb-4">Mínimo 1 archivo, peso máximo 20MB, formato PDF</h6>
 
-            {userData?.perfil === 'DIPRES' && (
-              <>
-                <div className="d-flex justify-content-between py-3 fw-bold">
-                  <div className="d-flex mb-2">
-                    <div className="ms-2">#</div>
-                    <div className="ms-5">Documento</div>
-                  </div>
-                  <div className="me-5">Acción</div>
+          {userData?.perfil === 'DIPRES' && (
+            <>
+              <div className="d-flex justify-content-between py-3 fw-bold">
+                <div className="d-flex mb-2">
+                  <div className="ms-2">#</div>
+                  <div className="ms-5">Documento</div>
                 </div>
-                <SubirArchivo
-                  index="1"
-                  handleFileSelect={handleFileSelect}
-                  readOnly={minutaEnviada}
-                  archivoDescargaUrl={competenciaDetails?.etapa5?.archivo_minuta_etapa5}
-                  tituloDocumento={competenciaDetails?.etapa5?.archivo_minuta_etapa5} 
-                />
-              </>
-            )}
-
-            {userData?.perfil !== 'DIPRES' && minutaEnviada && (
+                <div className="me-5">Acción</div>
+              </div>
               <SubirArchivo
                 index="1"
                 handleFileSelect={handleFileSelect}
@@ -172,24 +164,39 @@ const SegundaMinuta = () => {
                 archivoDescargaUrl={competenciaDetails?.etapa5?.archivo_minuta_etapa5}
                 tituloDocumento={competenciaDetails?.etapa5?.archivo_minuta_etapa5} 
               />
-            )}
+            </>
+          )}
 
-            {userData?.perfil !== 'DIPRES' && !minutaEnviada && (
-              <p className="text-sans-25 mt-5">Aun no se ha subido Minuta DIPRES.</p>
-            )}
+          {userData?.perfil !== 'DIPRES' && minutaEnviada && (
+            <SubirArchivo
+              index="1"
+              handleFileSelect={handleFileSelect}
+              readOnly={minutaEnviada}
+              archivoDescargaUrl={competenciaDetails?.etapa5?.archivo_minuta_etapa5}
+              tituloDocumento={competenciaDetails?.etapa5?.archivo_minuta_etapa5} 
+            />
+          )}
+          {errorMessage && (
+            <p className="text-sans-h6-darkred mt-1 mb-0">
+              {errorMessage}
+            </p>
+          )}
+          {userData?.perfil !== 'DIPRES' && !minutaEnviada && (
+            <p className="text-sans-25 mt-5">Aun no se ha subido Minuta DIPRES.</p>
+          )}
         </div>
           
         <div className="d-flex justify-content-end my-5 me-3">
-            {!minutaEnviada && (
-              <button
-                className="btn-primario-s"
-                disabled={!archivoSeleccionado}
-                onClick={handleEnviarMinuta}
-              >
-                Enviar minuta
-                <i className="material-symbols-rounded me-2">arrow_forward_ios</i>
-              </button>
-            )}
+          {!minutaEnviada && (
+            <button
+              className="btn-primario-s"
+              disabled={!archivoSeleccionado}
+              onClick={handleEnviarMinuta}
+            >
+              Enviar minuta
+              <i className="material-symbols-rounded me-2">arrow_forward_ios</i>
+            </button>
+          )}
         </div>
       </>
       ) : (

@@ -6,6 +6,7 @@ export const DocumentsAditionals = ({ onFilesChanged, marcoJuridicoData, handleD
   const maxSize = 20 * 1024 * 1024; // 20 MB
   const [maxFilesReached, setMaxFilesReached] = useState(false);
   const [fileTooLarge, setFileTooLarge] = useState(false); // Estado para manejar si el archivo es demasiado grande
+  const [errorMessage, setErrorMessage] = useState(""); // Mensaje de error para tipo de archivo
 
   useEffect(() => {
     if (marcoJuridicoData && marcoJuridicoData.length > 0) {
@@ -30,12 +31,21 @@ export const DocumentsAditionals = ({ onFilesChanged, marcoJuridicoData, handleD
 
   const handleFileChange = async (event) => {
     setFileTooLarge(false);
+    setErrorMessage("");
     const incomingFiles = Array.from(event.target.files);
     const filesExceedingMaxSize = incomingFiles.filter(file => file.size > maxSize);
   
     if (filesExceedingMaxSize.length > 0) {
       setFileTooLarge(true);
       return;  // Podrías decidir no retornar aquí para permitir la carga de archivos válidos en el mismo lote
+    }
+
+    // Agregar verificación de tipo de archivo
+    const filesNotPdf = incomingFiles.filter(file => !file.type.includes('pdf'));
+    if (filesNotPdf.length > 0) {
+      setFileTooLarge(false); // Restablecer el estado de fileTooLarge en caso de que se haya establecido previamente
+      setErrorMessage("Por favor, seleccione archivos en formato PDF.");
+      return;
     }
   
     const validFiles = incomingFiles.filter(file => file.size <= maxSize);
@@ -97,7 +107,8 @@ export const DocumentsAditionals = ({ onFilesChanged, marcoJuridicoData, handleD
       <input
         type="file"
         multiple
-        accept="application/pdf"
+        //accept="application/pdf"
+        accept=".pdf"
         onChange={handleFileChange}
         id="fileInput"
         style={{ display: "none" }}
@@ -131,6 +142,11 @@ export const DocumentsAditionals = ({ onFilesChanged, marcoJuridicoData, handleD
       {maxFilesReached && (
         <h6 className="text-sans-h6-primary">
           Alcanzaste el número máximo de archivos permitidos ({maxFiles} archivos).
+        </h6>
+      )}
+      {errorMessage && (
+        <h6 className="text-sans-p-bold-darkred my-2">
+          {errorMessage}
         </h6>
       )}
     </>
