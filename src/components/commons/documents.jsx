@@ -97,7 +97,8 @@ export const DocumentsAditionals = ({ onFilesChanged, marcoJuridicoData, handleD
       <input
         type="file"
         multiple
-        accept="application/pdf"
+        //accept="application/pdf"
+        accept=".pdf"
         onChange={handleFileChange}
         id="fileInput"
         style={{ display: "none" }}

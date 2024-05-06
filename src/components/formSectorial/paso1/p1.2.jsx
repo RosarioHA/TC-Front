@@ -11,8 +11,7 @@ export const Subpaso_dos = ({
   id,
   stepNumber,
   solo_lectura,
-}) =>
-{
+}) => {
   const { updatePasoError, handleUpdatePaso, handleUploadFiles } =
     useContext(FormularioContext);
   const { uploadFile } = useFileRegional();
@@ -32,30 +31,24 @@ export const Subpaso_dos = ({
     organigrama_nacional: { loading: false, saved: false },
   });
 
-  useEffect(() =>
-  {
-    if (pasoData && pasoData.paso1)
-    {
+  useEffect(() => {
+    if (pasoData && pasoData.paso1) {
       setFormData({ paso1: pasoData.paso1 });
     }
   }, [ pasoData ]);
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     const savedData = localStorage.getItem('formData');
-    if (savedData)
-    {
+    if (savedData) {
       setFormData(JSON.parse(savedData));
     }
   }, []);
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     localStorage.setItem('formData', JSON.stringify(formData));
   }, [ formData ]);
 
-  const handleChange = (inputName, e) =>
-  {
+  const handleChange = (inputName, e) => {
     const { value } = e.target;
     setFormData(prevFormData => ({
       ...prevFormData,
@@ -71,8 +64,7 @@ export const Subpaso_dos = ({
     setHasChanged(true);
   }
 
-  const handleSave = async (inputName) =>
-  {
+  const handleSave = async (inputName) => {
     if (!hasChanged) return;
 
     setInputStatus(prevStatus => ({
@@ -80,25 +72,22 @@ export const Subpaso_dos = ({
       [ inputName ]: { ...prevStatus[ inputName ], loading: true },
     }));
 
-  const fieldData = {
+    const fieldData = {
     paso1: {
       [inputName]: formData.paso1[inputName]
     }
-  };
+    };
 
-    try
-    {
+    try{
       const success = await handleUpdatePaso(id, stepNumber, fieldData);
-      if (success)
-      {
+      if (success) {
         setHasChanged(false);
       }
       setInputStatus(prevStatus => ({
         ...prevStatus,
         [ inputName ]: { loading: false, saved: true },
       }));
-    } catch (error)
-    {
+    } catch (error) {
       console.error('Error saving:', error);
       setInputStatus(prevStatus => ({
         ...prevStatus,
@@ -107,11 +96,8 @@ export const Subpaso_dos = ({
     }
   };
 
-
-  const handleFileSelect = async (file, fieldName) =>
-  {
-    try
-    {
+  const handleFileSelect = async (file, fieldName) => {
+    try {
       const archivos = new FormData();
       archivos.append(fieldName, file);
       setInputStatus((prevStatus) => ({
@@ -124,8 +110,7 @@ export const Subpaso_dos = ({
         ...prevStatus,
         [ fieldName ]: { loading: false, saved: true },
       }));
-    } catch (error)
-    {
+    } catch (error) {
       console.error('Error al subir el archivo:', error);
       setInputStatus((prevStatus) => ({
         ...prevStatus,
@@ -134,18 +119,15 @@ export const Subpaso_dos = ({
     }
   };
 
-  const handleFileSelectRegion = async (file, fieldName, regionId) =>
-  {
-    if (typeof id === 'undefined' || typeof stepNumber === 'undefined')
-    {
+  const handleFileSelectRegion = async (file, fieldName, regionId) => {
+    if (typeof id === 'undefined' || typeof stepNumber === 'undefined') {
       console.error(
         'El ID del formulario o el número de paso no están definidos.'
       );
       return;
     }
 
-    try
-    {
+    try  {
       setInputStatus((prevStatus) => ({
         ...prevStatus,
         [ fieldName ]: { ...prevStatus[ fieldName ], loading: true },
@@ -156,8 +138,7 @@ export const Subpaso_dos = ({
         ...prevStatus,
         [ fieldName ]: { loading: false, saved: true },
       }));
-    } catch (error)
-    {
+    } catch (error) {
       console.error('Error al subir el archivo:', error);
       setInputStatus((prevStatus) => ({
         ...prevStatus,
@@ -166,28 +147,23 @@ export const Subpaso_dos = ({
     }
   };
 
-  const eliminarDocRegional = async (idRegion) =>
-  {
+  const eliminarDocRegional = async (idRegion) => {
     const payload = {
-      organigramaregional: [
-        {
+      organigramaregional: [ {
           id: idRegion,
           documento: null,
         },
       ],
     };
 
-    try
-    {
+    try {
       await handleUpdatePaso(id, stepNumber, payload);
-    } catch (error)
-    {
+    } catch (error) {
       console.error('Error al eliminar el organigrama regional:', error);
     }
   };
 
-  if (updatePasoError)
-  {
+  if (updatePasoError) {
     return <div>Error: {updatePasoError.message}</div>;
   }
 

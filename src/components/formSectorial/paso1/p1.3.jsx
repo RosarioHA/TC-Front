@@ -4,8 +4,7 @@ import CustomTextarea from "../../forms/custom_textarea";
 import DropdownSelect from "../../dropdown/select";
 import { useAmbitos } from '../../../hooks/useAmbitos';
 
-export const Subpaso_tres = ({ pasoData, id, stepNumber, solo_lectura }) =>
-{
+export const Subpaso_tres = ({ pasoData, id, stepNumber, solo_lectura }) => {
   const { handleUpdatePaso } = useContext(FormularioContext);
   const { ambitos } = useAmbitos();
   const [ ambitoSeleccionado, setAmbitoSeleccionado ] = useState(null);
@@ -23,7 +22,6 @@ export const Subpaso_tres = ({ pasoData, id, stepNumber, solo_lectura }) =>
 
   const [ lastSavedData, setLastSavedData ] = useState(formData.paso1);
 
-
   const [ inputStatus, setInputStatus ] = useState({
     identificacion_competencia: { loading: false, saved: false },
     fuentes_normativas: { loading: false, saved: false },
@@ -33,17 +31,14 @@ export const Subpaso_tres = ({ pasoData, id, stepNumber, solo_lectura }) =>
     organo_actual_competencia: { loading: false, saved: false },
   });
 
-  useEffect(() =>
-  {
-    if (pasoData && pasoData.paso1)
-    {
+  useEffect(() => {
+    if (pasoData && pasoData.paso1) {
       setFormData({ paso1: pasoData.paso1 });
       setLastSavedData(pasoData.paso1);  // Actualiza los últimos datos guardados al cargar los datos
     }
   }, [ pasoData ]);
 
-  const handleChange = (inputName, e) =>
-  {
+  const handleChange = (inputName, e) => {
     const { value } = e.target;
     setFormData(prevFormData => ({
       ...prevFormData,
@@ -102,8 +97,7 @@ export const Subpaso_tres = ({ pasoData, id, stepNumber, solo_lectura }) =>
     value: ambito.id,
   }));
 
-  const handleAmbitoChange = async (selectedOption) =>
-  {
+  const handleAmbitoChange = async (selectedOption) => {
     setAmbitoSeleccionado(selectedOption);
     localStorage.setItem('ambitoSeleccionado', JSON.stringify(selectedOption));
 
@@ -117,12 +111,10 @@ export const Subpaso_tres = ({ pasoData, id, stepNumber, solo_lectura }) =>
     }));
 
     // Ahora llama a handleSave con el valor actualizado
-    if (selectedOption.value !== lastSavedData.ambito_paso1)
-    {
+    if (selectedOption.value !== lastSavedData.ambito_paso1) {
       await handleSave('ambito_paso1');
     }
   };
-
 
   return (
     <>

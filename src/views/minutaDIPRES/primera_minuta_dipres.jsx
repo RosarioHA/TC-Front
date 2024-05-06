@@ -16,6 +16,7 @@ const PrimeraMinuta = () => {
   const { userData } = useAuth();
   const minutaEnviada = !!competenciaDetails?.etapa3?.archivo_minuta_etapa3;
   const idEtapa = competenciaDetails?.etapa3?.id
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleBackButtonClick = () => {
     navigate(-1);
@@ -30,10 +31,12 @@ const PrimeraMinuta = () => {
   };
 
   const handleEnviarMinuta = () => {
-    if (archivoSeleccionado) {
-      patchArchivoMinuta(idEtapa, archivoSeleccionado);
-      setIsSubmitSuccessful(true);
+    if (!archivoSeleccionado) {
+      setErrorMessage("Por favor, seleccione un archivo antes de enviar la minuta.");
+      return;
     }
+    patchArchivoMinuta(idEtapa, archivoSeleccionado);
+    setIsSubmitSuccessful(true);
   };
 
   return (
@@ -136,7 +139,11 @@ const PrimeraMinuta = () => {
               tituloDocumento={competenciaDetails?.etapa3?.archivo_minuta_etapa3} 
             />
           )}
-
+          {errorMessage && (
+            <p className="text-sans-h6-darkred mt-1 mb-0">
+              {errorMessage}
+            </p>
+          )}
           {userData?.perfil !== 'DIPRES' && !minutaEnviada && (
             <p className="text-sans-25 mt-5">Aún no se ha subido Minuta DIPRES.</p>
           )}
