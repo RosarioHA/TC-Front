@@ -4,14 +4,13 @@ const Etapa = ({ etapaInfo, index, id, usuarios}) => {
 
   switch (index) {
     case 0: return <Etapa1 etapa={etapaInfo.etapa1} id={id}/>;
-    case 1: return <Etapa2 etapa={etapaInfo.etapa2}  sectoriales={usuarios.usuarios_sectoriales} idCompetencia={id}/>;
-    case 2: return <Etapa3 etapa={etapaInfo.etapa3}  idCompetencia={id} />;
-    case 3: return <Etapa4 etapa={etapaInfo.etapa4} etapaTres={etapaInfo.etapa3}  />;
-    case 4: return <Etapa5 etapa={etapaInfo.etapa5} idCompetencia={id} />;
+    case 1: return <Etapa2 etapa={etapaInfo.etapa2} etapaUno={etapaInfo.etapa1}   sectoriales={usuarios.usuarios_sectoriales} idCompetencia={id}/>;
+    case 2: return <Etapa3 etapa={etapaInfo.etapa3} etapaDos={etapaInfo.etapa2}  idCompetencia={id} />;
+    case 3: return <Etapa4 etapa={etapaInfo.etapa4} etapaTres={etapaInfo.etapa3}  idCompetencia={id} />;
+    case 4: return <Etapa5 etapa={etapaInfo.etapa5} etapaCuatro={etapaInfo.etapa4}  idCompetencia={id} />;
     default: return null;
   }
 };
-
 
 
 export const VerticalStepper = ({ etapasObjeto, etapaDatos, id }) => {
