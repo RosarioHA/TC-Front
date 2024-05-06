@@ -27,7 +27,10 @@ export const Etapa2 = ({ etapa, idCompetencia }) =>
     formulario_sectorial
   } = etapa;
 
-  const accionFormulario = formulario_sectorial?.formularios_sectoriales?.[0];
+  const accionFormulario = formulario_sectorial?.formularios_sectoriales?.[ 0 ];
+  const estadoObservaciones = observaciones_sectorial.resumen_observaciones_sectoriales?.[ 0 ];
+  const estadoObservacion = observaciones_sectorial[ 0 ];
+
 
   const usuariosNotificadosDetalles = usuarios_notificados?.detalle_usuarios_notificados || [];
 
@@ -64,7 +67,7 @@ export const Etapa2 = ({ etapa, idCompetencia }) =>
   {
     const { estado, accion, nombre,
       //  id: subetapaId 
-      } = subetapa;
+    } = subetapa;
     let buttonText = accion;
     let icon = estado === "finalizada" ? "visibility" : "draft";
     let path = "/";
@@ -102,33 +105,41 @@ export const Etapa2 = ({ etapa, idCompetencia }) =>
           path = `/home/estado_competencia/${idCompetencia}/subir_oficio_sectorial`;
         } break;
 
-        case nombre.includes("Observación del formulario sectorial"):
-          // Adaptar el path y las condiciones para otros roles también, si necesario
-          path = estado === "revision" ? `/home/observaciones_subdere/${idCompetencia}/` : `/home/observaciones_subdere/${idCompetencia}/`;
-          buttonText = accion;
-          icon = estado === "revision" ? "upload_file" : "visibility";
-          break;
+      case nombre.includes("Observaciones de formularios sectoriales"):
+        // Adaptar el path y las condiciones para otros roles también, si necesario
+        path = estado === "revision" ? `/home/observaciones_subdere/${idCompetencia}/` : `/home/observaciones_subdere/${idCompetencia}/`;
+        buttonText = accion;
+        icon = estado === "revision" ? "draft" : "visibility";
+        break;
+      case nombre.includes("Observación del formulario sectorial"):
+        // Adaptar el path y las condiciones para otros roles también, si necesario
+        path = estado === "revision" ? `/home/observaciones_subdere/${idCompetencia}/` : `/home/observaciones_subdere/${idCompetencia}/`;
+        buttonText = accion;
+        icon = estado === "revision" ? "draft" : "visibility";
+        break;
 
       default:
-          break;
+        break;
     }
-    if (isButtonEnabled) {
+    if (isButtonEnabled)
+    {
       return (
-          <button onClick={() => handleNavigation(path, { state: { extraData: "Sectorial", seccion: "etapa2" } })}
-              className={`btn-secundario-s text-decoration-none ${isDisabled ? 'disabled' : ''}`} id="btn"
-              disabled={isDisabled}>
-              <span className="material-symbols-outlined me-1">{icon}</span>
-              <u>{buttonText}</u>
-          </button>
+        <button onClick={() => handleNavigation(path, { state: { extraData: "Sectorial", seccion: "etapa2" } })}
+          className={`btn-secundario-s text-decoration-none ${isDisabled ? 'disabled' : ''}`} id="btn"
+          disabled={isDisabled}>
+          <span className="material-symbols-outlined me-1">{icon}</span>
+          <u>{buttonText}</u>
+        </button>
       );
-  } else {
+    } else
+    {
       return (
-          <button className="btn-secundario-s disabled" id="btn" disabled>
-              <span className="material-symbols-outlined me-1">{icon}</span>
-              <u>{buttonText}</u>
-          </button>
+        <button className="btn-secundario-s disabled" id="btn" disabled>
+          <span className="material-symbols-outlined me-1">{icon}</span>
+          <u>{buttonText}</u>
+        </button>
       );
-  }
+    }
   };
 
 
@@ -170,16 +181,19 @@ export const Etapa2 = ({ etapa, idCompetencia }) =>
     );
   };
 
-  const renderUsuariosNotificados = () => {
-    if (usuarios_notificados && usuarios_notificados.length === 1) {
-      const usuario = usuarios_notificados[0];
+  const renderUsuariosNotificados = () =>
+  {
+    if (usuarios_notificados && usuarios_notificados.length === 1)
+    {
+      const usuario = usuarios_notificados[ 0 ];
       return (
         <div className="usuario-notificado d-flex justify-content-between py-2 my-1 border-top border-bottom">
           <span>{usuario.nombre}</span>
           {renderBadge(usuario)}
         </div>
       );
-    } else if (usuariosNotificadosDetalles.length > 0) {
+    } else if (usuariosNotificadosDetalles.length > 0)
+    {
       return usuariosNotificadosDetalles.map((usuario, index) => (
         <div key={index} className="usuario-notificado d-flex justify-content-between py-2 my-1 border-top border-bottom">
           <span>{usuario.nombre}</span>
@@ -199,7 +213,7 @@ export const Etapa2 = ({ etapa, idCompetencia }) =>
     }
     return null;
   };
-  
+
 
   const renderFormularioSectorial = () =>
   {
@@ -304,13 +318,17 @@ export const Etapa2 = ({ etapa, idCompetencia }) =>
         )}
         {/* Llamada a las funciones de renderizado de formularios sectoriales */}
         {userSubdere || userGore ? renderFormularioSectorial() : renderFormularioSectorialParaUsuarioSectorial()}
-        {observaciones_sectorial.length > 0 && (
-          observaciones_sectorial.map((observacion, index) => (
-            <div key={index} className="d-flex justify-content-between text-sans-p border-top border-bottom my-3 py-1">
-              <div className="align-self-center">{observacion.nombre}</div>
-              {renderButtonForSubetapa(observacion)}
-            </div>
-          ))
+        {estadoObservaciones && (
+          <div className="d-flex justify-content-between text-sans-p border-top border-bottom my-3 py-1">
+            <div className="align-self-center">{estadoObservaciones.nombre}</div>
+            {renderButtonForSubetapa(estadoObservaciones)}
+          </div>
+        )}
+        {estadoObservacion && (
+          <div className="d-flex justify-content-between text-sans-p border-top border-bottom my-3 py-1">
+            <div className="align-self-center">{estadoObservacion.nombre}</div>
+            {renderButtonForSubetapa(estadoObservacion)}
+          </div>
         )}
         {estado === "En Estudio" && (
           <Counter
