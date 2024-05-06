@@ -41,8 +41,7 @@ export const DocumentsAditionals = ({ onFilesChanged, marcoJuridicoData, handleD
     }
 
     // Agregar verificación de tipo de archivo
-  const filesNotPdf = incomingFiles.filter(file => !file.type.includes('pdf'));
-
+    const filesNotPdf = incomingFiles.filter(file => !file.type.includes('pdf'));
     if (filesNotPdf.length > 0) {
       setFileTooLarge(false); // Restablecer el estado de fileTooLarge en caso de que se haya establecido previamente
       setErrorMessage("Por favor, seleccione archivos en formato PDF.");
