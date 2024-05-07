@@ -103,35 +103,32 @@ export const Etapa4 = ({ etapa, etapaTres, idCompetencia }) =>
   };
 
 
-  const renderUsuariosGore = () =>
-  {
-    let usuariosParaRenderizar = usuarios_gore?.detalle_usuarios_gore_notificados || usuarios_gore || [];
-
-
-    if (usuariosParaRenderizar.length === 1)
-    {
-      const usuario = usuariosParaRenderizar[ 0 ];
+  const renderUsuariosGore = () => {
+    const usuariosParaRenderizar = usuarios_gore?.detalle_usuarios_gore_notificados || usuarios_gore || [];
+  
+    if (usuariosParaRenderizar.length === 1) {
+      const usuario = usuariosParaRenderizar[0];
       return (
         <div className="d-flex justify-content-between text-sans-p border-top border-bottom my-3 py-1">
           <div className="align-self-center">{usuario.nombre}</div>
           {renderBadgeOrButtonForUsuario(usuario)}
         </div>
       );
-    } else if (usuariosParaRenderizar.length > 1)
-    {
+    } else if (usuariosParaRenderizar.length > 1) {
       return (
         <div className='w-100 border-bottom border-top'>
           <button type="button" className="btn d-flex justify-content-between w-100 px-0 my-1" onClick={toggleUsuariosGoreCollapse}>
-            <span>{estadoAsignacion[ 0 ].nombre}</span>
+            <span>{usuariosParaRenderizar[0].nombre}</span>
             <div className="d-flex align-items-center">
               {
-                etapa.estado === "Aún no puede comenzar" && estadoAsignacion[ 0 ].estado === "finalizada" ? (
-                  <span className="badge-status-pending">{estadoAsignacion[ 0 ].accion}</span>
-                ) : etapa.estado !== "Aún no puede comenzar" && estadoAsignacion[ 0 ].estado === "finalizada" ? (
-                  <span className="badge-status-finish">{estadoAsignacion[ 0 ].accion}</span>
+                etapa.estado === "Aún no puede comenzar" && usuariosParaRenderizar[0].estado === "revision" ? (
+                  <span className="badge-status-pending">{usuariosParaRenderizar[0].accion}</span>
+                ) : etapa.estado !== "Aún no puede comenzar" && usuariosParaRenderizar[0].estado === "revision" ? (
+                  <span className="badge-status-pending">{usuariosParaRenderizar[0].accion}</span>
+                ) : usuariosParaRenderizar[0].estado === "finalizada" ? (
+                  <span className="badge-status-finish">{usuariosParaRenderizar[0].accion}</span>
                 ) : (
-                  // Aquí manejas los otros casos, puedes agregar más condiciones si es necesario
-                  <span className={`badge-status-${estadoAsignacion[ 0 ].estado}`}>{estadoAsignacion[ 0 ].accion}</span>
+                  <span className={`badge-status-${usuariosParaRenderizar[0].estado}`}>{usuariosParaRenderizar[0].accion}</span>
                 )
               }
               <span className="material-symbols-outlined text-black">
@@ -158,8 +155,8 @@ export const Etapa4 = ({ etapa, etapaTres, idCompetencia }) =>
         </div>
       );
     }
-
-    return null;  // Retorna null si no hay usuarios para mostrar
+  
+    return null; 
   };
 
 
