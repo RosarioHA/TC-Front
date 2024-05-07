@@ -427,7 +427,7 @@ export const Subpaso_dosPuntoDos = ({
                               </div>
                             </div>
                             <div className="col-2 d-flex align-items-center justify-content-center">
-                            {unidadIndex > 0 && ( 
+                            {unidadIndex > 0 && !solo_lectura &&( 
                                 <button
                                   className="btn-terciario-ghost mb-2 me-5"
                                   onClick={() =>
