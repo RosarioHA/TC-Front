@@ -32,7 +32,7 @@ export const Etapa5 = ({ etapa, idCompetencia, etapaCuatro }) =>
     {
         return <div>Cargando...</div>;
     }
-    console.log(etapaCuatro.estado)
+
     const renderButtonForSubetapa = (subetapa) =>
     {
         let buttonText = subetapa.accion;
