@@ -342,19 +342,19 @@ export const Subpaso_dosPuntoDos = ({
       <div className="my-4">
         {Object.entries(agrupados).map(([ organismoDisplay, ministerios ]) => (
           <div key={organismoDisplay} className="tabla-organismo">
-            <div className="row border">
-              <div className="col-2">
+            <div className="row border-start border-bottom">
+              <div className="col-2 border-top">
                 <p>{organismoDisplay}</p>
               </div>
 
               <div className="col-10">
                 {Object.entries(ministerios).map(([ ministerio, unidades ]) => (
                   <div key={ministerio} className="tabla-organismo">
-                    <div className="row border-start">
-                      <div className="col-3 p-3 border border-end">
+                    <div className="row border-start border-top">
+                      <div className="col-3 p-3">
                         <div className="col-7">{ministerio}</div>
                       </div>
-                      <div className="col-9 border-start border-bottom p-2">
+                      <div className="col-9 border-start border-end p-2">
                         {unidades.map((unidad, unidadIndex) => (
                           <div key={unidad.id} className=" row">
                             <div className="col-10 p-3">
