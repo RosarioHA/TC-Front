@@ -8,14 +8,14 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { validacionTemporalidadGradualidad } from '../../../validaciones/temporalidadGradualidad';
 
 export const Temporalidad = ({
-  temporalidad,
-  solo_lectura,
-  regiones_recomendadas,
-  temporalidad_opciones,
-  regiones_temporalidad,
+  temporalidad = [],
+  solo_lectura = false,
+  regiones_recomendadas = [],
+  temporalidad_opciones = [],
+  regiones_temporalidad = [],
 }) => {
   const { updatePasoSubdere } = useContext(FormSubdereContext);
-  const [grupos, setGrupos] = useState(temporalidad || []);
+  const [grupos, setGrupos] = useState(temporalidad);
   const {
     control,
     handleSubmit,
@@ -127,9 +127,9 @@ export const Temporalidad = ({
     agregarGrupo();
   };
 
-  const opcionesRegion = regiones_temporalidad.map((region) => ({
-    label: region.label,
-    value: region.value,
+  const opcionesRegion = (regiones_temporalidad || []).map((region) => ({
+    label: region?.label || '',
+    value: region?.value || '',
   }));
 
   return (
@@ -166,7 +166,7 @@ export const Temporalidad = ({
                                 <>
                                   Región:{' '}
                                   <div className="border-gris my-2 px-3 py-3">
-                                    {grupo.region_label_value[0].label}
+                                    {grupo.region_label_value[0]?.label}
                                   </div>
                                 </>
                               ) : (
@@ -216,7 +216,7 @@ export const Temporalidad = ({
                                 Temporalidad
                               </span>
                               <div className=" d-flex  flex-row col my-2 mx-3 p-2">
-                                <div className="col-5 me-2">
+                                <div className="col-6 me-2">
                                   <Controller
                                     name={`grupos[${index}].temporalidad`}
                                     control={control}
