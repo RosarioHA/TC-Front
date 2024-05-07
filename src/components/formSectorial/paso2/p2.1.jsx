@@ -465,12 +465,12 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
         {Object.entries(organismosAgrupados).map(
           ([ organismoDisplay, filas ], index) => (
             <div key={index} className="tabla-organismo">
-              <div className="row border">
-                <div className="col p-3">
-                  <p>{organismoDisplay}</p>
+              <div className="row border-top border-start border-bottom">
+                <div className="col-2 p-3">
+                  <p className="text-wrap">{organismoDisplay}</p>
                 </div>
 
-                <div className="col-10 border p-2">
+                <div className="col-10 border-start border-end p-2">
                   {filas.map((fila, filaIndex) => (
                     <div key={fila.id} className="row p-1">
                       <div className="col-10 p-3">
@@ -513,36 +513,38 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
                           }
                         />
                         {!(index === 0 && filaIndex === 0) && (
-                          <CustomInputArea
-                            label="Descripción (Obligatorio)"
-                            value={fila.descripcion || ''}
-                            placeholder="Descripción"
-                            maxLength={300}
-                            readOnly = {solo_lectura}
-                            onChange={(valor) =>
-                              handleInputChange(
-                                organismoDisplay,
-                                fila.id,
-                                'descripcion',
-                                valor
-                              )
-                            }
-                            onBlur={
-                              fila.id !== ultimaFilaId
-                                ? () =>
-                                  handleSave(
-                                    fila.id,
-                                    organismoDisplay,
-                                    true,
-                                    'descripcion'
-                                  )
-                                : null
-                            }
-                            loading={
-                              campoEstado[ `${fila.id}-descripcion` ]?.loading
-                            }
-                            saved={campoEstado[ `${fila.id}-descripcion` ]?.saved}
-                          />
+                          <div className="mt-4">
+                            <CustomInputArea
+                              label="Descripción (Obligatorio)"
+                              value={fila.descripcion || ''}
+                              placeholder="Descripción"
+                              maxLength={300}
+                              readOnly = {solo_lectura}
+                              onChange={(valor) =>
+                                handleInputChange(
+                                  organismoDisplay,
+                                  fila.id,
+                                  'descripcion',
+                                  valor
+                                )
+                              }
+                              onBlur={
+                                fila.id !== ultimaFilaId
+                                  ? () =>
+                                    handleSave(
+                                      fila.id,
+                                      organismoDisplay,
+                                      true,
+                                      'descripcion'
+                                    )
+                                  : null
+                              }
+                              loading={
+                                campoEstado[ `${fila.id}-descripcion` ]?.loading
+                              }
+                              saved={campoEstado[ `${fila.id}-descripcion` ]?.saved}
+                            />
+                          </div>
                         )}
                       </div>
                       {index !== 0 || filaIndex !== 0 ? (
