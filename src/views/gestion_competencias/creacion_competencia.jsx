@@ -27,19 +27,18 @@ const initialValues = {
   usuarios_dipres: [],
   usuarios_sectoriales: [],
   usuarios_gore: [],
+  fecha_inicio: '',
+  oficio_origen: '',
   plazo_formulario_sectorial: undefined,
   plazo_formulario_gore: undefined,
 };
 
-const groupUsersByType = (usuarios) =>
-{
-  if (!usuarios || usuarios.length === 0)
-  {
+const groupUsersByType = (usuarios) => {
+  if (!usuarios || usuarios.length === 0) {
     return [];
   }
 
-  const grouped = usuarios.reduce((acc, user) =>
-  {
+  const grouped = usuarios.reduce((acc, user) => {
     const perfil = user.perfil;
     acc[ perfil ] = acc[ perfil ] || [];
     acc[ perfil ].push(user);
@@ -52,8 +51,7 @@ const groupUsersByType = (usuarios) =>
   }));
 };
 
-const CreacionCompetencia = () =>
-{
+const CreacionCompetencia = () => {
   const { createCompetencia } = useCrearCompetencia();
   const { dataRegiones } = useRegion();
   const { dataSector } = useSector();
@@ -77,16 +75,14 @@ const CreacionCompetencia = () =>
   const [ regionSeleccionada, setRegionSeleccionada ] = useState(null);
   const { usuarios } = useFiltroUsuarios(sectorSeleccionado, regionSeleccionada);
   const [ fechaMaxima, setFechaMaxima ] = useState('');
+  const [errorArchivo, setErrorArchivo] = useState("");
 
   const history = useNavigate();
-  const handleBackButtonClick = () =>
-  {
-    if (hasChanged)
-    {
+  const handleBackButtonClick = () => {
+    if (hasChanged) {
       // Muestra el modal
       setIsModalOpen(true);
-    } else
-    {
+    } else {
       // Retrocede solo si no hay cambios
       history(-1);
     }
@@ -104,11 +100,9 @@ const CreacionCompetencia = () =>
   });
 
   //detecta cambios sin guardar en el formulario
-  function handleOnChange(event)
-  {
+  function handleOnChange(event) {
     const data = new FormData(event.currentTarget);
-    const formHasChanged = Array.from(data.entries()).some(([ name, value ]) =>
-    {
+    const formHasChanged = Array.from(data.entries()).some(([ name, value ]) => {
       const initialValue = initialValues[ name ];
       return value !== String(initialValue);
     });
@@ -116,16 +110,19 @@ const CreacionCompetencia = () =>
     updateHasChanged(formHasChanged);
   }
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     // Establece la fecha máxima permitida como la fecha actual
     const hoy = new Date();
     const fechaActual = `${hoy.getFullYear()}-${(hoy.getMonth() + 1).toString().padStart(2, '0')}-${hoy.getDate().toString().padStart(2, '0')}`;
     setFechaMaxima(fechaActual);
   }, []);
 
-  const onSubmit = async (data) =>
-  {
+  const onSubmit = async (data) => {
+    if (!selectedFile) {
+      // Mostrar mensaje de error al usuario indicando que deben adjuntar un archivo
+      setErrorArchivo("Debes adjuntar un archivo antes de enviar el formulario.");
+      return;
+    }
     const competenciaData = {
       ...data,
       sectores: sectoresIds,
@@ -141,23 +138,20 @@ const CreacionCompetencia = () =>
       fecha_inicio: fechaInicio,
       oficio_origen: selectedFile,
     };
-    try
-    {
+
+    try {
       await createCompetencia(competenciaData);
       updateHasChanged(false);
       setHasChanged(false);
       history('/home/success_creacion', { state: { origen: "crear_competencia" } });
       setErrorGeneral('');
-    } catch (error)
-    {
-      if (error.response && error.response.data)
-      {
+    } catch (error) {
+      if (error.response && error.response.data) {
         const errores = error.response.data;
         const primerCampoError = Object.keys(errores)[ 0 ];
         const primerMensajeError = errores[ primerCampoError ][ 0 ];
         setErrorGeneral(primerMensajeError);
-      } else
-      {
+      } else {
         setErrorGeneral('Error al conectarse con el servidor.');
       }
     }
@@ -169,8 +163,7 @@ const CreacionCompetencia = () =>
     value: region.id,
   }));
 
-  const handleRegionesChange = useCallback((selectedOptions) =>
-  {
+  const handleRegionesChange = useCallback((selectedOptions) => {
     const regionIds = selectedOptions.map(option => option.value);
     setRegionesSeleccionadas(selectedOptions);
     setRegionSeleccionada(regionIds); // Asegúrate de que esta línea actualiza correctamente el estado
@@ -186,8 +179,7 @@ const CreacionCompetencia = () =>
     }))
   }));
 
-  const handleSectorSelectionChange = (selectedSectorValues) =>
-  {
+  const handleSectorSelectionChange = (selectedSectorValues) => {
     // Transforma y actualiza el estado con solo los IDs de los sectores
     const sectoresIds = selectedSectorValues.map(sector => sector.value);
     setSectoresIds(sectoresIds);
@@ -195,14 +187,12 @@ const CreacionCompetencia = () =>
     setValue('sectores', selectedSectorValues, { shouldValidate: true });
   };
 
-
   //opciones origen
   const opcionesOrigen = origenes.map(origen => ({
     label: origen.descripcion,
     value: origen.clave,
   }));
-  const handleOrigenChange = (selectedOption) =>
-  {
+  const handleOrigenChange = (selectedOption) => {
     setOrigenSeleccionado(selectedOption.value);
     setValue('origen', selectedOption.value);
   };
@@ -212,28 +202,25 @@ const CreacionCompetencia = () =>
     label: ambito.nombre,
     value: ambito.id,
   }));
-  const handleAmbitoChange = (selectedOption) =>
-  {
+  const handleAmbitoChange = (selectedOption) => {
     setAmbitoSeleccionado(selectedOption.value);
     setValue('ambito_competencia', selectedOption.value);
   };
 
-  const handleUsuariosTransformed = useCallback((nuevosUsuarios) =>
-  {
+  const handleUsuariosTransformed = useCallback((nuevosUsuarios) => {
     setUsuariosSeleccionados(nuevosUsuarios);
   }, []);
 
-  const handleFileChange = (event) =>
-  {
+  const handleFileChange = (event) => {
     const file = event.target.files[ 0 ];
-    if (file)
-    {
-      if (file.size > 20971520)
-      { // 20 MB en bytes
+    if (file) {
+      if (file.size > 20971520) { // 20 MB en bytes
         setErrorMessage("Archivo no cumple con el peso permitido");
         setSelectedFile(null);
-      } else
-      {
+      } else if (file.type !== 'application/pdf') {
+        setErrorMessage("El archivo debe ser de tipo PDF.");
+        setSelectedFile(null);
+      } else {
         setSelectedFile(file);
         setButtonText('Modificar');
         setErrorMessage("");
@@ -241,8 +228,7 @@ const CreacionCompetencia = () =>
     }
   };
 
-  const handleDelete = () =>
-  {
+  const handleDelete = () => {
     setSelectedFile(null);
     setButtonText('Subir archivo');
   };
@@ -265,26 +251,21 @@ const CreacionCompetencia = () =>
 
   const dateInputRef = useRef(null);
 
-
-  const handleFechaInicioChange = (event) =>
-  {
+  const handleFechaInicioChange = (event) => {
     const selectedDate = event.target.value;
     const today = new Date();
     const formattedToday = `${today.getFullYear()}-${(today.getMonth() + 1)
       .toString()
       .padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}`;
-    if (selectedDate > formattedToday)
-    {
+    if (selectedDate > formattedToday) {
       setErrorMessageDate("La fecha no puede ser posterior a la fecha actual.");
       event.target.value = formattedToday;
       setFechaInicio(formattedToday);
-    } else
-    {
+    } else {
       setErrorMessageDate("");
       setFechaInicio(selectedDate);
     }
   };
-
 
   const userOptions = usuarios ? groupUsersByType(usuarios) : [];
 
@@ -423,6 +404,7 @@ const CreacionCompetencia = () =>
                       <div className="d-flex">
                         <input
                           id="fileUploadInput"
+                          name="oficio_origen"
                           type="file"
                           className="form-control"
                           onChange={handleFileChange}
@@ -443,25 +425,39 @@ const CreacionCompetencia = () =>
                     </td>
                   </tr>
                 </tbody>
-              </table>
+              </table>          
+              {errorArchivo && (
+                <p className="text-sans-h6-darkred mt-1 mb-0">{errorArchivo}</p>
+              )}
+
               <div className="my-4 py-3 col-12">
                 <div className="fecha-oficio-contenedor col-4  ">
                   <span className="text-sans-h5">
                     Elige la fecha del oficio (Obligatorio)
                   </span>
-                  <input
-                    ref={dateInputRef}
-                    onClick={() => dateInputRef.current?.click()}
-                    id="dateInput"
-                    type="date"
-                    className="form-control py-3 my-2 border rounded border-dark-subtle"
-                    onChange={handleFechaInicioChange}
-                    value={fechaInicio}
-                    max={fechaMaxima}
+                  <Controller
+                    name="fecha_inicio"
+                    control={control}
+                    render={({ field }) => (
+                      <input
+                        ref={dateInputRef}
+                        onClick={() => dateInputRef.current?.click()}
+                        id="dateInput"
+                        type="date"
+                        className="form-control py-3 my-2 border rounded border-dark-subtle"
+                        onChange={handleFechaInicioChange}
+                        value={fechaInicio}
+                        max={fechaMaxima}
+                        {...field} // Pasa las propiedades del campo al input
+                      />
+                    )}
                   />
                 </div>
                 {errorMessageDate && (
                   <p className="text-sans-h6-darkred mt-1 mb-0">{errorMessageDate}</p>
+                )}
+                {errors.fecha_inicio && (
+                  <p className="text-sans-h6-darkred mt-1 mb-0">{errors.fecha_inicio.message}</p>
                 )}
                 <div className="d-flex text-sans-h6-primary">
                   <i className="material-symbols-rounded me-2">info</i>
@@ -469,6 +465,7 @@ const CreacionCompetencia = () =>
                 </div>
               </div>
             </div>
+
           </div>
           <div className="mb-4">
             <Controller

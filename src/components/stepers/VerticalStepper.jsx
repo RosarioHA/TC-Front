@@ -4,14 +4,13 @@ const Etapa = ({ etapaInfo, index, id, usuarios}) => {
 
   switch (index) {
     case 0: return <Etapa1 etapa={etapaInfo.etapa1} id={id}/>;
-    case 1: return <Etapa2 etapa={etapaInfo.etapa2}  sectoriales={usuarios.usuarios_sectoriales} idCompetencia={id}/>;
-    case 2: return <Etapa3 etapa={etapaInfo.etapa3}  idCompetencia={id} />;
-    case 3: return <Etapa4 etapa={etapaInfo.etapa4} etapaTres={etapaInfo.etapa3}  />;
-    case 4: return <Etapa5 etapa={etapaInfo.etapa5} idCompetencia={id} />;
+    case 1: return <Etapa2 etapa={etapaInfo.etapa2} etapaUno={etapaInfo.etapa1}   sectoriales={usuarios.usuarios_sectoriales} idCompetencia={id}/>;
+    case 2: return <Etapa3 etapa={etapaInfo.etapa3} etapaDos={etapaInfo.etapa2}  idCompetencia={id} />;
+    case 3: return <Etapa4 etapa={etapaInfo.etapa4} etapaTres={etapaInfo.etapa3}  idCompetencia={id} />;
+    case 4: return <Etapa5 etapa={etapaInfo.etapa5} etapaCuatro={etapaInfo.etapa4}  idCompetencia={id} />;
     default: return null;
   }
 };
-
 
 
 export const VerticalStepper = ({ etapasObjeto, etapaDatos, id }) => {
@@ -35,13 +34,17 @@ export const VerticalStepper = ({ etapasObjeto, etapaDatos, id }) => {
     switch (estado)
     {
       case 'Finalizada':
-        return <span className="badge-status-finish">Finalizada</span>;
+        return <span className="badge-status-finish">{estado}</span>;
       case 'En Estudio':
-        return <span className="badge-status-review">En Estudio</span>;
+        return <span className="badge-status-review">{estado}</span>;
+      case 'En revisión SUBDERE':
+          return <span className="badge-status-study">{estado}</span>;
       case 'Aún no puede comenzar':
-        return <span className="badge-status-pending">Aún no puede comenzar</span>;
+        return <span className="badge-status-pending">{estado}</span>;
       case 'Omitida':
-        return <span className="badge-status-pending">Omitida</span>;
+        return <span className="badge-status-pending">{estado}</span>;
+      case 'Atrasada':
+          return <span className="badge-status-borderRed">{estado}</span>;
       default:
         return null;
     }

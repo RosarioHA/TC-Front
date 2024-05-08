@@ -1,28 +1,39 @@
 import { useState, forwardRef } from "react";
 
 const CustomInput = forwardRef(
-  ({ loading, saved, label, placeholder, id, maxLength, error, readOnly, onChange, initialValue, ...props }, ref) => {
+  ({ loading, saved, label, placeholder, id, maxLength, error, readOnly, onChange, initialValue, ...props }, ref) =>
+  {
     const [ inputValue, setInputValue ] = useState(initialValue || '');
+    const [ totalCharacters, setTotalCharacters ] = useState(initialValue ? initialValue.length : 0); // estado para total de caracteres
 
-    const handleInputChange = (e) => {
+    const handleInputChange = (e) =>
+    {
       const value = e.target.value;
-      if (maxLength !== null && maxLength !== undefined && value.length > maxLength) {
+      if (maxLength !== null && maxLength !== undefined && value.length > maxLength)
+      {
         setInputValue(value.slice(0, maxLength));
-      } else {
+        setTotalCharacters(maxLength);
+      } else
+      {
         setInputValue(value);
+        setTotalCharacters(value.length);
       }
-      if (onChange) {
+      if (onChange)
+      {
         onChange(value);
       }
     };
 
-    const counterClass = inputValue.length === maxLength ? "text-sans-h6-darkred" : "text-sans-h6";
+    const counterClass = totalCharacters === maxLength ? "text-sans-h6-darkred" : "text-sans-h6";
 
-    const renderSpinnerOrCheck = () => {
-      if (loading) {
+    const renderSpinnerOrCheck = () =>
+    {
+      if (loading)
+      {
         return <div className="spinner-border text-primary" role="status"></div>;
       }
-      if (saved) {
+      if (saved)
+      {
         return <i className="material-symbols-outlined text-success">check</i>; // Reemplaza esto con tu ícono de check real
       }
       return null;
@@ -48,7 +59,7 @@ const CustomInput = forwardRef(
                 id={id}
                 value={inputValue}
                 onChange={handleInputChange}
-                maxLength={maxLength} 
+                maxLength={maxLength}
                 ref={ref}
                 {...props}
               />
@@ -56,14 +67,14 @@ const CustomInput = forwardRef(
                 {renderSpinnerOrCheck()}
               </div>
             </div>
-            <div className="d-flex justify-content-between col-11">
+            <div className="d-flex justify-content-between col-12">
               {error && (
                 <p className="text-sans-h6-darkred mt-1 mb-0">{error}</p>
               )}
               {maxLength !== null && maxLength !== undefined && (
-                <div className="mb-0  mt-1 ms-auto ">
+                <div className="mb-0 mt-1 ms-auto">
                   <span className={counterClass}>
-                    {inputValue.length}/{maxLength} caracteres.
+                    {totalCharacters}/{maxLength} caracteres.
                   </span>
                 </div>
               )}

@@ -4,6 +4,7 @@ const CustomInputArea = forwardRef(
   ({ loading, saved, label, placeholder, id, maxLength, error, readOnly, onChange, onBlur, initialValue, ...props }, ref) => {
     const [inputValue, setInputValue] = useState(initialValue || '');
     const [lastSavedValue, setLastSavedValue] = useState(initialValue || '');
+    const [totalCharacters, setTotalCharacters] = useState(initialValue ? initialValue.length : 0); // Inicializa el contador de caracteres
     const internalRef = useRef(null);
     const effectiveRef = ref || internalRef;
 
@@ -28,6 +29,7 @@ const CustomInputArea = forwardRef(
       if (onChange) {
         onChange(value);
       }
+      setTotalCharacters(value.length); // Actualiza el contador total de caracteres
     };
 
     const handleBlur = (e) => {
@@ -39,7 +41,8 @@ const CustomInputArea = forwardRef(
       }
     };
 
-    const counterClass = inputValue.length === maxLength ? "text-sans-h6-darkred" : "text-sans-h6";
+    const counterClass = totalCharacters === maxLength ? "text-sans-h6-darkred" : "text-sans-h6";
+
 
     const renderSpinnerOrCheck = () => {
       if (loading) {
@@ -75,7 +78,7 @@ const CustomInputArea = forwardRef(
           <div className="d-flex justify-content-end col-12">
             <div className="mb-0 mt-1">
               <span className={counterClass}>
-                {inputValue.length}/{maxLength} caracteres.
+                {totalCharacters}/{maxLength} caracteres.
               </span>
             </div>
           </div>

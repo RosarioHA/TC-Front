@@ -225,7 +225,7 @@ const CreacionUsuario = () => {
       if (perfilSeleccionado === 'GORE' && !regionSeleccionada) {
         validationErrors.region = "Seleccionar una región para el perfil GORE.";
       }
-      if (perfilSeleccionado === 'Usuario Sectorial' && !sectorSeleccionado) {
+      if (perfilSeleccionado === 'Usuario Sectorial' && !sectorId) {
         validationErrors.sector = "Seleccionar un sector para el perfil de Usuario Sectorial.";
       }
   

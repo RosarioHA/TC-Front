@@ -112,6 +112,13 @@
   font-weight: 500;
 }
 
+.text-sans-h3-blue {
+  font-family: "Roboto";
+  color: #0F69C4;
+  font-size: 24px;
+  font-weight: 500;
+}
+
 .text-sans-h3-bold {
   font-family: "Roboto";
   color: #21272A;
@@ -161,6 +168,13 @@
   font-weight: 500;
 }
 
+.text-sans-h5-medium-blue {
+  font-family: "Roboto";
+  color: #006FB3;
+  font-size: 18px;
+  font-weight: 500;
+}
+
 .text-sans-h6 {
   font-family: "Roboto";
   color: #373737;
@@ -189,6 +203,13 @@
   font-weight: 400;
 }
 
+.text-sans-h6-green {
+  font-family: "Roboto";
+  color: #006636;
+  font-size: 14px;
+  font-weight: 400;
+}
+
 .text-sans-h6-grey {
   font-family: "Roboto";
   color: #656565;
@@ -206,6 +227,14 @@
 .text-sans-h6-bold-darkblue {
   font-family: "Roboto";
   color: #001C41;
+  font-size: 14px;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.text-sans-h6-bold-green {
+  font-family: "Roboto";
+  color: #006636;
   font-size: 14px;
   font-weight: 700;
   font-style: normal;
@@ -655,14 +684,25 @@ span.material-symbols-outlined {
   margin-left: 10%;
 }
 
+.bluesky-container {
+  border: 1px solid #9FC3E7;
+  border-radius: 4px;
+  background-color: #CFE1F3;
+}
+
 .container-home {
   background-color: rgba(207, 225, 243, 0.35);
-  width: 83.2%;
   min-height: 92vh;
   margin-top: 0;
   position: absolute;
+  margin-left: 50px;
 }
 
+@media (min-width: 1350px) {
+  .container-home {
+    margin-left: 0px;
+  }
+}
 .container-info {
   display: flex;
   height: 124px;
@@ -676,7 +716,7 @@ span.material-symbols-outlined {
   box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.25);
 }
 
-.container-compentencia {
+.container-competencia {
   background-color: #FFF;
   display: flex;
   width: auto;
@@ -737,6 +777,11 @@ span.material-symbols-outlined {
 .icono-s {
   width: 32px;
   height: 32px;
+}
+
+.icono-xs {
+  width: 24px;
+  height: 24px;
 }
 
 #icon-inputSearch i.material-symbols-outlined,
@@ -1320,6 +1365,7 @@ a.btn-link:hover, a.btn-link:focus {
   background: #0F69C4;
   color: #FFF;
   padding: 4px 8px 4px 8px;
+  border: 2px solid #0F69C4;
   border-radius: 5px;
   text-align: center;
   font-family: Roboto;
@@ -1337,6 +1383,25 @@ a.btn-link:hover, a.btn-link:focus {
   background: #334967;
   color: #FFF;
   padding: 4px 8px 4px 8px;
+  border: 2px solid #334967;
+  border-radius: 5px;
+  text-align: center;
+  font-family: Roboto;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 100%;
+}
+
+.badge-status-study {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #CFE1F3;
+  color: #373737;
+  padding: 4px 8px 4px 8px;
+  border: 2px solid #CFE1F3;
   border-radius: 5px;
   text-align: center;
   font-family: Roboto;
@@ -1354,6 +1419,7 @@ a.btn-link:hover, a.btn-link:focus {
   background: #BBBBBB;
   color: #373737;
   padding: 4px 8px 4px 8px;
+  border: 2px solid #BBBBBB;
   border-radius: 5px;
   text-align: center;
   font-family: Roboto;
@@ -1371,6 +1437,61 @@ a.btn-link:hover, a.btn-link:focus {
   background: #F56B0F;
   color: #FFF;
   padding: 4px 8px 4px 8px;
+  border: 2px solid #F56B0F;
+  border-radius: 5px;
+  text-align: center;
+  font-family: Roboto;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 100%;
+}
+
+.badge-status-red {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #871a1a;
+  color: #FFF;
+  padding: 4px 8px 4px 8px;
+  border: 2px solid #871a1a;
+  border-radius: 5px;
+  text-align: center;
+  font-family: Roboto;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 100%;
+}
+
+.badge-status-green {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #006636;
+  color: #FFF;
+  padding: 4px 8px 4px 8px;
+  border: 2px solid #006636;
+  border-radius: 5px;
+  text-align: center;
+  font-family: Roboto;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 100%;
+}
+
+.badge-status-borderRed {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #FFF;
+  color: #871a1a;
+  padding: 4px 8px 4px 8px;
+  border: 2px solid #871a1a;
   border-radius: 5px;
   text-align: center;
   font-family: Roboto;
@@ -1404,11 +1525,104 @@ a.btn-link:hover, a.btn-link:focus {
   padding-top: 8px;
 }
 
+.subrayado-gris {
+  background-color: #EEEEEE;
+  height: 80px;
+  padding-top: 8px;
+}
+
 .border-gris {
   border: 1px solid #BBBBBB;
   border-radius: 4px;
   color: #656565;
   background-color: #FFF;
+}
+
+.message-container {
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.message {
+  background-color: #CFE1F3;
+  color: #0F69C4;
+  border: 1px solid #9FC3E7;
+  border-radius: 4px;
+}
+
+.message-container-favorable {
+  background-color: #E3F4ED;
+  color: #006636;
+}
+
+.message-container-parcial {
+  background-color: #FFF3EB;
+  color: #F56B0F;
+}
+
+.message-container-desfavorable {
+  background-color: #F9D5D5;
+  color: #871a1a;
+}
+
+.rdl-filter, .rdl-control {
+  font-size: 18px !important;
+  padding: 8px 6px;
+}
+
+.react-dual-listbox button, .react-dual-listbox select {
+  font-family: inherit;
+  line-height: 1.42857;
+  color: #006FB3;
+}
+
+.rdl-actions {
+  flex-direction: column;
+  align-self: flex-end;
+  width: 260px !important;
+  margin: 0 10px;
+}
+
+.rdl-btn {
+  padding: 5px 5px;
+  margin: 0 3px;
+  font-size: 16px !important;
+  color: #006FB3;
+  cursor: pointer;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 2px;
+}
+
+.rdl-icon, .rdl-icon {
+  font-family: sans-serif;
+  font-weight: 900;
+}
+
+.react-dual-listbox select option:checked:focus {
+  background-color: #0F69C4;
+  color: #FFF;
+}
+
+.react-dual-listbox select option:checked:active {
+  background-color: #0F69C4;
+  color: #FFF;
+}
+
+.react-dual-listbox select option:checked:hover {
+  background-color: #0F69C4;
+  color: #FFF;
+}
+
+.react-dual-listbox select option:checked {
+  background-color: #0F69C4;
+  color: #FFF;
+}
+
+.blue-border-top {
+  border-top: 1px solid #9FC3E7;
 }
 
 .wrapper {
@@ -1569,6 +1783,12 @@ a.btn-link:hover, a.btn-link:focus {
   background-color: rgb(249, 213, 213);
   color: #871a1a;
   border: 2px solid #871a1a;
+}
+.stepper-pasos .step .step-button.disabled {
+  background-color: #d3d3d3;
+  color: #a9a9a9;
+  border: 2px solid #bababa;
+  cursor: not-allowed;
 }
 
 .mono-stepper {
@@ -1813,6 +2033,26 @@ a.btn-link:hover, a.btn-link:focus {
   margin-top: 155px;
 }
 
+.chart-numbers {
+  font-family: "Roboto";
+  color: #001C41;
+  font-size: 32px;
+  font-weight: 700;
+}
+
+@media (max-width: 1400px) {
+  .chart-skills {
+    width: 245px;
+    height: 122.5px;
+  }
+  .chart-text {
+    margin-left: 57px;
+    margin-top: 63px;
+  }
+  .chart-numbers {
+    font-size: 25px;
+  }
+}
 .modal {
   display: none;
   position: fixed;
