@@ -43,6 +43,13 @@ export const Etapa3 = ({ etapa, idCompetencia, etapaDos }) =>
     }
 
     const onClickAction = () => {
+      // Primero manejar el caso específico que nos interesa
+      if (subetapa.accion === "Subir Observaciones" && subetapa.nombre === "Revisión SUBDERE" && subetapa.estado === "revision" && userSubdere) {
+        navigate(`/home/minuta_dipres/${idCompetencia}/observaciones_subdere`);
+        return; // Añadir return para prevenir que otras condiciones se evalúen después
+      }
+    
+      // Luego el resto de condiciones
       if (isFinalizado && subetapa.accion === "Ver oficio") {
         window.open(oficio_origen, '_blank');
       } else if (subetapa.accion === "Subir minuta" && subetapa.estado === "revision" && userDipres) {

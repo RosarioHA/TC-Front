@@ -16,7 +16,6 @@ export const Etapa4 = ({ etapa, etapaTres, idCompetencia }) =>
     oficio_origen
   } = etapa;
 
-  const estadoAsignacion = usuarios_gore.usuarios_gore_notificados;
 
 
   const navigate = useNavigate();
