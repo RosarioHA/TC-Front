@@ -71,7 +71,12 @@ export const Etapa2 = ({ etapa, idCompetencia }) =>
     let buttonText = accion;
     let icon = estado === "finalizada" ? "visibility" : "draft";
     let path = "/";
-    let isDisabled = estado === "pendiente";
+    const formularios = formulario_sectorial && formulario_sectorial?.formularios_sectoriales && formulario_sectorial.formularios_sectoriales.length > 0 ? formulario_sectorial.formularios_sectoriales[0] : null;
+    let isDisabled = estado === "pendiente" || (formularios && formularios?.estado !== "finalizada");
+
+    if (nombre.includes("Observaciones de formularios sectoriales") || nombre.includes("Observación del formulario sectorial")) {
+      isDisabled = formularios && formularios?.estado !== "finalizada";
+    }
 
 
     const userMinisterio = userData?.perfil?.includes('Ministerio');
@@ -104,18 +109,19 @@ export const Etapa2 = ({ etapa, idCompetencia }) =>
         {
           path = `/home/estado_competencia/${idCompetencia}/subir_oficio_sectorial`;
         } break;
-
       case nombre.includes("Observaciones de formularios sectoriales"):
         // Adaptar el path y las condiciones para otros roles también, si necesario
         path = estado === "revision" ? `/home/observaciones_subdere/${idCompetencia}/` : `/home/observaciones_subdere/${idCompetencia}/`;
         buttonText = accion;
         icon = estado === "revision" ? "draft" : "visibility";
+        isDisabled = formularios?.estado !== "finalizada";
         break;
       case nombre.includes("Observación del formulario sectorial"):
         // Adaptar el path y las condiciones para otros roles también, si necesario
         path = estado === "revision" ? `/home/observaciones_subdere/${idCompetencia}/` : `/home/observaciones_subdere/${idCompetencia}/`;
         buttonText = accion;
         icon = estado === "revision" ? "draft" : "visibility";
+        isDisabled = formularios?.estado !== "finalizada";
         break;
 
       default:
@@ -239,6 +245,7 @@ export const Etapa2 = ({ etapa, idCompetencia }) =>
     else if (etapa.formulario_sectorial.detalle_formularios_sectoriales && etapa.formulario_sectorial.detalle_formularios_sectoriales.length > 0)
     {
       const info = etapa.formulario_sectorial.formularios_sectoriales[ 0 ];
+
       return (
         <div className='w-100 boder border-bottom'>
           <button type="button" className="btn d-flex justify-content-between w-100 px-0" onClick={toggleCollapse}>
