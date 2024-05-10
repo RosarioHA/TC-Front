@@ -1,7 +1,5 @@
-import CostosDirectos from "../../tables/CostosDirectos";
+import Costos from "../../tables/Costos";
 import { useState, useEffect } from "react";
-import { apiTransferenciaCompentencia } from "../../../services/transferenciaCompetencia";
-import CostosIndirectos from "../../tables/CostosIndirectos";
 import ResumenCostos from "../../tables/ResumenCostos";
 
 export const Subpaso_CincoPuntoUno = (
@@ -18,17 +16,17 @@ export const Subpaso_CincoPuntoUno = (
     listado_item_subtitulos_directos,
     listado_item_subtitulos_indirectos,
     listado_etapas,
-    setRefreshSubpaso_CincoDos,
-    refetchTrigger
   }
 ) => {
 
   const [refreshSumatoriaCostos, setRefreshSumatoriaCostos] = useState(false);
-  const [dataDirecta, setDataDirecta] = useState(null);
-  const [totalCostosDirectos, setTotalCostosDirectos] = useState('');
-  const [totalCostosIndirectos, setTotalCostosIndirectos] = useState('');
-  const [costosTotales, setCostosTotales] = useState('');
-  const [descripcionCostosTotales, setDescripcionCostosTotales] = useState('');
+
+  const{
+    total_costos_directos,
+    total_costos_indirectos,
+    costos_totales,
+    descripcion_costos_totales
+  } = paso5;
 
   // Función de utilidad para formatear números
   const formatearNumero = (numero) => {
@@ -43,40 +41,14 @@ export const Subpaso_CincoPuntoUno = (
     }
     // Devolver un valor predeterminado o el mismo valor si no es un número
     return numero;
-  };
-
-  // Lógica para recargar sumatoria al agregar costos directos o indirectos
-  // Llamada para recargar componente
-  const fetchDataDirecta = async () => {
-    try {
-      const response = await apiTransferenciaCompentencia.get(`/formulario-sectorial/${id}/paso-${stepNumber}/`);
-      setDataDirecta(response.data);
-    } catch (error) {
-      console.error('Error al obtener datos directamente:', error);
-    }
-  };
+  }; 
 
   // refreshSumatoriaCostos es un trigger disparado desde CostosDirectos o CostosIndirectos
   useEffect(() => {
     if (refreshSumatoriaCostos) {
-      fetchDataDirecta();
       setRefreshSumatoriaCostos(false);
     }
   }, [refreshSumatoriaCostos, id, stepNumber]);
-
-  useEffect(() => {
-    if (dataDirecta && dataDirecta.paso5) {
-      setTotalCostosDirectos(dataDirecta.paso5.total_costos_directos || '0');
-      setTotalCostosIndirectos(dataDirecta.paso5.total_costos_indirectos || '0');
-      setCostosTotales(dataDirecta.paso5.costos_totales || '0');
-      setDescripcionCostosTotales(dataDirecta.paso5.descripcion_costos_totales || '');
-    } else {
-      setTotalCostosDirectos(paso5.total_costos_directos || '0');
-      setTotalCostosIndirectos(paso5.total_costos_indirectos || '0');
-      setCostosTotales(paso5.costos_totales || '0');
-      setDescripcionCostosTotales(paso5.descripcion_costos_totales || '');
-    }
-  }, [dataDirecta]);
   
 
   return (
@@ -89,24 +61,22 @@ export const Subpaso_CincoPuntoUno = (
       <h6 className="text-sans-h6-primary mt-3 mb-4">Llenar información para al menos un subtítulo/item es obligatorio.</h6>
 
       <div >
-        <CostosDirectos
+        <Costos
           id={id}
           data={data_costos_directos}
           stepNumber={stepNumber}
           listado_subtitulos={listado_subtitulos_directos}
           listado_item_subtitulos={listado_item_subtitulos_directos}
           listado_etapas={listado_etapas}
-          setRefreshSubpaso_CincoDos={setRefreshSubpaso_CincoDos}
-          refetchTrigger={refetchTrigger}
-          setRefreshSumatoriaCostos={setRefreshSumatoriaCostos}
           solo_lectura={solo_lectura}
+          seccion="p_5_1_a_costos_directos"
         />
         <hr />
       </div>
 
       <div className="row mt-5 d-flex align-items-center">
         <p className="text-sans-p-bold mb-0 col-2">Costos Directos <br /> Totales Anual ($M)</p>
-        <p className="text-sans-p-blue col">{formatearNumero(totalCostosDirectos)}</p>
+        <p className="text-sans-p-blue col">{formatearNumero(total_costos_directos)}</p>
       </div>
       <hr className="col-4"/>
 
@@ -115,24 +85,22 @@ export const Subpaso_CincoPuntoUno = (
       <h6 className="text-sans-h6-primary mt-3">Llenar información para al menos un subtítulo/item es obligatorio.</h6>
 
       <div className="mt-4">
-      <CostosIndirectos
+      <Costos
           id={id}
           data={data_costos_indirectos}
           stepNumber={stepNumber}
           listado_subtitulos={listado_subtitulos_indirectos}
           listado_item_subtitulos={listado_item_subtitulos_indirectos}
           listado_etapas={listado_etapas}
-          setRefreshSubpaso_CincoDos={setRefreshSubpaso_CincoDos}
-          refetchTrigger={refetchTrigger}
-          setRefreshSumatoriaCostos={setRefreshSumatoriaCostos}
           solo_lectura={solo_lectura}
+          seccion="p_5_1_b_costos_indirectos"
         />
         <hr />
       </div>
 
       <div className="row mt-5 d-flex align-items-center">
         <p className="text-sans-p-bold mb-0 col-2">Costos Indirectos <br /> Totales Anual ($M)</p>
-        <p className="text-sans-p-blue col">{formatearNumero(totalCostosIndirectos)}</p>
+        <p className="text-sans-p-blue col">{formatearNumero(total_costos_indirectos)}</p>
       </div>
       <hr className="col-4" />
 
@@ -142,12 +110,10 @@ export const Subpaso_CincoPuntoUno = (
         <ResumenCostos
           id={id}
           data={data_resumen_costos}
-          costosTotales={costosTotales}
-          descripcionCostosTotales={descripcionCostosTotales}
+          costosTotales={costos_totales}
+          descripcionCostosTotales={descripcion_costos_totales}
           stepNumber={stepNumber}
-          solo_lectura={solo_lectura}          
-          setRefreshSumatoriaCostos={setRefreshSumatoriaCostos}
-          refreshSumatoriaCostos={refreshSumatoriaCostos}
+          solo_lectura={solo_lectura}
         />
       </div>
 

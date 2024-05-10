@@ -271,9 +271,9 @@ export const Fluctuaciones = ({ id, dataGastos, solo_lectura }) => {
                                 disabled={solo_lectura}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
-                                loading={costoAnio.estados?.loading ?? false}
-                                saved={costoAnio.estados?.saved ?? false}
-                                error={errors[`costo_${costoAnio.id}`]?.message}
+                                loading={costoAnio?.estados?.loading ?? false}
+                                saved={costoAnio?.estados?.saved ?? false}
+                                error={errors[`costo_${costoAnio?.id}`]?.message}
                               />
                             );
                           }}
