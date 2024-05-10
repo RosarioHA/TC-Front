@@ -125,7 +125,9 @@ export const Etapa4 = ({ etapa, etapaTres, idCompetencia }) =>
                   <span className="badge-status-pending">{detalleUsuarios[0].accion}</span>
                 ) : etapa.estado !== "Aún no puede comenzar" && detalleUsuarios[0].estado === "revision" ? (
                   <span className="badge-status-pending">{detalleUsuarios[0].accion}</span>
-                ) : detalleUsuarios[0].estado === "finalizada" ? (
+                ): etapa.estado === "Aún no puede comenzar" && detalleUsuarios[0].estado === "finalizada" ? (
+                  <span className="badge-status-pending">{detalleUsuarios[0].accion}</span>
+                  ) : detalleUsuarios[0].estado === "finalizada" ? (
                   <span className="badge-status-finish">{detalleUsuarios[0].accion}</span>
                 ) : (
                   <span className={`badge-status-${detalleUsuarios[0].estado}`}>{detalleUsuarios[0].accion}</span>
