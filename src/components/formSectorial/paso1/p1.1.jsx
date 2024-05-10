@@ -157,6 +157,7 @@ export const Subpaso_uno = ({ dataPaso, id, stepNumber, marcojuridico, solo_lect
     }
   };
 
+
   return (
     <>
       <div className="pe-5 me-5 mt-4 col-12">
