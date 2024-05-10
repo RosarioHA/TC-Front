@@ -320,7 +320,6 @@ export const Subpaso_dosPuntoDos = ({
       }));
     }
   };
- console.log(data); 
 
   return (
     <div>

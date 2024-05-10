@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useMemo } from "react";
 import { useForm, Controller } from 'react-hook-form';
 import { useNavigate, useParams } from "react-router-dom";
 import CustomInput from "../../components/forms/custom_input";
-import DropdownSelect from "../../components/dropdown/select";
+import {DropdownSelectSimple} from "../../components/dropdown/selectSimple";
 import { CheckboxRegion } from "../../components/dropdown/checkboxRegion";
 import DropdownConSecciones from "../../components/dropdown/checkbox_conSecciones_conTabla";
 import { useOrigenes } from "../../hooks/useOrigenes";
@@ -56,8 +56,6 @@ const EdicionCompetencia = () => {
   const regionIds = useMemo(() => regionSeleccionada || competencia?.regiones, [ regionSeleccionada, competencia ]);
   const { usuarios } = useFiltroUsuarios(sectorIds, regionIds);
   const { editMode, updateEditMode, hasChanged, updateHasChanged } = useFormContext();
-
-  console.log(sectorIds)
 
   //opciones selectores
   const opcionesRegiones = useMemo(() => dataRegiones.map(region => ({
@@ -370,7 +368,7 @@ const EdicionCompetencia = () => {
             name="origen"
             control={control}
             render={() => (
-              <DropdownSelect
+              <DropdownSelectSimple
                 label="Origen de la competencia (Obligatorio)"
                 placeholder={competencia ? origenSeleccionado?.descripcion || '' : ''}
                 id="origen"
@@ -389,7 +387,7 @@ const EdicionCompetencia = () => {
             name="ambito_competencia"
             control={control}
             render={() => (
-              <DropdownSelect
+              <DropdownSelectSimple
                 label="Elige el ámbito de la competencia (Obligatorio)"
                 placeholder={competencia ? ambitoSeleccionado?.nombre || '' : ''}
                 id="ambito_competencia"
