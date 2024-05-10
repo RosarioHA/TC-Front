@@ -4,7 +4,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import CustomInput from "../../components/forms/custom_input";
 import { CheckboxRegion } from "../../components/dropdown/checkboxRegion";
-import DropdownSelect from "../../components/dropdown/select";
+import {DropdownSelectSimple} from "../../components/dropdown/selectSimple";
 import DropdownConSecciones from "../../components/dropdown/checkbox_conSecciones_conTabla";
 import { DropdownSelectBuscadorCheck } from "../../components/dropdown/select_buscador_checkbox";
 import { esquemaCreacionCompetencia } from "../../validaciones/esquemaCrearUsuario_Competencia";
@@ -326,7 +326,7 @@ const CreacionCompetencia = () => {
           </div>
 
           <div className="mb-4 col-11">
-            <DropdownSelect
+            <DropdownSelectSimple
               label="Origen de la competencia (Obligatorio)"
               placeholder="Elige el origen de la competencia"
               options={opcionesOrigen}
@@ -339,7 +339,7 @@ const CreacionCompetencia = () => {
           </div>
 
           <div className="mb-4 col-11">
-            <DropdownSelect
+            <DropdownSelectSimple
               label="Elige el ámbito de la competencia (Obligatorio)"
               placeholder="Elige el ámbito de la competencia"
               name="ambito_competencia"

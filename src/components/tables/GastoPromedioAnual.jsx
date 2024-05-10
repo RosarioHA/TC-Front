@@ -8,12 +8,12 @@ export const GastosPromedioAnual = ({
   paso5,
   solo_lectura,
   stepNumber,
-  dataGastos,
-  refetchTrigger
+  dataGastos
 }) => {
 
-  const [datosGastos, setDatosGastos] = useState([]);
+  const [datosGastos, setDatosGastos] = useState(Array.isArray(dataGastos) ? dataGastos : []);
   const { handleUpdatePaso } = useContext(FormularioContext);
+  const [inputStatus, setInputStatus] = useState({});
 
   // Función de utilidad para formatear números
   const formatearNumero = (numero) => {
@@ -31,37 +31,13 @@ export const GastosPromedioAnual = ({
   };
 
   useEffect(() => {
-    if (Array.isArray(dataGastos)) {
-      const formattedData = dataGastos.map(item => ({
-        ...item,
-        estados: {
-          descripcion: {
-            loading: false,
-            saved: false
-          }
-        }
-      }));
-      setDatosGastos(formattedData);
-    }
+    setDatosGastos(Array.isArray(dataGastos) ? dataGastos : []);
   }, [dataGastos]);
 
   const { control, trigger, clearErrors} = useForm({
     mode: 'onBlur',
   });
 
-  // Función para recargar campos por separado
-  const updateFieldState = (instanciaId, fieldName, newState) => {
-    setDatosGastos(previnstancia =>
-      previnstancia.map(instancia => {
-        if (instancia.id === instanciaId) {
-          // Actualiza solo los estados del campo específico
-          const updatedEstados = { ...instancia.estados, [fieldName]: { ...newState } };
-          return { ...instancia, estados: updatedEstados };
-        }
-        return instancia;
-      })
-    );
-  };
 
   // Manejadora de CustomInput y CustomTextArea
   const handleInputChange = (instanciaId, campo, valor) => {
@@ -84,7 +60,13 @@ export const GastosPromedioAnual = ({
 
     const resumenSubtitulo = datosGastos.find(e => e.id === arrayNameId);
 
-    updateFieldState(arrayNameId, fieldName, { loading: true, saved: false });
+    setInputStatus(prevStatus => ({
+      ...prevStatus,
+      [arrayNameId]: {
+          ...prevStatus[arrayNameId],
+          [fieldName]: { loading: true, saved: false },
+      },
+    }));
 
     let payload;
     // Payload para otros campos
@@ -97,13 +79,24 @@ export const GastosPromedioAnual = ({
       await handleUpdatePaso(id, stepNumber, payload);
 
       // Actualiza el estado de carga y guardado
-      updateFieldState(arrayNameId, fieldName, { loading: false, saved: true });
-      refetchTrigger();
+      setInputStatus(prevStatus => ({
+        ...prevStatus,
+        [arrayNameId]: {
+            ...prevStatus[arrayNameId],
+            [fieldName]: { loading: false, saved: true },
+        },
+      }));
 
     } catch (error) {
       console.error("Error al guardar los datos:", error);
 
-      updateFieldState(arrayNameId, fieldName, { loading: false, saved: false });
+      setInputStatus(prevStatus => ({
+        ...prevStatus,
+        [arrayNameId]: {
+            ...prevStatus[arrayNameId],
+            [fieldName]: { loading: false, saved: false },
+        },
+      }));
     }
   };
 
@@ -183,8 +176,8 @@ export const GastosPromedioAnual = ({
                               onBlur={handleBlur}
                               className={`form-control ${rowIndex % 2 === 0 ? "bg-color-even" : "bg-color-odd"}`}
                               readOnly={solo_lectura}
-                              loading={item.estados?.descripcion?.loading ?? false}
-                              saved={item.estados?.descripcion?.saved ?? false}
+                              loading={inputStatus[item.id]?.descripcion?.loading}
+                              saved={inputStatus[item.id]?.descripcion?.saved}
                             />
                           );
                         }}
