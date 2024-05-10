@@ -2,7 +2,7 @@ import { useState, useEffect , useMemo} from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Controller, useForm } from 'react-hook-form';
 import CustomInput from "../../components/forms/custom_input";
-import DropdownSelect from "../../components/dropdown/select";
+import { DropdownSelectSimple } from "../../components/dropdown/selectSimple";
 import DropdownSelectBuscador from "../../components/dropdown/select_buscador";
 import DropdownSinSecciones from "../../components/dropdown/checkbox_sinSecciones_conTabla";
 import { OpcionesAB } from "../../components/forms/opciones_AB";
@@ -305,7 +305,7 @@ const EdicionUsuario = () => {
               name="perfil"
               control={control}
               render={({ field }) => (
-                <DropdownSelect
+                <DropdownSelectSimple
                   label="Elige el perfil de usuario (Obligatorio)"
                   placeholder={userDetails ? userDetails.perfil : ''}
                   id="perfil"

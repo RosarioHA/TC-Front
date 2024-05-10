@@ -24,8 +24,6 @@ export const useFiltroUsuarios = (sectorSeleccionado, regionSeleccionada) => {
     try {
       const url = `users/get-users-by-sector-region/?${params.toString()}`;
       const respuesta = await apiTransferenciaCompentencia.get(url);
-      console.log("Respuesta API:", respuesta.data);  // Log para depuración
-
       let filteredUsers = respuesta.data || [];
 
       // Filtrar para retornar solo SUBDERE y DIPRES si no hay sectores o regiones seleccionados

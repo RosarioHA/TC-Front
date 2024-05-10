@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-export const DocumentsAditionals = ({ onFilesChanged, marcoJuridicoData, handleDelete, handleDownload, readOnly }) => {
+export const DocumentsAditionals = ({ onFilesChanged, marcoJuridicoData, handleDelete, readOnly }) => {
   const [files, setFiles] = useState([]);
   const maxFiles = 5; // Máximo número de archivos permitidos
   const maxSize = 20 * 1024 * 1024; // 20 MB
@@ -14,20 +14,26 @@ export const DocumentsAditionals = ({ onFilesChanged, marcoJuridicoData, handleD
         if (doc && doc.documento_url) {
           return {
             id: doc.id,
-            title: doc.documento_url.split('/').pop(),
-            isTooLarge: false,
+            title: doc.documento_url.split('/').pop(), // Extraer el nombre del archivo de la URL
+            url: doc.documento, // URL completa para la descarga
+            isTooLarge: false // Estado inicial para comprobar si el archivo es demasiado grande (puedes implementar lógica adicional aquí)
           };
         }
-        return null;
-      }).filter(doc => doc !== null);
-
-      setFiles(updatedFiles);
-      setMaxFilesReached(updatedFiles.length >= maxFiles);
+        return null; // Filtrar elementos no válidos o sin URL
+      }).filter(doc => doc !== null); // Eliminar los elementos nulos del resultado final
+  
+      setFiles(updatedFiles); // Actualizar el estado con los archivos procesados
+      setMaxFilesReached(updatedFiles.length >= maxFiles); // Verificar si se ha alcanzado el límite de archivos permitidos
     } else {
-      setFiles([]);
-      setMaxFilesReached(false);
+      setFiles([]); // Vaciar el estado de archivos si no hay datos
+      setMaxFilesReached(false); // Actualizar el estado de máximo alcanzado a falso si no hay archivos
     }
-  }, [marcoJuridicoData, maxFiles]);
+  }, [marcoJuridicoData, maxFiles]); 
+
+
+  const handleDownload = (url) => {
+    window.open(url, '_blank'); // Abrir el documento en una nueva pestaña para iniciar la descarga
+  };
 
   const handleFileChange = async (event) => {
     setFileTooLarge(false);
@@ -41,7 +47,8 @@ export const DocumentsAditionals = ({ onFilesChanged, marcoJuridicoData, handleD
     }
 
     // Agregar verificación de tipo de archivo
-    const filesNotPdf = incomingFiles.filter(file => !file.type.includes('pdf'));
+  const filesNotPdf = incomingFiles.filter(file => !file.type.includes('pdf'));
+
     if (filesNotPdf.length > 0) {
       setFileTooLarge(false); // Restablecer el estado de fileTooLarge en caso de que se haya establecido previamente
       setErrorMessage("Por favor, seleccione archivos en formato PDF.");
@@ -93,7 +100,7 @@ export const DocumentsAditionals = ({ onFilesChanged, marcoJuridicoData, handleD
           <div className="col-2 p-3 d-flex">
             <button
               type="button"
-              onClick={() => handleDownload(fileObj.id)}
+              onClick={() => handleDownload(fileObj.url)}
               className="btn-secundario-s px-0 d-flex align-items-center mx-0"
             >
               <span className="text-sans-b-green mx-2">Descargar</span>

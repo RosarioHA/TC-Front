@@ -1,5 +1,5 @@
 import { useContext, useState, useEffect, useCallback } from "react";
-import DropdownSelect from "../../dropdown/select";
+import {DropdownSelectSimple} from "../../dropdown/selectSimple"; 
 import CustomTextarea from "../../forms/custom_textarea";
 // import useRecargaDirecta from "../../../hooks/formulario/useRecargaDirecta";
 import { useUpdateFormRefresh } from "../../../hooks/formulario/useUpdateFormRefresh";
@@ -243,9 +243,6 @@ export const Subpaso_CuatroUno = ({ data, listaIndicadores, id, stepNumber, solo
 
   const todosIndicadoresGuardados = indicadores.every(indicador => typeof indicador.id === 'number');
 
-
-  console.log(inputStatus)
-
   return (
     <>
       <div className="container">
@@ -266,7 +263,7 @@ export const Subpaso_CuatroUno = ({ data, listaIndicadores, id, stepNumber, solo
             <div className="d-flex neutral-line p-2 col-11">
               <p className="text-sans-p-bold mx-3 mt-4">{index + 1}</p>
               <div className="col-3 mt-2">
-                <DropdownSelect
+                <DropdownSelectSimple
                   placeholder="Tipo de indicador"
                   options={opcionesIndicadores}
                   selected={indicador.indicador}
