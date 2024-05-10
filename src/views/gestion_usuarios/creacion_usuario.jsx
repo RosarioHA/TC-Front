@@ -3,7 +3,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { useNavigate } from "react-router-dom";
 import { yupResolver } from '@hookform/resolvers/yup';
 import CustomInput from "../../components/forms/custom_input";
-import DropdownSelect from "../../components/dropdown/select";
+import {DropdownSelectSimple} from "../../components/dropdown/selectSimple";
 import DropdownSelectBuscador from "../../components/dropdown/select_buscador";
 import DropdownSinSecciones from "../../components/dropdown/checkbox_sinSecciones_conTabla";
 import { RadioButtons } from "../../components/forms/radio_btns";
@@ -335,7 +335,7 @@ const CreacionUsuario = () => {
                   {loadingGroups ? (
                     <div>Cargando perfiles...</div>
                   ) : dataGroups && dataGroups.length > 0 ? (
-                    < DropdownSelect
+                    <DropdownSelectSimple
                       label="Elige el perfil de usuario (Obligatorio)"
                       placeholder="Elige el perfil de usuario"
                       options={loadingGroups ? [] : opcionesGroups}

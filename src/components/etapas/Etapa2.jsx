@@ -145,23 +145,27 @@ export const Etapa2 = ({ etapa, idCompetencia }) =>
 
   // AQUI DECIR A LA FUNCION QUE RECONOZCA SI EL BOTON ESTA EN ESTADO FINALIZADO  
 
-  const renderButtonForFormularioSectorial = (formulario) => {
+  const renderButtonForFormularioSectorial = (formulario) =>
+  {
     const buttonText = formulario.accion;
     const path = `/home/formulario_sectorial/${formulario.id}/paso_1`;
-  
+
     // Determinar si el botón debe estar deshabilitado
     const isButtonDisabled = formulario.estado === "pendiente";
-  
+
     // Elegir el icono basado en el estado del formulario
     let icon;
-    if (formulario.estado === "finalizada") {
+    if (formulario.estado === "finalizada")
+    {
       icon = 'visibility';  // Icono de visibilidad para formularios finalizados
-    } else if (formulario.estado === "pendiente") {
+    } else if (formulario.estado === "pendiente")
+    {
       icon = 'edit';  // Icono de edición para formularios pendientes
-    } else {
+    } else
+    {
       icon = 'draft';  // Icono de borrador para otros estados
     }
-  
+
     return (
       <button
         onClick={() => handleNavigation(path)}
@@ -254,8 +258,8 @@ export const Etapa2 = ({ etapa, idCompetencia }) =>
                     <tr key={index}>
                       <td className="d-flex justify-content-between">
                         <span className="align-self-center">{formulario.nombre}</span>
-                        {formulario.estado === "pendiente"
-                          ? renderButtonForFormularioSectorial(formulario)
+                        {formulario.estado ?
+                          renderButtonForFormularioSectorial(formulario)
                           : formulario.accion}
                       </td>
                     </tr>
