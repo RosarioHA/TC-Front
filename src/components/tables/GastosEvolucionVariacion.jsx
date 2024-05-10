@@ -24,9 +24,7 @@ export const GastosEvolucionVariacion = ({
   paso5,
   solo_lectura,
   stepNumber,
-  dataGastos,
-  setRefreshSubpaso_CincoDosVariacion,
-  refetchTrigger
+  dataGastos
 
 }) => {
 
@@ -42,21 +40,16 @@ export const GastosEvolucionVariacion = ({
         ...item,
         costo_anio: item?.costo_anio?.map(costo => ({
           ...costo,
-          estados: {
-            loading: false,
-            saved: false
-          }
-        })),
-        estados: {
-          descripcion: {
-            loading: false,
-            saved: false
-          }
-        }
+          
+        }))
+        
       }));
+      console.log('costo_anio', formattedData)
       setDatosGastos(formattedData);
     }
   }, [dataGastos]);
+
+  
 
   useEffect(() => {
     const esquema = construirValidacionPaso5_2evolucion(datosGastos);
@@ -155,17 +148,23 @@ export const GastosEvolucionVariacion = ({
 
       // Actualiza el estado de carga y guardado
       updateFieldState(subtituloId, costoAnioId, fieldName, { loading: false, saved: true });
-      setGlosasEspecificasLoading(false);
-      setGlosasEspecificasSaved(true);
-      setRefreshSubpaso_CincoDosVariacion(true);
-      refetchTrigger();
+
+      if (fieldName === 'glosas_especificas') {
+        setGlosasEspecificasLoading(false);
+        setGlosasEspecificasSaved(true)
+      }
+      
 
     } catch (error) {
       console.error("Error al guardar los datos:", error);
 
       updateFieldState(subtituloId, costoAnioId, fieldName, { loading: false, saved: false });
-      setGlosasEspecificasLoading(false);
-      setGlosasEspecificasSaved(false);
+
+      if (fieldName === 'glosas_especificas'){
+        setGlosasEspecificasLoading(false);
+        setGlosasEspecificasSaved(false);
+      }
+      
     }
   };
 
@@ -193,44 +192,45 @@ export const GastosEvolucionVariacion = ({
                   <th scope="row" className="text-sans-p-bold pt-2"><u>{item.nombre_subtitulo}</u></th>
                   {headers.map((year, colIndex) => {
                     // Encuentra el costo correspondiente al año
-                    const costoAnio = item?.costo_anio?.find(anio => anio.anio === parseInt(year));
-                    return (
-                      <td key={`${rowIndex}-${colIndex}`} className="px-1">
-                        <Controller
-                          control={control}
-                          name={`costo_${costoAnio?.id}`}
-                          defaultValue={costoAnio?.costo || ''}
-                          render={({ field }) => {
-                            // Destructura las propiedades necesarias de field
-                            const { onChange, onBlur, value } = field;
+                  const costoAnio = item?.costo_anio?.find(anio => anio.anio === parseInt(year));
+                  const isLastYear = parseInt(year) === Math.max(...headers.map(Number)); // Comprueba si es el último año
+                  return (
+                    <td key={`${rowIndex}-${colIndex}`} className="px-1">
+                      <Controller
+                        control={control}
+                        name={`costo_${costoAnio?.id}`}
+                        defaultValue={costoAnio?.costo || ''}
+                        render={({ field }) => {
+                          // Destructura las propiedades necesarias de field
+                          const { onChange, onBlur, value } = field;
 
-                            const handleChange = (valor) => {
-                              clearErrors(`costo_${costoAnio.id}`);
-                              onChange(valor);
-                              handleInputChange(item.id, costoAnio.id, 'costo', valor);
-                            };
+                          const handleChange = (valor) => {
+                            clearErrors(`costo_${costoAnio.id}`);
+                            onChange(valor);
+                            handleInputChange(item.id, costoAnio.id, 'costo', valor);
+                          };
 
-                            // Función para manejar el evento onBlur
-                            const handleBlur = async () => {
-                              const isFieldValid = await trigger(`costo_${costoAnio.id}`);
-                              if (isFieldValid) {
-                                handleSave(item.id, costoAnio.id, 'costo', field.value);
-                              }
-                              onBlur();
-                            };
-                            return (
-                              <InputCosto
-                                id={`costo_${costoAnio?.id}`}
-                                placeholder="Costo (M$)"
-                                value={value}
-                                style={inputNumberStyle}
-                                disabled={solo_lectura}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                loading={costoAnio.estados?.loading ?? false}
-                                saved={costoAnio.estados?.saved ?? false}
-                                error={errors[`costo_${costoAnio.id}`]?.message}
-                              />
+                          // Función para manejar el evento onBlur
+                          const handleBlur = async () => {
+                            const isFieldValid = await trigger(`costo_${costoAnio.id}`);
+                            if (isFieldValid && !isLastYear) {
+                              handleSave(item.id, costoAnio.id, 'costo', field.value);
+                            }
+                            onBlur();
+                          };
+                          return (
+                            <InputCosto
+                              id={`costo_${costoAnio?.id}`}
+                              placeholder="Costo (M$)"
+                              value={value}
+                              style={inputNumberStyle}
+                              disabled={solo_lectura || isLastYear}
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              loading={costoAnio.estados?.loading ?? false}
+                              saved={costoAnio.estados?.saved ?? false}
+                              error={errors[`costo_${costoAnio.id}`]?.message}
+                            />
                             );
                           }}
                         />

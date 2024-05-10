@@ -1,7 +1,6 @@
 import { useState, useContext, useEffect } from "react";
 import CustomTextarea from "../forms/custom_textarea";
 import { FormularioContext } from "../../context/FormSectorial";
-import { apiTransferenciaCompentencia } from "../../services/transferenciaCompetencia";
 import { useForm, Controller } from "react-hook-form";
 
 const ResumenCostos = ({
@@ -11,12 +10,9 @@ const ResumenCostos = ({
   descripcionCostosTotales,
   stepNumber,
   solo_lectura,
-  refreshSumatoriaCostos,
-  setRefreshSumatoriaCostos,
 }) => {
 
   const [ResumenCostos, setResumenCostos] = useState(() => { return Array.isArray(data) ? data : []; });
-  const [dataDirecta, setDataDirecta] = useState(null);
   const { handleUpdatePaso } = useContext(FormularioContext);
   const [descripcionCostosTotalesLoading, setDescripcionCostosTotalesLoading] = useState(false);
   const [descripcionCostosTotalesSaved, setDescripcionCostosTotalesSaved] = useState(false);
@@ -25,6 +21,10 @@ const ResumenCostos = ({
   const { control, trigger, clearErrors, setValue } = useForm({
     mode: 'onBlur',
   });
+
+  useEffect(() => {
+    setResumenCostos(Array.isArray(data) ? data : []);
+  }, [data]);
 
   // Función de utilidad para formatear números
   const formatearNumero = (numero) => {
@@ -47,30 +47,6 @@ const ResumenCostos = ({
       setValue("descripcionCostosTotales", descripcionCostosTotales);
     }
   }, [descripcionCostosTotales, setValue]);
-
-  // Llamada para recargar componente
-  const fetchDataDirecta = async () => {
-    try {
-      const response = await apiTransferenciaCompentencia.get(`/formulario-sectorial/${id}/paso-${stepNumber}/`);
-      setDataDirecta(response.data);
-    } catch (error) {
-      console.error('Error al obtener datos directamente:', error);
-    }
-  };
-
-  useEffect(() => {
-    if (refreshSumatoriaCostos) {
-      fetchDataDirecta();
-      setRefreshSumatoriaCostos(false);
-    }
-  }, [refreshSumatoriaCostos, id, stepNumber]);
-
-
-  useEffect(() => {
-    if (dataDirecta && dataDirecta.paso5) {
-      setResumenCostos(dataDirecta.p_5_1_c_resumen_costos_por_subtitulo || '0');
-    }
-  }, [dataDirecta]);
 
   // Función para recargar campos por separado
   const updateFieldState = (instanciaId, fieldName, newState) => {

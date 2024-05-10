@@ -94,8 +94,7 @@ const Costos = ({
 
   useEffect(() => {
     if (listado_etapas) {
-      const opcionesDeEtapas = transformarEnOpciones(listado_etapas, 'nombre_etapa');
-      setopcionesEtapas(opcionesDeEtapas);
+      setopcionesEtapas(transformarEnOpciones(listado_etapas, 'nombre_etapa'));
     }
   }, [listado_etapas]);
 
@@ -107,9 +106,6 @@ const Costos = ({
 
   const agregarCostoAdicional = async () => {
     const nuevoCostoAdicional = {
-      total_anual: null,
-      es_transversal: '',
-      descripcion: '',
     };
 
     const payload = {
@@ -418,7 +414,6 @@ return (
                       return (
                         <DropdownCheckbox
                           id={`etapa_${costo.id}`}
-                          name={`etapa_${costo.id}`}
                           placeholder="Etapa"
                           options={opcionesEtapas}
                           onSelectionChange={(selectedOptions) => {
@@ -428,9 +423,6 @@ return (
 
                           readOnly={solo_lectura || opcionesEtapas.length === 0}
                           selectedValues={costo.etapa_label_value}
-
-                          loading={costo.estados?.etapa?.loading ?? false}
-                          saved={costo.estados?.etapa?.saved ?? false}
                         />
                       );
                     }}
