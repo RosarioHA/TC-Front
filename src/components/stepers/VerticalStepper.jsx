@@ -53,17 +53,17 @@ export const VerticalStepper = ({ etapasObjeto, etapaDatos, id }) => {
   return (
     <div className="wrapper d-flex justify-content-start mx-0">
       <ol className="stepper">
-        {etapasClaves.map((clave, index) =>
-        {
-          const etapa = etapasInfo[ clave ];
+        {etapasClaves.map((clave, index) => {
+          const etapa = etapasInfo[clave];
+          const isCompleted = etapa.estado === 'Finalizada' || etapa.estado === 'Omitida'; // Agregar estado Omitida
           return (
             <li
-              className={`stepperItem ${etapa.estado === 'Finalizada' ? 'completed' : ''} ${index === lastCompletedIndex ? 'next-step' : ''}`}
-              key={index} 
+              className={`stepperItem ${isCompleted ? 'completed' : ''} ${index === lastCompletedIndex ? 'next-step' : ''}`}
+              key={index}
             >
               <div className="stepNumber">
-                {etapa.estado === 'Finalizada' ? (
-                  <i className="material-symbols-outlined">done</i>
+                {isCompleted ? (
+                  <i className="material-symbols-outlined">done</i> // Se muestra el ícono 'done' si la etapa está 'Finalizada' o 'Omitida'
                 ) : (
                   <span className="stepIndex">{index + 1}</span>
                 )}
@@ -74,7 +74,6 @@ export const VerticalStepper = ({ etapasObjeto, etapaDatos, id }) => {
                   <div>{renderBadge(etapa.estado)}</div>
                 </div>
                 <Etapa etapaInfo={etapaDatos} index={index} id={idCompetencia} usuarios={etapaDatos}/>
-
               </div>
             </li>
           );
@@ -83,4 +82,5 @@ export const VerticalStepper = ({ etapasObjeto, etapaDatos, id }) => {
       </ol>
     </div>
   );
+  
 };

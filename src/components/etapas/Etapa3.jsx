@@ -2,12 +2,12 @@ import { useNavigate } from 'react-router-dom';
 import { Counter } from "../tables/Counter";
 import { useAuth } from '../../context/AuthContext';
 
-export const Etapa3 = ({ etapa, idCompetencia, etapaDos }) =>
-{
+export const Etapa3 = ({ etapa, idCompetencia, etapaDos }) => {
   const navigate = useNavigate();
   const { userData } = useAuth();
   const userSubdere = userData?.perfil?.includes('SUBDERE');
   const userDipres = userData?.perfil?.includes('DIPRES');
+
   const {
     nombre_etapa,
     estado,
@@ -19,37 +19,26 @@ export const Etapa3 = ({ etapa, idCompetencia, etapaDos }) =>
     oficio_origen
   } = etapa;
 
-  if (!etapa)
-  {
+  if (!etapa) {
     return <div>Cargando...</div>;
   }
 
-
-  const renderButtonOrBadgeForSubetapa = (subetapa) =>
-  {
+  const renderButtonOrBadgeForSubetapa = (subetapa) => {
     const isFinalizado = subetapa.estado === "finalizada";
     let buttonText = subetapa.accion;
     let icon = isFinalizado ? "visibility" : "draft";
 
-    if (subetapa.nombre.includes("Notificar a") && isFinalizado)
-    {
-      if (estado === 'Aún no puede comenzar')
-      {
-        return <span className="badge-status-pending">{buttonText}</span>;
-      } else
-      {
-        return <span className="badge-status-finish">{buttonText}</span>;
-      }
+    // Verificar si el estado general es 'Omitida'
+    if (estado === "Omitida") {
+      return <span className="badge-status-pending">{buttonText}</span>;
     }
 
     const onClickAction = () => {
-      // Primero manejar el caso específico que nos interesa
       if (subetapa.accion === "Subir Observaciones" && subetapa.nombre === "Revisión SUBDERE" && subetapa.estado === "revision" && userSubdere) {
         navigate(`/home/minuta_dipres/${idCompetencia}/observaciones_subdere`);
-        return; // Añadir return para prevenir que otras condiciones se evalúen después
+        return;
       }
-    
-      // Luego el resto de condiciones
+
       if (isFinalizado && subetapa.accion === "Ver oficio") {
         window.open(oficio_origen, '_blank');
       } else if (subetapa.accion === "Subir minuta" && subetapa.estado === "revision" && userDipres) {
@@ -59,35 +48,32 @@ export const Etapa3 = ({ etapa, idCompetencia, etapaDos }) =>
       } else if (isFinalizado && subetapa.accion === "Ver Observaciones") {
         navigate(`/home/minuta_dipres/${idCompetencia}/observaciones_subdere`);
       } else if (etapaDos.estado === "Finalizada") {
-        let path = `/home/estado_competencia/${idCompetencia}/subir_oficio_dipres`;
-        navigate(path);
+        navigate(`/home/estado_competencia/${idCompetencia}/subir_oficio_dipres`);
       }
     };
 
     const isDisabled = !(isFinalizado && subetapa.accion === "Ver minuta") &&
-    !((subetapa.estado === "revision" && userSubdere && subetapa.nombre.includes("Subir oficio") && etapaDos.estado === "Finalizada") ||
-      (isFinalizado && subetapa.accion === "Ver oficio") ||
-      (subetapa.accion === "Subir Observaciones" && userSubdere && subetapa.estado === "revision") ||
-      (subetapa.accion === "Subir minuta" && userDipres && subetapa.estado === "revision") ||
-      (isFinalizado && subetapa.accion === "Ver Observaciones"));
-  
-  return !isDisabled ? (
-    <button onClick={onClickAction} className="btn-secundario-s text-decoration-none" id="btn">
-      <span className="material-symbols-outlined me-1">{icon}</span>
-      <u>{buttonText}</u>
-    </button>
-  ) : (
-    <button className="btn-secundario-s disabled" id="btn">
-      <span className="material-symbols-outlined me-1">{icon}</span>
-      <u>{buttonText}</u>
-    </button>
-  );
+      !((subetapa.estado === "revision" && userSubdere && subetapa.nombre.includes("Subir oficio") && etapaDos.estado === "Finalizada") ||
+        (isFinalizado && subetapa.accion === "Ver oficio") ||
+        (subetapa.accion === "Subir Observaciones" && userSubdere && subetapa.estado === "revision") ||
+        (subetapa.accion === "Subir minuta" && userDipres && subetapa.estado === "revision") ||
+        (isFinalizado && subetapa.accion === "Ver Observaciones"));
+
+    return !isDisabled ? (
+      <button onClick={onClickAction} className="btn-secundario-s text-decoration-none" id="btn">
+        <span className="material-symbols-outlined me-1">{icon}</span>
+        <u>{buttonText}</u>
+      </button>
+    ) : (
+      <button className="btn-secundario-s disabled" id="btn">
+        <span className="material-symbols-outlined me-1">{icon}</span>
+        <u>{buttonText}</u>
+      </button>
+    );
   };
 
-  const handleClick = (usuario) =>
-  {
-    if (usuario.estado === "pendiente")
-    {
+  const handleClick = (usuario) => {
+    if (usuario.estado === "pendiente") {
       navigate(`/home/editar_competencia/${idCompetencia}`);
     }
   };
@@ -96,7 +82,17 @@ export const Etapa3 = ({ etapa, idCompetencia, etapaDos }) =>
     const isFinalizado = usuario.estado === "finalizada";
     const icon = isFinalizado ? "visibility" : "person_add";
     const isPending = etapaDos.estado !== "Finalizada";
-    // Agregar chequeo de isPending para evitar mostrar el badge-status-finish cuando está pendiente
+
+    // Verificar si el estado general es 'Omitida'
+    if (estado === "Omitida") {
+      return (
+        <div className="d-flex justify-content-between text-sans-p border-top border-bottom my-3 py-1">
+          <div className="align-self-center">{usuario.nombre}</div>
+          <span className="badge-status-pending">{usuario.accion}</span>
+        </div>
+      );
+    }
+
     if (isFinalizado && !isPending) {
       return (
         <div className="d-flex justify-content-between text-sans-p border-top border-bottom my-3 py-1">
@@ -105,8 +101,7 @@ export const Etapa3 = ({ etapa, idCompetencia, etapaDos }) =>
         </div>
       );
     }
-  
-    // Si está pendiente, mostrar badge-status-pending, sino el botón correspondiente
+
     return (
       <div className="d-flex justify-content-between text-sans-p border-top border-bottom my-3 py-1">
         <div className="align-self-center">{usuario.nombre}</div>
@@ -121,6 +116,7 @@ export const Etapa3 = ({ etapa, idCompetencia, etapaDos }) =>
       </div>
     );
   };
+
   return (
     <div className="my-3">
       <div className="d-flex justify-content-between my-2 text-sans-p">
@@ -128,7 +124,7 @@ export const Etapa3 = ({ etapa, idCompetencia, etapaDos }) =>
       </div>
       <div>
         {usuario_notificado && usuario_notificado.nombre.includes("Notificar a") && renderNotificacionUsuario(usuario_notificado)}
-        {[ oficio_inicio_dipres, minuta_sectorial, observacion_minuta_sectorial ].map((subetapa, index) => (
+        {[oficio_inicio_dipres, minuta_sectorial, observacion_minuta_sectorial].map((subetapa, index) => (
           <div key={index} className="d-flex justify-content-between text-sans-p border-top border-bottom my-3 py-1">
             <div className="align-self-center">{subetapa.nombre}</div>
             {renderButtonOrBadgeForSubetapa(subetapa)}
