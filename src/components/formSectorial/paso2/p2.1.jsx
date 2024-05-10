@@ -476,14 +476,12 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
                       <div className="col-10 p-3">
                         <div className="conteo">{filaIndex + 1}</div>
                         <CustomInputArea
-                          readOnly = {solo_lectura}
+                          readOnly={solo_lectura}
                           label="Nombre (Obligatorio)"
                           value={fila.nombre_ministerio_servicio || ''}
                           placeholder="Nombre ministerio o servicio"
-                          maxLength={
-                            index === 0 && filaIndex === 0 ? undefined : 300
-                          }
-                          disabled={index === 0 && filaIndex === 0}
+                          maxLength={index === 0 && filaIndex === 0 ? undefined : 300}
+                          disabled={index === 0 && filaIndex === 0 || solo_lectura}
                           onChange={(valor) =>
                             handleInputChange(
                               organismoDisplay,
@@ -503,14 +501,8 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
                                 )
                               : null
                           }
-                          loading={
-                            campoEstado[ `${fila.id}-nombre_ministerio_servicio` ]
-                              ?.loading
-                          }
-                          saved={
-                            campoEstado[ `${fila.id}-nombre_ministerio_servicio` ]
-                              ?.saved
-                          }
+                          loading={campoEstado[ `${fila.id}-nombre_ministerio_servicio` ]?.loading}
+                          saved={campoEstado[ `${fila.id}-nombre_ministerio_servicio` ]?.saved}
                         />
                         {!(index === 0 && filaIndex === 0) && (
                           <div className="mt-4">
@@ -519,7 +511,7 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
                               value={fila.descripcion || ''}
                               placeholder="Descripción"
                               maxLength={300}
-                              readOnly = {solo_lectura}
+                              readOnly={solo_lectura}
                               onChange={(valor) =>
                                 handleInputChange(
                                   organismoDisplay,
@@ -550,19 +542,19 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
                       {index !== 0 || filaIndex !== 0 ? (
                         <div className="col d-flex align-items-center">
                           {!solo_lectura && (
-                          <button
-                            className="btn-terciario-ghost"
-                            onClick={() =>
-                              eliminarFila(organismoDisplay, fila.id)
-                            }
-                          >
-                            <i className="material-symbols-rounded me-2">
-                              delete
-                            </i>
-                            <p className="mb-0 text-decoration-underline">
-                              Borrar
-                            </p>
-                          </button>
+                            <button
+                              className="btn-terciario-ghost"
+                              onClick={() =>
+                                eliminarFila(organismoDisplay, fila.id)
+                              }
+                            >
+                              <i className="material-symbols-rounded me-2">
+                                delete
+                              </i>
+                              <p className="mb-0 text-decoration-underline">
+                                Borrar
+                              </p>
+                            </button>
                           )}
                         </div>
                       ) : null}

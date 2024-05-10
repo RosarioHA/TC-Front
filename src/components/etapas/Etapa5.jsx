@@ -76,18 +76,17 @@ export const Etapa5 = ({ etapa, idCompetencia, etapaCuatro }) =>
                 return <span className="badge-status-finish">{buttonText}</span>;
             }
         }
-        if (userSubdere && subetapa.accion === "Subir oficio" && subetapa.estado === "revision")
-        {
-            path = `/home/estado_competencia/${idCompetencia}/subir_segundo_oficio_dipres`;
+          // Redirigir a la ruta correspondiente según la subetapa
+        if (userSubdere && subetapa.accion === "Revisión SUBDERE" && subetapa.estado === "finalizada") {
+            path = `/home/minuta_dipres/${idCompetencia}/observaciones_subdere`;
             return (
-                <button onClick={handleButtonClick} className={`btn-secundario-s text-decoration-none ${isDisabled ? 'disabled' : ''}`} id="btn" disabled={isDisabled}>
+                <Link to={path} className="btn-secundario-s text-decoration-none" id="btn">
                     <span className="material-symbols-outlined me-1">{icon}</span>
                     <u>{buttonText}</u>
-                </button>
+                </Link>
             );
         }
-        if (userDipres && subetapa.accion === "Subir minuta" && subetapa.estado === "revision")
-        {
+        if (userDipres && subetapa.accion === "Subir minuta" && subetapa.estado === "finalizada") {
             path = `/home/minuta_dipres/${idCompetencia}/segunda_minuta_dipres`;
             return (
                 <Link to={path} className="btn-secundario-s text-decoration-none" id="btn">
@@ -96,8 +95,16 @@ export const Etapa5 = ({ etapa, idCompetencia, etapaCuatro }) =>
                 </Link>
             );
         }
-        if (userSubdere && subetapa.accion === "Subir Observaciones" && subetapa.estado === "pendiente")
-        {
+        if (subetapa.accion === "Ver minuta" && subetapa.estado === "finalizada") {
+            path = `/home/minuta_dipres/${idCompetencia}/segunda_minuta_dipres`;
+            return (
+                <Link to={path} className="btn-secundario-s text-decoration-none" id="btn">
+                    <span className="material-symbols-outlined me-1">{icon}</span>
+                    <u>{buttonText}</u>
+                </Link>
+            );
+        }
+        if (userSubdere && subetapa.accion === "Subir Observaciones" && subetapa.estado === "pendiente") {
             path = `/home/minuta_dipres/${idCompetencia}/observaciones_subdere`;
             return (
                 <button to={path} className="btn-secundario-s text-decoration-none disabled" id="btn">
@@ -106,8 +113,27 @@ export const Etapa5 = ({ etapa, idCompetencia, etapaCuatro }) =>
                 </button>
             );
         }
-        if (subetapa.estado === "finalizada")
-        {
+        if (subetapa.accion === "Ver Observaciones" && subetapa.estado === "finalizada") {
+            path = `/home/minuta_dipres/${idCompetencia}/observaciones_subdere`;
+            return (
+                <Link to={path} className="btn-secundario-s text-decoration-none" id="btn">
+                    <span className="material-symbols-outlined me-1">{icon}</span>
+                    <u>{buttonText}</u>
+                </Link>
+            );
+        }
+        if (userSubdere && subetapa.accion === "Subir oficio" && subetapa.estado === "revision") {
+            path = `/home/estado_competencia/${idCompetencia}/subir_segundo_oficio_dipres`;
+            return (
+                <button onClick={handleButtonClick} className={`btn-secundario-s text-decoration-none ${isDisabled ? 'disabled' : ''}`} id="btn" disabled={isDisabled}>
+                    <span className="material-symbols-outlined me-1">{icon}</span>
+                    <u>{buttonText}</u>
+                </button>
+            );
+        }
+
+        // Caso finalizado para el oficio
+        if (subetapa.accion === "Ver oficio" && subetapa.estado === "finalizada") {
             return (
                 <a href={oficio_origen} target="_blank" rel="noopener noreferrer" className="btn-secundario-s text-decoration-none" id="btn">
                     <span className="material-symbols-outlined me-1">{icon}</span>
@@ -115,7 +141,7 @@ export const Etapa5 = ({ etapa, idCompetencia, etapaCuatro }) =>
                 </a>
             );
         }
-
+    
         // Aplicar la clase disabled basado en la variable isDisabled
         return (
             <button className={`btn-secundario-s text-decoration-none ${isDisabled ? 'disabled' : ''}`} id="btn" disabled={isDisabled}>
@@ -124,6 +150,8 @@ export const Etapa5 = ({ etapa, idCompetencia, etapaCuatro }) =>
             </button>
         );
     };
+
+
 
     return (
         <div className="my-3">

@@ -16,7 +16,6 @@ export const Etapa4 = ({ etapa, etapaTres, idCompetencia }) =>
     oficio_origen
   } = etapa;
 
-  const estadoAsignacion = usuarios_gore.usuarios_gore_notificados;
 
 
   const navigate = useNavigate();
@@ -105,6 +104,8 @@ export const Etapa4 = ({ etapa, etapaTres, idCompetencia }) =>
 
   const renderUsuariosGore = () => {
     const usuariosParaRenderizar = usuarios_gore?.detalle_usuarios_gore_notificados || usuarios_gore || [];
+    const detalleUsuarios = usuarios_gore?.usuarios_gore_notificados; 
+    console.log(detalleUsuarios)
   
     if (usuariosParaRenderizar.length === 1) {
       const usuario = usuariosParaRenderizar[0];
@@ -118,17 +119,17 @@ export const Etapa4 = ({ etapa, etapaTres, idCompetencia }) =>
       return (
         <div className='w-100 border-bottom border-top'>
           <button type="button" className="btn d-flex justify-content-between w-100 px-0 my-1" onClick={toggleUsuariosGoreCollapse}>
-            <span>{usuariosParaRenderizar[0].nombre}</span>
+            <span>{detalleUsuarios[0].nombre}</span>
             <div className="d-flex align-items-center">
               {
-                etapa.estado === "Aún no puede comenzar" && usuariosParaRenderizar[0].estado === "revision" ? (
-                  <span className="badge-status-pending">{usuariosParaRenderizar[0].accion}</span>
-                ) : etapa.estado !== "Aún no puede comenzar" && usuariosParaRenderizar[0].estado === "revision" ? (
-                  <span className="badge-status-pending">{usuariosParaRenderizar[0].accion}</span>
-                ) : usuariosParaRenderizar[0].estado === "finalizada" ? (
-                  <span className="badge-status-finish">{usuariosParaRenderizar[0].accion}</span>
+                etapa.estado === "Aún no puede comenzar" && detalleUsuarios[0].estado === "revision" ? (
+                  <span className="badge-status-pending">{detalleUsuarios[0].accion}</span>
+                ) : etapa.estado !== "Aún no puede comenzar" && detalleUsuarios[0].estado === "revision" ? (
+                  <span className="badge-status-pending">{detalleUsuarios[0].accion}</span>
+                ) : detalleUsuarios[0].estado === "finalizada" ? (
+                  <span className="badge-status-finish">{detalleUsuarios[0].accion}</span>
                 ) : (
-                  <span className={`badge-status-${usuariosParaRenderizar[0].estado}`}>{usuariosParaRenderizar[0].accion}</span>
+                  <span className={`badge-status-${detalleUsuarios[0].estado}`}>{detalleUsuarios[0].accion}</span>
                 )
               }
               <span className="material-symbols-outlined text-black">

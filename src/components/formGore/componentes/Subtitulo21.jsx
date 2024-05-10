@@ -1,8 +1,7 @@
 import React from 'react';
 import CustomTextarea from '../../forms/custom_textarea';
 
-export const Subtitulo21 = ({ personal, solo_lectura }) =>
-{
+export const Subtitulo21 = ({ personal, solo_lectura }) => {
   return (
     <>
       <div className="mt-4 col-11">
@@ -48,7 +47,7 @@ export const Subtitulo21 = ({ personal, solo_lectura }) =>
                       placeholder="Describe el costo por subtítulo e ítem"
                       name="descripcion"
                       value={item.descripcion || ''}
-                      readOnly={solo_lectura}
+                      readOnly={true}
                     />
                   </div>
                 </div>

@@ -16,22 +16,19 @@ export const SubAdicionales = ({
   seccion,
   data,
 }) => {
-  const [subAdicionales, setSubAdicionales] = useState(
-    Array.isArray(data) ? data : []
-  );
-  const { updatePasoGore, patchResponse, patchError } =
-    useContext(FormGOREContext);
-  const [esquemaValidacion, setEsquemaValidacion] = useState(null);
+  const [subAdicionales, setSubAdicionales] = useState(Array.isArray(data) ? data : []);
+  const { updatePasoGore } = useContext(FormGOREContext);
   const [opcionesSubtitulos, setOpcionesSubtitulos] = useState([]);
+  const [opcionesItemsPorCosto, setOpcionesItemsPorCosto] = useState({});
   const [inputStatus, setInputStatus] = useState({});
 
 
-  console.log(esquemaValidacion)// no eliminar
-  
+  //console.log(esquemaValidacion)// no eliminar
+
   useEffect(() => {
     setSubAdicionales(Array.isArray(data) ? data : []);
   }, [data]);
-  
+
   const formMethods = useForm({
     resolver: yupResolver(esquemaSubAdicionales(subAdicionales)),
     mode: 'onBlur',
@@ -39,8 +36,7 @@ export const SubAdicionales = ({
       (acc, item) => ({
         ...acc,
         [`subtitulo_${item.id}`]: item.subtitulo_label_value?.value || '',
-        [`item_subtitulo_${item.id}`]:
-          item.item_subtitulo_label_value?.value || '',
+        [`item_subtitulo_${item.id}`]: item.item_subtitulo_label_value?.value || '',
         [`total_anual_gore_${item.id}`]: item.total_anual_gore || '',
         [`es_transitorio_${item.id}`]: item.es_transitorio || false,
         [`descripcion_${item.id}`]: item.descripcion || '',
@@ -55,89 +51,54 @@ export const SubAdicionales = ({
     clearErrors,
     trigger,
     formState: { errors },
-  } = formMethods;
-
-  useEffect(() => {
-    const esquema = esquemaSubAdicionales(subAdicionales);
-    setEsquemaValidacion(esquema);
-  }, [subAdicionales]);
+  } = formMethods; 
 
 
-
-
-  useEffect(() => {
-    setOpcionesSubtitulos(
-      subtitulos?.map((subtitulo) => ({
-        label: subtitulo.subtitulo,
-        value: subtitulo.id.toString(),
-      }))
-    );
-  }, [subtitulos]);
-
-  const transformarEnOpciones = (datos, propiedadLabel) => {
-    return datos.map((dato) => ({
-      label: dato[propiedadLabel], // Usar dinámicamente la propiedad para 'label'
-      value: dato.id.toString(),
+  // Lógicas para llenar opciones de subtitulo e item_subtitulo
+  const transformarEnOpciones = (datos, propiedadLabel, propiedadValue = 'id') => {
+    return datos.map(dato => ({
+      label: dato[propiedadLabel],
+      value: dato[propiedadValue].toString()
     }));
   };
-  const encontrarOpcionesDeItems = (subtituloSeleccionado) => {
-    const items = itemSub[subtituloSeleccionado] || [];
+
+  useEffect(() => {
+    setOpcionesSubtitulos(transformarEnOpciones(subtitulos, 'subtitulo'));
+  }, [subtitulos]);
+
+  const encontrarOpcionesDeItems = (subtituloTexto) => {
+    const items = itemSub[subtituloTexto] || [];
     return transformarEnOpciones(items, 'item');
   };
 
+  const actualizarOpcionesDeItems = (subtituloId, subtitulosData, itemSubData) => {
+    const subtituloSeleccionado = subtitulosData.find(sub => sub.id.toString() === subtituloId);
+    if (!subtituloSeleccionado) return [];
+
+    const items = itemSubData[subtituloSeleccionado.subtitulo] || [];
+    return transformarEnOpciones(items, 'item');
+  };
+
+  // Inicializa las opciones de items para cada costo cuando recibes los datos iniciales
   useEffect(() => {
-    const newInputStatus = subAdicionales.reduce(
-      (acc, subAdicional) => ({
-        ...acc,
-        [subAdicional.id]: {
-          subtitulo: { loading: false, saved: false },
-          item_subtitulo: { loading: false, saved: false },
-          etapa: { loading: false, saved: false },
-          total_anual_gore: { loading: false, saved: false },
-          descripcion: { loading: false, saved: false },
-          es_transitorio: { loading: false, saved: false },
-        },
-      }),
-      {}
-    );
+    const opcionesIniciales = subAdicionales.reduce((acc, costo) => {
+      const opcionesDeItems = actualizarOpcionesDeItems(costo.subtitulo_label_value?.value, subtitulos, itemSub);
+      return { ...acc, [costo.id]: opcionesDeItems };
+    }, {});
+    setOpcionesItemsPorCosto(opcionesIniciales);
+  }, [subAdicionales, subtitulos, itemSub]);
 
-    setInputStatus(newInputStatus);
-  }, [subAdicionales]);
 
-  // Lógica para agregar una nueva tabla Plataformas
+  // Lógica para agregar un nuevo costo
   const onSubmit = () => {
     agregarSubAdicional();
   };
-
-  useEffect(() => {
-    if (patchError) {
-      console.error('Error al agregar el subtítulo:', patchError);
-    } else if (
-      patchResponse &&
-      patchResponse.data &&
-      patchResponse.data.seccion
-    ) {
-      const listaActualizadaDeSubAdicionales = patchResponse.data.seccion;
-      const nuevoSubAdicional = {
-        ...listaActualizadaDeSubAdicionales[
-          listaActualizadaDeSubAdicionales.length - 1
-        ],
-        isItemSubtituloReadOnly: true,
-      };
-      setSubAdicionales((prevSubAdicionales) => [
-        ...prevSubAdicionales,
-        nuevoSubAdicional,
-      ]);
-    }
-    // Esta lógica se ejecuta cada vez que patchResponse o patchError cambien.
-  }, [patchResponse, patchError]);
 
   const agregarSubAdicional = async () => {
     const nuevoSubAdicional = {
       total_anual_gore: null,
       es_transitorio: '',
       descripcion: '',
-      subtitulo_label_value: { label: '', value: '' },
     };
 
     const payload = {
@@ -184,9 +145,6 @@ export const SubAdicionales = ({
     setSubAdicionales((prevSubAdicionales) =>
       prevSubAdicionales.map((subAdicional) => {
         if (subAdicional.id === subAdicionalId) {
-          if (campo === 'item_subtitulo') {
-            return { ...subAdicional, subtitulo_label_value: valor }; 
-          }
           return { ...subAdicional, [campo]: valor };
         }
         return subAdicional;
@@ -206,23 +164,41 @@ export const SubAdicionales = ({
 
   // Función de guardado
   const handleSave = async (
-    arrayNameId,
+    costoId,
     fieldName,
-    newValue,
-    subAdicionalId
+    newValue
   ) => {
     // Si se está guardando por blur, no es necesario desactivar el botón de guardar general
 
-    const subAdicional = subAdicionales.find((e) => e.id === arrayNameId);
+    const subAdicional = subAdicionales.find((e) => e.id === costoId);
+
+    setInputStatus(prevStatus => ({
+      ...prevStatus,
+      [costoId]: {
+          ...prevStatus[costoId],
+          [fieldName]: { loading: true, saved: false },
+      },
+    }));
 
     let payload;
-    if (fieldName === 'item_subtitulo') {
+    if (fieldName === 'subtitulo') {
+      // Ajuste para enviar 'subtitulo' como un valor único, no un array
+      // Asumiendo que newValue es un objeto de la opción seleccionada
+      payload = {
+        [seccion]: [
+          {
+            id: costoId,
+            [fieldName]: newValue.value, // Envía el valor seleccionado directamente
+          },
+        ],
+      };
+    } else if (fieldName === 'item_subtitulo') {
       // Ajuste para enviar 'item_subtitulo' como un valor único, no un array
       // Asumiendo que newValue es un objeto de la opción seleccionada
       payload = {
         [seccion]: [
           {
-            id: arrayNameId,
+            id: costoId,
             [fieldName]: newValue.value, // Envía el valor seleccionado directamente
           },
         ],
@@ -230,50 +206,39 @@ export const SubAdicionales = ({
     } else if (fieldName === 'es_transitorio') {
       payload = {
         // Payload para 'es_transitorio'
-        [seccion]: [{ id: arrayNameId, [fieldName]: newValue }],
+        [seccion]: [{ id: costoId, [fieldName]: newValue }],
       };
     } else {
       // Payload para otros campos
       payload = {
-        [seccion]: [{ id: arrayNameId, [fieldName]: subAdicional[fieldName] }],
+        [seccion]: [{ id: costoId, [fieldName]: subAdicional[fieldName] }],
       };
     }
-    setInputStatus((prevStatus) => ({
-      ...prevStatus,
-      [subAdicionalId]: {
-        ...prevStatus[subAdicionalId],
-        [fieldName]: { loading: true, saved: false },
-      },
-    }));
 
     try {
-      // Asume que handleUpdatePaso puede manejar ambos casos adecuadamente
       await updatePasoGore(payload);
-      setInputStatus((prevStatus) => ({
-        ...prevStatus,
-        [subAdicionalId]: {
-          ...prevStatus[subAdicionalId],
-          [fieldName]: { loading: false, saved: true },
-        },
-      }));
-    } catch (error) {
-      console.error('Error al guardar los datos:', error);
-      setInputStatus((prevStatus) => ({
-        ...prevStatus,
-        [subAdicionalId]: {
-          ...prevStatus[subAdicionalId],
-          [fieldName]: { loading: false, saved: false },
-        },
+      
+      // Finalizar carga con éxito
+      setInputStatus(prevStatus => ({
+          ...prevStatus,
+          [costoId]: {
+              ...prevStatus[costoId],
+              [fieldName]: { loading: false, saved: true },
+          },
       }));
 
-      if (error.response && error.response.data.errors) {
-        const serverErrors = error.response.data.errors;
-        Object.keys(serverErrors).forEach((field) => {
-          setError(field, { type: 'server', message: serverErrors[field][0] });
-        });
-      }
-    }
-  };
+  } catch (error) {
+      console.error('Error al guardar los datos:', error);
+      // Finalizar carga con error
+      setInputStatus(prevStatus => ({
+          ...prevStatus,
+          [costoId]: {
+              ...prevStatus[costoId],
+              [fieldName]: { loading: false, saved: false },
+          },
+      }));
+  }
+};
 
   return (
     <>
@@ -307,44 +272,41 @@ export const SubAdicionales = ({
                             name={`subtitulo_${costo.id}`}
                             placeholder="Subtítulos"
                             options={opcionesSubtitulos}
-                            onSelectionChange={(selectedOption) => {
-                              const textoSubtitulo = subtitulos.find(
-                                (subtitulo) =>
-                                  subtitulo.id.toString() ===
-                                  selectedOption.value
-                              )?.subtitulo;
-                              const opcionesDeItems =
-                                encontrarOpcionesDeItems(textoSubtitulo);
+                            onSelectionChange={async (selectedOption) => {
 
+                              // Guardar el subtítulo seleccionado y esperar a que se complete
+                              await handleSave(costo.id, 'subtitulo', selectedOption);
+
+                              // Reset item_subtitulo
+                              await handleSave(costo.id, 'item_subtitulo', { label: '', value: '' });
+
+                              // Calcular las nuevas opciones para item_subtitulo basado en el subtitulo seleccionado
+                              const opcionesDeItems = encontrarOpcionesDeItems(selectedOption.value);
+
+                              // Actualizar el estado con las nuevas opciones
                               setSubAdicionales((prevCostos) =>
-                                prevCostos.map((costo) => {
-                                  if (costo.id === costo.id) {
+                                prevCostos.map((costoItem) => {
+                                  if (costoItem.id === costo.id) {
                                     return {
-                                      ...costo,
-                                      subtituloSeleccionado: textoSubtitulo,
-                                      opcionesItems: opcionesDeItems,
-                                      isItemSubtituloReadOnly: false,
+                                      ...costoItem,
+                                      subtitulo_label_value: selectedOption,
+                                      item_subtitulo_label_value: { label: '', value: '' }, // Resetea item_subtitulo
+                                      opcionesItems: opcionesDeItems
                                     };
                                   }
-                                  return costo;
+                                  return costoItem;
                                 })
                               );
+
                               field.onChange(selectedOption.value);
                             }}
+
                             readOnly={solo_lectura}
                             selected={
                               costo.subtitulo_label_value &&
-                              costo.subtitulo_label_value.value
+                                costo.subtitulo_label_value.value
                                 ? costo.subtitulo_label_value
                                 : undefined
-                            }
-                            loading={
-                              inputStatus[costo.id]?.item_subtitulo?.loading ??
-                              false
-                            }
-                            saved={
-                              inputStatus[costo.id]?.item_subtitulo?.saved ??
-                              false
                             }
                             error={errors[`subtitulo_${costo.id}`]?.message}
                           />
@@ -364,37 +326,18 @@ export const SubAdicionales = ({
                             id={`item_subtitulo_${costo.id}`}
                             name={`item_subtitulo_${costo.id}`}
                             placeholder="Ítem"
-                            options={costo.opcionesItems}
-                            onSelectionChange={(selectedOptions) => {
-                              handleSave(
-                                costo.id,
-                                'item_subtitulo',
-                                selectedOptions
-                              );
-                              setSubAdicionales((prevCostos) =>
-                                prevCostos?.map((costo) => {
-                                  if (costo.id === costo.id) {
-                                    return {
-                                      ...costo,
-                                      isItemSubtituloReadOnly: true,
-                                    };
-                                  }
-                                  return costo;
-                                })
-                              );
-                              field.onChange(selectedOptions.value);
+                            options={opcionesItemsPorCosto[costo.id] || []} // Usa el estado que corresponde a cada costo
+                            onSelectionChange={(selectedOption) => {
+                              handleSave(costo.id, 'item_subtitulo', selectedOption);
+                              field.onChange(selectedOption.value);
                             }}
-                            readOnly={solo_lectura || costo.isItemSubtituloReadOnly}
+                            readOnly={solo_lectura}
                             selected={
                               costo.item_subtitulo_label_value &&
-                              costo.item_subtitulo_label_value.value
+                                costo.item_subtitulo_label_value.value
                                 ? costo.item_subtitulo_label_value
                                 : undefined
                             }
-                            loading={
-                              inputStatus[costo.id]?.item_subtitulo?.loading
-                            }
-                            saved={inputStatus[costo.id]?.item_subtitulo?.saved}
                             error={
                               errors[`item_subtitulo_${costo.id}`]?.message
                             }
@@ -445,17 +388,9 @@ export const SubAdicionales = ({
                             value={value}
                             onChange={handleChange}
                             onBlur={handleBlur}
-                            loading={
-                              inputStatus[costo.id]?.total_anual_gore
-                                ?.loading ?? false
-                            }
-                            saved={
-                              inputStatus[costo.id]?.total_anual_gore?.saved ??
-                              false
-                            }
-                            error={
-                              errors[`total_anual_gore_${costo.id}`]?.message
-                            }
+                            loading={inputStatus[costo.id]?.total_anual_gore?.loading}
+                            saved={inputStatus[costo.id]?.total_anual_gore?.saved}
+                            error={errors[`total_anual_gore_${costo.id}`]?.message}
                             disabled={solo_lectura}
                           />
                         );
@@ -478,14 +413,8 @@ export const SubAdicionales = ({
                             handleEstadoChange={(newValue) =>
                               handleEsTransitorioChange(costo.id, newValue)
                             }
-                            loading={
-                              inputStatus[costo.id]?.es_transitorio?.loading ??
-                              false
-                            }
-                            saved={
-                              inputStatus[costo.id]?.es_transitorio?.saved ??
-                              false
-                            }
+                            loading={inputStatus[costo.id]?.es_transitorio?.loading}
+                            saved={inputStatus[costo.id]?.es_transitorio?.saved}
                             error={
                               errors[`es_transitorio_${costo.id}`]?.message
                             }
