@@ -105,7 +105,6 @@ export const Etapa4 = ({ etapa, etapaTres, idCompetencia }) =>
   const renderUsuariosGore = () => {
     const usuariosParaRenderizar = usuarios_gore?.detalle_usuarios_gore_notificados || usuarios_gore || [];
     const detalleUsuarios = usuarios_gore?.usuarios_gore_notificados; 
-    console.log(detalleUsuarios)
   
     if (usuariosParaRenderizar.length === 1) {
       const usuario = usuariosParaRenderizar[0];

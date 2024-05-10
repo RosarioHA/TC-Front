@@ -1,7 +1,7 @@
 import { useContext, useState, useEffect } from 'react';
 import { FormularioContext } from "./../../../context/FormSectorial";
 import CustomTextarea from "../../forms/custom_textarea";
-import DropdownSelect from "../../dropdown/select";
+import { DropdownSelectSimple } from "../../dropdown/selectSimple"; 
 import { useAmbitos } from '../../../hooks/useAmbitos';
 
 export const Subpaso_tres = ({ pasoData, id, stepNumber, solo_lectura }) => {
@@ -203,7 +203,7 @@ export const Subpaso_tres = ({ pasoData, id, stepNumber, solo_lectura }) => {
           </div>
         </div>
         <div className="my-4 col-11">
-          <DropdownSelect
+          <DropdownSelectSimple
             label="Elige el ámbito de la competencia (Obligatorio)"
             placeholder="Elige el ámbito de la competencia"
             options={opcionesAmbito}
