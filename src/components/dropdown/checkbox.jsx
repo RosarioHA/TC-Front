@@ -29,13 +29,16 @@ const DropdownCheckbox = ({
       toggleRef.current &&
       !toggleRef.current.contains(event.target)
     ) {
-      setIsOpen(false);
-      // Notificar al componente padre cuando el dropdown se cierra
-      if (userHasMadeSelection && onSelectionChange) {
-        onSelectionChange(selectedOptions);
+      if (isOpen) {
+        setIsOpen(false);
+        // Notificar al componente padre cuando el dropdown se cierra
+        if (userHasMadeSelection && onSelectionChange) {
+          onSelectionChange(selectedOptions);
+        }
       }
     }
-  }, [selectedOptions, userHasMadeSelection, onSelectionChange]);
+  }, [isOpen, selectedOptions, userHasMadeSelection, onSelectionChange]);
+  
 
   useEffect(() => {
     document.addEventListener('mousedown', handleClickOutside);
@@ -59,7 +62,7 @@ const DropdownCheckbox = ({
   const handleCheckboxChange = useCallback((option) => {
     if (readOnly) return;
     let newSelectedOptions;
-
+  
     if (option === 'Todas') {
       newSelectedOptions = options.filter(opt => opt.label !== 'Sin opción asociada');
     } else if (option === 'Eliminar Selección') {
@@ -67,24 +70,24 @@ const DropdownCheckbox = ({
     } else {
       const index = selectedOptions.findIndex(opt => opt.value === option.value);
       if (index > -1) {
-        // Deseleccionar
         newSelectedOptions = [
           ...selectedOptions.slice(0, index),
           ...selectedOptions.slice(index + 1)
         ];
       } else {
-        // Seleccionar
         newSelectedOptions = [...selectedOptions, option];
       }
     }
-
-    setSelectedOptions(newSelectedOptions)
-    setUserHasMadeSelection(true);
-    // Llamar a la función de callback pasada por el componente padre
-    if (onSelectionChange) {
-      onSelectionChange(newSelectedOptions);
+  
+    if (JSON.stringify(newSelectedOptions) !== JSON.stringify(selectedOptions)) {
+      setSelectedOptions(newSelectedOptions);
+      setUserHasMadeSelection(true);
+      if (onSelectionChange) {
+        onSelectionChange(newSelectedOptions);
+      }
     }
   }, [selectedOptions, options, onSelectionChange, readOnly]);
+  
 
 
   const renderSelectedOptions = () => {

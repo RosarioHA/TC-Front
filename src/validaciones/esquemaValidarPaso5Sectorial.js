@@ -16,12 +16,6 @@ export const construirValidacionPaso5_1ab = (modeloCostos) => {
       .string()
       .required('Un ítem es requerido');
 
-    // Validación para etapa (no requerido)
-    schemaFields[`etapa_${id}`] = yup
-      .array()
-      .of(yup.string())
-      .nullable();
-
     // Validación para Total Anual
     schemaFields[`total_anual_${id}`] = yup
     .number()
@@ -58,7 +52,7 @@ export const construirValidacionPaso5_2evolucion = (modeloCostos) => {
       schemaFields[campoCostoId] = yup
         .number()
         .typeError('El costo debe ser un número')
-        .min(0, 'El costo no debe ser un número negativo')
+        .integer('El costo debe ser un número entero sin decimales')
         .nullable(true) // Esto permite que el valor sea null, útil si el costo puede estar vacío
         .required('El costo es obligatorio');
     });

@@ -1,5 +1,4 @@
 import Costos from "../../tables/Costos";
-import { useState, useEffect } from "react";
 import ResumenCostos from "../../tables/ResumenCostos";
 
 export const Subpaso_CincoPuntoUno = (
@@ -18,8 +17,6 @@ export const Subpaso_CincoPuntoUno = (
     listado_etapas,
   }
 ) => {
-
-  const [refreshSumatoriaCostos, setRefreshSumatoriaCostos] = useState(false);
 
   const{
     total_costos_directos,
@@ -41,14 +38,7 @@ export const Subpaso_CincoPuntoUno = (
     }
     // Devolver un valor predeterminado o el mismo valor si no es un número
     return numero;
-  }; 
-
-  // refreshSumatoriaCostos es un trigger disparado desde CostosDirectos o CostosIndirectos
-  useEffect(() => {
-    if (refreshSumatoriaCostos) {
-      setRefreshSumatoriaCostos(false);
-    }
-  }, [refreshSumatoriaCostos, id, stepNumber]);
+  };
   
 
   return (
