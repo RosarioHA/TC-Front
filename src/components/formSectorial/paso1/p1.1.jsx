@@ -162,14 +162,14 @@ export const Subpaso_uno = ({ dataPaso, id, stepNumber, marcojuridico, solo_lect
     <>
       <div className="pe-5 me-5 mt-4 col-12">
         <span className="my-4 text-sans-h4">1.1 Ficha de descripción organizacional</span>
-        <div className="my-4">
+        <div className="my-4 col-11">
           <CustomTextarea
             label="Denominación del organismo"
             placeholder="Escriba la denominación del organismo"
             id={dataPaso?.denominacion_organismo}
             value={dataPaso?.denominacion_organismo}
             disabled={true}
-            readOnly={solo_lectura}
+            readOnly={true}
             name="denominacion_organismo"
           />
         </div>
