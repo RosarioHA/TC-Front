@@ -11,10 +11,6 @@
   vertical-align: middle;
   }
 
-  .dropdown-container {
-    max-height: 350px; 
-    overflow-y: auto;
-}
 
 .checkbox-custom {
   display: inline-block;
@@ -101,4 +97,22 @@
 
 .dropdown-menu{
   width: 100%;
+}
+
+.input-container {
+  position: relative; /* Importante para el posicionamiento del dropdown */
+  width: 100%; /* Ajusta esto según el diseño */
+}
+
+.dropdown-container {
+  position: absolute;
+  top: 100%;  
+  left: 0;
+  width: 100%;  
+  background-color: white;  
+  border: 1px solid #ccc;  
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);  
+  overflow-y: auto;  
+  max-height: 300px;  
+  z-index: 1000;  
 }
