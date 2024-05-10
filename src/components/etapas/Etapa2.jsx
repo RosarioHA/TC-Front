@@ -71,14 +71,12 @@ export const Etapa2 = ({ etapa, idCompetencia }) =>
     let buttonText = accion;
     let icon = estado === "finalizada" ? "visibility" : "draft";
     let path = "/";
-    let isDisabled = estado === "pendiente";
-    const formularios = formulario_sectorial.formularios_sectoriales[ 0 ];
+    const formularios = formulario_sectorial && formulario_sectorial?.formularios_sectoriales && formulario_sectorial.formularios_sectoriales.length > 0 ? formulario_sectorial.formularios_sectoriales[0] : null;
+    let isDisabled = estado === "pendiente" || (formularios && formularios?.estado !== "finalizada");
 
-    if (nombre.includes("Observaciones de formularios sectoriales") || nombre.includes("Observación del formulario sectorial"))
-    {
-      isDisabled = formularios.estado !== "finalizada";
+    if (nombre.includes("Observaciones de formularios sectoriales") || nombre.includes("Observación del formulario sectorial")) {
+      isDisabled = formularios && formularios?.estado !== "finalizada";
     }
-
 
 
     const userMinisterio = userData?.perfil?.includes('Ministerio');
@@ -116,14 +114,14 @@ export const Etapa2 = ({ etapa, idCompetencia }) =>
         path = estado === "revision" ? `/home/observaciones_subdere/${idCompetencia}/` : `/home/observaciones_subdere/${idCompetencia}/`;
         buttonText = accion;
         icon = estado === "revision" ? "draft" : "visibility";
-        isDisabled = formularios.estado !== "finalizada";
+        isDisabled = formularios?.estado !== "finalizada";
         break;
       case nombre.includes("Observación del formulario sectorial"):
         // Adaptar el path y las condiciones para otros roles también, si necesario
         path = estado === "revision" ? `/home/observaciones_subdere/${idCompetencia}/` : `/home/observaciones_subdere/${idCompetencia}/`;
         buttonText = accion;
         icon = estado === "revision" ? "draft" : "visibility";
-        isDisabled = formularios.estado !== "finalizada";
+        isDisabled = formularios?.estado !== "finalizada";
         break;
 
       default:
