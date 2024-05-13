@@ -1,4 +1,4 @@
-import React,{ useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { FormularioContext } from "../../context/FormSectorial";
 import CustomTextarea from "../forms/custom_textarea";
 import InputCosto from "../forms/input_costo";
@@ -40,16 +40,16 @@ export const GastosEvolucionVariacion = ({
         ...item,
         costo_anio: item?.costo_anio?.map(costo => ({
           ...costo,
-          
+
         }))
-        
+
       }));
       console.log('costo_anio', formattedData)
       setDatosGastos(formattedData);
     }
   }, [dataGastos]);
 
-  
+
 
   useEffect(() => {
     const esquema = construirValidacionPaso5_2evolucion(datosGastos);
@@ -94,7 +94,7 @@ export const GastosEvolucionVariacion = ({
       })
     );
   };
-    
+
 
   // Manejadora de CustomInput y CustomTextArea
   const handleInputChange = (instanciaId, campo, valor) => {
@@ -120,14 +120,14 @@ export const GastosEvolucionVariacion = ({
 
     if (fieldName === 'descripcion') {
       payload = {
-        'p_5_2_evolucion_gasto_asociado': [{ id: subtituloId, [fieldName]: fieldValue}]
+        'p_5_2_evolucion_gasto_asociado': [{ id: subtituloId, [fieldName]: fieldValue }]
       };
     } else if (fieldName === 'costo') {
-      
+
       // Payload para otros campos
       payload = {
         'p_5_2_evolucion_gasto_asociado': [{
-          id:subtituloId,
+          id: subtituloId,
           'costo_anio': [{
             id: costoAnioId,
             costo: fieldValue
@@ -153,18 +153,18 @@ export const GastosEvolucionVariacion = ({
         setGlosasEspecificasLoading(false);
         setGlosasEspecificasSaved(true)
       }
-      
+
 
     } catch (error) {
       console.error("Error al guardar los datos:", error);
 
       updateFieldState(subtituloId, costoAnioId, fieldName, { loading: false, saved: false });
 
-      if (fieldName === 'glosas_especificas'){
+      if (fieldName === 'glosas_especificas') {
         setGlosasEspecificasLoading(false);
         setGlosasEspecificasSaved(false);
       }
-      
+
     }
   };
 
@@ -192,45 +192,45 @@ export const GastosEvolucionVariacion = ({
                   <th scope="row" className="text-sans-p-bold pt-2"><u>{item.nombre_subtitulo}</u></th>
                   {headers.map((year, colIndex) => {
                     // Encuentra el costo correspondiente al año
-                  const costoAnio = item?.costo_anio?.find(anio => anio.anio === parseInt(year));
-                  const isLastYear = parseInt(year) === Math.max(...headers.map(Number)); // Comprueba si es el último año
-                  return (
-                    <td key={`${rowIndex}-${colIndex}`} className="px-1">
-                      <Controller
-                        control={control}
-                        name={`costo_${costoAnio?.id}`}
-                        defaultValue={costoAnio?.costo || ''}
-                        render={({ field }) => {
-                          // Destructura las propiedades necesarias de field
-                          const { onChange, onBlur, value } = field;
+                    const costoAnio = item?.costo_anio?.find(anio => anio.anio === parseInt(year));
+                    const isLastYear = parseInt(year) === Math.max(...headers.map(Number)); // Comprueba si es el último año
+                    return (
+                      <td key={`${rowIndex}-${colIndex}`} className="px-1">
+                        <Controller
+                          control={control}
+                          name={`costo_${costoAnio?.id}`}
+                          defaultValue={costoAnio?.costo || ''}
+                          render={({ field }) => {
+                            const { onChange, onBlur, value } = field;
 
-                          const handleChange = (valor) => {
-                            clearErrors(`costo_${costoAnio.id}`);
-                            onChange(valor);
-                            handleInputChange(item.id, costoAnio.id, 'costo', valor);
-                          };
+                            // Función para manejar el cambio en el input
+                            const handleChange = (valor) => {
+                              onChange(valor); // Actualiza el valor en react-hook-form
+                              handleInputChange(item.id, costoAnio.id, 'costo', valor); // Actualiza el estado local
+                            };
 
-                          // Función para manejar el evento onBlur
-                          const handleBlur = async () => {
-                            const isFieldValid = await trigger(`costo_${costoAnio.id}`);
-                            if (isFieldValid && !isLastYear) {
-                              handleSave(item.id, costoAnio.id, 'costo', field.value);
-                            }
-                            onBlur();
-                          };
-                          return (
-                            <InputCosto
-                              id={`costo_${costoAnio?.id}`}
-                              placeholder="Costo (M$)"
-                              value={value}
-                              style={inputNumberStyle}
-                              disabled={solo_lectura || isLastYear}
-                              onChange={handleChange}
-                              onBlur={handleBlur}
-                              loading={costoAnio.estados?.loading ?? false}
-                              saved={costoAnio.estados?.saved ?? false}
-                              error={errors[`costo_${costoAnio.id}`]?.message}
-                            />
+                            // Función para manejar el evento onBlur
+                            const handleBlur = async () => {
+                              const isFieldValid = await trigger(`costo_${costoAnio.id}`);
+                              if (isFieldValid) {
+                                handleSave(item.id, costoAnio.id, 'costo', value);
+                              }
+                              onBlur();
+                            };
+
+                            return (
+                              <InputCosto
+                                id={`costo_${costoAnio?.id}`}
+                                placeholder="Costo (M$)"
+                                value={costoAnio?.costo || ''}
+                                style={inputNumberStyle} // asegúrate de que el estilo sea correcto
+                                disabled={solo_lectura || isLastYear}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                loading={costoAnio.estados?.loading ?? false}
+                                saved={costoAnio.estados?.saved ?? false}
+                                error={errors[`costo_${costoAnio.id}`]?.message}
+                              />
                             );
                           }}
                         />
