@@ -10,7 +10,8 @@ import CustomTextarea from '../../components/forms/custom_textarea';
 import { useAuth } from '../../context/AuthContext';
 import { useObservacionesSubdere } from '../../hooks/formulario/useObSubdereSectorial';
 
-const PasoUno = () => {
+const PasoUno = () =>
+{
   const { pasoData, errorPaso, updateStepNumber, data } = useContext(FormularioContext);
   const stepNumber = 1;
   const { userData } = useAuth();
@@ -21,14 +22,25 @@ const PasoUno = () => {
   const observacionesEnviadas = observaciones?.observacion_enviada
   const formSectorialEnviado = data?.formulario_enviado
 
-  useEffect(() => {
-    updateStepNumber(stepNumber);
-    if (observaciones && Object.keys(observaciones).length === 0) {
+  useEffect(() =>
+  {
+    updateStepNumber(1);
+
+    // Carga inicial de observaciones
+    if (data?.id)
+    {
       fetchObservaciones();
-    } if (observaciones && observaciones.observacion_paso1)  {
+    }
+  }, [ data?.id, fetchObservaciones, updateStepNumber ]);
+
+  // Seguimiento de cambios en las observaciones para actualizar el estado local
+  useEffect(() =>
+  {
+    if (observaciones?.observacion_paso1)
+    {
       setObservacionPaso1(observaciones.observacion_paso1);
     }
-  }, [ updateStepNumber, stepNumber, observaciones, data, fetchObservaciones ]);
+  }, [ observaciones?.observacion_paso1 ]);
 
   if (errorPaso) return <div>Error: {errorPaso.message || "Error desconocido"}</div>;
   if (!pasoData || pasoData.length === 0) return <> <div className="d-flex align-items-center flex-column my-5 px-5 ">
@@ -43,11 +55,15 @@ const PasoUno = () => {
     paso1 } = pasoData;
   const paso1Data = paso1 || {};
 
-  const handleGuardarObservacion = async () => {
-    if (!observacionesEnviadas) {
+  const handleGuardarObservacion = async () =>
+  {
+    if (!observacionesEnviadas)
+    {
       const observacionData = {
-        observacion_paso1: observacionPaso1,
+        id: observaciones?.id,  // Asumiendo que 'observaciones' es un estado que contiene el 'id' sectorial
+        observacion_paso1: observacionPaso1
       };
+
       await updateObservacion(observacionData);
     }
   };

@@ -1,10 +1,11 @@
-import {  useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useCompetencia } from "../../hooks/competencias/useCompetencias";
 import { useEtapa3 } from "../../hooks/minutaDIPRES/useEtapa3";
 
-const ObservacionesSubdere = () => {
-  const [ etapaOmitida, setEtapaOmitida] = useState(null);
+const ObservacionesSubdere = () =>
+{
+  const [ etapaOmitida, setEtapaOmitida ] = useState(null);
   const navigate = useNavigate();
   const { id } = useParams();
   const { competenciaDetails } = useCompetencia(id);
@@ -14,36 +15,44 @@ const ObservacionesSubdere = () => {
   const observacionesEnviadas = competenciaDetails?.etapa2?.observaciones_completas;
   const etapaFinalizada = competenciaDetails?.etapa2?.estado === 'Finalizada';
 
-  useEffect(() => {
+  useEffect(() =>
+  {
     // Obtener etapaOmitida desde competenciaDetails y establecerla en el estado
-    if (competenciaDetails && competenciaDetails.etapa3 && competenciaDetails.etapa3.omitida !== undefined) {
+    if (competenciaDetails && competenciaDetails.etapa3 && competenciaDetails.etapa3.omitida !== undefined)
+    {
       setEtapaOmitida(competenciaDetails.etapa3.omitida);
     }
-  }, [competenciaDetails]); // Este efecto se ejecuta cada vez que competenciaDetails cambia
+  }, [ competenciaDetails ]); // Este efecto se ejecuta cada vez que competenciaDetails cambia
 
-  console.log("competencia details", competenciaDetails);
-  console.log("formulariosNoEnviados", formulariosNoEnviados);
-  console.log("observacionesEnviadas", observacionesEnviadas);
-  console.log("estapaFinalizada", etapaFinalizada);
-  console.log("etapaOmitida", etapaOmitida);
+  // console.log("competencia details", competenciaDetails);
+  // console.log("formulariosNoEnviados", formulariosNoEnviados);
+  // console.log("observacionesEnviadas", observacionesEnviadas);
+  // console.log("estapaFinalizada", etapaFinalizada);
+  // console.log("etapaOmitida", etapaOmitida);
 
-  const handleBackButtonClick = () => {
+  const handleBackButtonClick = () =>
+  {
     navigate(-1);
   };
 
-  const handleRadioButtonChange = (value) => {
+  const handleRadioButtonChange = (value) =>
+  {
     setEtapaOmitida(value === 'B');
   };
 
-  const handleVerFormulario = (formularioId) => {
+  const handleVerFormulario = (formularioId) =>
+  {
     navigate(`/home/formulario_sectorial/${formularioId}/paso_1`);
   };
 
-  const handleCerrarEtapa = async () => {
-    try {
+  const handleCerrarEtapa = async () =>
+  {
+    try
+    {
       await patchCompetenciaOmitida(competenciaDetails?.etapa3?.id, etapaOmitida);
       navigate(`/home/success_cierre_observaciones/${competenciaDetails?.id}`);
-    } catch (error) {
+    } catch (error)
+    {
       console.error("Error al cerrar la etapa:", error);
     }
   };
@@ -51,7 +60,7 @@ const ObservacionesSubdere = () => {
   return (
     <div className="container col-10 col-xxl-11">
       <div className="py-3 d-flex">
-        <div  className="align-self-center">
+        <div className="align-self-center">
           <button className="btn-secundario-s" onClick={handleBackButtonClick}>
             <i className="material-symbols-rounded me-2">arrow_back_ios</i>
             <p className="mb-0 text-decoration-underline">Volver</p>
@@ -70,52 +79,54 @@ const ObservacionesSubdere = () => {
         <h2 className="text-sans-h1">Formularios sectoriales</h2>
         <h2 className="text-sans-h2">{competenciaDetails.nombre}</h2>
       </div>
-      <hr/>
+      <hr />
 
       <div>
-      {competenciaDetails?.etapa2?.observaciones_sectorial ? (
-        Array.isArray(competenciaDetails.etapa2.observaciones_sectorial) ? (
-          competenciaDetails.etapa2.observaciones_sectorial.map((observaciones, index) => (
-            <tr 
-              className={`d-flex justify-content-between p-3 align-items-center ${index % 2 === 0 ? 'neutral-line' : 'white-line'}`} 
-              key={observaciones.id}
-            >
-              <td>{observaciones.nombre}</td>
-              <td className="">
-              <button 
-              className={`btn-secundario-s text-decoration-underline ${formulariosNoEnviados ? 'disabled' : ''}`} 
-              onClick={() => handleVerFormulario(observaciones.id)} 
-              disabled={formulariosNoEnviados}
-              >
-                <p className="mb-0">{observaciones.accion}</p>
-              </button>
-              </td>
-            </tr>
-            ))
-          ) : (
-            competenciaDetails.etapa2.observaciones_sectorial.detalle_observaciones_sectoriales.map((observaciones, index) => (
-              <tr 
-                className={`d-flex justify-content-between p-3 align-items-center ${index % 2 === 0 ? 'neutral-line' : 'white-line'}`} 
+        {competenciaDetails?.etapa2?.observaciones_sectorial ? (
+          Array.isArray(competenciaDetails.etapa2.observaciones_sectorial) ? (
+            competenciaDetails.etapa2.observaciones_sectorial.map((observaciones, index) => (
+              <tr
+                className={`d-flex justify-content-between p-3 align-items-center ${index % 2 === 0 ? 'neutral-line' : 'white-line'}`}
                 key={observaciones.id}
               >
                 <td>{observaciones.nombre}</td>
                 <td className="">
-                  <button 
-                  className={`btn-secundario-s text-decoration-underline ${formulariosNoEnviados ? 'disabled' : ''}`} 
-                  onClick={() => handleVerFormulario(observaciones.id)} 
-                  disabled={formulariosNoEnviados}
+                  <button
+                    className={`btn-secundario-s text-decoration-underline ${formulariosNoEnviados ? 'disabled' : ''}`}
+                    onClick={() => handleVerFormulario(observaciones.id)}
+                    disabled={formulariosNoEnviados}
                   >
                     <p className="mb-0">{observaciones.accion}</p>
                   </button>
                 </td>
               </tr>
             ))
-          ) 
+          ) : (
+            competenciaDetails?.etapa2.observaciones_sectorial?.detalle_observaciones_sectoriales
+              .sort((a, b) => b.id - a.id) 
+              .map((observaciones, index) => (
+                <tr
+                  className={`d-flex justify-content-between p-3 align-items-center ${index % 2 === 0 ? 'neutral-line' : 'white-line'}`}
+                  key={observaciones.id}
+                >
+                  <td>{observaciones.nombre}</td>
+                  <td className="">
+                    <button
+                      className={`btn-secundario-s text-decoration-underline ${formulariosNoEnviados ? 'disabled' : ''}`}
+                      onClick={() => handleVerFormulario(observaciones.id)}
+                      disabled={formulariosNoEnviados}
+                    >
+                      <p className="mb-0">{observaciones.accion}</p>
+                    </button>
+                  </td>
+                </tr>
+              ))
+          )
         ) : (
           <p>No hay formularios disponibles.</p>
         )}
       </div>
-      <hr/>
+      <hr />
 
       <div className="d-flex justify-content-between">
         <div className="d-flex">
@@ -174,7 +185,7 @@ const ObservacionesSubdere = () => {
         </div>
       )}
 
-      {!observacionesEnviadas &&  (
+      {!observacionesEnviadas && (
         <>
           <div>
             <h3 className="text-sans-h2">Debes revisar todos los formularios antes de terminar la etapa</h3>
@@ -183,18 +194,18 @@ const ObservacionesSubdere = () => {
         </>
       )}
 
-      
+
       <div className="d-flex justify-content-end my-5 me-3">
-      {!etapaFinalizada && (
-        <button
-        className="btn-primario-s"
-        disabled={etapaOmitida === null}
-        onClick={handleCerrarEtapa}
-        >
-          Cerrar etapa
-          <i className="material-symbols-rounded me-2">arrow_forward_ios</i>
-        </button>
-      )}  
+        {!etapaFinalizada && (
+          <button
+            className="btn-primario-s"
+            disabled={etapaOmitida === null}
+            onClick={handleCerrarEtapa}
+          >
+            Cerrar etapa
+            <i className="material-symbols-rounded me-2">arrow_forward_ios</i>
+          </button>
+        )}
       </div>
     </div>
   )
