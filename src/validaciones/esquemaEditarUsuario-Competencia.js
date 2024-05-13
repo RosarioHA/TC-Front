@@ -2,7 +2,8 @@ import * as yup from 'yup';
 
 // Expresiones regulares
 const nombreRegex = /^[A-Za-záéíóúüÜñÑ\s']+$/;
-const nombreCompetenciaRegex = /^[a-zA-Z0-9\sñÑáéíóúÁÉÍÓÚüÜ.,'":?!@_\-{}()~#$%&*+=[\]\\|;]+$/;
+const nombreCompetenciaRegex = /^[a-zA-Z0-9\sñÑáéíóúÁÉÍÓÚüÜ.,'":?!@_\-{}()~#$%&*+=[\]\\|;/]+$/;
+
 
 export const esquemaEdicionUsuarios = yup.object().shape({
   nombre_completo: yup
