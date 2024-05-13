@@ -34,13 +34,17 @@ export const Etapa2 = ({ etapa, idCompetencia }) =>
 
   const usuariosNotificadosDetalles = usuarios_notificados?.detalle_usuarios_notificados || [];
 
-  const renderBadge = (usuario) =>
-  {
-    if (usuario.estado === "finalizada" && usuario.accion === "Finalizada")
-    {
-      return <span className="badge-status-finish">{usuario.accion}</span>;
+  const renderBadge  = (usuario) => {
+    switch (usuario.estado) {
+      case "finalizada":
+        return <span className="badge-status-finish">{usuario.accion}</span>;
+      case "pendiente":
+        return <span className="badge-status-pending">{usuario.accion}</span>; // Mostrar este badge si el estado es "pendiente"
+      case "revision":
+        return <span className="badge-status-review">{usuario.accion}</span>;
+      default:
+        return null; // No badge si no cumple ninguna de las condiciones anteriores
     }
-    // Aquí puedes añadir más lógica para otros estados o acciones
   };
 
   const renderBadgeForEstado = (estado) =>
@@ -116,13 +120,19 @@ export const Etapa2 = ({ etapa, idCompetencia }) =>
         icon = estado === "revision" ? "draft" : "visibility";
         isDisabled = formularios?.estado !== "finalizada";
         break;
-      case nombre.includes("Observación del formulario sectorial"):
-        // Adaptar el path y las condiciones para otros roles también, si necesario
-        path = estado === "revision" ? `/home/observaciones_subdere/${idCompetencia}/` : `/home/observaciones_subdere/${idCompetencia}/`;
-        buttonText = accion;
-        icon = estado === "revision" ? "draft" : "visibility";
-        isDisabled = formularios?.estado !== "finalizada";
-        break;
+        case nombre.includes("Observación del formulario sectorial"):
+          // Establecer el path. Considerar diferentes rutas si es necesario para otros roles.
+          path = `/home/observaciones_subdere/${idCompetencia}/`;
+        
+          // Establecer el texto y el icono del botón basado en el estado.
+          buttonText = accion;
+          icon = estado === "revision" ? "draft" : "visibility";
+        
+          // Habilitar el botón específicamente cuando el estado es 'revision'.
+          // El botón estará deshabilitado únicamente si el formulario no está finalizado y el estado no es 'revision'.
+          isDisabled = estado !== "revision" && formularios?.estado === "finalizada";
+        
+          break;
 
       default:
         break;
@@ -195,6 +205,7 @@ export const Etapa2 = ({ etapa, idCompetencia }) =>
     );
   };
 
+
   const renderUsuariosNotificados = () =>
   {
     if (usuarios_notificados && usuarios_notificados.length === 1)
@@ -247,7 +258,7 @@ export const Etapa2 = ({ etapa, idCompetencia }) =>
       const info = etapa.formulario_sectorial.formularios_sectoriales[ 0 ];
 
       return (
-        <div className='w-100 boder border-bottom'>
+        <div className='w-100 boder border-bottom border-top'>
           <button type="button" className="btn d-flex justify-content-between w-100 px-0" onClick={toggleCollapse}>
             <span>{info.nombre}</span>
             <div className="d-flex align-items-center">

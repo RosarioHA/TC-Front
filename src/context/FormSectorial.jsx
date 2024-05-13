@@ -28,7 +28,6 @@ export const FormularioProvider = ({ children }) => {
 
   const  handleUpdatePaso = useCallback(async ( id, stepNumber,formData) => {
     try {
-      console.log(formData);
       await patchStep(id, stepNumber, formData);
       refetchTrigger(); 
     } catch (error) {

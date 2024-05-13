@@ -63,12 +63,17 @@ const PasoDos = () =>
 
   const handleGuardarObservacion = async () =>
   {
-    const observacionData = {
-      observacion_paso2: observacionPaso2,
-    };
+    if (!observacionesEnviadas)
+    {
+      const observacionData = {
+        id: observaciones?.id,  // Asumiendo que 'observaciones' es un estado que contiene el 'id' sectorial
+        observacion_paso2: observacionPaso2
+      };
 
-    await updateObservacion(observacionData);
+      await updateObservacion(observacionData);
+    }
   };
+
 
   const avance = pasoData?.paso2?.avance;
 

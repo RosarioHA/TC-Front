@@ -50,7 +50,6 @@ export const Subpaso_uno = ({ dataPaso, id, stepNumber, marcojuridico, solo_lect
   {
     const uniqueKey = `formData-${id}-step${stepNumber}`;
     const savedData = localStorage.getItem(uniqueKey);
-    console.log('get', savedData)
     if (savedData)
     {
       setFormData(JSON.parse(savedData));
@@ -62,7 +61,6 @@ export const Subpaso_uno = ({ dataPaso, id, stepNumber, marcojuridico, solo_lect
     if (hasChanged)
     {
       const uniqueKey = `formData-${id}-step${stepNumber}`;
-      console.log('set', formData)
       localStorage.setItem(uniqueKey, JSON.stringify(formData));
     }
   }, [ formData, hasChanged, id, stepNumber ]);

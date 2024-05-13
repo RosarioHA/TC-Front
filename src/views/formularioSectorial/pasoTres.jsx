@@ -123,14 +123,20 @@ const PasoTres = () =>
 
   const { cobertura_anual, paso3, solo_lectura } = pasoData;
 
+
   const handleGuardarObservacion = async () =>
   {
-    const observacionData = {
-      observacion_paso3: observacionPaso3,
-    };
-    await updateObservacion(observacionData);
-  };
+    if (!observacionesEnviadas)
+    {
+      const observacionData = {
+        id: observaciones?.id,  // Asumiendo que 'observaciones' es un estado que contiene el 'id' sectorial
+        observacion_paso3: observacionPaso3
+      };
 
+      await updateObservacion(observacionData);
+    }
+  };
+  
   const avance = pasoData?.paso3?.avance;
 
   return (
