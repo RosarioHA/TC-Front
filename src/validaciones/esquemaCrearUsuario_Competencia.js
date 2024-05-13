@@ -3,7 +3,7 @@ import * as yup from 'yup';
 // Expresiones regulares
 const rutRegex = /^[0-9]+-[0-9kK]{1}$/;
 const nombreRegex = /^[A-Za-záéíóúüÜñÑ\s']+$/;
-const nombreCompetenciaRegex = /^[a-zA-Z0-9\sñÑáéíóúÁÉÍÓÚüÜ.,'":?!@_\-{}()~#$%&*+=[\]\\|;]+$/;
+const nombreCompetenciaRegex = /^[a-zA-Z0-9\sñÑáéíóúÁÉÍÓÚüÜ.,'":?!@_\-{}()~#$%&*+=[\]\\|;/]+$/;
 
 
 export const esquemaCreacionUsuario = yup.object().shape({
