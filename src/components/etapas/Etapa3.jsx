@@ -130,7 +130,7 @@ export const Etapa3 = ({ etapa, idCompetencia, etapaDos }) => {
             {renderButtonOrBadgeForSubetapa(subetapa)}
           </div>
         ))}
-        {estado === "En Estudio" && <Counter plazoDias={etapa.plazo_dias} tiempoTranscurrido={etapa.calcular_tiempo_transcurrido} />}
+        {estado !== "Aún no puede comenzar" && <Counter plazoDias={etapa.plazo_dias} tiempoTranscurrido={etapa.calcular_tiempo_transcurrido} />}
         <div className="text-sans-p">Fecha última modificación: {fecha_ultima_modificacion}</div>
       </div>
     </div>

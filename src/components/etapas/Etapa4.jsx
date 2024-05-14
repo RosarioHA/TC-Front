@@ -3,9 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Counter } from "../tables/Counter";
 import { useAuth } from '../../context/AuthContext';
 
-
-export const Etapa4 = ({ etapa, etapaTres, idCompetencia }) =>
-{
+export const Etapa4 = ({ etapa, etapaTres, idCompetencia }) => {
   const {
     nombre_etapa,
     estado,
@@ -16,52 +14,36 @@ export const Etapa4 = ({ etapa, etapaTres, idCompetencia }) =>
     oficio_origen
   } = etapa;
 
-
-
   const navigate = useNavigate();
   const { userData } = useAuth();
   const userRegionId = userData.region;
   const userProfile = userData.perfil;
   const userSubdere = userData?.perfil?.includes('SUBDERE');
 
-  const [ isUsuariosGoreCollapsed, setIsUsuariosGoreCollapsed ] = useState(false);
-  const [ isFormulariosGoreCollapsed, setIsFormulariosGoreCollapsed ] = useState(false);
+  const [isUsuariosGoreCollapsed, setIsUsuariosGoreCollapsed] = useState(false);
+  const [isFormulariosGoreCollapsed, setIsFormulariosGoreCollapsed] = useState(false);
 
-  // const isStageDisabled = estado === "Aún no puede comenzar" || !(etapaTres.estado === "Finalizada" || etapaTres.estado === "Omitida");
-
-  // Función para alternar el collapse de Usuarios GORE
-  const toggleUsuariosGoreCollapse = () =>
-  {
+  const toggleUsuariosGoreCollapse = () => {
     setIsUsuariosGoreCollapsed(!isUsuariosGoreCollapsed);
   };
 
-  // Función para alternar el collapse de Formularios GORE
-  const toggleFormulariosGoreCollapse = () =>
-  {
+  const toggleFormulariosGoreCollapse = () => {
     setIsFormulariosGoreCollapsed(!isFormulariosGoreCollapsed);
   };
 
-  const renderBadgeOrButtonForUsuario = (usuario) =>
-  {
-    // Verifica si el usuario tiene el perfil SUBDERE
-    if (userSubdere)
-    {
-      // Aquí agregamos las condiciones específicas para mostrar los badges según tu descripción
-      if (etapa.estado === "Aún no puede comenzar" && usuario.estado === "finalizada")
-      {
+  const renderBadgeOrButtonForUsuario = (usuario) => {
+    if (userSubdere) {
+      if (etapa.estado === "Aún no puede comenzar" && usuario.estado === "finalizada") {
         return <span className="badge-status-pending">{usuario.accion}</span>;
-      } else if (etapa.estado !== "Aún no puede comenzar" && usuario.estado === "finalizada")
-      {
+      } else if (etapa.estado !== "Aún no puede comenzar" && usuario.estado === "finalizada") {
         return <span className="badge-status-finish">{usuario.accion}</span>;
       }
 
-      switch (usuario.estado)
-      {
+      switch (usuario.estado) {
         case "pendiente":
           return <span className="badge-status-pending">{usuario.accion}</span>;
         case "revision":
-          if (usuario.accion === "Asignar usuario")
-          {
+          if (usuario.accion === "Asignar usuario") {
             return (
               <button
                 className="btn-secundario-s text-decoration-none"
@@ -71,41 +53,34 @@ export const Etapa4 = ({ etapa, etapaTres, idCompetencia }) =>
                 <u>{usuario.accion}</u>
               </button>
             );
-          } else
-          {
+          } else {
             return <span className="badge-status-review">{usuario.accion}</span>;
           }
         default:
-          return null; // Para otros estados no especificados
+          return null;
       }
-    } else
-    {
-      // Si no es SUBDERE, muestra solo el estado del usuario sin botones activos
-      if (etapa.estado === "Aún no puede comenzar" && usuario.estado === "finalizada")
-      {
+    } else {
+      if (etapa.estado === "Aún no puede comenzar" && usuario.estado === "finalizada") {
         return <span className="badge-status-pending">{usuario.accion}</span>;
-      } else if (etapa.estado !== "Aún no puede comenzar" && usuario.estado === "finalizada")
-      {
+      } else if (etapa.estado !== "Aún no puede comenzar" && usuario.estado === "finalizada") {
         return <span className="badge-status-finish">{usuario.accion}</span>;
       }
 
-      switch (usuario.estado)
-      {
+      switch (usuario.estado) {
         case "pendiente":
           return <span className="badge-status-pending">{usuario.accion}</span>;
         case "revision":
           return <span className="badge-status-review">{usuario.accion}</span>;
         default:
-          return null; // Para otros estados no especificados
+          return null;
       }
     }
   };
 
-
   const renderUsuariosGore = () => {
     const usuariosParaRenderizar = usuarios_gore?.detalle_usuarios_gore_notificados || usuarios_gore || [];
-    const detalleUsuarios = usuarios_gore?.usuarios_gore_notificados; 
-  
+    const detalleUsuarios = usuarios_gore?.usuarios_gore_notificados;
+
     if (usuariosParaRenderizar.length === 1) {
       const usuario = usuariosParaRenderizar[0];
       return (
@@ -120,19 +95,17 @@ export const Etapa4 = ({ etapa, etapaTres, idCompetencia }) =>
           <button type="button" className="btn d-flex justify-content-between w-100 px-0 my-1" onClick={toggleUsuariosGoreCollapse}>
             <span>{detalleUsuarios[0].nombre}</span>
             <div className="d-flex align-items-center">
-              {
-                etapa.estado === "Aún no puede comenzar" && detalleUsuarios[0].estado === "revision" ? (
-                  <span className="badge-status-pending">{detalleUsuarios[0].accion}</span>
-                ) : etapa.estado !== "Aún no puede comenzar" && detalleUsuarios[0].estado === "revision" ? (
-                  <span className="badge-status-pending">{detalleUsuarios[0].accion}</span>
-                ): etapa.estado === "Aún no puede comenzar" && detalleUsuarios[0].estado === "finalizada" ? (
-                  <span className="badge-status-pending">{detalleUsuarios[0].accion}</span>
-                  ) : detalleUsuarios[0].estado === "finalizada" ? (
-                  <span className="badge-status-finish">{detalleUsuarios[0].accion}</span>
-                ) : (
-                  <span className={`badge-status-${detalleUsuarios[0].estado}`}>{detalleUsuarios[0].accion}</span>
-                )
-              }
+              {etapa.estado === "Aún no puede comenzar" && detalleUsuarios[0].estado === "revision" ? (
+                <span className="badge-status-pending">{detalleUsuarios[0].accion}</span>
+              ) : etapa.estado !== "Aún no puede comenzar" && detalleUsuarios[0].estado === "revision" ? (
+                <span className="badge-status-pending">{detalleUsuarios[0].accion}</span>
+              ) : etapa.estado === "Aún no puede comenzar" && detalleUsuarios[0].estado === "finalizada" ? (
+                <span className="badge-status-pending">{detalleUsuarios[0].accion}</span>
+              ) : detalleUsuarios[0].estado === "finalizada" ? (
+                <span className="badge-status-finish">{detalleUsuarios[0].accion}</span>
+              ) : (
+                <span className={`badge-status-${detalleUsuarios[0].estado}`}>{detalleUsuarios[0].accion}</span>
+              )}
               <span className="material-symbols-outlined text-black">
                 {isUsuariosGoreCollapsed ? 'expand_less' : 'expand_more'}
               </span>
@@ -157,55 +130,40 @@ export const Etapa4 = ({ etapa, etapaTres, idCompetencia }) =>
         </div>
       );
     }
-  
-    return null; 
+
+    return null;
   };
 
-
-  const renderButtonForSubetapa = (subetapa) =>
-  {
+  const renderButtonForSubetapa = (subetapa) => {
     const { estado, accion, nombre } = subetapa;
     let buttonText = accion;
     let icon = estado === "finalizada" ? "visibility" : "draft";
     let path = "/";
 
-    // Manejo de casos específicos y asignación del path correcto
-    if (nombre.startsWith("Notificar a") && estado === "finalizada")
-    {
-      if (etapa.estado === 'Aún no puede comenzar')
-      {
+    if (nombre.startsWith("Notificar a") && estado === "finalizada") {
+      if (etapa.estado === 'Aún no puede comenzar') {
         return <span className="badge-status-pending">{accion}</span>;
-      } else
-      {
+      } else {
         return <span className="badge-status-finish">{accion}</span>;
       }
     }
 
-    // Condición revisada para habilitación del botón
     const enableButtonForSubdere = (etapaTres.estado === "Finalizada" || etapaTres.estado === "Omitida") && userSubdere;
 
-    // Manejo del botón para subir oficio
-    if (nombre.includes("Subir oficio y su fecha para habilitar formulario GORE"))
-    {
-      if (estado === "finalizada")
-      {
+    if (nombre.includes("Subir oficio y su fecha para habilitar formulario GORE")) {
+      if (estado === "finalizada") {
         return (
           <button onClick={() => window.open(oficio_origen, '_blank')} className="btn-secundario-s text-decoration-none" id="btn">
             <span className="material-symbols-outlined me-1">{icon}</span>
             <u>{buttonText}</u>
           </button>
         );
-      } else
-      {
-        // Determinar la ruta y si el botón debe estar deshabilitado
+      } else {
         path = `/home/estado_competencia/${etapa.id}/subir_oficio_gore/`;
         const isDisabled = (estado === "pendiente" || estado === "revision") && !enableButtonForSubdere;
 
-        // Manejar el clic en el botón para navegar
-        const handleButtonClick = () =>
-        {
-          if (!isDisabled)
-          { // Solo navegar si el botón no está deshabilitado
+        const handleButtonClick = () => {
+          if (!isDisabled) {
             navigate(path, { state: { extraData: "GORE", seccion: 'etapa4' } });
           }
         };
@@ -218,35 +176,28 @@ export const Etapa4 = ({ etapa, etapaTres, idCompetencia }) =>
         );
       }
     }
-  }
+  };
 
-  const renderButtonForFormularioGore = (formulario) =>
-  {
-    // Define la ruta base para el formulario, esto puede ajustarse según tu enrutamiento
+  const renderButtonForFormularioGore = (formulario) => {
     const basePath = `/home/formulario_gore/${formulario.id}`;
-
-    // Determina el estado del botón basándote en el estado del formulario y el perfil del usuario
     let path, icon, buttonText, isButtonDisabled;
 
-    switch (formulario.estado)
-    {
+    switch (formulario.estado) {
       case "pendiente":
         buttonText = formulario.accion || "Completar";
-        path = `${basePath}/paso_1`; // Asumiendo que "paso_1" es el inicio del formulario
+        path = `${basePath}/paso_1`;
         icon = 'edit';
-        isButtonDisabled = userProfile !== "GORE"; 
+        isButtonDisabled = userProfile !== "GORE" || estado === 'Aún no puede comenzar';
         break;
-      // Agrega más casos según otros estados posibles
       default:
         buttonText = "Ver Detalles";
         path = `${basePath}/paso_1`;
         icon = 'visibility';
-        isButtonDisabled = false;
+        isButtonDisabled = estado === 'Aún no puede comenzar';
         break;
     }
-    // Función para manejar la navegación
-    const handleNavigation = () =>
-    {
+
+    const handleNavigation = () => {
       navigate(path);
     };
 
@@ -263,9 +214,7 @@ export const Etapa4 = ({ etapa, etapaTres, idCompetencia }) =>
     );
   };
 
-  const renderSingleFormularioGore = (formulario) =>
-  {
-    // Aquí utilizamos la lógica específica para renderizar un único formulario
+  const renderSingleFormularioGore = (formulario) => {
     return (
       <div className="d-flex justify-content-between text-sans-p border-top border-bottom my-3 py-1">
         <span className="my-1">{formulario.nombre}</span>
@@ -274,21 +223,18 @@ export const Etapa4 = ({ etapa, etapaTres, idCompetencia }) =>
     );
   };
 
-
   const renderFormulariosGore = () => {
-    // Verifica si formularios_gore es un array directamente, indicando solo un formulario.
     if (Array.isArray(formularios_gore) && formularios_gore.length === 1) {
       return renderSingleFormularioGore(formularios_gore[0]);
     }
-  
-    // En caso de que formularios_gore contenga las propiedades para múltiples formularios
+
     const { detalle_formularios_gore = [] } = formularios_gore || {};
     const formulariosParaRenderizar = userProfile === 'GORE'
       ? detalle_formularios_gore.filter(formulario => formulario.region_id === userRegionId)
       : detalle_formularios_gore;
-  
+
     const formularioCompleto = formularios_gore.formularios_gore_completos[0];
-  
+
     if (formulariosParaRenderizar.length === 1) {
       return renderSingleFormularioGore(formulariosParaRenderizar[0]);
     } if (formulariosParaRenderizar.length > 1 && userProfile !== 'GORE') {
@@ -297,7 +243,6 @@ export const Etapa4 = ({ etapa, etapaTres, idCompetencia }) =>
           <button type="button" className="btn d-flex justify-content-between w-100 px-0 my-1" onClick={toggleFormulariosGoreCollapse}>
             <span>{formularioCompleto.nombre}</span>
             <div className="d-flex align-items-center">
-              {/* Modificación aquí para ajustar el badge según el estado de la etapa */}
               <span className={etapa.estado === "Aún no puede comenzar" ? "badge-status-pending" : (formularioCompleto.estado === "revision" ? "badge-status-review" : "badge-status-finish")}>
                 {formularioCompleto.accion}
               </span>
@@ -327,8 +272,6 @@ export const Etapa4 = ({ etapa, etapaTres, idCompetencia }) =>
     }
     return null;
   };
-  
-
 
   return (
     <div className="my-3">
@@ -340,13 +283,13 @@ export const Etapa4 = ({ etapa, etapaTres, idCompetencia }) =>
         {oficio_inicio_gore && (
           <div className="d-flex justify-content-between text-sans-p border-top border-bottom my-3 py-1">
             <div className="align-self-center">{oficio_inicio_gore.nombre}</div>
-            {renderButtonForSubetapa(oficio_inicio_gore,)}
+            {renderButtonForSubetapa(oficio_inicio_gore)}
           </div>
         )}
         {renderFormulariosGore()}
-        {estado === "En Estudio" && (
+        {estado !== "Aún no puede comenzar" && (
           <Counter
-            plazoDias={etapa.plazo_dias}
+            plazoDias={etapa.plazo_formulario_gore}
             tiempoTranscurrido={etapa.calcular_tiempo_transcurrido}
           />
         )}
