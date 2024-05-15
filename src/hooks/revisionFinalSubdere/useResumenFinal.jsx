@@ -51,5 +51,22 @@ export const useResumenFinal = (id) => {
   };
 
 
-  return { resumen, loading, error, fetchResumen, actualizarFormularioEnviado };
+  const subirArchivo = async (file, fieldName) => {
+    const formData = new FormData();
+    formData.append(fieldName, file);
+
+    try {
+      await apiTransferenciaCompentencia.patch(`/revision-final-competencia/${id}/resumen/`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      fetchResumen();
+    } catch (error) {
+      console.error('Error al subir el archivo:', error);
+    }
+  };
+
+
+  return { resumen, loading, error, fetchResumen, actualizarFormularioEnviado, subirArchivo };
 };

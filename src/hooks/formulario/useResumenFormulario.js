@@ -19,17 +19,54 @@ export const useResumenFormulario = (id) => {
 
   useEffect(() => {
     fetchResumen();
-  }, [fetchResumen, id]);
+  }, [fetchResumen]);
 
   const actualizarFormularioEnviado = async () => {
     try {
       await apiTransferenciaCompentencia.patch(`/formulario-sectorial/${id}/resumen/`, { formulario_enviado: true });
-      // Recargar el resumen después de la actualización
       fetchResumen();
     } catch (error) {
       console.error("Error al enviar el formulario:", error);
     }
   };
 
-  return { resumen, loading, error,  fetchResumen, actualizarFormularioEnviado };
+  const subirArchivo = async (file, fieldName) => {
+    const formData = new FormData();
+    formData.append(fieldName, file);
+
+    try {
+      await apiTransferenciaCompentencia.patch(`/formulario-sectorial/${id}/resumen/`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      fetchResumen();
+    } catch (error) {
+      console.error('Error al subir el archivo:', error);
+    }
+  };
+
+  const guardarDescripcion = async (fieldName, value) => {
+    try {
+      await apiTransferenciaCompentencia.patch(`/formulario-sectorial/${id}/resumen/`, {
+        [fieldName]: value
+      });
+      fetchResumen();
+    } catch (error) {
+      console.error(`Error al guardar la descripción del archivo:`, error);
+    }
+  };
+
+  const eliminarArchivo = async () => {
+    try {
+      await apiTransferenciaCompentencia.patch(`/formulario-sectorial/${id}/resumen/`, {
+        delete_antecedente_adicional_sectorial: true
+      });
+      fetchResumen();  // Recargar el resumen para reflejar la eliminación
+    } catch (error) {
+      console.error('Error al eliminar el archivo:', error);
+    }
+  };
+
+  return { resumen, loading, error, fetchResumen, actualizarFormularioEnviado, subirArchivo, guardarDescripcion ,eliminarArchivo};
 };
