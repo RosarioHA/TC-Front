@@ -2,7 +2,7 @@ import { useContext, useState, useEffect } from "react";
 import { FormSubdereContext } from "../../../context/RevisionFinalSubdere";
 import { useAmbitos } from "../../../hooks/useAmbitos";
 import { useForm, Controller } from "react-hook-form";
-import DropdownSelect from "../../dropdown/select";
+import  {DropdownSelectSimple} from "../../dropdown/selectSimple"; 
 
 export const AmbitoDefinitivo = ({ ambito_definitivo_competencia, solo_lectura }) => {
   const { updatePasoSubdere } = useContext(FormSubdereContext);
@@ -73,7 +73,7 @@ export const AmbitoDefinitivo = ({ ambito_definitivo_competencia, solo_lectura }
               name="ambito_competencia"
               control={control}
               render={() => (
-                <DropdownSelect
+                <DropdownSelectSimple
                   id="ambito_competencia"
                   label="Elige el ámbito de la competencia (Obligatorio)"
                   placeholder="Elige el ámbito de la competencia"
