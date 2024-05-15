@@ -14,7 +14,7 @@ export const useResumenGore = (id) => {
       setError(null); // Limpiar errores previos si la solicitud es exitosa
     } catch (error) {
       setError('No se pudo cargar el resumen del formulario. Por favor, intente nuevamente.');
-      setResumen(null); // Opcional: resetear el resumen en caso de error
+      setResumen(null); 
     } finally {
       setLoading(false);
     }
@@ -40,6 +40,44 @@ export const useResumenGore = (id) => {
     }
   };
 
+  const subirArchivo = async (file, fieldName) => {
+    const formData = new FormData();
+    formData.append(fieldName, file);
 
-  return { resumen, loading, error, fetchResumen, actualizarFormularioEnviado };
+    try {
+      await apiTransferenciaCompentencia.patch(`/formulario-gore/${id}/resumen/`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      fetchResumen();
+    } catch (error) {
+      console.error('Error al subir el archivo:', error);
+    }
+  };
+
+  const guardarDescripcion = async (fieldName, value) => {
+    try {
+      await apiTransferenciaCompentencia.patch(`/formulario-gore/${id}/resumen/`, {
+        [fieldName]: value
+      });
+      fetchResumen();
+    } catch (error) {
+      console.error(`Error al guardar la descripción del archivo:`, error);
+    }
+  };
+
+  const eliminarArchivo = async () => {
+    try {
+      await apiTransferenciaCompentencia.patch(`/formulario-gore/${id}/resumen/`, {
+        antecedente_adicional_gore: true
+      });
+      fetchResumen();  // Recargar el resumen para reflejar la eliminación
+    } catch (error) {
+      console.error('Error al eliminar el archivo:', error);
+    }
+  };
+
+
+  return { resumen, loading, error, fetchResumen, actualizarFormularioEnviado ,subirArchivo, guardarDescripcion, eliminarArchivo };
 };
