@@ -1,5 +1,6 @@
 import PersonalIndirecto from "../../tables/PersonalIndirecto";
 import PersonalDirecto from "../../tables/PersonalDirecto";
+import Personal from "../../tables/PersonalSectorial";
 
 export const Subpaso_CincoPuntoTres = (
   { id,
@@ -10,8 +11,7 @@ export const Subpaso_CincoPuntoTres = (
     data_personal_indirecto,
     listado_estamentos,
     listado_calidades_juridicas_directas,
-    listado_calidades_juridicas_indirectas,
-    refetchTrigger
+    listado_calidades_juridicas_indirectas
   }) => {
 
 
@@ -26,7 +26,7 @@ export const Subpaso_CincoPuntoTres = (
       <h6 className="text-sans-h6-primary mt-3">Por ejercicio directo se entenderán todas aquellas tareas y procedimientos específicos y exclusivos de la competencia. En la renta bruta se deben considerar aquellas asignaciones propias del cargo. </h6>
 
       <div className="my-4 relative-container">
-        <PersonalDirecto
+        <Personal
           id={id}
           paso5={paso5}
           solo_lectura={solo_lectura}
@@ -34,7 +34,6 @@ export const Subpaso_CincoPuntoTres = (
           data_personal_directo={data_personal_directo}
           listado_estamentos={listado_estamentos}
           listado_calidades_juridicas={listado_calidades_juridicas_directas}
-          refetchTrigger={refetchTrigger}
         />
       </div>
 
@@ -52,7 +51,6 @@ export const Subpaso_CincoPuntoTres = (
           data_personal_indirecto={data_personal_indirecto}
           listado_estamentos={listado_estamentos}
           listado_calidades_juridicas={listado_calidades_juridicas_indirectas}
-          refetchTrigger={refetchTrigger}
         />
       </div>
 
