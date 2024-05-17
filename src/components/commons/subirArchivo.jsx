@@ -1,32 +1,40 @@
 import { useState, useEffect } from "react";
-import {BtnOrganigrama} from "../commons/btnOrganigrama";
+import { BtnOrganigrama } from "../commons/btnOrganigrama";
 
-export const SubirArchivo = ({ index, tituloDocumento, readOnly, archivoDescargaUrl, handleFileSelect, fieldName }) => {
+export const SubirArchivo = ({ index, tituloDocumento, readOnly, archivoDescargaUrl, handleFileSelect, fieldName, handleDeleteFile }) =>
+{
   const [ fileUploaded, setFileUploaded ] = useState(false);
   const [ fileName, setFileName ] = useState('');
   const [ error, setError ] = useState('');
 
-  useEffect(() => {
-    if (tituloDocumento) {
+  useEffect(() =>
+  {
+    if (tituloDocumento)
+    {
       const parts = tituloDocumento.split('/');
       const name = parts.pop() || tituloDocumento;
       setFileName(name);
       setFileUploaded(true);
-    } else {
+    } else
+    {
       setFileUploaded(false);
     }
   }, [ tituloDocumento ]);
 
   const displayFileType = fileUploaded ? "Archivo guardado" : "No seleccionado";
 
-  const handleFileChange = (event) => {
+  const handleFileChange = (event) =>
+  {
     const file = event.target.files[ 0 ];
-    if (file) {
-      if (file.type !== "application/pdf") {
+    if (file)
+    {
+      if (file.type !== "application/pdf")
+      {
         setError("Solo se permiten archivos PDF.");
         return;
       }
-      if (file.size > 20971520) {
+      if (file.size > 20971520)
+      {
         setError("El archivo no debe superar los 20 MB.");
         return;
       }
@@ -37,14 +45,17 @@ export const SubirArchivo = ({ index, tituloDocumento, readOnly, archivoDescarga
     }
   };
 
-  const handleDelete = () => {
+  const handleDelete = () =>
+  {
     setFileUploaded(false);
     setFileName('');
     setError('');
     handleFileSelect('', fieldName);
+    handleDeleteFile();
   };
 
-  const handleDownload = () => {
+  const handleDownload = () =>
+  {
     if (archivoDescargaUrl)
     {
       window.open(archivoDescargaUrl, '_blank');
@@ -60,13 +71,13 @@ export const SubirArchivo = ({ index, tituloDocumento, readOnly, archivoDescarga
             <div className="py-3 text-wrap ms-4">{fileName}</div>
           )}
           {!readOnly && (
-          <div className="py-3 px-2">{error ? <div className="text-sans-p-bold-darkred">{error}</div> : displayFileType}</div>
+            <div className="py-3 px-2">{error ? <div className="text-sans-p-bold-darkred">{error}</div> : displayFileType}</div>
           )}
         </div>
         <div>
           {!readOnly ? (
             <div className="col p-3 d-flex">
-              <BtnOrganigrama  onFileChange={handleFileChange} fileUploaded={fileUploaded} />
+              <BtnOrganigrama onFileChange={handleFileChange} fileUploaded={fileUploaded} />
               {fileUploaded && (
                 <>
                   <button onClick={handleDelete} className="btn-terciario-ghost px-2 d-flex align-items-center mx-1">

@@ -2,13 +2,17 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from 'react-router-dom';
 import { Avance } from "../../components/tables/Avance";
 import { useResumenFinal } from "../../hooks/revisionFinalSubdere/useResumenFinal";
+// import { SubirArchivo } from "../../components/commons/subirArchivo";
+// import CustomTextarea from "../../components/forms/custom_textarea";
 
 const ResumenFinal = () =>
 {
   const navigate = useNavigate();
   const [ pasos, setPasos ] = useState([]);
   const { id } = useParams();
-  const { resumen, loading, error, actualizarFormularioEnviado } = useResumenFinal(id);
+  const { resumen, loading, error, actualizarFormularioEnviado, 
+    // subirArchivo
+  } = useResumenFinal(id);
 
   useEffect(() =>
   {
@@ -39,10 +43,21 @@ const ResumenFinal = () =>
   };
 
   if (loading) return <div className="d-flex align-items-center flex-column ">
-  <div className="text-center text-sans-h5-medium-blue ">Cargando Resumen</div>
-  <span className="placeholder col-4 bg-primary"></span>
-</div>;
+    <div className="text-center text-sans-h5-medium-blue ">Cargando Resumen</div>
+    <span className="placeholder col-4 bg-primary"></span>
+  </div>;
   if (error) return <div>Error: {error}</div>;
+
+  // const handleFileSelect = async (file) =>
+  // {
+  //   try
+  //   {
+  //     await subirArchivo(file, "antecedente_adicional_revision_subdere");
+  //   } catch (error)
+  //   {
+  //     console.error("Error al guardar el archivo:", error);
+  //   }
+  // };
 
 
   return (
@@ -94,6 +109,57 @@ const ResumenFinal = () =>
         </div>
       )}
 
+      {/* <div className="mb-5 mx-5 px-2">
+        <span className="text-sans-h1">Está todo listo para que envíes el formulario</span>
+        <p className="text-sans-h6">
+          Ya llenaste todos los campos obligatorios de este formulario.
+        </p>
+        <p className="text-sans-h6">
+          Si quisieras agregar algún antecedente adicional, sube un archivo en el siguiente recuadro:
+        </p>
+        <div className="col-9">
+          <h5 className="text-sans-h5 mt-4">Antecedentes Adicionales (Opcional)</h5>
+          <h6 className="text-sans-h6 mb-3">
+            Máximo 1 archivo, peso máximo 20MB, formato PDF)
+          </h6>
+          <div className="d-flex justify-content-between py-3 fw-bold">
+            <div className="col-10">
+              <div className="d-flex">
+                <div className="ms-4 col-3">#</div>
+                <div className="px-5 col-9">Documento</div>
+                <div className="me-5 col-4">Acción</div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <SubirArchivo
+              index="1"
+              handleFileSelect={handleFileSelect}
+              archivoDescargaUrl={resumen?.antecedente_adicional_revision_subdere}
+              tituloDocumento={resumen?.antecedente_adicional_revision_subdere}
+              fieldName="antecedente_adicional_revision_subdere"
+            />
+          </div>
+        </div>
+        <div className="my-5 col-10">
+          <CustomTextarea
+            label="Descripción del archivo adjunto (Opcional)"
+            placeholder="Describe el archivo adjunto"
+          // name="descripcion_archivo_marco_juridico"
+          // value={dataPaso?.descripcion_archivo_marco_juridico}
+          // onChange={(e) => handleChange('descripcion_archivo_marco_juridico', e)}
+          // onBlur={() => handleSave('descripcion_archivo_marco_juridico')}
+          // loading={inputStatus.descripcion_archivo_marco_juridico.loading}
+          // saved={inputStatus.descripcion_archivo_marco_juridico.saved}
+          // maxLength={500}
+          // readOnly={solo_lectura}
+          />
+          <p className="text-sans-h6 mt-2">
+            Asegurate que los datos ingresados son correctos, ya que una vez que envíes el formulario, no podrás editarlo a menos que SUBDERE requiera información adicional.
+          </p>
+        </div>
+      </div> */}
+
       {/* Botones de navegación */}
       <div className="px-5 mx-5 pt-3 pb-4 d-flex justify-content-between">
         <button className="btn-secundario-s" onClick={handleBackButtonClick}>
@@ -101,9 +167,9 @@ const ResumenFinal = () =>
           Atrás
         </button>
 
-        <button className="btn-primario-s" 
-        disabled={!resumen?.formulario_completo}
-        onClick={handleEnviarClick}>
+        <button className="btn-primario-s"
+          disabled={!resumen?.formulario_completo}
+          onClick={handleEnviarClick}>
           <u>Cerrar Proceso</u>
           <i className="material-symbols-rounded me-2">arrow_forward_ios</i>
         </button>
