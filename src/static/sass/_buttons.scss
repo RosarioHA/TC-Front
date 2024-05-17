@@ -27,6 +27,17 @@
     justify-content: center;
     align-items: center; 
 }
+@mixin typo{
+    padding: 10px;
+    text-align: center;
+    font-family: Roboto;
+    display: flex;
+    font-weight: 700;
+    font-size: 16px;
+    justify-content: center;
+    align-items: center; 
+}
+
 // BOTON PRIMARIO
 // fondo azul con letras blancas. Existe en S-fitcontent Y L-100%
 .btn-primario-s{
@@ -54,6 +65,38 @@
     border: 2px solid $blue-color;
 }
 
+
+.btn-secundario-s-round{
+    @include btn-border(fit-content, $blue-color);
+    @include typo;
+    background-color: $white-color;
+    border-radius: 30px;
+    padding: 15px; 
+
+    // Asegurar que el color del ícono sea el mismo que el texto por defecto
+    span.material-symbols-outlined {
+        color: $blue-color;
+    }
+}
+.btn-secundario-s-round:hover, .btn-secundario-s-round:focus {
+    background-color: $blue-color;
+    color: $white-color;
+
+    // Asegurarte de que el ícono también cambie a blanco
+    span.material-symbols-outlined {
+        color: $white-color;
+    }
+}
+
+.btn-secundario-s-round.active{
+    background-color: $blue-color;
+    color: $white-color;
+
+    // Asegurarte de que el ícono también cambie a blanco
+    span.material-symbols-outlined {
+        color: $white-color;
+    }
+}
 // BOTON SECUNDARIO
 // fondo transp. con borde y letras azules. Existe en S-fitcontent Y L-100%
 .btn-secundario-s {
