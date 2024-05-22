@@ -19,12 +19,10 @@ const PasoTres = () =>
   const { observaciones, updateObservacion, fetchObservaciones, loadingObservaciones, saved } = useObservacionesSubdere(data ? data.id : null);
   const observacionesEnviadas = observaciones?.observacion_enviada
   const formSectorialEnviado = data?.formulario_enviado
+  const [ collapseStates, setCollapseStates ] = useState({});
 
   const [ observacionPaso3, setObservacionPaso3 ] = useState("");
-  const [ formData, setFormData ] = useState({
-    universo_cobertura: "",
-    descripcion_cobertura: ""
-  });
+  const [ formData, setFormData ] = useState({});
 
   const [ inputStatus, setInputStatus ] = useState({
     universo_cobertura: { loading: false, saved: false },
@@ -43,37 +41,39 @@ const PasoTres = () =>
       setObservacionPaso3(observaciones.observacion_paso3);
     }
     // Establecer datos del formulario basados en pasoData si están disponibles
-    if (pasoData && pasoData.paso3)
+    if (pasoData && pasoData.regiones)
     {
-      setFormData({
-        universo_cobertura: pasoData.paso3.universo_cobertura || "",
-        descripcion_cobertura: pasoData.paso3.descripcion_cobertura || ""
-      });
+      const transformedData = transformData(pasoData.regiones);
+      setFormData(transformedData);
     }
   }, [ updateStepNumber, stepNumber, observaciones, fetchObservaciones, pasoData ]);
 
-
-  useEffect(() =>
+  const transformData = (regiones) =>
   {
-    if (pasoData && pasoData.paso3)
-    {
-      setFormData({
-        universo_cobertura: pasoData.paso3.universo_cobertura || "",
-        descripcion_cobertura: pasoData.paso3.descripcion_cobertura || "",
-      });
-    }
-  }, [ pasoData ]);
+    return regiones.reduce((acc, region) => {
+      acc[region.region] = {
+        paso3: region.paso3.map(p3 => ({
+          id: p3.id,
+          universo_cobertura: p3.universo_cobertura || "",
+          descripcion_cobertura: p3.descripcion_cobertura || ""
+        }))
+      };
+      return acc;
+    }, {});
+  };
 
-  // if (!pasoData || !pasoData.paso3) {
-  //   return <div>Cargando...</div>;
-  // }
-
-  const handleChange = (inputName, e) =>
+  const handleChange = (region, inputName, e) =>
   {
     const { value } = e.target;
     setFormData(prevFormData => ({
       ...prevFormData,
-      [ inputName ]: value,
+      [ region ]: {
+        ...prevFormData[ region ],
+        paso3: prevFormData[ region ].paso3.map(p3 => ({
+          ...p3,
+          [ inputName ]: value
+        }))
+      }
     }));
     setInputStatus(prevStatus => ({
       ...prevStatus,
@@ -81,7 +81,7 @@ const PasoTres = () =>
     }));
   };
 
-  const handleSave = async (inputName) =>
+  const handleSave = async (region, inputName) =>
   {
     // Iniciar la carga
     setInputStatus(prevStatus => ({
@@ -90,7 +90,12 @@ const PasoTres = () =>
     }));
 
     // Preparar datos para enviar
-    const datosParaEnviar = { paso3: { [ inputName ]: formData[ inputName ] } };
+    const datosParaEnviar = {
+      regiones: [{
+        region: region,
+        paso3: formData[region].paso3
+      }]
+    };
 
     try
     {
@@ -111,19 +116,18 @@ const PasoTres = () =>
     }
   };
 
-
-
-  if (!pasoData || !pasoData.paso3)
+  if (!pasoData || !pasoData.regiones)
   {
-    return <> <div className="d-flex align-items-center flex-column my-5 px-5 ">
-      <div className="text-center text-sans-h5-medium-blue ">Cargando paso 3</div>
-      <span className="placeholder col-6 bg-primary"></span>
-    </div></>;
+    return (
+      <div className="d-flex align-items-center flex-column my-5 px-5">
+        <div className="text-center text-sans-h5-medium-blue">Cargando paso 3</div>
+        <span className="placeholder col-6 bg-primary"></span>
+      </div>
+    );
   }
 
-
-  const { cobertura_anual, paso3, solo_lectura } = pasoData;
-
+  const { regiones, solo_lectura, paso3encabezado } = pasoData;
+  const avance = paso3encabezado?.avance;
 
   const handleGuardarObservacion = async () =>
   {
@@ -137,18 +141,24 @@ const PasoTres = () =>
       await updateObservacion(observacionData);
     }
   };
-  
-  const avance = pasoData?.paso3?.avance;
+
+  const toggleCollapse = (index) =>
+  {
+    setCollapseStates(prevState => ({
+      ...prevState,
+      [ index ]: !prevState[ index ]
+    }));
+  };
 
   return (
     <>
       <div className="col-1">
-        <MonoStepers stepNumber={paso3?.numero_paso} />
+        <MonoStepers stepNumber={paso3encabezado?.numero_paso} />
       </div>
       <div className="col-11">
         <div className="container">
           <div className="d-flex">
-            <h3 className="mt-3 me-4">{paso3?.nombre_paso}</h3>
+            <h3 className="mt-3 me-4">{paso3encabezado?.nombre_paso}</h3>
             <Avance avance={avance} id={id} />
           </div>
           <div className="container-fluid me-5 pe-5 text-sans-h6-primary">
@@ -169,59 +179,83 @@ const PasoTres = () =>
               ex ante, se debe considerar la información más actualizada.
             </h6>
           </div>
-          <div className="container-fluid me-5 pe-5">
-            <div className="pe-5 me-5 mt-4">
-              <div className="my-4 me-4">
-                <CustomTextarea
-                  label="Descripción de universo de cobertura (Obligatorio)"
-                  placeholder="Describe el universo de cobertura"
-                  name="universo_cobertura"
-                  id="universo_cobertura"
-                  value={paso3?.universo_cobertura}
-                  onChange={(e) => handleChange('universo_cobertura', e)}
-                  onBlur={() => handleSave('universo_cobertura')}
-                  loading={inputStatus.universo_cobertura.loading}
-                  saved={inputStatus.universo_cobertura.saved}
-                  maxLength={800}
-                  readOnly={solo_lectura}
-                />
-                <div className="d-flex mb-3 mt-0 text-sans-h6-primary">
-                  <i className="material-symbols-rounded me-2">info</i>
-                  <h6 className="mt-0">
-                    La descripción del universo de cobertura debe responder preguntas
-                    tales como: ¿Cuál es el universo? ¿Cómo se identifica?.
-                  </h6>
+          {regiones.map((region, index) => (
+            <div key={index} className="my-5">
+              <div className="col-12 collapse-regiones border  border-bottom" type="button" data-bs-toggle="collapse"
+                data-bs-target={`#collapseRegion${index}`} aria-expanded={collapseStates[ index ] ? "true" : "false"}
+                aria-controls={`collapseRegion${index}`} onClick={() => toggleCollapse(index)}>
+                <div className="d-flex justify-content-between">
+                  <span className="text-sans-h4 text-start">{region.region}</span>
+                  <button className="btn-secundario-s-round">
+                    {collapseStates[ index ] ? "Ocultar sección" : "Mostrar sección"}
+                    <span className="material-symbols-outlined">
+                      {collapseStates[ index ] ? "keyboard_arrow_up" : "keyboard_arrow_down"}
+                    </span>
+                  </button>
+                </div>
+                <div>
+                  <Avance avance={region.paso3[ 0 ]?.avance} id={id} />
                 </div>
               </div>
-              <div className="my-4 me-4">
-                <CustomTextarea
-                  label="Descripción de cobertura efectivamente abordada (Obligatorio)"
-                  placeholder="Describe la cobertura efectivamente abordada"
-                  id="descripcion_cobertura"
-                  name="descripcion_coberturaa"
-                  value={paso3?.descripcion_cobertura}
-                  onChange={(e) => handleChange('descripcion_cobertura', e)}
-                  onBlur={() => handleSave('descripcion_cobertura')}
-                  loading={inputStatus.descripcion_cobertura.loading}
-                  saved={inputStatus.descripcion_cobertura.saved}
-                  maxLength={800}
-                  readOnly={solo_lectura}
-                />
-                <div className="d-flex mb-3 mt-0 text-sans-h6-primary">
-                  <i className="material-symbols-rounded me-2">info</i>
-                  <h6 className="mt-0">
-                    La descripción de la cobertura efectiva debe responder preguntas
-                    tales como: ¿Cuál es? ¿Cómo se selecciona?.
-                  </h6>
+              <div className={`collapse ${collapseStates[ index ] ? 'show' : ''}`} id={`collapseRegion${index}`}>
+                <div className="card card-body">
+                  <div className="container-fluid me-5 pe-5">
+
+                    <div className="my-4 me-4">
+                      <CustomTextarea
+                        label="Descripción de universo de cobertura (Obligatorio)"
+                        placeholder="Describe el universo de cobertura"
+                        name="universo_cobertura"
+                        id="universo_cobertura"
+                        value={formData[region.region]?.paso3[0]?.universo_cobertura || ""}
+                        onChange={(e) => handleChange(region.region, `universo_cobertura`, e)}
+                        onBlur={() => handleSave(region.region, `universo_cobertura`)}
+                        loading={inputStatus.universo_cobertura.loading}
+                        saved={inputStatus.universo_cobertura.saved}
+                        maxLength={800}
+                        readOnly={solo_lectura}
+                      />
+                      <div className="d-flex mb-3 mt-0 text-sans-h6-primary">
+                        <i className="material-symbols-rounded me-2">info</i>
+                        <h6 className="mt-0">
+                          La descripción del universo de cobertura debe responder preguntas
+                          tales como: ¿Cuál es el universo? ¿Cómo se identifica?.
+                        </h6>
+                      </div>
+                    </div>
+                    <div className="py-4 me-4">
+                      <CustomTextarea
+                        label="Descripción de cobertura efectivamente abordada (Obligatorio)"
+                        placeholder="Describe la cobertura efectivamente abordada"
+                        id='descripcion_cobertura'
+                        name='descripcion_cobertura'
+                        value={formData[region.region]?.paso3[0]?.descripcion_cobertura || ""}
+                        onChange={(e) => handleChange(region.region, `descripcion_cobertura`, e)}
+                        onBlur={() => handleSave(region.region, `descripcion_cobertura`)}
+                        loading={inputStatus.descripcion_cobertura.loading}
+                        saved={inputStatus.descripcion_cobertura.saved}
+                        maxLength={800}
+                        readOnly={solo_lectura}
+                        rows={2}
+                      />
+                      <div className="d-flex mb-3 mt-0 text-sans-h6-primary">
+                        <i className="material-symbols-rounded me-2">info</i>
+                        <h6 className="mt-0">
+                          La descripción de la cobertura efectiva debe responder preguntas
+                          tales como: ¿Cuál es? ¿Cómo se selecciona?.
+                        </h6>
+                      </div>
+                    </div>
+                    <div className="container ">
+                      {console.log(id)}
+                      <Subpaso_Tres esquemaDatos={region.cobertura_anual} region={region.region} idCompetencia={id} stepNumber={stepNumber} solo_lectura={solo_lectura} />
+                    </div>
+                  </div>
                 </div>
-              </div>
-              <div className="container me-5 pe-5 border-bottom pb-2">
-                <Subpaso_Tres esquemaDatos={cobertura_anual} id={id} stepNumber={stepNumber} solo_lectura={solo_lectura} />
               </div>
             </div>
-          </div>
-
-          { (userSubdere || (userSectorial && formSectorialEnviado)) && (
+          ))}
+          {(userSubdere || (userSectorial && formSectorialEnviado)) && (
             <div className="mt-5 my-4">
               {!observacionPaso3.trim() && observacionesEnviadas ? (
                 <p>No se han dejado observaciones en este paso.</p>
@@ -240,11 +274,12 @@ const PasoTres = () =>
                 />
               )}
             </div>
+
           )}
 
           {/* Botones navegación */}
           <div className="container me-5 pe-5">
-            <ButtonsNavigate step={paso3?.numero_paso} id={id} />
+            <ButtonsNavigate step={paso3encabezado?.numero_paso} id={id} />
           </div>
         </div>
       </div>
