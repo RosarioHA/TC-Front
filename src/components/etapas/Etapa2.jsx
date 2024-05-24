@@ -65,6 +65,7 @@ export const Etapa2 = ({ etapa, idCompetencia }) => {
 
   const renderButtonForSubetapa = (subetapa) => {
     const { estado, accion, nombre } = subetapa;
+    
     let buttonText = accion;
     let icon = estado === "finalizada" ? "visibility" : "draft";
     let path = "/";
@@ -82,16 +83,23 @@ export const Etapa2 = ({ etapa, idCompetencia }) => {
         return <span className="badge-status-finish">{accion}</span>;
 
       case nombre.includes("Subir oficio y su fecha para habilitar formulario sectorial"):
-        if (estado === "finalizada") {
+        if (estado !== "pendiente") { //aqui cambie la condicion para habilitar el boton siempre que el estado no sea 'pendiente'
           return (
-            <button onClick={() => window.open(oficio_origen, '_blank')} className="btn-secundario-s text-decoration-none" id="btn">
+            <button 
+            onClick={() => {
+              if (estado === "finalizada") {
+                window.open(oficio_origen, '_blank');
+              } else {
+                navigate(`/home/estado_competencia/${idCompetencia}/subir_oficio_sectorial`);
+              }
+            }} 
+            className="btn-secundario-s text-decoration-none" 
+            id="btn">
               <span className="material-symbols-outlined me-1">{icon}</span>
               <u>{buttonText}</u>
             </button>
           );
-        } else {
-          path = `/home/estado_competencia/${idCompetencia}/subir_oficio_sectorial`;
-        }
+        } 
         break;
 
       case nombre.includes("Observaciones de formularios sectoriales"):
