@@ -139,7 +139,6 @@ const CreacionUsuario = () => {
     updateHasChanged(true);
   };
 
-  console.log("Estado sectorId actualizado:", sectorId);
   const handleEstadoChange = (nuevoEstado) => {
     setEstado(nuevoEstado);
     setActiveButton(nuevoEstado);

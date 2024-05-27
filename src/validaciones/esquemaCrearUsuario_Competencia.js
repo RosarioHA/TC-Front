@@ -34,6 +34,14 @@ export const esquemaCreacionCompetencia = yup.object().shape({
     .matches(nombreCompetenciaRegex, 'Formato de nombre inválido')
     .min(3, 'El nombre debe tener al menos 3 caracteres')
     .max(200, 'El nombre no debe exceder los 200 caracteres'),
+  nombres: yup.array().of(
+    yup.object().shape({
+      name: yup.string().required('El nombre de la competencia es obligatorio')
+        .matches(nombreCompetenciaRegex, 'Formato de nombre inválido')
+        .min(3, 'El nombre debe tener al menos 3 caracteres')
+        .max(200, 'El nombre no debe exceder los 200 caracteres')
+    })
+  ),
   regiones: yup.array().min(1, 'Debes seleccionar al menos una región'),
   sectores: yup.array().min(1, 'Debes seleccionar al menos un sector'),
   origen: yup.string().required('El origen de la competencia es obligatorio'),
