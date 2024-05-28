@@ -10,23 +10,19 @@ export const GastosPromedioAnual = ({
   stepNumber,
   dataGastos
 }) => {
-
   const [datosGastos, setDatosGastos] = useState(Array.isArray(dataGastos) ? dataGastos : []);
   const { handleUpdatePaso } = useContext(FormularioContext);
   const [inputStatus, setInputStatus] = useState({});
 
   // Función de utilidad para formatear números
   const formatearNumero = (numero) => {
-    // Asegurarse de que el valor es un número. Convertir si es necesario.
     const valorNumerico = Number(numero);
-    // Verificar si el valor es un número válido antes de intentar formatearlo
     if (!isNaN(valorNumerico)) {
       return valorNumerico.toLocaleString('es-CL', {
         minimumFractionDigits: 0,
         maximumFractionDigits: 2
       });
     }
-    // Devolver un valor predeterminado o el mismo valor si no es un número
     return numero;
   };
 
@@ -34,21 +30,17 @@ export const GastosPromedioAnual = ({
     setDatosGastos(Array.isArray(dataGastos) ? dataGastos : []);
   }, [dataGastos]);
 
-  const { control, trigger, clearErrors} = useForm({
+  const { control, trigger, clearErrors } = useForm({
     mode: 'onBlur',
   });
-
 
   // Manejadora de CustomInput y CustomTextArea
   const handleInputChange = (instanciaId, campo, valor) => {
     setDatosGastos(prevInstancia =>
       prevInstancia.map(elemento => {
-        // Verifica si es la costo que estamos actualizando
         if (elemento.id === instanciaId) {
-          // Actualiza el valor del campo específico de manera inmutable
           return { ...elemento, [campo]: valor };
         }
-        // Si no es la costo que estamos actualizando, la retorna sin cambios
         return elemento;
       })
     );
@@ -56,34 +48,28 @@ export const GastosPromedioAnual = ({
 
   // Función de guardado
   const handleSave = async (arrayNameId, fieldName) => {
-    // Si se está guardando por blur, no es necesario desactivar el botón de guardar general
-
     const resumenSubtitulo = datosGastos.find(e => e.id === arrayNameId);
 
     setInputStatus(prevStatus => ({
       ...prevStatus,
       [arrayNameId]: {
-          ...prevStatus[arrayNameId],
-          [fieldName]: { loading: true, saved: false },
+        ...prevStatus[arrayNameId],
+        [fieldName]: { loading: true, saved: false },
       },
     }));
 
-    let payload;
-    // Payload para otros campos
-    payload = {
+    let payload = {
       'p_5_2_variacion_promedio': [{ id: arrayNameId, [fieldName]: resumenSubtitulo[fieldName] }]
     };
 
     try {
-      // Asume que handleUpdatePaso puede manejar ambos casos adecuadamente
       await handleUpdatePaso(id, stepNumber, payload);
 
-      // Actualiza el estado de carga y guardado
       setInputStatus(prevStatus => ({
         ...prevStatus,
         [arrayNameId]: {
-            ...prevStatus[arrayNameId],
-            [fieldName]: { loading: false, saved: true },
+          ...prevStatus[arrayNameId],
+          [fieldName]: { loading: false, saved: true },
         },
       }));
 
@@ -93,13 +79,14 @@ export const GastosPromedioAnual = ({
       setInputStatus(prevStatus => ({
         ...prevStatus,
         [arrayNameId]: {
-            ...prevStatus[arrayNameId],
-            [fieldName]: { loading: false, saved: false },
+          ...prevStatus[arrayNameId],
+          [fieldName]: { loading: false, saved: false },
         },
       }));
     }
   };
 
+  const añosVariacion = paso5?.años_variacion || {};
 
   return (
     <div className="mt-4">
@@ -116,24 +103,23 @@ export const GastosPromedioAnual = ({
             <tr>
               <th scope="col" className="text-sans-p-bold px-2 pb-5">Subtitulo</th>
               <th scope="col" className="text-sans-p text-center">
-                <u>Variación con {paso5.años_variacion.n_5}</u>
+                <u>Variación con {añosVariacion.n_5 || 0}</u>
                 <p className="text-sans-h6-grey">(año n-5) - (año n-1)</p>
               </th>
               <th scope="col" className="text-sans-p text-center">
-                <u>Variación con {paso5.años_variacion.n_4}</u>
+                <u>Variación con {añosVariacion.n_4 || 0}</u>
                 <p className="text-sans-h6-grey">(año n-4) - (año n-1)</p>
               </th>
               <th scope="col" className="text-sans-p text-center">
-                <u>Variación con {paso5.años_variacion.n_3}</u>
+                <u>Variación con {añosVariacion.n_3 || 0}</u>
                 <p className="text-sans-h6-grey">(año n-3) - (año n-1)</p>
               </th>
               <th scope="col" className="text-sans-p text-center">
-                <u>Variación con {paso5.años_variacion.n_2}</u>
+                <u>Variación con {añosVariacion.n_2 || 0}</u>
                 <p className="text-sans-h6-grey">(año n-2) - (año n-1)</p>
               </th>
             </tr>
           </thead>
-
           <tbody>
             {datosGastos.map((item, rowIndex) => (
               <React.Fragment key={item.id}>
@@ -167,7 +153,7 @@ export const GastosPromedioAnual = ({
                           };
                           return (
                             <CustomTextarea
-                              id={`descripcion_${item?.id}`}
+                              id={`descripcion_${item.id}`}
                               value={value}
                               label="Descripción"
                               placeholder="Describe la evolución del gasto por subtitulo"
@@ -188,10 +174,8 @@ export const GastosPromedioAnual = ({
               </React.Fragment>
             ))}
           </tbody>
-
         </table>
       </div>
-
     </div>
   );
-}
+};

@@ -10,6 +10,10 @@ export const Subpaso_CincoDos = ({
   p_5_2_variacion_promedio
 }) => {
 
+  if (!p_5_2_evolucion_gasto_asociado || !p_5_2_variacion_promedio) {
+    return <div>No hay datos para mostrar.</div>;
+  }
+
   return (
     <div className="mt-4 me-5 pe-5 ">
       <span className="my-4 text-sans-h4">5.2 Evolución del gasto asociado al ejercicio de la competencia</span>
@@ -38,5 +42,5 @@ export const Subpaso_CincoDos = ({
         dataGastos={p_5_2_variacion_promedio}
       />
     </div>
-  )
-}
+  );
+};
