@@ -14,13 +14,14 @@ const PasoCinco = () => {
   const { updateStepNumber, pasoData, data, errorPaso } = useContext(FormularioContext);
   const stepNumber = 5;
   const { userData } = useAuth();
+  const [collapseStates, setCollapseStates] = useState({});
 
   const userSubdere = userData?.perfil?.includes('SUBDERE');
   const userSectorial = userData?.perfil?.includes('Sectorial');
   const { observaciones, updateObservacion, fetchObservaciones, loadingObservaciones, saved } = useObservacionesSubdere(data ? data.id : null);
   const [observacionPaso5, setObservacionPaso5] = useState("");
   const formSectorialEnviado = data?.formulario_enviado;
-  const observacionesEnviadas = observaciones.observacion_enviada;
+  const observacionesEnviadas = observaciones?.observacion_enviada;
 
   useEffect(() => {
     updateStepNumber(stepNumber);
@@ -55,6 +56,13 @@ const PasoCinco = () => {
 
   const avance = pasoData?.paso5encabezado?.avance;
 
+  const toggleCollapse = (index) => {
+    setCollapseStates(prevState => ({
+      ...prevState,
+      [index]: !prevState[index]
+    }));
+  };
+
   return (
     <>
       <div className="col-1">
@@ -68,41 +76,62 @@ const PasoCinco = () => {
           </div>
           <span className="text-sans-h6-primary">Texto de apoyo</span>
           {pasoData.regiones.map((region, index) => (
-            <div key={index}>
-              <h4 className="mt-4">{region.region}</h4>
-              <Subpaso_CincoPuntoUno
-                id={data.id}
-                paso5={region.paso5}
-                solo_lectura={solo_lectura}
-                stepNumber={stepNumber}
-                data_costos_directos={region.p_5_1_a_costos_directos}
-                data_costos_indirectos={region.p_5_1_b_costos_indirectos}
-                data_resumen_costos={region.p_5_1_c_resumen_costos_por_subtitulo}
-                listado_subtitulos_directos={region.listado_subtitulos_directos}
-                listado_subtitulos_indirectos={region.listado_subtitulos_indirectos}
-                listado_item_subtitulos_directos={region.listado_item_subtitulos_directos}
-                listado_item_subtitulos_indirectos={region.listado_item_subtitulos_indirectos}
-                listado_etapas={listado_etapas}
-              />
-              <Subpaso_CincoDos
-                id={data.id}
-                paso5={region.paso5}
-                solo_lectura={solo_lectura}
-                stepNumber={stepNumber}
-                p_5_2_evolucion_gasto_asociado={region.p_5_2_evolucion_gasto_asociado}
-                p_5_2_variacion_promedio={region.p_5_2_variacion_promedio}
-              />
-              <Subpaso_CincoPuntoTres
-                id={data.id}
-                paso5={region.paso5}
-                solo_lectura={solo_lectura}
-                stepNumber={stepNumber}
-                data_personal_directo={region.p_5_3_a_personal_directo}
-                data_personal_indirecto={region.p_5_3_b_personal_indirecto}
-                listado_estamentos={listado_estamentos}
-                listado_calidades_juridicas_directas={region.listado_calidades_juridicas_directas}
-                listado_calidades_juridicas_indirectas={region.listado_calidades_juridicas_indirectas}
-              />
+            <div key={index} className="my-5">
+              <div className="col-12 collapse-regiones border border-bottom" type="button" data-bs-toggle="collapse"
+                data-bs-target={`#collapseRegion${index}`} aria-expanded={collapseStates[index] ? "true" : "false"}
+                aria-controls={`collapseRegion${index}`} onClick={() => toggleCollapse(index)}>
+                <div className="d-flex justify-content-between">
+                  <span className="text-sans-h4 text-start">{region.region}</span>
+                  <button className="btn-secundario-s-round">
+                    {collapseStates[index] ? "Ocultar sección" : "Mostrar sección"}
+                    <span className="material-symbols-outlined">
+                      {collapseStates[index] ? "keyboard_arrow_up" : "keyboard_arrow_down"}
+                    </span>
+                  </button>
+                </div>
+                <div>
+                  <Avance avance={region.paso5[0]?.avance} id={data.id} />
+                </div>
+              </div>
+              <div className={`collapse ${collapseStates[index] ? 'show' : ''}`} id={`collapseRegion${index}`}>
+                <div className="card card-body">
+                  <div className="container-fluid me-5 pe-5">
+                    <Subpaso_CincoPuntoUno
+                      id={data.id}
+                      paso5={region.paso5}
+                      solo_lectura={solo_lectura}
+                      stepNumber={stepNumber}
+                      data_costos_directos={region.p_5_1_a_costos_directos}
+                      data_costos_indirectos={region.p_5_1_b_costos_indirectos}
+                      data_resumen_costos={region.p_5_1_c_resumen_costos_por_subtitulo}
+                      listado_subtitulos_directos={region.listado_subtitulos_directos}
+                      listado_subtitulos_indirectos={region.listado_subtitulos_indirectos}
+                      listado_item_subtitulos_directos={region.listado_item_subtitulos_directos}
+                      listado_item_subtitulos_indirectos={region.listado_item_subtitulos_indirectos}
+                      listado_etapas={listado_etapas}
+                    />
+                    <Subpaso_CincoDos
+                      id={data.id}
+                      paso5={region.paso5}
+                      solo_lectura={solo_lectura}
+                      stepNumber={stepNumber}
+                      p_5_2_evolucion_gasto_asociado={region.p_5_2_evolucion_gasto_asociado}
+                      p_5_2_variacion_promedio={region.p_5_2_variacion_promedio}
+                    />
+                    <Subpaso_CincoPuntoTres
+                      id={data.id}
+                      paso5={region.paso5}
+                      solo_lectura={solo_lectura}
+                      stepNumber={stepNumber}
+                      data_personal_directo={region.p_5_3_a_personal_directo}
+                      data_personal_indirecto={region.p_5_3_b_personal_indirecto}
+                      listado_estamentos={listado_estamentos}
+                      listado_calidades_juridicas_directas={region.listado_calidades_juridicas_directas}
+                      listado_calidades_juridicas_indirectas={region.listado_calidades_juridicas_indirectas}
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
           ))}
 
