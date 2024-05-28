@@ -181,12 +181,12 @@ const PasoTres = () =>
           </div>
           {regiones.map((region, index) => (
             <div key={index} className="my-5">
-              <div className="col-12 collapse-regiones border  border-bottom" type="button" data-bs-toggle="collapse"
+              <div className="col-12 collapse-regiones border border-bottom" type="button" data-bs-toggle="collapse"
                 data-bs-target={`#collapseRegion${index}`} aria-expanded={collapseStates[ index ] ? "true" : "false"}
                 aria-controls={`collapseRegion${index}`} onClick={() => toggleCollapse(index)}>
                 <div className="d-flex justify-content-between">
                   <span className="text-sans-h4 text-start">{region.region}</span>
-                  <button className="btn-secundario-s-round">
+                  <button className="btn-secundario-s-round py-2">
                     {collapseStates[ index ] ? "Ocultar sección" : "Mostrar sección"}
                     <span className="material-symbols-outlined">
                       {collapseStates[ index ] ? "keyboard_arrow_up" : "keyboard_arrow_down"}
@@ -198,8 +198,8 @@ const PasoTres = () =>
                 </div>
               </div>
               <div className={`collapse ${collapseStates[ index ] ? 'show' : ''}`} id={`collapseRegion${index}`}>
-                <div className="card card-body">
-                  <div className="container-fluid me-5 pe-5">
+                <div className="card card-body ">
+                  <div className="container me-5 pe-5">
 
                     <div className="my-4 me-4">
                       <CustomTextarea
@@ -223,7 +223,7 @@ const PasoTres = () =>
                         </h6>
                       </div>
                     </div>
-                    <div className="py-4 me-4">
+                    <div className="my-4 me-4">
                       <CustomTextarea
                         label="Descripción de cobertura efectivamente abordada (Obligatorio)"
                         placeholder="Describe la cobertura efectivamente abordada"
