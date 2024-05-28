@@ -7,7 +7,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { construirValidacionPaso5_2evolucion } from "../../validaciones/esquemaValidarPaso5Sectorial";
 
 const inputNumberStyle = {
-  // Estilos para ocultar flechas en navegadores que usan Webkit y Mozilla
   MozAppearance: 'textfield',
   '&::-webkit-outer-spin-button': {
     WebkitAppearance: 'none',
@@ -25,31 +24,23 @@ export const GastosEvolucionVariacion = ({
   solo_lectura,
   stepNumber,
   dataGastos
-
 }) => {
-
   const [datosGastos, setDatosGastos] = useState([]);
   const { handleUpdatePaso } = useContext(FormularioContext);
   const [esquemaValidacion, setEsquemaValidacion] = useState(null);
   const [glosasEspecificasLoading, setGlosasEspecificasLoading] = useState(false);
-  const [glosasEspecificasSaved, setGlosasEspecificasSaved] = useState(false)
+  const [glosasEspecificasSaved, setGlosasEspecificasSaved] = useState(false);
 
   useEffect(() => {
     if (Array.isArray(dataGastos)) {
       const formattedData = dataGastos.map(item => ({
         ...item,
-        costo_anio: item?.costo_anio?.map(costo => ({
-          ...costo,
-
-        }))
-
+        costo_anio: item?.costo_anio?.map(costo => ({ ...costo }))
       }));
-      console.log('costo_anio', formattedData)
+      console.log('costo_anio', formattedData);
       setDatosGastos(formattedData);
     }
   }, [dataGastos]);
-
-
 
   useEffect(() => {
     const esquema = construirValidacionPaso5_2evolucion(datosGastos);
@@ -65,11 +56,11 @@ export const GastosEvolucionVariacion = ({
     return <div className="text-center text-sans-h5-medium-blue ">Cargando datos...</div>;
   }
 
-  if (!datosGastos || datosGastos.length === 0) {
+  if (datosGastos.length === 0) {
     return <div>No hay datos para mostrar.</div>;
   }
 
-  const headers = paso5.años
+  const headers = paso5?.años || [];
 
   // Función para recargar campos por separado
   const updateFieldState = (subtituloId, costoAnioId, fieldName, newState) => {
@@ -77,7 +68,6 @@ export const GastosEvolucionVariacion = ({
       prevDatosGastos.map(subtitulo => {
         if (subtitulo.id === subtituloId) {
           if (fieldName === 'costo' && costoAnioId) {
-            // Encuentra el costo específico para actualizar su estado
             const updatedCostoAnio = subtitulo.costo_anio.map(costoAnio => {
               if (costoAnio.id === costoAnioId) {
                 return { ...costoAnio, estados: { ...costoAnio.estados, ...newState } };
@@ -86,7 +76,6 @@ export const GastosEvolucionVariacion = ({
             });
             return { ...subtitulo, costo_anio: updatedCostoAnio };
           } else {
-            // Actualiza el estado de la descripción del subtitulo
             return { ...subtitulo, estados: { ...subtitulo.estados, descripcion: { ...newState } } };
           }
         }
@@ -95,36 +84,26 @@ export const GastosEvolucionVariacion = ({
     );
   };
 
-
-  // Manejadora de CustomInput y CustomTextArea
   const handleInputChange = (instanciaId, campo, valor) => {
     setDatosGastos(prevInstancia =>
       prevInstancia.map(elemento => {
-        // Verifica si es la costo que estamos actualizando
         if (elemento.id === instanciaId) {
-          // Actualiza el valor del campo específico de manera inmutable
           return { ...elemento, [campo]: valor };
         }
-        // Si no es la costo que estamos actualizando, la retorna sin cambios
         return elemento;
       })
     );
   };
 
-  // Función de guardado
   const handleSave = async (subtituloId, costoAnioId, fieldName, fieldValue) => {
-
     updateFieldState(subtituloId, costoAnioId, fieldName, { loading: true, saved: false });
 
     let payload;
-
     if (fieldName === 'descripcion') {
       payload = {
         'p_5_2_evolucion_gasto_asociado': [{ id: subtituloId, [fieldName]: fieldValue }]
       };
     } else if (fieldName === 'costo') {
-
-      // Payload para otros campos
       payload = {
         'p_5_2_evolucion_gasto_asociado': [{
           id: subtituloId,
@@ -143,57 +122,46 @@ export const GastosEvolucionVariacion = ({
     }
 
     try {
-      // Asume que handleUpdatePaso puede manejar ambos casos adecuadamente
       await handleUpdatePaso(id, stepNumber, payload);
-
-      // Actualiza el estado de carga y guardado
       updateFieldState(subtituloId, costoAnioId, fieldName, { loading: false, saved: true });
 
       if (fieldName === 'glosas_especificas') {
         setGlosasEspecificasLoading(false);
-        setGlosasEspecificasSaved(true)
+        setGlosasEspecificasSaved(true);
       }
-
-
     } catch (error) {
       console.error("Error al guardar los datos:", error);
-
       updateFieldState(subtituloId, costoAnioId, fieldName, { loading: false, saved: false });
 
       if (fieldName === 'glosas_especificas') {
         setGlosasEspecificasLoading(false);
         setGlosasEspecificasSaved(false);
       }
-
     }
   };
-
 
   return (
     <div className="mt-4">
       <div className="my-4">
         <table className="table table-borderless table-striped">
-
           <thead>
             <tr>
               <th scope="col" className="text-sans-p-bold pt-2">Subtítulo</th>
-              {headers && headers.map((year, index) => (
+              {headers.map((year, index) => (
                 <th key={index} scope="col" className="text-sans-p text-center">
                   <u>{year}</u>
                 </th>
               ))}
             </tr>
           </thead>
-
           <tbody>
             {datosGastos.map((item, rowIndex) => (
               <React.Fragment key={item.id}>
                 <tr>
                   <th scope="row" className="text-sans-p-bold pt-2"><u>{item.nombre_subtitulo}</u></th>
                   {headers.map((year, colIndex) => {
-                    // Encuentra el costo correspondiente al año
                     const costoAnio = item?.costo_anio?.find(anio => anio.anio === parseInt(year));
-                    const isLastYear = parseInt(year) === Math.max(...headers.map(Number)); // Comprueba si es el último año
+                    const isLastYear = parseInt(year) === Math.max(...headers.map(Number));
                     return (
                       <td key={`${rowIndex}-${colIndex}`} className="px-1">
                         <Controller
@@ -202,14 +170,10 @@ export const GastosEvolucionVariacion = ({
                           defaultValue={costoAnio?.costo || ''}
                           render={({ field }) => {
                             const { onChange, onBlur, value } = field;
-
-                            // Función para manejar el cambio en el input
                             const handleChange = (valor) => {
-                              onChange(valor); // Actualiza el valor en react-hook-form
-                              handleInputChange(item.id, costoAnio.id, 'costo', valor); // Actualiza el estado local
+                              onChange(valor);
+                              handleInputChange(item.id, costoAnio.id, 'costo', valor);
                             };
-
-                            // Función para manejar el evento onBlur
                             const handleBlur = async () => {
                               const isFieldValid = await trigger(`costo_${costoAnio.id}`);
                               if (isFieldValid) {
@@ -217,18 +181,17 @@ export const GastosEvolucionVariacion = ({
                               }
                               onBlur();
                             };
-
                             return (
                               <InputCosto
                                 id={`costo_${costoAnio?.id}`}
                                 placeholder="Costo (M$)"
                                 value={costoAnio?.costo || ''}
-                                style={inputNumberStyle} // asegúrate de que el estilo sea correcto
+                                style={inputNumberStyle}
                                 disabled={solo_lectura || isLastYear}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
-                                loading={costoAnio.estados?.loading ?? false}
-                                saved={costoAnio.estados?.saved ?? false}
+                                loading={costoAnio?.estados?.loading ?? false}
+                                saved={costoAnio?.estados?.saved ?? false}
                                 error={errors[`costo_${costoAnio.id}`]?.message}
                               />
                             );
@@ -246,15 +209,12 @@ export const GastosEvolucionVariacion = ({
                         name={`descripcion_${item.id}`}
                         defaultValue={item?.descripcion || ''}
                         render={({ field }) => {
-                          // Destructura las propiedades necesarias de field
                           const { onChange, onBlur, value } = field;
-
                           const handleChange = (e) => {
                             clearErrors(`descripcion_${item.id}`);
                             onChange(e.target.value);
                             handleInputChange(item.id, null, 'descripcion', e.target.value);
                           };
-
                           const handleBlur = async () => {
                             const isFieldValid = await trigger(`descripcion_${item.id}`);
                             if (isFieldValid) {
@@ -262,10 +222,9 @@ export const GastosEvolucionVariacion = ({
                             }
                             onBlur();
                           };
-
                           return (
                             <CustomTextarea
-                              id={`descripcion_${item?.id}`}
+                              id={`descripcion_${item.id}`}
                               value={value}
                               label="Descripción (Opcional)"
                               placeholder="Describe la evolución del gasto por subtitulo"
@@ -274,8 +233,8 @@ export const GastosEvolucionVariacion = ({
                               onBlur={handleBlur}
                               className={`form-control ${rowIndex % 2 === 0 ? "bg-color-even" : "bg-color-odd"}`}
                               readOnly={solo_lectura}
-                              loading={item.estados?.descripcion?.loading ?? false}
-                              saved={item.estados?.descripcion?.saved ?? false}
+                              loading={item?.estados?.descripcion?.loading ?? false}
+                              saved={item?.estados?.descripcion?.saved ?? false}
                               error={errors[`descripcion_${item.id}`]?.message}
                             />
                           );
@@ -287,25 +246,20 @@ export const GastosEvolucionVariacion = ({
               </React.Fragment>
             ))}
           </tbody>
-
         </table>
         <hr />
         <div className="mt-4">
           <Controller
             control={control}
             name="glosas_especificas"
-            defaultValue={paso5.glosas_especificas || ''}
+            defaultValue={paso5?.glosas_especificas || ''}
             render={({ field }) => {
-              // Destructura las propiedades necesarias de field
               const { onChange, onBlur, value } = field;
-
               const handleChange = (e) => {
                 clearErrors("glosas_especificas");
                 onChange(e.target.value);
                 handleInputChange('glosas_especificas', e.target.value);
               };
-
-              // Función para manejar el evento onBlur
               const handleBlur = async () => {
                 const isFieldValid = await trigger("glosas_especificas");
                 if (isFieldValid) {
@@ -313,7 +267,6 @@ export const GastosEvolucionVariacion = ({
                 }
                 onBlur();
               };
-
               return (
                 <CustomTextarea
                   id="glosas_especificas"
@@ -340,4 +293,4 @@ export const GastosEvolucionVariacion = ({
       </div>
     </div>
   );
-}
+};
