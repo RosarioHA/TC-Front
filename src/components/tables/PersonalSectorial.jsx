@@ -8,14 +8,15 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { FormularioContext } from "../../context/FormSectorial";
 import { construirValidacionPaso5_Personal } from "../../validaciones/esquemaValidarPaso5Sectorial";
 
-const PersonalDirecto = ({
+const Personal = ({
   id,
   paso5,
   solo_lectura,
   stepNumber,
   data_personal_directo,
   listado_estamentos,
-  listado_calidades_juridicas
+  listado_calidades_juridicas,
+  refetchTrigger
 }) => {
 
   const [personas, setPersonas] = useState([]);
@@ -59,7 +60,7 @@ const PersonalDirecto = ({
     return numero;
   };
 
-  // Función para agrupar los datos por calidad jurídica
+  // Función para agrupar los datos por organismo_display
   const agruparPorCalidadJuridica = (datos) => {
     const agrupados = datos.reduce((acc, item) => {
       const displayKey = item.nombre_calidad_juridica;
@@ -145,6 +146,7 @@ const PersonalDirecto = ({
     try {
       // Llamar a la API para actualizar los datos
       await handleUpdatePaso(id, stepNumber, payload);
+      refetchTrigger();
 
       // Actualizar el estado local para reflejar la eliminación
       setPersonas(prevPersonas => {
@@ -361,6 +363,7 @@ const PersonalDirecto = ({
 
       // Actualiza el estado de carga y guardado
       updateFieldState(arrayNameId, fieldName, { loading: false, saved: true });
+      refetchTrigger();
 
     } catch (error) {
       console.error("Error al guardar los datos:", error);
@@ -682,4 +685,4 @@ const PersonalDirecto = ({
   )
 }
 
-export default PersonalDirecto;
+export default Personal;
