@@ -384,6 +384,13 @@ return (
                         onBlur();
                       };
 
+                      // Evita eliminar o submit con tecla Enter
+                      const handleKeyDown = (e) => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault();
+                          }
+                        };
+
                       return (
                         <InputCosto
                           id={`total_anual_${costo.id}`}
@@ -391,6 +398,7 @@ return (
                           value={value}
                           onChange={handleChange}
                           onBlur={handleBlur}
+                          onKeyDown={handleKeyDown}
                           loading={inputStatus[costo.id]?.total_anual?.loading}
                           saved={inputStatus[costo.id]?.total_anual?.saved}
                           error={errors[`total_anual_${costo.id}`]?.message}
