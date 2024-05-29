@@ -11,6 +11,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 
 const Costos = ({
   id,
+  region,
   stepNumber,
   data,
   listado_subtitulos,
@@ -54,7 +55,7 @@ const Costos = ({
     clearErrors,
     trigger,
     formState: { errors },
-  } = formMethods; 
+  } = formMethods;
 
 
   // Lógicas para llenar opciones de subtitulo e item_subtitulo
@@ -109,7 +110,12 @@ const Costos = ({
     };
 
     const payload = {
-      [seccion]: [nuevoCostoAdicional],
+      regiones: [
+        {
+          region: region,
+          [seccion]: [nuevoCostoAdicional],
+        },
+      ],
     };
 
     try {
@@ -128,10 +134,15 @@ const Costos = ({
   // Lógica para eliminar una ficha de una costo
   const eliminarElemento = async (costoId) => {
     const payload = {
-      [seccion]: [
+      regiones: [
         {
-          id: costoId,
-          DELETE: true,
+          region: region,
+          [seccion]: [
+            {
+              id: costoId,
+              DELETE: true,
+            },
+          ],
         },
       ],
     };
@@ -170,386 +181,347 @@ const Costos = ({
   };
 
   // Función de guardado
-  const handleSave = async (
-    costoId,
-    fieldName,
-    newValue
-  ) => {
-    // Si se está guardando por blur, no es necesario desactivar el botón de guardar general
+  const buildPayload = (region, seccion, costoId, fields) => {
+    return {
+      regiones: [
+        {
+          region: region,
+          [seccion]: [
+            {
+              id: costoId,
+              ...fields,
+            },
+          ],
+        },
+      ],
+    };
+  };
 
-    const costo = costos.find((e) => e.id === costoId);
 
-    setInputStatus(prevStatus => ({
+  const handleSave = async (costoId, fieldName, newValue) => {
+    setInputStatus((prevStatus) => ({
       ...prevStatus,
       [costoId]: {
-          ...prevStatus[costoId],
-          [fieldName]: { loading: true, saved: false },
+        ...prevStatus[costoId],
+        [fieldName]: { loading: true, saved: false },
       },
     }));
 
-    let payload;
-    if (fieldName === 'subtitulo') {
-      // Ajuste para enviar 'subtitulo' como un valor único, no un array
-      // Asumiendo que newValue es un objeto de la opción seleccionada
-      payload = {
-        [seccion]: [
-          {
-            id: costoId,
-            [fieldName]: newValue.value, // Envía el valor seleccionado directamente
-          },
-        ],
-      };
-    } else if (fieldName === 'item_subtitulo') {
-      // Ajuste para enviar 'item_subtitulo' como un valor único, no un array
-      // Asumiendo que newValue es un objeto de la opción seleccionada
-      payload = {
-        [seccion]: [
-          {
-            id: costoId,
-            [fieldName]: newValue.value, // Envía el valor seleccionado directamente
-          },
-        ],
-      };
+    let fields = {};
+    if (fieldName === 'subtitulo' || fieldName === 'item_subtitulo') {
+      fields[fieldName] = newValue.value;
     } else if (fieldName === 'etapa') {
-      payload = {
-        [seccion]: [{
-          id: costoId,
-          [fieldName]: newValue.map(option => option.value)
-        }]
-      };
-    } else if (fieldName === 'es_transversal') {
-      payload = {
-        [seccion]: [{ id: costoId, [fieldName]: newValue }],
-      };
+      fields[fieldName] = newValue.map((option) => option.value);
     } else {
-      // Payload para otros campos
-      payload = {
-        [seccion]: [{ id: costoId, [fieldName]: costo[fieldName] }],
-      };
+      fields[fieldName] = newValue;
     }
+
+    const payload = buildPayload(region, seccion, costoId, fields);
 
     try {
       await handleUpdatePaso(id, stepNumber, payload);
-      
-      // Finalizar carga con éxito
-      setInputStatus(prevStatus => ({
-          ...prevStatus,
-          [costoId]: {
-              ...prevStatus[costoId],
-              [fieldName]: { loading: false, saved: true },
-          },
-      }));
 
-  } catch (error) {
+      setInputStatus((prevStatus) => ({
+        ...prevStatus,
+        [costoId]: {
+          ...prevStatus[costoId],
+          [fieldName]: { loading: false, saved: true },
+        },
+      }));
+    } catch (error) {
       console.error('Error al guardar los datos:', error);
-      // Finalizar carga con error
-      setInputStatus(prevStatus => ({
-          ...prevStatus,
-          [costoId]: {
-              ...prevStatus[costoId],
-              [fieldName]: { loading: false, saved: false },
-          },
+      setInputStatus((prevStatus) => ({
+        ...prevStatus,
+        [costoId]: {
+          ...prevStatus[costoId],
+          [fieldName]: { loading: false, saved: false },
+        },
       }));
-  }
-};
+    }
+  };
 
- 
-return (
-  <>
-    <div className="mt-4 col-11">
-      <form onSubmit={handleSubmit(onSubmit)}>
-        {Array.isArray(costos) &&
-          costos.map((costo, index) => (
-            <div key={costo.id} className="col mt-4">
-              <div className="row">
-                <span className="text-sans-p-bold mb-0">{index + 1}</span>
-                <div className="col d-flex flex-column justify-content-between">
-                  <p className="text-sans-p-bold">Subtítulo</p>
-                  <Controller
-                    control={control}
-                    name={`subtitulo_${costo.id}`}
-                    render={({ field }) => {
-                      return (
-                        <DropdownSelect
-                          id={`subtitulo_${costo.id}`}
-                          name={`subtitulo_${costo.id}`}
-                          placeholder="Subtítulos"
-                          options={opcionesSubtitulos}
-                          onSelectionChange={async (selectedOption) => {
 
-                            // Guardar el subtítulo seleccionado y esperar a que se complete
-                            await handleSave(costo.id, 'subtitulo', selectedOption);
 
-                            // Reset item_subtitulo
-                            await handleSave(costo.id, 'item_subtitulo', { label: '', value: '' });
+  return (
+    <>
+      <div className="mt-4 col-11">
+        <form onSubmit={handleSubmit(onSubmit)}>
+          {Array.isArray(costos) &&
+            costos.map((costo, index) => (
+              <div key={costo.id} className="col mt-4">
+                <div className="row">
+                  <span className="text-sans-p-bold mb-0">{index + 1}</span>
+                  <div className="col d-flex flex-column justify-content-between">
+                    <p className="text-sans-p-bold">Subtítulo</p>
+                    <Controller
+                      control={control}
+                      name={`subtitulo_${costo.id}`}
+                      render={({ field }) => {
+                        return (
+                          <DropdownSelect
+                            id={`subtitulo_${costo.id}`}
+                            name={`subtitulo_${costo.id}`}
+                            placeholder="Subtítulos"
+                            options={opcionesSubtitulos}
+                            onSelectionChange={async (selectedOption) => {
 
-                            // Calcular las nuevas opciones para item_subtitulo basado en el subtitulo seleccionado
-                            const opcionesDeItems = encontrarOpcionesDeItems(selectedOption.value);
+                              // Guardar el subtítulo seleccionado y esperar a que se complete
+                              await handleSave(costo.id, 'subtitulo', selectedOption);
 
-                            // Actualizar el estado con las nuevas opciones
-                            setCostos((prevCostos) =>
-                              prevCostos.map((costoItem) => {
-                                if (costoItem.id === costo.id) {
-                                  return {
-                                    ...costoItem,
-                                    subtitulo_label_value: selectedOption,
-                                    item_subtitulo_label_value: { label: '', value: '' }, // Resetea item_subtitulo
-                                    opcionesItems: opcionesDeItems
-                                  };
-                                }
-                                return costoItem;
-                              })
-                            );
+                              // Reset item_subtitulo
+                              await handleSave(costo.id, 'item_subtitulo', { label: '', value: '' });
 
-                            field.onChange(selectedOption.value);
-                          }}
+                              // Calcular las nuevas opciones para item_subtitulo basado en el subtitulo seleccionado
+                              const opcionesDeItems = encontrarOpcionesDeItems(selectedOption.value);
 
-                          readOnly={solo_lectura}
-                          selected={
-                            costo.subtitulo_label_value &&
-                              costo.subtitulo_label_value.value
-                              ? costo.subtitulo_label_value
-                              : undefined
-                          }
-                          error={errors[`subtitulo_${costo.id}`]?.message}
-                        />
-                      );
-                    }}
-                  />
-                </div>
+                              // Actualizar el estado con las nuevas opciones
+                              setCostos((prevCostos) =>
+                                prevCostos.map((costoItem) => {
+                                  if (costoItem.id === costo.id) {
+                                    return {
+                                      ...costoItem,
+                                      subtitulo_label_value: selectedOption,
+                                      item_subtitulo_label_value: { label: '', value: '' }, // Resetea item_subtitulo
+                                      opcionesItems: opcionesDeItems
+                                    };
+                                  }
+                                  return costoItem;
+                                })
+                              );
 
-                <div className="col border-end  d-flex flex-column justify-content-between">
-                  <p className="text-sans-p-bold">Item</p>
-                  <Controller
-                    control={control}
-                    name={`item_subtitulo_${costo.id}`}
-                    render={({ field }) => {
-                      return (
-                        <DropdownSelect
-                          id={`item_subtitulo_${costo.id}`}
-                          name={`item_subtitulo_${costo.id}`}
-                          placeholder="Ítem"
-                          options={opcionesItemsPorCosto[costo.id] || []} // Usa el estado que corresponde a cada costo
-                          onSelectionChange={(selectedOption) => {
-                            handleSave(costo.id, 'item_subtitulo', selectedOption);
-                            field.onChange(selectedOption.value);
-                          }}
-                          readOnly={solo_lectura}
-                          selected={
-                            costo.item_subtitulo_label_value &&
-                              costo.item_subtitulo_label_value.value
-                              ? costo.item_subtitulo_label_value
-                              : undefined
-                          }
-                          error={
-                            errors[`item_subtitulo_${costo.id}`]?.message
-                          }
-                        />
-                      );
-                    }}
-                  />
-                </div>
-                <div className="col d-flex flex-column justify-content-between border-end pe-4">
-                  <div>
-                    <p className="text-sans-p-bold mb-0">Total Anual</p>
-                    <p className="mb-0">($M)</p>
+                              field.onChange(selectedOption.value);
+                            }}
+
+                            readOnly={solo_lectura}
+                            selected={
+                              costo.subtitulo_label_value &&
+                                costo.subtitulo_label_value.value
+                                ? costo.subtitulo_label_value
+                                : undefined
+                            }
+                            error={errors[`subtitulo_${costo.id}`]?.message}
+                          />
+                        );
+                      }}
+                    />
                   </div>
 
-                  <Controller
-                    control={control}
-                    name={`total_anual_${costo.id}`}
-                    defaultValue={costo?.total_anual || ''}
-                    render={({ field }) => {
-                      // Destructura las propiedades necesarias de field
-                      const { onChange, onBlur, value } = field;
-
-                      const handleChange = (valor) => {
-                        clearErrors(`total_anual_${costo.id}`);
-                        onChange(valor);
-                        handleInputChange(
-                          costo.id,
-                          'total_anual',
-                          valor
+                  <div className="col border-end  d-flex flex-column justify-content-between">
+                    <p className="text-sans-p-bold">Item</p>
+                    <Controller
+                      control={control}
+                      name={`item_subtitulo_${costo.id}`}
+                      render={({ field }) => {
+                        return (
+                          <DropdownSelect
+                            id={`item_subtitulo_${costo.id}`}
+                            name={`item_subtitulo_${costo.id}`}
+                            placeholder="Ítem"
+                            options={opcionesItemsPorCosto[costo.id] || []} // Usa el estado que corresponde a cada costo
+                            onSelectionChange={(selectedOption) => {
+                              handleSave(costo.id, 'item_subtitulo', selectedOption);
+                              field.onChange(selectedOption.value);
+                            }}
+                            readOnly={solo_lectura}
+                            selected={
+                              costo.item_subtitulo_label_value &&
+                                costo.item_subtitulo_label_value.value
+                                ? costo.item_subtitulo_label_value
+                                : undefined
+                            }
+                            error={
+                              errors[`item_subtitulo_${costo.id}`]?.message
+                            }
+                          />
                         );
-                      };
+                      }}
+                    />
+                  </div>
+                  <div className="col d-flex flex-column justify-content-between border-end pe-4">
+                    <div>
+                      <p className="text-sans-p-bold mb-0">Total Anual</p>
+                      <p className="mb-0">($M)</p>
+                    </div>
 
-                      // Función para manejar el evento onBlur
-                      const handleBlur = async () => {
-                        const isFieldValid = await trigger(
-                          `total_anual_${costo.id}`
-                        );
-                        if (isFieldValid) {
-                          handleSave(costo.id, 'total_anual');
-                        }
-                        onBlur();
-                      };
+                    <Controller
+                      control={control}
+                      name={`total_anual_${costo.id}`}
+                      defaultValue={costo?.total_anual || ''}
+                      render={({ field }) => {
+                        const { onChange, onBlur, value } = field;
 
-                      // Evita eliminar o submit con tecla Enter
-                      const handleKeyDown = (e) => {
+                        const handleChange = (valor) => {
+                          clearErrors(`total_anual_${costo.id}`);
+                          onChange(valor);
+                          handleInputChange(costo.id, 'total_anual', valor);
+                        };
+
+                        const handleBlur = async () => {
+                          const isFieldValid = await trigger(`total_anual_${costo.id}`);
+                          if (isFieldValid) {
+                            handleSave(costo.id, 'total_anual', value);
+                          }
+                          onBlur();
+                        };
+
+                        const handleKeyDown = (e) => {
                           if (e.key === 'Enter') {
                             e.preventDefault();
                           }
                         };
 
+                        return (
+                          <InputCosto
+                            id={`total_anual_${costo.id}`}
+                            placeholder="Costo (M$)"
+                            value={value}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            onKeyDown={handleKeyDown}
+                            loading={inputStatus[costo.id]?.total_anual?.loading}
+                            saved={inputStatus[costo.id]?.total_anual?.saved}
+                            error={errors[`total_anual_${costo.id}`]?.message}
+                            disabled={solo_lectura}
+                          />
+                        );
+                      }}
+                    />
+
+                  </div>
+
+                  <div className="col d-flex flex-column justify-content-between border-end">
+                    <div>
+                      <p className="text-sans-p-bold mb-0">Etapa</p>
+                      <p className="">(Opcional)</p>
+                    </div>
+                    <div className="ps-2">
+                      <Controller
+                        control={control}
+                        name={`etapa_${costo.id}`}
+                        render={({ field }) => {
+                          return (
+                            <DropdownCheckbox
+                              id={`etapa_${costo.id}`}
+                              placeholder="Etapa"
+                              options={opcionesEtapas}
+                              onSelectionChange={(selectedOptions) => {
+                                handleSave(costo.id, 'etapa', selectedOptions);
+                                field.onChange(selectedOptions);
+                              }}
+
+                              readOnly={solo_lectura || opcionesEtapas.length === 0}
+                              selectedValues={costo.etapa_label_value}
+                            />
+                          );
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="col d-flex flex-column justify-content-between">
+                    <p className="text-sans-p-bold">¿Es transversal?</p>
+                    <Controller
+                      control={control}
+                      name={`es_transversal_${costo.id}`}
+                      defaultValue={costo.es_transversal}
+                      render={({ field }) => {
+                        return (
+                          <OpcionesAB
+                            id={`es_transversal_${costo.id}`}
+                            readOnly={solo_lectura}
+                            initialState={field.value}
+                            handleEstadoChange={(newValue) =>
+                              handleEsTransversalChange(costo.id, newValue)
+                            }
+                            loading={inputStatus[costo.id]?.es_transversal?.loading}
+                            saved={inputStatus[costo.id]?.es_transversal?.saved}
+                            error={
+                              errors[`es_transversal_${costo.id}`]?.message
+                            }
+                            altA="Si"
+                            altB="No"
+                            field={field}
+                            handleSave={handleSave}
+                            arrayNameId={costo.id}
+                            fieldName="es_transversal"
+                          />
+                        );
+                      }}
+                    />
+                  </div>
+                </div>
+
+                <div className="row pe-3 mt-4">
+                  <Controller
+                    control={control}
+                    name={`descripcion_${costo.id}`}
+                    defaultValue={costo?.descripcion || ''}
+                    render={({ field }) => {
+                      const { onChange, onBlur, value } = field;
+
+                      const handleChange = (e) => {
+                        clearErrors(`descripcion_${costo.id}`);
+                        onChange(e.target.value);
+                        handleInputChange(costo.id, 'descripcion', e.target.value);
+                      };
+
+                      const handleBlur = async () => {
+                        const isFieldValid = await trigger(`descripcion_${costo.id}`);
+                        if (isFieldValid) {
+                          handleSave(costo.id, 'descripcion', value);
+                        }
+                        onBlur();
+                      };
+
                       return (
-                        <InputCosto
-                          id={`total_anual_${costo.id}`}
-                          placeholder="Costo (M$)"
+                        <CustomTextarea
+                          id={`descripcion_${costo.id}`}
+                          label="Descripción"
+                          placeholder="Describe el costo por subtítulo e ítem."
+                          maxLength={500}
                           value={value}
                           onChange={handleChange}
                           onBlur={handleBlur}
-                          onKeyDown={handleKeyDown}
-                          loading={inputStatus[costo.id]?.total_anual?.loading}
-                          saved={inputStatus[costo.id]?.total_anual?.saved}
-                          error={errors[`total_anual_${costo.id}`]?.message}
-                          disabled={solo_lectura}
-                        />
-                      );
-                    }}
-                  />
-                </div>
-
-                <div className="col d-flex flex-column justify-content-between border-end">
-                <div>
-                  <p className="text-sans-p-bold mb-0">Etapa</p>
-                  <p className="">(Opcional)</p>
-                </div>
-                <div className="ps-2">
-                  <Controller
-                    control={control}
-                    name={`etapa_${costo.id}`}
-                    render={({ field }) => {
-                      return (
-                        <DropdownCheckbox
-                          id={`etapa_${costo.id}`}
-                          placeholder="Etapa"
-                          options={opcionesEtapas}
-                          onSelectionChange={(selectedOptions) => {
-                            handleSave(costo.id, 'etapa', selectedOptions);
-                            field.onChange(selectedOptions);
-                          }}
-
-                          readOnly={solo_lectura || opcionesEtapas.length === 0}
-                          selectedValues={costo.etapa_label_value}
-                        />
-                      );
-                    }}
-                  />
-                </div>
-              </div>
-
-                <div className="col d-flex flex-column justify-content-between">
-                  <p className="text-sans-p-bold">¿Es transversal?</p>
-                  <Controller
-                    control={control}
-                    name={`es_transversal_${costo.id}`}
-                    defaultValue={costo.es_transversal}
-                    render={({ field }) => {
-                      return (
-                        <OpcionesAB
-                          id={`es_transversal_${costo.id}`}
+                          loading={inputStatus[costo.id]?.descripcion?.loading}
+                          saved={inputStatus[costo.id]?.descripcion?.saved}
+                          error={errors[`descripcion_${costo.id}`]?.message}
                           readOnly={solo_lectura}
-                          initialState={field.value}
-                          handleEstadoChange={(newValue) =>
-                            handleEsTransversalChange(costo.id, newValue)
-                          }
-                          loading={inputStatus[costo.id]?.es_transversal?.loading}
-                          saved={inputStatus[costo.id]?.es_transversal?.saved}
-                          error={
-                            errors[`es_transversal_${costo.id}`]?.message
-                          }
-                          altA="Si"
-                          altB="No"
-                          field={field}
-                          handleSave={handleSave}
-                          arrayNameId={costo.id}
-                          fieldName="es_transversal"
                         />
                       );
                     }}
                   />
                 </div>
+
+                <div className="d-flex justify-content-end me-2">
+                  {!solo_lectura && (
+                    <div className="">
+                      <button
+                        className="btn-terciario-ghost mt-3"
+                        onClick={() => eliminarElemento(costo.id)}
+                      >
+                        <i className="material-symbols-rounded me-2">delete</i>
+                        <p className="mb-0 text-decoration-underline">
+                          Borrar subtítulo
+                        </p>
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
+            ))}
 
-              <div className="row pe-3 mt-4">
-                <Controller
-                  control={control}
-                  name={`descripcion_${costo.id}`}
-                  defaultValue={costo?.descripcion || ''}
-                  render={({ field }) => {
-                    // Destructura las propiedades necesarias de field
-                    const { onChange, onBlur, value } = field;
-
-                    const handleChange = (e) => {
-                      clearErrors(`descripcion_${costo.id}`);
-                      onChange(e.target.value);
-                      handleInputChange(
-                        costo.id,
-                        'descripcion',
-                        e.target.value
-                      );
-                    };
-
-                    // Función para manejar el evento onBlur
-                    const handleBlur = async () => {
-                      const isFieldValid = await trigger(
-                        `descripcion_${costo.id}`
-                      );
-                      if (isFieldValid) {
-                        handleSave(costo.id, 'descripcion');
-                      }
-                      onBlur();
-                    };
-
-                    return (
-                      <CustomTextarea
-                        id={`descripcion_${costo.id}`}
-                        label="Descripción"
-                        placeholder="Describe el costo por subtítulo e ítem."
-                        maxLength={500}
-                        value={value}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        loading={inputStatus[costo.id]?.descripcion?.loading}
-                        saved={inputStatus[costo.id]?.descripcion?.saved}
-                        error={errors[`descripcion_${costo.id}`]?.message}
-                        readOnly={solo_lectura}
-                      />
-                    );
-                  }}
-                />
-              </div>
-
-              <div className="d-flex justify-content-end me-2">
-                {!solo_lectura && (
-                  <div className="">
-                    <button
-                      className="btn-terciario-ghost mt-3"
-                      onClick={() => eliminarElemento(costo.id)}
-                    >
-                      <i className="material-symbols-rounded me-2">delete</i>
-                      <p className="mb-0 text-decoration-underline">
-                        Borrar subtítulo
-                      </p>
-                    </button>
-                  </div>
-                )}
-              </div>
-            </div>
-          ))}
-
-        {!solo_lectura && (
-          <button className="btn-secundario-s m-2" type="submit">
-            <i className="material-symbols-rounded me-2">add</i>
-            <p className="mb-0 text-decoration-underline">
-              Agregar subtítulo
-            </p>
-          </button>
-        )}
-      </form>
-    </div>
-  </>
-);
+          {!solo_lectura && (
+            <button className="btn-secundario-s m-2" type="submit">
+              <i className="material-symbols-rounded me-2">add</i>
+              <p className="mb-0 text-decoration-underline">
+                Agregar subtítulo
+              </p>
+            </button>
+          )}
+        </form>
+      </div>
+    </>
+  );
 };
 
 export default Costos;

@@ -5,6 +5,7 @@ export const Subpaso_CincoPuntoUno = (
   {
     id,
     paso5,
+    region,
     solo_lectura,
     stepNumber,
     data_costos_directos,
@@ -53,6 +54,7 @@ export const Subpaso_CincoPuntoUno = (
       <div >
         <Costos
           id={id}
+          region={region}
           data={data_costos_directos}
           stepNumber={stepNumber}
           listado_subtitulos={listado_subtitulos_directos}
