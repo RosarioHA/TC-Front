@@ -52,14 +52,11 @@ const CreacionUsuario = () => {
     console.log("competencias seleccionadas en vista", competenciasSeleccionadas);
   }, [ competenciasSeleccionadas ]);
 
-  // Maneja boton de volver atras.
   const history = useNavigate();
   const handleBackButtonClick = () => {
     if (hasChanged) {
-      // Muestra el modal
       setIsModalOpen(true);
     } else {
-      // Retrocede solo si no hay cambios
       history(-1);
     }
   };
@@ -82,23 +79,21 @@ const CreacionUsuario = () => {
     mode: 'manual',
   });
 
-  //detecta cambios sin guardar en el formulario
   function handleOnChange(event) {
     const data = new FormData(event.currentTarget);
-    // Verifica si hay cambios respecto al valor inicial
     const formHasChanged = Array.from(data.entries()).some(([ name, value ]) => {
       const initialValue = initialValues[ name ];
       return value !== String(initialValue);
     });
     setHasChanged(formHasChanged);
-    // Actualiza el valor de hasChanged en el contexto
     updateHasChanged(formHasChanged);
   }
-  //opciones de perfil 
+   
   const opcionesGroups = dataGroups.map(group => ({
     value: group.id,
     label: group.name
   }))
+
   const handlePerfilChange = (selectedValue) => {
     const selectedProfile = opcionesGroups.find((option) => option.value === selectedValue.value);
     if (selectedProfile) {
@@ -110,11 +105,11 @@ const CreacionUsuario = () => {
     updateHasChanged(true);
   };
 
-  //opciones de regiones
   const opcionesDeRegiones = dataRegiones.map(region => ({
     value: region.id,
     label: region.region
   }));
+
   const handleRegionChange = (region) => {
     setRegionSeleccionada(region.value);
     setRegionId(region.value);
@@ -123,7 +118,6 @@ const CreacionUsuario = () => {
     updateHasChanged(true);
   }
 
-  //opciones sector 
   const opcionesSector = dataSector.map(ministerio => ({
     label: ministerio.nombre,
     options: ministerio.sectores.map(sector => ({
@@ -132,6 +126,7 @@ const CreacionUsuario = () => {
       ministerioId: ministerio.id
     }))
   }));
+
   const handleSectorChange = (sectorId) => {
     setSectorSeleccionado(sectorId.label);
     setSectorId(sectorId);
@@ -153,70 +148,19 @@ const CreacionUsuario = () => {
   }));
 
   const handleCompetenciasChange = (selectedOptions) => {
-    setCompetenciasSeleccionadas(selectedOptions);
+    const competenciasSeleccionadasFormatted = selectedOptions.map(option => {
+      const competencia = opcionesFiltroCompetencias.find(c => c.value === parseInt(option, 10));
+      return { id: parseInt(option, 10), nombre: competencia ? competencia.label : '' };
+    });
+    setCompetenciasSeleccionadas(competenciasSeleccionadasFormatted);
     setHasChanged(true);
     updateHasChanged(true);
   };
 
   const handleInputClick = (e) => {
-    // Previene que el evento se propague al boton
     e.stopPropagation();
   };
 
-  // const onSubmit = async (data) => {
-  //   let validationErrors = {};
-    
-  //     // Validación de Región y Sector según el perfil de usuario seleccionado
-  //     if (perfilSeleccionado === 'GORE' && !regionSeleccionada) {
-  //       validationErrors.region = "Seleccionar una región para el perfil GORE.";
-  //     }
-  //     if (perfilSeleccionado === 'Usuario Sectorial' && !sectorSeleccionado) {
-  //       validationErrors.sector = "Seleccionar un sector para el perfil de Usuario Sectorial.";
-  //     }
-  //     // Actualizar el estado de los errores
-  //     setConditionalFieldErrors(validationErrors);
-  
-  //     // Preparar las competencias seleccionadas para la modificación
-  //     const competenciasModificar = competenciasSeleccionadas.map(id => ({
-  //       id: parseInt(id, 10),
-  //       action: 'add'
-  //     }));
-
-  //     if (Object.keys(validationErrors).length === 0) {
-  //     // Construir el payload con el campo sector actualizado para solo incluir el ID
-  //     const payload = {
-  //       ...data,
-  //       nombre_completo: data.nombre,
-  //       perfil: perfilSeleccionado, // Asegúrate de que este es el ID o el valor necesario del perfil
-  //       sector: sectorId, // Usar directamente el ID del sector seleccionado
-  //       region: regionSeleccionada, // Asegúrate de que este es el ID o el valor necesario de la región
-  //       password: data.password,
-  //       is_active: estado === 'activo',
-  //       competencias_modificar: competenciasModificar,
-  //     };
-  //     // Omitir campos no necesarios antes de enviar
-  //     delete payload.password2; 
-
-  //     try {
-  //       const isValid = await trigger();
-  //       if (submitClicked && isValid) {
-  //         await createUser(payload);
-  //         updateHasChanged(false);
-  //         setHasChanged(false);
-  //         history('/home/success_creacion', { state: { origen: "crear_usuario" } });
-  //       } else {
-  //         console.log("El formulario no es válido o no se ha hecho click en 'Crear Usuario'");
-  //       }
-  //     } catch (error) {
-  //       // Verifica si el error es debido a un problema en el campo 'rut'
-  //       if (error.message && error.message.rut && error.message.rut.length > 0) {
-  //         // Utiliza el primer mensaje de error para el campo 'rut'
-  //         const mensajeErrorRut = error.message.rut[ 0 ];
-  //         setError('rut', { type: 'manual', message: mensajeErrorRut });
-  //       }
-  //     }
-  //   }
-  // };
   const onSubmit = async (data) => {
     try {
       // Validación de Región y Sector según el perfil de usuario seleccionado
@@ -227,15 +171,9 @@ const CreacionUsuario = () => {
       if (perfilSeleccionado === 'Usuario Sectorial' && !sectorId) {
         validationErrors.sector = "Seleccionar un sector para el perfil de Usuario Sectorial.";
       }
-  
       setConditionalFieldErrors(validationErrors);
   
       if (Object.keys(validationErrors).length === 0) {
-        const competenciasModificar = competenciasSeleccionadas.map(id => ({
-          id: parseInt(id, 10),
-          action: 'add'
-        }));
-  
         const payload = {
           ...data,
           nombre_completo: data.nombre,
@@ -244,9 +182,10 @@ const CreacionUsuario = () => {
           region: regionSeleccionada,
           password: data.password,
           is_active: estado === 'activo',
-          competencias_modificar: competenciasModificar,
+          asignar_competencias: competenciasSeleccionadas,
         };
         delete payload.password2;
+        delete payload.competenciasSeleccionadas;
   
         const isValid = await trigger();
         if (submitClicked && isValid) {
