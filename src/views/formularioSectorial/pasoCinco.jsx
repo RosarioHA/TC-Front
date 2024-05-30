@@ -109,7 +109,7 @@ const PasoCinco = () => {
                       listado_item_subtitulos_directos={region.listado_item_subtitulos_directos}
                       listado_item_subtitulos_indirectos={region.listado_item_subtitulos_indirectos}
                       listado_etapas={listado_etapas}
-                      region={region.region}  // Pasar la región al componente hijo
+                      region={region.region}
                     />
                     <Subpaso_CincoDos
                       id={data.id}
@@ -118,7 +118,7 @@ const PasoCinco = () => {
                       stepNumber={stepNumber}
                       p_5_2_evolucion_gasto_asociado={region.p_5_2_evolucion_gasto_asociado}
                       p_5_2_variacion_promedio={region.p_5_2_variacion_promedio}
-                      region={region.region}  // Pasar la región al componente hijo
+                      region={region.region}
                     />
                     <Subpaso_CincoPuntoTres
                       id={data.id}
@@ -130,7 +130,7 @@ const PasoCinco = () => {
                       listado_estamentos={listado_estamentos}
                       listado_calidades_juridicas_directas={region.listado_calidades_juridicas_directas}
                       listado_calidades_juridicas_indirectas={region.listado_calidades_juridicas_indirectas}
-                      region={region.region}  // Pasar la región al componente hijo
+                      region={region.region}
                     />
                   </div>
                 </div>

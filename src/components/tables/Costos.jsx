@@ -107,6 +107,7 @@ const Costos = ({
 
   const agregarCostoAdicional = async () => {
     const nuevoCostoAdicional = {
+      total_anual: '',
     };
 
     const payload = {
