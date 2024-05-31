@@ -31,6 +31,7 @@ const PasoCuatro = () => {
   useEffect(() => {
     updateStepNumber(stepNumber);
     if (observaciones && Object.keys(observaciones).length === 0) {
+      console.log("Fetching observaciones");
       fetchObservaciones();
     }
     if (observaciones && observaciones.observacion_paso4) {
@@ -40,9 +41,19 @@ const PasoCuatro = () => {
 
   if (!pasoData) return <div>No hay datos disponibles para el Paso 4</div>;
 
-  const { paso4: paso4Data, indicador_desempeno, lista_indicadores, solo_lectura } = pasoData;
-  console.log("paso data", pasoData)
-  if (!paso4Data) return <> <div className="d-flex align-items-center flex-column my-5 px-5 ">
+  const { paso4encabezado: paso4Data, lista_indicadores, solo_lectura, regiones } = pasoData; // indicador_desempeno,
+
+  console.log("pasoData desde FormularioContext", pasoData) //entrega data
+  console.log("paso4Data", paso4Data); //undefined
+  console.log("indicador_desempeno", pasoData?.indicador_desempeno); //undefined
+  console.log("lista_indicadores", pasoData?.lista_indicadores); //lista de indicadores
+  console.log("observacionesEnviadas", observacionesEnviadas); //booleano
+  console.log("formSectorialEnviado", formSectorialEnviado); //booleano
+  console.log("data desde FormularioContext", data );
+  console.log("buscando avance paso 4", );
+
+  if (!paso4Data) 
+  return <> <div className="d-flex align-items-center flex-column my-5 px-5 ">
     <div className="text-center text-sans-h5-medium-blue ">Cargando paso 4</div>
     <span className="placeholder col-6 bg-primary"></span>
   </div></>;
@@ -56,9 +67,9 @@ const PasoCuatro = () => {
     await updateObservacion(observacionData);
   };
 
-  const avance = pasoData?.paso4?.avance;
+  const avance = paso4Data?.avance;
+  //const index= 1; 
 
-  const index= 1; 
   return (
     <>
       <div className="col-1">
@@ -76,39 +87,43 @@ const PasoCuatro = () => {
             <h6 className="text-sans-h6-primary mt-3">Si el ejercicio de la competencia tiene mas de un indicador de desempeño, se deben añadir las tablas correspondientes.</h6>
             <div className="my-5 pb-3 border-bottom">
 
-              <div className="col-12 collapse-regiones border  border-bottom" key={index} type="button" data-bs-toggle="collapse"
-                data-bs-target={`#collapseRegion${index}`} aria-expanded={collapseStates[ index ] ? "true" : "false"}
-                aria-controls={`collapseRegion${index}`} onClick={() => toggleCollapse(index)}>
-                <div className="d-flex justify-content-between">
-                  <span className="text-sans-h4 text-start">Nombre region </span>
-                  <button className="btn-secundario-s-round">
-                    {collapseStates[ index ] ? "Ocultar sección" : "Mostrar sección"}
-                    <span className="material-symbols-outlined">
-                      {collapseStates[ index ] ? "keyboard_arrow_up" : "keyboard_arrow_down"}
-                    </span>
-                  </button>
+            
+            {regiones.map((regionData, index) => (
+              <div key={index}>
+                <div className="col-12 collapse-regiones border border-bottom" type="button" data-bs-toggle="collapse"
+                  data-bs-target={`#collapseRegion${index}`} aria-expanded={collapseStates[index] ? "true" : "false"}
+                  aria-controls={`collapseRegion${index}`} onClick={() => toggleCollapse(index)}>
+                  <div className="d-flex justify-content-between">
+                    <span className="text-sans-h4 text-start">{regionData.region}</span>
+                    <button className="btn-secundario-s-round">
+                      {collapseStates[index] ? "Ocultar sección" : "Mostrar sección"}
+                      <span className="material-symbols-outlined">
+                        {collapseStates[index] ? "keyboard_arrow_up" : "keyboard_arrow_down"}
+                      </span>
+                    </button>
+                  </div>
+                  <div>
+                    <Avance avance={regionData?.paso4[0].avance} id={id} />
+                  </div>
                 </div>
-                <div>
-                  <Avance avance={avance} id={id} />
+                <div className={`collapse ${collapseStates[index] ? 'show' : ''}`} id={`collapseRegion${index}`}>
+                  <div className="card card-body">
+                    <>
+                      {regionData.indicador_desempeno && (
+                        <Subpaso_CuatroUno
+                          data={regionData}
+                          id={id}
+                          stepNumber={stepNumber}
+                          listaIndicadores={lista_indicadores}
+                          readOnly={false}
+                          solo_lectura={solo_lectura}
+                        />
+                      )}
+                    </>
+                  </div>
                 </div>
               </div>
-              <div className={`collapse ${collapseStates[ index ] ? 'show' : ''}`} id={`collapseRegion${index}`}>
-                <div className="card card-body ">
-                  <>
-                    {/* Componente adicional en blanco para un nuevo indicador */}
-                    {indicador_desempeno && (
-                      <Subpaso_CuatroUno
-                        data={pasoData}
-                        id={id}
-                        stepNumber={stepNumber}
-                        listaIndicadores={lista_indicadores}
-                        readOnly={false}
-                        solo_lectura={solo_lectura}
-                      />
-                    )}
-                  </>
-                </div>
-              </div>
+            ))}
             </div>
           </div>
 

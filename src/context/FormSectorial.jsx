@@ -23,9 +23,6 @@ export const FormularioProvider = ({ children }) => {
     setStepNumber(newStepNumber);
   }, []);
 
-
-
-
   const  handleUpdatePaso = useCallback(async ( id, stepNumber,formData) => {
     try {
       await patchStep(id, stepNumber, formData);
@@ -34,7 +31,6 @@ export const FormularioProvider = ({ children }) => {
       console.error('Error updating data', error);
     }
   }, [patchStep, refetchTrigger]);
-
 
   const handleUploadFiles = async (id, stepNumber, archivos, fieldName) => {
     try {
