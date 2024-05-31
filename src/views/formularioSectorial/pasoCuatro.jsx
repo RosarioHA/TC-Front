@@ -50,7 +50,6 @@ const PasoCuatro = () => {
   console.log("observacionesEnviadas", observacionesEnviadas); //booleano
   console.log("formSectorialEnviado", formSectorialEnviado); //booleano
   console.log("data desde FormularioContext", data );
-  console.log("buscando avance paso 4", );
 
   if (!paso4Data) 
   return <> <div className="d-flex align-items-center flex-column my-5 px-5 ">

@@ -5,10 +5,8 @@ import CustomTextarea from "../../forms/custom_textarea";
 import { useUpdateFormRefresh } from "../../../hooks/formulario/useUpdateFormRefresh";
 import { FormularioContext } from "../../../context/FormSectorial";
 
-export const Subpaso_CuatroUno = ({ data, listaIndicadores, id, stepNumber, solo_lectura }) =>
-{
-  const { patchStep } = useUpdateFormRefresh((datosActualizados) =>
-  {
+export const Subpaso_CuatroUno = ({ data, listaIndicadores, id, stepNumber, solo_lectura }) => {
+  const { patchStep } = useUpdateFormRefresh((datosActualizados) => {
     setIndicadores(datosActualizados.indicador_desempeno || []);
     // setDatosGuardados(true);
   });
@@ -24,8 +22,7 @@ export const Subpaso_CuatroUno = ({ data, listaIndicadores, id, stepNumber, solo
   // const { dataDirecta } = useRecargaDirecta(id, stepNumber);
   const [ indicadores, setIndicadores ] = useState(data.indicador_desempeno || [ { id: generarIdTemp() } ]);
   // const [ datosGuardados, setDatosGuardados ] = useState(false);
-  const [ inputStatus, setInputStatus ] = useState(indicadores.reduce((acc, indicador) =>
-  {
+  const [ inputStatus, setInputStatus ] = useState(indicadores.reduce((acc, indicador) => {
     acc[ indicador.id ] = {
       formula_calculo: { loading: false, saved: false },
       descripcion_indicador: { loading: false, saved: false },
@@ -34,14 +31,11 @@ export const Subpaso_CuatroUno = ({ data, listaIndicadores, id, stepNumber, solo
     };
     return acc;
   }, {}));
+
   const [ message, setMessage ] = useState({ text: '', type: '' });
-
-
   const { handleUpdatePaso } = useContext(FormularioContext);
 
-
-  function generarIdTemp()
-  {
+  function generarIdTemp() {
     return `temp-${Date.now()}-${Math.random()}`;
   }
 
@@ -53,24 +47,18 @@ export const Subpaso_CuatroUno = ({ data, listaIndicadores, id, stepNumber, solo
   //   }
   // }, [ dataDirecta ]);
 
-
-  useEffect(() =>
-  {
+  useEffect(() => {
     const savedData = localStorage.getItem('formData');
-    if (savedData)
-    {
+    if (savedData) {
       setFormData(JSON.parse(savedData));
     }
   }, []);
 
-
-  useEffect(() =>
-  {
+  useEffect(() => {
     localStorage.setItem('formData', JSON.stringify(formData));
   }, [ formData ]);
 
-  const handleChangeInput = (idIndicador, campo, evento) =>
-  {
+  const handleChangeInput = (idIndicador, campo, evento) => {
     const valor = evento.target.value;
     setIndicadores(indicadoresActuales =>
       indicadoresActuales.map(indicador =>
@@ -79,8 +67,7 @@ export const Subpaso_CuatroUno = ({ data, listaIndicadores, id, stepNumber, solo
     );
   };
 
-  const agregarIndicador = () =>
-  {
+  const agregarIndicador = () => {
     const ultimoIndicador = indicadores[ indicadores.length - 1 ];
     // Permite agregar un nuevo indicador si la lista está vacía o si el último indicador está completo
     if (indicadores.length === 0 || (ultimoIndicador.id && todosLosCamposCompletos(ultimoIndicador)))
@@ -89,15 +76,11 @@ export const Subpaso_CuatroUno = ({ data, listaIndicadores, id, stepNumber, solo
     }
   };
 
-
-  const todosLosCamposCompletos = (indicador) =>
-  {
+  const todosLosCamposCompletos = (indicador) => {
     return indicador.indicador && indicador.formula_calculo && indicador.descripcion_indicador && indicador.medios_calculo && indicador.verificador_asociado;
   };
 
-
-  const eliminarIndicador = async (idIndicador) =>
-  {
+  const eliminarIndicador = async (idIndicador) => {
     // Construir el payload con la estructura deseada
     const payload = {
       indicador_desempeno: [ {
@@ -106,14 +89,12 @@ export const Subpaso_CuatroUno = ({ data, listaIndicadores, id, stepNumber, solo
       } ]
     };
 
-    try
-    {
+    try {
       await patchStep(id, stepNumber, payload);
 
       setIndicadores(indicadoresActuales =>
         indicadoresActuales.filter(indicador => indicador.id !== idIndicador));
-    } catch (error)
-    {
+    } catch (error) {
       console.error("Error al eliminar el indicador:", error);
     }
   };
@@ -124,49 +105,36 @@ export const Subpaso_CuatroUno = ({ data, listaIndicadores, id, stepNumber, solo
     label: label // Etiqueta del indicador
   }));
 
-  const handleDropdownChange = (idIndicador, valorSeleccionado) =>
-  {
+  const handleDropdownChange = (idIndicador, valorSeleccionado) => {
     setIndicadores(indicadoresActuales =>
       indicadoresActuales.map(indicador =>
         indicador.id === idIndicador
           ? { ...indicador, indicador: valorSeleccionado.value, indicador_display: valorSeleccionado.label }
           : indicador
-      )
-    );
-    if (idIndicador)
-    {
+      ));
+    if (idIndicador) {
       guardarCambioIndicador(idIndicador, valorSeleccionado.value);
     }
   };
 
-
-  const guardarCambioIndicador = async (idIndicador, nuevoValor) =>
-  {
+  const guardarCambioIndicador = async (idIndicador, nuevoValor) => {
     const indicadorActualizado = indicadores.find(indicador => indicador.id === idIndicador);
 
     if (!indicadorActualizado) return;
-
     const payload = {
       ...indicadorActualizado,
       indicador: nuevoValor
     };
-
-    try
-    {
+    try {
       await patchStep(id, stepNumber, { indicador_desempeno: [ payload ] });
-    } catch (error)
-    {
+    } catch (error) {
       console.error("Error al guardar el cambio de indicador:", error);
     }
   };
 
-
-  const handleSave = async () =>
-  {
-    try
-    {
-      const todosCompletos = indicadores.every((indicador) =>
-      {
+  const handleSave = async () => {
+    try {
+      const todosCompletos = indicadores.every((indicador) => {
         return (
           indicador.indicador &&
           indicador.formula_calculo &&
@@ -176,8 +144,7 @@ export const Subpaso_CuatroUno = ({ data, listaIndicadores, id, stepNumber, solo
         );
       });
 
-      if (!todosCompletos)
-      {
+      if (!todosCompletos) {
         setMessage({ text: "Por favor, completa todos los campos antes de guardar.", type: 'error' });
         return;
       }
@@ -185,20 +152,17 @@ export const Subpaso_CuatroUno = ({ data, listaIndicadores, id, stepNumber, solo
         indicador_desempeno: indicadores,
       };
       const exito = await patchStep(id, stepNumber, datosPaso);
-      if (exito)
-      {
+      if (exito) {
         setMessage({ text: "Datos guardados exitosamente", type: 'success' });
         // setDatosGuardados(true);
       }
-    } catch (error)
-    {
+    } catch (error) {
       console.error("Error en handleSave:", error);
       setMessage({ text: "Error al guardar. Inténtalo de nuevo.", type: 'error' });
     }
   };
 
-  const handleInputChange = useCallback((idIndicador, campo, evento) =>
-  {
+  const handleInputChange = useCallback((idIndicador, campo, evento) => {
     const valor = evento.target.value;
     setIndicadores(indicadoresActuales =>
       indicadoresActuales.map(indicador =>
@@ -207,8 +171,7 @@ export const Subpaso_CuatroUno = ({ data, listaIndicadores, id, stepNumber, solo
     );
   }, []);
 
-  const inputSave = async (idIndicador, campo) =>
-  {
+  const inputSave = async (idIndicador, campo) => {
     setInputStatus(prevStatus => ({
       ...prevStatus,
       [ idIndicador ]: {
@@ -217,8 +180,7 @@ export const Subpaso_CuatroUno = ({ data, listaIndicadores, id, stepNumber, solo
       }
     }));
 
-    try
-    {
+    try {
       const indicadorASalvar = indicadores.find(indicador => indicador.id === idIndicador);
       await handleUpdatePaso(id, stepNumber, { indicador_desempeno: [ indicadorASalvar ] });
       setInputStatus(prevStatus => ({
@@ -228,8 +190,7 @@ export const Subpaso_CuatroUno = ({ data, listaIndicadores, id, stepNumber, solo
           [ campo ]: { loading: false, saved: true }
         }
       }));
-    } catch (error)
-    {
+    } catch (error) {
       console.error('Error saving input:', error);
       setInputStatus(prevStatus => ({
         ...prevStatus,
