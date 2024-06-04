@@ -19,10 +19,10 @@ const CustomTextarea = forwardRef(({
   containerSize
 }, ref) =>
 {
-  const [ inputValue, setInputValue ] = useState(value || ''); // Asegúrate de que el valor inicial no sea null
+  const [ inputValue, setInputValue ] = useState(value || ''); 
   const [ totalCharacters, setTotalCharacters ] = useState((value || '').length);
-  const internalRef = useRef(null); // Ref interna para manipulación DOM que no necesita exposición externa
-  const lastSavedValueRef = useRef(value); // Referencia para almacenar el valor al momento del último guardado
+  const internalRef = useRef(null); 
+  const lastSavedValueRef = useRef(value);
 
   useEffect(() =>
   {
