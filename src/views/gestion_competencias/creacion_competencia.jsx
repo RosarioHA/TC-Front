@@ -36,7 +36,6 @@ const initialValues = {
   plazo_formulario_gore: undefined,
   agrupada: null,
   competencias_agrupadas: [],
-
 };
 
 const groupUsersByType = (usuarios) =>
@@ -75,7 +74,6 @@ const CreacionCompetencia = () =>
   const [ usuariosSeleccionados, setUsuariosSeleccionados ] = useState(initialValues);
   const [ selectedFile, setSelectedFile ] = useState(null);
   const [ buttonText, setButtonText ] = useState('Subir archivo');
-  const [ fechaInicio, setFechaInicio ] = useState('');
   const [ errorMessage, setErrorMessage ] = useState("");
   const [ errorMessageDate, setErrorMessageDate ] = useState("");
   const { updateHasChanged } = useFormContext();
@@ -135,20 +133,20 @@ const CreacionCompetencia = () =>
     setFechaMaxima(fechaActual);
   }, []);
 
-  const onSubmit = async (data) =>
-  {
-    if (!selectedFile)
-    {
-      // Mostrar mensaje de error al usuario indicando que deben adjuntar un archivo
+  const onSubmit = async (data) => {
+    console.log('Data from react-hook-form on submit:', data);
+  
+    if (!selectedFile) {
       setErrorArchivo("Debes adjuntar un archivo antes de enviar el formulario.");
       return;
     }
-    const competenciasAgrupadas = estado
-      ? (data.nombres?.map(comp => ({ nombre: comp.name })) || [])
-      : [];
-      console.log(competenciasAgrupadas)
+  
+  
+    const competenciasAgrupadas = data.competencias_agrupadas.map(item => ({ nombre: item.nombre }));
+  
     const competenciaData = {
       ...data,
+      nombre: data.nombre,
       sectores: sectoresIds,
       regiones: regionesSeleccionadas.map(r => r.value),
       ambito_competencia: ambitoSeleccionado,
@@ -157,30 +155,30 @@ const CreacionCompetencia = () =>
       usuarios_dipres: usuariosSeleccionados.usuarios_dipres,
       usuarios_sectoriales: usuariosSeleccionados.usuarios_sectoriales,
       usuarios_gore: usuariosSeleccionados.usuarios_gore,
-      plazo_formulario_sectorial: data.plazo_formulario_sectorial,
-      plazo_formulario_gore: data.plazo_formulario_gore,
-      fecha_inicio: fechaInicio,
+      fecha_inicio: data.fecha_inicio,
       oficio_origen: selectedFile,
       agrupada: estado,
       competencias_agrupadas: competenciasAgrupadas,
-    }
-    try
-    {
+      plazo_formulario_sectorial: data.plazo_formulario_sectorial,
+      plazo_formulario_gore: data.plazo_formulario_gore,
+    };
+  
+    console.log('Competencia Data:', competenciaData);
+    console.log(competenciasAgrupadas)
+  
+    try {
       await createCompetencia(competenciaData);
       updateHasChanged(false);
       setHasChanged(false);
       history('/home/success_creacion', { state: { origen: "crear_competencia" } });
       setErrorGeneral('');
-    } catch (error)
-    {
-      if (error.response && error.response.data)
-      {
+    } catch (error) {
+      if (error.response && error.response.data) {
         const errores = error.response.data;
-        const primerCampoError = Object.keys(errores)[ 0 ];
-        const primerMensajeError = errores[ primerCampoError ][ 0 ];
+        const primerCampoError = Object.keys(errores)[0];
+        const primerMensajeError = errores[primerCampoError][0];
         setErrorGeneral(primerMensajeError);
-      } else
-      {
+      } else {
         setErrorGeneral('Error al conectarse con el servidor.');
       }
     }
@@ -199,6 +197,7 @@ const CreacionCompetencia = () =>
     setRegionSeleccionada(regionIds); // Asegúrate de que esta línea actualiza correctamente el estado
     setValue('regiones', regionIds);
   }, [ setValue ]);
+
   //opciones sector 
   const opcionesSectores = dataSector.map(ministerio => ({
     label: ministerio.nombre,
@@ -278,17 +277,6 @@ const CreacionCompetencia = () =>
     document.getElementById('fileUploadInput').click();
   };
 
-  // const handleFechaInicioChange = (event) =>
-  // {
-  //   setFechaInicio(event.target.value);
-  // };
-
-  // const formatFechaInicio = () =>
-  // {
-  //   if (!fechaInicio) return '';
-  //   return new Date(fechaInicio).toISOString();
-  // };
-
   const dateInputRef = useRef(null);
 
   const handleFechaInicioChange = (event) =>
@@ -302,14 +290,16 @@ const CreacionCompetencia = () =>
     {
       setErrorMessageDate("La fecha no puede ser posterior a la fecha actual.");
       event.target.value = formattedToday;
-      setFechaInicio(formattedToday);
+      setValue('fecha_inicio', formattedToday);  // Actualiza el valor en react-hook-form
     } else
     {
       setErrorMessageDate("");
-      setFechaInicio(selectedDate);
+      setValue('fecha_inicio', selectedDate);  // Actualiza el valor en react-hook-form
     }
-  };
 
+    // Log the selected date
+    console.log('Selected Date:', selectedDate);
+  };
 
   const handleEstadoChange = (nuevoEstado) =>
   {
@@ -318,7 +308,6 @@ const CreacionCompetencia = () =>
     setHasChanged(true);
     updateHasChanged(true);
   };
-
 
   const userOptions = usuarios ? groupUsersByType(usuarios) : [];
 
@@ -384,10 +373,17 @@ const CreacionCompetencia = () =>
                   />
                   <div className="my-4">
                     <div className="pb-4">Lista de competencias del grupo</div>
-                    <ListaNombres
+                    <Controller
+                      name="competencias_agrupadas"
                       control={control}
-                      errors={errors}
-                      setValue={setValue}
+                      render={({ field }) => (
+                        <ListaNombres
+                          control={control}
+                          errors={errors}
+                          setValue={setValue}
+                          {...field}
+                        />
+                      )}
                     />
                   </div>
                 </div>
@@ -460,7 +456,6 @@ const CreacionCompetencia = () =>
                   options={opcionesAmbito}
                   onSelectionChange={handleAmbitoChange}
                   selected={ambitoSeleccionado}
-
                 />
                 {errors.ambito_competencia && (
                   <p className="text-sans-h6-darkred mt-2 mb-0">{errors.ambito_competencia.message}</p>
@@ -559,10 +554,14 @@ const CreacionCompetencia = () =>
                             id="dateInput"
                             type="date"
                             className="form-control py-3 my-2 border rounded border-dark-subtle"
-                            onChange={handleFechaInicioChange}
-                            value={fechaInicio}
+                            onChange={(e) =>
+                            {
+                              handleFechaInicioChange(e);
+                              field.onChange(e.target.value); // Asegúrate de que el valor también se está enviando a react-hook-form
+                            }}
+                            value={field.value} // Usa el valor de react-hook-form
                             max={fechaMaxima}
-                            {...field} // Pasa las propiedades del campo al input
+                            {...field}
                           />
                         )}
                       />
