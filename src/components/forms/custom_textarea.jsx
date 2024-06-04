@@ -109,7 +109,7 @@ const CustomTextarea = forwardRef(({
             <label className="text-sans-h5 input-label ms-3 ms-sm-0 ">{label}</label>
             <textarea
               ref={ref || internalRef} // Utiliza ref externa si disponible, sino usa interna
-              className={`input-textarea input-s p-3 col-11 ${error ? 'input-error' : ''}`}
+              className={`input-textarea input-s p-3 col-11 h-100 ${error ? 'input-error' : ''}`}
               placeholder={placeholder}
               id={id}
               value={inputValue}
