@@ -184,7 +184,7 @@ const PasoTres = () => {
               actualizada.
             </h6>
           </div>
-          {regiones.map((region, index) => (
+          {regiones?.map((region, index) => (
             <div key={index} className="my-5">
               <div
                 className="col-12 collapse-regiones border  border-bottom"
@@ -197,7 +197,7 @@ const PasoTres = () => {
               >
                 <div className="d-flex justify-content-between">
                   <span className="text-sans-h4 text-start">
-                    {region.region}
+                    {region?.region}
                   </span>
                   <button className="btn-secundario-s-round">
                     {collapseStates[index]
