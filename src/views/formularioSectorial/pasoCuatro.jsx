@@ -43,14 +43,6 @@ const PasoCuatro = () => {
 
   const { paso4encabezado: paso4Data, lista_indicadores, solo_lectura, regiones } = pasoData; // indicador_desempeno,
 
-  console.log("pasoData desde FormularioContext", pasoData) //entrega data
-  console.log("paso4Data", paso4Data); //undefined
-  console.log("indicador_desempeno", pasoData?.indicador_desempeno); //undefined
-  console.log("lista_indicadores", pasoData?.lista_indicadores); //lista de indicadores
-  console.log("observacionesEnviadas", observacionesEnviadas); //booleano
-  console.log("formSectorialEnviado", formSectorialEnviado); //booleano
-  console.log("data desde FormularioContext", data );
-
   if (!paso4Data) 
   return <> <div className="d-flex align-items-center flex-column my-5 px-5 ">
     <div className="text-center text-sans-h5-medium-blue ">Cargando paso 4</div>
