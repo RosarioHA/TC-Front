@@ -7,7 +7,10 @@ export const Subpaso_CincoDos = ({
   solo_lectura,
   stepNumber,
   p_5_2_evolucion_gasto_asociado,
-  p_5_2_variacion_promedio
+  p_5_2_variacion_promedio,
+  años,
+  años_variacion,
+  region
 }) => {
 
   if (!p_5_2_evolucion_gasto_asociado || !p_5_2_variacion_promedio) {
@@ -33,6 +36,8 @@ export const Subpaso_CincoDos = ({
         solo_lectura={solo_lectura}
         stepNumber={stepNumber}
         dataGastos={p_5_2_evolucion_gasto_asociado}
+        años={años}
+        region={region}
       />
       <GastosPromedioAnual
         id={id}
@@ -40,6 +45,8 @@ export const Subpaso_CincoDos = ({
         solo_lectura={solo_lectura}
         stepNumber={stepNumber}
         dataGastos={p_5_2_variacion_promedio}
+        años={años_variacion}
+        region={region}
       />
     </div>
   );

@@ -5,7 +5,9 @@ import { useForm, Controller } from "react-hook-form";
 
 const ResumenCostos = ({
   id,
+  region,
   data,
+  paso5Id,
   costosTotales,
   descripcionCostosTotales,
   stepNumber,
@@ -16,7 +18,7 @@ const ResumenCostos = ({
   const { handleUpdatePaso } = useContext(FormularioContext);
   const [descripcionCostosTotalesLoading, setDescripcionCostosTotalesLoading] = useState(false);
   const [descripcionCostosTotalesSaved, setDescripcionCostosTotalesSaved] = useState(false);
-
+  const [inputStatus, setInputStatus] = useState({});
 
   const { control, trigger, clearErrors, setValue } = useForm({
     mode: 'onBlur',
@@ -26,103 +28,106 @@ const ResumenCostos = ({
     setResumenCostos(Array.isArray(data) ? data : []);
   }, [data]);
 
-  // Función de utilidad para formatear números
-  const formatearNumero = (numero) => {
-    // Asegurarse de que el valor es un número. Convertir si es necesario.
-    const valorNumerico = Number(numero);
-    // Verificar si el valor es un número válido antes de intentar formatearlo
-    if (!isNaN(valorNumerico)) {
-      return valorNumerico.toLocaleString('es-CL', {
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 2
-      });
-    }
-    // Devolver un valor predeterminado o el mismo valor si no es un número
-    return numero;
-  };
-
   useEffect(() => {
-    // Verifica si descripcionCostosTotales tiene un valor y actualiza el campo correspondiente
     if (descripcionCostosTotales) {
       setValue("descripcionCostosTotales", descripcionCostosTotales);
     }
   }, [descripcionCostosTotales, setValue]);
 
-  // Función para recargar campos por separado
-  const updateFieldState = (instanciaId, fieldName, newState) => {
-    setResumenCostos(previnstancia =>
-      previnstancia.map(instancia => {
-        if (instancia.id === instanciaId) {
-          // Actualiza solo los estados del campo específico
-          const updatedEstados = { ...instancia.estados, [fieldName]: { ...newState } };
-          return { ...instancia, estados: updatedEstados };
-        }
-        return instancia;
-      })
-    );
+  const formatearNumero = (numero) => {
+    const valorNumerico = Number(numero);
+    if (!isNaN(valorNumerico)) {
+      return valorNumerico.toLocaleString('es-CL', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2,
+      });
+    }
+    return numero;
   };
 
-  // Manejadora de CustomInput y CustomTextArea
   const handleInputChange = (instanciaId, campo, valor) => {
     setResumenCostos(prevInstancia =>
       prevInstancia.map(elemento => {
-        // Verifica si es la costo que estamos actualizando
         if (elemento.id === instanciaId) {
-          // Actualiza el valor del campo específico de manera inmutable
           return { ...elemento, [campo]: valor };
         }
-        // Si no es la costo que estamos actualizando, la retorna sin cambios
         return elemento;
       })
     );
   };
 
-  // Función de guardado
   const handleSave = async (arrayNameId, fieldName, fieldValue) => {
-    // Si se está guardando por blur, no es necesario desactivar el botón de guardar general
-
-    const resumenSubtitulo = ResumenCostos.find(e => e.id === arrayNameId);
-
-    updateFieldState(arrayNameId, fieldName, { loading: true, saved: false });
+    setInputStatus((prevStatus) => ({
+      ...prevStatus,
+      [arrayNameId]: {
+        ...prevStatus[arrayNameId],
+        [fieldName]: { loading: true, saved: false },
+      },
+    }));
 
     let payload;
-    // Payload para otros campos
 
     if (fieldName === 'descripcion') {
       payload = {
-        'p_5_1_c_resumen_costos_por_subtitulo': [{ id: arrayNameId, [fieldName]: resumenSubtitulo[fieldName] }]
+        regiones: [
+          {
+            region: region,
+            'p_5_1_c_resumen_costos_por_subtitulo': [{ id: arrayNameId, [fieldName]: fieldValue }]
+          }
+        ]
       };
-    } else {
-      // Payload para otros campos
+    } else if (fieldName === 'descripcion_costos_totales') {
       setDescripcionCostosTotalesLoading(true);
       setDescripcionCostosTotalesSaved(false);
       payload = {
-        'paso5': { "descripcion_costos_totales": fieldValue }
+        regiones: [
+          {
+            region: region,
+            'paso5': [{ 
+              "id": paso5Id,
+              "descripcion_costos_totales": fieldValue 
+            }]
+          }
+        ]
       };
     }
 
     try {
-      // Asume que handleUpdatePaso puede manejar ambos casos adecuadamente
       await handleUpdatePaso(id, stepNumber, payload);
 
-      // Actualiza el estado de carga y guardado
-      updateFieldState(arrayNameId, fieldName, { loading: false, saved: true });
-      setDescripcionCostosTotalesLoading(false);
-      setDescripcionCostosTotalesSaved(true);
+      if (fieldName === 'descripcion_costos_totales') {
+        setDescripcionCostosTotalesLoading(false);
+        setDescripcionCostosTotalesSaved(true);
+      } else {
+        setInputStatus((prevStatus) => ({
+          ...prevStatus,
+          [arrayNameId]: {
+            ...prevStatus[arrayNameId],
+            [fieldName]: { loading: false, saved: true },
+          },
+        }));
+      }
 
     } catch (error) {
       console.error("Error al guardar los datos:", error);
 
-      updateFieldState(arrayNameId, fieldName, { loading: false, saved: false });
-      setDescripcionCostosTotalesLoading(false);
-      setDescripcionCostosTotalesSaved(false);
+      if (fieldName === 'descripcion_costos_totales') {
+        setDescripcionCostosTotalesLoading(false);
+        setDescripcionCostosTotalesSaved(false);
+      } else {
+        setInputStatus((prevStatus) => ({
+          ...prevStatus,
+          [arrayNameId]: {
+            ...prevStatus[arrayNameId],
+            [fieldName]: { loading: false, saved: false },
+          },
+        }));
+      }
     }
   };
 
-
   return (
     <div>
-      {/* Encabezado */}
       <div className="ps-3 my-4">
         <div className="d-flex justify-content-between py-3 fw-bold">
           <div className="col-2">
@@ -137,7 +142,6 @@ const ResumenCostos = ({
           </div>
         </div>
 
-        {/* filas, se tienen que generar dinamicamente segun los costos elegidos en a. y b., enumerados por subtitulo */}
         {ResumenCostos.map((subtitulo, index) => (
           <div
             key={subtitulo.id}
@@ -155,23 +159,28 @@ const ResumenCostos = ({
                   name={`descripcion_${subtitulo.id}`}
                   defaultValue={subtitulo?.descripcion || ''}
                   render={({ field }) => {
-                    // Destructura las propiedades necesarias de field
                     const { onChange, onBlur, value } = field;
 
-                    const handleChange = (e) => {
+                    const handleChange = (valor) => {
                       clearErrors(`descripcion_${subtitulo.id}`);
-                      onChange(e.target.value);
-                      handleInputChange(subtitulo.id, 'descripcion', e.target.value);
+                      onChange(valor);
+                      handleInputChange(subtitulo.id, 'descripcion', valor);
                     };
 
-                    // Función para manejar el evento onBlur
                     const handleBlur = async () => {
                       const isFieldValid = await trigger(`descripcion_${subtitulo.id}`);
                       if (isFieldValid) {
-                        handleSave(subtitulo.id, 'descripcion');
+                        handleSave(subtitulo.id, 'descripcion', value);
                       }
                       onBlur();
                     };
+
+                    const handleKeyDown = (e) => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault();
+                          }
+                        };
+
 
                     return (
                       <CustomTextarea
@@ -180,8 +189,9 @@ const ResumenCostos = ({
                         value={value}
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        loading={subtitulo.estados?.descripcion?.loading ?? false}
-                        saved={subtitulo.estados?.descripcion?.saved ?? false}
+                        onKeyDown={handleKeyDown}
+                        loading={inputStatus[subtitulo.id]?.descripcion?.loading}
+                            saved={inputStatus[subtitulo.id]?.descripcion?.saved}
                         readOnly={solo_lectura}
                         maxLength={300}
                       />
@@ -199,7 +209,6 @@ const ResumenCostos = ({
               <p className="text-sans-p-bold mb-0 mt-3 ms-4">Costos <br /> totales</p>
             </div>
             <div className="col">
-              {/* sumatoria de los valores de todos los subtitulos de la tabla */}
               <p className="text-sans-p-bold mb-0 mt-3 ms-5">{formatearNumero(costosTotales)}</p>
             </div>
             <div className="col-7 ps-2">
@@ -208,16 +217,13 @@ const ResumenCostos = ({
                 name="descripcionCostosTotales"
                 defaultValue={descripcionCostosTotales || ''}
                 render={({ field }) => {
-                  // Destructura las propiedades necesarias de field
                   const { onChange, onBlur, value } = field;
 
                   const handleChange = (e) => {
                     clearErrors("descripcionCostosTotales");
                     onChange(e.target.value);
-                    handleInputChange('descripcion_costos_totales', e.target.value);
                   };
 
-                  // Función para manejar el evento onBlur
                   const handleBlur = async () => {
                     const isFieldValid = await trigger("descripcionCostosTotales");
                     if (isFieldValid) {
