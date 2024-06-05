@@ -40,9 +40,9 @@ export const Subpaso_dosPuntoCuatro = ({
   const [esquemaValidacion, setEsquemaValidacion] = useState(null);
 
   useEffect(() => {
-    const esquema = construirEsquemaValidacion(plataformasySoftwares);
+    const esquema = construirEsquemaValidacion(plataformasySoftwares, limite_caracteres);
     setEsquemaValidacion(esquema);
-  }, [plataformasySoftwares]);
+  }, [limite_caracteres, plataformasySoftwares]);
 
   const { control, handleSubmit, trigger, clearErrors, setError, formState: { errors } } = useForm({
     resolver: esquemaValidacion ? yupResolver(esquemaValidacion) : undefined,
