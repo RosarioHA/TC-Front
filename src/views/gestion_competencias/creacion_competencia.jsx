@@ -15,7 +15,7 @@ import { useSector } from "../../hooks/useSector";
 import { useOrigenes } from "../../hooks/useOrigenes";
 import { useAmbitos } from "../../hooks/useAmbitos";
 import { useFormContext } from "../../context/FormAlert";
-import { BtnRadio } from "../../components/forms/btnRadio";
+import { BtnRadio } from "../../components/forms/BtnRadio";
 import ModalAbandonoFormulario from "../../components/commons/modalAbandonoFormulario";
 import { ListaNombres } from "../../components/tables/ListaNombres";
 
