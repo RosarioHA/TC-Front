@@ -23,13 +23,16 @@ export const GastosEvolucionVariacion = ({
   paso5,
   solo_lectura,
   stepNumber,
-  dataGastos
+  dataGastos,
+  años,
+  region,
 }) => {
   const [datosGastos, setDatosGastos] = useState([]);
   const { handleUpdatePaso } = useContext(FormularioContext);
   const [esquemaValidacion, setEsquemaValidacion] = useState(null);
   const [glosasEspecificasLoading, setGlosasEspecificasLoading] = useState(false);
   const [glosasEspecificasSaved, setGlosasEspecificasSaved] = useState(false);
+  const [inputStatus, setInputStatus] = useState({});
 
   useEffect(() => {
     if (Array.isArray(dataGastos)) {
@@ -37,16 +40,23 @@ export const GastosEvolucionVariacion = ({
         ...item,
         costo_anio: item?.costo_anio?.map(costo => ({ ...costo }))
       }));
-      console.log('costo_anio', formattedData);
       setDatosGastos(formattedData);
     }
   }, [dataGastos]);
+
+  const paso5Data = Array.isArray(paso5) && paso5.length > 0 ? paso5[0] : {};
+
+  const {
+    id: paso5Id,
+    glosas_especificas
+  } = paso5Data;
 
   useEffect(() => {
     const esquema = construirValidacionPaso5_2evolucion(datosGastos);
     setEsquemaValidacion(esquema);
   }, [datosGastos]);
 
+    
   const { control, trigger, clearErrors, formState: { errors } } = useForm({
     resolver: esquemaValidacion ? yupResolver(esquemaValidacion) : undefined,
     mode: 'onBlur',
@@ -60,29 +70,7 @@ export const GastosEvolucionVariacion = ({
     return <div>No hay datos para mostrar.</div>;
   }
 
-  const headers = paso5?.años || [];
-
-  // Función para recargar campos por separado
-  const updateFieldState = (subtituloId, costoAnioId, fieldName, newState) => {
-    setDatosGastos(prevDatosGastos =>
-      prevDatosGastos.map(subtitulo => {
-        if (subtitulo.id === subtituloId) {
-          if (fieldName === 'costo' && costoAnioId) {
-            const updatedCostoAnio = subtitulo.costo_anio.map(costoAnio => {
-              if (costoAnio.id === costoAnioId) {
-                return { ...costoAnio, estados: { ...costoAnio.estados, ...newState } };
-              }
-              return costoAnio;
-            });
-            return { ...subtitulo, costo_anio: updatedCostoAnio };
-          } else {
-            return { ...subtitulo, estados: { ...subtitulo.estados, descripcion: { ...newState } } };
-          }
-        }
-        return subtitulo;
-      })
-    );
-  };
+  const headers = años || [];
 
   const handleInputChange = (instanciaId, campo, valor) => {
     setDatosGastos(prevInstancia =>
@@ -96,50 +84,88 @@ export const GastosEvolucionVariacion = ({
   };
 
   const handleSave = async (subtituloId, costoAnioId, fieldName, fieldValue) => {
-    updateFieldState(subtituloId, costoAnioId, fieldName, { loading: true, saved: false });
-
+    const arrayNameId = fieldName === 'descripcion' ? `descripcion_${subtituloId}` : `costo_${costoAnioId}`;
+  
+    setInputStatus((prevStatus) => ({
+      ...prevStatus,
+      [arrayNameId]: {
+        loading: true,
+        saved: false,
+      },
+    }));
+  
     let payload;
     if (fieldName === 'descripcion') {
       payload = {
-        'p_5_2_evolucion_gasto_asociado': [{ id: subtituloId, [fieldName]: fieldValue }]
+        regiones: [
+          {
+            region: region,
+            'p_5_2_evolucion_gasto_asociado': [{ id: subtituloId, [fieldName]: fieldValue }]
+          },
+        ],
       };
     } else if (fieldName === 'costo') {
       payload = {
-        'p_5_2_evolucion_gasto_asociado': [{
-          id: subtituloId,
-          'costo_anio': [{
-            id: costoAnioId,
-            costo: fieldValue
-          }]
-        }]
+        regiones: [
+          {
+            region: region,
+            'p_5_2_evolucion_gasto_asociado': [{
+              id: subtituloId,
+              'costo_anio': [{
+                id: costoAnioId,
+                costo: fieldValue
+              }]
+            }]
+          }
+        ]
       };
     } else {
       setGlosasEspecificasLoading(true);
       setGlosasEspecificasSaved(false);
       payload = {
-        'paso5': { "glosas_especificas": fieldValue }
+        regiones: [
+          {
+            region: region,
+            'paso5': [{ 
+              "id": paso5Id,
+              "glosas_especificas": fieldValue 
+            }]
+          }
+        ]
       };
     }
-
+  
     try {
       await handleUpdatePaso(id, stepNumber, payload);
-      updateFieldState(subtituloId, costoAnioId, fieldName, { loading: false, saved: true });
-
+      setInputStatus((prevStatus) => ({
+        ...prevStatus,
+        [arrayNameId]: {
+          loading: false,
+          saved: true,
+        },
+      }));
+  
       if (fieldName === 'glosas_especificas') {
         setGlosasEspecificasLoading(false);
         setGlosasEspecificasSaved(true);
       }
     } catch (error) {
       console.error("Error al guardar los datos:", error);
-      updateFieldState(subtituloId, costoAnioId, fieldName, { loading: false, saved: false });
-
+      setInputStatus((prevStatus) => ({
+        ...prevStatus,
+        [arrayNameId]: {
+          loading: false,
+          saved: false,
+        },
+      }));
+  
       if (fieldName === 'glosas_especificas') {
         setGlosasEspecificasLoading(false);
         setGlosasEspecificasSaved(false);
       }
     }
   };
-
+  
   return (
     <div className="mt-4">
       <div className="my-4">
@@ -190,9 +216,9 @@ export const GastosEvolucionVariacion = ({
                                 disabled={solo_lectura || isLastYear}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
-                                loading={costoAnio?.estados?.loading ?? false}
-                                saved={costoAnio?.estados?.saved ?? false}
-                                error={errors[`costo_${costoAnio.id}`]?.message}
+                                loading={inputStatus[`costo_${costoAnio?.id}`]?.loading ?? false}
+                                saved={inputStatus[`costo_${costoAnio?.id}`]?.saved ?? false}
+                                error={errors[`costo_${costoAnio}`]?.message}
                               />
                             );
                           }}
@@ -233,9 +259,9 @@ export const GastosEvolucionVariacion = ({
                               onBlur={handleBlur}
                               className={`form-control ${rowIndex % 2 === 0 ? "bg-color-even" : "bg-color-odd"}`}
                               readOnly={solo_lectura}
-                              loading={item?.estados?.descripcion?.loading ?? false}
-                              saved={item?.estados?.descripcion?.saved ?? false}
-                              error={errors[`descripcion_${item.id}`]?.message}
+                              loading={inputStatus[`descripcion_${item.id}`]?.loading ?? false}
+                              saved={inputStatus[`descripcion_${item.id}`]?.saved ?? false}
+                              error={errors[`descripcion_${item}`]?.message}
                             />
                           );
                         }}
@@ -252,14 +278,16 @@ export const GastosEvolucionVariacion = ({
           <Controller
             control={control}
             name="glosas_especificas"
-            defaultValue={paso5?.glosas_especificas || ''}
+            defaultValue={glosas_especificas || ''}
             render={({ field }) => {
               const { onChange, onBlur, value } = field;
+
               const handleChange = (e) => {
                 clearErrors("glosas_especificas");
                 onChange(e.target.value);
                 handleInputChange('glosas_especificas', e.target.value);
               };
+
               const handleBlur = async () => {
                 const isFieldValid = await trigger("glosas_especificas");
                 if (isFieldValid) {
@@ -292,5 +320,5 @@ export const GastosEvolucionVariacion = ({
         </div>
       </div>
     </div>
-  );
+  );  
 };

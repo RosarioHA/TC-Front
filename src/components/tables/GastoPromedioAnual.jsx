@@ -8,7 +8,9 @@ export const GastosPromedioAnual = ({
   paso5,
   solo_lectura,
   stepNumber,
-  dataGastos
+  dataGastos,
+  region,
+  años
 }) => {
   const [datosGastos, setDatosGastos] = useState(Array.isArray(dataGastos) ? dataGastos : []);
   const { handleUpdatePaso } = useContext(FormularioContext);
@@ -59,7 +61,12 @@ export const GastosPromedioAnual = ({
     }));
 
     let payload = {
+      regiones: [
+        {
+          region: region,
       'p_5_2_variacion_promedio': [{ id: arrayNameId, [fieldName]: resumenSubtitulo[fieldName] }]
+        } 
+      ]
     };
 
     try {
@@ -86,8 +93,6 @@ export const GastosPromedioAnual = ({
     }
   };
 
-  const añosVariacion = paso5?.años_variacion || {};
-
   return (
     <div className="mt-4">
       <span className="my-4 text-sans-m-semibold">Variación promedio del gasto anual respecto del año n-1</span>
@@ -103,19 +108,19 @@ export const GastosPromedioAnual = ({
             <tr>
               <th scope="col" className="text-sans-p-bold px-2 pb-5">Subtitulo</th>
               <th scope="col" className="text-sans-p text-center">
-                <u>Variación con {añosVariacion.n_5 || 0}</u>
+                <u>Variación con {años.n_5 || 0}</u>
                 <p className="text-sans-h6-grey">(año n-5) - (año n-1)</p>
               </th>
               <th scope="col" className="text-sans-p text-center">
-                <u>Variación con {añosVariacion.n_4 || 0}</u>
+                <u>Variación con {años.n_4 || 0}</u>
                 <p className="text-sans-h6-grey">(año n-4) - (año n-1)</p>
               </th>
               <th scope="col" className="text-sans-p text-center">
-                <u>Variación con {añosVariacion.n_3 || 0}</u>
+                <u>Variación con {años.n_3 || 0}</u>
                 <p className="text-sans-h6-grey">(año n-3) - (año n-1)</p>
               </th>
               <th scope="col" className="text-sans-p text-center">
-                <u>Variación con {añosVariacion.n_2 || 0}</u>
+                <u>Variación con {años.n_2 || 0}</u>
                 <p className="text-sans-h6-grey">(año n-2) - (año n-1)</p>
               </th>
             </tr>

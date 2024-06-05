@@ -5,7 +5,7 @@ import { FormularioContext } from '../../../context/FormSectorial';
 import { useFlujograma } from '../../../hooks/formulario/useFlujograma';
 import { usePasoForm } from '../../../hooks/formulario/usePasoForm';
 
-export const Subpaso_dosPuntoCinco = ({ id, stepNumber, data, flujograma, solo_lectura }) =>
+export const Subpaso_dosPuntoCinco = ({ id, stepNumber, data, flujograma, solo_lectura, limite_caracteres }) =>
 {
   const { handleUpdatePaso } = useContext(FormularioContext);
   const { uploadDocumento } = useFlujograma(id, stepNumber);
@@ -202,7 +202,7 @@ export const Subpaso_dosPuntoCinco = ({ id, stepNumber, data, flujograma, solo_l
           onBlur={() => handleSave('descripcion_cualitativa')}
           loading={inputStatus.descripcion_cualitativa.loading}
           saved={inputStatus.descripcion_cualitativa.saved}
-          maxLength={2200}
+          maxLength={limite_caracteres}
           readOnly={solo_lectura}
         />
       </div>

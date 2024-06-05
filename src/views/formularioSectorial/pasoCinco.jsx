@@ -45,7 +45,7 @@ const PasoCinco = () => {
     </div>
   );
 
-  const { listado_etapas, listado_estamentos, solo_lectura } = pasoData;
+  const { listado_etapas, listado_estamentos, solo_lectura, años, años_variacion } = pasoData;
 
   const handleGuardarObservacion = async () => {
     const observacionData = {
@@ -119,6 +119,8 @@ const PasoCinco = () => {
                       p_5_2_evolucion_gasto_asociado={region.p_5_2_evolucion_gasto_asociado}
                       p_5_2_variacion_promedio={region.p_5_2_variacion_promedio}
                       region={region.region}
+                      años={años}
+                      años_variacion={años_variacion}
                     />
                     <Subpaso_CincoPuntoTres
                       id={data.id}

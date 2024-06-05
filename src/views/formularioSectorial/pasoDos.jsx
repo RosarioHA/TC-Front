@@ -12,8 +12,7 @@ import CustomTextarea from '../../components/forms/custom_textarea';
 import { useAuth } from '../../context/AuthContext';
 import { useObservacionesSubdere } from '../../hooks/formulario/useObSubdereSectorial';
 
-const PasoDos = () =>
-{
+const PasoDos = () => {
   const { pasoData, errorPaso, updateStepNumber, data } = useContext(FormularioContext);
   const stepNumber = 2;
   const [ refreshSubpasoDos_dos, setRefreshSubpasoDos_dos ] = useState(false);
@@ -28,15 +27,12 @@ const PasoDos = () =>
   const observacionesEnviadas = observaciones.observacion_enviada;
   const formSectorialEnviado = data?.formulario_enviado;
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     updateStepNumber(stepNumber);
-    if (observaciones && Object.keys(observaciones).length === 0)
-    {
+    if (observaciones && Object.keys(observaciones).length === 0) {
       fetchObservaciones();
     }
-    if (observaciones && observaciones.observacion_paso2)
-    {
+    if (observaciones && observaciones.observacion_paso2) {
       setObservacionPaso2(observaciones.observacion_paso2);
     }
   }, [ updateStepNumber, stepNumber, observaciones, fetchObservaciones ]);
@@ -62,21 +58,25 @@ const PasoDos = () =>
     solo_lectura
   } = pasoData;
 
-  const handleGuardarObservacion = async () =>
-  {
-    if (!observacionesEnviadas)
-    {
+  const {
+    avance,
+    multiplicador_caracteres_competencia,
+    multiplicador_caracteres_region
+  } = pasoData.paso2
+
+  const handleGuardarObservacion = async () => {
+    if (!observacionesEnviadas) {
       const observacionData = {
         id: observaciones?.id,  // Asumiendo que 'observaciones' es un estado que contiene el 'id' sectorial
         observacion_paso2: observacionPaso2
       };
-
       await updateObservacion(observacionData);
     }
   };
-
-
-  const avance = pasoData?.paso2?.avance;
+  
+  console.log("pasoData", pasoData);
+  console.log("multiplicador_caracteres_competencia", multiplicador_caracteres_competencia);
+  console.log("multiplicador_caracteres_region", multiplicador_caracteres_region);
 
   return (
     <>
@@ -143,7 +143,8 @@ const PasoDos = () =>
               data={pasoData.paso2}
               stepNumber={stepNumber}
               id={data.id}
-              solo_lectura={solo_lectura} />
+              solo_lectura={solo_lectura}
+              limite_caracteres={multiplicador_caracteres_competencia} />
           </div>
 
           { (userSubdere || (userSectorial && formSectorialEnviado)) && (

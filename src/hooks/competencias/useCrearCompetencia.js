@@ -9,21 +9,24 @@ export const useCrearCompetencia = () => {
     setIsLoading(true);
     setError(null);
 
-    // Crear un objeto FormData
     const formData = new FormData();
 
-    // Agregar campos simples al formData
-    Object.keys(competenciaData).forEach(key => {
-      if (!Array.isArray(competenciaData[key])) {
-        formData.append(key, competenciaData[key]);
-      }
-    });
-
-    // Agregar elementos de los arrays (sectores, regiones y usuarios) al formData
-    ['sectores', 'regiones', 'usuarios_subdere', 'usuarios_dipres', 'usuarios_sectoriales', 'usuarios_gore'].forEach(arrayKey => {
-      competenciaData[arrayKey]?.forEach(item => {
-        formData.append(arrayKey, item);
+    // Convertir competencias_agrupadas a JSON y agregar al formData como string
+    if (competenciaData.competencias_agrupadas) {
+      competenciaData.competencias_agrupadas.forEach((comp, index) => {
+        formData.append(`competencias_agrupadas[${index}].nombre`, comp.nombre);
       });
+    }
+
+    // Agregar campos simples y arrays al formData
+    Object.entries(competenciaData).forEach(([key, value]) => {
+      if (key !== 'competencias_agrupadas') {
+        if (Array.isArray(value)) {
+          value.forEach(item => formData.append(key, item));
+        } else {
+          formData.append(key, value);
+        }
+      }
     });
 
     // Agregar el archivo si está presente
@@ -32,7 +35,11 @@ export const useCrearCompetencia = () => {
     }
 
     try {
-      const response = await apiTransferenciaCompentencia.post('competencias/', formData);
+      const response = await apiTransferenciaCompentencia.post('competencias/', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
       return response.data;
     } catch (error) {
       if (error.response) {
@@ -46,7 +53,7 @@ export const useCrearCompetencia = () => {
     } finally {
       setIsLoading(false);
     }
-  }
+  };
 
   return { createCompetencia, isLoading, error };
 };

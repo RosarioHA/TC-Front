@@ -19,10 +19,10 @@ const CustomTextarea = forwardRef(({
   containerSize
 }, ref) =>
 {
-  const [ inputValue, setInputValue ] = useState(value || ''); // Asegúrate de que el valor inicial no sea null
+  const [ inputValue, setInputValue ] = useState(value || ''); 
   const [ totalCharacters, setTotalCharacters ] = useState((value || '').length);
-  const internalRef = useRef(null); // Ref interna para manipulación DOM que no necesita exposición externa
-  const lastSavedValueRef = useRef(value); // Referencia para almacenar el valor al momento del último guardado
+  const internalRef = useRef(null); 
+  const lastSavedValueRef = useRef(value);
 
   useEffect(() =>
   {
@@ -109,7 +109,7 @@ const CustomTextarea = forwardRef(({
             <label className="text-sans-h5 input-label ms-3 ms-sm-0 ">{label}</label>
             <textarea
               ref={ref || internalRef} // Utiliza ref externa si disponible, sino usa interna
-              className={`input-textarea input-s p-3 col-11 ${error ? 'input-error' : ''}`}
+              className={`input-textarea input-s p-3 col-11 h-100 ${error ? 'input-error' : ''}`}
               placeholder={placeholder}
               id={id}
               value={inputValue}
