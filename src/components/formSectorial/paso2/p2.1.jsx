@@ -4,8 +4,7 @@ import DropdownSelect from '../../dropdown/select';
 import { FormularioContext } from '../../../context/FormSectorial';
 import { apiTransferenciaCompentencia } from '../../../services/transferenciaCompetencia';
 
-export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSubpasoDos_dos, solo_lectura, limite_caracteres }) =>
-{
+export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSubpasoDos_dos, solo_lectura, limite_caracteres }) => {
   const [ dataDirecta, setDataDirecta ] = useState(null);
   const [ opciones, setOpciones ] = useState([]);
   const [ mostrarError, setMostrarError ] = useState(false);
@@ -13,41 +12,33 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
   const [ controlBotones, setControlBotones ] = useState({});
   const [ erroresPorFila, setErroresPorFila ] = useState({});
 
-  const fetchDataDirecta = async () =>
-  {
-    try
-    {
+  const fetchDataDirecta = async () => {
+    try {
       const response = await apiTransferenciaCompentencia.get(
         `/formulario-sectorial/${id}/paso-${stepNumber}/`
       );
       setDataDirecta(response.data);
-    } catch (error)
-    {
+    } catch (error) {
       console.error('Error al obtener datos directamente:', error);
     }
   };
 
   //convertir estructura para el select
-  const transformarEnOpciones = (datos) =>
-  {
+  const transformarEnOpciones = (datos) => {
     return Object.entries(datos).map(([ value, label ]) => ({ label, value }));
   };
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     // Carga inicial con 'lista'
-    if (lista)
-    {
+    if (lista) {
       const listaInicial = transformarEnOpciones(lista);
       setOpciones(listaInicial);
     }
   }, [ data, lista ]);
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     // Carga con 'dataDirecta' tras editar paso 2.1
-    if (dataDirecta?.listado_organismos)
-    {
+    if (dataDirecta?.listado_organismos) {
       const nuevasOpciones = transformarEnOpciones(
         dataDirecta.listado_organismos
       );
@@ -68,16 +59,13 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
     useState('');
 
   // Efecto para agrupar datos cada vez que 'data' cambia
-  useEffect(() =>
-  {
+  useEffect(() => {
     agruparOrganismos(data);
   }, [ data ]);
 
   // Función para agrupar los datos por organismo_display
-  const agruparOrganismos = (datos) =>
-  {
-    const agrupados = datos.reduce((acc, item) =>
-    {
+  const agruparOrganismos = (datos) => {
+    const agrupados = datos.reduce((acc, item) => {
       const displayKey = item.organismo_display;
       acc[ displayKey ] = acc[ displayKey ] || [];
       acc[ displayKey ].push(item);
@@ -86,14 +74,11 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
 
     // Ordenar para que 'MIN' sea el primero, si existe
     const ordenados = {};
-    if (agrupados[ 'MIN' ])
-    {
+    if (agrupados[ 'MIN' ]) {
       ordenados[ 'MIN' ] = agrupados[ 'MIN' ];
     }
-    Object.keys(agrupados).forEach((key) =>
-    {
-      if (key !== 'MIN')
-      {
+    Object.keys(agrupados).forEach((key) => {
+      if (key !== 'MIN') {
         ordenados[ key ] = agrupados[ key ];
       }
     });
@@ -110,8 +95,7 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
 
   // Lógica para agregar una nueva fila a un organismo
   // Generador de ID único
-  const generarIdUnico = () =>
-  {
+  const generarIdUnico = () => {
     // Implementa tu lógica para generar un ID único
     return Math.floor(Date.now() / 1000);
   };
@@ -119,8 +103,7 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
   const [ ultimaFilaId, setUltimaFilaId ] = useState(null);
   const [ mostrarBotonGuardar, setMostrarBotonGuardar ] = useState(false);
 
-  const agregarFila = (organismoDisplay) =>
-  {
+  const agregarFila = (organismoDisplay) => {
     const nuevaFilaId = generarIdUnico();
 
     const organismo =
@@ -130,7 +113,6 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
       ...prev,
       [ organismoDisplay ]: { mostrarBotonGuardar: true },
     }));
-
 
     setUltimaFilaId(nuevaFilaId);
     const nuevaFila = {
@@ -146,8 +128,7 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
   };
 
   // Lógica para eliminar una fila de un organismo
-  const eliminarFila = async (organismoDisplay, idFila) =>
-  {
+  const eliminarFila = async (organismoDisplay, idFila) => {
     const payload = {
       p_2_1_organismos_intervinientes: [
         {
@@ -157,21 +138,18 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
       ],
     };
 
-    try
-    {
+    try {
       // Llamar a la API para actualizar los datos
       await handleUpdatePaso(id, stepNumber, payload);
 
       // Actualizar el estado local para reflejar la eliminación
-      setOrganismosAgrupados((prevOrganismos) =>
-      {
+      setOrganismosAgrupados((prevOrganismos) => {
         const filasActualizadas = prevOrganismos[ organismoDisplay ].filter(
           (fila) => fila.id !== idFila
         );
 
         // Si después de la eliminación no quedan filas, eliminar también el organismo
-        if (filasActualizadas.length === 0)
-        {
+        if (filasActualizadas.length === 0) {
           const nuevosOrganismos = { ...prevOrganismos };
           delete nuevosOrganismos[ organismoDisplay ];
           return nuevosOrganismos;
@@ -190,30 +168,26 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
         [ organismoDisplay ]: { mostrarBotonGuardar: false },
       }));
       setMostrarError(false);
-    } catch (error)
-    {
+    } catch (error) {
       console.error('Error al eliminar la fila:', error);
     }
   };
 
   // Lógica para agregar Nuevos Organismos
 
-  const handleNombreChange = (nuevoValor) =>
-  {
+  const handleNombreChange = (nuevoValor) => {
     setMostrarErrorNuevoOrganismo(false);
     setNuevoOrganismoNombre(nuevoValor);
   };
 
-  const handleDescripcionChange = (nuevoValor) =>
-  {
+  const handleDescripcionChange = (nuevoValor) => {
     setNuevoOrganismoDescripcion(nuevoValor);
   };
 
   const [ mostrarFormularioNuevoOrganismo, setMostrarFormularioNuevoOrganismo ] =
     useState(false);
 
-  const manejarCambioDropdown = (opcionSeleccionada) =>
-  {
+  const manejarCambioDropdown = (opcionSeleccionada) => {
     // Asumiendo que opcionSeleccionada es un objeto con las propiedades 'label' y 'value'
     const valorSeleccionado = opcionSeleccionada.value;
     const labelSeleccionado = opcionSeleccionada.label;
@@ -221,13 +195,11 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
     setNuevoOrganismoDisplay(labelSeleccionado);
   };
 
-  const mostrarFormulario = () =>
-  {
+  const mostrarFormulario = () => {
     setMostrarFormularioNuevoOrganismo(true);
   };
 
-  const agregarNuevoOrganismo = async () =>
-  {
+  const agregarNuevoOrganismo = async () => {
     if (
       !nuevoOrganismo ||
       !nuevoOrganismoNombre.trim() ||
@@ -248,11 +220,9 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
       p_2_1_organismos_intervinientes: [ nuevoOrganismoDatos ],
     };
 
-    try
-    {
+    try {
       await handleUpdatePaso(id, stepNumber, payload);
-      setOrganismosAgrupados((prevOrganismos) =>
-      {
+      setOrganismosAgrupados((prevOrganismos) => {
         const nuevosOrganismos = { ...prevOrganismos };
         nuevosOrganismos[ nuevoOrganismo ] =
           nuevosOrganismos[ nuevoOrganismo ] || [];
@@ -263,17 +233,14 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
       setNuevoOrganismoNombre('');
       setNuevoOrganismoDescripcion('');
       setNuevoOrganismoDisplay('');
-
       setMostrarFormularioNuevoOrganismo(false);
       setRefreshSubpasoDos_dos(true);
       fetchDataDirecta();
-    } catch (error)
-    {
+    } catch (error) {
       console.error('Error al agregar el organismo:', error);
     }
   };
-  const cancelarAgregarOrganismo = () =>
-  {
+  const cancelarAgregarOrganismo = () => {
     setNuevoOrganismo('');
     setNuevoOrganismoNombre('');
     setNuevoOrganismoDescripcion('');
@@ -288,18 +255,14 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
   const [ filaEnEdicionId, setFilaEnEdicionId ] = useState(null);
   const [ campoEstado, setCampoEstado ] = useState({});
 
-  const handleInputChange = (organismoDisplay, id, campo, valor) =>
-  {
+  const handleInputChange = (organismoDisplay, id, campo, valor) => {
     setMostrarError(false);
     setFilaEnEdicionId(id);
-    setOrganismosAgrupados((prevOrganismos) =>
-    {
+    setOrganismosAgrupados((prevOrganismos) => {
       const organismosActualizados = {
         ...prevOrganismos,
-        [ organismoDisplay ]: prevOrganismos[ organismoDisplay ].map((fila) =>
-        {
-          if (fila.id === id)
-          {
+        [ organismoDisplay ]: prevOrganismos[ organismoDisplay ].map((fila) => {
+          if (fila.id === id) {
             return { ...fila, [ campo ]: valor };
           }
           return fila;
@@ -326,10 +289,8 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
     organismoDisplay,
     esGuardadoPorBlur,
     campo
-  ) =>
-  {
-    if (!esGuardadoPorBlur)
-    {
+  ) => {
+    if (!esGuardadoPorBlur) {
       setMostrarBotonGuardar(false);
     }
 
@@ -338,32 +299,27 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
       (fila) => fila.id === idFila
     );
 
-    if (!filaEditada)
-    {
+    if (!filaEditada) {
       setErroresPorFila((prev) => ({
         ...prev,
         [ idFila ]: 'Todos los campos son obligatorios.',
       }));
       return;
     }
-    if (!validarCamposFila(filaEditada))
-    {
+    if (!validarCamposFila(filaEditada)) {
       setErroresPorFila((prev) => ({
         ...prev,
         [ idFila ]: 'Todos los campos son obligatorios.',
       }));
       return;
-    } else
-    {
-      setErroresPorFila((prev) =>
-      {
+    } else {
+      setErroresPorFila((prev) => {
         const nuevoEstado = { ...prev };
         delete nuevoEstado[ idFila ];
         return nuevoEstado;
       });
     }
-    if (!campo)
-    {
+    if (!campo) {
       console.error(
         'El nombre del campo no se ha pasado correctamente a handleSave:',
         campo
@@ -376,8 +332,7 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
       [ `${idFila}-${campo}` ]: { loading: true, saved: false },
     }));
 
-    try
-    {
+    try {
       const payload = {
         p_2_1_organismos_intervinientes: [
           {
@@ -399,8 +354,7 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
         ...prev,
         [ `${idFila}-${campo}` ]: { loading: false, saved: true },
       }));
-    } catch (error)
-    {
+    } catch (error) {
       console.error('Error al guardar los datos:', error);
       setCampoEstado((prev) => ({
         ...prev,
@@ -409,38 +363,32 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
     }
   };
 
-  const sonCamposFilaValidos = (fila) =>
-  {
+  const sonCamposFilaValidos = (fila) => {
     return (
       fila.nombre_ministerio_servicio.trim() !== '' &&
       fila.descripcion.trim() !== ''
     );
   };
 
-  const intentarGuardarFila = (idFila, organismoDisplay) =>
-  {
+  const intentarGuardarFila = (idFila, organismoDisplay) => {
     const fila = organismosAgrupados[ organismoDisplay ].find(
       (fila) => fila.id === idFila
     );
-    if (!fila || !sonCamposFilaValidos(fila))
-    {
+    if (!fila || !sonCamposFilaValidos(fila)) {
       setErroresPorFila((prev) => ({
         ...prev,
         [ idFila ]: 'Todos los campos deben estar completos antes de guardar.',
       }));
-    } else
-    {
+    } else {
       handleSave(idFila, organismoDisplay, true, 'nombre_ministerio_servicio');
       handleSave(idFila, organismoDisplay, true, 'descripcion');
-      setErroresPorFila((prev) =>
-      {
+      setErroresPorFila((prev) => {
         const newState = { ...prev };
         delete newState[ idFila ];
         return newState;
       });
     }
   };
-
 
   return (
     <div>
