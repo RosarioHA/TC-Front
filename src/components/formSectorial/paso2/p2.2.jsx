@@ -11,6 +11,7 @@ export const Subpaso_dosPuntoDos = ({
   setRefreshSubpasoDos_dos,
   setRefreshSubpasoDos_tres,
   solo_lectura,
+  limite_caracteres,
 }) =>
 {
   const { handleUpdatePaso } = useContext(FormularioContext);
@@ -395,7 +396,7 @@ export const Subpaso_dosPuntoDos = ({
                                   label="Descripción (Obligatorio)"
                                   value={unidad.descripcion_unidad || ''}
                                   placeholder="Descripción"
-                                  maxLength={300}
+                                  maxLength={limite_caracteres}
                                   onChange={(valor) =>
                                     handleInputChange(
                                       organismoDisplay,

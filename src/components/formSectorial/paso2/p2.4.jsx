@@ -8,7 +8,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { construirEsquemaValidacion } from "../../../validaciones/esquemaEditarFormularioSectorial";
 import { OpcionesAB } from "../../forms/opciones_AB";
 
-
 export const Subpaso_dosPuntoCuatro = ({
   id,
   data,
@@ -16,7 +15,8 @@ export const Subpaso_dosPuntoCuatro = ({
   listado_etapas,
   setRefreshSubpasoDos_cuatro,
   refreshSubpasoDos_cuatro,
-  solo_lectura
+  solo_lectura,
+  limite_caracteres,
 }) => {
 
   const initialState = data.map(item => ({
@@ -336,7 +336,7 @@ export const Subpaso_dosPuntoCuatro = ({
                       <CustomTextarea
                         id={`descripcion_tecnica_${plataforma.id}`}
                         placeholder="Escribe el nombre de la plataforma o software"
-                        maxLength={500}
+                        maxLength={limite_caracteres}
                         value={value}
                         onChange={handleChange}
                         onBlur={handleBlur}
@@ -478,7 +478,7 @@ export const Subpaso_dosPuntoCuatro = ({
                           id={`descripcion_costos_${plataforma.id}`}
                           label="Descripción de costos"
                           placeholder="Describe los costos de la plataforma o software"
-                          maxLength={500}
+                          maxLength={limite_caracteres}
                           value={value}
                           onChange={handleChange}
                           onBlur={handleBlur}
@@ -527,7 +527,7 @@ export const Subpaso_dosPuntoCuatro = ({
                       <CustomTextarea
                         id={`funcion_plataforma_${plataforma.id}`}
                         placeholder="Describe la función en el ejercicio de la competencia y los perfiles de usuario."
-                        maxLength={500}
+                        maxLength={limite_caracteres}
                         value={value}
                         onChange={handleChange}
                         onBlur={handleBlur}

@@ -99,6 +99,7 @@ const PasoDos = () => {
               id={data.id}
               setRefreshSubpasoDos_dos={setRefreshSubpasoDos_dos}
               solo_lectura={solo_lectura}
+              limite_caracteres={multiplicador_caracteres_region}
             />
           </div>
           <div className="container me-5 pe-5 my-5">
@@ -111,6 +112,7 @@ const PasoDos = () => {
               refreshSubpasoDos_tres={refreshSubpasoDos_tres}
               setRefreshSubpasoDos_tres={setRefreshSubpasoDos_tres}
               solo_lectura={solo_lectura}
+              limite_caracteres={multiplicador_caracteres_region}
             />
           </div>
           <div className="container me-5 pe-5 my-5">
@@ -124,6 +126,7 @@ const PasoDos = () => {
               refreshSubpasoDos_cuatro={refreshSubpasoDos_cuatro}
               setRefreshSubpasoDos_cuatro={setRefreshSubpasoDos_cuatro}
               solo_lectura={solo_lectura}
+              limite_caracteres={multiplicador_caracteres_region}
             />
           </div>
           <div className="container me-5 pe-5 my-5">
@@ -135,6 +138,7 @@ const PasoDos = () => {
               refreshSubpasoDos_cuatro={refreshSubpasoDos_cuatro}
               setRefreshSubpasoDos_cuatro={setRefreshSubpasoDos_cuatro}
               solo_lectura={solo_lectura}
+              limite_caracteres={multiplicador_caracteres_region}
             />
           </div>
           <div className="container me-5 pe-5 my-5">

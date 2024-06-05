@@ -4,7 +4,7 @@ import DropdownSelect from '../../dropdown/select';
 import { FormularioContext } from '../../../context/FormSectorial';
 import { apiTransferenciaCompentencia } from '../../../services/transferenciaCompetencia';
 
-export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSubpasoDos_dos, solo_lectura }) =>
+export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSubpasoDos_dos, solo_lectura, limite_caracteres }) =>
 {
   const [ dataDirecta, setDataDirecta ] = useState(null);
   const [ opciones, setOpciones ] = useState([]);
@@ -510,7 +510,7 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
                               label="Descripción (Obligatorio)"
                               value={fila.descripcion || ''}
                               placeholder="Descripción"
-                              maxLength={300}
+                              maxLength={limite_caracteres}
                               readOnly={solo_lectura}
                               onChange={(valor) =>
                                 handleInputChange(
@@ -633,7 +633,7 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
                       value={nuevoOrganismoDescripcion}
                       onChange={handleDescripcionChange}
                       placeholder="Descripción"
-                      maxLength={300}
+                      maxLength={limite_caracteres}
                       readOnly={solo_lectura}
                     />
                   </div>
