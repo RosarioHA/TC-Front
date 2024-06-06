@@ -1,6 +1,6 @@
 import * as yup from 'yup';
 
-export const construirEsquemaValidacion = (plataformasySoftwares) => {
+export const construirEsquemaValidacion = (plataformasySoftwares, limite_caracteres ) => {
   let schemaFields = {};
 
   plataformasySoftwares.forEach(plataforma => {
@@ -18,7 +18,7 @@ export const construirEsquemaValidacion = (plataformasySoftwares) => {
       .string()
       .required('La descripción técnica es obligatoria')
       .min(3, 'La descripción técnica debe tener al menos 3 caracteres')
-      .max(500, 'La descripción técnica no debe exceder los 500 caracteres');
+      .max(limite_caracteres, `La descripción técnica no debe exceder los ${limite_caracteres} caracteres`);
 
     // Validación para costo de adquisición
     schemaFields[`costo_adquisicion_${id}`] = yup
@@ -39,14 +39,14 @@ export const construirEsquemaValidacion = (plataformasySoftwares) => {
       .string()
       .required('La descripción de costos es obligatoria')
       .min(3, 'La descripción de costos debe tener al menos 3 caracteres')
-      .max(500, 'La descripción de costos no debe exceder los 500 caracteres');
+      .max(limite_caracteres, `La descripción de costos no debe exceder los ${limite_caracteres} caracteres`);
 
     // Validación para función de la plataforma o software
     schemaFields[`funcion_plataforma_${id}`] = yup
       .string()
       .required('La descripción de la función de la plataforma o software es obligatoria')
       .min(3, 'La descripción de la función de la plataforma o software debe tener al menos 3 caracteres')
-      .max(500, 'La descripción de la función de la plataforma o software no debe exceder los 500 caracteres');
+      .max(limite_caracteres, `La descripción de la función de la plataforma o software no debe exceder los ${limite_caracteres} caracteres`);
     
     
     // Por ejemplo, un campo booleano para capacitación requerida:

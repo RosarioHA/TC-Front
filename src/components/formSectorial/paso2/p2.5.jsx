@@ -5,8 +5,7 @@ import { FormularioContext } from '../../../context/FormSectorial';
 import { useFlujograma } from '../../../hooks/formulario/useFlujograma';
 import { usePasoForm } from '../../../hooks/formulario/usePasoForm';
 
-export const Subpaso_dosPuntoCinco = ({ id, stepNumber, data, flujograma, solo_lectura, limite_caracteres }) =>
-{
+export const Subpaso_dosPuntoCinco = ({ id, stepNumber, data, flujograma, solo_lectura, limite_caracteres }) => {
   const { handleUpdatePaso } = useContext(FormularioContext);
   const { uploadDocumento } = useFlujograma(id, stepNumber);
   const { dataPaso, refetchTrigger } = usePasoForm(id, stepNumber);
@@ -25,40 +24,33 @@ export const Subpaso_dosPuntoCinco = ({ id, stepNumber, data, flujograma, solo_l
   //visualizar pdf
   const ver = true;
 
-  const handleViewFile = (path) =>
-  {
+  const handleViewFile = (path) => {
     // const baseUrl = import.meta.env.VITE_REACT_APP_API_URL;
     const url = `${path}`;
     setIframeSrc(url);
     setShowPdfViewer(true);
   };
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     setFlujogramaFiles(dataPaso?.p_2_5_flujograma_competencia || []);
   }, [ dataPaso ]);
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     setFlujogramaFiles(flujograma || []);
   }, [ flujograma ]);
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     const savedData = localStorage.getItem('formData');
-    if (savedData)
-    {
+    if (savedData) {
       setFormData(JSON.parse(savedData));
     }
   }, []);
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     localStorage.setItem('formData', JSON.stringify(formData));
   }, [ formData ]);
 
-  const handleChange = (inputName, e) =>
-  {
+  const handleChange = (inputName, e) => {
     const { value } = e.target;
     setFormData((prevFormData) => ({
       ...prevFormData,
@@ -73,22 +65,19 @@ export const Subpaso_dosPuntoCinco = ({ id, stepNumber, data, flujograma, solo_l
     }));
   };
 
-  const handleSave = async (inputName) =>
-  {
+  const handleSave = async (inputName) => {
     setInputStatus((prevStatus) => ({
       ...prevStatus,
       [ inputName ]: { ...prevStatus[ inputName ], loading: true },
     }));
-    try
-    {
+    try {
       const payload = { ...formData };
       await handleUpdatePaso(id, stepNumber, payload);
       setInputStatus((prevStatus) => ({
         ...prevStatus,
         [ inputName ]: { loading: false, saved: true },
       }));
-    } catch (error)
-    {
+    } catch (error) {
       console.error('Error saving:', error);
       setInputStatus((prevStatus) => ({
         ...prevStatus,
@@ -97,40 +86,31 @@ export const Subpaso_dosPuntoCinco = ({ id, stepNumber, data, flujograma, solo_l
     }
   };
 
-  const uploadFile = async (file) =>
-  {
-    if (flujogramaFiles.length < 5)
-    {
+  const uploadFile = async (file) => {
+    if (flujogramaFiles.length < 5) {
       setUploading(true);
-      try
-      {
+      try {
         await uploadDocumento(id, file);
         refetchTrigger();
-      } catch (error)
-      {
+      } catch (error) {
         console.error('Error uploading file:', error);
-      } finally
-      {
+      } finally {
         setUploading(false);
       }
     }
   };
 
-  const eliminarDocFlujo = async (idFlujo) =>
-  {
+  const eliminarDocFlujo = async (idFlujo) => {
     setDeleting(true);
-    try
-    {
+    try {
       const payload = {
         p_2_5_flujograma_competencia: [ { id: idFlujo, DELETE: true } ],
       };
       await handleUpdatePaso(id, stepNumber, payload);
       refetchTrigger();
-    } catch (error)
-    {
+    } catch (error) {
       console.error('Error al eliminar el flujo', error);
-    } finally
-    {
+    } finally {
       setDeleting(false);
     }
   };
