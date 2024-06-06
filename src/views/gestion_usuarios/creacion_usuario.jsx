@@ -118,6 +118,7 @@ const CreacionUsuario = () => {
     updateHasChanged(true);
   }
 
+  //opciones sector
   const opcionesSector = dataSector.map(ministerio => ({
     label: ministerio.nombre,
     options: ministerio.sectores.map(sector => ({
