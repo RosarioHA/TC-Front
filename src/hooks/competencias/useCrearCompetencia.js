@@ -10,13 +10,7 @@ export const useCrearCompetencia = () => {
     setError(null);
 
     const formData = new FormData();
-
-    // Convertir competencias_agrupadas a JSON y agregar al formData como string
-    if (competenciaData.competencias_agrupadas) {
-      competenciaData.competencias_agrupadas.forEach((comp, index) => {
-        formData.append(`competencias_agrupadas[${index}].nombre`, comp.nombre);
-      });
-    }
+    
 
     // Agregar campos simples y arrays al formData
     Object.entries(competenciaData).forEach(([key, value]) => {
