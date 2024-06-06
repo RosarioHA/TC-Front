@@ -14,6 +14,7 @@ export const Subpaso_dosPuntoTres = ({
   // setRefreshSubpasoDos_tres,
   // setRefreshSubpasoDos_cuatro,
   solo_lectura,
+  limite_caracteres,
 }) => {
   const { control } = useForm({
     mode: 'onBlur',
@@ -506,7 +507,7 @@ export const Subpaso_dosPuntoTres = ({
                   label=""
                   value={etapa.nombre_etapa || ''}
                   placeholder="Escribe el nombre de la etapa"
-                  maxLength={500}
+                  maxLength={limite_caracteres}
                   onChange={(valor) =>
                     handleInputChange(etapa.id, null, 'nombre_etapa', valor)
                   }
@@ -539,7 +540,7 @@ export const Subpaso_dosPuntoTres = ({
                   label=""
                   value={etapa.descripcion_etapa || ''}
                   placeholder="Describe la etapa"
-                  maxLength={500}
+                  maxLength={limite_caracteres}
                   onChange={(valor) =>
                     handleInputChange(
                       etapa.id,
@@ -593,7 +594,7 @@ export const Subpaso_dosPuntoTres = ({
                         //label="Descripción del procedimiento (Obligatorio)"
                         value={procedimiento.descripcion_procedimiento || ''}
                         placeholder="Describe el procedimiento"
-                        maxLength={500}
+                        maxLength={limite_caracteres}
                         onChange={(valor) =>
                           handleInputChange(
                             etapa.id,
