@@ -34,14 +34,19 @@ export const esquemaCreacionCompetencia = yup.object().shape({
     .matches(nombreCompetenciaRegex, 'Formato de nombre inválido')
     .min(3, 'El nombre debe tener al menos 3 caracteres')
     .max(200, 'El nombre no debe exceder los 200 caracteres'),
-  nombres: yup.array().of(
+  competencias_agrupadas: yup.array().of(
     yup.object().shape({
-      name: yup.string().required('El nombre de la competencia es obligatorio')
+      nombre: yup.string()
+        .required('El nombre de la competencia agrupada es obligatorio')
         .matches(nombreCompetenciaRegex, 'Formato de nombre inválido')
         .min(3, 'El nombre debe tener al menos 3 caracteres')
         .max(200, 'El nombre no debe exceder los 200 caracteres')
     })
-  ),
+  )
+  .test('unique-nombres', 'Los nombres de las competencias agrupadas deben ser únicos', (competencias_agrupadas) => {
+    const nombres = competencias_agrupadas.map(comp => comp.nombre);
+    return new Set(nombres).size === nombres.length;
+  }),
   regiones: yup.array().min(1, 'Debes seleccionar al menos una región'),
   sectores: yup.array().min(1, 'Debes seleccionar al menos un sector'),
   origen: yup.string().required('El origen de la competencia es obligatorio'),
