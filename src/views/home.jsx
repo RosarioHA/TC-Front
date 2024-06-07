@@ -2,8 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { SummaryDetail } from '../components/tables/SummaryDetail';
 import { useCompetencia } from '../hooks/competencias/useCompetencias';
 
-const Home = () =>
-{
+const Home = () => {
   const {
     dataCompetencia,
     currentPageListaHome,
@@ -12,26 +11,18 @@ const Home = () =>
   } = useCompetencia();
 
   const navigate = useNavigate();
-
-
   const competenciasPerPage = 2; // Ajusta según sea necesario
   const totalPages = Math.ceil(paginationListaHome.count / competenciasPerPage);
 
-
-  const handlePageChange = (newPage) =>
-  {
+  const handlePageChange = (newPage) => {
     setCurrentPageListaHome(newPage);
   };
 
-
-  const handleDetailsCompetencia = (competencia) =>
-  {
+  const handleDetailsCompetencia = (competencia) => {
     navigate(`/home/estado_competencia/${competencia.id}`, { state: { competencia } });
   };
 
   const tieneCompetencias = Array.isArray(dataCompetencia) && dataCompetencia.length > 0;
-
-
 
   return (
     <>
@@ -68,7 +59,10 @@ const Home = () =>
             {dataCompetencia.map(competencia => (
               <div key={competencia.id} className="container-competencia">
                 <div className="container">
-                  <h3 className="my-3">{competencia.nombre}</h3>
+                  <div className="d-flex">
+                    <span className="badge-tipo">{competencia.agrupada ? 'Agrupada' : 'Individual'}</span>
+                    <h3 className="mb-3 ms-3">{competencia.nombre}</h3>
+                  </div>
                   <SummaryDetail competencia={competencia} tiempoTranscurrido={competencia.tiempo_transcurrido} />
                   <div className="d-flex justify-content-end">
                     <button onClick={() => handleDetailsCompetencia(competencia)} className="btn-secundario-s link-underline link-underline-opacity-0 py-3">

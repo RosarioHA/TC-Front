@@ -2,11 +2,10 @@ import { useNavigate } from 'react-router-dom';
 import { useResumenFinal } from '../../hooks/revisionFinalSubdere/useResumenFinal';
 import { useDescargarDocumento } from '../../hooks/competencias/useDownloadPDFFinal';
 
-export const SummaryDetail = ({ competencia }) =>
-{
+export const SummaryDetail = ({ competencia }) => {
   const navigate = useNavigate();
   const { resumen } = useResumenFinal(competencia.id);
-  const { descargarDocumento, loading, error } = useDescargarDocumento(competencia.id);  
+  const { descargarDocumento } = useDescargarDocumento(competencia.id);  
 
   const etapas_info =
     competencia.etapas_info || competencia.resumen_competencia?.etapas_info;
@@ -26,8 +25,7 @@ export const SummaryDetail = ({ competencia }) =>
     competencia.recomendacion_transferencia ||
     competencia.resumen_competencia?.recomendacion_transferencia;
 
-  if (!competencia || !etapas_info)
-  {
+  if (!competencia || !etapas_info) {
     return <div className="text-center text-sans-h5-medium-blue ">Cargando...</div>;
   }
   // Transformar etapas_info en un arreglo para facilitar su manejo
@@ -51,8 +49,7 @@ export const SummaryDetail = ({ competencia }) =>
   ).length;
   const totalEtapas = etapasArray.length;
 
-  const getBadgeDetails = (estado) =>
-  {
+  const getBadgeDetails = (estado) => {
     const badgeClasses = {
       Finalizada: 'badge-status-finish',
       'En Estudio': 'badge-status-review',
@@ -68,12 +65,10 @@ export const SummaryDetail = ({ competencia }) =>
     };
 
     const classForState = badgeClasses[ estado ] || '';
-
     return { class: classForState, text: estado };
   };
 
-  const handleVerRevisionSubdere = () =>
-  {
+  const handleVerRevisionSubdere = () => {
     navigate(`/home/revision_subdere/${competencia.id}/paso_1/`);
   };
 
@@ -87,8 +82,7 @@ export const SummaryDetail = ({ competencia }) =>
     year: 'numeric',
   });
 
-  const etapas_finalizada = [
-    {
+  const etapas_finalizada = [ {
       nombre: 'Proceso de Levantamiento de Información',
       fecha: formattedDate,
       estado: 'Finalizado',
@@ -110,8 +104,7 @@ export const SummaryDetail = ({ competencia }) =>
     })
   );
 
-  if (estado === 'Finalizada')
-  {
+  if (estado === 'Finalizada') {
     return (
       <>
         <div className="row">
@@ -163,8 +156,7 @@ export const SummaryDetail = ({ competencia }) =>
           <div className="col-8">
             <div className="mb-4 ms-4">
               <ul className="list-group list-group-flush my-3">
-                {etapasFinalizadasArray.map((etapa, index) =>
-                {
+                {etapasFinalizadasArray.map((etapa, index) => {
                   const badgeDetails = getBadgeDetails(etapa.estado);
                   return (
                     <li
@@ -269,8 +261,7 @@ export const SummaryDetail = ({ competencia }) =>
         <div className="col-8">
           <div className="mb-4 ms-4">
             <ul className="list-group list-group-flush my-3">
-              {etapasArray.map((etapa) =>
-              {
+              {etapasArray.map((etapa) => {
                 const badgeDetails = getBadgeDetails(etapa.estado);
                 return (
                   <li
