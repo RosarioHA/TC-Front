@@ -24,6 +24,8 @@ const GestionCompetencias = () => {
   const projectsPerPage = 10;
   const totalPages = Math.ceil(paginationCompetencia.count / projectsPerPage);
 
+  console.log("filteredCompetencia", filteredCompetencia)
+
   useEffect(() => {
     if (dataListCompetencia) {
       // Si hay información de paginación, filtra los usuarios según la página actual
@@ -168,10 +170,12 @@ const GestionCompetencias = () => {
             sortableColumns={[]}
             renderRow={(competencia) => (
               <tr key={competencia.id}>
-                <td className="ps-3 col-4">
+                <td className="ps-3 col-3">
                   <u className="text-sans-p my-4">{competencia.nombre}</u>
                 </td>
-                <td className="text-primary pt-4 col-2">{competencia.ambito}</td>
+                <td className="pt-4 col-2">
+                  <span className="badge-tipo">{competencia.agrupada ? 'Agrupada' : 'Individual'}</span>
+                </td>
                 <td className="col-1">
                   <span className={`badge my-3 ${getBadgeClass(competencia.estado)}`}>
                     {competencia.estado}
