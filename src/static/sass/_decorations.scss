@@ -60,7 +60,7 @@ padding:4px;
   border: 1px solid $grey-a-color;
   border-radius: 4px;
   padding:4px; 
-  }
+}
 
 .circle-color-blue{
   width: 16px;
@@ -69,15 +69,12 @@ background-color: $blue-color;
 border-radius: 50%;
 }
 
-
 .circle-color-light-blue{
   width: 16px;
 height: 16px;
 background-color: $blue-sky;
 border-radius: 50%;
 }
-
-
 
 
 @mixin badge-status ($bg , $border, $color) {
@@ -96,42 +93,31 @@ border-radius: 50%;
   font-style: normal;
   font-weight: 700;
   line-height: 100%;
-
 }
-
 .badge-status-finish{
   @include badge-status($blue-color,$blue-color,$white-color )  
 }
-
 .badge-status-review{
-
-@include badge-status($blue-marine,$blue-marine,$white-color )
+@include badge-status($blue-marine,$blue-marine,$white-color );
 }
-
 .badge-status-study{
   @include badge-status($blue-sky,$blue-sky,$grey-a-color )
-  }
-
+}
 .badge-status-pending{
   @include badge-status($grey-light-color,$grey-light-color,$grey-a-color)
 }
-
 .badge-status-warning{
   @include badge-status( $alert-danger,$alert-danger,$white-color); 
 }
-
 .badge-status-red{
   @include badge-status($dark-red,$dark-red,$white-color); 
 }
-
 .badge-status-green{
   @include badge-status($success-color,$success-color,$white-color); 
 }
-
 .badge-status-borderRed{
   @include badge-status($white-color,$dark-red,$dark-red); 
 }
-
 
 .badge-percent {
   background:$grey-light-b;
@@ -145,6 +131,23 @@ border-radius: 50%;
   color: $white-color;
   border-radius: 15px;
   text-align: center;
+}
+
+.badge-info-expandibles{
+  background:$blue-marine;
+  height: 26px;
+  color: $white-color;
+  border-radius: 5px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-family: Roboto;
+  font-size: 16px; 
+  font-style: normal;
+  font-weight: 700;
+  padding:4px 8px 4px 8px;
 }
 
 .input-success {
@@ -202,23 +205,19 @@ border-radius: 50%;
 .rdl-filter, .rdl-control {
   font-size: 18px !important;
   padding: 8px 6px;
-
 } 
-
 
 .react-dual-listbox button, .react-dual-listbox select {
   font-family: inherit;
   line-height: 1.42857;
   color: $primary-color;
 }
-
 .rdl-actions {
   flex-direction: column;
   align-self: flex-end;
   width: 260px !important;
   margin: 0 10px;
 }
-
 .rdl-btn {
   padding: 5px 5px;
   margin: 0 3px;
@@ -229,7 +228,6 @@ border-radius: 50%;
   border: 1px solid #ccc;
   border-radius: 2px;
 }
-
 .rdl-icon, .rdl-icon {
   font-family: sans-serif;
   font-weight: 900;
@@ -242,7 +240,6 @@ border-radius: 50%;
   background-color: $blue-color;
   color:$white-color;
 }
-
 
 .react-dual-listbox select option:checked:hover {
   background-color: $blue-color;
