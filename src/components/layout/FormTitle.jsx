@@ -4,35 +4,38 @@ import { useCompetencia } from '../../hooks/competencias/useCompetencias';
 
 export const FormTitle = ({ data, error, title }) => {
   const navigate = useNavigate();
-  const handleBackButtonClick = () => { 
-    navigate(-1); 
-  }
   const id = data?.competencia_id;
   const {competenciaDetails }  = useCompetencia(id);
   const [competenciasCollapsed, setCompetenciasCollapsed] = useState(false);
-  const competenciasAgrupadas = competenciaDetails?.competencias_agrupadas;
-  const numCompetenciasAgrupadas = competenciasAgrupadas ? competenciasAgrupadas.length : 0;
+  const [regionesCollapsed, setRegionesCollapsed] = useState(false);
+  const [sectoresCollapsed, setSectoresCollapsed] = useState(false);
   
   if (error) return <div>Error al cargar los datos: {error.message}</div>;
   if (!data) return <div>No hay datos disponibles</div>; 
 
-  console.log("competenciaDetails en FormTitle", competenciaDetails) // data de la competencia que necesitamos
-  console.log("competenciasAgrupadas en FormTitle", competenciasAgrupadas);
-  console.log("numCompetenciasAgrupadas en FormTitle", numCompetenciasAgrupadas);
+  const handleBackButtonClick = () => { 
+    navigate(-1); 
+  }
   
   const toggleCompetenciasCollapse = () => {
     setCompetenciasCollapsed(!competenciasCollapsed);
   };
+  const toggleRegionesCollapse = () => {
+    setRegionesCollapsed(!regionesCollapsed);
+  };
+  const toggleSectoresCollapse = () => {
+    setSectoresCollapsed(!sectoresCollapsed);
+  };
 
   const renderCompetenciasAgrupadas = () => {
-    //competencias individuales CHECK
+    const competenciasAgrupadas = competenciaDetails?.competencias_agrupadas;
+    const numCompetenciasAgrupadas = competenciasAgrupadas ? competenciasAgrupadas.length : 0;
     if (competenciasAgrupadas && competenciasAgrupadas.length === 0) {
       return (
         <div className="">
           <span className="text-sans-h1 mb-1">{competenciaDetails?.nombre}</span>
         </div>
       );
-    //competencias agrupadas
     } else if (competenciasAgrupadas?.length > 0) {
     return(
       <div>
@@ -70,8 +73,108 @@ export const FormTitle = ({ data, error, title }) => {
     return null;
   };
 
+  const renderRegiones = () => {
+    const regiones = competenciaDetails?.regiones;
+    const numRegiones = regiones ? regiones.length : 0;
+
+    if (regiones && numRegiones > 0) {
+      if (numRegiones === 1) {
+        return (
+          <div className="">
+            <span className="text-sans-h3-greyc mb-1">Región {regiones[0]}</span>
+          </div>
+        );
+      } else {
+        return (
+          <div>
+            <button
+              type="button"
+              onClick={toggleRegionesCollapse}
+              className="btn d-flex justify-content-between w-100 px-0"
+            >
+              <span className="text-sans-m-semibold-greyc mb-1">Regiones</span>
+              <div className="d-flex align-items-center">
+                <span className="badge-info-expandibles">
+                  <p className="my-0">{numRegiones} regiones</p>
+                </span>
+                <span className="material-symbols-outlined text-black ms-2">
+                  {regionesCollapsed ? 'expand_less' : 'expand_more'}
+                </span>
+              </div>
+            </button>
+            <div className={`collapse ${regionesCollapsed ? 'show' : ''}`}>
+              <table className="table table-striped">
+                <tbody>
+                  {regiones.map((region, index) => (
+                    <tr key={index}>
+                      <td className="d-flex justify-content-between">
+                        <span className="text-sans-h5 mb-1">Región {region}</span>
+                        <button>boton? a donde?</button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        );
+      }
+    }
+    return null;
+  };
+
+  const renderSectores = () => {
+    const sectores = competenciaDetails?.sectores;
+    const numSectores = sectores ? sectores.length : 0;
+
+    if (sectores && numSectores > 0) {
+      if (numSectores === 1) {
+        return (
+          <div className="">
+            <span className="text-sans-h3-greyc mb-1">{sectores[0].nombre}</span>
+          </div>
+        );
+      } else {
+        return (
+          <div>
+            <button
+              type="button"
+              onClick={toggleSectoresCollapse}
+              className="btn d-flex justify-content-between w-100 px-0"
+            >
+              <span className="text-sans-m-semibold-greyc mb-1">Sectores</span>
+              <div className="d-flex align-items-center">
+                <span className="badge-info-expandibles">
+                  <p className="my-0">{numSectores} sectores</p>
+                </span>
+                <span className="material-symbols-outlined text-black ms-2">
+                  {sectoresCollapsed ? 'expand_less' : 'expand_more'}
+                </span>
+              </div>
+            </button>
+            <div className={`collapse ${sectoresCollapsed ? 'show' : ''}`}>
+              <table className="table table-striped">
+                <tbody>
+                  {sectores.map((sector, index) => (
+                    <tr key={index}>
+                      <td className="d-flex justify-content-between">
+                        <span className="text-sans-h5 mb-1">{sector.nombre}</span>
+                        <button>boton? a donde?</button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        );
+      }
+    }
+    return null;
+  };
+
   return (
-    <div className="my-3 mx-3">
+    <div className="container col-11 my-3 mx-3">
       <div className="py-3 d-flex">
         <div className="d-flex align-items-center">
           <button className="btn-secundario-s" onClick={handleBackButtonClick}>
@@ -95,7 +198,10 @@ export const FormTitle = ({ data, error, title }) => {
           {renderCompetenciasAgrupadas()}
         </div>
         <div className="text-sans-h2-grey mb-2">{data.sector_nombre || data.region_nombre}</div>
-        <div>AQUI TIENE QUE IR LAS REGIONES/SECTORES SEGUN SI ES FORM SECTORIAL O GORE</div>
+        <div className="">
+          {title.includes('Sectorial') && renderRegiones()}
+          {title.includes('Regional') && renderSectores()}
+        </div>
       </div>
     </div>
   );
