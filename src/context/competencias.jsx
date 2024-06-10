@@ -1,14 +1,10 @@
 import { useCompetencia } from "../hooks/competencias/useCompetencias";
 import { createContext } from "react";
 
-
 export const CompetenciasContext = createContext(); 
 
-export const CompetenciaProvider = ({ children }) =>
-{
+export const CompetenciaProvider = ({ children }) => {
   const {dataCompetencia, dataListCompetencia, competenciaDetails }  = useCompetencia();
-
-
   const value ={
     dataCompetencia,
     dataListCompetencia,

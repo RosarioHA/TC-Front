@@ -1,20 +1,16 @@
 import { Link, useNavigate } from 'react-router-dom';
 
-
-export const FormTitle = ({ data, error, title }) =>
-{
+export const FormTitle = ({ data, error, title }) => {
   const navigate = useNavigate();
-
-  const handleBackButtonClick = () =>
-  {
-    navigate(-1);
+  const handleBackButtonClick = () => { 
+    navigate(-1); 
   }
 
   if (error) return <div>Error al cargar los datos: {error.message}</div>;
   if (!data) return <div>No hay datos disponibles</div>; 
 
-
-
+  console.log("data en FormTitle", data)
+  console.log("title en FormTitle", title)
 
   return (
     <div className="my-3 mx-3">
