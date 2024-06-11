@@ -61,7 +61,6 @@ export const FormTitle = ({ data, error, title }) => {
                 <tr key={index}>
                   <td className="d-flex justify-content-between">
                     <span className="text-sans-h5 mb-1">{competencia.nombre}</span>
-                    <button>boton? a donde?</button>
                   </td>
                 </tr>
               ))}
@@ -109,7 +108,6 @@ export const FormTitle = ({ data, error, title }) => {
                     <tr key={index}>
                       <td className="d-flex justify-content-between">
                         <span className="text-sans-h5 mb-1">Región {region}</span>
-                        <button>boton? a donde?</button>
                       </td>
                     </tr>
                   ))}
@@ -159,7 +157,6 @@ export const FormTitle = ({ data, error, title }) => {
                     <tr key={index}>
                       <td className="d-flex justify-content-between">
                         <span className="text-sans-h5 mb-1">{sector.nombre}</span>
-                        <button>boton? a donde?</button>
                       </td>
                     </tr>
                   ))}
