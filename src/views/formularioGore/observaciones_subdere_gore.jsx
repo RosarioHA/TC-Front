@@ -5,6 +5,7 @@ import { SubirArchivo } from "../../components/commons/subirArchivo";
 import CustomTextarea from "../../components/forms/custom_textarea";
 import { useEtapa5 } from "../../hooks/minutaDIPRES/useEtapa5";
 import { SuccessOSminutaDIPRES } from "../../components/success/OSminutaDipres";
+import { EncabezadoFormularios } from "../../components/layout/EncabezadoFormularios";
 
 const ObservacionesSubdereGore = () => {
   const { id } = useParams();
@@ -13,9 +14,6 @@ const ObservacionesSubdereGore = () => {
   const [observacionMinutaDipres, setObservacionMinutaDipres] = useState("");
   const [observacionEnviada, setObservacionEnviada] = useState(false);
   const [isSubmitSuccessful, setIsSubmitSuccessful] = useState(false);
-  const [competenciasCollapsed, setCompetenciasCollapsed] = useState(false);
-  const [regionesCollapsed, setRegionesCollapsed] = useState(false);
-  const [sectoresCollapsed, setSectoresCollapsed] = useState(false);
   const navigate = useNavigate();
   const observacionesEnviadas = competenciaDetails?.etapa5?.observacion_minuta_gore_enviada;
   const idEtapa = competenciaDetails?.etapa5?.id
@@ -45,159 +43,6 @@ const ObservacionesSubdereGore = () => {
     navigate(`/home/formulario_gore/${formularioId}/paso_1`);
   };
 
-  const toggleCompetenciasCollapse = () => {
-    setCompetenciasCollapsed(!competenciasCollapsed);
-  };
-  const toggleRegionesCollapse = () => {
-    setRegionesCollapsed(!regionesCollapsed);
-  };
-  const toggleSectoresCollapse = () => {
-    setSectoresCollapsed(!sectoresCollapsed);
-  };
-
-  const renderCompetenciasAgrupadas = () => {
-    const competenciasAgrupadas = competenciaDetails?.competencias_agrupadas;
-    const numCompetenciasAgrupadas = competenciasAgrupadas ? competenciasAgrupadas.length : 0;
-    if (competenciasAgrupadas && competenciasAgrupadas.length === 0) {
-      return (
-        <div className="">
-          <span className="text-sans-h1 mb-1">{competenciaDetails?.nombre}</span>
-        </div>
-      );
-    } else if (competenciasAgrupadas?.length > 0) {
-    return(
-      <div>
-        <button 
-        type="button" 
-        onClick={toggleCompetenciasCollapse}
-        className="btn d-flex justify-content-between w-100 px-0"
-        >
-          <span className="text-sans-h1 mb-1">{competenciaDetails?.nombre}</span>
-          <div className="d-flex align-items-center">
-            <span className="badge-info-expandibles">
-              <p className="my-0">{numCompetenciasAgrupadas} competencias</p>
-            </span>
-            <span className="material-symbols-outlined text-black ms-2">
-              {competenciasCollapsed ? 'expand_less' : 'expand_more'}
-            </span>
-          </div>
-        </button>
-        <div className={`collapse ${competenciasCollapsed ? 'show' : ''}`}>
-          <table className="table table-striped">
-            <tbody>
-              {competenciasAgrupadas.map((competencia, index) => (
-                <tr key={index}>
-                  <td className="d-flex justify-content-between">
-                    <span className="text-sans-h5 mb-1">{competencia.nombre}</span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    )}
-    return null;
-  };
-
-  const renderRegiones = () => {
-    const regiones = competenciaDetails?.regiones;
-    const numRegiones = regiones ? regiones.length : 0;
-
-    if (regiones && numRegiones > 0) {
-      if (numRegiones === 1) {
-        return (
-          <div className="">
-            <span className="text-sans-h3-greyc mb-1">{regiones[0].region}</span>
-          </div>
-        );
-      } else {
-        return (
-          <div>
-            <button
-              type="button"
-              onClick={toggleRegionesCollapse}
-              className="btn d-flex justify-content-between w-100 px-0"
-            >
-              <span className="text-sans-m-semibold-greyc mb-1">Regiones</span>
-              <div className="d-flex align-items-center">
-                <span className="badge-info-expandibles">
-                  <p className="my-0">{numRegiones} regiones</p>
-                </span>
-                <span className="material-symbols-outlined text-black ms-2">
-                  {regionesCollapsed ? 'expand_less' : 'expand_more'}
-                </span>
-              </div>
-            </button>
-            <div className={`collapse ${regionesCollapsed ? 'show' : ''}`}>
-              <table className="table table-striped">
-                <tbody>
-                  {regiones.map((region, index) => (
-                    <tr key={index}>
-                      <td className="d-flex justify-content-between">
-                        <span className="text-sans-h5 mb-1">{region.region}</span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        );
-      }
-    }
-    return null;
-  };
-
-  const renderSectores = () => {
-    const sectores = competenciaDetails?.sectores;
-    const numSectores = sectores ? sectores.length : 0;
-
-    if (sectores && numSectores > 0) {
-      if (numSectores === 1) {
-        return (
-          <div className="">
-            <span className="text-sans-h3-greyc mb-1">{sectores[0].nombre}</span>
-          </div>
-        );
-      } else {
-        return (
-          <div>
-            <button
-              type="button"
-              onClick={toggleSectoresCollapse}
-              className="btn d-flex justify-content-between w-100 px-0"
-            >
-              <span className="text-sans-m-semibold-greyc mb-1">Sectores</span>
-              <div className="d-flex align-items-center">
-                <span className="badge-info-expandibles">
-                  <p className="my-0">{numSectores} sectores</p>
-                </span>
-                <span className="material-symbols-outlined text-black ms-2">
-                  {sectoresCollapsed ? 'expand_less' : 'expand_more'}
-                </span>
-              </div>
-            </button>
-            <div className={`collapse ${sectoresCollapsed ? 'show' : ''}`}>
-              <table className="table table-striped">
-                <tbody>
-                  {sectores.map((sector, index) => (
-                    <tr key={index}>
-                      <td className="d-flex justify-content-between">
-                        <span className="text-sans-h5 mb-1">{sector.nombre}</span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        );
-      }
-    }
-    return null;
-  };
-
   return(
     <div className="container col-10 col-xxl-11">
       <div className="py-3 d-flex">
@@ -219,15 +64,7 @@ const ObservacionesSubdereGore = () => {
       <div className="border-bottom pb-3">
         <h1 className="text-sans-Title ">Observaciones SUBDERE</h1>
         <h2 className="text-sans-h1 mt-2 mb-0">Formularios GORE y Minuta DIPRES</h2>
-        <div className="">
-          {renderCompetenciasAgrupadas()}
-        </div>
-        <div className="">
-          {renderRegiones()}
-        </div>
-        <div className="">
-          {renderSectores()}
-        </div>
+        <EncabezadoFormularios id={id} />
       </div>
 
       {!isSubmitSuccessful ? (
