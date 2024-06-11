@@ -4,6 +4,7 @@ import { Controller } from 'react-hook-form';
 
 export const ListaNombres = ({ control, errors, setValue }) => {
   const [rows, setRows] = useState([{ nombre: '' }, { nombre: '' }]);
+  const [duplicateNames, setDuplicateNames] = useState([]);
 
   useEffect(() => {
     setValue('competencias_agrupadas', rows);
@@ -22,6 +23,13 @@ export const ListaNombres = ({ control, errors, setValue }) => {
   const handleChange = (index, event) => {
     const updatedRows = rows.map((row, i) => (i === index ? { ...row, nombre: event.target.value } : row));
     setRows(updatedRows);
+    checkDuplicates(updatedRows);
+  };
+
+  const checkDuplicates = (updatedRows) => {
+    const names = updatedRows.map(row => row.nombre.trim().toLowerCase());
+    const duplicates = names.filter((name, index) => names.indexOf(name) !== index);
+    setDuplicateNames(duplicates);
   };
 
   return (
@@ -39,7 +47,7 @@ export const ListaNombres = ({ control, errors, setValue }) => {
                   placeholder="Escribe el nombre de la competencia"
                   id={`nombre-${index}`}
                   maxLength={200}
-                  error={errors?.competencias_agrupadas?.[index]?.nombre?.message}
+                  error={errors?.competencias_agrupadas?.[index]?.nombre?.message || (duplicateNames.includes(row.nombre.trim().toLowerCase()) && 'Nombre duplicado')}
                   value={row.nombre}
                   onChange={(event) => handleChange(index, event)}
                   {...field}
@@ -57,6 +65,9 @@ export const ListaNombres = ({ control, errors, setValue }) => {
           )}
         </div>
       ))}
+      {errors.competencias_agrupadas?.message && (
+        <div className="text-sans-h6-darkred mt-2 mb-0">{errors.competencias_agrupadas.message}</div>
+      )}
       <button type="button" className="btn-secundario-s d-flex my-3" onClick={handleAddRow}>
         <i className="material-symbols-rounded me-2">add</i>
         <p className="mb-0 text-decoration-underline">Agregar Competencia</p>
