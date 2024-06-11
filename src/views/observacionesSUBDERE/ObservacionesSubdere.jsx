@@ -62,7 +62,7 @@ const ObservacionesSubdere = () => {
       
       <div>
         <h1 className="text-sans-Title">Observaciones SUBDERE</h1>
-        <h2 className="text-sans-h1">Formularios sectoriales</h2>
+        <h2 className="text-sans-h1">Formularios Sectoriales</h2>
         <EncabezadoFormularios id={id} />
       </div>
       <hr />

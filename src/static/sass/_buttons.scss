@@ -262,3 +262,10 @@ span.material-symbols-outlined {
 #btn span.material-symbols-outlined {
     color: inherit;
 }
+
+.btn_desplegables_encabezados{
+    border:none;
+    color: black;
+    background-color: $white-color;
+    padding: 4px;
+}

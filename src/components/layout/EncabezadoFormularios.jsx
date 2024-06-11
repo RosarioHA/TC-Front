@@ -34,7 +34,7 @@ export const EncabezadoFormularios = ({id}) => {
         <button 
         type="button" 
         onClick={toggleCompetenciasCollapse}
-        className="btn d-flex justify-content-between w-100 px-0"
+        className="btn_desplegables_encabezados d-flex justify-content-between w-100 px-0"
         >
           <span className="text-sans-h1 mb-1">{competenciaDetails?.nombre}</span>
           <div className="d-flex align-items-center">
@@ -81,7 +81,7 @@ export const EncabezadoFormularios = ({id}) => {
             <button
               type="button"
               onClick={toggleRegionesCollapse}
-              className="btn d-flex justify-content-between w-100 px-0"
+              className="btn_desplegables_encabezados d-flex justify-content-between w-100 px-0"
             >
               <span className="text-sans-m-semibold-greyc mb-1">Regiones</span>
               <div className="d-flex align-items-center">
@@ -130,7 +130,7 @@ export const EncabezadoFormularios = ({id}) => {
             <button
               type="button"
               onClick={toggleSectoresCollapse}
-              className="btn d-flex justify-content-between w-100 px-0"
+              className="btn_desplegables_encabezados d-flex justify-content-between w-100 px-0"
             >
               <span className="text-sans-m-semibold-greyc mb-1">Sectores</span>
               <div className="d-flex align-items-center">
