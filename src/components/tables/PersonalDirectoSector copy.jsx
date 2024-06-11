@@ -8,7 +8,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { FormularioContext } from "../../context/FormSectorial";
 import { construirValidacionPaso5_Personal } from "../../validaciones/esquemaValidarPaso5Sectorial";
 
-const Personal = ({
+const PersonalDirecto = ({
   id,
   paso5,
   solo_lectura,
@@ -16,9 +16,11 @@ const Personal = ({
   data_personal_directo,
   listado_estamentos,
   listado_calidades_juridicas,
-  refetchTrigger
+  region
 }) => {
 
+  // Verificar que paso5 no sea null o undefined y proporcionar valores por defecto
+  const paso5Data = Array.isArray(paso5) && paso5.length > 0 ? paso5[0] : {};
   const [personas, setPersonas] = useState([]);
   const [nuevaCalidadJuridica, setNuevaCalidadJuridica] = useState('');
   const [mostrarFormularioNuevo, setMostrarFormularioNuevo] = useState(false);
@@ -29,11 +31,13 @@ const Personal = ({
   const [opcionesEstamentos, setOpcionesEstamentos] = useState([]);
   const [opcionesCalidadJuridica, setOpcionesCalidadJuridica] = useState([]);
 
+
+
   const itemsJustificados = [
-    { label: '01 - Personal de Planta', informado: paso5.sub21_total_personal_planta, justificado: paso5.sub21_personal_planta_justificado, por_justificar: paso5.sub21_personal_planta_justificar },
-    { label: '02 - Personal de Contrata', informado: paso5.sub21_total_personal_contrata, justificado: paso5.sub21_personal_contrata_justificado, por_justificar: paso5.sub21_personal_contrata_justificar },
-    { label: '03 - Otras Remuneraciones', informado: paso5.sub21_total_otras_remuneraciones, justificado: paso5.sub21_otras_remuneraciones_justificado, por_justificar: paso5.sub21_otras_remuneraciones_justificar },
-    { label: '04 - Otros Gastos en Personal', informado: paso5.sub21_total_gastos_en_personal, justificado: paso5.sub21_gastos_en_personal_justificado, por_justificar: paso5.sub21_gastos_en_personal_justificar },
+    { label: '01 - Personal de Planta', informado: paso5Data.sub21_total_personal_planta, justificado: paso5Data.sub21_personal_planta_justificado, por_justificar: paso5Data.sub21_personal_planta_justificar },
+    { label: '02 - Personal de Contrata', informado: paso5Data.sub21_total_personal_contrata, justificado: paso5Data.sub21_personal_contrata_justificado, por_justificar: paso5Data.sub21_personal_contrata_justificar },
+    { label: '03 - Otras Remuneraciones', informado: paso5Data.sub21_total_otras_remuneraciones, justificado: paso5Data.sub21_otras_remuneraciones_justificado, por_justificar: paso5Data.sub21_otras_remuneraciones_justificar },
+    { label: '04 - Otros Gastos en Personal', informado: paso5Data.sub21_total_gastos_en_personal, justificado: paso5Data.sub21_gastos_en_personal_justificado, por_justificar: paso5Data.sub21_gastos_en_personal_justificar },
   ];
 
   const relacion_item_calidad = {
@@ -104,9 +108,14 @@ const Personal = ({
     }
 
     const payload = {
-      'p_5_3_a_personal_directo': [{
-        calidad_juridica: calidadJuridicaObjeto.id,
-      }]
+      regiones: [
+        {
+          region: region,
+          'p_5_3_a_personal_directo': [{
+            calidad_juridica: calidadJuridicaObjeto.id,
+          }],
+        },
+      ],
     };
 
     try {
@@ -137,16 +146,20 @@ const Personal = ({
   // Lógica para eliminar una fila de un organismo
   const eliminarPersona = async (persona, idFila) => {
     const payload = {
-      'p_5_3_a_personal_directo': [{
-        id: idFila,
-        DELETE: true
-      }]
+      regiones: [
+        {
+          region: region,
+          'p_5_3_a_personal_directo': [{
+            id: idFila,
+            DELETE: true
+          }]
+        }
+      ]
     };
 
     try {
       // Llamar a la API para actualizar los datos
       await handleUpdatePaso(id, stepNumber, payload);
-      refetchTrigger();
 
       // Actualizar el estado local para reflejar la eliminación
       setPersonas(prevPersonas => {
@@ -230,10 +243,15 @@ const Personal = ({
   const agregarNuevaCalidadJuridica = async (calidadJuridicaSeleccionada, labelSeleccionado) => {
 
     const payload = {
-      'p_5_3_a_personal_directo': [{
-        calidad_juridica: calidadJuridicaSeleccionada,
-        nombre_calidad_juridica: labelSeleccionado
-      }]
+      regiones: [
+        {
+          region: region,
+          'p_5_3_a_personal_directo': [{
+            calidad_juridica: calidadJuridicaSeleccionada,
+            nombre_calidad_juridica: labelSeleccionado
+          }]
+        }
+      ]
     };
 
     try {
@@ -310,17 +328,29 @@ const Personal = ({
 
     if (fieldName === 'calidad_juridica') {
       payload = {
-        'p_5_3_a_personal_directo': [{
-          id: arrayNameId,
-          calidad_juridica: newValue,
-        }]
-      };
+        regiones: [
+          {
+            region: region,
+            'p_5_3_a_personal_directo': [{
+              id: arrayNameId,
+              calidad_juridica: newValue,
+            }]
+          }
+        ]
+      }
+
     } else if (fieldName === 'descripcion_funciones_personal_directo') {
       payload = {
-        'paso5': {
-          'descripcion_funciones_personal_directo': newValue,
-        }
-      };
+        regiones: [
+          {
+            region: region,
+            'paso5': {
+              'descripcion_funciones_personal_directo': newValue,
+            }
+          }
+        ]
+      }
+
     } else {
 
       let personaEncontrada = null;
@@ -344,18 +374,28 @@ const Personal = ({
         // Ajuste para enviar 'estamento' como un valor único, no un array
         // Asumiendo que newValue es un objeto de la opción seleccionada
         payload = {
-          'p_5_3_a_personal_directo': [{
-            id: arrayNameId,
-            [fieldName]: newValue.value // Envía el valor seleccionado directamente
-          }]
+          regiones: [
+            {
+              region: region,
+              'p_5_3_a_personal_directo': [{
+                id: arrayNameId,
+                [fieldName]: newValue.value // Envía el valor seleccionado directamente
+              }]
+            }
+          ]
         };
+
       } else {
         // Payload para otros campos
         payload = {
-          'p_5_3_a_personal_directo': [{ id: arrayNameId, [fieldName]: personaEncontrada[fieldName] }]
+          regiones: [
+            {
+              region: region,
+              'p_5_3_a_personal_directo': [{ id: arrayNameId, [fieldName]: personaEncontrada[fieldName] }]
+            }
+          ]
         };
       }
-
     }
     try {
       // Asume que handleUpdatePaso puede manejar ambos casos adecuadamente
@@ -363,7 +403,6 @@ const Personal = ({
 
       // Actualiza el estado de carga y guardado
       updateFieldState(arrayNameId, fieldName, { loading: false, saved: true });
-      refetchTrigger();
 
     } catch (error) {
       console.error("Error al guardar los datos:", error);
@@ -639,7 +678,7 @@ const Personal = ({
         <Controller
           control={control}
           name={`descripcion_funciones_personal_directo`}
-          defaultValue={paso5.descripcion_funciones_personal_directo || ''}
+          defaultValue={paso5Data.descripcion_funciones_personal_directo || ''}
           render={({ field }) => {
             // Destructura las propiedades necesarias de field
             const { onChange, onBlur, value } = field;
@@ -668,9 +707,9 @@ const Personal = ({
                 value={value}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                loading={paso5?.descripcion_funciones_personal_directo?.estados?.descripcion?.loading ?? false}
-                saved={paso5?.descripcion_funciones_personal_directo?.estados?.descripcion?.saved ?? false}
-                error={errors[`descripcion_${paso5.descripcion_funciones_personal_directo?.id}`]?.message}
+                loading={paso5Data?.descripcion_funciones_personal_directo?.estados?.descripcion?.loading ?? false}
+                saved={paso5Data?.descripcion_funciones_personal_directo?.estados?.descripcion?.saved ?? false}
+                error={errors[`descripcion_${paso5Data.descripcion_funciones_personal_directo?.id}`]?.message}
                 readOnly={solo_lectura}
               />
             );
@@ -685,4 +724,4 @@ const Personal = ({
   )
 }
 
-export default Personal;
+export default PersonalDirecto;
