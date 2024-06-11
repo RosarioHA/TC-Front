@@ -57,10 +57,15 @@ const PasoCinco = () => {
   const avance = pasoData?.paso5encabezado?.avance;
 
   const toggleCollapse = (index) => {
-    setCollapseStates(prevState => ({
-      ...prevState,
-      [index]: !prevState[index]
-    }));
+    setCollapseStates((prevState) => {
+      const newState = { ...prevState, [index]: !prevState[index] };
+      for (const key in newState) {
+        if (key !== index.toString()) {
+          newState[key] = false;
+        }
+      }
+      return newState;
+    });
   };
 
   return (
