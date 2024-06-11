@@ -5,13 +5,10 @@ import { FormTitle } from "../components/layout/FormTitle"
 import { HorizontalRevision } from "../components/stepers/HorizontalRevision";
 import { FormSubdereContext } from '../context/RevisionFinalSubdere';
 
-
-const FormLayout = () =>
-{
+const FormLayout = () => {
   const { dataFormSubdere, dataPasoSubdere, loadingFormSubdere, errorFormSubdere, updateFormId, permisoPaso2,setPermisoPaso2 } = useContext(FormSubdereContext);
   const location = useLocation();
   const params = useParams();
-
 
   useEffect(() => {
     const currentId = location.state?.id || params.id;
@@ -23,20 +20,17 @@ const FormLayout = () =>
 
   const baseUrl = `/home/revision_subdere/${params.id}`;
 
-  if (errorFormSubdere)
-  {
+  if (errorFormSubdere) {
     return <div>Error: {errorFormSubdere.message}</div>;
   }
-
-  if (!dataFormSubdere)
-  {
+  if (!dataFormSubdere) {
     return <div className="container">
     <div className="d-flex align-items-center flex-column my-5 px-5 ">
       <div className="text-center text-sans-h5-medium-blue ">Cargando Formulario</div>
       <span className="placeholder col-10 bg-primary"></span>
     </div>
-  </div>;  }
-
+  </div>;  
+  }
 
   return (
     <div className="container col-10 col-xxl-11">

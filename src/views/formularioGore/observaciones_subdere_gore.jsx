@@ -60,8 +60,9 @@ const ObservacionesSubdereGore = () => {
         </nav>
       </div>
 
+      {/* AQUI MODIFICAR ENCABEZADO */}
       <div className="border-bottom pb-3">
-        <h1 className="text-sans-Title mt-5">Observaciones SUBDERE</h1>
+        <h1 className="text-sans-Title ">Observaciones SUBDERE</h1>
         <h2 className="text-sans-h1 mt-4">Formularios GORE y Minuta DIPRES</h2>
         <h2 className="text-sans-h2">{competenciaDetails.nombre}</h2>
       </div>
