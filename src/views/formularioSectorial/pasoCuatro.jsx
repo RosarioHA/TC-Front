@@ -19,10 +19,15 @@ const PasoCuatro = () => {
   const [ collapseStates, setCollapseStates ] = useState({});
 
   const toggleCollapse = (index) => {
-    setCollapseStates(prevState => ({
-      ...prevState,
-      [ index ]: !prevState[ index ]
-    }));
+    setCollapseStates((prevState) => {
+      const newState = { ...prevState, [index]: !prevState[index] };
+      for (const key in newState) {
+        if (key !== index.toString()) {
+          newState[key] = false;
+        }
+      }
+      return newState;
+    });
   };
 
   const observacionesEnviadas = observaciones?.observacion_enviada
@@ -41,7 +46,7 @@ const PasoCuatro = () => {
 
   if (!pasoData) return <div>No hay datos disponibles para el Paso 4</div>;
 
-  const { paso4encabezado: paso4Data, lista_indicadores, solo_lectura, regiones } = pasoData; // indicador_desempeno,
+  const { paso4encabezado: paso4Data, lista_indicadores, solo_lectura, regiones } = pasoData;
 
   if (!paso4Data) 
   return <> <div className="d-flex align-items-center flex-column my-5 px-5 ">
@@ -80,7 +85,7 @@ const PasoCuatro = () => {
 
             
             {regiones.map((regionData, index) => (
-              <div key={index}>
+              <div key={index} className="my-5">
                 <div className="col-12 collapse-regiones border border-bottom" type="button" data-bs-toggle="collapse"
                   data-bs-target={`#collapseRegion${index}`} aria-expanded={collapseStates[index] ? "true" : "false"}
                   aria-controls={`collapseRegion${index}`} onClick={() => toggleCollapse(index)}>
@@ -94,7 +99,7 @@ const PasoCuatro = () => {
                     </button>
                   </div>
                   <div>
-                    <Avance avance={regionData?.paso4[0].avance} id={id} />
+                    <Avance avance={regionData?.paso4?.[0]?.avance} id={id} />
                   </div>
                 </div>
                 <div className={`collapse ${collapseStates[index] ? 'show' : ''}`} id={`collapseRegion${index}`}>
@@ -102,12 +107,13 @@ const PasoCuatro = () => {
                     <>
                       {regionData.indicador_desempeno && (
                         <Subpaso_CuatroUno
-                          data={regionData}
+                          data={regionData.indicador_desempeno}
                           id={id}
                           stepNumber={stepNumber}
                           listaIndicadores={lista_indicadores}
                           readOnly={false}
                           solo_lectura={solo_lectura}
+                          region={regionData.region}
                         />
                       )}
                     </>

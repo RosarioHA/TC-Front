@@ -121,7 +121,6 @@ export const Subpaso_Tres = ({ esquemaDatos, id, stepNumber, solo_lectura, regio
       .join(' ');
   }
 
-  console.log(datos);
 
   return (
     <div className="mt-4">

@@ -10,7 +10,8 @@
     padding: 0 7px;
 }
 .input-s{
-    height: 60px;
+    min-height:60px; 
+    max-height:fit-content;
     border: 1px solid $grey-light-color;
     border-radius: 5px;
 }

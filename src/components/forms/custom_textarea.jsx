@@ -30,7 +30,6 @@ const CustomTextarea = forwardRef(({
   }, [ inputValue ]);
 
   useEffect(() => {
-    console.log('Textarea value prop:', value);
     if (value !== null && value !== undefined) {
         setInputValue(value);
         setTotalCharacters(value.length);
@@ -109,7 +108,7 @@ const CustomTextarea = forwardRef(({
             <label className="text-sans-h5 input-label ms-3 ms-sm-0 ">{label}</label>
             <textarea
               ref={ref || internalRef} // Utiliza ref externa si disponible, sino usa interna
-              className={`input-textarea input-s p-3 col-11 h-100 ${error ? 'input-error' : ''}`}
+              className={`input-textarea input-s p-3 col-11 ${error ? 'input-error' : ''}`}
               placeholder={placeholder}
               id={id}
               value={inputValue}
@@ -117,7 +116,7 @@ const CustomTextarea = forwardRef(({
               onChange={handleChange}
               onBlur={handleBlur}
               rows={rows}
-              style={{ overflow: 'hidden' }}
+              style={{ overflow: 'hidden'}}
               name={name}
             />
             <div className="d-flex align-self-end align-items-center">
