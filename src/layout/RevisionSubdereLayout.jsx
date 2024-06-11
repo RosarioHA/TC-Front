@@ -1,9 +1,9 @@
 import { useContext, useEffect } from 'react';
 import { Outlet, useLocation, useParams } from 'react-router-dom';
 import { Timmer } from "../components/layout/Timmer"
-import { FormTitle } from "../components/layout/FormTitle"
 import { HorizontalRevision } from "../components/stepers/HorizontalRevision";
 import { FormSubdereContext } from '../context/RevisionFinalSubdere';
+import { EncabezadoFormularios } from '../components/layout/EncabezadoFormularios';
 
 const FormLayout = () => {
   const { dataFormSubdere, dataPasoSubdere, loadingFormSubdere, errorFormSubdere, updateFormId, permisoPaso2,setPermisoPaso2 } = useContext(FormSubdereContext);
@@ -36,7 +36,11 @@ const FormLayout = () => {
     <div className="container col-10 col-xxl-11">
       <div className="row">
         <div className="col mb-2">
-          <FormTitle data={dataFormSubdere} title="Revision Final SUBDERE" loading={loadingFormSubdere} id={dataFormSubdere.id} />
+          <div className="border-bottom my-3">
+            <h1 className="text-sans-Title">Revisión final SUBDERE</h1>
+            <EncabezadoFormularios id={params.id} />
+          </div>
+
           <div className="mx-5">
             {dataFormSubdere && <HorizontalRevision baseUrl={baseUrl}
               permisoSiguiente={dataPasoSubdere} permisoPaso2={permisoPaso2} id={dataFormSubdere.id}

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useCompetencia } from "../../hooks/competencias/useCompetencias";
 import { useEtapa3 } from "../../hooks/minutaDIPRES/useEtapa3";
+import { EncabezadoFormularios } from "../../components/layout/EncabezadoFormularios";
 
 const ObservacionesSubdere = () => {
   const [ etapaOmitida, setEtapaOmitida ] = useState(null);
@@ -9,7 +10,6 @@ const ObservacionesSubdere = () => {
   const { id } = useParams();
   const { competenciaDetails } = useCompetencia(id);
   const { patchCompetenciaOmitida } = useEtapa3();
-
   const formulariosNoEnviados = competenciaDetails?.etapa2?.estado === 'Aún no puede comenzar';
   const observacionesEnviadas = competenciaDetails?.etapa2?.observaciones_completas;
   const etapaFinalizada = competenciaDetails?.etapa2?.estado === 'Finalizada';
@@ -59,11 +59,11 @@ const ObservacionesSubdere = () => {
           </ol>
         </nav>
       </div>
-      {/* AQUI MODIFICAR ENCABEZADO  */}
+      
       <div>
         <h1 className="text-sans-Title">Observaciones SUBDERE</h1>
         <h2 className="text-sans-h1">Formularios sectoriales</h2>
-        <h2 className="text-sans-h2">{competenciaDetails.nombre}</h2>
+        <EncabezadoFormularios id={id} />
       </div>
       <hr />
 

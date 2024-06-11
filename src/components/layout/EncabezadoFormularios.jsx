@@ -65,7 +65,7 @@ export const EncabezadoFormularios = ({id}) => {
   };
 
   const renderRegiones = () => {
-    const regiones = competenciaDetails?.regiones;
+    const regiones = competenciaDetails?.regiones; //aqui falta apuntar al campo correcto
     const numRegiones = regiones ? regiones.length : 0;
 
     if (regiones && numRegiones > 0) {
