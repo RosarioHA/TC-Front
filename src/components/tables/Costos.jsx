@@ -51,7 +51,6 @@ const Costos = ({
   const {
     handleSubmit,
     control,
-    setError,
     clearErrors,
     trigger,
     formState: { errors },

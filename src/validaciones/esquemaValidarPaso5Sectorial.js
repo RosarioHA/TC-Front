@@ -18,11 +18,11 @@ export const construirValidacionPaso5_1ab = (modeloCostos) => {
 
     // Validación para Total Anual
     schemaFields[`total_anual_${id}`] = yup
-    .number()
-    .typeError('El Total Anual debe ser un número')
-    .positive('El Total Anual debe ser un número positivo')
-    .integer('El Total Anual debe ser un número entero')
-    .required('El Total Anual es obligatorio');
+      .number()
+      .typeError('El Total Anual debe ser un número')
+      .positive('El Total Anual debe ser un número positivo')
+      .integer('El Total Anual debe ser un número entero')
+      .required('El Total Anual es obligatorio');
 
     // Validación para opcíon Transversal:
     schemaFields[`es_transversal_${id}`] = yup
@@ -70,33 +70,36 @@ export const construirValidacionPaso5_Personal = (calidadJuridica) => {
       // Agrega validación para el campo de costo específico
       schemaFields[`estamento_${persona.id}`] = yup
         .string()
-        .required('El subtítulo es requerido');
+        .required('El Estamento es requerido');
 
       schemaFields[`renta_bruta_${persona.id}`] = yup
         .number()
-        .typeError('La renta bruta debe ser un número')
-        .min(0, 'El costo no debe ser un número negativo')
-        .nullable(true)
-        .required('La renta bruta es requerida');
+        .typeError('La Renta bruta debe ser un número')
+        .positive('La Renta bruta debe ser un número positivo')
+        .integer('La Renta bruta debe ser un número entero')
+        .required('La Renta bruta es obligatoria');
 
-        schemaFields[`grado_${persona.id}`] = yup
-          .number()
-          .transform((value, originalValue) => {
-            // Asegurarse de que originalValue sea una cadena antes de llamar a trim.
-            if (typeof originalValue === 'string') {
-              return originalValue.trim() === '' ? null : value;
-            }
-            return value;
-          })
-          .min(0, 'El grado no debe ser un número negativo')
-          .nullable(true)
-          .typeError('El grado debe ser un número');
-      
-      
-      
+      schemaFields[`numero_personas_${persona.id}`] = yup
+        .number()
+        .typeError('El N° de personas debe ser un número')
+        .positive('El N° de personas debe ser un número positivo')
+        .integer('El N° de personas debe ser un número entero')
+        .required('El N° de personas es obligatorio');
+
+      schemaFields[`grado_${persona.id}`] = yup
+        .number()
+        .typeError('El Grado debe ser un número')
+        .positive('El Grado debe ser un número positivo')
+        .integer('El Grado debe ser un número entero')
+        .nullable(true)
+        .transform((value, originalValue) => (String(originalValue).trim() === '' ? null : value));
     });
 
     schemaFields['descripcion_funciones_personal_directo'] = yup
+      .string()
+      .required('La descripción de funciones es requerida');
+    
+    schemaFields['descripcion_funciones_personal_indirecto'] = yup
       .string()
       .required('La descripción de funciones es requerida');
   });

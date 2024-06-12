@@ -402,7 +402,7 @@ export const Temporalidad = ({
                                   }) => (
                                     <CustomTextarea
                                       {...field}
-                                      label="Justifica la gradualidadn de este grupo"
+                                      label="Justifica la gradualidad de este grupo"
                                       placeholder="Describe los costos de la plataforma o software"
                                       error={error?.message}
                                       readOnly={solo_lectura}
