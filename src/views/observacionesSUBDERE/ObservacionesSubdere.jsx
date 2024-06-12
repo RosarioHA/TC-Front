@@ -2,57 +2,42 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useCompetencia } from "../../hooks/competencias/useCompetencias";
 import { useEtapa3 } from "../../hooks/minutaDIPRES/useEtapa3";
+import { EncabezadoFormularios } from "../../components/layout/EncabezadoFormularios";
 
-const ObservacionesSubdere = () =>
-{
+const ObservacionesSubdere = () => {
   const [ etapaOmitida, setEtapaOmitida ] = useState(null);
   const navigate = useNavigate();
   const { id } = useParams();
   const { competenciaDetails } = useCompetencia(id);
   const { patchCompetenciaOmitida } = useEtapa3();
-
   const formulariosNoEnviados = competenciaDetails?.etapa2?.estado === 'Aún no puede comenzar';
   const observacionesEnviadas = competenciaDetails?.etapa2?.observaciones_completas;
   const etapaFinalizada = competenciaDetails?.etapa2?.estado === 'Finalizada';
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     // Obtener etapaOmitida desde competenciaDetails y establecerla en el estado
-    if (competenciaDetails && competenciaDetails.etapa3 && competenciaDetails.etapa3.omitida !== undefined)
-    {
+    if (competenciaDetails && competenciaDetails.etapa3 && competenciaDetails.etapa3.omitida !== undefined) {
       setEtapaOmitida(competenciaDetails.etapa3.omitida);
     }
   }, [ competenciaDetails ]); // Este efecto se ejecuta cada vez que competenciaDetails cambia
 
-  // console.log("competencia details", competenciaDetails);
-  // console.log("formulariosNoEnviados", formulariosNoEnviados);
-  // console.log("observacionesEnviadas", observacionesEnviadas);
-  // console.log("estapaFinalizada", etapaFinalizada);
-  // console.log("etapaOmitida", etapaOmitida);
-
-  const handleBackButtonClick = () =>
-  {
+  const handleBackButtonClick = () => {
     navigate(-1);
   };
 
-  const handleRadioButtonChange = (value) =>
-  {
+  const handleRadioButtonChange = (value) => {
     setEtapaOmitida(value === 'B');
   };
 
-  const handleVerFormulario = (formularioId) =>
-  {
+  const handleVerFormulario = (formularioId) => {
     navigate(`/home/formulario_sectorial/${formularioId}/paso_1`);
   };
 
-  const handleCerrarEtapa = async () =>
-  {
-    try
-    {
+  const handleCerrarEtapa = async () => {
+    try {
       await patchCompetenciaOmitida(competenciaDetails?.etapa3?.id, etapaOmitida);
       navigate(`/home/success_cierre_observaciones/${competenciaDetails?.id}`);
-    } catch (error)
-    {
+    } catch (error) {
       console.error("Error al cerrar la etapa:", error);
     }
   };
@@ -74,10 +59,11 @@ const ObservacionesSubdere = () =>
           </ol>
         </nav>
       </div>
+      
       <div>
         <h1 className="text-sans-Title">Observaciones SUBDERE</h1>
-        <h2 className="text-sans-h1">Formularios sectoriales</h2>
-        <h2 className="text-sans-h2">{competenciaDetails.nombre}</h2>
+        <h2 className="text-sans-h1">Formularios Sectoriales</h2>
+        <EncabezadoFormularios id={id} />
       </div>
       <hr />
 
@@ -193,7 +179,6 @@ const ObservacionesSubdere = () =>
           </div>
         </>
       )}
-
 
       <div className="d-flex justify-content-end my-5 me-3">
         {!etapaFinalizada && (

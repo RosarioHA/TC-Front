@@ -7,8 +7,7 @@ import { useCompetencia } from "../../hooks/competencias/useCompetencias";
 import { useFormularioSubdere } from "../../hooks/revisionFinalSubdere/useFormularioSubdere";
 import { useResumenFinal } from "../../hooks/revisionFinalSubdere/useResumenFinal";
 
-const EstadoCompetencia = () =>
-{
+const EstadoCompetencia = () => {
   const { id } = useParams();
   const { competenciaDetails, loading, error } = useCompetencia(id);
   const { resumen } = useResumenFinal(id);
@@ -17,40 +16,30 @@ const EstadoCompetencia = () =>
   const { dataFormSubdere } = useFormularioSubdere(id);
   const mostrarMensajeFinalizada = competenciaDetails.estado === 'Finalizada' && resumen?.formulario_final_enviado === true;
 
-
-
-
-  useEffect(() =>
-  {
-    if (competenciaDetails)
-    {
+  useEffect(() => {
+    if (competenciaDetails) {
       setCompetencia(competenciaDetails);
     }
   }, [ competenciaDetails ]);
 
-  const handleBackButtonClick = () =>
-  {
+  const handleBackButtonClick = () => {
     navigate(-1);
   };
 
-  const handleVerRevisionSubdere = () =>
-  {
+  const handleVerRevisionSubdere = () => {
     navigate(`/home/revision_subdere/${id}/paso_1/`)
   }
 
-  if (loading)
-  {
+  if (loading) {
     return <div className="d-flex align-items-center flex-column ">
       <div className="text-center text-sans-h5-medium-blue ">Cargando detalles de la competencia...</div>
       <span className="placeholder col-4 bg-primary"></span>
     </div>;
   }
-  if (error)
-  {
+  if (error) {
     return <div>Error al cargar los detalles: {error.message}</div>;
   }
-  if (!competencia)
-  {
+  if (!competencia) {
     return <div>No se encontraron detalles de la competencia</div>;
   }
 
@@ -73,7 +62,10 @@ const EstadoCompetencia = () =>
         </div>
         <span className="text-sans-Title">Estado de la Competencia</span>
         <div className="my-3">
-          <div className="text-sans-h1 mb-4">{competencia.nombre}</div>
+          <div className="d-flex">
+            <span className="badge-tipo mt-1">{competencia.agrupada ? 'Agrupada' : 'Individual'}</span>
+            <h1 className="text-sans-h1 mb-4 ms-2">{competencia.nombre}</h1>
+          </div>
           <SummaryDetail competencia={competencia} />
         </div>
         <div className="mt-5">

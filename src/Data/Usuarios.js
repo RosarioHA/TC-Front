@@ -1,9 +1,7 @@
 
 export const columnTitlesUser = ['Nombre', 'Competencia Asociada','Estado', 'Tipo de usuario','Acción'];
 
-export const columnTitleCompetencias = ['Nombre de la competencia ', 'Ámbito', 'Estado', 'Origen', 'Acción' ]; 
-
-
+export const columnTitleCompetencias = ['Nombre de la competencia ', 'Tipo de competencia', 'Estado', 'Origen', 'Acción' ]; 
 
 export const TypeUser =[
   {id:1,  tipoUsuario:"SUBDERE"},
@@ -11,8 +9,6 @@ export const TypeUser =[
   {id:3,  tipoUsuario:"DIPRES"},
   {id:4,  tipoUsuario:"GORE"},
 ]
-
-
 
 export  const UserData =[
   {id:1, nombre: 'Isabella Silva Castro', email:'isabel@gmail.com',  tipoUsuario:"1"},

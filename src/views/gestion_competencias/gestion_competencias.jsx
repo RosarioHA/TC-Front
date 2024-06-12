@@ -6,8 +6,7 @@ import InputSearch from "../../components/forms/Input_search";
 import { TableCheckbox } from "../../components/tables/TableCheck";
 import { columnTitleCompetencias } from "../../Data/Usuarios";
 
-const GestionCompetencias = () =>
-{
+const GestionCompetencias = () => {
   const { userData } = useAuth();
   const {
     dataListCompetencia,
@@ -21,64 +20,51 @@ const GestionCompetencias = () =>
   const navigate = useNavigate();
   const [ hasSearched, setHasSearched ] = useState(false);
 
-
-
   const userSubdere = userData?.perfil?.includes('SUBDERE');
   const projectsPerPage = 10;
   const totalPages = Math.ceil(paginationCompetencia.count / projectsPerPage);
 
-  useEffect(() =>
-  {
-    if (dataListCompetencia)
-    {
+  console.log("filteredCompetencia", filteredCompetencia)
+
+  useEffect(() => {
+    if (dataListCompetencia) {
       // Si hay información de paginación, filtra los usuarios según la página actual
-      if (currentPageCompetencia && currentPageCompetencia.results)
-      {
+      if (currentPageCompetencia && currentPageCompetencia.results) {
         const startIndex = (currentPageCompetencia.current_page - 1) * currentPageCompetencia.page_size;
         const endIndex = startIndex + currentPageCompetencia.results.length;
         setFilteredCompetencia(dataListCompetencia.slice(startIndex, endIndex));
-      } else
-      {
+      } else {
         // Si no hay información de paginación, muestra todos los usuarios
         setFilteredCompetencia(dataListCompetencia);
       }
     }
   }, [ dataListCompetencia, currentPageCompetencia ]);
 
-
-  useEffect(() =>
-  {
+  useEffect(() => {
     // Actualiza los datos filtrados cuando cambian los datos de competencia o la página actual
-    if (dataListCompetencia && paginationCompetencia)
-    {
+    if (dataListCompetencia && paginationCompetencia) {
       setFilteredCompetencia(dataListCompetencia);
     }
   }, [ dataListCompetencia, paginationCompetencia ])
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     // Asegúrate de que dataListCompetencia tenga la estructura esperada
-    if (dataListCompetencia && Array.isArray(dataListCompetencia.results))
-    {
+    if (dataListCompetencia && Array.isArray(dataListCompetencia.results)) {
       setFilteredCompetencia(dataListCompetencia.results);
     }
   }, [ dataListCompetencia ]);
 
-
-  const handlePageChange = (newPage) =>
-  {
+  const handlePageChange = (newPage) => {
     setCurrentPageCompetencia(newPage);
   };
 
   const sortOptions = {
-    Estado: (direction) => (a, b) =>
-    {
+    Estado: (direction) => (a, b) => {
       // Asegurándose de que los estados existen para evitar errores
       const estadoA = a.estado || '';
       const estadoB = b.estado || '';
 
-      if (direction === 'asc')
-      {
+      if (direction === 'asc') {
         return estadoA.localeCompare(estadoB);
       }
       // Orden descendente
@@ -86,10 +72,8 @@ const GestionCompetencias = () =>
     }
   };
 
-  const getBadgeClass = (estado) =>
-  {
-    switch (estado)
-    {
+  const getBadgeClass = (estado) => {
+    switch (estado) {
       case 'En Estudio': return 'badge-status-review';
       case 'Finalizada': return 'badge-status-finish';
       case 'Sin usuario sectorial': return ' badge-status-warning';
@@ -98,31 +82,22 @@ const GestionCompetencias = () =>
   };
 
   // Función de búsqueda
-  const handleSearch = useCallback((query) =>
-  {
+  const handleSearch = useCallback((query) => {
     setSearchQuery(query);
     updateSearchTerm(query);
     setHasSearched(true);
   }, [ updateSearchTerm ]);
 
-
-
-  const handleVerEstado = (competencia) =>
-  {
+  const handleVerEstado = (competencia) => {
     navigate(`/home/estado_competencia/${competencia.id}`, { state: { competencia } });
   };
-  const handleVerDetalle = (competencia) =>
-  {
+  const handleVerDetalle = (competencia) => {
     navigate(`/home/editar_competencia/${competencia.id}`, { state: { competencia } });
   };
 
-
-
   // Modificar la función para renderizar botones de paginación
-  const renderPaginationButtons = () =>
-  {
-    if (!paginationCompetencia || totalPages <= 1)
-    {
+  const renderPaginationButtons = () => {
+    if (!paginationCompetencia || totalPages <= 1) {
       return null;
     }
 
@@ -195,10 +170,12 @@ const GestionCompetencias = () =>
             sortableColumns={[]}
             renderRow={(competencia) => (
               <tr key={competencia.id}>
-                <td className="ps-3 col-4">
+                <td className="ps-3 col-3">
                   <u className="text-sans-p my-4">{competencia.nombre}</u>
                 </td>
-                <td className="text-primary pt-4 col-2">{competencia.ambito}</td>
+                <td className="pt-4 col-2">
+                  <span className="badge-tipo">{competencia.agrupada ? 'Agrupada' : 'Individual'}</span>
+                </td>
                 <td className="col-1">
                   <span className={`badge my-3 ${getBadgeClass(competencia.estado)}`}>
                     {competencia.estado}

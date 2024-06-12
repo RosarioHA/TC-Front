@@ -5,6 +5,7 @@ import { SubirArchivo } from "../../components/commons/subirArchivo";
 import CustomTextarea from "../../components/forms/custom_textarea";
 import { useEtapa5 } from "../../hooks/minutaDIPRES/useEtapa5";
 import { SuccessOSminutaDIPRES } from "../../components/success/OSminutaDipres";
+import { EncabezadoFormularios } from "../../components/layout/EncabezadoFormularios";
 
 const ObservacionesSubdereGore = () => {
   const { id } = useParams();
@@ -61,9 +62,9 @@ const ObservacionesSubdereGore = () => {
       </div>
 
       <div className="border-bottom pb-3">
-        <h1 className="text-sans-Title mt-5">Observaciones SUBDERE</h1>
-        <h2 className="text-sans-h1 mt-4">Formularios GORE y Minuta DIPRES</h2>
-        <h2 className="text-sans-h2">{competenciaDetails.nombre}</h2>
+        <h1 className="text-sans-Title ">Observaciones SUBDERE</h1>
+        <h2 className="text-sans-h1 mt-2 mb-0">Formularios GORE y Minuta DIPRES</h2>
+        <EncabezadoFormularios id={id} />
       </div>
 
       {!isSubmitSuccessful ? (

@@ -5,41 +5,33 @@ import { HorizontalStepper } from "../components/stepers/HorizontalStepper";
 import { Timmer } from "../components/layout/Timmer";
 import { FormularioContext } from "../context/FormSectorial";
 
-const FormularioLayout = () =>
-{
+const FormularioLayout = () => {
   const { data, loading, error, updateFormId } = useContext(FormularioContext);
   const location = useLocation();
   const params = useParams();
 
+  console.log("data en FormularioLauout", data);
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     const currentId = location.state?.id || params.id;
-    if (currentId)
-    {
+    if (currentId) {
       updateFormId(currentId);
     }
   }, [ location, params.id, updateFormId ]);
 
-  const baseUrl = useMemo(() =>
-  {
-    if (location.pathname.includes('formulario_sectorial'))
-    {
+  const baseUrl = useMemo(() => {
+    if (location.pathname.includes('formulario_sectorial')) {
       return `/home/formulario_sectorial/${params.id}`;
-    } else if (location.pathname.includes('revision_formulario_sectorial'))
-    {
+    } else if (location.pathname.includes('revision_formulario_sectorial')) {
       return `/home/revision_formulario_sectorial/${params.id}`;
     }
     return ''; // or a default value
   }, [ location.pathname, params.id ]);
 
-  if (error)
-  {
+  if (error) {
     return <div>Error: {error.message}</div>;
   }
-
-  if (!data)
-  {
+  if (!data) {
     return <div className="container">
       <div className="d-flex align-items-center flex-column my-5 px-5 ">
         <div className="text-center text-sans-h5-medium-blue ">Cargando Formulario</div>
