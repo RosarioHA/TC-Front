@@ -5,7 +5,6 @@ const rutRegex = /^[0-9]+-[0-9kK]{1}$/;
 const nombreRegex = /^[A-Za-záéíóúüÜñÑ\s']+$/;
 const nombreCompetenciaRegex = /^[a-zA-Z0-9\sñÑáéíóúÁÉÍÓÚüÜ.,'":?!@_\-{}()~#$%&*+=\\[\\|;/°ᵃ]+$/;
 
-
 export const esquemaCreacionUsuario = yup.object().shape({
   rut: yup.string().matches(rutRegex, 'Formato de RUT inválido').required('El RUT es obligatorio'),
   nombre: yup
@@ -34,26 +33,28 @@ export const esquemaCreacionCompetencia = yup.object().shape({
     .matches(nombreCompetenciaRegex, 'Formato de nombre inválido')
     .min(3, 'El nombre debe tener al menos 3 caracteres')
     .max(200, 'El nombre no debe exceder los 200 caracteres'),
-  competencias_agrupadas: yup.array().of(
-    yup.object().shape({
-      nombre: yup.string()
-        .required('El nombre de la competencia agrupada es obligatorio')
-        .matches(nombreCompetenciaRegex, 'Formato de nombre inválido')
-        .min(3, 'El nombre debe tener al menos 3 caracteres')
-        .max(200, 'El nombre no debe exceder los 200 caracteres')
-    })
-  )
-  .test('unique-nombres', 'Los nombres de las competencias agrupadas deben ser únicos', (competencias_agrupadas) => {
-    const nombres = competencias_agrupadas.map(comp => comp.nombre);
-    return new Set(nombres).size === nombres.length;
-  }),
+  competencias_agrupadas: yup
+    .array()
+    .of(
+      yup.object().shape({
+        nombre: yup
+          .string()
+          .required('El nombre de la competencia agrupada es obligatorio')
+          .matches(nombreCompetenciaRegex, 'Formato de nombre inválido')
+          .min(3, 'El nombre debe tener al menos 3 caracteres')
+          .max(200, 'El nombre no debe exceder los 200 caracteres')
+      })
+    )
+    .min(2, 'Debes agregar al menos dos competencias agrupadas')
+    .test('no-duplicates', 'No se permiten nombres duplicados', function(value) {
+      let nombres = value.map(v => v.nombre.trim().toLowerCase());
+      return nombres.length === new Set(nombres).size;
+    }),
   regiones: yup.array().min(1, 'Debes seleccionar al menos una región'),
   sectores: yup.array().min(1, 'Debes seleccionar al menos un sector'),
   origen: yup.string().required('El origen de la competencia es obligatorio'),
   ambito_competencia: yup.number().integer().required('El ámbito de la competencia es obligatorio'),
-  fecha_inicio: yup
-    .string()
-    .required('La fecha del oficio es obligatoria'),
+  fecha_inicio: yup.string().required('La fecha del oficio es obligatoria'),
   plazo_formulario_sectorial: yup
     .number()
     .required('El plazo para el formulario sectorial es obligatorio')
