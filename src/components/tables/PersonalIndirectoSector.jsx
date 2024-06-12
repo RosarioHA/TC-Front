@@ -16,9 +16,10 @@ const PersonalIndirecto = ({
   data_personal_indirecto,
   listado_estamentos,
   listado_calidades_juridicas,
-  refetchTrigger
+  region
 }) => {
-
+  // Verificar que paso5 no sea null o undefined y proporcionar valores por defecto
+  const paso5Data = Array.isArray(paso5) && paso5.length > 0 ? paso5[0] : {};
   const [personas, setPersonas] = useState([]);
   const [nuevaCalidadJuridica, setNuevaCalidadJuridica] = useState('');
   const [mostrarFormularioNuevo, setMostrarFormularioNuevo] = useState(false);
@@ -28,12 +29,13 @@ const PersonalIndirecto = ({
 
   const [opcionesEstamentos, setOpcionesEstamentos] = useState([]);
   const [opcionesCalidadJuridica, setOpcionesCalidadJuridica] = useState([]);
+  const [inputStatus, setInputStatus] = useState({});
 
   const itemsJustificados = [
-    { label: '01 - Personal de Planta', informado: paso5.sub21b_total_personal_planta, justificado: paso5.sub21b_personal_planta_justificado, por_justificar: paso5.sub21b_personal_planta_justificar },
-    { label: '02 - Personal de Contrata', informado: paso5.sub21b_total_personal_contrata, justificado: paso5.sub21b_personal_contrata_justificado, por_justificar: paso5.sub21b_personal_contrata_justificar },
-    { label: '03 - Otras Remuneraciones', informado: paso5.sub21b_total_otras_remuneraciones, justificado: paso5.sub21b_otras_remuneraciones_justificado, por_justificar: paso5.sub21b_otras_remuneraciones_justificar },
-    { label: '04 - Otros Gastos en Personal', informado: paso5.sub21b_total_gastos_en_personal, justificado: paso5.sub21b_gastos_en_personal_justificado, por_justificar: paso5.sub21b_gastos_en_personal_justificar },
+    { label: '01 - Personal de Planta', informado: paso5Data.sub21b_total_personal_planta, justificado: paso5Data.sub21b_personal_planta_justificado, por_justificar: paso5Data.sub21b_personal_planta_justificar },
+    { label: '02 - Personal de Contrata', informado: paso5Data.sub21b_total_personal_contrata, justificado: paso5Data.sub21b_personal_contrata_justificado, por_justificar: paso5Data.sub21b_personal_contrata_justificar },
+    { label: '03 - Otras Remuneraciones', informado: paso5Data.sub21b_total_otras_remuneraciones, justificado: paso5Data.sub21b_otras_remuneraciones_justificado, por_justificar: paso5Data.sub21b_otras_remuneraciones_justificar },
+    { label: '04 - Otros Gastos en Personal', informado: paso5Data.sub21b_total_gastos_en_personal, justificado: paso5Data.sub21b_gastos_en_personal_justificado, por_justificar: paso5Data.sub21b_gastos_en_personal_justificar },
   ];
 
   const relacion_item_calidad = {
@@ -120,17 +122,17 @@ const PersonalIndirecto = ({
         };
 
         // Actualiza el estado inmediatamente con la nueva persona
-      setPersonas(prevPersonas => ({
-        ...prevPersonas,
-        [calidadJuridicaLabel]: [...(prevPersonas[calidadJuridicaLabel] || []), nuevaPersona]
-      }));
+        setPersonas(prevPersonas => ({
+          ...prevPersonas,
+          [calidadJuridicaLabel]: [...(prevPersonas[calidadJuridicaLabel] || []), nuevaPersona]
+        }));
 
       } else {
         console.error("La actualización no fue exitosa:", response ? response.message : "Respuesta vacía");
       }
     } catch (error) {
       console.error("Error al agregar la nueva calidad jurídica:", error);
-    }   
+    }
   };
 
 
@@ -146,7 +148,6 @@ const PersonalIndirecto = ({
     try {
       // Llamar a la API para actualizar los datos
       await handleUpdatePaso(id, stepNumber, payload);
-      refetchTrigger();
 
       // Actualizar el estado local para reflejar la eliminación
       setPersonas(prevPersonas => {
@@ -169,28 +170,6 @@ const PersonalIndirecto = ({
       console.error("Error al eliminar la fila:", error);
     }
   };
-
-
-  // Función para recargar campos por separado
-  const updateFieldState = (personaId, fieldName, newState) => {
-    setPersonas(prevPersonas => {
-      const nuevasPersonas = { ...prevPersonas };
-      // Iterar sobre cada calidad jurídica
-      Object.keys(nuevasPersonas).forEach(calidadJuridica => {
-        // Encontrar el índice de la persona a actualizar
-        const index = nuevasPersonas[calidadJuridica].findIndex(persona => persona.id === personaId);
-        // Si se encuentra la persona, actualizar su estado
-        if (index !== -1) {
-          nuevasPersonas[calidadJuridica][index] = {
-            ...nuevasPersonas[calidadJuridica][index],
-            [fieldName]: newState,
-          };
-        }
-      });
-      return nuevasPersonas;
-    });
-  };
-
 
   // Manejadora de CustomInput y CustomTextArea
   const handleInputChange = (personaId, campo, valor) => {
@@ -230,10 +209,15 @@ const PersonalIndirecto = ({
   const agregarNuevaCalidadJuridica = async (calidadJuridicaSeleccionada, labelSeleccionado) => {
 
     const payload = {
-      'p_5_3_b_personal_indirecto': [{
-        calidad_juridica: calidadJuridicaSeleccionada,
-        nombre_calidad_juridica: labelSeleccionado
-      }]
+      regiones: [
+        {
+          region: region,
+          'p_5_3_b_personal_indirecto': [{
+            calidad_juridica: calidadJuridicaSeleccionada,
+            nombre_calidad_juridica: labelSeleccionado
+          }]
+        }
+      ]
     };
 
     try {
@@ -300,27 +284,60 @@ const PersonalIndirecto = ({
     setMostrarBotonFormulario(opcionesActualizadas.length > 0);
   }, [personas, listado_calidades_juridicas]);
 
+  const startSavingField = (fieldId) => {
+    setInputStatus(prevStatus => ({
+      ...prevStatus,
+      [fieldId]: {
+        loading: true,
+        saved: false
+      },
+    }));
+  };
+
+  const finishSavingField = (fieldId, success) => {
+    setInputStatus(prevStatus => ({
+      ...prevStatus,
+      [fieldId]: {
+        loading: false,
+        saved: success
+      },
+    }));
+  };
+
   // Función de guardado
   const handleSave = async (arrayNameId, fieldName, newValue) => {
 
-
-    updateFieldState(arrayNameId, fieldName, { loading: true, saved: false });
+    const fieldId = `${fieldName}_${arrayNameId}`;
+    startSavingField(fieldId);
 
     let payload;
 
     if (fieldName === 'calidad_juridica') {
       payload = {
-        'p_5_3_b_personal_indirecto': [{
-          id: arrayNameId,
-          calidad_juridica: newValue,
-        }]
+        regiones: [
+          {
+            region: region,
+            'p_5_3_b_personal_indirecto': [{
+              id: arrayNameId,
+              calidad_juridica: newValue,
+            }]
+          }
+        ]
       };
+
     } else if (fieldName === 'descripcion_funciones_personal_indirecto') {
       payload = {
-        'paso5': {
-          'descripcion_funciones_personal_indirecto': newValue,
-        }
-      };
+        regiones: [
+          {
+            region: region,
+            'paso5': [{
+              id: arrayNameId,
+              descripcion_funciones_personal_directo: newValue,
+            }]
+          }
+        ]
+      }
+
     } else {
 
       let personaEncontrada = null;
@@ -344,26 +361,34 @@ const PersonalIndirecto = ({
         // Ajuste para enviar 'estamento' como un valor único, no un array
         // Asumiendo que newValue es un objeto de la opción seleccionada
         payload = {
-          'p_5_3_b_personal_indirecto': [{
-            id: arrayNameId,
-            [fieldName]: newValue.value // Envía el valor seleccionado directamente
-          }]
+          regiones: [
+            {
+              region: region,
+              'p_5_3_b_personal_indirecto': [{
+                id: arrayNameId,
+                [fieldName]: newValue.value // Envía el valor seleccionado directamente
+              }]
+            }
+          ]
         };
+
       } else {
         // Payload para otros campos
         payload = {
-          'p_5_3_b_personal_indirecto': [{ id: arrayNameId, [fieldName]: personaEncontrada[fieldName] }]
+          regiones: [
+            {
+              region: region,
+              'p_5_3_b_personal_indirecto': [{ id: arrayNameId, [fieldName]: personaEncontrada[fieldName] }]
+            }
+          ]
         };
       }
-
     }
     try {
       // Asume que handleUpdatePaso puede manejar ambos casos adecuadamente
       await handleUpdatePaso(id, stepNumber, payload);
 
-      // Actualiza el estado de carga y guardado
-      updateFieldState(arrayNameId, fieldName, { loading: false, saved: true });
-      refetchTrigger();
+      finishSavingField(fieldId, true);
 
     } catch (error) {
       console.error("Error al guardar los datos:", error);
@@ -375,18 +400,13 @@ const PersonalIndirecto = ({
         });
       }
 
-      updateFieldState(arrayNameId, fieldName, { loading: false, saved: false });
+      finishSavingField(fieldId, false);
     }
   };
 
   const onSubmitAgregarPersona = () => {
     agregarPersona();
   };
-
-  const onSubmitAgregarCalidadJuridica = () => {
-    agregarNuevaCalidadJuridica();
-  };
-
 
 
   return (
@@ -475,8 +495,8 @@ const PersonalIndirecto = ({
                             value={value}
                             onChange={handleChange}
                             onBlur={handleBlur}
-                            loading={persona.estados?.numero_personas?.loading ?? false}
-                            saved={persona.estados?.numero_personas?.saved ?? false}
+                            loading={inputStatus[`numero_personas_${persona.id}`]?.loading ?? false}
+                            saved={inputStatus[`numero_personas_${persona.id}`]?.saved ?? false}
                             error={errors[`numero_personas_${persona.id}`]?.message}
                             disabled={solo_lectura}
                           />
@@ -516,8 +536,8 @@ const PersonalIndirecto = ({
                             value={value}
                             onChange={handleChange}
                             onBlur={handleBlur}
-                            loading={persona.estados?.renta_bruta?.loading ?? false}
-                            saved={persona.estados?.renta_bruta?.saved ?? false}
+                            loading={inputStatus[`renta_bruta_${persona.id}`]?.loading ?? false}
+                            saved={inputStatus[`renta_bruta_${persona.id}`]?.saved ?? false}
                             error={errors[`renta_bruta_${persona.id}`]?.message}
                             disabled={solo_lectura}
                           />
@@ -528,7 +548,7 @@ const PersonalIndirecto = ({
 
                   <div className="col">
                     <p className="text-sans-p-blue">{formatearNumero(persona.total_rentas)}</p>
-                  </div>                  
+                  </div>
 
                   <div className="col">
                     <Controller
@@ -561,8 +581,8 @@ const PersonalIndirecto = ({
                             value={value}
                             onChange={handleChange}
                             onBlur={handleBlur}
-                            loading={persona.estados?.grado?.loading ?? false}
-                            saved={persona.estados?.grado?.saved ?? false}
+                            loading={inputStatus[`grado_${persona.id}`]?.loading ?? false}
+                            saved={inputStatus[`grado_${persona.id}`]?.saved ?? false}
                             error={errors[`grado_${persona.id}`]?.message}
                             disabled={solo_lectura}
                           />
@@ -686,14 +706,14 @@ const PersonalIndirecto = ({
             const handleChange = (e) => {
               clearErrors(`descripcion_funciones_personal_indirecto`);
               onChange(e.target.value);
-              handleInputChange(null, 'descripcion_funciones_personal_indirecto', e.target.value);
+              handleInputChange(paso5Data.id, 'descripcion_funciones_personal_indirecto', e.target.value);
             };
 
             // Función para manejar el evento onBlur
             const handleBlur = async () => {
               const isFieldValid = await trigger(`descripcion_funciones_personal_indirecto`);
               if (isFieldValid) {
-                handleSave(null, 'descripcion_funciones_personal_indirecto', value);
+                handleSave(paso5Data.id, 'descripcion_funciones_personal_indirecto', value);
               }
               onBlur();
             };
@@ -707,8 +727,8 @@ const PersonalIndirecto = ({
                 value={value}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                loading={paso5.descripcion_funciones_personal_indirecto?.estados?.descripcion?.loading ?? false}
-                saved={paso5.descripcion_funciones_personal_indirecto?.estados?.descripcion?.saved ?? false}
+                loading={inputStatus['descripcion_funciones_personal_indirecto']?.loading ?? false}
+                saved={inputStatus['descripcion_funciones_personal_indirecto']?.saved ?? false}
                 error={errors[`descripcion_${paso5.descripcion_funciones_personal_indirecto?.id}`]?.message}
                 readOnly={solo_lectura}
               />

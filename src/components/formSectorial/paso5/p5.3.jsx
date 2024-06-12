@@ -35,6 +35,7 @@ export const Subpaso_CincoPuntoTres = (
           listado_estamentos={listado_estamentos}
           listado_calidades_juridicas={listado_calidades_juridicas_directas}
           region={region}
+          
         />
       </div>
 
@@ -52,6 +53,7 @@ export const Subpaso_CincoPuntoTres = (
           data_personal_indirecto={data_personal_indirecto}
           listado_estamentos={listado_estamentos}
           listado_calidades_juridicas={listado_calidades_juridicas_indirectas}
+          region={region}
         />
       </div>
 

@@ -7,6 +7,7 @@ import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FormularioContext } from "../../context/FormSectorial";
 import { construirValidacionPaso5_Personal } from "../../validaciones/esquemaValidarPaso5Sectorial";
+import { set } from "lodash";
 
 const PersonalDirecto = ({
   id,
@@ -30,6 +31,9 @@ const PersonalDirecto = ({
 
   const [opcionesEstamentos, setOpcionesEstamentos] = useState([]);
   const [opcionesCalidadJuridica, setOpcionesCalidadJuridica] = useState([]);
+  const [inputStatus, setInputStatus] = useState({});
+  const [descripcionLoading, setDescripcionLoading] = useState(false);
+  const [descripcionSaved, setDescripcionSaved] = useState(false);
 
   const itemsJustificados = [
     { label: '01 - Personal de Planta', informado: paso5Data.sub21_total_personal_planta, justificado: paso5Data.sub21_personal_planta_justificado, por_justificar: paso5Data.sub21_personal_planta_justificar },
@@ -181,28 +185,6 @@ const PersonalDirecto = ({
     }
   };
 
-
-  // Función para recargar campos por separado
-  const updateFieldState = (personaId, fieldName, newState) => {
-    setPersonas(prevPersonas => {
-      const nuevasPersonas = { ...prevPersonas };
-      // Iterar sobre cada calidad jurídica
-      Object.keys(nuevasPersonas).forEach(calidadJuridica => {
-        // Encontrar el índice de la persona a actualizar
-        const index = nuevasPersonas[calidadJuridica].findIndex(persona => persona.id === personaId);
-        // Si se encuentra la persona, actualizar su estado
-        if (index !== -1) {
-          nuevasPersonas[calidadJuridica][index] = {
-            ...nuevasPersonas[calidadJuridica][index],
-            [fieldName]: newState,
-          };
-        }
-      });
-      return nuevasPersonas;
-    });
-  };
-
-
   // Manejadora de CustomInput y CustomTextArea
   const handleInputChange = (personaId, campo, valor) => {
     setPersonas(prevPersonas => {
@@ -222,6 +204,7 @@ const PersonalDirecto = ({
 
   const manejarDropdownCalidadJuridica = (opcionSeleccionada) => {
     setNuevaCalidadJuridica(opcionSeleccionada);
+    setMostrarFormularioNuevo(false);
   };
 
   useEffect(() => {
@@ -234,12 +217,7 @@ const PersonalDirecto = ({
   }, [nuevaCalidadJuridica]);
 
 
-  const mostrarFormulario = () => {
-    setMostrarFormularioNuevo(true);
-  };
-
   const agregarNuevaCalidadJuridica = async (calidadJuridicaSeleccionada, labelSeleccionado) => {
-
     const payload = {
       regiones: [
         {
@@ -251,37 +229,33 @@ const PersonalDirecto = ({
         }
       ]
     };
-
+  
     try {
       const response = await handleUpdatePaso(id, stepNumber, payload);
-
       if (response && response.data.p_5_3_a_personal_directo) {
         const listaActualizadaPersonalDirecto = response.data.p_5_3_a_personal_directo;
-
         const nuevaCalidadJuridicaDatos = {
           ...listaActualizadaPersonalDirecto[listaActualizadaPersonalDirecto.length - 1], // Extrayendo el último elemento
         };
-        // Actualiza el estado para añadir el nuevo elemento al final
+  
         setPersonas(prevPersonas => {
-          // Si ya existen personas con esta calidad jurídica, simplemente añade al final
           const nuevasPersonas = { ...prevPersonas };
-          // Asegura que la nueva calidad jurídica se añada al final
           nuevasPersonas[labelSeleccionado] = nuevasPersonas[labelSeleccionado] || [];
           nuevasPersonas[labelSeleccionado].push(nuevaCalidadJuridicaDatos);
           return nuevasPersonas;
         });
+  
         // Limpia los campos del formulario y oculta el formulario
         setNuevaCalidadJuridica('');
-        setMostrarFormularioNuevo(false); // Esto oculta el formulario
-
+        setMostrarFormularioNuevo(false);
+  
       } else {
         console.error("La actualización no fue exitosa:", response ? response.message : "Respuesta vacía");
       }
     } catch (error) {
       console.error("Error al agregar la nueva calidad jurídica:", error);
     }
-  };
-
+  };  
 
   //convertir estructura para el select
   const transformarEnOpciones = (datos, propiedadLabel) => {
@@ -316,11 +290,31 @@ const PersonalDirecto = ({
     setMostrarBotonFormulario(opcionesActualizadas.length > 0);
   }, [personas, listado_calidades_juridicas]);
 
+  const startSavingField = (fieldId) => {
+    setInputStatus(prevStatus => ({
+      ...prevStatus,
+      [fieldId]: {
+        loading: true,
+        saved: false
+      },
+    }));
+  };
+
+  const finishSavingField = (fieldId, success) => {
+    setInputStatus(prevStatus => ({
+      ...prevStatus,
+      [fieldId]: {
+        loading: false,
+        saved: success
+      },
+    }));
+  };
 
   // Función de guardado
   const handleSave = async (arrayNameId, fieldName, newValue) => {
 
-    updateFieldState(arrayNameId, fieldName, { loading: true, saved: false });
+    const fieldId = `${fieldName}_${arrayNameId}`;
+    startSavingField(fieldId);
 
     let payload;
 
@@ -338,13 +332,16 @@ const PersonalDirecto = ({
       }
 
     } else if (fieldName === 'descripcion_funciones_personal_directo') {
+      setDescripcionLoading(true);
+      setDescripcionSaved(false);
       payload = {
         regiones: [
           {
             region: region,
-            'paso5': {
-              'descripcion_funciones_personal_directo': newValue,
-            }
+            'paso5': [{
+              id: arrayNameId,
+              descripcion_funciones_personal_directo: newValue,
+            }]
           }
         ]
       }
@@ -399,8 +396,10 @@ const PersonalDirecto = ({
       // Asume que handleUpdatePaso puede manejar ambos casos adecuadamente
       await handleUpdatePaso(id, stepNumber, payload);
 
-      // Actualiza el estado de carga y guardado
-      updateFieldState(arrayNameId, fieldName, { loading: false, saved: true });
+      finishSavingField(fieldId, true);
+      setDescripcionLoading(false);
+      setDescripcionSaved(true);
+
 
     } catch (error) {
       console.error("Error al guardar los datos:", error);
@@ -412,7 +411,10 @@ const PersonalDirecto = ({
         });
       }
 
-      updateFieldState(arrayNameId, fieldName, { loading: false, saved: false });
+      finishSavingField(fieldId, false);
+      setDescripcionLoading(false);
+      setDescripcionSaved(false);
+
     }
   };
 
@@ -512,8 +514,8 @@ const PersonalDirecto = ({
                             onChange={handleChange}
                             onBlur={handleBlur}
                             onKeyDown={handleKeyDown}
-                            loading={persona.estados?.renta_bruta?.loading ?? false}
-                            saved={persona.estados?.renta_bruta?.saved ?? false}
+                            loading={inputStatus[`renta_bruta_${persona.id}`]?.loading ?? false}
+                            saved={inputStatus[`renta_bruta_${persona.id}`]?.saved ?? false}
                             error={errors[`renta_bruta_${persona.id}`]?.message}
                             disabled={solo_lectura}
                           />
@@ -559,8 +561,8 @@ const PersonalDirecto = ({
                             onChange={handleChange}
                             onBlur={handleBlur}
                             onKeyDown={handleKeyDown}
-                            loading={persona.estados?.grado?.loading ?? false}
-                            saved={persona.estados?.grado?.saved ?? false}
+                            loading={inputStatus[`grado_${persona.id}`]?.loading ?? false}
+                            saved={inputStatus[`grado_${persona.id}`]?.saved ?? false}
                             error={errors[`grado_${persona.id}`]?.message}
                             disabled={solo_lectura}
                           />
@@ -664,7 +666,7 @@ const PersonalDirecto = ({
       {mostrarBotonFormulario && !solo_lectura && (
         <button
           className="btn-secundario-s m-2"
-          onClick={mostrarFormulario}
+          onClick={() => setMostrarFormularioNuevo(true)}
         >
           <i className="material-symbols-rounded me-2">add</i>
           <p className="mb-0 text-decoration-underline">Agregar Calidad Juridica</p>
@@ -684,14 +686,14 @@ const PersonalDirecto = ({
             const handleChange = (e) => {
               clearErrors(`descripcion_funciones_personal_directo`);
               onChange(e.target.value);
-              handleInputChange(null, 'descripcion_funciones_personal_directo', e.target.value);
+              handleInputChange(paso5Data.id, 'descripcion_funciones_personal_directo', e.target.value);
             };
 
             // Función para manejar el evento onBlur
             const handleBlur = async () => {
               const isFieldValid = await trigger(`descripcion_funciones_personal_directo`);
               if (isFieldValid) {
-                handleSave(null, 'descripcion_funciones_personal_directo', value);
+                handleSave(paso5Data.id, 'descripcion_funciones_personal_directo', value);
               }
               onBlur();
             };
@@ -705,8 +707,8 @@ const PersonalDirecto = ({
                 value={value}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                loading={paso5Data?.descripcion_funciones_personal_directo?.estados?.descripcion?.loading ?? false}
-                saved={paso5Data?.descripcion_funciones_personal_directo?.estados?.descripcion?.saved ?? false}
+                loading={descripcionLoading}
+                saved={descripcionSaved}
                 error={errors[`descripcion_${paso5Data.descripcion_funciones_personal_directo?.id}`]?.message}
                 readOnly={solo_lectura}
               />
