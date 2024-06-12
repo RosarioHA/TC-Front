@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, Controller} from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import CustomInput from "../../components/forms/custom_input";
 import { CheckboxRegion } from "../../components/dropdown/checkboxRegion";
@@ -115,18 +115,15 @@ const CreacionCompetencia = () =>
   });
 
   //detecta cambios sin guardar en el formulario
-  function handleOnChange(event)
-  {
+  function handleOnChange(event) {
     const data = new FormData(event.currentTarget);
-    const formHasChanged = Array.from(data.entries()).some(([ name, value ]) =>
-    {
-      const initialValue = initialValues[ name ];
+    const formHasChanged = Array.from(data.entries()).some(([name, value]) => {
+      const initialValue = initialValues[name];
       return value !== String(initialValue);
     });
     setHasChanged(formHasChanged);
     updateHasChanged(formHasChanged);
   }
-
   useEffect(() =>
   {
     // Establece la fecha máxima permitida como la fecha actual
@@ -310,9 +307,6 @@ const CreacionCompetencia = () =>
       setErrorMessageDate("");
       setValue('fecha_inicio', selectedDate);  // Actualiza el valor en react-hook-form
     }
-
-    // Log the selected date
-    console.log('Selected Date:', selectedDate);
   };
 
   const handleEstadoChange = (nuevoEstado) =>
