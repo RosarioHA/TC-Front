@@ -33,7 +33,7 @@ export const esquemaCreacionCompetencia = yup.object().shape({
     .matches(nombreCompetenciaRegex, 'Formato de nombre inválido')
     .min(3, 'El nombre debe tener al menos 3 caracteres')
     .max(200, 'El nombre no debe exceder los 200 caracteres'),
-  competencias_agrupadas: yup
+    competencias_agrupadas: yup
     .array()
     .of(
       yup.object().shape({
@@ -46,8 +46,9 @@ export const esquemaCreacionCompetencia = yup.object().shape({
       })
     )
     .min(2, 'Debes agregar al menos dos competencias agrupadas')
-    .test('no-duplicates', 'No se permiten nombres duplicados', function(value) {
-      let nombres = value.map(v => v.nombre.trim().toLowerCase());
+    .test('no-duplicates', 'No se permiten nombres duplicados', function (value)
+    {
+      let nombres = value.map(v => v.nombre.trim());
       return nombres.length === new Set(nombres).size;
     }),
   regiones: yup.array().min(1, 'Debes seleccionar al menos una región'),
@@ -72,3 +73,4 @@ export const esquemaCreacionCompetencia = yup.object().shape({
     .min(15, 'El plazo mínimo es de 15 días.')
     .max(30, 'El plazo máximo es de 30 días.')
 });
+

@@ -97,6 +97,16 @@
         color: $white-color;
     }
 }
+
+.btn-secundario-s-round.disabled {
+    background-color: $grey-c-color;
+    color: $white-color;
+    opacity: 0.7;
+    border: 2px solid $grey-c-color;
+    span.material-symbols-outlined {
+        color: $grey-c-color;
+    }
+}
 // BOTON SECUNDARIO
 // fondo transp. con borde y letras azules. Existe en S-fitcontent Y L-100%
 .btn-secundario-s {
