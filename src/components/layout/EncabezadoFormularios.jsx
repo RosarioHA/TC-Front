@@ -65,14 +65,14 @@ export const EncabezadoFormularios = ({id}) => {
   };
 
   const renderRegiones = () => {
-    const regiones = competenciaDetails?.regiones; //aqui falta apuntar al campo correcto
+    const regiones = competenciaDetails?.nombres_regiones; //aqui falta apuntar al campo correcto
     const numRegiones = regiones ? regiones.length : 0;
 
     if (regiones && numRegiones > 0) {
       if (numRegiones === 1) {
         return (
           <div className="">
-            <span className="text-sans-h3-greyc mb-1">{regiones[0].region}</span>
+            <span className="text-sans-h3-greyc mb-1">{regiones[0].nombre}</span>
           </div>
         );
       } else {
@@ -99,7 +99,7 @@ export const EncabezadoFormularios = ({id}) => {
                   {regiones.map((region, index) => (
                     <tr key={index}>
                       <td className="d-flex justify-content-between">
-                        <span className="text-sans-h5 mb-1">{region.region}</span>
+                        <span className="text-sans-h5 mb-1">{region.nombre}</span>
                       </td>
                     </tr>
                   ))}

@@ -14,6 +14,8 @@ export const FormTitle = ({ data, error, title }) => {
   if (!data) return <div>No hay datos disponibles</div>; 
 
   console.log("competenciaDetails", competenciaDetails);
+  console.log("title", title);
+  console.log("data", data);
 
   const handleBackButtonClick = () => { 
     navigate(-1); 
@@ -82,7 +84,7 @@ export const FormTitle = ({ data, error, title }) => {
       if (numRegiones === 1) {
         return (
           <div className="">
-            <span className="text-sans-h3-greyc mb-1">{regiones[0].region}</span>
+            <span className="text-sans-h3-greyc mb-1">{regiones[0].nombre}</span>
           </div>
         );
       } else {
@@ -109,7 +111,7 @@ export const FormTitle = ({ data, error, title }) => {
                   {regiones.map((region, index) => (
                     <tr key={index}>
                       <td className="d-flex justify-content-between">
-                        <span className="text-sans-h5 mb-1">{region.region}</span>
+                        <span className="text-sans-h5 mb-1">{region.nombre}</span>
                       </td>
                     </tr>
                   ))}
