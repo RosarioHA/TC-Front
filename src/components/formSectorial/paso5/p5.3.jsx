@@ -31,11 +31,13 @@ export const Subpaso_CincoPuntoTres = (
           paso5={paso5}
           solo_lectura={solo_lectura}
           stepNumber={stepNumber}
-          data_personal_directo={data_personal_directo}
+          data_personal={data_personal_directo}
           listado_estamentos={listado_estamentos}
           listado_calidades_juridicas={listado_calidades_juridicas_directas}
           region={region}
-          
+          prefix="sub21"
+          payloadModel="p_5_3_a_personal_directo"
+          descripcionModelo="directo"
         />
       </div>
 
@@ -45,15 +47,18 @@ export const Subpaso_CincoPuntoTres = (
       <h6 className="text-sans-h6-primary mt-3">Por personal de soporte se entenderán todas personas que realizan tareas y procedimientos indirectos a la competencia. </h6>
 
       <div className="my-4 relative-container">
-        <PersonalIndirecto
+        <PersonalDirecto
           id={id}
           paso5={paso5}
           solo_lectura={solo_lectura}
           stepNumber={stepNumber}
-          data_personal_indirecto={data_personal_indirecto}
+          data_personal={data_personal_indirecto}
           listado_estamentos={listado_estamentos}
           listado_calidades_juridicas={listado_calidades_juridicas_indirectas}
           region={region}
+          prefix="sub21b"
+          payloadModel="p_5_3_b_personal_indirecto"
+          descripcionModelo="indirecto"
         />
       </div>
 
