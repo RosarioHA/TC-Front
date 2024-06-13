@@ -7,17 +7,19 @@ import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FormularioContext } from "../../context/FormSectorial";
 import { construirValidacionPaso5_Personal } from "../../validaciones/esquemaValidarPaso5Sectorial";
-import { set } from "lodash";
 
 const PersonalDirecto = ({
   id,
   paso5,
   solo_lectura,
   stepNumber,
-  data_personal_directo,
+  data_personal,
   listado_estamentos,
   listado_calidades_juridicas,
-  region
+  region,
+  prefix,
+  payloadModel,
+  descripcionModelo
 }) => {
 
   // Verificar que paso5 no sea null o undefined y proporcionar valores por defecto
@@ -36,10 +38,10 @@ const PersonalDirecto = ({
   const [descripcionSaved, setDescripcionSaved] = useState(false);
 
   const itemsJustificados = [
-    { label: '01 - Personal de Planta', informado: paso5Data.sub21_total_personal_planta, justificado: paso5Data.sub21_personal_planta_justificado, por_justificar: paso5Data.sub21_personal_planta_justificar },
-    { label: '02 - Personal de Contrata', informado: paso5Data.sub21_total_personal_contrata, justificado: paso5Data.sub21_personal_contrata_justificado, por_justificar: paso5Data.sub21_personal_contrata_justificar },
-    { label: '03 - Otras Remuneraciones', informado: paso5Data.sub21_total_otras_remuneraciones, justificado: paso5Data.sub21_otras_remuneraciones_justificado, por_justificar: paso5Data.sub21_otras_remuneraciones_justificar },
-    { label: '04 - Otros Gastos en Personal', informado: paso5Data.sub21_total_gastos_en_personal, justificado: paso5Data.sub21_gastos_en_personal_justificado, por_justificar: paso5Data.sub21_gastos_en_personal_justificar },
+    { label: '01 - Personal de Planta', informado: paso5Data[`${prefix}_total_personal_planta`], justificado: paso5Data[`${prefix}_personal_planta_justificado`], por_justificar: paso5Data[`${prefix}_personal_planta_justificar`] },
+    { label: '02 - Personal de Contrata', informado: paso5Data[`${prefix}_total_personal_contrata`], justificado: paso5Data[`${prefix}_personal_contrata_justificado`], por_justificar: paso5Data[`${prefix}_personal_contrata_justificar`] },
+    { label: '03 - Otras Remuneraciones', informado: paso5Data[`${prefix}_total_otras_remuneraciones`], justificado: paso5Data[`${prefix}_otras_remuneraciones_justificado`], por_justificar: paso5Data[`${prefix}_otras_remuneraciones_justificar`] },
+    { label: '04 - Otros Gastos en Personal', informado: paso5Data[`${prefix}_total_gastos_en_personal`], justificado: paso5Data[`${prefix}_gastos_en_personal_justificado`], por_justificar: paso5Data[`${prefix}_gastos_en_personal_justificar`] },
   ];
 
   const relacion_item_calidad = {
@@ -80,8 +82,8 @@ const PersonalDirecto = ({
 
   // Efecto para agrupar datos cada vez que 'data' cambia
   useEffect(() => {
-    agruparPorCalidadJuridica(data_personal_directo);
-  }, [data_personal_directo]);
+    agruparPorCalidadJuridica(data_personal);
+  }, [data_personal]);
 
   const arregloCalidadJuridica = Object.entries(personas).map(([calidadJuridica, personas]) => {
     return { calidadJuridica, personas };
@@ -113,7 +115,7 @@ const PersonalDirecto = ({
       regiones: [
         {
           region: region,
-          'p_5_3_a_personal_directo': [{
+          [payloadModel]: [{
             calidad_juridica: calidadJuridicaObjeto.id,
           }],
         },
@@ -151,7 +153,7 @@ const PersonalDirecto = ({
       regiones: [
         {
           region: region,
-          'p_5_3_a_personal_directo': [{
+          [payloadModel]: [{
             id: idFila,
             DELETE: true
           }]
@@ -222,40 +224,40 @@ const PersonalDirecto = ({
       regiones: [
         {
           region: region,
-          'p_5_3_a_personal_directo': [{
+          [payloadModel]: [{
             calidad_juridica: calidadJuridicaSeleccionada,
             nombre_calidad_juridica: labelSeleccionado
           }]
         }
       ]
     };
-  
+
     try {
       const response = await handleUpdatePaso(id, stepNumber, payload);
-      if (response && response.data.p_5_3_a_personal_directo) {
-        const listaActualizadaPersonalDirecto = response.data.p_5_3_a_personal_directo;
+      if (response && response.data[payloadModel]) {
+        const listaActualizadaPersonal = response.data[payloadModel];
         const nuevaCalidadJuridicaDatos = {
-          ...listaActualizadaPersonalDirecto[listaActualizadaPersonalDirecto.length - 1], // Extrayendo el último elemento
+          ...listaActualizadaPersonal[listaActualizadaPersonal.length - 1], // Extrayendo el último elemento
         };
-  
+
         setPersonas(prevPersonas => {
           const nuevasPersonas = { ...prevPersonas };
           nuevasPersonas[labelSeleccionado] = nuevasPersonas[labelSeleccionado] || [];
           nuevasPersonas[labelSeleccionado].push(nuevaCalidadJuridicaDatos);
           return nuevasPersonas;
         });
-  
+
         // Limpia los campos del formulario y oculta el formulario
         setNuevaCalidadJuridica('');
         setMostrarFormularioNuevo(false);
-  
+
       } else {
         console.error("La actualización no fue exitosa:", response ? response.message : "Respuesta vacía");
       }
     } catch (error) {
       console.error("Error al agregar la nueva calidad jurídica:", error);
     }
-  };  
+  };
 
   //convertir estructura para el select
   const transformarEnOpciones = (datos, propiedadLabel) => {
@@ -323,7 +325,7 @@ const PersonalDirecto = ({
         regiones: [
           {
             region: region,
-            'p_5_3_a_personal_directo': [{
+            [payloadModel]: [{
               id: arrayNameId,
               calidad_juridica: newValue,
             }]
@@ -331,7 +333,7 @@ const PersonalDirecto = ({
         ]
       }
 
-    } else if (fieldName === 'descripcion_funciones_personal_directo') {
+    } else if (fieldName === `descripcion_funciones_personal_${descripcionModelo}`) {
       setDescripcionLoading(true);
       setDescripcionSaved(false);
       payload = {
@@ -340,7 +342,7 @@ const PersonalDirecto = ({
             region: region,
             'paso5': [{
               id: arrayNameId,
-              descripcion_funciones_personal_directo: newValue,
+              [`descripcion_funciones_personal_${descripcionModelo}`]: newValue,
             }]
           }
         ]
@@ -372,7 +374,7 @@ const PersonalDirecto = ({
           regiones: [
             {
               region: region,
-              'p_5_3_a_personal_directo': [{
+              [payloadModel]: [{
                 id: arrayNameId,
                 [fieldName]: newValue.value // Envía el valor seleccionado directamente
               }]
@@ -386,7 +388,7 @@ const PersonalDirecto = ({
           regiones: [
             {
               region: region,
-              'p_5_3_a_personal_directo': [{ id: arrayNameId, [fieldName]: personaEncontrada[fieldName] }]
+              [payloadModel]: [{ id: arrayNameId, [fieldName]: personaEncontrada[fieldName] }]
             }
           ]
         };
@@ -422,7 +424,27 @@ const PersonalDirecto = ({
     agregarPersona();
   };
 
-
+  const ColumnHeaders = ({ descripcionModelo, soloLectura }) => {
+    return (
+      <div className="row mt-3">
+        <div className="col-1"> <p className="text-sans-p-bold">N°</p> </div>
+        <div className={descripcionModelo === "directo" ? "col" : "col-2"}>
+          <p className="text-sans-p-bold">Estamento</p>
+        </div>
+        {descripcionModelo === "indirecto" && (
+          <div className="col"> <p className="text-sans-p-bold">N° de personas</p> </div>
+        )}
+        <div className="col"> <p className="text-sans-p-bold">Renta bruta mensual ($M)</p> </div>
+        {descripcionModelo === "indirecto" && (
+          <div className="col"> <p className="text-sans-p-bold">Total rentas</p> </div>
+        )}
+        <div className="col"> <p className="text-sans-p-bold">Grado <br /> (Si corresponde)</p> </div>
+        {!soloLectura && (
+          <div className="col"> <p className="text-sans-p-bold">Acción</p> </div>
+        )}
+      </div>
+    );
+  };
 
   return (
     <div className="my-4">
@@ -437,16 +459,10 @@ const PersonalDirecto = ({
                 <span className="text-sans-p-bold mt-4">Calidad Jurídica: </span>
                 <span>{calidad_juridica}</span>
               </div>
+
               {/* Encabezado para cada grupo */}
-              <div className="row mt-3">
-                <div className="col-1"> <p className="text-sans-p-bold">N°</p> </div>
-                <div className="col"> <p className="text-sans-p-bold">Estamento</p> </div>
-                <div className="col"> <p className="text-sans-p-bold">Renta bruta mensual ($M)</p> </div>
-                <div className="col"> <p className="text-sans-p-bold">Grado <br /> (Si corresponde)</p> </div>
-                {!solo_lectura && (
-                  <div className="col"> <p className="text-sans-p-bold">Acción</p> </div>
-                )}
-              </div>
+              <ColumnHeaders descripcionModelo={descripcionModelo} soloLectura={solo_lectura} />
+
               {personas.map((persona, personaIndex) => (
                 <div
                   key={persona.id}
@@ -476,6 +492,50 @@ const PersonalDirecto = ({
                       }}
                     />
                   </div>
+
+                  {descripcionModelo === "indirecto" && (
+                    <div className="col">
+                      <Controller
+                        control={control}
+                        name={`numero_personas_${persona.id}`}
+                        defaultValue={persona?.numero_personas || ''}
+                        render={({ field }) => {
+                          // Destructura las propiedades necesarias de field
+                          const { onChange, onBlur, value } = field;
+
+                          const handleChange = (valor) => {
+                            clearErrors(`numero_personas_${persona.id}`);
+                            onChange(valor);
+                            handleInputChange(persona.id, 'numero_personas', valor);
+                          };
+
+                          // Función para manejar el evento onBlur
+                          const handleBlur = async () => {
+                            const isFieldValid = await trigger(`numero_personas_${persona.id}`);
+                            if (isFieldValid) {
+                              handleSave(persona.id, 'numero_personas');
+                            }
+                            onBlur();
+                          };
+
+                          return (
+                            <InputCosto
+                              id={`numero_personas_${persona.id}`}
+                              placeholder="N° personas"
+                              value={value}
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              loading={inputStatus[`numero_personas_${persona.id}`]?.loading ?? false}
+                              saved={inputStatus[`numero_personas_${persona.id}`]?.saved ?? false}
+                              error={errors[`numero_personas_${persona.id}`]?.message}
+                              disabled={solo_lectura}
+                            />
+                          );
+                        }}
+                      />
+                    </div>
+                  )}
+
                   <div className="col pt-3">
                     <Controller
                       control={control}
@@ -523,6 +583,13 @@ const PersonalDirecto = ({
                       }}
                     />
                   </div>
+
+                  {descripcionModelo === "indirecto" && (
+                    <div className="col">
+                      <p className="text-sans-p-blue">{formatearNumero(persona.total_rentas)}</p>
+                    </div>
+                  )}
+
                   <div className="col pt-3">
                     <Controller
                       control={control}
@@ -606,8 +673,8 @@ const PersonalDirecto = ({
                 if (itemCorrespondiente) {
                   return (
                     <div key={itemIndex} className="my-4">
-                      <p className="text-sans-p-bold">Resumen de justificación de costos de personal directo: {item.label}</p>
-                      <h6 className="text-sans-h6-primary mt-3">Debes justificar el 100% del costo informado en el punto 5.1a para completar esta sección.</h6>
+                      <p className="text-sans-p-bold">Resumen de justificación de costos de personal {descripcionModelo === "directo" ? "directo" : "indirecto"}: {item.label}</p>
+                      <h6 className="text-sans-h6-primary mt-3">Debes justificar el 100% del costo informado en el punto {descripcionModelo === "directo" ? "5.1a" : "5.1b"} para completar esta sección.</h6>
                       <div className="ps-3 my-4">
                         {/* Encabezado */}
                         <div className="d-flex justify-content-between py-3 fw-bold">
@@ -677,30 +744,30 @@ const PersonalDirecto = ({
       <div className="mt-5">
         <Controller
           control={control}
-          name={`descripcion_funciones_personal_directo`}
+          name={`descripcion_funciones_personal_${descripcionModelo}`}
           defaultValue={paso5Data.descripcion_funciones_personal_directo || ''}
           render={({ field }) => {
             // Destructura las propiedades necesarias de field
             const { onChange, onBlur, value } = field;
 
             const handleChange = (e) => {
-              clearErrors(`descripcion_funciones_personal_directo`);
+              clearErrors(`descripcion_funciones_personal_${descripcionModelo}`);
               onChange(e.target.value);
               handleInputChange(paso5Data.id, 'descripcion_funciones_personal_directo', e.target.value);
             };
 
             // Función para manejar el evento onBlur
             const handleBlur = async () => {
-              const isFieldValid = await trigger(`descripcion_funciones_personal_directo`);
+              const isFieldValid = await trigger(`descripcion_funciones_personal_${descripcionModelo}`);
               if (isFieldValid) {
-                handleSave(paso5Data.id, 'descripcion_funciones_personal_directo', value);
+                handleSave(paso5Data.id, `descripcion_funciones_personal_${descripcionModelo}`, value);
               }
               onBlur();
             };
 
             return (
               <CustomTextarea
-                id={`descripcion_funciones_personal_directo`}
+                id={`descripcion_funciones_personal_${descripcionModelo}`}
                 label="Descripción de funciones"
                 placeholder="Describe las funciones asociadas a otras competencias."
                 maxLength={1100}
@@ -709,7 +776,7 @@ const PersonalDirecto = ({
                 onBlur={handleBlur}
                 loading={descripcionLoading}
                 saved={descripcionSaved}
-                error={errors[`descripcion_${paso5Data.descripcion_funciones_personal_directo?.id}`]?.message}
+                error={errors[`descripcion_funciones_personal_${descripcionModelo}`]?.message}
                 readOnly={solo_lectura}
               />
             );
