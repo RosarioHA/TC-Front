@@ -24,7 +24,6 @@ const GestionCompetencias = () => {
   const projectsPerPage = 10;
   const totalPages = Math.ceil(paginationCompetencia.count / projectsPerPage);
 
-  console.log("filteredCompetencia", filteredCompetencia)
 
   useEffect(() => {
     if (dataListCompetencia) {

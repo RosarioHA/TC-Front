@@ -26,6 +26,7 @@ export const esquemaCreacionUsuario = yup.object().shape({
     .required('Es necesario reingresar la contraseña'),
 });
 
+
 export const esquemaCreacionCompetencia = yup.object().shape({
   nombre: yup
     .string()
@@ -33,24 +34,6 @@ export const esquemaCreacionCompetencia = yup.object().shape({
     .matches(nombreCompetenciaRegex, 'Formato de nombre inválido')
     .min(3, 'El nombre debe tener al menos 3 caracteres')
     .max(200, 'El nombre no debe exceder los 200 caracteres'),
-    competencias_agrupadas: yup
-    .array()
-    .of(
-      yup.object().shape({
-        nombre: yup
-          .string()
-          .required('El nombre de la competencia agrupada es obligatorio')
-          .matches(nombreCompetenciaRegex, 'Formato de nombre inválido')
-          .min(3, 'El nombre debe tener al menos 3 caracteres')
-          .max(200, 'El nombre no debe exceder los 200 caracteres')
-      })
-    )
-    .min(2, 'Debes agregar al menos dos competencias agrupadas')
-    .test('no-duplicates', 'No se permiten nombres duplicados', function (value)
-    {
-      let nombres = value.map(v => v.nombre.trim());
-      return nombres.length === new Set(nombres).size;
-    }),
   regiones: yup.array().min(1, 'Debes seleccionar al menos una región'),
   sectores: yup.array().min(1, 'Debes seleccionar al menos un sector'),
   origen: yup.string().required('El origen de la competencia es obligatorio'),
@@ -74,3 +57,31 @@ export const esquemaCreacionCompetencia = yup.object().shape({
     .max(30, 'El plazo máximo es de 30 días.')
 });
 
+export const esquemaCompetenciaAgrupada= yup.object().shape({
+  competencias_agrupadas: yup
+    .array()
+    .of(
+      yup.object().shape({
+        nombre: yup
+          .string()
+          .required('El nombre de la competencia agrupada es obligatorio')
+          .matches(nombreCompetenciaRegex, 'Formato de nombre inválido')
+          .min(3, 'El nombre debe tener al menos 3 caracteres')
+          .max(200, 'El nombre no debe exceder los 200 caracteres')
+      })
+    )
+    .test('min-competencias', 'Debes agregar al menos dos competencias agrupadas', value => {
+      const nonEmptyValues = value.filter(v => v.nombre.trim() !== "");
+      return nonEmptyValues.length >= 2;
+    })
+    .test('no-duplicates', 'No se permiten nombres duplicados', function (value) {
+      const nonEmptyValues = value.filter(v => v.nombre.trim() !== "");
+      if (nonEmptyValues.length < 2) return true;
+      let nombres = nonEmptyValues.map(v => v.nombre.trim());
+      return nombres.length === new Set(nombres).size;
+    })
+    .test('count-empty-rows', 'Debes agregar al menos dos competencias agrupadas', value => {
+      const nonEmptyValues = value.filter(v => v.nombre.trim() !== "");
+      return nonEmptyValues.length + value.filter(v => v.nombre.trim() === "").length >= 2;
+    }),
+});
