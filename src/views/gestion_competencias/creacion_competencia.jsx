@@ -7,7 +7,7 @@ import { CheckboxRegion } from "../../components/dropdown/checkboxRegion";
 import { DropdownSelectSimple } from "../../components/dropdown/selectSimple";
 import DropdownConSecciones from "../../components/dropdown/checkbox_conSecciones_conTabla";
 import { DropdownSelectBuscadorCheck } from "../../components/dropdown/select_buscador_checkbox";
-import { esquemaCreacionCompetencia } from "../../validaciones/esquemaCrearUsuario_Competencia";
+import { esquemaCreacionCompetencia ,esquemaCompetenciaAgrupada} from "../../validaciones/esquemaCrearUsuario_Competencia";
 import { useCrearCompetencia } from "../../hooks/competencias/useCrearCompetencia";
 import { useCrearCompetenciaAgrupada } from "../../hooks/competencias/useCrearCompetenciaAgrupada";
 import { useRegion } from "../../hooks/useRegion";
@@ -103,13 +103,16 @@ const CreacionCompetencia = () =>
     }
   };
 
-  const {
-    control,
-    handleSubmit,
-    setValue,
-    formState: { errors },
-  } = useForm({
-    resolver: yupResolver(esquemaCreacionCompetencia),
+  const getCombinedSchema = (estado) => {
+    if (estado) {
+      return esquemaCompetenciaAgrupada.concat(esquemaCreacionCompetencia);
+    } else {
+      return esquemaCreacionCompetencia;
+    }
+  };
+  
+  const { control, handleSubmit, setValue, formState: { errors } } = useForm({
+    resolver: yupResolver(getCombinedSchema(estado)),
     defaultValues: initialValues,
     mode: 'onBlur',
   });
