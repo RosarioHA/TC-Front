@@ -1,5 +1,4 @@
-import PersonalIndirecto from "../../tables/PersonalIndirectoSector";
-import PersonalDirecto from "../../tables/PersonalDirectoSector";
+import PersonalSectorial from "../../tables/PersonalSector";
 
 export const Subpaso_CincoPuntoTres = (
   { id,
@@ -26,7 +25,7 @@ export const Subpaso_CincoPuntoTres = (
       <h6 className="text-sans-h6-primary mt-3">Por ejercicio directo se entenderán todas aquellas tareas y procedimientos específicos y exclusivos de la competencia. En la renta bruta se deben considerar aquellas asignaciones propias del cargo. </h6>
 
       <div className="my-4 relative-container">
-        <PersonalDirecto
+        <PersonalSectorial
           id={id}
           paso5={paso5}
           solo_lectura={solo_lectura}
@@ -47,7 +46,7 @@ export const Subpaso_CincoPuntoTres = (
       <h6 className="text-sans-h6-primary mt-3">Por personal de soporte se entenderán todas personas que realizan tareas y procedimientos indirectos a la competencia. </h6>
 
       <div className="my-4 relative-container">
-        <PersonalDirecto
+        <PersonalSectorial
           id={id}
           paso5={paso5}
           solo_lectura={solo_lectura}

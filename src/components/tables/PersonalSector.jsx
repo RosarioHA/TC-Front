@@ -8,7 +8,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { FormularioContext } from "../../context/FormSectorial";
 import { construirValidacionPaso5_Personal } from "../../validaciones/esquemaValidarPaso5Sectorial";
 
-const PersonalDirecto = ({
+const PersonalSectorial = ({
   id,
   paso5,
   solo_lectura,
@@ -336,6 +336,7 @@ const PersonalDirecto = ({
     } else if (fieldName === `descripcion_funciones_personal_${descripcionModelo}`) {
       setDescripcionLoading(true);
       setDescripcionSaved(false);
+
       payload = {
         regiones: [
           {
@@ -347,6 +348,22 @@ const PersonalDirecto = ({
           }
         ]
       }
+
+      try {
+        await handleUpdatePaso(id, stepNumber, payload);
+        setDescripcionLoading(false);
+        setDescripcionSaved(true);
+    } catch (error) {
+        console.error("Error al guardar los datos de descripción:", error);
+        if (error.response && error.response.data.errors) {
+            const serverErrors = error.response.data.errors;
+            Object.keys(serverErrors).forEach((field) => {
+                setError(field, { type: 'server', message: serverErrors[field][0] });
+            });
+        }
+        setDescripcionLoading(false);
+        setDescripcionSaved(false);
+    }
 
     } else {
 
@@ -399,9 +416,6 @@ const PersonalDirecto = ({
       await handleUpdatePaso(id, stepNumber, payload);
 
       finishSavingField(fieldId, true);
-      setDescripcionLoading(false);
-      setDescripcionSaved(true);
-
 
     } catch (error) {
       console.error("Error al guardar los datos:", error);
@@ -414,8 +428,6 @@ const PersonalDirecto = ({
       }
 
       finishSavingField(fieldId, false);
-      setDescripcionLoading(false);
-      setDescripcionSaved(false);
 
     }
   };
@@ -791,4 +803,4 @@ const PersonalDirecto = ({
   )
 }
 
-export default PersonalDirecto;
+export default PersonalSectorial;
