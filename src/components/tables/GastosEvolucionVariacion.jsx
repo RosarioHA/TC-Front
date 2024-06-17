@@ -190,39 +190,40 @@ export const GastosEvolucionVariacion = ({
                     const isLastYear = parseInt(year) === Math.max(...headers.map(Number));
                     return (
                       <td key={`${rowIndex}-${colIndex}`} className="px-1">
-                        <Controller
-                          control={control}
-                          name={`costo_${costoAnio?.id}`}
-                          defaultValue={costoAnio?.costo || ''}
-                          render={({ field }) => {
-                            const { onChange, onBlur, value } = field;
-                            const handleChange = (valor) => {
-                              onChange(valor);
-                              handleInputChange(item.id, costoAnio.id, 'costo', valor);
-                            };
-                            const handleBlur = async () => {
-                              const isFieldValid = await trigger(`costo_${costoAnio.id}`);
-                              if (isFieldValid) {
-                                handleSave(item.id, costoAnio.id, 'costo', value);
-                              }
-                              onBlur();
-                            };
-                            return (
-                              <InputCosto
-                                id={`costo_${costoAnio?.id}`}
-                                placeholder="Costo (M$)"
-                                value={costoAnio?.costo || ''}
-                                style={inputNumberStyle}
-                                disabled={solo_lectura || isLastYear}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                loading={inputStatus[`costo_${costoAnio?.id}`]?.loading ?? false}
-                                saved={inputStatus[`costo_${costoAnio?.id}`]?.saved ?? false}
-                                error={errors[`costo_${costoAnio}`]?.message}
-                              />
-                            );
-                          }}
-                        />
+                      <Controller
+  control={control}
+  name={`costo_${costoAnio?.id}`}
+  defaultValue={costoAnio?.costo || ''}
+  render={({ field }) => {
+    const { onChange, onBlur, value } = field;
+    const handleChange = (valor) => {
+      onChange(valor);
+      handleInputChange(item.id, costoAnio.id, 'costo', valor);
+    };
+    const handleBlur = async () => {
+      const isFieldValid = await trigger(`costo_${costoAnio.id}`);
+      if (isFieldValid) {
+        handleSave(item.id, costoAnio.id, 'costo', value);
+      }
+      onBlur();
+    };
+    return (
+      <InputCosto
+        id={`costo_${costoAnio?.id}`}
+        placeholder="Costo (M$)"
+        value={value}
+        style={inputNumberStyle}
+        disabled={solo_lectura || isLastYear}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        loading={inputStatus[`costo_${costoAnio?.id}`]?.loading ?? false}
+        saved={inputStatus[`costo_${costoAnio?.id}`]?.saved ?? false}
+        error={errors[`costo_${costoAnio.id}`]?.message} // Asegúrate de usar correctamente el acceso al error
+      />
+    );
+  }}
+/>
+
                       </td>
                     );
                   })}
