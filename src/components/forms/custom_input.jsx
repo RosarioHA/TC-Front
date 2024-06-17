@@ -8,7 +8,7 @@ const CustomInput = forwardRef(
     useEffect(() => {
       setInputValue(initialValue || '');
       setTotalCharacters(initialValue?.length || 0);
-    }, [initialValue]);
+    }, [initialValue, inputValue]);
 
     const handleInputChange = (e) => {
       let value = e.target.value;  // Use `let` instead of `const` to allow reassignment
@@ -28,7 +28,7 @@ const CustomInput = forwardRef(
       if (saved) return <i className="material-symbols-outlined text-success">check</i>;
       return null;
     };
-
+    
     return (
       <div className="d-flex flex-column input-container col-11">
         {readOnly ? (

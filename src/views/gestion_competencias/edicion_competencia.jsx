@@ -53,6 +53,7 @@ const EdicionCompetencia = () =>
   const [ selectedReadOnlyOptions, setSelectedReadOnlyOptions ] = useState([]);
   const [ sectorSeleccionado, setSectorSeleccionado ] = useState(null);
   const [ regionSeleccionada, setRegionSeleccionada ] = useState(null);
+
   const sectorIds = useMemo(() =>
   {
     const savedSectorIds = competencia?.sectores?.map(sector => sector.id) || [];
@@ -126,7 +127,7 @@ const EdicionCompetencia = () =>
     {
       // Inicializar el formulario con los detalles de la competencia
       setValue("nombre", competencia.nombre || "");
-      setValue("competencias_agrupadas", competencia.competencias_agrupadas || null)
+      setValue("competencias_agrupadas", competencia.competencias_agrupadas || []);
       setValue("regiones", competencia.regiones || null);
       setValue("ambito_competencia", competencia.ambito_competencia || null);
       setValue("origen", competencia.origen || null);
@@ -222,17 +223,23 @@ const EdicionCompetencia = () =>
     updateHasChanged(true);
   };
 
+
   const onSubmit = async (formData) =>
   {
     try
     {
       const sectorIds = sectoresSeleccionados.map(sector => sector.value);
+      const competenciasAgrupadas = formData.competencias_agrupadas.map(comp => ({
+        id: comp.id,
+        nombre: comp.nombre
+      }));
       const dataToSend = {
         ...formData,
         sectores: sectorIds,
-        ...usuariosSeleccionados
+        ...usuariosSeleccionados,
+        competencias_agrupadas: competenciasAgrupadas,
       };
-
+      console.log(dataToSend)
       await updateCompetencia(dataToSend);
       updateEditMode(false);
       updateHasChanged(false);
@@ -358,20 +365,11 @@ const EdicionCompetencia = () =>
             />
             <div className="my-4">
               <div className="pb-4">Lista de competencias del grupo</div>
-              <Controller
-                name="competencias_agrupadas"
-                control={control}
-                render={({ field }) => (
                   <ListaNombres
-                    control={control}
-                    errors={errors}
                     setValue={setValue}
                     readOnly={!editMode}
                     competenciasAgrupadas={competencia?.competencias_agrupadas}
-                    {...field}
                   />
-                )}
-              />
             </div>
           </div>
         )}

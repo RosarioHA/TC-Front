@@ -1,70 +1,109 @@
 import { useState, useEffect } from 'react';
 import CustomInput from '../forms/custom_input';
-import { Controller } from 'react-hook-form';
 
-export const ListaNombres = ({ control, errors, setValue, competenciasAgrupadas, readOnly  }) => {
-  const [rows, setRows] = useState([{ nombre: '' }, { nombre: '' }]);
-  const [duplicateNames, setDuplicateNames] = useState([]);
+export const ListaNombres = ({ readOnly, setValue, competenciasAgrupadas }) =>
+{
+  const [rows, setRows] = useState([
+    { id: 1, nombre: '' },
+    { id: 2, nombre: '' },
+    ...competenciasAgrupadas?.map((comp, index) => ({ id: index + 3, nombre: comp.nombre })) || [],
+  ]);
+  const [ errors, setErrors ] = useState({});
 
-  const handleAddRow = () => {
-    setRows([...rows, { nombre: '' }]);
+  const handleNombreChange = (id, value) =>
+  {
+    setRows(rows => rows?.map(row => (row.id === id ? { ...row, nombre: value } : row)));
   };
-  useEffect(() => {
-    if (competenciasAgrupadas) {
-      setRows(competenciasAgrupadas);
-      setValue('competencias_agrupadas', competenciasAgrupadas);
-    }
-  }, [competenciasAgrupadas, setValue]);
 
-  const handleRemoveRow = (index) => {
-    if (rows.length > 2) {
+  const handleBlur = async (id) =>
+  {
+    const newErrors = { ...errors };
+
+    if (rows[ id - 1 ].nombre.trim() === '')
+    {
+      newErrors[ id ] = 'El nombre de la competencia agrupada es obligatorio';
+    } else if (rows[ id - 1 ].nombre.trim().length < 3)
+    {
+      newErrors[ id ] = 'El nombre debe tener al menos 3 caracteres';
+    } else
+    {
+      delete newErrors[ id ];
+    }
+
+    // Check if any nombre is empty
+    const emptyCount = rows.filter(row => row.nombre.trim() === '').length;
+    if (emptyCount > 1)
+    {
+      delete newErrors.global;
+    } else
+    {
+      // Check for duplicate names
+      const nombres = rows?.map(row => row.nombre.trim().toLowerCase());
+      const hasDuplicates = nombres.some((nombre, index) => nombres.indexOf(nombre) !== index);
+
+      if (hasDuplicates)
+      {
+        newErrors.global = 'No se permiten nombres duplicados';
+      } else
+      {
+        delete newErrors.global;
+      }
+    }
+
+    setErrors(newErrors);
+  };
+
+  const handleFocus = (id) =>
+  {
+    const newErrors = { ...errors };
+    delete newErrors[ id ];
+    setErrors(newErrors);
+  };
+
+  const handleAddRow = () =>
+  {
+    const nombres = rows?.map(row => row.nombre.trim().toLowerCase());
+    if (nombres.some((nombre, index) => nombres.indexOf(nombre) !== index))
+    {
+      setErrors({ global: 'No se permiten nombres duplicados' });
+      return;
+    }
+
+    const newRowId = rows.length + 1;
+    setRows([ ...rows, { id: newRowId, nombre: '' } ]);
+  };
+
+  const handleRemoveRow = (index) =>
+  {
+    if (rows.length > 1)
+    {
       setRows(rows.filter((_, i) => i !== index));
     }
   };
 
-  const handleChange = (index, event) => {
-    const updatedRows = rows.map((row, i) => (i === index ? { ...row, nombre: event.target.value } : row));
-    setRows(updatedRows);
-  };
-  
-  useEffect(() => {
-    const checkDuplicates = (updatedRows) => {
-      const nonEmptyNames = updatedRows.filter(row => row.nombre.trim() !== "").map(row => row.nombre.trim().toLowerCase());
-      const duplicates = nonEmptyNames.filter((name, index) => nonEmptyNames.indexOf(name) !== index);
-      setDuplicateNames(duplicates);
-    };
-    checkDuplicates(rows);
-  }, [rows]);
-
-  useEffect(() => {
+  useEffect(() =>
+  {
     setValue('competencias_agrupadas', rows);
-  }, [rows, setValue]);
+  }, [ rows, setValue ]);
 
   return (
     <>
-      {rows.map((row, index) => (
-        <div key={index} className={`row ${index % 2 === 0 ? 'white-line' : 'neutral-line'} pt-4 col-11`}>
-          <div className="d-flex align-items-center mb-2 mt-2">
-            <span className="mx-3 fw-bold mb-auto">{index + 1}</span>
-            <Controller
-              control={control}
-              name={`competencias_agrupadas[${index}].nombre`}
-              render={({ field }) => (
-                <CustomInput
-                  label='Nombre de la Competencia (Obligatorio)'
-                  placeholder={row?.nombre || "Escribe el nombre de la competencia"}
-                  id={`nombre-${index}`}
-                  maxLength={200}
-                  error={errors?.competencias_agrupadas?.[index]?.nombre?.message || (duplicateNames.includes(row.nombre.trim().toLowerCase()) && 'Nombre duplicado')}
-                  value={row.nombre}
-                  readOnly={readOnly}
-                  onChange={(event) => handleChange(index, event)}
-                  {...field}
-                />
-              )}
-            />
-          </div>
-          {rows.length >= 3 && !readOnly &&(
+      {rows?.map((row, index) => (
+        <div key={index} className={`row ${index % 2 === 0 ? 'white-line' : 'neutral-line'} py-4 col-11`}>
+          <span className="mx-3 fw-bold mb-auto"></span>
+          <CustomInput
+            label={`Nombre de la Competencia (Obligatorio)`}
+            placeholder={row.nombre || "Escribe el nombre de la competencia"}
+            id={`nombre-${row.id}`}
+            maxLength={200}
+            value={row.nombre}
+            onChange={(value) => handleNombreChange(row.id, value)}
+            onBlur={() => handleBlur(row.id)}
+            onFocus={() => handleFocus(row.id)}
+            readOnly={readOnly}
+          />
+          {errors[ row.id ] && <div className="text-danger">{errors[ row.id ]}</div>}
+          {rows.length > 2 && !readOnly && (
             <div className="d-flex justify-content-end col-12 me-5 pe-4">
               <button type="button" className="btn-terciario-ghost" onClick={() => handleRemoveRow(index)}>
                 <i className="material-symbols-rounded mx-1">delete</i>
@@ -74,10 +113,8 @@ export const ListaNombres = ({ control, errors, setValue, competenciasAgrupadas,
           )}
         </div>
       ))}
-      {errors.competencias_agrupadas?.message && (
-        <div className="text-sans-h6-darkred mt-2 mb-0">{errors.competencias_agrupadas.message}</div>
-      )}
-          {!readOnly && (
+      {errors.global && <div className="text-danger mb-2">{errors.global}</div>}
+      {!readOnly && (
         <button type="button" className="btn-secundario-s d-flex my-3" onClick={handleAddRow}>
           <i className="material-symbols-rounded me-2">add</i>
           <p className="mb-0 text-decoration-underline">Agregar Competencia</p>

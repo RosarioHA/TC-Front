@@ -1,13 +1,13 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useForm, Controller} from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import CustomInput from "../../components/forms/custom_input";
 import { CheckboxRegion } from "../../components/dropdown/checkboxRegion";
 import { DropdownSelectSimple } from "../../components/dropdown/selectSimple";
 import DropdownConSecciones from "../../components/dropdown/checkbox_conSecciones_conTabla";
 import { DropdownSelectBuscadorCheck } from "../../components/dropdown/select_buscador_checkbox";
-import { esquemaCreacionCompetencia ,esquemaCompetenciaAgrupada} from "../../validaciones/esquemaCrearUsuario_Competencia";
+import { esquemaCreacionCompetencia, esquemaCompetenciaAgrupada } from "../../validaciones/esquemaCrearUsuario_Competencia";
 import { useCrearCompetencia } from "../../hooks/competencias/useCrearCompetencia";
 import { useCrearCompetenciaAgrupada } from "../../hooks/competencias/useCrearCompetenciaAgrupada";
 import { useRegion } from "../../hooks/useRegion";
@@ -103,14 +103,17 @@ const CreacionCompetencia = () =>
     }
   };
 
-  const getCombinedSchema = (estado) => {
-    if (estado) {
+  const getCombinedSchema = (estado) =>
+  {
+    if (estado)
+    {
       return esquemaCompetenciaAgrupada.concat(esquemaCreacionCompetencia);
-    } else {
+    } else
+    {
       return esquemaCreacionCompetencia;
     }
   };
-  
+
   const { control, handleSubmit, setValue, formState: { errors } } = useForm({
     resolver: yupResolver(getCombinedSchema(estado)),
     defaultValues: initialValues,
@@ -118,10 +121,12 @@ const CreacionCompetencia = () =>
   });
 
   //detecta cambios sin guardar en el formulario
-  function handleOnChange(event) {
+  function handleOnChange(event)
+  {
     const data = new FormData(event.currentTarget);
-    const formHasChanged = Array.from(data.entries()).some(([name, value]) => {
-      const initialValue = initialValues[name];
+    const formHasChanged = Array.from(data.entries()).some(([ name, value ]) =>
+    {
+      const initialValue = initialValues[ name ];
       return value !== String(initialValue);
     });
     setHasChanged(formHasChanged);
@@ -384,17 +389,8 @@ const CreacionCompetencia = () =>
                   />
                   <div className="my-4">
                     <div className="pb-4">Lista de competencias del grupo</div>
-                    <Controller
-                      name="competencias_agrupadas"
-                      control={control}
-                      render={({ field }) => (
-                        <ListaNombres
-                          control={control}
-                          errors={errors}
-                          setValue={setValue}
-                          {...field}
-                        />
-                      )}
+                    <ListaNombres
+                      setValue={setValue}
                     />
                   </div>
                 </div>
