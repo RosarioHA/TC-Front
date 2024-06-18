@@ -1,6 +1,5 @@
 import axios from 'axios' ; 
 
-
 export const apiTransferenciaCompentencia = axios.create({
   baseURL: import.meta.env.VITE_REACT_APP_API_URL,
 }); 
@@ -27,12 +26,14 @@ apiTransferenciaCompentencia.interceptors.response.use(
     if (error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       const refreshToken = localStorage.getItem('refreshToken');
+      console.log("API refresh token: ", refreshToken)
+
 
       try {
-        const response = await axios.post('api/token/refresh/', { refresh: refreshToken });
-        const newAccessToken = response.data.access;
-        localStorage.setItem('userToken', newAccessToken);
-        originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
+        const tokenResponse = await apiTransferenciaCompentencia.post('/refresh_token/', { refresh_token: refreshToken });
+        const { access_token } = tokenResponse.data;
+        localStorage.setItem('userToken', access_token);
+        originalRequest.headers['Authorization'] = `Bearer ${access_token}`;
         return apiTransferenciaCompentencia(originalRequest);
       } catch (e) {
         console.error('Error al intentar refrescar el token:', e);
