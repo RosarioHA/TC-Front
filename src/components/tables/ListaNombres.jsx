@@ -53,11 +53,22 @@ export const ListaNombres = ({ readOnly, setValue, competenciasAgrupadas, onDele
 
   const handleAddRow = () => {
     const nombres = rows?.map(row => row.nombre.trim().toLowerCase());
+  
+    // Verificar si hay nombres duplicados
     if (nombres.some((nombre, index) => nombres.indexOf(nombre) !== index)) {
       setErrors({ global: 'No se permiten nombres duplicados' });
       return;
     }
-    setRows([...rows, { nombre: '' }]);
+  
+    // Agregar una nueva fila
+    if (competenciasAgrupadas) {
+      // Estamos editando una competencia existente
+      setRows([...rows, { nombre: '' }]);
+    } else {
+      // Estamos creando una nueva competencia
+      const newId = Math.max(...rows.map(row => row.id), 0) + 1;
+      setRows([...rows, { id: newId, nombre: '' }]);
+    }
   };
 
   const handleRemoveRow = (index) => {
