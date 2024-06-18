@@ -100,7 +100,7 @@ const ResumenOS_Gore = () => {
       {!observaciones.observacion_enviada && (
         <>
           <h2 className="text-sans-h2">Esta todo listo para que envies las observaciones</h2>
-          <p className="text-sans-p">Asegurate que las observaciones que ingresaste son suficientes, ya que una vez que las envíes, no podrás editarlas.</p>
+          <p className="text-sans-p">Asegúrate que las observaciones que ingresaste son suficientes, ya que una vez que las envíes, no podrás editarlas.</p>
         </>
       )}
 			<div className="d-flex justify-content-between p-2 mb-5 pb-5 mt-5">

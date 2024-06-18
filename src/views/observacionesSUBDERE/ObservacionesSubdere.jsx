@@ -3,6 +3,8 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { useCompetencia } from "../../hooks/competencias/useCompetencias";
 import { useEtapa3 } from "../../hooks/minutaDIPRES/useEtapa3";
 import { EncabezadoFormularios } from "../../components/layout/EncabezadoFormularios";
+import { SubirArchivo } from "../../components/commons/subirArchivo";
+import CustomTextarea from "../../components/forms/custom_textarea";
 
 const ObservacionesSubdere = () => {
   const [ etapaOmitida, setEtapaOmitida ] = useState(null);
@@ -124,6 +126,35 @@ const ObservacionesSubdere = () => {
       </div>
       <div className="d-flex mb-4">
         <p className="text-sans-p">Fecha última modificación:</p><p className="text-sans-p-bold ms-2">{competenciaDetails?.etapa2?.fecha_ultima_modificacion}</p>
+      </div>
+
+        {/* DOCUMENTOS ANTECEDENTES ADICIONALES SECTOR:
+        aqui el usuario SUBDERE envia sus AA sobre cada Sector de la competencia
+        pendiente conecciones PATCH con el backend*/}
+      <div className="my-4">
+        <p className="text-sans-h5 mb-1">Antecedentes Adicionales de sector (Opcional)</p>
+        <p className="text-sans-h6">Máximo 1 archivo por sector, peso máximo 20MB, formato PDF.</p>
+        {competenciaDetails?.sectores?.map((sector) => (
+          <div key={sector.id}>
+            <p>{sector.nombre}</p>
+            <div>
+              <div className="d-flex justify-content-between py-3 fw-bold">
+                <div className="d-flex mb-2">
+                  <div className="ms-4">#</div>
+                  <div className="ms-5">Documento</div>
+                </div>
+                <div className="me-5">Acción</div>
+              </div>
+            </div>
+              <SubirArchivo/>
+            <div className="my-4">
+              <CustomTextarea
+                label="Descripción del archivo adjunto (Opcional)"
+                placeholder="Describe el archivo adjunto"
+              />
+            </div>
+          </div>
+        ))}
       </div>
 
       {observacionesEnviadas && (

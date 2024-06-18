@@ -98,7 +98,7 @@ const ObservacionesSubdereDipres = () => {
       ) : (
         <SuccessOSminutaDIPRES 
         idCompetencia={competenciaDetails?.id}
-        mensaje="Para continuar con la sigueinte etapa del proceso asegurate de subir el oficio que notifica al grupo de usuarios GORE."
+        mensaje="Para continuar con la sigueinte etapa del proceso asegúrate de subir el oficio que notifica al grupo de usuarios GORE."
         />
       )}
 
