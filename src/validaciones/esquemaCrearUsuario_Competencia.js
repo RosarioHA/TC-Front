@@ -56,18 +56,3 @@ export const esquemaCreacionCompetencia = yup.object().shape({
     .min(15, 'El plazo mínimo es de 15 días.')
     .max(30, 'El plazo máximo es de 30 días.')
 });
-
-export const esquemaCompetenciaAgrupada = yup.object().shape({
-  competencias_agrupadas: yup
-    .array()
-    .of(
-      yup.object().shape({
-        nombre: yup
-          .string()
-          .required('El nombre de la competencia agrupada es obligatorio')
-          .matches(nombreCompetenciaRegex, 'Formato de nombre inválido')
-          .min(3, 'El nombre debe tener al menos 3 caracteres')
-          .max(200, 'El nombre no debe exceder los 200 caracteres')
-      })
-    )
-});
