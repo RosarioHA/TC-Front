@@ -326,6 +326,14 @@
   line-height: 30px;
 }
 
+.text-sans-m-semibold-greyc {
+  font-family: "Roboto";
+  color: #656565;
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 30px;
+}
+
 .text-sans-p-semibold {
   font-family: "Roboto";
   color: #373737;
@@ -448,55 +456,6 @@
   background-color: #FFF;
   color: #0F69C4;
   border: 2px solid #0F69C4;
-}
-
-.btn-secundario-s-round {
-  width: -moz-fit-content;
-  width: fit-content;
-  background-color: transparent;
-  color: #0F69C4;
-  border: 2px solid #0F69C4;
-  display: flex;
-  padding: 10px;
-  text-align: center;
-  font-family: Roboto;
-  display: flex;
-  font-weight: 700;
-  font-size: 16px;
-  justify-content: center;
-  align-items: center;
-  background-color: #FFF;
-  border-radius: 30px;
-  padding: 15px;
-}
-.btn-secundario-s-round span.material-symbols-outlined {
-  color: #0F69C4;
-}
-
-.btn-secundario-s-round:hover, .btn-secundario-s-round:focus {
-  background-color: #0F69C4;
-  color: #FFF;
-}
-.btn-secundario-s-round:hover span.material-symbols-outlined, .btn-secundario-s-round:focus span.material-symbols-outlined {
-  color: #FFF;
-}
-
-.btn-secundario-s-round.active {
-  background-color: #0F69C4;
-  color: #FFF;
-}
-.btn-secundario-s-round.active span.material-symbols-outlined {
-  color: #FFF;
-}
-
-.btn-secundario-s-round.disabled {
-  background-color: #656565;
-  color: #FFF;
-  opacity: 0.7;
-  border: 2px solid #656565;
-}
-.btn-secundario-s-round.disabled span.material-symbols-outlined {
-  color: #656565;
 }
 
 .btn-secundario-s {
