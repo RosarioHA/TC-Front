@@ -111,6 +111,7 @@ const ResumenOS = () => {
         aqui usuario SUBDERE ve los AA subidos por el sector correspondiente
         pendiente conecciones GET con el backend*/}
       <div className="my-4">
+        <p className="text-sans-h5 mb-1">Antecedentes Adicionales subidos por el sector</p>
         <div>
           <div className="d-flex justify-content-between py-3 fw-bold">
             <div className="d-flex mb-2">
@@ -120,11 +121,14 @@ const ResumenOS = () => {
             <div className="me-5">Acción</div>
           </div>
         </div>
-          <SubirArchivo/>
+          <SubirArchivo
+            readOnly={true}
+          />
         <div className="my-4">
           <CustomTextarea
             label="Descripción del archivo adjunto (Opcional)"
             placeholder="Describe el archivo adjunto"
+            readOnly={true}
           />
         </div>
         <p className="text-sans-p">

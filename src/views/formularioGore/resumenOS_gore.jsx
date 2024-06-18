@@ -2,6 +2,7 @@ import { useContext, useEffect } from "react";
 import { FormGOREContext } from "../../context/FormGore";
 import { useObservacionesGORE } from "../../hooks/fomularioGore/useObSubdereGore";
 import CustomTextarea from "../../components/forms/custom_textarea";
+import { SubirArchivo } from "../../components/commons/subirArchivo";
 import successIcon from '../../static/icons/success.svg';
 import { useNavigate } from "react-router-dom";
 
@@ -103,6 +104,37 @@ const ResumenOS_Gore = () => {
           <p className="text-sans-p">Asegúrate que las observaciones que ingresaste son suficientes, ya que una vez que las envíes, no podrás editarlas.</p>
         </>
       )}
+
+      {/* DOCUMENTOS ANTECEDENTES ADICIONALES SECTOR:
+      aqui usuario SUBDERE ve los AA subidos por el sector correspondiente
+      pendiente conecciones GET con el backend*/}
+      <div className="my-4">
+        <p className="text-sans-h5 mb-1">Antecedentes Adicionales subidos por GORE</p>
+        <div>
+          <div className="d-flex justify-content-between py-3 fw-bold">
+            <div className="d-flex mb-2">
+              <div className="ms-4">#</div>
+              <div className="ms-5">Documento</div>
+            </div>
+            <div className="me-5">Acción</div>
+          </div>
+        </div>
+          <SubirArchivo
+            readOnly={true}
+          />
+        <div className="my-4">
+          <CustomTextarea
+            label="Descripción del archivo adjunto (Opcional)"
+            placeholder="Describe el archivo adjunto"
+            readOnly={true}
+          />
+        </div>
+        <p className="text-sans-p">
+          Asegúrate que los datos ingresados son correctos, ya que una vez que envíes el formulario, 
+          no podrás editarlo a menos que SUBDERE requiera información adicional.</p>
+      </div>
+
+
 			<div className="d-flex justify-content-between p-2 mb-5 pb-5 mt-5">
 				<button className="d-flex btn-secundario-s"  onClick={handleBackButtonClick}>
 					<i className="material-symbols-rounded me-2">arrow_back_ios</i>
