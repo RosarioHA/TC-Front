@@ -53,7 +53,6 @@ const EdicionCompetencia = () =>
   const [ selectedReadOnlyOptions, setSelectedReadOnlyOptions ] = useState([]);
   const [ sectorSeleccionado, setSectorSeleccionado ] = useState(null);
   const [ regionSeleccionada, setRegionSeleccionada ] = useState(null);
-
   const sectorIds = useMemo(() =>
   {
     const savedSectorIds = competencia?.sectores?.map(sector => sector.id) || [];
@@ -223,7 +222,6 @@ const EdicionCompetencia = () =>
     updateHasChanged(true);
   };
 
-
   const onSubmit = async (formData) =>
   {
     try
@@ -231,8 +229,13 @@ const EdicionCompetencia = () =>
       const sectorIds = sectoresSeleccionados.map(sector => sector.value);
       const competenciasAgrupadas = formData.competencias_agrupadas.map(comp => ({
         id: comp.id,
-        nombre: comp.nombre
+        nombre: comp.nombre,
+        competencias: id,
       }));
+      console.log(competenciasAgrupadas)
+
+
+
       const dataToSend = {
         ...formData,
         sectores: sectorIds,
@@ -323,6 +326,24 @@ const EdicionCompetencia = () =>
     }
   }, [ competencia, editMode ]);
 
+  const handleDeleteCompetenciaAgrupada = (id) =>
+  {
+    const competenciasAgrupadas = competencia.competencias_agrupadas.map(comp =>
+    {
+      if (comp.id === id)
+      {
+        return { ...comp, DELETE: true };
+      }
+      return comp;
+    });
+
+    const dataToSend = {
+      competencias_agrupadas: competenciasAgrupadas
+    };
+
+    updateCompetencia(dataToSend);
+  };
+
   return (
     <div className="container col-10 my-4">
       <h2 className="text-sans-h2 mb-3">Gestión de Competencias</h2>
@@ -358,6 +379,7 @@ const EdicionCompetencia = () =>
                   maxLength={200}
                   name="nombre"
                   error={errors.nombre?.message}
+                  initialValue={competencia.nombre}
                   readOnly={!editMode}
                   {...field}
                 />
@@ -365,11 +387,13 @@ const EdicionCompetencia = () =>
             />
             <div className="my-4">
               <div className="pb-4">Lista de competencias del grupo</div>
-                  <ListaNombres
-                    setValue={setValue}
-                    readOnly={!editMode}
-                    competenciasAgrupadas={competencia?.competencias_agrupadas}
-                  />
+              <ListaNombres
+                name="competencias_agrupadas"
+                readOnly={!editMode}
+                setValue={setValue}
+                competenciasAgrupadas={competencia?.competencias_agrupadas || []}
+                onDelete={handleDeleteCompetenciaAgrupada}
+              />
             </div>
           </div>
         )}
@@ -386,6 +410,7 @@ const EdicionCompetencia = () =>
                   name="nombre"
                   maxLength={200}
                   readOnly={!editMode}
+                  initialValue={competencia.nombre}
                   error={errors.nombre?.message}
                   {...field}
 

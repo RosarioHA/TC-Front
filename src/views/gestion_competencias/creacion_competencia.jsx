@@ -7,7 +7,7 @@ import { CheckboxRegion } from "../../components/dropdown/checkboxRegion";
 import { DropdownSelectSimple } from "../../components/dropdown/selectSimple";
 import DropdownConSecciones from "../../components/dropdown/checkbox_conSecciones_conTabla";
 import { DropdownSelectBuscadorCheck } from "../../components/dropdown/select_buscador_checkbox";
-import { esquemaCreacionCompetencia, esquemaCompetenciaAgrupada } from "../../validaciones/esquemaCrearUsuario_Competencia";
+import { esquemaCreacionCompetencia } from "../../validaciones/esquemaCrearUsuario_Competencia";
 import { useCrearCompetencia } from "../../hooks/competencias/useCrearCompetencia";
 import { useCrearCompetenciaAgrupada } from "../../hooks/competencias/useCrearCompetenciaAgrupada";
 import { useRegion } from "../../hooks/useRegion";
@@ -88,6 +88,7 @@ const CreacionCompetencia = () =>
   const [ errorArchivo, setErrorArchivo ] = useState("");
   const [ activeButton, setActiveButton ] = useState(null);
   const [ estado, setEstado ] = useState(null);
+  
 
   const history = useNavigate();
   const handleBackButtonClick = () =>
@@ -103,35 +104,25 @@ const CreacionCompetencia = () =>
     }
   };
 
-  const getCombinedSchema = (estado) =>
-  {
-    if (estado)
-    {
-      return esquemaCompetenciaAgrupada.concat(esquemaCreacionCompetencia);
-    } else
-    {
-      return esquemaCreacionCompetencia;
-    }
-  };
+
 
   const { control, handleSubmit, setValue, formState: { errors } } = useForm({
-    resolver: yupResolver(getCombinedSchema(estado)),
+    resolver: yupResolver(esquemaCreacionCompetencia),
     defaultValues: initialValues,
     mode: 'onBlur',
   });
 
-  //detecta cambios sin guardar en el formulario
-  function handleOnChange(event)
-  {
-    const data = new FormData(event.currentTarget);
-    const formHasChanged = Array.from(data.entries()).some(([ name, value ]) =>
-    {
-      const initialValue = initialValues[ name ];
-      return value !== String(initialValue);
+  const handleOnChange = (event) => {
+    const { name, value } = event.target;
+    setValue(name, value); // Actualiza el valor en react-hook-form
+    const formHasChanged = Object.entries(initialValues).some(([fieldName, fieldValue]) => {
+      return fieldName === name && value !== String(fieldValue);
     });
     setHasChanged(formHasChanged);
     updateHasChanged(formHasChanged);
-  }
+  };
+
+
   useEffect(() =>
   {
     // Establece la fecha máxima permitida como la fecha actual
@@ -384,9 +375,11 @@ const CreacionCompetencia = () =>
                         maxLength={200}
                         error={errors.nombre?.message}
                         {...field}
+                        initialValue={field.value}  // Pasar el valor inicial
                       />
                     )}
                   />
+                  {console.log(initialValues)}
                   <div className="my-4">
                     <div className="pb-4">Lista de competencias del grupo</div>
                     <ListaNombres
@@ -408,6 +401,7 @@ const CreacionCompetencia = () =>
                         placeholder="Escribe el nombre de la competencia"
                         id="nombre"
                         maxLength={200}
+                        initialValue={field.value} 
                         error={errors.nombre?.message}
                         {...field}
                       />
