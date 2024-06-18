@@ -189,7 +189,7 @@ const ResumenSectorial = () =>
               // readOnly={solo_lectura}
               />
               <p className="text-sans-h6 mt-2">
-                Asegurate que los datos ingresados son correctos, ya que una vez que envíes el formulario, no podrás editarlo a menos que SUBDERE requiera información adicional.
+               Asegúrate que los datos ingresados son correctos, ya que una vez que envíes el formulario, no podrás editarlo a menos que SUBDERE requiera información adicional.
               </p>
             </div>
           </div>

@@ -100,7 +100,6 @@ const PersonalSectorial = ({
   });
 
 
-  // Lógica para agregar una nueva persona a calidad juridica existente
   const agregarPersona = async (calidadJuridicaLabel) => {
     // Busca el objeto correspondiente en listado_calidades_juridicas basado en el label
     const calidadJuridicaObjeto = listado_calidades_juridicas.find(cj => cj.calidad_juridica === calidadJuridicaLabel);
@@ -111,12 +110,24 @@ const PersonalSectorial = ({
       return; // Termina la ejecución si no se encuentra la calidad jurídica
     }
 
+    // Encuentra el ID del costo asociado con la última persona de la misma calidad jurídica
+    const ultimaPersonaConCalidad = personas[calidadJuridicaLabel].slice(-1)[0];
+    const costoId = ultimaPersonaConCalidad ? ultimaPersonaConCalidad.costos : null;
+
+    // Si no existe un costo previo, manejar adecuadamente la situación
+    if (!costoId) {
+      console.error('No se encontró un costo asociado previo para esta calidad jurídica:', calidadJuridicaLabel);
+      // Considerar si se debe continuar sin un costo o manejar de otra manera
+      return;
+    }
+
     const payload = {
       regiones: [
         {
           region: region,
           [payloadModel]: [{
             calidad_juridica: calidadJuridicaObjeto.id,
+            costos: costoId // Asigna el costo encontrado al nuevo registro
           }],
         },
       ],
@@ -125,8 +136,8 @@ const PersonalSectorial = ({
     try {
       const response = await handleUpdatePaso(id, stepNumber, payload);
 
-      if (response && response.data.p_5_3_a_personal_directo) {
-        const listaActualizadaPersonal = response.data.p_5_3_a_personal_directo;
+      if (response && response.data[payloadModel]) {
+        const listaActualizadaPersonal = response.data[payloadModel];
 
         const nuevaPersona = {
           ...listaActualizadaPersonal[listaActualizadaPersonal.length - 1], // Extrayendo el último elemento
@@ -145,6 +156,7 @@ const PersonalSectorial = ({
       console.error("Error al agregar la nueva calidad jurídica:", error);
     }
   };
+
 
 
   // Lógica para eliminar una fila de un organismo

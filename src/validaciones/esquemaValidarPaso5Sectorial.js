@@ -53,7 +53,6 @@ export const construirValidacionPaso5_2evolucion = (modeloCostos) => {
         .number()
         .typeError('El costo debe ser un número')
         .integer('El costo debe ser un número entero sin decimales')
-        .nullable(true) // Esto permite que el valor sea null, útil si el costo puede estar vacío
         .required('El costo es obligatorio');
     });
   });

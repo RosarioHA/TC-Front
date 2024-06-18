@@ -108,27 +108,56 @@ const ObservacionesSubdereGore = () => {
         </div>
 
         {/* MINUTA DIPRES */}
-        <div className="mt-4 border-bottom pb-3">
+        <div className="mt-4 border-bottom">
         <h2 className="text-sans-25 mt-4 mb-4">Minuta DIPRES</h2>
           <SubirArchivo
             readOnly={true}
             archivoDescargaUrl={competenciaDetails?.etapa5?.archivo_minuta_etapa5}
             tituloDocumento="Minuta DIPRES"
           />
+
+          <div className="my-4">
+            <CustomTextarea 
+              label="Observaciones (Opcional)"
+              placeholder="Escribe tus observaciones de este paso del formulario"
+              rows={6}
+              maxLength={500}
+              value={observacionMinutaDipres}
+              onChange={(e) => setObservacionMinutaDipres(e.target.value)}
+              readOnly={observacionesEnviadas}
+              onBlur={handleGuardarObservacion}
+              loading={loadingPatch}
+            />
+          </div>
         </div>
 
-        <div className="mt-5 mb-5">
-          <CustomTextarea 
-            label="Observaciones (Opcional)"
-            placeholder="Escribe tus observaciones de este paso del formulario"
-            rows={6}
-            maxLength={500}
-            value={observacionMinutaDipres}
-            onChange={(e) => setObservacionMinutaDipres(e.target.value)}
-            readOnly={observacionesEnviadas}
-            onBlur={handleGuardarObservacion}
-            loading={loadingPatch}
-          />
+        {/* DOCUMENTOS ANTECEDENTES ADICIONALES GORE:
+        aqui el usuario SUBDERE envia sus AA sobre cada Region de la competencia
+        pendiente conecciones PATCH con el backend*/}
+        <div className="my-4">
+          <p className="text-sans-h5 mb-1">Antecedentes Adicionales de GORE (Opcional)</p>
+          <p className="text-sans-h6">Máximo 1 archivo por sector, peso máximo 20MB, formato PDF.</p>
+          {competenciaDetails?.nombres_regiones?.map((region) => (
+            <div key={region.id}>
+              <p>{region.nombre}</p>
+              <div>
+                <div className="d-flex justify-content-between py-3 fw-bold">
+                  <div className="d-flex mb-2">
+                    <div className="ms-4">#</div>
+                    <div className="ms-5">Documento</div>
+                  </div>
+                  <div className="me-5">Acción</div>
+                </div>
+              </div>
+                <SubirArchivo/>
+              <div className="my-4">
+                <CustomTextarea
+                  label="Descripción del archivo adjunto (Opcional)"
+                  placeholder="Describe el archivo adjunto"
+                />
+              </div>
+            </div>
+          ))}
         </div>
 
         {!observacionesEnviadas && (

@@ -1,11 +1,11 @@
 export const Avance = ({ avance }) => {
   if (!avance) {
     // Manejar el caso en que avance no esté definido
-    return <div>Datos de avances No disponible</div>;
+    return <div>Datos de avances No disponibles</div>;
   }
 
   const [completados, total] = avance.split('/').map(Number);
-  const esCompleto = completados === total;
+  const esCompleto = completados === total && completados !== 0;
   const claseAvanceStep = `avance-step py-1 px-1 mx-2 ${esCompleto ? '' : 'incompleto'}`;
 
   return (

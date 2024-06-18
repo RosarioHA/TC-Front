@@ -1,34 +1,38 @@
 import { useState, forwardRef, useEffect } from "react";
 
 const CustomInput = forwardRef(
-  ({ loading, saved, label, placeholder, id, maxLength, error, readOnly, onChange, initialValue, ...props }, ref) => {
-    const [inputValue, setInputValue] = useState(initialValue || '');
-    const [totalCharacters, setTotalCharacters] = useState(initialValue ? initialValue.length : 0);
+  ({ loading, saved, label, placeholder, id, maxLength, error, readOnly, onChange, initialValue, ...props }, ref) =>
+  {
+    const [ inputValue, setInputValue ] = useState(initialValue || '');
+    const [ totalCharacters, setTotalCharacters ] = useState(initialValue ? initialValue.length : 0);
 
-    useEffect(() => {
+    useEffect(() =>
+    {
       setInputValue(initialValue || '');
       setTotalCharacters(initialValue?.length || 0);
-    }, [initialValue]);
+    }, [ initialValue, inputValue ]);
 
-    const handleInputChange = (e) => {
-      let value = e.target.value;  // Use `let` instead of `const` to allow reassignment
-      if (maxLength !== null && maxLength !== undefined && value.length > maxLength) {
-          value = value.slice(0, maxLength);  // Now this reassignment is valid
+    const handleInputChange = (e) =>
+    {
+      let value = e.target.value;
+      if (maxLength !== null && maxLength !== undefined && value.length > maxLength)
+      {
+        value = value.slice(0, maxLength);
       }
       setInputValue(value);
       setTotalCharacters(value.length);
-      if (onChange) {
-          onChange(value);
+      if (onChange)
+      {
+        onChange(value);
       }
-  };
-
+    };
     const counterClass = totalCharacters === maxLength ? "text-sans-h6-darkred" : "text-sans-h6";
-    const renderSpinnerOrCheck = () => {
+    const renderSpinnerOrCheck = () =>
+    {
       if (loading) return <div className="spinner-border text-primary" role="status"></div>;
       if (saved) return <i className="material-symbols-outlined text-success">check</i>;
       return null;
     };
-
     return (
       <div className="d-flex flex-column input-container col-11">
         {readOnly ? (
@@ -59,7 +63,7 @@ const CustomInput = forwardRef(
             </div>
             <div className="d-flex justify-content-between col-12">
               {error && <p className="text-sans-h6-darkred mt-1 mb-0">{error}</p>}
-              {maxLength !== null && (
+              {maxLength !== undefined && (
                 <div className="mb-0 mt-1 ms-auto">
                   <span className={counterClass}>{totalCharacters}/{maxLength} caracteres.</span>
                 </div>
