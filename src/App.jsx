@@ -150,7 +150,7 @@ function App()
             <Route path="paso_1" element={<PasoUnoGore />} />
             <Route path="paso_2" element={<PasoDosGore />} />
             <Route path="paso_3" element={<PasoTresGore />} />
-            <Route path="resumen_observaciones_subdere" element={<ResumenOS_Gore />} />
+            <Route path="resumen_observaciones_gore" element={<ResumenOS_Gore />} />
             <Route path="resumen_formulario_gore" element={<ResumenGore />} />
           </Route>
 
