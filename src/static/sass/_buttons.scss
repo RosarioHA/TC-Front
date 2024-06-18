@@ -279,3 +279,16 @@ span.material-symbols-outlined {
     background-color: $white-color;
     padding: 4px;
 }
+
+//BOTON CLAVE UNICA
+.btn-clave-unica{
+    @include btn-solid(fit-content, $blue-color, $white-color);
+    @include typo-style;
+    &:hover{
+        background-color: $hover-claveunica-color;
+    }
+    &:focus{
+        outline: 1px dashed $border-claveunica-color;
+        outline-offset: 3px;
+    }
+}

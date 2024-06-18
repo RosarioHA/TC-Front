@@ -51,7 +51,7 @@ export const FormTitle = ({ data, error, title }) => {
           <span className="text-sans-h1 mb-1">{competenciaDetails?.nombre}</span>
           <div className="d-flex align-items-center">
             <span className="badge-info-expandibles">
-              <p className="my-0">{numCompetenciasAgrupadas} competencias</p>
+              <p className="my-0 text-nowrap">{numCompetenciasAgrupadas} competencias</p>
             </span>
             <span className="material-symbols-outlined text-black ms-2">
               {competenciasCollapsed ? 'expand_less' : 'expand_more'}
@@ -98,7 +98,7 @@ export const FormTitle = ({ data, error, title }) => {
               <span className="text-sans-m-semibold-greyc mb-1">Regiones</span>
               <div className="d-flex align-items-center">
                 <span className="badge-info-expandibles">
-                  <p className="my-0">{numRegiones} regiones</p>
+                  <p className="my-0 text-nowrap">{numRegiones} regiones</p>
                 </span>
                 <span className="material-symbols-outlined text-black ms-2">
                   {regionesCollapsed ? 'expand_less' : 'expand_more'}
@@ -147,7 +147,7 @@ export const FormTitle = ({ data, error, title }) => {
               <span className="text-sans-m-semibold-greyc mb-1">Sectores</span>
               <div className="d-flex align-items-center">
                 <span className="badge-info-expandibles">
-                  <p className="my-0">{numSectores} sectores</p>
+                  <p className="my-0 text-nowrap">{numSectores} sectores</p>
                 </span>
                 <span className="material-symbols-outlined text-black ms-2">
                   {sectoresCollapsed ? 'expand_less' : 'expand_more'}
