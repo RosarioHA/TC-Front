@@ -21,7 +21,7 @@ export const NavigationGore= ({ step , id }) => {
       navigate(getRouteForStep(step + 1));
     } else {
       const resumenRoute = userSubdere
-        ? `/home/formulario_gore/${id}/resumen_observaciones_subdere`
+        ? `/home/formulario_gore/${id}/resumen_observaciones_gore`
         : `/home/formulario_gore/${id}/resumen_formulario_gore`;
       navigate(resumenRoute);
     }
