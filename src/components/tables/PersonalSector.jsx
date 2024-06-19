@@ -110,17 +110,12 @@ const PersonalSectorial = ({
       return; // Termina la ejecución si no se encuentra la calidad jurídica
     }
 
-    // Encuentra el ID del costo asociado con la última persona de la misma calidad jurídica
-    const ultimaPersonaConCalidad = personas[calidadJuridicaLabel].slice(-1)[0];
-    const costoId = ultimaPersonaConCalidad ? ultimaPersonaConCalidad.costos : null;
-
     const payload = {
       regiones: [
         {
           region: region,
           [payloadModel]: [{
             calidad_juridica: calidadJuridicaObjeto.id,
-            costos: costoId // Asigna el costo encontrado al nuevo registro
           }],
         },
       ],
@@ -192,25 +187,23 @@ const PersonalSectorial = ({
   };
 
   // Manejadora de CustomInput, CustomTextArea y DropdownSelect
-const handleInputChange = (personaId, campo, valor) => {
-  setPersonas(prevPersonas => {
-    return Object.fromEntries(
-      Object.entries(prevPersonas).map(([calidadJuridica, personas]) => [
-        calidadJuridica,
-        personas.map(persona => {
-          if (persona.id === personaId) {
-            // Si el campo es un objeto (como en DropdownSelect), guardamos su valor
-            const newValue = typeof valor === 'object' ? valor.value : valor;
-            return { ...persona, [campo]: newValue };
-          }
-          return persona;
-        })
-      ])
-    );
-  });
-};
-
-
+  const handleInputChange = (personaId, campo, valor) => {
+    setPersonas(prevPersonas => {
+      return Object.fromEntries(
+        Object.entries(prevPersonas).map(([calidadJuridica, personas]) => [
+          calidadJuridica,
+          personas.map(persona => {
+            if (persona.id === personaId) {
+              // Si el campo es un objeto (como en DropdownSelect), guardamos su valor
+              const newValue = typeof valor === 'object' ? valor.value : valor;
+              return { ...persona, [campo]: newValue };
+            }
+            return persona;
+          })
+        ])
+      );
+    });
+  };
 
   const manejarDropdownCalidadJuridica = (opcionSeleccionada) => {
     setNuevaCalidadJuridica(opcionSeleccionada);
@@ -322,123 +315,101 @@ const handleInputChange = (personaId, campo, valor) => {
 
   // Función de guardado
   const handleSave = async (arrayNameId, fieldName, newValue) => {
-
     const fieldId = `${fieldName}_${arrayNameId}`;
     startSavingField(fieldId);
-
-    let payload;
-
-    if (fieldName === 'calidad_juridica') {
-      payload = {
-        regiones: [
-          {
-            region: region,
-            [payloadModel]: [{
-              id: arrayNameId,
-              calidad_juridica: newValue,
-            }]
-          }
-        ]
-      }
-
-    } else if (fieldName === `descripcion_funciones_personal_${descripcionModelo}`) {
-      setDescripcionLoading(true);
-      setDescripcionSaved(false);
-
-      payload = {
-        regiones: [
-          {
-            region: region,
-            'paso5': [{
-              id: arrayNameId,
-              [`descripcion_funciones_personal_${descripcionModelo}`]: newValue,
-            }]
-          }
-        ]
-      }
-
-      try {
-        await handleUpdatePaso(id, stepNumber, payload);
-        setDescripcionLoading(false);
-        setDescripcionSaved(true);
-    } catch (error) {
-        console.error("Error al guardar los datos de descripción:", error);
-        if (error.response && error.response.data.errors) {
-            const serverErrors = error.response.data.errors;
-            Object.keys(serverErrors).forEach((field) => {
-                setError(field, { type: 'server', message: serverErrors[field][0] });
-            });
-        }
-        setDescripcionLoading(false);
-        setDescripcionSaved(false);
-    }
-
-    } else {
-
-      let personaEncontrada = null;
-
-      Object.values(personas).some(calidadJuridica => {
-        const persona = calidadJuridica.find(e => e.id === arrayNameId);
-        if (persona) {
-          personaEncontrada = persona;
-          return true; // Detiene el bucle una vez que se encuentra la persona
-        }
-        return false;
-      });
-
-      // Asegurar que la persona fue encontrada antes de proceder
-      if (!personaEncontrada) {
-        console.error('Persona no encontrada');
-        return; // Termina la ejecución de la función si no se encuentra la persona
-      }
-
-      if (fieldName === 'estamento') {
-        // Ajuste para enviar 'estamento' como un valor único, no un array
-        // Asumiendo que newValue es un objeto de la opción seleccionada
-        payload = {
-          regiones: [
-            {
-              region: region,
-              [payloadModel]: [{
-                id: arrayNameId,
-                [fieldName]: newValue.value // Envía el valor seleccionado directamente
-              }]
-            }
-          ]
-        };
-
-      } else {
-        // Payload para otros campos
-        payload = {
-          regiones: [
-            {
-              region: region,
-              [payloadModel]: [{ id: arrayNameId, [fieldName]: personaEncontrada[fieldName] }]
-            }
-          ]
-        };
-      }
-    }
-    try {
-      // Asume que handleUpdatePaso puede manejar ambos casos adecuadamente
-      await handleUpdatePaso(id, stepNumber, payload);
-
-      finishSavingField(fieldId, true);
-
-    } catch (error) {
-      console.error("Error al guardar los datos:", error);
-
-      if (error.response && error.response.data.errors) {
-        const serverErrors = error.response.data.errors;
-        Object.keys(serverErrors).forEach((field) => {
-          setError(field, { type: 'server', message: serverErrors[field][0] });
-        });
-      }
-
+  
+    let payload = createPayload(fieldName, arrayNameId, newValue);
+    if (!payload) {
+      console.error('Error al crear el payload');
       finishSavingField(fieldId, false);
-
+      return;
+    }
+  
+    // Revisar si algún valor dentro del payload es null
+    if (containsNull(payload)) {
+      console.log(`Se detectó un valor null en el payload para el campo ${fieldName}.`);
+      finishSavingField(fieldId, false);
+      return; // Terminar ejecución si se encuentra un valor null
+    }
+  
+    try {
+      await handleUpdatePaso(id, stepNumber, payload);
+      finishSavingField(fieldId, true);
+      updateUIStates(fieldName, true);
+    } catch (error) {
+      console.error(`Error al guardar los datos para el campo ${fieldName}:`, error);
+      handleServerError(error);
+      finishSavingField(fieldId, false);
+      updateUIStates(fieldName, false);
     }
   };
+  
+  function containsNull(obj) {
+    if (obj === null) return true;
+    if (typeof obj === 'object') {
+      for (const key in obj) {
+        // Uso de hasOwnProperty mediante Object.prototype.call para evitar problemas de prototipo
+        if (Object.prototype.hasOwnProperty.call(obj, key)) {
+          if (containsNull(obj[key])) {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
+  }
+  
+  
+  function createPayload(fieldName, arrayNameId, newValue) {
+    switch (fieldName) {
+      case 'calidad_juridica':
+        return {
+          regiones: [{ region, [payloadModel]: [{ id: arrayNameId, calidad_juridica: newValue }] }]
+        };
+      case `descripcion_funciones_personal_${descripcionModelo}`:
+        return {
+          regiones: [{ region, paso5: [{ id: arrayNameId, [`descripcion_funciones_personal_${descripcionModelo}`]: newValue }] }]
+        };
+      case 'estamento':
+        return {
+          regiones: [{ region, [payloadModel]: [{ id: arrayNameId, [fieldName]: newValue.value }] }]
+        };
+      default:
+        const personaEncontrada = findPersona(arrayNameId);
+        if (!personaEncontrada) {
+          console.error('Persona no encontrada');
+          return null;
+        }
+        return {
+          regiones: [{ region, [payloadModel]: [{ id: arrayNameId, [fieldName]: personaEncontrada[fieldName] }] }]
+        };
+    }
+  }
+  
+  function findPersona(arrayNameId) {
+    for (const calidadJuridica of Object.values(personas)) {
+      const persona = calidadJuridica.find(e => e.id === arrayNameId);
+      if (persona) return persona;
+    }
+    return null;
+  }
+  
+  function handleServerError(error) {
+    if (error.response && error.response.data.errors) {
+      const serverErrors = error.response.data.errors;
+      Object.keys(serverErrors).forEach(field => {
+        setError(field, { type: 'server', message: serverErrors[field][0] });
+      });
+    }
+  }
+  
+  function updateUIStates(fieldName, isSuccessful) {
+    if (fieldName.startsWith('descripcion_funciones_personal_')) {
+      setDescripcionLoading(false);
+      setDescripcionSaved(isSuccessful);
+    }
+  }
+  
 
   const onSubmitAgregarPersona = () => {
     agregarPersona();
@@ -490,30 +461,30 @@ const handleInputChange = (personaId, campo, valor) => {
 
                   <div className="col-1"> <p className="text-sans-p-bold mt-3">{personaIndex + 1}</p> </div>
                   <div className="col">
-                  <Controller
-  control={control}
-  name={`estamento_${persona.id}`}
-  render={({ field }) => {
-    return (
-      <DropdownSelect
-        id={`estamento_${persona.id}`}
-        name={`estamento_${persona.id}`}
-        placeholder="Estamento"
-        options={opcionesEstamentos}
-        onSelectionChange={(selectedOption) => {
-          // Primero, actualizar el estado local del formulario
-          field.onChange(selectedOption.value);
-          // Segundo, actualizar el estado global de personas
-          handleInputChange(persona.id, 'estamento', selectedOption.value);
-          // Finalmente, guardar el cambio
-          handleSave(persona.id, 'estamento', selectedOption);
-        }}
-        readOnly={solo_lectura}
-        selected={persona.estamento_label_value}
-      />
-    );
-  }}
-/>
+                    <Controller
+                      control={control}
+                      name={`estamento_${persona.id}`}
+                      render={({ field }) => {
+                        return (
+                          <DropdownSelect
+                            id={`estamento_${persona.id}`}
+                            name={`estamento_${persona.id}`}
+                            placeholder="Estamento"
+                            options={opcionesEstamentos}
+                            onSelectionChange={(selectedOption) => {
+                              // Primero, actualizar el estado local del formulario
+                              field.onChange(selectedOption.value);
+                              // Segundo, actualizar el estado global de personas
+                              handleInputChange(persona.id, 'estamento', selectedOption.value);
+                              // Finalmente, guardar el cambio
+                              handleSave(persona.id, 'estamento', selectedOption);
+                            }}
+                            readOnly={solo_lectura}
+                            selected={persona.estamento_label_value}
+                          />
+                        );
+                      }}
+                    />
 
                   </div>
 

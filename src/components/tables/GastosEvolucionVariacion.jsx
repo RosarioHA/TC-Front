@@ -56,7 +56,7 @@ export const GastosEvolucionVariacion = ({
     setEsquemaValidacion(esquema);
   }, [datosGastos]);
 
-    
+
   const { control, trigger, clearErrors, formState: { errors } } = useForm({
     resolver: esquemaValidacion ? yupResolver(esquemaValidacion) : undefined,
     mode: 'onBlur',
@@ -85,7 +85,7 @@ export const GastosEvolucionVariacion = ({
 
   const handleSave = async (subtituloId, costoAnioId, fieldName, fieldValue) => {
     const arrayNameId = fieldName === 'descripcion' ? `descripcion_${subtituloId}` : `costo_${costoAnioId}`;
-  
+
     setInputStatus((prevStatus) => ({
       ...prevStatus,
       [arrayNameId]: {
@@ -93,7 +93,7 @@ export const GastosEvolucionVariacion = ({
         saved: false,
       },
     }));
-  
+
     let payload;
     if (fieldName === 'descripcion') {
       payload = {
@@ -126,15 +126,15 @@ export const GastosEvolucionVariacion = ({
         regiones: [
           {
             region: region,
-            'paso5': [{ 
+            'paso5': [{
               "id": paso5Id,
-              "glosas_especificas": fieldValue 
+              "glosas_especificas": fieldValue
             }]
           }
         ]
       };
     }
-  
+
     try {
       await handleUpdatePaso(id, stepNumber, payload);
       setInputStatus((prevStatus) => ({
@@ -144,7 +144,7 @@ export const GastosEvolucionVariacion = ({
           saved: true,
         },
       }));
-  
+
       if (fieldName === 'glosas_especificas') {
         setGlosasEspecificasLoading(false);
         setGlosasEspecificasSaved(true);
@@ -158,14 +158,14 @@ export const GastosEvolucionVariacion = ({
           saved: false,
         },
       }));
-  
+
       if (fieldName === 'glosas_especificas') {
         setGlosasEspecificasLoading(false);
         setGlosasEspecificasSaved(false);
       }
     }
   };
-  
+
   return (
     <div className="mt-4">
       <div className="my-4">
@@ -190,39 +190,39 @@ export const GastosEvolucionVariacion = ({
                     const isLastYear = parseInt(year) === Math.max(...headers.map(Number));
                     return (
                       <td key={`${rowIndex}-${colIndex}`} className="px-1">
-                      <Controller
-  control={control}
-  name={`costo_${costoAnio?.id}`}
-  defaultValue={costoAnio?.costo || ''}
-  render={({ field }) => {
-    const { onChange, onBlur, value } = field;
-    const handleChange = (valor) => {
-      onChange(valor);
-      handleInputChange(item.id, costoAnio.id, 'costo', valor);
-    };
-    const handleBlur = async () => {
-      const isFieldValid = await trigger(`costo_${costoAnio.id}`);
-      if (isFieldValid) {
-        handleSave(item.id, costoAnio.id, 'costo', value);
-      }
-      onBlur();
-    };
-    return (
-      <InputCosto
-        id={`costo_${costoAnio?.id}`}
-        placeholder="Costo (M$)"
-        value={value}
-        style={inputNumberStyle}
-        disabled={solo_lectura || isLastYear}
-        onChange={handleChange}
-        onBlur={handleBlur}
-        loading={inputStatus[`costo_${costoAnio?.id}`]?.loading ?? false}
-        saved={inputStatus[`costo_${costoAnio?.id}`]?.saved ?? false}
-        error={errors[`costo_${costoAnio.id}`]?.message} // Asegúrate de usar correctamente el acceso al error
-      />
-    );
-  }}
-/>
+                        <Controller
+                          control={control}
+                          name={`costo_${costoAnio?.id}`}
+                          defaultValue={costoAnio?.costo || ''}
+                          render={({ field }) => {
+                            const { onChange, onBlur, value } = field;
+                            const handleChange = (valor) => {
+                              onChange(valor);
+                              handleInputChange(item.id, costoAnio.id, 'costo', valor);
+                            };
+                            const handleBlur = async () => {
+                              const isFieldValid = await trigger(`costo_${costoAnio.id}`);
+                              if (isFieldValid) {
+                                handleSave(item.id, costoAnio.id, 'costo', value);
+                              }
+                              onBlur();
+                            };
+                            return (
+                              <InputCosto
+                                id={`costo_${costoAnio?.id}`}
+                                placeholder="Costo (M$)"
+                                value={value}
+                                style={inputNumberStyle}
+                                disabled={solo_lectura || isLastYear}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                loading={inputStatus[`costo_${costoAnio?.id}`]?.loading ?? false}
+                                saved={inputStatus[`costo_${costoAnio?.id}`]?.saved ?? false}
+                                error={errors[`costo_${costoAnio.id}`]?.message} // Asegúrate de usar correctamente el acceso al error
+                              />
+                            );
+                          }}
+                        />
 
                       </td>
                     );
@@ -321,5 +321,5 @@ export const GastosEvolucionVariacion = ({
         </div>
       </div>
     </div>
-  );  
+  );
 };
