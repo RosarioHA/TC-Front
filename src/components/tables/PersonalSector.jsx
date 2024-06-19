@@ -114,13 +114,6 @@ const PersonalSectorial = ({
     const ultimaPersonaConCalidad = personas[calidadJuridicaLabel].slice(-1)[0];
     const costoId = ultimaPersonaConCalidad ? ultimaPersonaConCalidad.costos : null;
 
-    // Si no existe un costo previo, manejar adecuadamente la situación
-    if (!costoId) {
-      console.error('No se encontró un costo asociado previo para esta calidad jurídica:', calidadJuridicaLabel);
-      // Considerar si se debe continuar sin un costo o manejar de otra manera
-      return;
-    }
-
     const payload = {
       regiones: [
         {
@@ -156,7 +149,6 @@ const PersonalSectorial = ({
       console.error("Error al agregar la nueva calidad jurídica:", error);
     }
   };
-
 
 
   // Lógica para eliminar una fila de un organismo
@@ -199,21 +191,25 @@ const PersonalSectorial = ({
     }
   };
 
-  // Manejadora de CustomInput y CustomTextArea
-  const handleInputChange = (personaId, campo, valor) => {
-    setPersonas(prevPersonas => {
-      const nuevasPersonas = { ...prevPersonas };
-      Object.keys(nuevasPersonas).forEach(calidadJuridica => {
-        nuevasPersonas[calidadJuridica] = nuevasPersonas[calidadJuridica].map(persona => {
+  // Manejadora de CustomInput, CustomTextArea y DropdownSelect
+const handleInputChange = (personaId, campo, valor) => {
+  setPersonas(prevPersonas => {
+    return Object.fromEntries(
+      Object.entries(prevPersonas).map(([calidadJuridica, personas]) => [
+        calidadJuridica,
+        personas.map(persona => {
           if (persona.id === personaId) {
-            return { ...persona, [campo]: valor };
+            // Si el campo es un objeto (como en DropdownSelect), guardamos su valor
+            const newValue = typeof valor === 'object' ? valor.value : valor;
+            return { ...persona, [campo]: newValue };
           }
           return persona;
-        });
-      });
-      return nuevasPersonas;
-    });
-  };
+        })
+      ])
+    );
+  });
+};
+
 
 
   const manejarDropdownCalidadJuridica = (opcionSeleccionada) => {
@@ -494,27 +490,31 @@ const PersonalSectorial = ({
 
                   <div className="col-1"> <p className="text-sans-p-bold mt-3">{personaIndex + 1}</p> </div>
                   <div className="col">
-                    <Controller
-                      control={control}
-                      name={`estamento_${persona.id}`}
-                      render={({ field }) => {
-                        return (
-                          <DropdownSelect
-                            id={`estamento_${persona.id}`}
-                            name={`estamento_${persona.id}`}
-                            placeholder="Estamento"
-                            options={opcionesEstamentos}
-                            onSelectionChange={(selectedOption) => {
-                              handleSave(persona.id, 'estamento', selectedOption);
-                              field.onChange(selectedOption.value);
-                            }}
+                  <Controller
+  control={control}
+  name={`estamento_${persona.id}`}
+  render={({ field }) => {
+    return (
+      <DropdownSelect
+        id={`estamento_${persona.id}`}
+        name={`estamento_${persona.id}`}
+        placeholder="Estamento"
+        options={opcionesEstamentos}
+        onSelectionChange={(selectedOption) => {
+          // Primero, actualizar el estado local del formulario
+          field.onChange(selectedOption.value);
+          // Segundo, actualizar el estado global de personas
+          handleInputChange(persona.id, 'estamento', selectedOption.value);
+          // Finalmente, guardar el cambio
+          handleSave(persona.id, 'estamento', selectedOption);
+        }}
+        readOnly={solo_lectura}
+        selected={persona.estamento_label_value}
+      />
+    );
+  }}
+/>
 
-                            readOnly={solo_lectura}
-                            selected={persona.estamento_label_value}
-                          />
-                        );
-                      }}
-                    />
                   </div>
 
                   {descripcionModelo === "indirecto" && (
