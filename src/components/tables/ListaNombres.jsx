@@ -59,16 +59,12 @@ export const ListaNombres = ({ readOnly, setValue, competenciasAgrupadas, onDele
       setErrors({ global: 'No se permiten nombres duplicados' });
       return;
     }
-  
+
+    // Generar un identificador único para la nueva fila
+    const newId = Math.max(...rows.map(row => row.id), 0) + 1;
+
     // Agregar una nueva fila
-    if (competenciasAgrupadas) {
-      // Estamos editando una competencia existente
-      setRows([...rows, { nombre: '' }]);
-    } else {
-      // Estamos creando una nueva competencia
-      const newId = Math.max(...rows.map(row => row.id), 0) + 1;
-      setRows([...rows, { id: newId, nombre: '' }]);
-    }
+    setRows([...rows, { id: newId, nombre: '' }]);
   };
 
   const handleRemoveRow = (index) => {
@@ -81,9 +77,13 @@ export const ListaNombres = ({ readOnly, setValue, competenciasAgrupadas, onDele
   };
 
   useEffect(() => {
-    setValue('competencias_agrupadas', rows);
-  }, [rows, setValue]);
-
+    const formattedRows = rows.map(row => (
+      competenciasAgrupadas && initialRows.some(initialRow => initialRow.id === row.id)
+        ? { id: row.id, nombre: row.nombre }
+        : { nombre: row.nombre }
+    ));
+    setValue('competencias_agrupadas', formattedRows);
+  }, [rows, setValue, competenciasAgrupadas, initialRows]);
 
   return (
     <>
