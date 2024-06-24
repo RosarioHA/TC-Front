@@ -2,92 +2,108 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCompetencia } from '../../hooks/competencias/useCompetencias';
 
-export const FormTitle = ({ data, error, title }) => {
+export const FormTitle = ({ data, error, title }) =>
+{
   const navigate = useNavigate();
   const id = data?.competencia_id;
-  const {competenciaDetails }  = useCompetencia(id);
-  const [competenciasCollapsed, setCompetenciasCollapsed] = useState(false);
-  const [regionesCollapsed, setRegionesCollapsed] = useState(false);
-  const [sectoresCollapsed, setSectoresCollapsed] = useState(false);
-  
+  const { competenciaDetails } = useCompetencia(id);
+  const [ competenciasCollapsed, setCompetenciasCollapsed ] = useState(false);
+  const [ regionesCollapsed, setRegionesCollapsed ] = useState(false);
+  const [ sectoresCollapsed, setSectoresCollapsed ] = useState(false);
+
   if (error) return <div>Error al cargar los datos: {error.message}</div>;
-  if (!data) return <div>No hay datos disponibles</div>; 
+  if (!data) return <div>No hay datos disponibles</div>;
 
   console.log("competenciaDetails", competenciaDetails);
   console.log("title", title);
   console.log("data", data);
 
-  const handleBackButtonClick = () => { 
-    navigate(-1); 
+  const handleBackButtonClick = () =>
+  {
+    navigate(-1);
   }
-  
-  const toggleCompetenciasCollapse = () => {
+
+  const toggleCompetenciasCollapse = () =>
+  {
     setCompetenciasCollapsed(!competenciasCollapsed);
   };
-  const toggleRegionesCollapse = () => {
+  const toggleRegionesCollapse = () =>
+  {
     setRegionesCollapsed(!regionesCollapsed);
   };
-  const toggleSectoresCollapse = () => {
+  const toggleSectoresCollapse = () =>
+  {
     setSectoresCollapsed(!sectoresCollapsed);
   };
 
-  const renderCompetenciasAgrupadas = () => {
+  const renderCompetenciasAgrupadas = () =>
+  {
     const competenciasAgrupadas = competenciaDetails?.competencias_agrupadas;
     const numCompetenciasAgrupadas = competenciasAgrupadas ? competenciasAgrupadas.length : 0;
-    if (competenciasAgrupadas && competenciasAgrupadas.length === 0) {
+    if (competenciasAgrupadas && competenciasAgrupadas.length === 0)
+    {
       return (
         <div className="">
           <span className="text-sans-h1 mb-1">{competenciaDetails?.nombre}</span>
         </div>
       );
-    } else if (competenciasAgrupadas?.length > 0) {
-    return(
-      <div>
-        <button 
-        type="button" 
-        onClick={toggleCompetenciasCollapse}
-        className="btn_desplegables_encabezados d-flex justify-content-between w-100 px-0"
-        >
+    } else if (competenciasAgrupadas?.length > 0)
+    {
+      return (
+        <>
           <span className="text-sans-h1 mb-1">{competenciaDetails?.nombre}</span>
-          <div className="d-flex align-items-center">
-            <span className="badge-info-expandibles">
-              <p className="my-0 text-nowrap">{numCompetenciasAgrupadas} competencias</p>
-            </span>
-            <span className="material-symbols-outlined text-black ms-2">
-              {competenciasCollapsed ? 'expand_less' : 'expand_more'}
-            </span>
+          <div>
+            <button
+              type="button"
+              onClick={toggleCompetenciasCollapse}
+              className="btn_desplegables_encabezados d-flex justify-content-between w-100 px-0"
+            >
+              <span className="text-sans-m-semibold-greyc mb-1">Competencias Agrupadas </span>
+              <div className="d-flex align-items-center">
+                <span className="badge-info-expandibles">
+                  <p className="my-0 text-nowrap">{numCompetenciasAgrupadas} competencias</p>
+                </span>
+                <span className="material-symbols-outlined text-black ms-2">
+                  {competenciasCollapsed ? 'expand_less' : 'expand_more'}
+                </span>
+              </div>
+            </button>
+            <div className={`collapse ${competenciasCollapsed ? 'show' : ''}`}>
+              <table className="table table-striped">
+                <tbody>
+                  {competenciasAgrupadas.map((competencia, index) => (
+                    <tr key={index}>
+                      <td className="d-flex justify-content-between">
+                        <span className="text-sans-h5 mb-1">{competencia.nombre}</span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
-        </button>
-        <div className={`collapse ${competenciasCollapsed ? 'show' : ''}`}>
-          <table className="table table-striped">
-            <tbody>
-              {competenciasAgrupadas.map((competencia, index) => (
-                <tr key={index}>
-                  <td className="d-flex justify-content-between">
-                    <span className="text-sans-h5 mb-1">{competencia.nombre}</span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    )}
+        </>
+      )
+    }
     return null;
   };
 
-  const renderRegiones = () => {
+  const renderRegiones = () =>
+  {
     const regiones = competenciaDetails?.nombres_regiones;
     const numRegiones = regiones ? regiones.length : 0;
 
-    if (regiones && numRegiones > 0) {
-      if (numRegiones === 1) {
+    if (regiones && numRegiones > 0)
+    {
+      if (numRegiones === 1)
+      {
         return (
           <div className="">
-            <span className="text-sans-h3-greyc mb-1">{regiones[0].nombre}</span>
+            <span className="text-sans-h3-greyc mb-1">{regiones[ 0 ].nombre}</span>
           </div>
         );
-      } else {
+      } else
+      {
         return (
           <div>
             <button
@@ -125,18 +141,22 @@ export const FormTitle = ({ data, error, title }) => {
     return null;
   };
 
-  const renderSectores = () => {
+  const renderSectores = () =>
+  {
     const sectores = competenciaDetails?.sectores;
     const numSectores = sectores ? sectores.length : 0;
 
-    if (sectores && numSectores > 0) {
-      if (numSectores === 1) {
+    if (sectores && numSectores > 0)
+    {
+      if (numSectores === 1)
+      {
         return (
           <div className="">
-            <span className="text-sans-h3-greyc mb-1">{sectores[0].nombre}</span>
+            <span className="text-sans-h3-greyc mb-1">{sectores[ 0 ].nombre}</span>
           </div>
         );
-      } else {
+      } else
+      {
         return (
           <div>
             <button
