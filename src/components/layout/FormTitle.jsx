@@ -14,9 +14,6 @@ export const FormTitle = ({ data, error, title }) =>
   if (error) return <div>Error al cargar los datos: {error.message}</div>;
   if (!data) return <div>No hay datos disponibles</div>;
 
-  console.log("competenciaDetails", competenciaDetails);
-  console.log("title", title);
-  console.log("data", data);
 
   const handleBackButtonClick = () =>
   {
