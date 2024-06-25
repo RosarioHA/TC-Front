@@ -49,7 +49,6 @@ export const SummaryDetail = ({ competencia }) => {
   ).length;
   const totalEtapas = etapasArray.length;
 
-  console.log(etapasFinalizadas)
 
   const getBadgeDetails = (estado) => {
     const badgeClasses = {
