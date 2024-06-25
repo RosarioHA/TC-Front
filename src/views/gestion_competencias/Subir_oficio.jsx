@@ -22,7 +22,6 @@ const SubirOficio = () => {
   const etapaNum = 2;
   const etapaId = competenciaDetails?.etapa2?.id
 
-  console.log("etapaId", etapaId);
 
   useEffect(() => {
     if (competenciaDetails) {

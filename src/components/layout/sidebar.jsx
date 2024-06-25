@@ -106,8 +106,8 @@ const Sidebar = () => {
             person
           </span>
         </div>
-        <span className="my-auto me-auto">Mi Perfil</span>
-        <div className="dropdown">
+        <span className="my-auto me-auto">Mi Perfil: <span className=" fw-medium text-decoration-underline" >{userData.perfil.replace('Usuario', '')}</span></span>
+        {/* <div className="dropdown">
           <a className="" data-bs-toggle="dropdown" aria-expanded="false" id="icon-setting">
             <span className="material-symbols-outlined">
               settings
@@ -119,7 +119,7 @@ const Sidebar = () => {
             <li><a className="dropdown-item" href="#">Profile</a></li>
             <li><a className="dropdown-item" href="#">Sign out</a></li>
           </ul>
-        </div>
+        </div> */}
       </div>
     </div >
   );

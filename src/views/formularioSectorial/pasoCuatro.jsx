@@ -36,7 +36,6 @@ const PasoCuatro = () => {
   useEffect(() => {
     updateStepNumber(stepNumber);
     if (observaciones && Object.keys(observaciones).length === 0) {
-      console.log("Fetching observaciones");
       fetchObservaciones();
     }
     if (observaciones && observaciones.observacion_paso4) {
