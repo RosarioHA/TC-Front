@@ -74,9 +74,6 @@ const PasoDos = () => {
     }
   };
   
-  console.log("pasoData", pasoData);
-  console.log("multiplicador_caracteres_competencia", multiplicador_caracteres_competencia);
-  console.log("multiplicador_caracteres_region", multiplicador_caracteres_region);
 
   return (
     <>

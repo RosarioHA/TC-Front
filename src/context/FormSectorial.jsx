@@ -15,7 +15,6 @@ export const FormularioProvider = ({ children }) => {
   const { patchStep, loading, error } = useUpdateForm();
   const {patchStepOrganigrama} = useOrganigramaRegional(); 
 
-  console.log("dataFormSectorial en context FormSectorial", dataFormSectorial)
 
   const updateFormId = useCallback((newId) => {
     setId(newId);
