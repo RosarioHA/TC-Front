@@ -10,8 +10,6 @@ const FormularioLayout = () => {
   const location = useLocation();
   const params = useParams();
 
-  console.log("data en FormularioLauout", data);
-
   useEffect(() => {
     const currentId = location.state?.id || params.id;
     if (currentId) {
