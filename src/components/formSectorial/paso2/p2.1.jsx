@@ -259,7 +259,6 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
   const handleInputChange = (organismoDisplay, id, campo, valor) => {
     setMostrarError(false);
     setFilaEnEdicionId(id);
-    console.log('set',id, campo)
     setOrganismosAgrupados((prevOrganismos) => {
       const organismosActualizados = {
         ...prevOrganismos,
@@ -295,8 +294,6 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
     if (!esGuardadoPorBlur) {
       setMostrarBotonGuardar(false);
     }
-    console.log('idF',idFila,campo)
-
     // Encuentra la fila específica que se está editando
     const filaEditada = organismosAgrupados[ organismoDisplay ]?.find(
       (fila) => fila.id === idFila
@@ -392,8 +389,6 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
     }
     setUltimaFilaId(null)
   };
-console.log('ul',ultimaFilaId)
-console.log('ed',filaEnEdicionId)
   return (
     <div>
       <h4 className="text-sans-h4">
