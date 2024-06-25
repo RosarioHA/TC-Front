@@ -45,9 +45,11 @@ export const SummaryDetail = ({ competencia }) => {
 
   // Calcula la cantidad de etapas finalizadas
   const etapasFinalizadas = etapasArray.filter(
-    (etapa) => etapa.estado === 'Finalizada'
+    (etapa) => etapa.estado === 'Finalizada' || etapa.estado === 'Omitida'
   ).length;
   const totalEtapas = etapasArray.length;
+
+  console.log(etapasFinalizadas)
 
   const getBadgeDetails = (estado) => {
     const badgeClasses = {
