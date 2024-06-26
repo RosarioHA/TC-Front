@@ -763,7 +763,7 @@ const PersonalSectorial = ({
             return (
               <CustomTextarea
                 id={`descripcion_funciones_personal_${descripcionModelo}`}
-                label="Descripción de funciones"
+                label="Descripción de funciones (Opcional)"
                 placeholder="Describe las funciones asociadas a otras competencias."
                 maxLength={1100}
                 value={value}

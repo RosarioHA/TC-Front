@@ -93,14 +93,6 @@ export const construirValidacionPaso5_Personal = (calidadJuridica) => {
         .nullable(true)
         .transform((value, originalValue) => (String(originalValue).trim() === '' ? null : value));
     });
-
-    schemaFields['descripcion_funciones_personal_directo'] = yup
-      .string()
-      .required('La descripción de funciones es requerida');
-    
-    schemaFields['descripcion_funciones_personal_indirecto'] = yup
-      .string()
-      .required('La descripción de funciones es requerida');
   });
 
   return yup.object().shape(schemaFields);
