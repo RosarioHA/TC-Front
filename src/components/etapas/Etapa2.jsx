@@ -76,11 +76,16 @@ export const Etapa2 = ({ etapa, idCompetencia }) => {
     let isDisabled = estado === "pendiente" || (formularios && formularios?.estado !== "finalizada");
 
     if (nombre.includes("Observaciones de formularios sectoriales") || nombre.includes("Observación del formulario sectorial")) {
-      isDisabled = estado !== "finalizada"; // Ajuste para habilitar el botón solo cuando el estado es "finalizada"
+      isDisabled = estado !== "finalizada"; 
     }
 
     const isButtonEnabled = (userSubdere || userGore || userDipres || usuarioSector) && (estado === "pendiente" || estado === "revision" || estado === "finalizada");
 
+      // Nueva condición para mostrar el badge en lugar del botón
+  if (nombre.includes("Observación del formulario sectorial") && estado === 'finalizada' && userObservador) {
+    return <span className="badge-status-finish">{accion}</span>;
+  }
+  
     switch (true) {
       case nombre.startsWith("Notificar a") && estado === "finalizada":
         return <span className="badge-status-finish">{accion}</span>;
@@ -118,6 +123,8 @@ export const Etapa2 = ({ etapa, idCompetencia }) => {
         icon = "visibility";
         isDisabled = estado !== "finalizada"; // Ajuste para habilitar el botón solo cuando el estado es "finalizada"
         break;
+        case nombre.includes("Observación del formulario sectorial") && estado === 'finalizada' && userObservador:
+          return <span className="badge-status-finish">{accion}</span>;
 
       default:
         break;
