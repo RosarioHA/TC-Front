@@ -90,7 +90,7 @@ export const Subpaso_CuatroUno = ({
         regiones: [
           {
             region: region,
-            indicador_desempeno: updatedIndicadores.map((indicador) => ({
+            indicador_desempeno: updatedIndicadores?.map((indicador) => ({
               id: indicador.id,
               indicador: indicador.indicador,
               formula_calculo: indicador.formula_calculo,
@@ -103,13 +103,13 @@ export const Subpaso_CuatroUno = ({
       };
       const response = await handleUpdatePaso(id, stepNumber, updatedData);
 
-      const completeStatus = updatedIndicadores.every(
+      const completeStatus = updatedIndicadores?.every(
         (indicador) =>
-          indicador.indicador &&
-          indicador.formula_calculo &&
-          indicador.descripcion_indicador &&
-          indicador.medios_calculo &&
-          indicador.verificador_asociado
+          indicador?.indicador &&
+          indicador?.formula_calculo &&
+          indicador?.descripcion_indicador &&
+          indicador?.medios_calculo &&
+          indicador?.verificador_asociado
       );
 
       setIsComplete(completeStatus);
@@ -120,7 +120,7 @@ export const Subpaso_CuatroUno = ({
       throw error;
     } finally {
       const updatedInputStatus = { ...inputStatus };
-      updatedIndicadores.forEach((indicador) => {
+      updatedIndicadores?.forEach((indicador) => {
         Object.keys(updatedInputStatus[indicador.id] ?? {}).forEach((field) => {
           updatedInputStatus[indicador.id][field] = {
             loading: false,
@@ -165,7 +165,7 @@ export const Subpaso_CuatroUno = ({
         console.error('Error creating indicator:', error);
       }
 
-      const updatedCompleteStatus = newIndicadores.every(
+      const updatedCompleteStatus = newIndicadores?.every(
         (indicador) =>
           indicador.indicador &&
           indicador.formula_calculo &&

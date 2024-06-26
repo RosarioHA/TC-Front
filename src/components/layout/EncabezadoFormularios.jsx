@@ -7,7 +7,6 @@ export const EncabezadoFormularios = ({id}) => {
   const [regionesCollapsed, setRegionesCollapsed] = useState(false);
   const [sectoresCollapsed, setSectoresCollapsed] = useState(false);
 
-  console.log("competenciaDetails en nuevo componente encabezado", competenciaDetails)
 
   const toggleCompetenciasCollapse = () => {
     setCompetenciasCollapsed(!competenciasCollapsed);

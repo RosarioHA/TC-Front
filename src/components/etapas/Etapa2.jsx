@@ -9,8 +9,11 @@ export const Etapa2 = ({ etapa, idCompetencia }) => {
   const userSubdere = userData?.perfil?.includes('SUBDERE');
   const userGore = userData?.perfil?.includes('GORE');
   const userDipres = userData?.perfil?.includes('DIPRES');
+  const userObservador = userData?.perfil?.includes("Usuario Observador");
   const [isCollapsed, setIsCollapsed] = useState(false);
   const usuarioSector = userData?.sector;
+
+  console.log(userObservador)
 
   const toggleCollapse = () => {
     setIsCollapsed(!isCollapsed);
@@ -198,7 +201,7 @@ export const Etapa2 = ({ etapa, idCompetencia }) => {
   };
 
   const renderFormularioSectorial = () => {
-    if (!userSubdere && !userGore && !userDipres) {
+    if (!userSubdere && !userGore && !userDipres  && !userObservador) {
       return null;
     }
     if (etapa.formulario_sectorial && etapa.formulario_sectorial.length === 1) {
@@ -244,7 +247,7 @@ export const Etapa2 = ({ etapa, idCompetencia }) => {
   };
 
   const renderFormularioSectorialParaUsuarioSectorial = () => {
-    if (userSubdere || !usuarioSector) {
+    if (userSubdere || !usuarioSector  && userObservador) {
       return null;
     }
 
@@ -281,7 +284,7 @@ export const Etapa2 = ({ etapa, idCompetencia }) => {
             {renderButtonForSubetapa(oficio_inicio_sectorial)}
           </div>
         )}
-        {userSubdere || userGore || userDipres ? renderFormularioSectorial() : renderFormularioSectorialParaUsuarioSectorial()}
+        {userSubdere || userGore || userDipres || userObservador ? renderFormularioSectorial() : renderFormularioSectorialParaUsuarioSectorial()}
         {estadoObservaciones && (
           <div className="d-flex justify-content-between text-sans-p border-top border-bottom my-3 py-1">
             <div className="align-self-center">{estadoObservaciones.nombre}</div>

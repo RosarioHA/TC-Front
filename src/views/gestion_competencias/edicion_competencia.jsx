@@ -232,8 +232,6 @@ const EdicionCompetencia = () =>
         nombre: comp.nombre,
         competencias: id,
       }));
-      console.log(competenciasAgrupadas)
-
 
 
       const dataToSend = {
@@ -242,7 +240,6 @@ const EdicionCompetencia = () =>
         ...usuariosSeleccionados,
         competencias_agrupadas: competenciasAgrupadas,
       };
-      console.log(dataToSend)
       await updateCompetencia(dataToSend);
       updateEditMode(false);
       updateHasChanged(false);

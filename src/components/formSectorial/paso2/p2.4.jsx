@@ -607,7 +607,7 @@ export const Subpaso_dosPuntoCuatro = ({
               </div>
             </div>
 
-            {!solo_lectura && (
+            {!solo_lectura && plataformasySoftwares.length >= 2 && (
             <div className="col d-flex align-items-center">
               <button
                 className="btn-terciario-ghost ms-2 mb-2"

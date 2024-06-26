@@ -3,7 +3,6 @@ import * as yup from 'yup';
 // Expresiones regulares
 const rutRegex = /^[0-9]+-[0-9kK]{1}$/;
 const nombreRegex = /^[A-Za-záéíóúüÜñÑ\s']+$/;
-const nombreCompetenciaRegex = /^[a-zA-Z0-9\sñÑáéíóúÁÉÍÓÚüÜ.,'":?!@_\-{}()~#$%&*+=\\[\\|;/°ᵃ]+$/;
 
 export const esquemaCreacionUsuario = yup.object().shape({
   rut: yup.string().matches(rutRegex, 'Formato de RUT inválido').required('El RUT es obligatorio'),
@@ -31,7 +30,6 @@ export const esquemaCreacionCompetencia = yup.object().shape({
   nombre: yup
     .string()
     .required('El nombre de la competencia es obligatorio')
-    .matches(nombreCompetenciaRegex, 'Formato de nombre inválido')
     .min(3, 'El nombre debe tener al menos 3 caracteres')
     .max(200, 'El nombre no debe exceder los 200 caracteres'),
   regiones: yup.array().min(1, 'Debes seleccionar al menos una región'),

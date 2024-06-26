@@ -375,11 +375,10 @@ const CreacionCompetencia = () =>
                         maxLength={200}
                         error={errors.nombre?.message}
                         {...field}
-                        initialValue={field.value}  // Pasar el valor inicial
+                        initialValue={field.value}  
                       />
                     )}
                   />
-                  {console.log(initialValues)}
                   <div className="my-4">
                     <div className="pb-4">Lista de competencias del grupo</div>
                     <ListaNombres

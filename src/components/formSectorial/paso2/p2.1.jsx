@@ -46,7 +46,7 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
     }
   }, [ dataDirecta ]);
 
-  const { handleUpdatePaso } = useContext(FormularioContext);
+  const { handleUpdatePaso, refetchTrigger } = useContext(FormularioContext);
 
   // Estado para mantener los datos agrupados por organismo
   const [ organismosAgrupados, setOrganismosAgrupados ] = useState({});
@@ -102,6 +102,7 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
 
   const [ ultimaFilaId, setUltimaFilaId ] = useState(null);
   const [ mostrarBotonGuardar, setMostrarBotonGuardar ] = useState(false);
+  
 
   const agregarFila = (organismoDisplay) => {
     const nuevaFilaId = generarIdUnico();
@@ -293,12 +294,10 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
     if (!esGuardadoPorBlur) {
       setMostrarBotonGuardar(false);
     }
-
     // Encuentra la fila específica que se está editando
     const filaEditada = organismosAgrupados[ organismoDisplay ]?.find(
       (fila) => fila.id === idFila
     );
-
     if (!filaEditada) {
       setErroresPorFila((prev) => ({
         ...prev,
@@ -388,8 +387,8 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
         return newState;
       });
     }
+    setUltimaFilaId(null)
   };
-
   return (
     <div>
       <h4 className="text-sans-h4">
@@ -419,8 +418,8 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
                 </div>
 
                 <div className="col-10 border-start border-end p-2">
-                  {filas.map((fila, filaIndex) => (
-                    <div key={fila.id} className="row p-1">
+                  {filas?.map((fila, filaIndex) => (
+                    <div key={fila?.id} className="row p-1">
                       <div className="col-10 p-3">
                         <div className="conteo">{filaIndex + 1}</div>
                         <CustomInputArea
