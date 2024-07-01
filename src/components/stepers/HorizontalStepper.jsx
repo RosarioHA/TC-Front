@@ -20,7 +20,7 @@ export const HorizontalStepper = ({ baseUrl, id }) => {
   useEffect(() => {
     if (resumen) {
       const newState = stepTitles.map((title, index) => {
-        const paso = resumen[`paso${index + 1}`];
+        const paso = resumen[`paso${index + 1}`] || resumen[`paso${index + 1}encabezado`];
         const estado = paso && paso.estado_stepper ? paso.estado_stepper : 'default';
         const esPasoActual = location.pathname === `${baseUrl}/paso_${index + 1}`;
         return esPasoActual && estado === 'default' ? 'active' : estado;
@@ -28,11 +28,12 @@ export const HorizontalStepper = ({ baseUrl, id }) => {
       setStepsState(newState);
     }
   }, [resumen, stepTitles, location.pathname, baseUrl]);
-
+  
   const goToStep = (stepNumber) => {
     navigate(`${baseUrl}/paso_${stepNumber}`);
     fetchResumen();
   };
+  
 
 
   return (
