@@ -119,6 +119,7 @@ export const useCompetencia = (id) =>
       setLoadingComptencia(false);
     }
   }, []);
+  
 
   useEffect(() => {
     fetchListaCompentencias();

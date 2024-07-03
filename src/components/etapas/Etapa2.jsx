@@ -127,7 +127,7 @@ export const Etapa2 = ({ etapa, idCompetencia }) =>
         path = `/home/observaciones_subdere/${idCompetencia}/`;
         buttonText = accion;
         icon = "visibility";
-        isDisabled = estado !== "finalizada"; 
+        isDisabled = estado !== "pendiente" && estado !== "revision"; 
         break;
 
       case nombre.includes("Observación del formulario sectorial"):

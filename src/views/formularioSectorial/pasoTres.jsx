@@ -8,32 +8,23 @@ import { MonoStepers } from '../../components/stepers/MonoStepers';
 import { useAuth } from '../../context/AuthContext';
 import { useObservacionesSubdere } from '../../hooks/formulario/useObSubdereSectorial';
 
+
 const PasoTres = () => {
-  const { handleUpdatePaso, updateStepNumber, pasoData, data } =
-    useContext(FormularioContext);
+  const { handleUpdatePaso, updateStepNumber, pasoData, data } = useContext(FormularioContext);
   const { userData } = useAuth();
   const userSubdere = userData?.perfil?.includes('SUBDERE');
   const userSectorial = userData?.perfil?.includes('Sectorial');
   const stepNumber = 3;
   const id = data.id;
-  const {
-    observaciones,
-    updateObservacion,
-    fetchObservaciones,
-    loadingObservaciones,
-    saved,
-  } = useObservacionesSubdere(data ? data.id : null);
+  const { observaciones, updateObservacion, fetchObservaciones, loadingObservaciones, saved } = useObservacionesSubdere(data ? data.id : null);
   const observacionesEnviadas = observaciones?.observacion_enviada;
   const formSectorialEnviado = data?.formulario_enviado;
   const [collapseStates, setCollapseStates] = useState({});
-
   const [observacionPaso3, setObservacionPaso3] = useState('');
   const [formData, setFormData] = useState({});
-
-  const [inputStatus, setInputStatus] = useState({
-    universo_cobertura: { loading: false, saved: false },
-    descripcion_cobertura: { loading: false, saved: false },
-  });
+  
+  // Estado para el estado de carga y guardado por región e input
+  const [inputStatus, setInputStatus] = useState({});
 
   useEffect(() => {
     updateStepNumber(stepNumber);
@@ -43,18 +34,11 @@ const PasoTres = () => {
     if (observaciones && observaciones.observacion_paso3) {
       setObservacionPaso3(observaciones.observacion_paso3);
     }
-    // Establecer datos del formulario basados en pasoData si están disponibles
     if (pasoData && pasoData.regiones) {
       const transformedData = transformData(pasoData.regiones);
       setFormData(transformedData);
     }
-  }, [
-    updateStepNumber,
-    stepNumber,
-    observaciones,
-    fetchObservaciones,
-    pasoData,
-  ]);
+  }, [updateStepNumber, stepNumber, observaciones, fetchObservaciones, pasoData]);
 
   const transformData = (regiones) => {
     return regiones.reduce((acc, region) => {
@@ -83,18 +67,22 @@ const PasoTres = () => {
     }));
     setInputStatus((prevStatus) => ({
       ...prevStatus,
-      [inputName]: { loading: false, saved: false },
+      [region]: {
+        ...prevStatus[region],
+        [inputName]: { loading: false, saved: false },
+      },
     }));
   };
 
   const handleSave = async (region, inputName) => {
-    // Iniciar la carga
     setInputStatus((prevStatus) => ({
       ...prevStatus,
-      [inputName]: { ...prevStatus[inputName], loading: true },
+      [region]: {
+        ...prevStatus[region],
+        [inputName]: { ...prevStatus[region][inputName], loading: true },
+      },
     }));
 
-    // Preparar datos para enviar
     const datosParaEnviar = {
       regiones: [
         {
@@ -106,17 +94,21 @@ const PasoTres = () => {
 
     try {
       await handleUpdatePaso(id, stepNumber, datosParaEnviar);
-
-      // Actualizar estado basado en la operación de guardado
       setInputStatus((prevStatus) => ({
         ...prevStatus,
-        [inputName]: { loading: false, saved: true },
+        [region]: {
+          ...prevStatus[region],
+          [inputName]: { loading: false, saved: true },
+        },
       }));
     } catch (error) {
       console.error('Error saving data for', inputName, ':', error);
       setInputStatus((prevStatus) => ({
         ...prevStatus,
-        [inputName]: { loading: false, saved: false },
+        [region]: {
+          ...prevStatus[region],
+          [inputName]: { loading: false, saved: false },
+        },
       }));
     }
   };
@@ -225,26 +217,19 @@ const PasoTres = () => {
               <div className="card card-body">
                 <div className="row">
                   <div className="col-12 mt-3">
-                    <CustomTextarea
+                  <CustomTextarea
                       label="Descripción de universo de cobertura (Obligatorio)"
                       placeholder="Describe el universo de cobertura"
                       name="universo_cobertura"
                       id="universo_cobertura"
                       value={
-                        formData[region.region]?.paso3?.[0]
-                          ?.universo_cobertura || ''
+                        formData[region.region]?.paso3?.[0]?.universo_cobertura || ''
                       }
-                      onChange={(e) =>
-                        handleChange(region.region, `universo_cobertura`, e)
-                      }
-                      onBlur={() =>
-                        handleSave(region.region, `universo_cobertura`)
-                      }
-                      loading={inputStatus.universo_cobertura.loading}
-                      saved={inputStatus.universo_cobertura.saved}
-                      maxLength={800}
+                      onChange={(e) => handleChange(region.region, 'universo_cobertura', e)}
+                      onBlur={() => handleSave(region.region, 'universo_cobertura')}
+                      loading={inputStatus[region.region]?.universo_cobertura?.loading}
+                      saved={inputStatus[region.region]?.universo_cobertura?.saved}
                       readOnly={solo_lectura}
-                      rows={2}
                     />
                     <div className="d-flex mb-3 mt-0 text-sans-h6-primary">
                       <i className="material-symbols-rounded me-2">info</i>
@@ -256,26 +241,19 @@ const PasoTres = () => {
                     </div>
                   </div>
                   <div className="mt-3 me-4">
-                    <CustomTextarea
+                  <CustomTextarea
                       label="Descripción de cobertura efectivamente abordada (Obligatorio)"
                       placeholder="Describe la cobertura efectivamente abordada"
-                      id="descripcion_cobertura"
                       name="descripcion_cobertura"
+                      id="descripcion_cobertura"
                       value={
-                        formData[region.region]?.paso3?.[0]
-                          ?.descripcion_cobertura || ''
+                        formData[region.region]?.paso3?.[0]?.descripcion_cobertura || ''
                       }
-                      onChange={(e) =>
-                        handleChange(region.region, `descripcion_cobertura`, e)
-                      }
-                      onBlur={() =>
-                        handleSave(region.region, `descripcion_cobertura`)
-                      }
-                      loading={inputStatus.descripcion_cobertura.loading}
-                      saved={inputStatus.descripcion_cobertura.saved}
-                      maxLength={800}
+                      onChange={(e) => handleChange(region.region, 'descripcion_cobertura', e)}
+                      onBlur={() => handleSave(region.region, 'descripcion_cobertura')}
+                      loading={inputStatus[region.region]?.descripcion_cobertura?.loading}
+                      saved={inputStatus[region.region]?.descripcion_cobertura?.saved}
                       readOnly={solo_lectura}
-                      rows={2}
                     />
                     <div className="d-flex mb-3 mt-0 text-sans-h6-primary">
                       <i className="material-symbols-rounded me-2">info</i>

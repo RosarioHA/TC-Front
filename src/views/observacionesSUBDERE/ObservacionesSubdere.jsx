@@ -5,8 +5,10 @@ import { useEtapa3 } from "../../hooks/minutaDIPRES/useEtapa3";
 import { EncabezadoFormularios } from "../../components/layout/EncabezadoFormularios";
 import { SubirArchivo } from "../../components/commons/subirArchivo";
 import CustomTextarea from "../../components/forms/custom_textarea";
+import { useResumenFormulario } from "../../hooks/formulario/useResumenFormulario";
 
-const ObservacionesSubdere = () => {
+const ObservacionesSubdere = () =>
+{
   const [ etapaOmitida, setEtapaOmitida ] = useState(null);
   const navigate = useNavigate();
   const { id } = useParams();
@@ -16,30 +18,44 @@ const ObservacionesSubdere = () => {
   const observacionesEnviadas = competenciaDetails?.etapa2?.observaciones_completas;
   const etapaFinalizada = competenciaDetails?.etapa2?.estado === 'Finalizada';
 
-  useEffect(() => {
+  const formularios = competenciaDetails?.etapa2?.formulario_sectorial?.detalle_formularios_sectoriales
+
+
+  console.log(formularios)
+
+
+  useEffect(() =>
+  {
     // Obtener etapaOmitida desde competenciaDetails y establecerla en el estado
-    if (competenciaDetails && competenciaDetails.etapa3 && competenciaDetails.etapa3.omitida !== undefined) {
+    if (competenciaDetails && competenciaDetails.etapa3 && competenciaDetails.etapa3.omitida !== undefined)
+    {
       setEtapaOmitida(competenciaDetails.etapa3.omitida);
     }
   }, [ competenciaDetails ]); // Este efecto se ejecuta cada vez que competenciaDetails cambia
 
-  const handleBackButtonClick = () => {
+  const handleBackButtonClick = () =>
+  {
     navigate(-1);
   };
 
-  const handleRadioButtonChange = (value) => {
+  const handleRadioButtonChange = (value) =>
+  {
     setEtapaOmitida(value === 'B');
   };
 
-  const handleVerFormulario = (formularioId) => {
+  const handleVerFormulario = (formularioId) =>
+  {
     navigate(`/home/formulario_sectorial/${formularioId}/paso_1`);
   };
 
-  const handleCerrarEtapa = async () => {
-    try {
+  const handleCerrarEtapa = async () =>
+  {
+    try
+    {
       await patchCompetenciaOmitida(competenciaDetails?.etapa3?.id, etapaOmitida);
       navigate(`/home/success_cierre_observaciones/${competenciaDetails?.id}`);
-    } catch (error) {
+    } catch (error)
+    {
       console.error("Error al cerrar la etapa:", error);
     }
   };
@@ -61,7 +77,7 @@ const ObservacionesSubdere = () => {
           </ol>
         </nav>
       </div>
-      
+
       <div>
         <h1 className="text-sans-Title">Observaciones SUBDERE</h1>
         <h2 className="text-sans-h1">Formularios Sectoriales</h2>
@@ -69,7 +85,7 @@ const ObservacionesSubdere = () => {
       </div>
       <hr />
 
-      <div>
+      <div className="my-4">
         {competenciaDetails?.etapa2?.observaciones_sectorial ? (
           Array.isArray(competenciaDetails.etapa2.observaciones_sectorial) ? (
             competenciaDetails.etapa2.observaciones_sectorial.map((observaciones, index) => (
@@ -91,7 +107,7 @@ const ObservacionesSubdere = () => {
             ))
           ) : (
             competenciaDetails?.etapa2.observaciones_sectorial?.detalle_observaciones_sectoriales
-              .sort((a, b) => b.id - a.id) 
+              .sort((a, b) => b.id - a.id)
               .map((observaciones, index) => (
                 <tr
                   className={`d-flex justify-content-between p-3 align-items-center ${index % 2 === 0 ? 'neutral-line' : 'white-line'}`}
@@ -128,29 +144,33 @@ const ObservacionesSubdere = () => {
         <p className="text-sans-p">Fecha última modificación:</p><p className="text-sans-p-bold ms-2">{competenciaDetails?.etapa2?.fecha_ultima_modificacion}</p>
       </div>
 
-        {/* DOCUMENTOS ANTECEDENTES ADICIONALES SECTOR:
+      {/* DOCUMENTOS ANTECEDENTES ADICIONALES SECTOR:
         aqui el usuario SUBDERE envia sus AA sobre cada Sector de la competencia
         pendiente conecciones PATCH con el backend*/}
       <div className="my-4">
-        <p className="text-sans-h5 mb-1">Antecedentes Adicionales de sector (Opcional)</p>
-        <p className="text-sans-h6">Máximo 1 archivo por sector, peso máximo 20MB, formato PDF.</p>
-        {competenciaDetails?.sectores?.map((sector) => (
-          <div key={sector.id}>
-            <p>{sector.nombre}</p>
+        <p className="text-sans-h4 mt-5">Antecedentes Adicionales de sector</p>
+        {formularios?.map((sector, index) => (
+          <div className="col-10" key={index}>
+            <p className="text-sans-h5 my-2 "><strong>{sector.nombre.replace('Completar formulario Sectorial - ', '')}</strong></p>
             <div>
-              <div className="d-flex justify-content-between py-3 fw-bold">
-                <div className="d-flex mb-2">
+              <div className="d-flex justify-content-between py-2 fw-bold">
+                <div className="d-flex my-1">
                   <div className="ms-4">#</div>
                   <div className="ms-5">Documento</div>
                 </div>
                 <div className="me-5">Acción</div>
               </div>
             </div>
-              <SubirArchivo/>
+            <SubirArchivo 
+            readOnly={true}
+            tituloDocumento={sector.antecedente_adicional_sectorial}
+            archivoDescargaUrl={sector.download_antecedente}/>
             <div className="my-4">
               <CustomTextarea
                 label="Descripción del archivo adjunto (Opcional)"
                 placeholder="Describe el archivo adjunto"
+                value={sector.descripcion_antecedente}
+                readOnly={true}
               />
             </div>
           </div>
@@ -204,7 +224,7 @@ const ObservacionesSubdere = () => {
 
       {!observacionesEnviadas && (
         <>
-          <div>
+          <div className="my-5">
             <h3 className="text-sans-h2">Debes revisar todos los formularios antes de terminar la etapa</h3>
             <p className="text-sans-p mt-3">Para poder terminar la etapa debes revisar todos los formularios y dejar observaciones donde consideres necesario.</p>
           </div>
