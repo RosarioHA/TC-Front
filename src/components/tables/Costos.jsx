@@ -401,7 +401,7 @@ const Costos = ({
                                 handleSave(costo.id, 'etapa', selectedOptions);
                                 field.onChange(selectedOptions);
                               }}
-
+                              titleMaxLength={18}
                               readOnly={solo_lectura || opcionesEtapas.length === 0}
                               selectedValues={costo.etapa_label_value}
                             />

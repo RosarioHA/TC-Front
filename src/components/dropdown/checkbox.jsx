@@ -9,7 +9,8 @@ const DropdownCheckbox = ({
   onSelectionChange,
   loading,
   saved,
-  error
+  error,
+  titleMaxLength
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState(() => selectedValues || []);
@@ -85,21 +86,21 @@ const DropdownCheckbox = ({
     }
   }, [selectedOptions, options, onSelectionChange, readOnly]);
   
-  const truncateText = (text, maxLength) => {
-    if (text.length > maxLength) {
-      return text.slice(0, maxLength) + '...';
+  const truncateText = (text, titleMaxLength) => {
+    if (titleMaxLength && text.length > titleMaxLength) {
+      return text.slice(0, titleMaxLength) + '...';
     }
     return text;
   };
 
   const renderSelectedOptions = () => {
-    const maxLength = 18;
+    const maxLengthToUse = titleMaxLength || Infinity;
 
     if (readOnly && selectedValues && selectedValues.length > 0) {
-      return selectedValues.map((value) => truncateText(value.label, maxLength)).join(', ');
+      return selectedValues.map((value) => truncateText(value.label, maxLengthToUse)).join(', ');
     } else if (!readOnly && selectedOptions && selectedOptions.length > 0) {
       return selectedOptions.length === 1
-      ? truncateText(selectedOptions[0].label, maxLength)
+      ? truncateText(selectedOptions[0].label, maxLengthToUse)
         : `${selectedOptions.length} seleccionadas`;
     }
     return placeholder;
