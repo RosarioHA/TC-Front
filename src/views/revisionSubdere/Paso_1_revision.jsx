@@ -6,8 +6,7 @@ import { AmbitoDefinitivo } from "../../components/formSubdere/paso1/p1_Subdere"
 import { RecomendacionTransferencia } from "../../components/formSubdere/paso1/p2_Subdere";
 import { NavigationSubdere } from "../../components/layout/navigationSubdere";
 
-const Paso_1_revision = () =>
-{
+const Paso_1_revision = () => {
   const {
     // dataFormSubdere,
     dataPasoSubdere,
@@ -18,14 +17,12 @@ const Paso_1_revision = () =>
 
   const stepNumber = 1;
 
-  const handleUpdateStepNumber = useCallback(() =>
-  {
+  const handleUpdateStepNumber = useCallback(() => {
     const stepNumber = 1;
     updateStepNumber(stepNumber);
   }, [ updateStepNumber ]);
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     handleUpdateStepNumber();
   }, [ handleUpdateStepNumber ]);
 
