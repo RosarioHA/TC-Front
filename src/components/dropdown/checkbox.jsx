@@ -21,7 +21,6 @@ const DropdownCheckbox = ({
     setSelectedOptions(selectedValues || []);
   }, [selectedValues]);
   
-
   const handleClickOutside = useCallback((event) => {
     if (
       dropdownRef.current &&
@@ -39,14 +38,12 @@ const DropdownCheckbox = ({
     }
   }, [isOpen, selectedOptions, userHasMadeSelection, onSelectionChange]);
   
-
   useEffect(() => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [handleClickOutside]);
-
 
   useEffect(() => {
     // Actualizar solo si el usuario no ha hecho ninguna selección
@@ -88,14 +85,21 @@ const DropdownCheckbox = ({
     }
   }, [selectedOptions, options, onSelectionChange, readOnly]);
   
-
+  const truncateText = (text, maxLength) => {
+    if (text.length > maxLength) {
+      return text.slice(0, maxLength) + '...';
+    }
+    return text;
+  };
 
   const renderSelectedOptions = () => {
+    const maxLength = 18;
+
     if (readOnly && selectedValues && selectedValues.length > 0) {
-      return selectedValues.map((value) => value.label).join(', ');
+      return selectedValues.map((value) => truncateText(value.label, maxLength)).join(', ');
     } else if (!readOnly && selectedOptions && selectedOptions.length > 0) {
       return selectedOptions.length === 1
-        ? selectedOptions[0].label
+      ? truncateText(selectedOptions[0].label, maxLength)
         : `${selectedOptions.length} seleccionadas`;
     }
     return placeholder;

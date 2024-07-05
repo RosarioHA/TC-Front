@@ -28,7 +28,6 @@ const Costos = ({
   const [opcionesItemsPorCosto, setOpcionesItemsPorCosto] = useState({});
   const [inputStatus, setInputStatus] = useState({});
 
-
   useEffect(() => {
     setCostos(Array.isArray(data) ? data : []);
   }, [data]);
@@ -55,7 +54,6 @@ const Costos = ({
     trigger,
     formState: { errors },
   } = formMethods;
-
 
   // Lógicas para llenar opciones de subtitulo e item_subtitulo
   const transformarEnOpciones = (datos, propiedadLabel, propiedadValue = 'id') => {
@@ -91,13 +89,11 @@ const Costos = ({
     setOpcionesItemsPorCosto(opcionesIniciales);
   }, [costos, listado_subtitulos, listado_item_subtitulos]);
 
-
   useEffect(() => {
     if (listado_etapas) {
       setopcionesEtapas(transformarEnOpciones(listado_etapas, 'nombre_etapa'));
     }
   }, [listado_etapas]);
-
 
   // Lógica para agregar un nuevo costo
   const onSubmit = () => {
@@ -197,7 +193,6 @@ const Costos = ({
     };
   };
 
-
   const handleSave = async (costoId, fieldName, newValue) => {
     setInputStatus((prevStatus) => ({
       ...prevStatus,
@@ -239,8 +234,6 @@ const Costos = ({
       }));
     }
   };
-
-
 
   return (
     <>
