@@ -100,7 +100,7 @@ const PasoCinco = () => {
               </div>
               <div className={`collapse ${collapseStates[index] ? 'show' : ''}`} id={`collapseRegion${index}`}>
                 <div className="card card-body">
-                  <div className="container-fluid me-5 pe-5">
+                  <div className="container">
                     <Subpaso_CincoPuntoUno
                       id={data.id}
                       paso5={region.paso5}

@@ -40,7 +40,7 @@ export const Subpaso_CincoPuntoUno = ({
   };
 
   return (
-    <div className="mt-4 me-5 pe-5">
+    <div className="mt-4">
       <h4 className="text-sans-h4">5.1 Costos asociados al ejercicio de la competencia</h4>
       <h6 className="text-sans-h6-primary mt-3">
         Para realizar un correcto costeo de la competencia, se toman como bases las etapas descritas y diagramadas en el paso 2. A partir de estas etapas, se deben completar las siguientes tablas de costos por subtitulo.
