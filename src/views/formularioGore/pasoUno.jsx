@@ -70,7 +70,7 @@ const PasoUnoGore = () => {
             <h3 className="mt-3 me-4">{paso1_gore.nombre_paso}</h3>
             <Avance avance={paso1_gore.avance} />
           </div>
-          <span className="text-sans-h6-primary">Texto de apoyo</span>
+          {/* <span className="text-sans-h6-primary">Texto de apoyo</span> */}
           <SubUno_Uno
             dataPaso={paso1_gore}
             id={dataFormGore.id}

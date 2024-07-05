@@ -79,7 +79,7 @@ const PasoCinco = () => {
             <h3 className="mt-3 me-4">{paso5encabezado.nombre_paso}</h3>
             <Avance avance={avance} id={data.id} />
           </div>
-          <span className="text-sans-h6-primary">Texto de apoyo</span>
+          {/* <span className="text-sans-h6-primary">Texto de apoyo</span> */}
           {pasoData.regiones.map((region, index) => (
             <div key={index} className="my-5">
               <div className="col-12 collapse-regiones border border-bottom" type="button" data-bs-toggle="collapse"
