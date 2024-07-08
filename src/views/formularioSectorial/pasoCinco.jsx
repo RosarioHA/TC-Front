@@ -79,7 +79,7 @@ const PasoCinco = () => {
             <h3 className="mt-3 me-4">{paso5encabezado.nombre_paso}</h3>
             <Avance avance={avance} id={data.id} />
           </div>
-          <span className="text-sans-h6-primary">Texto de apoyo</span>
+          {/* <span className="text-sans-h6-primary">Texto de apoyo</span> */}
           {pasoData.regiones.map((region, index) => (
             <div key={index} className="my-5">
               <div className="col-12 collapse-regiones border border-bottom" type="button" data-bs-toggle="collapse"
@@ -100,7 +100,7 @@ const PasoCinco = () => {
               </div>
               <div className={`collapse ${collapseStates[index] ? 'show' : ''}`} id={`collapseRegion${index}`}>
                 <div className="card card-body">
-                  <div className="container-fluid me-5 pe-5">
+                  <div className="container">
                     <Subpaso_CincoPuntoUno
                       id={data.id}
                       paso5={region.paso5}

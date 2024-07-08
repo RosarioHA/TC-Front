@@ -519,15 +519,18 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
                     <div className="p-2">
                       {!solo_lectura && (
                         controlBotones[ organismoDisplay ]?.mostrarBotonGuardar ? (
-                          <button
-                            className="btn-secundario-s m-2"
-                            onClick={() => intentarGuardarFila(filaEnEdicionId, organismoDisplay)}
-                          >
-                            <i className="material-symbols-rounded me-2">save</i>
-                            <p className="mb-0 text-decoration-underline">
-                              Guardar
-                            </p>
-                          </button>
+                          <>
+                            <p className="ms-2 text-sans-h6-primary">Recuerda guardar los datos ingresados. Si no guardas, tus respuestas se perderán.</p>
+                            <button
+                              className="btn-secundario-s m-2"
+                              onClick={() => intentarGuardarFila(filaEnEdicionId, organismoDisplay)}
+                            >
+                              <i className="material-symbols-rounded me-2">save</i>
+                              <p className="mb-0 text-decoration-underline">
+                                Guardar
+                              </p>
+                            </button>
+                          </>
                         ) : (
                           <button
                             className="btn-secundario-s m-2"

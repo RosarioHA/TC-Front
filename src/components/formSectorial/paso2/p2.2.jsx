@@ -340,6 +340,10 @@ export const Subpaso_dosPuntoDos = ({
       </h6>
 
       <div className="my-4">
+        <div className="row fw-bold my-2"> 
+          <div className="col-5">Organismos</div>
+          <div className="col-3 ps-0">Unidades intervinientes</div>
+        </div>
         {Object.entries(agrupados).map(([ organismoDisplay, ministerios ]) => (
           <div key={organismoDisplay} className="tabla-organismo">
             <div className="row border-start border-bottom">

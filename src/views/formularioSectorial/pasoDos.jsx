@@ -86,7 +86,7 @@ const PasoDos = () => {
             <h3 className="mt-3 me-4">{paso2.nombre_paso}</h3>
             <Avance avance={avance} id={data.id} />
           </div>
-          <span className="text-sans-h6-primary">Texto de apoyo</span>
+          {/* <span className="text-sans-h6-primary">Texto de apoyo</span> */}
 
           <div className="container me-5 pe-5 my-5">
             <Subpaso_dosPuntoUno
