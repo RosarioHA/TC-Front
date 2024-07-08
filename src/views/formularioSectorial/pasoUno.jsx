@@ -17,11 +17,13 @@ const PasoUno = () =>
   const { userData } = useAuth();
   const userSubdere = userData?.perfil?.includes('SUBDERE');
   const userSectorial = userData?.perfil?.includes('Sectorial');
+  const userDIPRES = userData?.perfil?.includes('DIPRES');
   const { observaciones, updateObservacion, fetchObservaciones, loadingObservaciones, saved } = useObservacionesSubdere(data ? data.id : null);
   const [ observacionPaso1, setObservacionPaso1 ] = useState("");
 
   const observacionesEnviadas = observaciones?.observacion_enviada
   const formSectorialEnviado = data?.formulario_enviado
+
 
 
   useEffect(() =>
@@ -89,7 +91,7 @@ const PasoUno = () =>
           <Subpaso_tres pasoData={paso1Data} id={data ? data.id : null} stepNumber={stepNumber} solo_lectura={solo_lectura} />
           {/* { activeOS ? (
             <> */}
-              {((userSubdere && formSectorialEnviado) || (userSectorial && observacionesEnviadas)) && (
+              {((userSubdere && formSectorialEnviado) || (userSectorial && observacionesEnviadas) || (userDIPRES && observacionesEnviadas) ) && (
                 <div className="mt-5 my-4">
                   {!observacionPaso1.trim() && observacionesEnviadas ? (
                     <p>No se han dejado observaciones en este paso.</p>

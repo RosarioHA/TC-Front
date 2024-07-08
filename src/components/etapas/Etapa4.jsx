@@ -160,7 +160,7 @@ export const Etapa4 = ({ etapa, etapaTres, idCompetencia }) => {
         );
       } else {
         path = `/home/estado_competencia/${etapa.id}/subir_oficio_gore/`;
-        const isDisabled = (estado === "pendiente" || estado === "revision") && !enableButtonForSubdere;
+        const isDisabled = estado === "pendiente" && !enableButtonForSubdere;
 
         const handleButtonClick = () => {
           if (!isDisabled) {

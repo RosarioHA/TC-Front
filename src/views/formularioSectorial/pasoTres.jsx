@@ -15,6 +15,7 @@ const PasoTres = () =>
   const { userData } = useAuth();
   const userSubdere = userData?.perfil?.includes('SUBDERE');
   const userSectorial = userData?.perfil?.includes('Sectorial');
+  const userDIPRES = userData?.perfil?.includes('DIPRES');
   const stepNumber = 3;
   const id = data.id;
   const { observaciones, updateObservacion, fetchObservaciones, loadingObservaciones, saved } = useObservacionesSubdere(data ? data.id : null);
@@ -300,7 +301,7 @@ const PasoTres = () =>
         ))}
         {/* {activeOS ? ( */}
           <>
-            {((userSubdere && formSectorialEnviado) || (userSectorial && observacionesEnviadas)) && (
+          {((userSubdere && formSectorialEnviado) || (userSectorial && observacionesEnviadas) || (userDIPRES && observacionesEnviadas) ) && (
               <div className="mt-5 my-4">
                 {!observacionPaso3.trim() && observacionesEnviadas ? (
                   <p>No se han dejado observaciones en este paso.</p>
