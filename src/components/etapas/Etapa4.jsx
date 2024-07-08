@@ -184,13 +184,13 @@ export const Etapa4 = ({ etapa, etapaTres, idCompetencia }) => {
 
     switch (formulario.estado) {
       case "pendiente":
-        buttonText = formulario.accion || "Completar";
+        buttonText = formulario.accion;
         path = `${basePath}/paso_1`;
         icon = 'edit';
         isButtonDisabled = userProfile !== "GORE" || estado === 'Aún no puede comenzar';
         break;
       default:
-        buttonText = "Ver Detalles";
+        buttonText = formulario.accion;
         path = `${basePath}/paso_1`;
         icon = 'visibility';
         isButtonDisabled = estado === 'Aún no puede comenzar';
