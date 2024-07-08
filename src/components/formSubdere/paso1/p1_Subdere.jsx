@@ -63,7 +63,7 @@ export const AmbitoDefinitivo = ({ ambito_definitivo_competencia, solo_lectura }
           <h4 className="text-sans-h4">
             1. Ámbito definitivo de la competencia:
           </h4>
-          <div className="text-sans-h6-primary my-3 col-11">
+          <div className="text-sans-h6-primary my-3 mb-4 col-11">
             <h6>
               El ámbito que selecciones será el ámbito que se asociará a la competencia.
             </h6>

@@ -5,8 +5,7 @@ import 'material-icons/iconfont/material-icons.css';
 import { FormSubdereContext } from '../../../context/RevisionFinalSubdere';
 import { ModalAdvertencia } from '../../commons/modalAdvertencia';
 
-export const RecomendacionTransferencia = ({ regionesListado, regionesRecomendadas, solo_lectura }) =>
-{
+export const RecomendacionTransferencia = ({ regionesListado, regionesRecomendadas, solo_lectura }) => {
   // Transforma el listado de regiones al formato esperado por DualListBox
   const options = regionesListado.map(region => ({
     value: region.id.toString(),
@@ -19,10 +18,7 @@ export const RecomendacionTransferencia = ({ regionesListado, regionesRecomendad
   const [ showMessage, setShowMessage ] = useState(false);
   const modalRef = useRef();
 
-
-
-  useEffect(() =>
-  {
+  useEffect(() => {
     // Asumiendo que esto ajusta la lista de `selected` basado en los datos externos.
     const recomendadasIds = new Set(regionesRecomendadas);
     const selectedOptions = regionesListado.filter(region => !recomendadasIds.has(region.id)).map(region => region.id.toString());
@@ -30,8 +26,7 @@ export const RecomendacionTransferencia = ({ regionesListado, regionesRecomendad
   }, [ regionesRecomendadas, regionesListado ]);
 
   // Manejador para el envío del formulario
-  const onSubmit = (event) =>
-  {
+  const onSubmit = (event) => {
     event.preventDefault();
     setIsModalOpen(true);
   };
@@ -50,14 +45,11 @@ export const RecomendacionTransferencia = ({ regionesListado, regionesRecomendad
     setShowMessage(true);
   };
   
-
   // Determina el mensaje a mostrar basado en la selección actual
-  const getMessageAndStyle = () =>
-  {
+  const getMessageAndStyle = () => {
     let messageComponent;
 
-    if (selected.length === 0)
-    {
+    if (selected.length === 0) {
       messageComponent = (
         <span>La transferencia es <strong>favorable</strong> para todas las regiones.</span>
       );
@@ -66,8 +58,7 @@ export const RecomendacionTransferencia = ({ regionesListado, regionesRecomendad
         style: "message-favorable",
         containerStyle: "message-container-favorable"
       };
-    } else if (selected.length < options.length)
-    {
+    } else if (selected.length < options.length) {
       messageComponent = (
         <span>La transferencia es <strong>parcialmente favorable</strong>. Solo se transferirá a algunas regiones.</span>
       );
@@ -76,8 +67,7 @@ export const RecomendacionTransferencia = ({ regionesListado, regionesRecomendad
         style: "message-parcial",
         containerStyle: "message-container-parcial"
       };
-    } else
-    {
+    } else {
       messageComponent = (
         <span>La transferencia es <strong>desfavorable</strong> para todas las regiones.</span>
       );
@@ -91,7 +81,6 @@ export const RecomendacionTransferencia = ({ regionesListado, regionesRecomendad
 
   const { message, style, containerStyle } = getMessageAndStyle();
 
-
   return (
     <>
       <div className="col-11">
@@ -99,8 +88,8 @@ export const RecomendacionTransferencia = ({ regionesListado, regionesRecomendad
           <h4 className="text-sans-h4">
             2. Recomendación de transferencia
           </h4>
-          <div className="text-sans-h6-primary my-3 col-11">
-            <h6>Texto de apoyo.</h6>
+          <div className="text-sans-h6-primary my-3 mb-4 col-11">
+            <h6>Mueve las regiones a la casilla que corresponde según la recomendación de transferencia. Recuerda guardar tu elección antes de seguir al la siguiente etapa.</h6>
           </div>
           <form onSubmit={onSubmit}>
             <DualListBox

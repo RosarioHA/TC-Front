@@ -463,7 +463,7 @@ const CreacionCompetencia = () =>
 
                 <div className="d-flex mt-2 text-sans-h6-primary">
                   <i className="material-symbols-rounded me-2">info</i>
-                  <h6> editable </h6>
+                  <h6> El ámbito se puede modificar en las revisiones SUBDERE que ocurren a lo largo del proceso, la elección en esta etapa no es necesariamente definitiva. </h6>
                 </div>
               </div>
               <div className="mb-4">

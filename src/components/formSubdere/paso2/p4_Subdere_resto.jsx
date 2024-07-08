@@ -132,10 +132,8 @@ export const RestoCampos = ({
           <h4 className="text-sans-h4">
             4.5 Implementación y acompañamiento
           </h4>
-          <div className="text-sans-h6 my-3 col-11">
-            {/* <h6>
-              Texto de apoyo
-            </h6> */}
+          <div className="text-sans-h6-primary my-3 col-11">
+            <h6> En esta instancia aún no podrás construir indicadores. Tendrás una instancia nueva post-CID, que aparecerá en esta sección con esos fines.</h6>
           </div>
           <div className="mb-4 col-11">
             <h6>

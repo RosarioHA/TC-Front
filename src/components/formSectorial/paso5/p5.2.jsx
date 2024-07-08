@@ -18,7 +18,7 @@ export const Subpaso_CincoDos = ({
   }
 
   return (
-    <div className="mt-4 me-5 pe-5 ">
+    <div className="mt-4">
       <span className="my-4 text-sans-h4">5.2 Evolución del gasto asociado al ejercicio de la competencia</span>
       <div className="container me-5 px-0">
         <h6 className="text-sans-h6-primary mt-3">

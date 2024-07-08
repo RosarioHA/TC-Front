@@ -7,8 +7,7 @@ import { Temporalidad } from "../../components/formSubdere/paso2/p4_1_Subdere";
 import { RestoCampos } from "../../components/formSubdere/paso2/p4_Subdere_resto";
 import { NavigationSubdere } from "../../components/layout/navigationSubdere";
 
-const Paso_2_Revision = () =>
-{
+const Paso_2_Revision = () => {
   const {
     dataFormSubdere,
     dataPasoSubdere,
@@ -18,13 +17,11 @@ const Paso_2_Revision = () =>
 
   const stepNumber = 2;
 
-  const handleUpdateStepNumber = useCallback(() =>
-  {
+  const handleUpdateStepNumber = useCallback(() => {
     updateStepNumber(stepNumber);
   }, [ updateStepNumber ]);
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     handleUpdateStepNumber();
   }, [ handleUpdateStepNumber ]);
 
