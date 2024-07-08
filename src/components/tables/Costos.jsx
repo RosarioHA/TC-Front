@@ -244,7 +244,7 @@ const Costos = ({
               <div key={costo.id} className="col mt-4">
                 <div className="row">
                   <span className="text-sans-p-bold mb-0">{index + 1}</span>
-                  <div className="col d-flex flex-column justify-content-between">
+                  <div className="col d-flex flex-column justify-content-between mt-3">
                     <p className="text-sans-p-bold">Subtítulo</p>
                     <Controller
                       control={control}
@@ -299,7 +299,7 @@ const Costos = ({
                     />
                   </div>
 
-                  <div className="col border-end  d-flex flex-column justify-content-between">
+                  <div className="col border-end  d-flex flex-column justify-content-between mt-3">
                     <p className="text-sans-p-bold">Item</p>
                     <Controller
                       control={control}
@@ -330,7 +330,7 @@ const Costos = ({
                       }}
                     />
                   </div>
-                  <div className="col d-flex flex-column justify-content-between border-end pe-4">
+                  <div className="col d-flex flex-column justify-content-between border-end pe-4 mt-3">
                     <div>
                       <p className="text-sans-p-bold mb-0">Total Anual</p>
                       <p className="mb-0">($M)</p>
@@ -382,7 +382,7 @@ const Costos = ({
 
                   </div>
 
-                  <div className="col d-flex flex-column justify-content-between border-end">
+                  <div className="col d-flex flex-column justify-content-between border-end mt-3">
                     <div>
                       <p className="text-sans-p-bold mb-0">Etapa</p>
                       <p className="">(Opcional)</p>
@@ -411,7 +411,7 @@ const Costos = ({
                     </div>
                   </div>
 
-                  <div className="col d-flex flex-column justify-content-between">
+                  <div className="col-4 d-flex flex-column justify-content-between mt-3">
                     <p className="text-sans-p-bold">¿Es transversal?</p>
                     <Controller
                       control={control}
