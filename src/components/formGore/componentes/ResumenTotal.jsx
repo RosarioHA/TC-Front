@@ -3,7 +3,7 @@ export const ResumenTotal = ({ resumen }) => {
     <>
       <div className="pe-5 me-5 mt-4 col-11">
         <div className="subrayado col-12">
-          <div className="align-self-center text-sans-h4">
+          <div className="align-self-center text-sans-h4 ps-2">
             Resumen de costos totales (directos + indirectos)
           </div>
         </div>
