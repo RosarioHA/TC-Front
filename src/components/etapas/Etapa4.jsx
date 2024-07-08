@@ -160,7 +160,7 @@ export const Etapa4 = ({ etapa, etapaTres, idCompetencia }) => {
         );
       } else {
         path = `/home/estado_competencia/${etapa.id}/subir_oficio_gore/`;
-        const isDisabled = estado === "pendiente" && !enableButtonForSubdere;
+        const isDisabled = (estado === "pendiente" || estado === "revision") && !enableButtonForSubdere;
 
         const handleButtonClick = () => {
           if (!isDisabled) {
@@ -184,13 +184,13 @@ export const Etapa4 = ({ etapa, etapaTres, idCompetencia }) => {
 
     switch (formulario.estado) {
       case "pendiente":
-        buttonText = formulario.accion;
+        buttonText = formulario.accion || "Completar";
         path = `${basePath}/paso_1`;
         icon = 'edit';
         isButtonDisabled = userProfile !== "GORE" || estado === 'Aún no puede comenzar';
         break;
       default:
-        buttonText = formulario.accion;
+        buttonText = "Ver Detalles";
         path = `${basePath}/paso_1`;
         icon = 'visibility';
         isButtonDisabled = estado === 'Aún no puede comenzar';
