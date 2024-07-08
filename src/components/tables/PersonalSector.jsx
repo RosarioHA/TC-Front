@@ -533,7 +533,7 @@ const PersonalSectorial = ({
                     </div>
                   )}
 
-                  <div className="col pt-3">
+                  <div className="col">
                     <Controller
                       control={control}
                       name={`renta_bruta_${persona.id}`}
@@ -587,7 +587,7 @@ const PersonalSectorial = ({
                     </div>
                   )}
 
-                  <div className="col pt-3">
+                  <div className="col">
                     <Controller
                       control={control}
                       name={`grado_${persona.id}`}
