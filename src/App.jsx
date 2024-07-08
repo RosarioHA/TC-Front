@@ -183,7 +183,7 @@ function App()
           <Route path="minuta_dipres/:id">
             {createProtectedRoute("", PrimeraMinutaDipres, [ 'SUBDERE', 'Usuario Observador', 'DIPRES','Usuario Sectorial'])}
             {createProtectedRoute("segunda_minuta_dipres", SegundaMinutaDipres, [ 'SUBDERE', 'Usuario Observador', 'DIPRES','Usuario Sectorial' ])}
-            {createProtectedRoute("observaciones_subdere", ObservacionesSubdereDipres, [ 'SUBDERE', 'Usuario Observador','Usuario Sectorial' ])}
+            {createProtectedRoute("observaciones_subdere", ObservacionesSubdereDipres, [ 'SUBDERE', 'Usuario Observador','Usuario Sectorial','DIPRES' ])}
           </Route>
 
 
