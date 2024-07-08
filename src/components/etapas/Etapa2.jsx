@@ -112,14 +112,14 @@ export const Etapa2 = ({ etapa, idCompetencia }) =>
       case nombre.includes("Observaciones de formularios sectoriales"):
         path = `/home/observaciones_subdere/${idCompetencia}/`;
         buttonText = accion;
-        icon = "visibility";
+        icon = "draft";
         isDisabled = estado === "pendiente"; 
         break;
   
       case nombre.includes("Observación del formulario sectorial"):
         path = `/home/observaciones_subdere/${idCompetencia}/`;
         buttonText = accion;
-        icon = "visibility";
+        icon = "draft";
         isDisabled = estado === "pendiente"; 
         break;
   
