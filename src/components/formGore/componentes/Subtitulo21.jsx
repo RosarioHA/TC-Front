@@ -8,9 +8,14 @@ export const Subtitulo21 = ({ personal, solo_lectura }) => {
         {Array.isArray(personal) && personal.map((sectorData) => (
           <React.Fragment key={sectorData.sector}>
             <div className="subrayado col-12">
-              <span className="py-2 my-2 align-self-center">
+              <span className="py-2 ps-2 my-2 align-self-center">
                 Subtítulo 21 - Gastos en Personal informados por {sectorData.sector}
               </span>
+            </div>
+            <div className="text-sans-h6-primary my-3 col-11">
+              <h6>
+                En caso de requerir subtítulos adicionales puedes agregarlos a continuación. Deberás justificarlos en el siguiente paso. En el paso 3 podrás elegir al personal de comisión de servicio que necesites.
+              </h6>
             </div>
             {sectorData.items.map((item) => (
               <div
