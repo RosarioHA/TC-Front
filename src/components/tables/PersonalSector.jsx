@@ -317,21 +317,23 @@ const PersonalSectorial = ({
   const handleSave = async (arrayNameId, fieldName, newValue) => {
     const fieldId = `${fieldName}_${arrayNameId}`;
     startSavingField(fieldId);
-  
+
     let payload = createPayload(fieldName, arrayNameId, newValue);
     if (!payload) {
       console.error('Error al crear el payload');
+      setError(fieldId, { type: 'manual', message: 'Error al crear el payload. Intenta de nuevo.' });
       finishSavingField(fieldId, false);
       return;
     }
-  
-    // Revisar si algún valor dentro del payload es null
-    if (containsNull(payload)) {
+
+    const nullField = containsNull(payload);
+    if (nullField) {
       console.log(`Se detectó un valor null en el payload para el campo ${fieldName}.`);
+      setError(`${nullField}_${arrayNameId}`, { type: 'manual', message: 'Error de guardado. Borra e ingresa el dato otra vez.' });
       finishSavingField(fieldId, false);
       return; // Terminar ejecución si se encuentra un valor null
     }
-  
+
     try {
       await handleUpdatePaso(id, stepNumber, payload);
       finishSavingField(fieldId, true);
@@ -343,23 +345,23 @@ const PersonalSectorial = ({
       updateUIStates(fieldName, false);
     }
   };
-  
-  function containsNull(obj) {
-    if (obj === null) return true;
+
+
+  function containsNull(obj, parentKey = '') {
+    if (obj === null) return parentKey; // Retorna la clave padre si el valor es null
     if (typeof obj === 'object') {
       for (const key in obj) {
         // Uso de hasOwnProperty mediante Object.prototype.call para evitar problemas de prototipo
         if (Object.prototype.hasOwnProperty.call(obj, key)) {
-          if (containsNull(obj[key])) {
-            return true;
-          }
+          const result = containsNull(obj[key], key);
+          if (result) return result; // Retorna el nombre del campo que tiene el valor nulo
         }
       }
     }
     return false;
   }
-  
-  
+
+
   function createPayload(fieldName, arrayNameId, newValue) {
     switch (fieldName) {
       case 'calidad_juridica':
@@ -385,7 +387,7 @@ const PersonalSectorial = ({
         };
     }
   }
-  
+
   function findPersona(arrayNameId) {
     for (const calidadJuridica of Object.values(personas)) {
       const persona = calidadJuridica.find(e => e.id === arrayNameId);
@@ -393,7 +395,7 @@ const PersonalSectorial = ({
     }
     return null;
   }
-  
+
   function handleServerError(error) {
     if (error.response && error.response.data.errors) {
       const serverErrors = error.response.data.errors;
@@ -402,14 +404,14 @@ const PersonalSectorial = ({
       });
     }
   }
-  
+
   function updateUIStates(fieldName, isSuccessful) {
     if (fieldName.startsWith('descripcion_funciones_personal_')) {
       setDescripcionLoading(false);
       setDescripcionSaved(isSuccessful);
     }
   }
-  
+
 
   const onSubmitAgregarPersona = () => {
     agregarPersona();
