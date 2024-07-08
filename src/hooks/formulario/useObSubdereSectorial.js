@@ -46,15 +46,15 @@ export const useObservacionesSubdere = (id) => {
 
   const subirArchivo = async (file) => {
     const formData = new FormData();
-    formData.append('documento', file);
-
+    formData.append('antecedente_adicional_subdere', file);
+  
     try {
-      await apiTransferenciaCompentencia.patch(`/formulario-sectorial/${id}/observaciones-subdere-sectorial/`, formData, {
+      await apiTransferenciaCompentencia.patch(`/formulario-sectorial/${id}/`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
-      fetchObservaciones();
+      fetchObservaciones(); // Recarga las observaciones para reflejar cualquier cambio
     } catch (error) {
       console.error('Error al subir el archivo:', error);
     }
@@ -77,19 +77,18 @@ export const useObservacionesSubdere = (id) => {
   };
 
   const eliminarArchivo = async () => {
+    const payload = {
+      id:id,
+      antecedente_adicional_subdere: null // Envía null para eliminar el archivo
+    };
     try {
-      const payload = {
-        observaciones_sectoriales: {
-          id: observaciones.id, // Asegúrate de que `observaciones.id` esté disponible y correcto
-          documento: null // Asigna `null` para eliminar el archivo
-        }
-      };
-      await apiTransferenciaCompentencia.patch(`/formulario-sectorial/${id}/observaciones-subdere-sectorial/`, payload);
-      fetchObservaciones();
+      await apiTransferenciaCompentencia.patch(`/formulario-sectorial/${id}/`, payload);
+      fetchObservaciones(); // Recarga las observaciones para reflejar la eliminación
     } catch (error) {
       console.error('Error al eliminar el archivo:', error);
     }
   };
+
 
   return { observaciones, subirArchivo, guardarDescripcion, eliminarArchivo, loadingObservaciones, saved, errorObservaciones, updateObservacion, fetchObservaciones };
 };
