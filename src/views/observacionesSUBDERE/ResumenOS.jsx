@@ -166,9 +166,9 @@ const ResumenOS = () => {
             index="1"
             handleFileSelect={handleFileSelect}
             handleDeleteFile={handleDeleteFile}
-            archivoDescargaUrl={observaciones.documento}
-            tituloDocumento={observaciones.documento}
-            fieldName="documento"
+            archivoDescargaUrl={data.antecedente_adicional_subdere}
+            tituloDocumento={data.antecedente_adicional_subdere}
+            fieldName="antecedente_adicional_subdere"
           />
         </div>
         <div className="my-4">
