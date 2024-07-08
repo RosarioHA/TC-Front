@@ -71,82 +71,65 @@ export const Etapa2 = ({ etapa, idCompetencia }) =>
     navigate(path);
   };
 
-  const renderButtonForSubetapa = (subetapa) =>
-  {
+  const renderButtonForSubetapa = (subetapa) => {
     const { estado, accion, nombre } = subetapa;
-
     let buttonText = accion;
     let icon = estado === "finalizada" ? "visibility" : "draft";
     let path = "/";
-    const formularios = formulario_sectorial?.formularios_sectoriales?.[ 0 ] || null;
+    const formularios = formulario_sectorial?.formularios_sectoriales?.[0] || null;
     let isDisabled = estado === "pendiente" || (formularios && formularios?.estado !== "finalizada");
-
-    if (nombre.includes("Observaciones de formularios sectoriales") || nombre.includes("Observación del formulario sectorial"))
-    {
-      isDisabled = estado !== "finalizada";
-    }
-
-    const isButtonEnabled = (userSubdere || userGore || userDipres || usuarioSector) && (estado === "pendiente" || estado === "revision" || estado === "finalizada");
-
-    // Nueva condición para mostrar el badge en lugar del botón
-    if (nombre.includes("Observación del formulario sectorial") && estado === 'finalizada' && userObservador)
-    {
+  
+    // Verificar si es una de las secciones de observaciones y el usuario es observador y está finalizada
+    if ((nombre.includes("Observaciones de formularios sectoriales") || nombre.includes("Observación del formulario sectorial")) && estado === 'finalizada' && userObservador) {
       return <span className="badge-status-finish">{accion}</span>;
     }
-
-    switch (true)
-    {
+  
+    switch (true) {
       case nombre.startsWith("Notificar a") && estado === "finalizada":
         return <span className="badge-status-finish">{accion}</span>;
-
+  
       case nombre.includes("Subir oficio y su fecha para habilitar formulario sectorial"):
-        if (estado !== "pendiente")
-        { //aqui cambie la condicion para habilitar el boton siempre que el estado no sea 'pendiente'
+        if (estado !== "pendiente") {
           return (
             <button
-              onClick={() =>
-              {
-                if (estado === "finalizada")
-                {
+              onClick={() => {
+                if (estado === "finalizada") {
                   window.open(oficio_origen, '_blank');
-                } else
-                {
+                } else {
                   navigate(`/home/estado_competencia/${idCompetencia}/subir_oficio_sectorial`);
                 }
               }}
               className="btn-secundario-s text-decoration-none"
-              id="btn">
+              id="btn"
+            >
               <span className="material-symbols-outlined me-1">{icon}</span>
               <u>{buttonText}</u>
             </button>
           );
         }
         break;
-
+  
       case nombre.includes("Observaciones de formularios sectoriales"):
         path = `/home/observaciones_subdere/${idCompetencia}/`;
         buttonText = accion;
         icon = "visibility";
-        isDisabled = estado !== "pendiente" && estado !== "revision"; 
+        isDisabled = estado === "pendiente"; 
         break;
-
+  
       case nombre.includes("Observación del formulario sectorial"):
         path = `/home/observaciones_subdere/${idCompetencia}/`;
         buttonText = accion;
         icon = "visibility";
-        isDisabled = estado !== "finalizada"; 
+        isDisabled = estado === "pendiente"; 
         break;
-      case nombre.includes("Observación del formulario sectorial") && estado === 'finalizada' && userObservador:
-        return <span className="badge-status-finish">{accion}</span>;
-      case nombre.includes("Observaciones de formularios sectoriales") && estado === 'finalizada' && userObservador:
-        return <span className="badge-status-finish">{accion}</span>;
-
+  
       default:
         break;
     }
-
-    if (isButtonEnabled)
-    {
+  
+    const isButtonEnabled = (userSubdere || userGore || userDipres || usuarioSector) && (estado === "pendiente" || estado === "revision" || estado === "finalizada");
+  
+    if (isButtonEnabled) {
       return (
         <button onClick={() => handleNavigation(path)}
           className={`btn-secundario-s text-decoration-none ${isDisabled ? 'disabled' : ''}`} id="btn"
@@ -155,8 +138,7 @@ export const Etapa2 = ({ etapa, idCompetencia }) =>
           <u>{buttonText}</u>
         </button>
       );
-    } else
-    {
+    } else {
       return (
         <button className="btn-secundario-s disabled" id="btn" disabled>
           <span className="material-symbols-outlined me-1">{icon}</span>

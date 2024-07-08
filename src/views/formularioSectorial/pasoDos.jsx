@@ -1,4 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
+// import { useOutletContext } from 'react-router-dom';
 import { FormularioContext } from '../../context/FormSectorial';
 import { Avance } from "../../components/tables/Avance";
 import { ButtonsNavigate } from "../../components/layout/ButtonsNavigate";
@@ -12,7 +13,8 @@ import CustomTextarea from '../../components/forms/custom_textarea';
 import { useAuth } from '../../context/AuthContext';
 import { useObservacionesSubdere } from '../../hooks/formulario/useObSubdereSectorial';
 
-const PasoDos = () => {
+const PasoDos = () =>
+{
   const { pasoData, errorPaso, updateStepNumber, data } = useContext(FormularioContext);
   const stepNumber = 2;
   const [ refreshSubpasoDos_dos, setRefreshSubpasoDos_dos ] = useState(false);
@@ -23,16 +25,22 @@ const PasoDos = () => {
   const userSectorial = userData?.perfil?.includes('Sectorial');
   const { observaciones, updateObservacion, fetchObservaciones, loadingObservaciones, saved } = useObservacionesSubdere(data ? data.id : null);
   const [ observacionPaso2, setObservacionPaso2 ] = useState("");
-
-  const observacionesEnviadas = observaciones.observacion_enviada;
+  const observacionesEnviadas = observaciones?.observacion_enviada;
   const formSectorialEnviado = data?.formulario_enviado;
+  // const { activeOS, id} = useOutletContext();
 
-  useEffect(() => {
+  // console.log('2', activeOS,  id )
+
+
+  useEffect(() =>
+  {
     updateStepNumber(stepNumber);
-    if (observaciones && Object.keys(observaciones).length === 0) {
+    if (observaciones && Object.keys(observaciones).length === 0)
+    {
       fetchObservaciones();
     }
-    if (observaciones && observaciones.observacion_paso2) {
+    if (observaciones && observaciones.observacion_paso2)
+    {
       setObservacionPaso2(observaciones.observacion_paso2);
     }
   }, [ updateStepNumber, stepNumber, observaciones, fetchObservaciones ]);
@@ -64,8 +72,10 @@ const PasoDos = () => {
     multiplicador_caracteres_region
   } = pasoData.paso2
 
-  const handleGuardarObservacion = async () => {
-    if (!observacionesEnviadas) {
+  const handleGuardarObservacion = async () =>
+  {
+    if (!observacionesEnviadas)
+    {
       const observacionData = {
         id: observaciones?.id,  // Asumiendo que 'observaciones' es un estado que contiene el 'id' sectorial
         observacion_paso2: observacionPaso2
@@ -73,7 +83,7 @@ const PasoDos = () => {
       await updateObservacion(observacionData);
     }
   };
-  
+
 
   return (
     <>
@@ -147,28 +157,30 @@ const PasoDos = () => {
               solo_lectura={solo_lectura}
               limite_caracteres={multiplicador_caracteres_competencia} />
           </div>
-
-          { (userSubdere || (userSectorial && formSectorialEnviado)) && (
-            <div className="mt-5 my-4">
-              {!observacionPaso2.trim() && observacionesEnviadas ? (
-                <p>No se han dejado observaciones en este paso.</p>
-              ) : (
-                <CustomTextarea
-                  label="Observaciones (Opcional)"
-                  placeholder="Escribe tus observaciones de este paso del formulario"
-                  rows={5}
-                  maxLength={500}
-                  value={observacionPaso2}
-                  onChange={(e) => setObservacionPaso2(e.target.value)}
-                  readOnly={observacionesEnviadas}
-                  onBlur={handleGuardarObservacion}
-                  loading={loadingObservaciones}
-                  saved={saved}
-                />
+          {/* {activeOS ? (
+            <> */}
+              {((userSubdere && formSectorialEnviado) || (userSectorial && observacionesEnviadas)) && (
+                <div className="mt-5 my-4">
+                  {!observacionPaso2.trim() && observacionesEnviadas ? (
+                    <p>No se han dejado observaciones en este paso.</p>
+                  ) : (
+                    <CustomTextarea
+                      label="Observaciones (Opcional)"
+                      placeholder="Escribe tus observaciones de este paso del formulario"
+                      rows={5}
+                      maxLength={500}
+                      value={observacionPaso2}
+                      onChange={(e) => setObservacionPaso2(e.target.value)}
+                      readOnly={observacionesEnviadas}
+                      onBlur={handleGuardarObservacion}
+                      loading={loadingObservaciones}
+                      saved={saved}
+                    />
+                  )}
+                </div>
               )}
-            </div>
-          )}
-
+            {/* </>
+          ) : ("")} */}
           <div className="container me-5 pe-5">
             <ButtonsNavigate step={paso2.numero_paso} id={data.id} />
           </div>

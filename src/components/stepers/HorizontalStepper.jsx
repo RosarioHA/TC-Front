@@ -33,7 +33,6 @@ export const HorizontalStepper = ({ baseUrl, id }) => {
     navigate(`${baseUrl}/paso_${stepNumber}`);
     fetchResumen();
   };
-  
 
 
   return (
