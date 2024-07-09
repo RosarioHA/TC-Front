@@ -2,7 +2,7 @@ import { useState, forwardRef } from "react";
 import { NumericFormat } from "react-number-format";
 
 const InputCosto = forwardRef(
-  ({ loading, saved, placeholder, id, error, readOnly, onChange, initialValue, ...props }, ref) => {
+  ({ loading, saved, placeholder, id, error, readOnly, onChange, onBlur, initialValue, ...props }, ref) => {
     const [inputValue, setInputValue] = useState(initialValue || '');
 
     const inputStyle = () => {
@@ -16,6 +16,10 @@ const InputCosto = forwardRef(
         return `input-costo  p-3 col-12 costo-error`;
       }
       return null;
+    };
+
+    const handleBlur = () => {
+      onBlur(inputValue);  // Pasar el valor actual al método onBlur
     };
 
     return (
@@ -41,6 +45,7 @@ const InputCosto = forwardRef(
                   onChange(value);
                 }
               }}
+              onBlur={handleBlur}
               ref={ref}
               {...props}
             />

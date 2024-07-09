@@ -5,7 +5,6 @@ import { useForm, Controller } from "react-hook-form";
 
 export const GastosPromedioAnual = ({
   id,
-  paso5,
   solo_lectura,
   stepNumber,
   dataGastos,
@@ -27,6 +26,8 @@ export const GastosPromedioAnual = ({
     }
     return numero;
   };
+
+ 
 
   useEffect(() => {
     setDatosGastos(Array.isArray(dataGastos) ? dataGastos : []);
