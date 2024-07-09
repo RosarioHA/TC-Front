@@ -159,7 +159,7 @@ const ObservacionesSubdere = () =>
             <SubirArchivo
               readOnly={true}
               tituloDocumento={sector.antecedente_adicional_sectorial}
-              archivoDescargaUrl={sector.download_antecedente}
+              archivoDescargaUrl={sector.antecedente_adicional_sectorial}
             />
             <div className="my-4">
               <CustomTextarea
@@ -187,7 +187,7 @@ const ObservacionesSubdere = () =>
             <SubirArchivo
               readOnly={true}
               tituloDocumento={formulario.antecedente_adicional_sectorial}
-              archivoDescargaUrl={formulario.download_antecedente}
+              archivoDescargaUrl={formulario.antecedente_adicional_sectorial}
             />
             <div className="my-4">
               <CustomTextarea
