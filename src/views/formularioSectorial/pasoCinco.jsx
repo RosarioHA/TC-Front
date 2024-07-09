@@ -181,7 +181,7 @@ const PasoCinco = () =>
           ) : ("")} */}
 
           <div className="container me-5 pe-5">
-            <ButtonsNavigate step={paso5encabezado.numero_paso} id={data.id} ocultarEnviarBtn={observacionesEnviadas} />
+            <ButtonsNavigate step={paso5encabezado.numero_paso} id={data.id} />
           </div>
         </div>
       </div>
