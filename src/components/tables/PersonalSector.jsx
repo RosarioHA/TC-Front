@@ -439,9 +439,20 @@ const PersonalSectorial = ({
     );
   };
 
+  function MensajeErrorPresupuesto({ por_justificar }) {
+    if (por_justificar == 0) {
+      console.log("por_justificar valor", por_justificar)
+      return <p></p>
+    } else {
+      return <p className="col-3 text-sans-h6-bold-darkred">Debes justificar el 100% del costo</p>;
+    }
+  }
+  // const counterClass = (item.por_justificar) !== undefined && totalCharacters === maxLength
+  // ? "text-sans-h6-darkred"
+  // : "text-sans-h6";
+
   return (
     <div className="my-4">
-
       <div className="col my-4">
 
         <form onSubmit={handleSubmit(onSubmitAgregarPersona)}>
@@ -667,6 +678,10 @@ const PersonalSectorial = ({
                   (Array.isArray(value) && value.includes(item.label) && key === calidad_juridica)
                 );
 
+                const counterClass = (item.por_justificar) == 0
+                ? "text-sans-p-bold"
+                : "text-sans-h6-bold-darkred";
+
                 if (itemCorrespondiente) {
                   return (
                     <div key={itemIndex} className="my-4">
@@ -686,7 +701,7 @@ const PersonalSectorial = ({
                           </div>
                         </div>
                         {/* Items */}
-                        <div className="d-flex justify-content-between py-3 fw-bold">
+                        <div className="d-flex justify-content-between pt-3 fw-bold">
                           <div className="col-2">
                             <p className="text-sans-p-bold">{formatearNumero(item.informado)}</p>
                           </div>
@@ -694,8 +709,13 @@ const PersonalSectorial = ({
                             <p className="text-sans-p-bold">{formatearNumero(item.justificado)}</p>
                           </div>
                           <div className="col-2">
-                            <p className="text-sans-p-bold">{formatearNumero(item.por_justificar)}</p>
+                            <p className={counterClass}>{formatearNumero(item.por_justificar)}</p>
                           </div>
+                        </div>
+                        <div className="d-flex justify-content-end p-0 m-0">
+                          <MensajeErrorPresupuesto
+                            por_justificar={item.por_justificar}
+                          />
                         </div>
                       </div>
                     </div>
