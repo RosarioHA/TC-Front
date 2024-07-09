@@ -17,11 +17,14 @@ const PasoUno = () =>
   const { userData } = useAuth();
   const userSubdere = userData?.perfil?.includes('SUBDERE');
   const userSectorial = userData?.perfil?.includes('Sectorial');
+  const userDIPRES = userData?.perfil?.includes('DIPRES');
   const { observaciones, updateObservacion, fetchObservaciones, loadingObservaciones, saved } = useObservacionesSubdere(data ? data.id : null);
   const [ observacionPaso1, setObservacionPaso1 ] = useState("");
 
   const observacionesEnviadas = observaciones?.observacion_enviada
   const formSectorialEnviado = data?.formulario_enviado
+
+
 
   useEffect(() =>
   {
@@ -86,28 +89,30 @@ const PasoUno = () =>
           <Subpaso_uno dataPaso={paso1Data} marcojuridico={marcojuridico} id={data ? data.id : null} stepNumber={stepNumber} solo_lectura={solo_lectura} />
           <Subpaso_dos pasoData={paso1Data} organigrama={organigramaregional} id={data ? data.id : null} stepNumber={stepNumber} solo_lectura={solo_lectura} />
           <Subpaso_tres pasoData={paso1Data} id={data ? data.id : null} stepNumber={stepNumber} solo_lectura={solo_lectura} />
-
-          { (userSubdere || (!userSectorial && formSectorialEnviado)) && (
-            <div className="mt-5 my-4">
-              {!observacionPaso1.trim() && observacionesEnviadas ? (
-                <p>No se han dejado observaciones en este paso.</p>
-              ) : (
-                <CustomTextarea
-                  label="Observaciones (Opcional)"
-                  placeholder="Escribe tus observaciones de este paso del formulario"
-                  rows={5}
-                  maxLength={500}
-                  value={observacionPaso1}
-                  onChange={(e) => setObservacionPaso1(e.target.value)}
-                  readOnly={observacionesEnviadas}
-                  onBlur={handleGuardarObservacion}
-                  loading={loadingObservaciones}
-                  saved={saved}
-                />
+          {/* { activeOS ? (
+            <> */}
+              {((userSubdere && formSectorialEnviado) || (userSectorial && observacionesEnviadas) || (userDIPRES && observacionesEnviadas) ) && (
+                <div className="mt-5 my-4">
+                  {!observacionPaso1.trim() && observacionesEnviadas ? (
+                    <p>No se han dejado observaciones en este paso.</p>
+                  ) : (
+                    <CustomTextarea
+                      label="Observaciones (Opcional)"
+                      placeholder="Escribe tus observaciones de este paso del formulario"
+                      rows={5}
+                      maxLength={500}
+                      value={observacionPaso1}
+                      onChange={(e) => setObservacionPaso1(e.target.value)}
+                      readOnly={observacionesEnviadas}
+                      onBlur={handleGuardarObservacion}
+                      loading={loadingObservaciones}
+                      saved={saved}
+                    />
+                  )}
+                </div>
               )}
-            </div>
-          )}
-
+            {/* </>
+          ) : ("")} */}
           <ButtonsNavigate step={paso1Data.numero_paso} id={data ? data.id : null} />
         </div>
       </div>

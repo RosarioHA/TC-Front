@@ -1,11 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useCompetencia } from "../../hooks/competencias/useCompetencias";
 import { useEtapa3 } from "../../hooks/minutaDIPRES/useEtapa3";
 import { EncabezadoFormularios } from "../../components/layout/EncabezadoFormularios";
 import { SubirArchivo } from "../../components/commons/subirArchivo";
 import CustomTextarea from "../../components/forms/custom_textarea";
-import { useResumenFormulario } from "../../hooks/formulario/useResumenFormulario";
 
 const ObservacionesSubdere = () =>
 {
@@ -14,15 +13,11 @@ const ObservacionesSubdere = () =>
   const { id } = useParams();
   const { competenciaDetails } = useCompetencia(id);
   const { patchCompetenciaOmitida } = useEtapa3();
-  const formulariosNoEnviados = competenciaDetails?.etapa2?.estado === 'Aún no puede comenzar';
   const observacionesEnviadas = competenciaDetails?.etapa2?.observaciones_completas;
   const etapaFinalizada = competenciaDetails?.etapa2?.estado === 'Finalizada';
 
   const formularios = competenciaDetails?.etapa2?.formulario_sectorial?.detalle_formularios_sectoriales
-
-
-  console.log(formularios)
-
+  const formulario = competenciaDetails?.etapa2?.formulario_sectorial[0]
 
   useEffect(() =>
   {
@@ -45,8 +40,9 @@ const ObservacionesSubdere = () =>
 
   const handleVerFormulario = (formularioId) =>
   {
-    navigate(`/home/formulario_sectorial/${formularioId}/paso_1`);
+    navigate(`/home/formulario_sectorial/${formularioId}/`);
   };
+
 
   const handleCerrarEtapa = async () =>
   {
@@ -59,6 +55,7 @@ const ObservacionesSubdere = () =>
       console.error("Error al cerrar la etapa:", error);
     }
   };
+
 
   return (
     <div className="container col-10 col-xxl-11">
@@ -96,9 +93,8 @@ const ObservacionesSubdere = () =>
                 <td>{observaciones.nombre}</td>
                 <td className="">
                   <button
-                    className={`btn-secundario-s text-decoration-underline ${formulariosNoEnviados ? 'disabled' : ''}`}
+                    className='btn-secundario-s text-decoration-underline'
                     onClick={() => handleVerFormulario(observaciones.id)}
-                    disabled={formulariosNoEnviados}
                   >
                     <p className="mb-0">{observaciones.accion}</p>
                   </button>
@@ -116,9 +112,8 @@ const ObservacionesSubdere = () =>
                   <td>{observaciones.nombre}</td>
                   <td className="">
                     <button
-                      className={`btn-secundario-s text-decoration-underline ${formulariosNoEnviados ? 'disabled' : ''}`}
+                      className='btn-secundario-s text-decoration-underline'
                       onClick={() => handleVerFormulario(observaciones.id)}
-                      disabled={formulariosNoEnviados}
                     >
                       <p className="mb-0">{observaciones.accion}</p>
                     </button>
@@ -161,10 +156,11 @@ const ObservacionesSubdere = () =>
                 <div className="me-5">Acción</div>
               </div>
             </div>
-            <SubirArchivo 
-            readOnly={true}
-            tituloDocumento={sector.antecedente_adicional_sectorial}
-            archivoDescargaUrl={sector.download_antecedente}/>
+            <SubirArchivo
+              readOnly={true}
+              tituloDocumento={sector.antecedente_adicional_sectorial}
+              archivoDescargaUrl={sector.antecedente_adicional_sectorial}
+            />
             <div className="my-4">
               <CustomTextarea
                 label="Descripción del archivo adjunto (Opcional)"
@@ -175,6 +171,34 @@ const ObservacionesSubdere = () =>
             </div>
           </div>
         ))}
+
+        {formulario &&
+          <div className="col-10">
+            <p className="text-sans-h5 my-2 "><strong>{formulario.nombre.replace('Completar formulario Sectorial - ', '')}</strong></p>
+            <div>
+              <div className="d-flex justify-content-between py-2 fw-bold">
+                <div className="d-flex my-1">
+                  <div className="ms-4">#</div>
+                  <div className="ms-5">Documento</div>
+                </div>
+                <div className="me-5">Acción</div>
+              </div>
+            </div>
+            <SubirArchivo
+              readOnly={true}
+              tituloDocumento={formulario.antecedente_adicional_sectorial}
+              archivoDescargaUrl={formulario.antecedente_adicional_sectorial}
+            />
+            <div className="my-4">
+              <CustomTextarea
+                label="Descripción del archivo adjunto (Opcional)"
+                placeholder="Describe el archivo adjunto"
+                value={formulario.descripcion_antecedente}
+                readOnly={true}
+              />
+            </div>
+          </div>
+        }
       </div>
 
       {observacionesEnviadas && (

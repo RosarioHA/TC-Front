@@ -10,6 +10,7 @@ const ResumenOS = () => {
   const { data } = useContext(FormularioContext);
   const { observaciones, fetchObservaciones, updateObservacion, subirArchivo, guardarDescripcion, eliminarArchivo } = useObservacionesSubdere(data ? data.id : null);
   const navigate = useNavigate();
+  const observacionesEnviadas = observaciones?.observacion_enviada;
   const [inputStatus, setInputStatus] = useState({
     descripcion_documento: { loading: false, saved: false },
   });
@@ -169,6 +170,7 @@ const ResumenOS = () => {
             archivoDescargaUrl={data.antecedente_adicional_subdere}
             tituloDocumento={data.antecedente_adicional_subdere}
             fieldName="antecedente_adicional_subdere"
+            readOnly={observacionesEnviadas}
           />
         </div>
         <div className="my-4">
@@ -181,6 +183,7 @@ const ResumenOS = () => {
             onBlur={() => handleSave('descripcion_documento')}
             loading={inputStatus.descripcion_documento.loading}
             saved={inputStatus.descripcion_documento.saved}
+            readOnly={observacionesEnviadas}
             maxLength={500}
           />
         </div>
