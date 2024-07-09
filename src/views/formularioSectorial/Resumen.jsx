@@ -14,7 +14,6 @@ const ResumenSectorial = () =>
   const [ inputStatus, setInputStatus ] = useState({
     descripcion_antecedente: { loading: false, saved: false },
   });
-
   useEffect(() =>
   {
     if (resumen)
@@ -140,20 +139,22 @@ const ResumenSectorial = () =>
             </div>
           ))}
         </div>
-        {resumen?.formulario_completo ? (
+        {resumen?.formulario_completo ?(
           <div className="mb-5 mx-5 px-2">
-            <span className="text-sans-h1">Está todo listo para que envíes el formulario</span>
-            <p className="text-sans-h6">
-              Ya llenaste todos los campos obligatorios de este formulario.
-            </p>
-            <p className="text-sans-h6">
-              Si quisieras agregar algún antecedente adicional, sube un archivo en el siguiente recuadro:
-            </p>
-            <div className="col-9">
-              <h5 className="text-sans-h5 mt-4">Antecedentes Adicionales (Opcional)</h5>
-              <h6 className="text-sans-h6 mb-3">
-                Máximo 1 archivo, peso máximo 20MB, formato PDF)
-              </h6>
+            <div>
+            {!resumen?.formulario_enviado ? (
+            <>
+            <span className="text-sans-h1">Está todo listo para que envíes el formulario</span><p className="text-sans-h6">
+                  Ya llenaste todos los campos obligatorios de este formulario.
+                </p><p className="text-sans-h6">
+                    Si quisieras agregar algún antecedente adicional, sube un archivo en el siguiente recuadro:
+                  </p><div className="col-9">
+                    <h5 className="text-sans-h5 mt-4">Antecedentes Adicionales (Opcional)</h5>
+                    <h6 className="text-sans-h6 mb-3">
+                      Máximo 1 archivo, peso máximo 20MB, formato PDF
+                    </h6>
+                  </div>
+                  </>):(<h5 className="text-sans-h5 mt-4">Antecedentes Adicionales</h5>)}
               <div className="d-flex justify-content-between py-3 fw-bold">
                 <div className="col-10">
                   <div className="d-flex">
@@ -167,10 +168,11 @@ const ResumenSectorial = () =>
                 <SubirArchivo
                   index="1"
                   handleFileSelect={handleFileSelect}
-                  handleDeleteFile={handleDeleteFile} 
+                  handleDeleteFile={handleDeleteFile}
                   archivoDescargaUrl={resumen?.antecedente_adicional_sectorial}
                   tituloDocumento={resumen?.antecedente_adicional_sectorial}
                   fieldName="antecedente_adicional_sectorial"
+                  readOnly={resumen?.formulario_enviado}
                 />
 
               </div>
@@ -186,11 +188,12 @@ const ResumenSectorial = () =>
                 loading={inputStatus.descripcion_antecedente.loading}
                 saved={inputStatus.descripcion_antecedente.saved}
                 maxLength={500}
-              // readOnly={solo_lectura}
+                readOnly={resumen?.formulario_enviado}
               />
+              {!resumen?.formulario_enviado ? (
               <p className="text-sans-h6 mt-2">
-               Asegúrate que los datos ingresados son correctos, ya que una vez que envíes el formulario, no podrás editarlo a menos que SUBDERE requiera información adicional.
-              </p>
+                Asegúrate que los datos ingresados son correctos, ya que una vez que envíes el formulario, no podrás editarlo a menos que SUBDERE requiera información adicional.
+              </p>):('')}
             </div>
           </div>
         ) : (<div className="mb-5 mx-5 px-2">
@@ -209,10 +212,11 @@ const ResumenSectorial = () =>
             <i className="material-symbols-rounded me-2">arrow_back_ios</i>
             Atrás
           </button>
-
+          {resumen?.formulario_completo && !resumen?.formulario_enviado ? (
           <button className="btn-primario-s" disabled={!resumen?.formulario_completo} onClick={handleEnviarClick}>
             <u>Enviar el formulario</u>
-          </button>
+          </button> ) 
+          :("")}
         </div>
       </div>
     </>

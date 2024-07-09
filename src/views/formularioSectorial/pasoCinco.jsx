@@ -10,28 +10,34 @@ import CustomTextarea from '../../components/forms/custom_textarea';
 import { useAuth } from '../../context/AuthContext';
 import { useObservacionesSubdere } from '../../hooks/formulario/useObSubdereSectorial';
 
-const PasoCinco = () => {
+const PasoCinco = () =>
+{
   const { updateStepNumber, pasoData, data, errorPaso } = useContext(FormularioContext);
   const stepNumber = 5;
   const { userData } = useAuth();
-  const [collapseStates, setCollapseStates] = useState({});
+  const [ collapseStates, setCollapseStates ] = useState({});
 
   const userSubdere = userData?.perfil?.includes('SUBDERE');
   const userSectorial = userData?.perfil?.includes('Sectorial');
+  const userDIPRES = userData?.perfil?.includes('DIPRES');
   const { observaciones, updateObservacion, fetchObservaciones, loadingObservaciones, saved } = useObservacionesSubdere(data ? data.id : null);
-  const [observacionPaso5, setObservacionPaso5] = useState("");
+  const [ observacionPaso5, setObservacionPaso5 ] = useState("");
   const formSectorialEnviado = data?.formulario_enviado;
   const observacionesEnviadas = observaciones?.observacion_enviada;
+  // const activeOS = location.state?.activeOS || false;
 
-  useEffect(() => {
+  useEffect(() =>
+  {
     updateStepNumber(stepNumber);
-    if (observaciones && Object.keys(observaciones).length === 0) {
+    if (observaciones && Object.keys(observaciones).length === 0)
+    {
       fetchObservaciones();
     }
-    if (observaciones && observaciones.observacion_paso5) {
+    if (observaciones && observaciones.observacion_paso5)
+    {
       setObservacionPaso5(observaciones.observacion_paso5);
     }
-  }, [updateStepNumber, stepNumber, observaciones, fetchObservaciones]);
+  }, [ updateStepNumber, stepNumber, observaciones, fetchObservaciones ]);
 
   if (errorPaso) return <div>Error: {errorPaso.message || "Error desconocido"}</div>;
   if (!pasoData) return <div>No hay datos disponibles para el Paso 5</div>;
@@ -47,7 +53,8 @@ const PasoCinco = () => {
 
   const { listado_etapas, listado_estamentos, solo_lectura, años, años_variacion } = pasoData;
 
-  const handleGuardarObservacion = async () => {
+  const handleGuardarObservacion = async () =>
+  {
     const observacionData = {
       observacion_paso5: observacionPaso5,
     };
@@ -56,12 +63,16 @@ const PasoCinco = () => {
 
   const avance = pasoData?.paso5encabezado?.avance;
 
-  const toggleCollapse = (index) => {
-    setCollapseStates((prevState) => {
-      const newState = { ...prevState, [index]: !prevState[index] };
-      for (const key in newState) {
-        if (key !== index.toString()) {
-          newState[key] = false;
+  const toggleCollapse = (index) =>
+  {
+    setCollapseStates((prevState) =>
+    {
+      const newState = { ...prevState, [ index ]: !prevState[ index ] };
+      for (const key in newState)
+      {
+        if (key !== index.toString())
+        {
+          newState[ key ] = false;
         }
       }
       return newState;
@@ -83,22 +94,22 @@ const PasoCinco = () => {
           {pasoData.regiones.map((region, index) => (
             <div key={index} className="my-5">
               <div className="col-12 collapse-regiones border border-bottom" type="button" data-bs-toggle="collapse"
-                data-bs-target={`#collapseRegion${index}`} aria-expanded={collapseStates[index] ? "true" : "false"}
+                data-bs-target={`#collapseRegion${index}`} aria-expanded={collapseStates[ index ] ? "true" : "false"}
                 aria-controls={`collapseRegion${index}`} onClick={() => toggleCollapse(index)}>
                 <div className="d-flex justify-content-between">
                   <span className="text-sans-h4 text-start">{region.region}</span>
                   <button className="btn-secundario-s-round">
-                    {collapseStates[index] ? "Ocultar sección" : "Mostrar sección"}
+                    {collapseStates[ index ] ? "Ocultar sección" : "Mostrar sección"}
                     <span className="material-symbols-outlined">
-                      {collapseStates[index] ? "keyboard_arrow_up" : "keyboard_arrow_down"}
+                      {collapseStates[ index ] ? "keyboard_arrow_up" : "keyboard_arrow_down"}
                     </span>
                   </button>
                 </div>
                 <div>
-                  <Avance avance={region.paso5[0]?.avance} id={data.id} />
+                  <Avance avance={region.paso5[ 0 ]?.avance} id={data.id} />
                 </div>
               </div>
-              <div className={`collapse ${collapseStates[index] ? 'show' : ''}`} id={`collapseRegion${index}`}>
+              <div className={`collapse ${collapseStates[ index ] ? 'show' : ''}`} id={`collapseRegion${index}`}>
                 <div className="card card-body">
                   <div className="container">
                     <Subpaso_CincoPuntoUno
@@ -144,27 +155,30 @@ const PasoCinco = () => {
               </div>
             </div>
           ))}
-
-          {(userSubdere || (userSectorial && formSectorialEnviado)) && (
-            <div className="mt-5 my-4">
-              {!observacionPaso5.trim() && observacionesEnviadas ? (
-                <p>No se han dejado observaciones en este paso.</p>
-              ) : (
-                <CustomTextarea
-                  label="Observaciones (Opcional)"
-                  placeholder="Escribe tus observaciones de este paso del formulario"
-                  rows={5}
-                  maxLength={500}
-                  value={observacionPaso5}
-                  onChange={(e) => setObservacionPaso5(e.target.value)}
-                  readOnly={observacionesEnviadas}
-                  onBlur={handleGuardarObservacion}
-                  loading={loadingObservaciones}
-                  saved={saved}
-                />
-              )}
-            </div>
-          )}
+          {/* {activeOS ? (
+            <> */}
+              {((userSubdere && formSectorialEnviado) || (userSectorial && observacionesEnviadas) || (userDIPRES && observacionesEnviadas) ) && (
+                <div className="mt-5 my-4">
+                  {!observacionPaso5.trim() && observacionesEnviadas ? (
+                    <p>No se han dejado observaciones en este paso.</p>
+                  ) : (
+                    <CustomTextarea
+                      label="Observaciones (Opcional)"
+                      placeholder="Escribe tus observaciones de este paso del formulario"
+                      rows={5}
+                      maxLength={500}
+                      value={observacionPaso5}
+                      onChange={(e) => setObservacionPaso5(e.target.value)}
+                      readOnly={observacionesEnviadas}
+                      onBlur={handleGuardarObservacion}
+                      loading={loadingObservaciones}
+                      saved={saved}
+                    />
+                  )}
+                </div>
+              )}  
+              {/* </>
+          ) : ("")} */}
 
           <div className="container me-5 pe-5">
             <ButtonsNavigate step={paso5encabezado.numero_paso} id={data.id} ocultarEnviarBtn={observacionesEnviadas} />

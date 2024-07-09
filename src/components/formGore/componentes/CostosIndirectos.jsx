@@ -62,7 +62,7 @@ export const CostosIndirectosSector = ({ costosIndirectos, solo_lectura }) => {
           {Array.isArray(costosIndirectos) && costosIndirectos.map((costo, index) => (
             <React.Fragment key={index}>
               <div className="subrayado col-12" key={index}>
-                <span className="py-2 my-2 align-self-center">
+                <span className="py-2 my-2 ps-2 align-self-center">
                   {costo.sector}
                 </span>
               </div>

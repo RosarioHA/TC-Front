@@ -79,7 +79,7 @@ const PrimeraMinuta = () =>
                     className={`d-flex justify-content-between p-3 align-items-center ${index % 2 === 0 ? 'neutral-line' : 'white-line'}`}
                     key={formulario.id}
                   >
-                    <td>{formulario.nombre}</td>
+                    <td>{formulario.nombre.replace('Completar formulario Sectorial - ', '')}</td>
                     <td className="">
                       {!userObservador? (
                       <button className="btn-secundario-s text-decoration-underline" onClick={() => handleVerFormulario(formulario.id)}>
@@ -96,7 +96,7 @@ const PrimeraMinuta = () =>
                     className={`d-flex justify-content-between p-3 align-items-center ${index % 2 === 0 ? 'neutral-line' : 'white-line'}`}
                     key={formulario.id}
                   >
-                    <td>{formulario.nombre}</td>
+                    <td>{formulario.nombre.replace('Completar formulario Sectorial - ', '')}</td>
                     <td className="">
                       {!userObservador ? (
                       <button

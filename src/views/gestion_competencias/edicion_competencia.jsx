@@ -11,6 +11,7 @@ import { useSector } from "../../hooks/useSector";
 import { useAmbitos } from "../../hooks/useAmbitos";
 import { useEditCompetencia } from "../../hooks/competencias/useEditCompetencia"
 import { useFormContext } from "../../context/FormAlert";
+import { useAuth } from '../../context/AuthContext';
 import ModalAbandonoFormulario from "../../components/commons/modalAbandonoFormulario";
 import { DropdownSelectBuscadorCheck } from "../../components/dropdown/select_buscador_checkbox";
 import { useFiltroUsuarios } from "../../hooks/usuarios/useFiltroUsuarios";
@@ -46,6 +47,7 @@ const EdicionCompetencia = () =>
   const { dataSector } = useSector();
   const { origenes } = useOrigenes();
   const { ambitos } = useAmbitos();
+  const { userData } = useAuth();
   const { competencia, updateCompetencia } = useEditCompetencia(id);
   const [ usuariosSeleccionados, setUsuariosSeleccionados ] = useState();
   const [ isModalOpen, setIsModalOpen ] = useState(false);
@@ -53,6 +55,7 @@ const EdicionCompetencia = () =>
   const [ selectedReadOnlyOptions, setSelectedReadOnlyOptions ] = useState([]);
   const [ sectorSeleccionado, setSectorSeleccionado ] = useState(null);
   const [ regionSeleccionada, setRegionSeleccionada ] = useState(null);
+  const userSubdere = userData?.perfil?.includes('SUBDERE');
   const sectorIds = useMemo(() =>
   {
     const savedSectorIds = competencia?.sectores?.map(sector => sector.id) || [];
@@ -352,10 +355,11 @@ const EdicionCompetencia = () =>
           </button>
           <h3 className="text-sans-h3 ms-3 mb-0">Competencia: {competencia?.nombre}</h3>
         </div>
+        { userSubdere ? (
         <button className="btn-secundario-s ms-3" onClick={handleEditClick}>
           <p className="mb-0 ms-2">{editMode ? 'Editando' : 'Editar'}</p>
           <i className="material-symbols-rounded me-2">{editMode ? 'edit' : 'edit'}</i>
-        </button>
+        </button>):("")}
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} onChange={handleOnChange}>
