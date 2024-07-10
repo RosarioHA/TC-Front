@@ -565,7 +565,7 @@ export const Subpaso_dosPuntoCuatro = ({
                         }}
                         readOnly={solo_lectura}
                         selectedValues={plataforma.etapas_label_value}
-                        
+                        titleMaxLength={40}
                       />
                     );
                   }}

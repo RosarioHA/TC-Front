@@ -685,7 +685,11 @@ const PersonalSectorial = ({
                 if (itemCorrespondiente) {
                   return (
                     <div key={itemIndex} className="my-4">
-                      <p className="text-sans-p-bold">Resumen de justificación de costos de personal {descripcionModelo === "directo" ? "directo" : "indirecto"}: {item.label}</p>
+                      <div className="subrayado col-12">
+                        <span className="py-2 ps-2 my-2 align-self-center text-sans-p-bold">
+                          Resumen de justificación de costos de personal {descripcionModelo === "directo" ? "directo" : "indirecto"}: {item.label}
+                        </span>
+                      </div>
                       <h6 className="text-sans-h6-primary mt-3">Debes justificar el 100% del costo informado en el punto {descripcionModelo === "directo" ? "5.1a" : "5.1b"} para completar esta sección.</h6>
                       <div className="ps-3 my-4">
                         {/* Encabezado */}
