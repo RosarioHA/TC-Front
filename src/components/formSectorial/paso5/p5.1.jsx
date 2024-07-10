@@ -70,10 +70,10 @@ export const Subpaso_CincoPuntoUno = ({
       </div>
 
       <div className="row mt-5 d-flex align-items-center">
-        <p className="text-sans-p-bold mb-0 col-2">Costos Directos <br /> Totales Anual ($M)</p>
+        <p className="text-sans-p-bold mb-0 col-4">Costos Directos <br /> Totales Anual ($M)</p>
         <p className="text-sans-p-blue col">{formatearNumero(total_costos_directos)}</p>
       </div>
-      <hr className="col-4"/>
+      <hr className="col-5"/>
 
       <p className="text-sans-m-semibold mt-5">b. Costos indirectos</p>
       <h6 className="text-sans-h6-primary mt-3">
@@ -99,10 +99,10 @@ export const Subpaso_CincoPuntoUno = ({
       </div>
 
       <div className="row mt-5 d-flex align-items-center">
-        <p className="text-sans-p-bold mb-0 col-2">Costos Indirectos <br /> Totales Anual ($M)</p>
+        <p className="text-sans-p-bold mb-0 col-4">Costos Indirectos <br /> Totales Anual ($M)</p>
         <p className="text-sans-p-blue col">{formatearNumero(total_costos_indirectos)}</p>
       </div>
-      <hr className="col-4" />
+      <hr className="col-5" />
 
       <p className="text-sans-m-semibold mt-4">c. Sumatoria de costos anuales destinados al ejercicio de la competencia</p>
 

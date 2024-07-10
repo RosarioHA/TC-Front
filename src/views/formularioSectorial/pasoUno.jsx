@@ -64,7 +64,7 @@ const PasoUno = () =>
     if (!observacionesEnviadas)
     {
       const observacionData = {
-        id: observaciones?.id,  // Asumiendo que 'observaciones' es un estado que contiene el 'id' sectorial
+        id: observaciones?.id, 
         observacion_paso1: observacionPaso1
       };
 

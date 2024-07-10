@@ -98,6 +98,8 @@ const ResumenSectorial = () =>
     }
   };
 
+  console.log( resumen?.antecedente_adicional_sectorial)
+
   return (
     <>
       <div className="container container-xxl-fluid">
@@ -141,7 +143,6 @@ const ResumenSectorial = () =>
         </div>
         {resumen?.formulario_completo ?(
           <div className="mb-5 mx-5 px-2">
-            <div>
             {!resumen?.formulario_enviado ? (
             <>
             <span className="text-sans-h1">Está todo listo para que envíes el formulario</span><p className="text-sans-h6">
@@ -155,6 +156,9 @@ const ResumenSectorial = () =>
                     </h6>
                   </div>
                   </>):(<h5 className="text-sans-h5 mt-4">Antecedentes Adicionales</h5>)}
+              
+              { (resumen?.formulario_enviado === false && resumen?.antecedente_adicional_sectorial ===  null) ? (
+                <>
               <div className="d-flex justify-content-between py-3 fw-bold">
                 <div className="col-10">
                   <div className="d-flex">
@@ -176,7 +180,7 @@ const ResumenSectorial = () =>
                 />
 
               </div>
-            </div>
+
             <div className="my-5 col-10">
               <CustomTextarea
                 label="Descripción del archivo adjunto (Opcional)"
@@ -190,11 +194,15 @@ const ResumenSectorial = () =>
                 maxLength={500}
                 readOnly={resumen?.formulario_enviado}
               />
+            </div>
+            </>
+            ):(<div className="my-5 px-3 neutral-line py-3">
+            El sector no subió antecedentes adicionales.
+          </div>)}
               {!resumen?.formulario_enviado ? (
-              <p className="text-sans-h6 mt-2">
+              <p className="text-sans-h6 mt-2 col-10">
                 Asegúrate que los datos ingresados son correctos, ya que una vez que envíes el formulario, no podrás editarlo a menos que SUBDERE requiera información adicional.
               </p>):('')}
-            </div>
           </div>
         ) : (<div className="mb-5 mx-5 px-2">
           <span className="text-serif-h2">

@@ -361,7 +361,6 @@ const PersonalSectorial = ({
     return false;
   }
 
-
   function createPayload(fieldName, arrayNameId, newValue) {
     switch (fieldName) {
       case 'calidad_juridica':
@@ -412,7 +411,6 @@ const PersonalSectorial = ({
     }
   }
 
-
   const onSubmitAgregarPersona = () => {
     agregarPersona();
   };
@@ -432,16 +430,26 @@ const PersonalSectorial = ({
           <div className="col"> <p className="text-sans-p-bold">Total rentas</p> </div>
         )}
         <div className="col"> <p className="text-sans-p-bold">Grado <br /> (Si corresponde)</p> </div>
-        {!soloLectura && (
+        {descripcionModelo === "directo" && !soloLectura && (
           <div className="col"> <p className="text-sans-p-bold">Acción</p> </div>
+        )}
+        {descripcionModelo === "indirecto" && !soloLectura && (
+          <div className="col d-none d-xxl-block"> <p className="text-sans-p-bold">Acción</p> </div>
         )}
       </div>
     );
   };
 
+  function MensajeErrorPresupuesto({ por_justificar }) {
+    if (por_justificar == 0) {
+      return <p></p>
+    } else {
+      return <p className="col-3 text-sans-h6-bold-darkred">Debes justificar el total del costo</p>;
+    }
+  }
+
   return (
     <div className="my-4">
-
       <div className="col my-4">
 
         <form onSubmit={handleSubmit(onSubmitAgregarPersona)}>
@@ -462,7 +470,7 @@ const PersonalSectorial = ({
                   className={`row py-3 ${personaIndex % 2 === 0 ? 'white-line' : 'neutral-line'} align-items-center me-3`}>
 
                   <div className="col-1"> <p className="text-sans-p-bold mt-3">{personaIndex + 1}</p> </div>
-                  <div className="col">
+                  <div className="col-3 col-xxl">
                     <Controller
                       control={control}
                       name={`estamento_${persona.id}`}
@@ -491,7 +499,7 @@ const PersonalSectorial = ({
                   </div>
 
                   {descripcionModelo === "indirecto" && (
-                    <div className="col">
+                    <div className="col-2 col-xxl">
                       <Controller
                         control={control}
                         name={`numero_personas_${persona.id}`}
@@ -533,7 +541,7 @@ const PersonalSectorial = ({
                     </div>
                   )}
 
-                  <div className="col pt-3">
+                  <div className="col-2 col-xxl">
                     <Controller
                       control={control}
                       name={`renta_bruta_${persona.id}`}
@@ -582,12 +590,12 @@ const PersonalSectorial = ({
                   </div>
 
                   {descripcionModelo === "indirecto" && (
-                    <div className="col">
-                      <p className="text-sans-p-blue">{formatearNumero(persona.total_rentas)}</p>
+                    <div className="col d-flex justify-content-center">
+                      <p className="text-sans-p-blue mb-0">{formatearNumero(persona.total_rentas)}</p>
                     </div>
                   )}
 
-                  <div className="col pt-3">
+                  <div className="col">
                     <Controller
                       control={control}
                       name={`grado_${persona.id}`}
@@ -635,10 +643,21 @@ const PersonalSectorial = ({
                     />
                   </div>
 
-                  {!solo_lectura && (
+                  {descripcionModelo === "directo" && !solo_lectura && (
                     <div className="col">
                       <button
-                        className="btn-terciario-ghost"
+                        className="btn-terciario-ghost mt-2"
+                        onClick={() => eliminarPersona(calidad_juridica, persona.id)}
+                      >
+                        <i className="material-symbols-rounded me-2">delete</i>
+                        <p className="mb-0 text-decoration-underline">Borrar</p>
+                      </button>
+                    </div>
+                  )}
+                  {descripcionModelo === "indirecto" && !solo_lectura && (
+                    <div className="col-5 col-xxl">
+                      <button
+                        className="btn-terciario-ghost mt-2"
                         onClick={() => eliminarPersona(calidad_juridica, persona.id)}
                       >
                         <i className="material-symbols-rounded me-2">delete</i>
@@ -648,8 +667,6 @@ const PersonalSectorial = ({
                   )}
                 </div>
               ))}
-
-
 
               {!solo_lectura && (
                 <button
@@ -667,10 +684,18 @@ const PersonalSectorial = ({
                   (Array.isArray(value) && value.includes(item.label) && key === calidad_juridica)
                 );
 
+                const counterClass = (item.por_justificar) == 0
+                ? "text-sans-p-bold"
+                : "text-sans-h6-bold-darkred";
+
                 if (itemCorrespondiente) {
                   return (
                     <div key={itemIndex} className="my-4">
-                      <p className="text-sans-p-bold">Resumen de justificación de costos de personal {descripcionModelo === "directo" ? "directo" : "indirecto"}: {item.label}</p>
+                      <div className="subrayado col-12">
+                        <span className="py-2 ps-2 my-2 align-self-center text-sans-p-bold">
+                          Resumen de justificación de costos de personal {descripcionModelo === "directo" ? "directo" : "indirecto"}: {item.label}
+                        </span>
+                      </div>
                       <h6 className="text-sans-h6-primary mt-3">Debes justificar el 100% del costo informado en el punto {descripcionModelo === "directo" ? "5.1a" : "5.1b"} para completar esta sección.</h6>
                       <div className="ps-3 my-4">
                         {/* Encabezado */}
@@ -686,7 +711,7 @@ const PersonalSectorial = ({
                           </div>
                         </div>
                         {/* Items */}
-                        <div className="d-flex justify-content-between py-3 fw-bold">
+                        <div className="d-flex justify-content-between pt-3 fw-bold">
                           <div className="col-2">
                             <p className="text-sans-p-bold">{formatearNumero(item.informado)}</p>
                           </div>
@@ -694,8 +719,13 @@ const PersonalSectorial = ({
                             <p className="text-sans-p-bold">{formatearNumero(item.justificado)}</p>
                           </div>
                           <div className="col-2">
-                            <p className="text-sans-p-bold">{formatearNumero(item.por_justificar)}</p>
+                            <p className={counterClass}>{formatearNumero(item.por_justificar)}</p>
                           </div>
+                        </div>
+                        <div className="d-flex justify-content-end p-0 m-0">
+                          <MensajeErrorPresupuesto
+                            por_justificar={item.por_justificar}
+                          />
                         </div>
                       </div>
                     </div>
