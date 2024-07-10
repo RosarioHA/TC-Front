@@ -252,6 +252,7 @@ const PasoTres = () =>
                       loading={inputStatus[ region.region ]?.universo_cobertura?.loading}
                       saved={inputStatus[ region.region ]?.universo_cobertura?.saved}
                       readOnly={solo_lectura}
+                      maxLength={800}
                     />
                     <div className="d-flex mb-3 mt-0 text-sans-h6-primary">
                       <i className="material-symbols-rounded me-2">info</i>
@@ -276,6 +277,7 @@ const PasoTres = () =>
                       loading={inputStatus[ region.region ]?.descripcion_cobertura?.loading}
                       saved={inputStatus[ region.region ]?.descripcion_cobertura?.saved}
                       readOnly={solo_lectura}
+                      maxLength={800}
                     />
                     <div className="d-flex mb-3 mt-0 text-sans-h6-primary">
                       <i className="material-symbols-rounded me-2">info</i>

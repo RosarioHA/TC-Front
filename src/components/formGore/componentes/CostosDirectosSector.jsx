@@ -106,7 +106,9 @@ export const CostosDirectosSector = ({ costoDirectosGet, solo_lectura }) => {
                         id={`total_anual_gore-${costo.id}`}
                         placeholder="Costo (M$)"
                         value={costo.total_anual_gore}
-                        onBlur={(e) => handleUpdate(costo.id, 'total_anual_gore', e.target.value, true)}
+                        onBlur={(value) => {
+                            handleUpdate(costo.id, 'total_anual_gore', value, true);
+                          }}
                         loading={inputStatus[ costo.id ]?.total_anual_gore?.loading}
                         saved={inputStatus[ costo.id ]?.total_anual_gore?.saved}
                         disabled={solo_lectura}
