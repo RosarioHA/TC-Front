@@ -169,7 +169,7 @@ const ResumenSectorial = () =>
                   index="1"
                   handleFileSelect={handleFileSelect}
                   handleDeleteFile={handleDeleteFile}
-                  archivoDescargaUrl={resumen?.antecedente_adicional_sectorial}
+                  archivoDescargaUrl={resumen?.download_antecedente_adicional_sectorial}
                   tituloDocumento={resumen?.antecedente_adicional_sectorial}
                   fieldName="antecedente_adicional_sectorial"
                   readOnly={resumen?.formulario_enviado}
