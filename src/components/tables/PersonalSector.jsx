@@ -361,7 +361,6 @@ const PersonalSectorial = ({
     return false;
   }
 
-
   function createPayload(fieldName, arrayNameId, newValue) {
     switch (fieldName) {
       case 'calidad_juridica':
@@ -412,7 +411,6 @@ const PersonalSectorial = ({
     }
   }
 
-
   const onSubmitAgregarPersona = () => {
     agregarPersona();
   };
@@ -432,8 +430,11 @@ const PersonalSectorial = ({
           <div className="col"> <p className="text-sans-p-bold">Total rentas</p> </div>
         )}
         <div className="col"> <p className="text-sans-p-bold">Grado <br /> (Si corresponde)</p> </div>
-        {!soloLectura && (
+        {descripcionModelo === "directo" && !soloLectura && (
           <div className="col"> <p className="text-sans-p-bold">Acción</p> </div>
+        )}
+        {descripcionModelo === "indirecto" && !soloLectura && (
+          <div className="col d-none d-xxl-block"> <p className="text-sans-p-bold">Acción</p> </div>
         )}
       </div>
     );
@@ -444,12 +445,9 @@ const PersonalSectorial = ({
       console.log("por_justificar valor", por_justificar)
       return <p></p>
     } else {
-      return <p className="col-3 text-sans-h6-bold-darkred">Debes justificar el 100% del costo</p>;
+      return <p className="col-3 text-sans-h6-bold-darkred">Debes justificar el total del costo</p>;
     }
   }
-  // const counterClass = (item.por_justificar) !== undefined && totalCharacters === maxLength
-  // ? "text-sans-h6-darkred"
-  // : "text-sans-h6";
 
   return (
     <div className="my-4">
@@ -473,7 +471,7 @@ const PersonalSectorial = ({
                   className={`row py-3 ${personaIndex % 2 === 0 ? 'white-line' : 'neutral-line'} align-items-center me-3`}>
 
                   <div className="col-1"> <p className="text-sans-p-bold mt-3">{personaIndex + 1}</p> </div>
-                  <div className="col">
+                  <div className="col-3 col-xxl">
                     <Controller
                       control={control}
                       name={`estamento_${persona.id}`}
@@ -502,7 +500,7 @@ const PersonalSectorial = ({
                   </div>
 
                   {descripcionModelo === "indirecto" && (
-                    <div className="col">
+                    <div className="col-2 col-xxl">
                       <Controller
                         control={control}
                         name={`numero_personas_${persona.id}`}
@@ -544,7 +542,7 @@ const PersonalSectorial = ({
                     </div>
                   )}
 
-                  <div className="col">
+                  <div className="col-2 col-xxl">
                     <Controller
                       control={control}
                       name={`renta_bruta_${persona.id}`}
@@ -593,8 +591,8 @@ const PersonalSectorial = ({
                   </div>
 
                   {descripcionModelo === "indirecto" && (
-                    <div className="col">
-                      <p className="text-sans-p-blue">{formatearNumero(persona.total_rentas)}</p>
+                    <div className="col d-flex justify-content-center">
+                      <p className="text-sans-p-blue mb-0">{formatearNumero(persona.total_rentas)}</p>
                     </div>
                   )}
 
@@ -646,10 +644,21 @@ const PersonalSectorial = ({
                     />
                   </div>
 
-                  {!solo_lectura && (
+                  {descripcionModelo === "directo" && !solo_lectura && (
                     <div className="col">
                       <button
-                        className="btn-terciario-ghost"
+                        className="btn-terciario-ghost mt-2"
+                        onClick={() => eliminarPersona(calidad_juridica, persona.id)}
+                      >
+                        <i className="material-symbols-rounded me-2">delete</i>
+                        <p className="mb-0 text-decoration-underline">Borrar</p>
+                      </button>
+                    </div>
+                  )}
+                  {descripcionModelo === "indirecto" && !solo_lectura && (
+                    <div className="col-5 col-xxl">
+                      <button
+                        className="btn-terciario-ghost mt-2"
                         onClick={() => eliminarPersona(calidad_juridica, persona.id)}
                       >
                         <i className="material-symbols-rounded me-2">delete</i>
@@ -659,8 +668,6 @@ const PersonalSectorial = ({
                   )}
                 </div>
               ))}
-
-
 
               {!solo_lectura && (
                 <button
