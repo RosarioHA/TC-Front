@@ -52,7 +52,7 @@ export const CostoPersonal = ({
                 <tr key={index}>
                   <th>{index + 1}</th>
                   <td><span className="text-sans-p-grayc">{fila.nombre}</span></td>
-                  <td><div className="border-gris col-6 py-2 px-3">{fila.justificado}</div></td>
+                  <td className="d-flex justify-content-center"><div className="col-6 py-1 valor-fijo mb-2 mt-2">$ {fila.justificado}</div></td>
                   <td><div className="text-sans-p-bold-darkred">{fila.justificar}</div></td>
                 </tr>
               ))}
