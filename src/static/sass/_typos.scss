@@ -148,6 +148,9 @@
     @include font-sans(14px, 700, $success-color);
     font-style: normal;
 }
+.text-sans-h6-bold-darkred{
+    @include font-sans(14px, 700, $dark-red);
+}
 
 // p
 .text-sans-p{
