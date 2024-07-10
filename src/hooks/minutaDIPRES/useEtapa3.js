@@ -42,9 +42,8 @@ export const useEtapa3 = () => {
     setLoadingPatch(true);
     try {
       const data = {
-        comentario_minuta_etapa3: comentarios,
+        comentario_minuta_sectorial: comentarios,
         observacion_minuta_sectorial_enviada: true,
-        estado: 'Finalizada'
       };
       await apiTransferenciaCompentencia.patch(`/etapa3/${idEtapa}/`, data);
     } catch (error) {

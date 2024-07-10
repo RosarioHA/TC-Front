@@ -15,10 +15,12 @@ const PrimeraMinuta = () =>
   const [ isSubmitSuccessful, setIsSubmitSuccessful ] = useState(false);
   const navigate = useNavigate();
   const { userData } = useAuth();
-  const minutaEnviada = !!competenciaDetails?.etapa3?.archivo_minuta_etapa3;
+  const minutaEnviada = !!competenciaDetails?.etapa3?.minuta_etapa3_enviada;
   const idEtapa = competenciaDetails?.etapa3?.id
   const [ errorMessage, setErrorMessage ] = useState("");
   const userObservador = userData?.perfil?.includes("Usuario Observador");
+
+  console.log(minutaEnviada)
 
   const handleBackButtonClick = () =>
   {

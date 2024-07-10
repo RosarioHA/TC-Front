@@ -1,7 +1,8 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useCompetencia } from "../../hooks/competencias/useCompetencias";
 import { useEtapa3 } from "../../hooks/minutaDIPRES/useEtapa3";
+import { useEtapa } from "../../hooks/etapa/useEtapa";
 import { EncabezadoFormularios } from "../../components/layout/EncabezadoFormularios";
 import { SubirArchivo } from "../../components/commons/subirArchivo";
 import CustomTextarea from "../../components/forms/custom_textarea";
@@ -11,13 +12,15 @@ const ObservacionesSubdere = () =>
   const [ etapaOmitida, setEtapaOmitida ] = useState(null);
   const navigate = useNavigate();
   const { id } = useParams();
-  const { competenciaDetails } = useCompetencia(id);
+  const { competenciaDetails } = useCompetencia(id, 2);
   const { patchCompetenciaOmitida } = useEtapa3();
+  const { updateEtapa} = useEtapa(id, 2);
   const observacionesEnviadas = competenciaDetails?.etapa2?.observaciones_completas;
   const etapaFinalizada = competenciaDetails?.etapa2?.estado === 'Finalizada';
 
   const formularios = competenciaDetails?.etapa2?.formulario_sectorial?.detalle_formularios_sectoriales
-  const formulario = competenciaDetails?.etapa2?.formulario_sectorial[0]
+  const formulario = competenciaDetails?.etapa2?.formulario_sectorial[ 0 ]
+
 
   useEffect(() =>
   {
@@ -40,7 +43,7 @@ const ObservacionesSubdere = () =>
 
   const handleVerFormulario = (formularioId) =>
   {
-    navigate(`/home/formulario_sectorial/${formularioId}/`);
+    navigate(`/home/formulario_sectorial/${formularioId}/paso_1`);
   };
 
 
@@ -48,6 +51,8 @@ const ObservacionesSubdere = () =>
   {
     try
     {
+      // Realizar la actualización del paso 2 aquí
+      await updateEtapa(2, { estado: "Finalizada" });
       await patchCompetenciaOmitida(competenciaDetails?.etapa3?.id, etapaOmitida);
       navigate(`/home/success_cierre_observaciones/${competenciaDetails?.id}`);
     } catch (error)
@@ -147,59 +152,73 @@ const ObservacionesSubdere = () =>
         {formularios?.map((sector, index) => (
           <div className="col-10" key={index}>
             <p className="text-sans-h5 my-2 "><strong>{sector.nombre.replace('Completar formulario Sectorial - ', '')}</strong></p>
-            <div>
-              <div className="d-flex justify-content-between py-2 fw-bold">
-                <div className="d-flex my-1">
-                  <div className="ms-4">#</div>
-                  <div className="ms-5">Documento</div>
+            {sector.antecedente_adicional_sectorial !== 'No aplica' ? (
+              <>
+                <div>
+                  <div className="d-flex justify-content-between py-2 fw-bold">
+                    <div className="d-flex my-1">
+                      <div className="ms-4">#</div>
+                      <div className="ms-5">Documento</div>
+                    </div>
+                    <div className="me-5">Acción</div>
+                  </div>
                 </div>
-                <div className="me-5">Acción</div>
-              </div>
-            </div>
-            <SubirArchivo
-              readOnly={true}
-              tituloDocumento={sector.antecedente_adicional_sectorial}
-              archivoDescargaUrl={sector.antecedente_adicional_sectorial}
-            />
-            <div className="my-4">
-              <CustomTextarea
-                label="Descripción del archivo adjunto (Opcional)"
-                placeholder="Describe el archivo adjunto"
-                value={sector.descripcion_antecedente}
-                readOnly={true}
-              />
-            </div>
+                <SubirArchivo
+                  readOnly={true}
+                  tituloDocumento={sector.antecedente_adicional_sectorial}
+                  archivoDescargaUrl={sector.antecedente_adicional_sectorial}
+                />
+                <div className="my-4">
+                  <CustomTextarea
+                    label="Descripción del archivo adjunto (Opcional)"
+                    placeholder="Describe el archivo adjunto"
+                    value={sector.descripcion_antecedente}
+                    readOnly={true}
+                  />
+                </div>
+              </>
+            ) : (<div className="my-5 px-3 neutral-line py-3">
+              El sector no subió antecedentes adicionales.
+            </div>)}
           </div>
         ))}
 
         {formulario &&
           <div className="col-10">
             <p className="text-sans-h5 my-2 "><strong>{formulario.nombre.replace('Completar formulario Sectorial - ', '')}</strong></p>
-            <div>
-              <div className="d-flex justify-content-between py-2 fw-bold">
-                <div className="d-flex my-1">
-                  <div className="ms-4">#</div>
-                  <div className="ms-5">Documento</div>
+            {formulario.antecedente_adicional_sectorial !== 'No aplica' ? (
+              <>
+                <div>
+                  <div className="d-flex justify-content-between py-2 fw-bold">
+                    <div className="d-flex my-1">
+                      <div className="ms-4">#</div>
+                      <div className="ms-5">Documento</div>
+                    </div>
+                    <div className="me-5">Acción</div>
+                  </div>
                 </div>
-                <div className="me-5">Acción</div>
-              </div>
-            </div>
-            <SubirArchivo
-              readOnly={true}
-              tituloDocumento={formulario.antecedente_adicional_sectorial}
-              archivoDescargaUrl={formulario.antecedente_adicional_sectorial}
-            />
-            <div className="my-4">
-              <CustomTextarea
-                label="Descripción del archivo adjunto (Opcional)"
-                placeholder="Describe el archivo adjunto"
-                value={formulario.descripcion_antecedente}
-                readOnly={true}
-              />
-            </div>
+                <SubirArchivo
+                  readOnly={true}
+                  tituloDocumento={formulario.antecedente_adicional_sectorial}
+                  archivoDescargaUrl={formulario.antecedente_adicional_sectorial}
+                />
+                <div className="my-4">
+                  <CustomTextarea
+                    label="Descripción del archivo adjunto (Opcional)"
+                    placeholder="Describe el archivo adjunto"
+                    value={formulario.descripcion_antecedente}
+                    readOnly={true}
+                  />
+                </div>
+              </>
+            ) : (
+              <div className="my-5 px-3 neutral-line py-3">
+                El sector no subió antecedentes adicionales.
+              </div>)}
           </div>
         }
       </div>
+
 
       {observacionesEnviadas && (
         <div>
