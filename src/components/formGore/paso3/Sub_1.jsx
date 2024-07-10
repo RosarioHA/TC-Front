@@ -5,7 +5,7 @@ export const Sub_1 = ({ data, solo_lectura }) => {
 
   return (
     <>
-      <div className="pe-5 me-5 mt-4 col-12">
+      <div className="pe-xxl-5 me-xxl-5 mt-4 col-12">
         <span className="my-4 text-sans-h4">
           3.1 Estamento, tipo de contrato y cantidad de personal para el Gobierno Regional solicitante
         </span>
