@@ -442,7 +442,6 @@ const PersonalSectorial = ({
 
   function MensajeErrorPresupuesto({ por_justificar }) {
     if (por_justificar == 0) {
-      console.log("por_justificar valor", por_justificar)
       return <p></p>
     } else {
       return <p className="col-3 text-sans-h6-bold-darkred">Debes justificar el total del costo</p>;
