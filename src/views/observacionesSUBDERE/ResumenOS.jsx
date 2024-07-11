@@ -15,7 +15,7 @@ const ResumenOS = () => {
     descripcion_documento: { loading: false, saved: false },
   });
 
-
+console.log(data)
   useEffect(() => {
     const obtenerObservaciones = async () => {
       try {
@@ -168,8 +168,8 @@ const ResumenOS = () => {
             index="1"
             handleFileSelect={handleFileSelect}
             handleDeleteFile={handleDeleteFile}
-            archivoDescargaUrl={data.antecedente_adicional_subdere}
-            tituloDocumento={data.antecedente_adicional_subdere}
+            archivoDescargaUrl={data?.antecedente_adicional_subdere}
+            tituloDocumento={data?.antecedente_adicional_subdere}
             fieldName="antecedente_adicional_subdere"
             readOnly={observacionesEnviadas}
           />
@@ -188,9 +188,11 @@ const ResumenOS = () => {
             maxLength={500}
           />
         </div>
+        {observaciones.observacion_enviada ? (
         <p className="text-sans-p">
           Asegúrate que los datos ingresados son correctos, ya que una vez que envíes el formulario, 
           no podrás editarlo a menos que SUBDERE requiera información adicional.</p>
+          ):("")}
       </div>
 
       <div className="d-flex justify-content-between p-2 mb-5 pb-5">

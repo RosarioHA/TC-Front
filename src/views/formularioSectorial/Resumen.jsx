@@ -178,8 +178,8 @@ const ResumenSectorial = () =>
                   fieldName="antecedente_adicional_sectorial"
                   readOnly={resumen?.formulario_enviado}
                 />
-
               </div>
+        
 
             <div className="my-5 col-10">
               <CustomTextarea

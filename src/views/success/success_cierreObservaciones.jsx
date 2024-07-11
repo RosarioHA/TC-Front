@@ -33,7 +33,7 @@ const SuccessCierreOS = () => {
   }
 
   return (
-    <div className="container col-11">
+    <div className="container col-11 ps-5 ms-5">
       <h1 className="text-sans-Title mt-5 ms-3">Observaciones SUBDERE</h1>
       <h1 className="text-sans-h1 ms-3">Formularios sectoriales</h1>
       <h2 className="text-sans-h2-grey pb-5 ms-3">{competenciaDetails?.nombre}</h2>
