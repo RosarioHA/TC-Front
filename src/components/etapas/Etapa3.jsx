@@ -7,6 +7,7 @@ export const Etapa3 = ({ etapa, idCompetencia, etapaDos }) => {
   const { userData } = useAuth();
   const userSubdere = userData?.perfil?.includes('SUBDERE');
   const userDipres = userData?.perfil?.includes('DIPRES');
+  const userGore = userData?.perfil?.includes('GORE');
 
   const {
     nombre_etapa,
@@ -54,7 +55,7 @@ export const Etapa3 = ({ etapa, idCompetencia, etapaDos }) => {
 
     const isDisabled = !(isFinalizado && subetapa.accion === "Ver minuta") &&
       !((subetapa.estado === "revision" && userSubdere && subetapa.nombre.includes("Subir oficio") && etapaDos.estado === "Finalizada") ||
-        (isFinalizado && subetapa.accion === "Ver oficio") ||
+        (isFinalizado && subetapa.accion === "Ver oficio" && !userGore) ||  // Disable "Ver oficio" if the user is GORE
         (subetapa.accion === "Subir Observaciones" && userSubdere && subetapa.estado === "revision") ||
         (subetapa.accion === "Subir minuta" && userDipres && subetapa.estado === "revision") ||
         (isFinalizado && subetapa.accion === "Ver Observaciones"));

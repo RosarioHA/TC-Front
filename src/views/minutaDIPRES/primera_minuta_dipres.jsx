@@ -20,7 +20,6 @@ const PrimeraMinuta = () =>
   const [ errorMessage, setErrorMessage ] = useState("");
   const userObservador = userData?.perfil?.includes("Usuario Observador");
 
-  console.log(minutaEnviada)
 
   const handleBackButtonClick = () =>
   {
