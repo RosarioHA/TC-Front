@@ -37,7 +37,7 @@ const SuccessRevisionFinal = () =>
   }
 
   return (
-    <div className="container col-11">
+    <div className="container col-11 ps-5 ms-5">
       <h1 className="text-sans-Title mt-5 ms-3">Revision final SUBDERE</h1>
       <h1 className="text-sans-h1 ms-3">{dataFormSubdere.competencia_nombre}</h1>
       <h2 className="text-sans-h2-grey pb-5 ms-3">{dataFormSubdere.sector_nombre}</h2>

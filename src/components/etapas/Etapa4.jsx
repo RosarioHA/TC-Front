@@ -159,7 +159,7 @@ export const Etapa4 = ({ etapa, etapaTres, idCompetencia }) => {
           </button>
         );
       } else {
-        path = `/home/estado_competencia/${etapa.id}/subir_oficio_gore/`;
+        path = `/home/estado_competencia/${idCompetencia}/subir_oficio_gore/`;
         const isDisabled = (estado === "pendiente" || estado === "revision") && !enableButtonForSubdere;
 
         const handleButtonClick = () => {

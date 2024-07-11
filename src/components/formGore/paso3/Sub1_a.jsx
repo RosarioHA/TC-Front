@@ -22,7 +22,7 @@ export const Sub1_a = ({data, solo_lectura}) => {
 
   return (
     <>
-      <div className="pe-5 me-5 mt-4 col-12">
+      <div className="pe-xxl-5 me-xxl-5 mt-4 col-12">
         <span className="my-4 text-sans-h4">
           a. Personal que ejerce directamente la competencia
         </span>

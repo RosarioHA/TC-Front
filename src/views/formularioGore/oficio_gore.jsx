@@ -5,8 +5,7 @@ import { useUpdateEtapa } from "../../hooks/competencias/useOficio";
 import { SuccessSOficio } from "../../components/success/oficio";
 import { SubirArchivo } from "../../components/commons/subirArchivo";
 
-const OficioGore = () =>
-{
+const OficioGore = () => {
   const updateEtapa = useUpdateEtapa();
   const { id } = useParams();
   const { competenciaDetails } = useCompetencia(id);
@@ -23,33 +22,26 @@ const OficioGore = () =>
   const etapaNum = 4;
   const etapaId = competenciaDetails?.etapa4?.id
 
-  useEffect(() =>
-  {
-    if (competenciaDetails)
-    {
+  useEffect(() => {
+    if (competenciaDetails) {
       setCompetencia(competenciaDetails);
     }
   }, [ competenciaDetails ]);
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     // Establece la fecha máxima permitida como la fecha actual
     const hoy = new Date();
     const fechaActual = `${hoy.getFullYear()}-${(hoy.getMonth() + 1).toString().padStart(2, '0')}-${hoy.getDate().toString().padStart(2, '0')}`;
     setFechaMaxima(fechaActual);
   }, []);
 
-  const handleFileChange = (event) =>
-  {
+  const handleFileChange = (event) => {
     const file = event.target.files[ 0 ];
-    if (file)
-    {
-      if (file.size > 20971520)
-      { // 20 MB en bytes
+    if (file)  {
+      if (file.size > 20971520) { // 20 MB en bytes
         setErrorMessage("Archivo no cumple con el peso permitido");
         setSelectedFile(null);
-      } else
-      {
+      } else {
         setSelectedFile(file);
         setButtonText('Modificar');
         setErrorMessage("");
@@ -57,81 +49,67 @@ const OficioGore = () =>
     }
   };
 
-  const handleDelete = () =>
-  {
+  const handleDelete = () => {
     setSelectedFile(null);
     setButtonText('Subir archivo');
   };
 
-  const handleUploadClick = () =>
-  {
+  const handleUploadClick = () => {
     document.getElementById('fileUploadInput').click();
   };
 
   const dateInputRef = useRef(null);
 
-  const handleFechaInicioChange = (event) =>
-  {
+  const handleFechaInicioChange = (event) => {
     const selectedDate = event.target.value;
     const today = new Date();
     const formattedToday = `${today.getFullYear()}-${(today.getMonth() + 1)
       .toString()
       .padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}`;
-    if (selectedDate > formattedToday)
-    {
+    if (selectedDate > formattedToday) {
       setErrorMessageDate("La fecha no puede ser posterior a la fecha actual.");
       event.target.value = formattedToday;
       setFechaInicio(formattedToday);
-    } else
-    {
+    } else {
       setErrorMessageDate("");
       setFechaInicio(selectedDate);
     }
   };
 
-  const prepareDataForSubmission = () =>
-  {
+  const prepareDataForSubmission = () => {
     const formData = new FormData();
-    if (selectedFile)
-    {
+    if (selectedFile) {
       formData.append('oficio_origen', selectedFile, selectedFile.name);
     }
     formData.append('fecha_inicio', fechaInicio);
     return formData;
   };
 
-  const handleSubmission = async () =>
-  {
+  const handleSubmission = async () => {
     // Verificar si el archivo y la fecha han sido seleccionados
-    if (!selectedFile || fechaInicio === '')
-    {
+    if (!selectedFile || fechaInicio === '') {
       setErrorMessage("Por favor, selecciona un archivo y una fecha.");
       return;
     }
     const formData = prepareDataForSubmission();
 
-    if (!etapaNum || !etapaId)
-    {
+    if (!etapaNum || !etapaId) {
       console.error("etapaNum o competenciaId están indefinidos o son nulos");
       return;
     }
-    try
-    {
+    try {
       await updateEtapa(etapaNum, etapaId, formData);
       setIsSubmitSuccessful(true);
-    } catch (error)
-    {
+    } catch (error) {
       console.error('Error al realizar la solicitud:', error);
     }
   };
 
-  const handleBackButtonClick = () =>
-  {
+  const handleBackButtonClick = () => {
     navigate(-1);
   };
 
-  if (!competencia)
-  {
+  if (!competencia) {
     return <div className="d-flex align-items-center flex-column ">
       <div className="text-center text-sans-h5-medium-blue ">Cargando datos de la competencia...</div>
       <span className="placeholder col-4 bg-primary"></span>
