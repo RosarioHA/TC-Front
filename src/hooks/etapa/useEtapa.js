@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { apiTransferenciaCompentencia } from '../../services/transferenciaCompetencia';
 
-export const useEtapa = ( competenciaId,stepNumber) => {
+export const useEtapa = (competenciaId, stepNumber) => {
   const [etapa, setEtapa] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -10,6 +10,10 @@ export const useEtapa = ( competenciaId,stepNumber) => {
 
   useEffect(() => {
     const fetchEtapa = async () => {
+      if (!competenciaId) {
+        setLoading(false);
+        return;
+      }
       try {
         const response = await apiTransferenciaCompentencia.get(`etapa${stepNumber}/${competenciaId}/`);
         setEtapa(response.data);
@@ -21,7 +25,7 @@ export const useEtapa = ( competenciaId,stepNumber) => {
     };
 
     fetchEtapa();
-  }, [competenciaId,stepNumber]);
+  }, [competenciaId, stepNumber]);
 
   const updateEtapa = async (stepNumber, data) => {
     setLoading(true);
@@ -40,3 +44,4 @@ export const useEtapa = ( competenciaId,stepNumber) => {
 
   return { etapa, loading, error, updateEtapa, updateResponse, updateError };
 };
+

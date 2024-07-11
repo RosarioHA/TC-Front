@@ -9,17 +9,19 @@ import CustomTextarea from "../../components/forms/custom_textarea";
 
 const ObservacionesSubdere = () =>
 {
-  const [ etapaOmitida, setEtapaOmitida ] = useState(false);
+  const [etapaOmitida, setEtapaOmitida] = useState(false);
   const navigate = useNavigate();
   const { id } = useParams();
   const { competenciaDetails } = useCompetencia(id, 2);
   const { patchCompetenciaOmitida } = useEtapa3();
-  const { updateEtapa} = useEtapa(id, 2);
+  const idEtapa = competenciaDetails?.etapa2?.id;
+  const { updateEtapa } = useEtapa(idEtapa, 2);
   const observacionesEnviadas = competenciaDetails?.etapa2?.observaciones_completas;
   const etapaFinalizada = competenciaDetails?.etapa2?.estado === 'Finalizada';
 
-  const formularios = competenciaDetails?.etapa2?.formulario_sectorial?.detalle_formularios_sectoriales
-  const formulario = competenciaDetails?.etapa2?.formulario_sectorial[ 0 ]
+  const formularios = competenciaDetails?.etapa2?.formulario_sectorial?.detalle_formularios_sectoriales;
+  const formulario = competenciaDetails?.etapa2?.formulario_sectorial[0];
+
 
 
   useEffect(() =>
@@ -52,7 +54,7 @@ const ObservacionesSubdere = () =>
     try
     {
       // Realizar la actualización del paso 2 aquí
-      await updateEtapa(2,{ aprobada: true});
+      await updateEtapa( 2,{ aprobada: true});
       await patchCompetenciaOmitida(competenciaDetails?.etapa3?.id, etapaOmitida);
       navigate(`/home/success_cierre_observaciones/${competenciaDetails?.id}`);
     } catch (error)
