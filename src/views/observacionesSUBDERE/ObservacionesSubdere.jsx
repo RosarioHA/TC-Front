@@ -9,7 +9,7 @@ import CustomTextarea from "../../components/forms/custom_textarea";
 
 const ObservacionesSubdere = () =>
 {
-  const [ etapaOmitida, setEtapaOmitida ] = useState(null);
+  const [ etapaOmitida, setEtapaOmitida ] = useState(false);
   const navigate = useNavigate();
   const { id } = useParams();
   const { competenciaDetails } = useCompetencia(id, 2);
@@ -52,7 +52,7 @@ const ObservacionesSubdere = () =>
     try
     {
       // Realizar la actualización del paso 2 aquí
-      await updateEtapa(2, { estado: "Finalizada" });
+      await updateEtapa(2,{ aprobada: true});
       await patchCompetenciaOmitida(competenciaDetails?.etapa3?.id, etapaOmitida);
       navigate(`/home/success_cierre_observaciones/${competenciaDetails?.id}`);
     } catch (error)
@@ -278,7 +278,7 @@ const ObservacionesSubdere = () =>
         {!etapaFinalizada && (
           <button
             className="btn-primario-s"
-            disabled={etapaOmitida === null}
+            disabled={!etapaOmitida && !observacionesEnviadas}
             onClick={handleCerrarEtapa}
           >
             Cerrar etapa
