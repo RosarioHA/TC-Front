@@ -80,7 +80,7 @@ export const Etapa2 = ({ etapa, idCompetencia }) =>
     let isDisabled = estado === "pendiente" || (formularios && formularios?.estado !== "finalizada");
   
     // Verificar si es una de las secciones de observaciones y el usuario es observador y está finalizada
-    if ((nombre.includes("Observaciones de formularios sectoriales") || nombre.includes("Observación del formulario sectorial")) && estado === 'finalizada' && userObservador) {
+    if ((nombre.includes("Observaciones de formularios sectoriales") || nombre.includes("Observación del formulario sectorial")) && estado === 'finalizada' && userObservador || userGore ) {
       return <span className="badge-status-finish">{accion}</span>;
     }
   

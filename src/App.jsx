@@ -113,7 +113,9 @@ function App()
             path="observaciones_subdere/:id/"
             element={
               <FormularioProvider>
+                  <ProtectedRoute allowedProfiles={[ 'Usuario Sectorial', 'SUBDERE','DIPRES' ]}>
                 <ObservacionesSubdere />
+                </ProtectedRoute>
               </FormularioProvider>
             } />
           <Route
