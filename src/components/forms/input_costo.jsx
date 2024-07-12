@@ -2,7 +2,7 @@ import { useState, forwardRef } from "react";
 import { NumericFormat } from "react-number-format";
 
 const InputCosto = forwardRef(
-  ({ loading, saved, placeholder, id, error, readOnly, onChange, onBlur, initialValue, ...props }, ref) => {
+  ({ loading, saved, placeholder, id, error, readOnly, onChange, onBlur, initialValue, onKeyDown, ...props }, ref) => {
     const [inputValue, setInputValue] = useState(initialValue || '');
 
     const inputStyle = () => {
@@ -20,6 +20,17 @@ const InputCosto = forwardRef(
 
     const handleBlur = () => {
       onBlur(inputValue);  // Pasar el valor actual al método onBlur
+    };
+
+    const handleKeyDown = (e) => {
+      // Prevenir que Enter realice alguna acción
+      if (e.key === 'Enter') {
+        e.preventDefault();
+      }
+      // Permitir al usuario agregar manejadores adicionales de onKeyDown
+      if (onKeyDown) {
+        onKeyDown(e);
+      }
     };
 
     return (
@@ -46,6 +57,7 @@ const InputCosto = forwardRef(
                 }
               }}
               onBlur={handleBlur}
+              onKeyDown={handleKeyDown}
               ref={ref}
               {...props}
             />
