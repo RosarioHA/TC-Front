@@ -3,8 +3,7 @@ import { Counter } from "../tables/Counter";
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
-export const Etapa5 = ({ etapa, idCompetencia, etapaCuatro }) =>
-{
+export const Etapa5 = ({ etapa, idCompetencia, etapaCuatro }) => {
     const { userData } = useAuth();
     const userSubdere = userData?.perfil?.includes('SUBDERE');
     const userDipres = userData?.perfil?.includes('DIPRES');
@@ -28,57 +27,27 @@ export const Etapa5 = ({ etapa, idCompetencia, etapaCuatro }) =>
         observacion_minuta_gore
     ];
 
-    if (!etapa)
-    {
+    if (!etapa) {
         return <div>Cargando...</div>;
     }
 
-    const renderButtonForSubetapa = (subetapa) =>
-    {
+    const renderButtonForSubetapa = (subetapa) => {
         let buttonText = subetapa.accion;
         let icon = subetapa.estado === "finalizada" ? "visibility" : "draft";
         let path = "/";
         const isDisabled = subetapa.estado === "pendiente" || etapaCuatro.estado !== "Finalizada";
 
-        const handleButtonClick = (event) =>
-        {
-            if (isDisabled)
-            {
+        const handleButtonClick = (event) => {
+            if (isDisabled) {
                 event.preventDefault(); // Previene la navegación si el botón está deshabilitado
-            } else
-            {
+            } else {
                 navigate(path); // Usa el hook 'navigate' para redirigir
             }
         };
 
-
-        // Agregar usuario cuando las condiciones específicas se cumplen
-        if (userSubdere && subetapa.accion === "Agregar usuario" && etapaCuatro.estado === "Finalizada" && estado === "Aún no puede comenzar")
-        {
-            path = `/home/editar_competencia/${idCompetencia}`;
-            return (
-                <button onClick={() => navigate(path)} className="btn-secundario-s text-decoration-none" id="btn">
-                    <span className="material-symbols-outlined me-1">person_add</span>
-                    <u>{buttonText}</u>
-                </button>
-            );
-        }
-
-
-        // Otros casos ya manejados en el código existente
-        if (subetapa.nombre.includes("Notificar a") && subetapa.estado === "finalizada")
-        {
-            if (estado === 'Aún no puede comenzar')
-            {
-                return <span className="badge-status-pending">{buttonText}</span>;
-            } else
-            {
-                return <span className="badge-status-finish">{buttonText}</span>;
-            }
-        }
-          // Redirigir a la ruta correspondiente según la subetapa
-        if (userSubdere && subetapa.accion === "Revisión SUBDERE" && subetapa.estado === "finalizada") {
-            path = `/home/minuta_dipres/${idCompetencia}/observaciones_subdere`;
+        // Condición específica para mostrar el botón activo para "Subir Observaciones"
+        if (userSubdere && subetapa.accion === "Subir Observaciones" && subetapa.estado === "revision") {
+            path = `/home/formulario_gore/${etapa.id}/observaciones_subdere`;
             return (
                 <Link to={path} className="btn-secundario-s text-decoration-none" id="btn">
                     <span className="material-symbols-outlined me-1">{icon}</span>
@@ -86,7 +55,26 @@ export const Etapa5 = ({ etapa, idCompetencia, etapaCuatro }) =>
                 </Link>
             );
         }
-        if (userDipres && subetapa.accion === "Subir minuta" && subetapa.estado === "finalizada") {
+
+        // Otros casos ya manejados en el código existente
+        if (subetapa.nombre.includes("Notificar a") && subetapa.estado === "finalizada") {
+            if (estado === 'Aún no puede comenzar') {
+                return <span className="badge-status-pending">{buttonText}</span>;
+            } else {
+                return <span className="badge-status-finish">{buttonText}</span>;
+            }
+        }
+
+        if (userSubdere && subetapa.accion === "Revisión SUBDERE" && subetapa.estado === "finalizada") {
+            path = `/home/formulario_gore/${etapa.id}/observaciones_subdere`;
+            return (
+                <Link to={path} className="btn-secundario-s text-decoration-none" id="btn">
+                    <span className="material-symbols-outlined me-1">{icon}</span>
+                    <u>{buttonText}</u>
+                </Link>
+            );
+        }
+        if (userDipres && subetapa.accion === "Subir minuta" && subetapa.estado === "revision") {
             path = `/home/minuta_dipres/${idCompetencia}/segunda_minuta_dipres`;
             return (
                 <Link to={path} className="btn-secundario-s text-decoration-none" id="btn">
@@ -105,7 +93,7 @@ export const Etapa5 = ({ etapa, idCompetencia, etapaCuatro }) =>
             );
         }
         if (userSubdere && subetapa.accion === "Subir Observaciones" && subetapa.estado === "pendiente") {
-            path = `/home/minuta_dipres/${idCompetencia}/observaciones_subdere`;
+            path = `/home/formulario_gore/${etapa.id}/observaciones_subdere`;
             return (
                 <button to={path} className="btn-secundario-s text-decoration-none disabled" id="btn">
                     <span className="material-symbols-outlined me-1">{icon}</span>
@@ -150,8 +138,6 @@ export const Etapa5 = ({ etapa, idCompetencia, etapaCuatro }) =>
             </button>
         );
     };
-
-
 
     return (
         <div className="my-3">

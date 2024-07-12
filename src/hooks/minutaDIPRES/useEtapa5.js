@@ -14,7 +14,7 @@ export const useEtapa5 = () => {
       // Realizar la solicitud PATCH para subir el archivo
       await apiTransferenciaCompentencia.patch(`/etapa5/${idEtapa}/`, formData);
       setArchivoSubido(true);
-      await apiTransferenciaCompentencia.patch(`/etapa5/${idEtapa}/`, { estado: "Finalizada" });
+      await apiTransferenciaCompentencia.patch(`/etapa5/${idEtapa}/`, {minuta_etapa5_enviada:true});
 
     } catch (error) {
       console.error("Error al subir el archivo:", error);
@@ -29,9 +29,7 @@ export const useEtapa5 = () => {
     try {
       const data = {
         comentario_minuta_etapa5: comentarios,
-        // comentario_minuta_gore: comentarios,
         observacion_minuta_gore_enviada: true,
-        estado: 'Finalizada'
       };
       await apiTransferenciaCompentencia.patch(`/etapa5/${idEtapa}/`, data);
     } catch (error) {

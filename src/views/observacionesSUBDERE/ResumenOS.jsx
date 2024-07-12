@@ -15,7 +15,6 @@ const ResumenOS = () => {
     descripcion_documento: { loading: false, saved: false },
   });
 
-console.log(data)
   useEffect(() => {
     const obtenerObservaciones = async () => {
       try {
