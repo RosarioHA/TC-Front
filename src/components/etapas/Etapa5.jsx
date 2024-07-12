@@ -102,7 +102,7 @@ export const Etapa5 = ({ etapa, idCompetencia, etapaCuatro }) => {
             );
         }
         if (subetapa.accion === "Ver Observaciones" && subetapa.estado === "finalizada") {
-            path = `/home/minuta_dipres/${idCompetencia}/observaciones_subdere`;
+            path = `/home/formulario_gore/${etapa.id}/observaciones_subdere`;
             return (
                 <Link to={path} className="btn-secundario-s text-decoration-none" id="btn">
                     <span className="material-symbols-outlined me-1">{icon}</span>
