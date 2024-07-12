@@ -381,6 +381,12 @@ export const SubAdicionales = ({
                           onBlur();
                         };
 
+                        const handleKeyDown = (e) => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault();
+                          }
+                        };
+
                         return (
                           <InputCosto
                             id={`total_anual_gore_${costo.id}`}
@@ -388,6 +394,7 @@ export const SubAdicionales = ({
                             value={value}
                             onChange={handleChange}
                             onBlur={handleBlur}
+                            onKeyDown={handleKeyDown}
                             loading={inputStatus[costo.id]?.total_anual_gore?.loading}
                             saved={inputStatus[costo.id]?.total_anual_gore?.saved}
                             error={errors[`total_anual_gore_${costo.id}`]?.message}

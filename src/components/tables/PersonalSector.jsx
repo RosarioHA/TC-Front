@@ -523,6 +523,12 @@ const PersonalSectorial = ({
                             onBlur();
                           };
 
+                          const handleKeyDown = (e) => {
+                            if (e.key === 'Enter') {
+                              e.preventDefault();
+                            }
+                          };
+
                           return (
                             <InputCosto
                               id={`numero_personas_${persona.id}`}
@@ -530,6 +536,7 @@ const PersonalSectorial = ({
                               value={value}
                               onChange={handleChange}
                               onBlur={handleBlur}
+                              onKeyDown={handleKeyDown}
                               loading={inputStatus[`numero_personas_${persona.id}`]?.loading ?? false}
                               saved={inputStatus[`numero_personas_${persona.id}`]?.saved ?? false}
                               error={errors[`numero_personas_${persona.id}`]?.message}
@@ -685,8 +692,8 @@ const PersonalSectorial = ({
                 );
 
                 const counterClass = (item.por_justificar) == 0
-                ? "text-sans-p-bold"
-                : "text-sans-h6-bold-darkred";
+                  ? "text-sans-p-bold"
+                  : "text-sans-h6-bold-darkred";
 
                 if (itemCorrespondiente) {
                   return (
