@@ -14,7 +14,7 @@ export const validacionFluctuacion = (modeloCostos) => {
         .number()
         .typeError('El costo debe ser un número')
         .min(0, 'El costo no debe ser un número negativo')
-        .nullable(true) // Esto permite que el valor sea null, útil si el costo puede estar vacío
+        .integer('El costo debe ser un número entero sin decimales')
         .required('El costo es obligatorio');
     });
   });
