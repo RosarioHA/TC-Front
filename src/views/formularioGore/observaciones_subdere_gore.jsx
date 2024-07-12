@@ -7,43 +7,54 @@ import { useEtapa5 } from "../../hooks/minutaDIPRES/useEtapa5";
 import { SuccessOSminutaDIPRES } from "../../components/success/OSminutaDipres";
 import { EncabezadoFormularios } from "../../components/layout/EncabezadoFormularios";
 
-const ObservacionesSubdereGore = () => {
+const ObservacionesSubdereGore = () =>
+{
   const { id } = useParams();
   const { competenciaDetails } = useCompetencia(id);
   const { patchComentarioMinuta, loadingPatch } = useEtapa5();
-  const [observacionMinutaDipres, setObservacionMinutaDipres] = useState("");
-  const [observacionEnviada, setObservacionEnviada] = useState(false);
-  const [isSubmitSuccessful, setIsSubmitSuccessful] = useState(false);
+  const [ observacionMinutaDipres, setObservacionMinutaDipres ] = useState("");
+  const [ observacionEnviada, setObservacionEnviada ] = useState(false);
+  const [ isSubmitSuccessful, setIsSubmitSuccessful ] = useState(false);
   const navigate = useNavigate();
   const observacionesEnviadas = competenciaDetails?.etapa5?.observacion_minuta_gore_enviada;
   const idEtapa = competenciaDetails?.etapa5?.id
+  const adicionalGore = competenciaDetails?.etapa4?.formularios_gore[ 0 ]
 
-  useEffect(() => {
+
+  console.log(adicionalGore)
+
+  useEffect(() =>
+  {
     // Verificar si las observaciones ya han sido enviadas
-    if (competenciaDetails?.etapa5?.observacion_minuta_gore_enviada) {
+    if (competenciaDetails?.etapa5?.observacion_minuta_gore_enviada)
+    {
       // Establecer las observaciones existentes como estado inicial
       setObservacionMinutaDipres(competenciaDetails?.etapa5?.comentario_minuta_etapa5);
     }
-  }, [competenciaDetails]);
+  }, [ competenciaDetails ]);
 
-  const handleBackButtonClick = () => {
+  const handleBackButtonClick = () =>
+  {
     navigate(-1);
   };
 
-  const handleGuardarObservacion = () => {
+  const handleGuardarObservacion = () =>
+  {
     setObservacionEnviada(true);
   };
 
-  const handleCerrarEtapa = async () => {
+  const handleCerrarEtapa = async () =>
+  {
     await patchComentarioMinuta(idEtapa, observacionMinutaDipres);
     setIsSubmitSuccessful(true);
   }
 
-  const handleVerFormulario = (formularioId) => {
+  const handleVerFormulario = (formularioId) =>
+  {
     navigate(`/home/formulario_gore/${formularioId}/paso_1`);
   };
 
-  return(
+  return (
     <div className="container col-10 col-xxl-11">
       <div className="py-3 d-flex">
         <div className="align-self-center">
@@ -68,127 +79,132 @@ const ObservacionesSubdereGore = () => {
       </div>
 
       {!isSubmitSuccessful ? (
-      <>
-        {/* FORMULARIOS GORE */}
-        <div className="border-bottom pb-3">
-          <h2 className="text-sans-25 mt-4 mb-4">Formularios GORE</h2>
-          {competenciaDetails?.etapa4?.formularios_gore ? (
-            Array.isArray(competenciaDetails.etapa4.formularios_gore) ? (
-              competenciaDetails.etapa4.formularios_gore.map((formulario, index) => (
-                <tr
-                  className={`d-flex justify-content-between p-3 align-items-center ${index % 2 === 0 ? 'neutral-line' : 'white-line'}`}
-                  key={formulario.id}
+        <>
+          {/* FORMULARIOS GORE */}
+          <div className="border-bottom pb-3">
+            <h2 className="text-sans-25 mt-4 mb-4">Formularios GORE</h2>
+            {competenciaDetails?.etapa4?.formularios_gore ? (
+              Array.isArray(competenciaDetails.etapa4.formularios_gore) ? (
+                competenciaDetails.etapa4.formularios_gore.map((formulario, index) => (
+                  <tr
+                    className={`d-flex justify-content-between p-3 align-items-center ${index % 2 === 0 ? 'neutral-line' : 'white-line'}`}
+                    key={formulario.id}
                   >
-                  <td>{formulario.nombre}</td>
-                  <td className="">
-                    <button className="btn-secundario-s text-decoration-underline" onClick={() => handleVerFormulario(formulario.id)}>
-                      {formulario.accion}
-                    </button>
-                  </td>
-                </tr>
-              ))
+                    <td>{formulario.nombre.replace('Completar formulario GORE - ', '')}</td>
+                    <td className="">
+                      <button className="btn-secundario-s text-decoration-underline" onClick={() => handleVerFormulario(formulario.id)}>
+                        {formulario.accion}
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                competenciaDetails.etapa4.formularios_gore.detalle_formularios_gore.map((formulario, index) => (
+                  <tr
+                    className={`d-flex justify-content-between p-3 align-items-center ${index % 2 === 0 ? 'neutral-line' : 'white-line'}`}
+                    key={formulario.id}
+                  >
+                    <td>{formulario.nombre}</td>
+                    <td className="">
+                      <button className="btn-secundario-s text-decoration-underline" onClick={() => handleVerFormulario(formulario.id)}>
+                        {formulario.accion}
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )
             ) : (
-            competenciaDetails.etapa4.formularios_gore.detalle_formularios_gore.map((formulario, index) => (
-              <tr
-                className={`d-flex justify-content-between p-3 align-items-center ${index % 2 === 0 ? 'neutral-line' : 'white-line'}`}
-                key={formulario.id}
-              >
-                <td>{formulario.nombre}</td>
-                <td className="">
-                  <button className="btn-secundario-s text-decoration-underline" onClick={() => handleVerFormulario(formulario.id)}>
-                    {formulario.accion}
-                  </button>
-                </td>
-              </tr>
-              ))
-            )
-          ) : (
-          <p>No hay formularios disponibles.</p>
-          )}
-        </div>
-
-        {/* MINUTA DIPRES */}
-        <div className="mt-4 border-bottom">
-        <h2 className="text-sans-25 mt-4 mb-4">Minuta DIPRES</h2>
-          <SubirArchivo
-            readOnly={true}
-            archivoDescargaUrl={competenciaDetails?.etapa5?.archivo_minuta_etapa5}
-            tituloDocumento="Minuta DIPRES"
-          />
-
-          <div className="my-4">
-            <CustomTextarea 
-              label="Observaciones (Opcional)"
-              placeholder="Escribe tus observaciones de este paso del formulario"
-              rows={6}
-              maxLength={500}
-              value={observacionMinutaDipres}
-              onChange={(e) => setObservacionMinutaDipres(e.target.value)}
-              readOnly={observacionesEnviadas}
-              onBlur={handleGuardarObservacion}
-              loading={loadingPatch}
-            />
-          </div>
-        </div>
-
-        {/* DOCUMENTOS ANTECEDENTES ADICIONALES GORE:
-        aqui el usuario SUBDERE envia sus AA sobre cada Region de la competencia
-        pendiente conecciones PATCH con el backend*/}
-        <div className="my-4">
-          <p className="text-sans-h5 mb-1">Antecedentes Adicionales de GORE (Opcional)</p>
-          <p className="text-sans-h6">Máximo 1 archivo por sector, peso máximo 20MB, formato PDF.</p>
-          {competenciaDetails?.nombres_regiones?.map((region) => (
-            <div key={region.id}>
-              <p>{region.nombre}</p>
-              <div>
-                <div className="d-flex justify-content-between py-3 fw-bold">
-                  <div className="d-flex mb-2">
-                    <div className="ms-4">#</div>
-                    <div className="ms-5">Documento</div>
-                  </div>
-                  <div className="me-5">Acción</div>
-                </div>
-              </div>
-                <SubirArchivo/>
-              <div className="my-4">
-                <CustomTextarea
-                  label="Descripción del archivo adjunto (Opcional)"
-                  placeholder="Describe el archivo adjunto"
-                />
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {!observacionesEnviadas && (
-          <div className="mb-4">
-            {!observacionEnviada ? (
-              <>
-                <h2 className="text-sans-h2">Debes revisar todos los formularios y escribir observaciones para DIPRES antes de terminar la etapa</h2>
-                <p className="text-sans-p">Para poder terminar la etapa debes revisar todos los formularios y dejar observaciones donde consideres necesario.</p>
-              </>
-            ) : (
-              <>
-                <h2 className="text-sans-h2">Esta todo listo para que termines la etapa</h2>
-                <p className="text-sans-p">Ya revisaste todos los formularios. </p>
-              </>
+              <p>No hay formularios disponibles.</p>
             )}
           </div>
-        )}
 
-        { !observacionesEnviadas && (
-        <div className="d-flex justify-content-end my-5">
-          <button className="btn-primario-s" disabled={!observacionEnviada} onClick={handleCerrarEtapa}>
-            <p className="mb-0 text-decoration-underline">Cerrar etapa</p>
-            <i className="material-symbols-rounded ms-2">arrow_forward_ios</i>
-          </button>
-        </div>
-        )}
-      </>
+          {/* MINUTA DIPRES */}
+          <div className="mt-4 border-bottom">
+            <h2 className="text-sans-25 mt-4 mb-4">Minuta DIPRES</h2>
+            <SubirArchivo
+              readOnly={true}
+              archivoDescargaUrl={competenciaDetails?.etapa5?.archivo_minuta_etapa5}
+              tituloDocumento="Minuta DIPRES"
+            />
+
+            <div className="my-4">
+              <CustomTextarea
+                label="Observaciones (Opcional)"
+                placeholder="Escribe tus observaciones de este paso del formulario"
+                rows={6}
+                maxLength={500}
+                value={observacionMinutaDipres}
+                onChange={(e) => setObservacionMinutaDipres(e.target.value)}
+                readOnly={observacionesEnviadas}
+                onBlur={handleGuardarObservacion}
+                loading={loadingPatch}
+              />
+            </div>
+          </div>
+
+          {/* DOCUMENTOS ANTECEDENTES ADICIONALES GORE:
+        aqui el usuario SUBDERE envia sus AA sobre cada Region de la competencia
+        pendiente conecciones PATCH con el backend*/}
+          <div className="my-4">
+            <p className="text-sans-h4 mt-5">Antecedentes Adicionales de sector</p>
+            {adicionalGore && (
+              <div key={adicionalGore.region_id}>
+                <p>{adicionalGore.nombre.replace('Completar formulario GORE - ', '')}</p>
+                <div>
+                  <div className="d-flex justify-content-between py-3 fw-bold">
+                    <div className="d-flex mb-2">
+                      <div className="ms-4">#</div>
+                      <div className="ms-5">Documento</div>
+                    </div>
+                    <div className="me-5">Acción</div>
+                  </div>
+                </div>
+                <SubirArchivo
+                  readOnly={true}
+                  tituloDocumento={adicionalGore.antecedente_adicional_gore}
+                  archivoDescargaUrl={adicionalGore.antecedente_adicional_gore}
+                />
+                <div className="my-4">
+                  <CustomTextarea
+                    label="Descripción del archivo adjunto (Opcional)"
+                    placeholder="Describe el archivo adjunto"
+                    value={adicionalGore.descripcion_antecedente}
+                    readOnly={true}
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+
+          {!observacionesEnviadas && (
+            <div className="mb-4">
+              {!observacionEnviada ? (
+                <>
+                  <h2 className="text-sans-h2">Debes revisar todos los formularios y escribir observaciones para DIPRES antes de terminar la etapa</h2>
+                  <p className="text-sans-p">Para poder terminar la etapa debes revisar todos los formularios y dejar observaciones donde consideres necesario.</p>
+                </>
+              ) : (
+                <>
+                  <h2 className="text-sans-h2">Esta todo listo para que termines la etapa</h2>
+                  <p className="text-sans-p">Ya revisaste todos los formularios. </p>
+                </>
+              )}
+            </div>
+          )}
+
+          {!observacionesEnviadas && (
+            <div className="d-flex justify-content-end my-5">
+              <button className="btn-primario-s" disabled={!observacionEnviada} onClick={handleCerrarEtapa}>
+                <p className="mb-0 text-decoration-underline">Cerrar etapa</p>
+                <i className="material-symbols-rounded ms-2">arrow_forward_ios</i>
+              </button>
+            </div>
+          )}
+        </>
       ) : (
-        <SuccessOSminutaDIPRES 
-        idCompetencia={competenciaDetails?.id}
-        mensaje="Dependiendo de la decisión que hayas tomado sobre la siguiente etapa, el usuario correspondiente será notificado para comenzar con la etapa que le corresponda."
+        <SuccessOSminutaDIPRES
+          idCompetencia={competenciaDetails?.id}
+          mensaje="Dependiendo de la decisión que hayas tomado sobre la siguiente etapa, el usuario correspondiente será notificado para comenzar con la etapa que le corresponda."
         />
       )}
 
