@@ -1,7 +1,7 @@
 // import { useContext } from 'react';
 // import { FormGOREContext } from '../../../context/FormGore';
 import { CostoPersonal } from '../componentes/CostoPersonal';
-import {Personal} from "../componentes/Personal"; 
+import { PersonalGore } from '../componentes/PersonalGore';
 
 export const Sub1_a = ({data, solo_lectura}) => {
 
@@ -47,7 +47,7 @@ export const Sub1_a = ({data, solo_lectura}) => {
             solo_lectura={solo_lectura}
           />
 
-          <Personal
+          <PersonalGore
           personalSector={p3_personal_directo_sector}
           personalGore={p3_personal_directo_gore}
           estamentos={listado_estamentos}

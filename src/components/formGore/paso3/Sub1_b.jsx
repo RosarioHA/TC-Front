@@ -1,5 +1,5 @@
 import { CostoPersonal } from '../componentes/CostoPersonal';
-import { Personal } from '../componentes/Personal';
+import { PersonalGore } from '../componentes/PersonalGore';
 
 export const Sub1_b = ({ data, solo_lectura }) => {
   const { paso3_gore,
@@ -42,7 +42,7 @@ export const Sub1_b = ({ data, solo_lectura }) => {
             gastoPersonalJustificado={paso3_gore?.sub21b_gastos_en_personal_justificado}
             gastosPersonalJustificar={paso3_gore?.sub21b_gastos_en_personal_justificar} 
           />
-          <Personal
+          <PersonalGore
             personalSector={p3_personal_indirecto_sector}
             personalGore={p3_personal_indirecto_gore}
             estamentos={listado_estamentos}

@@ -194,8 +194,7 @@ const PersonalSectorial = ({
           calidadJuridica,
           personas.map(persona => {
             if (persona.id === personaId) {
-              // Si el campo es un objeto (como en DropdownSelect), guardamos su valor
-              const newValue = typeof valor === 'object' ? valor.value : valor;
+              const newValue = (typeof valor === 'object' && valor !== null) ? valor.value : valor;
               return { ...persona, [campo]: newValue };
             }
             return persona;
@@ -319,6 +318,7 @@ const PersonalSectorial = ({
     startSavingField(fieldId);
 
     let payload = createPayload(fieldName, arrayNameId, newValue);
+    console.log("Payload antes de enviar:", payload);
     if (!payload) {
       console.error('Error al crear el payload');
       setError(fieldId, { type: 'manual', message: 'Error al crear el payload. Intenta de nuevo.' });
@@ -347,21 +347,30 @@ const PersonalSectorial = ({
   };
 
 
-  function containsNull(obj, parentKey = '') {
+  function containsNull(obj, parentKey = '', excludeFields = ['grado']) {
+    // Retorna false si el campo está en la lista de exclusiones
+    if (excludeFields.includes(parentKey)) {
+      return false;
+    }
+  
     if (obj === null) return parentKey; // Retorna la clave padre si el valor es null
     if (typeof obj === 'object') {
       for (const key in obj) {
         // Uso de hasOwnProperty mediante Object.prototype.call para evitar problemas de prototipo
         if (Object.prototype.hasOwnProperty.call(obj, key)) {
-          const result = containsNull(obj[key], key);
+          const result = containsNull(obj[key], key, excludeFields);
           if (result) return result; // Retorna el nombre del campo que tiene el valor nulo
         }
       }
     }
     return false;
   }
+  
 
   function createPayload(fieldName, arrayNameId, newValue) {
+    const payloadValue = newValue === '' ? null : newValue;
+    const personaEncontrada = findPersona(arrayNameId);
+
     switch (fieldName) {
       case 'calidad_juridica':
         return {
@@ -375,8 +384,14 @@ const PersonalSectorial = ({
         return {
           regiones: [{ region, [payloadModel]: [{ id: arrayNameId, [fieldName]: newValue.value }] }]
         };
+      case 'grado':
+        return {
+          regiones: [{
+            region: region,
+            [payloadModel]: [{ id: arrayNameId, grado: payloadValue }]
+          }]
+        };
       default:
-        const personaEncontrada = findPersona(arrayNameId);
         if (!personaEncontrada) {
           console.error('Persona no encontrada');
           return null;
@@ -598,16 +613,17 @@ const PersonalSectorial = ({
                         const { onChange, onBlur, value } = field;
 
                         const handleChange = (valor) => {
-                          clearErrors(`grado_${persona.id}`);
-                          onChange(valor);
-                          handleInputChange(persona.id, 'grado', valor);
+                          const valueToSend = valor.trim() === '' ? null : valor;
+                          onChange(valueToSend);
+                          handleInputChange(persona.id, 'grado', valueToSend);
                         };
+
 
                         // Función para manejar el evento onBlur
                         const handleBlur = async () => {
                           const isFieldValid = await trigger(`grado_${persona.id}`);
                           if (isFieldValid) {
-                            handleSave(persona.id, 'grado');
+                            handleSave(persona.id, 'grado', value);
                           }
                           onBlur();
                         };
