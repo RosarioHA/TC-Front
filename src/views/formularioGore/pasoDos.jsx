@@ -3,8 +3,7 @@ import { FormGOREContext } from '../../context/FormGore';
 import { MonoStepers } from '../../components/stepers/MonoStepers';
 import { Avance } from '../../components/tables/Avance';
 import { NavigationGore } from '../../components/layout/navigationGore';
-import { DosA } from '../../components/formGore/paso2/DosA';
-import { DosB } from '../../components/formGore/paso2/DosB';
+import { CostosGORE } from '../../components/formGore/paso2/DosA';
 import { ResumenTotal } from '../../components/formGore/componentes/ResumenTotal';
 import { Fluctuaciones } from '../../components/formGore/paso2/DosC';
 import CustomTextarea from '../../components/forms/custom_textarea';
@@ -22,6 +21,16 @@ const PasoDosGore = () =>
   const solo_lectura = dataPasoGore?.solo_lectura;
   const formularioEnviado = dataFormGore?.formulario_enviado
   const observacionesEnviadas = observaciones?.observacion_enviada;
+
+  const tituloDirecto = "a. Costos directos";
+  const glosaDirecto = "Por costos directos se entenderán aquellos imputables a los procedimientos específicos de la competencia analizada, y que no corresponden a unidades de soporte transversal del Ministerio o Servicio de origen. Los costos analizados responden al año n-1, es decir, al año anterior al inicio del estudio de transferencia de competencias.\nSe debe informar si el costo informado es transitorio o no. Un costo transitorio es aquel que es efectivo solo durante el tiempo de traspaso de la competencia, mientras que un costo no transitorio es aquel que se sostiene de manera permanente.";
+  const nombreModeloDirecto = "directos"
+  const seccionDirecto = "p_2_1_a_costos_directos"
+
+  const tituloIndirecto = "b. Costos indirectos"
+  const glosaIndirecto = "Por costos indirectos se entenderán aquellos que no son imputables a los procedimientos específicos de la competencia analizada, pero que, al financiar unidades de soporte transversal en el Ministerio o Servicio de origen, hacen posible el ejercicio de la competencia. Los costos analizados responden al año n-1, es decir, al año anterior al inicio de estudio de transferencia de competencias.\nSe debe informar si el costo informado es transitorio o no. Un costo transitorio es aquel que es efectivo solo durante el tiempo de traspaso de la competencia, mientras que un costo no transitorio es aquel que se sostiene de manera permanente.";
+  const nombreModeloIndirecto = "indirectos"
+  const seccionIndirecto = "p_2_1_b_costos_indirectos"
 
   const handleUpdateStepNumber = useCallback(() =>
   {
@@ -100,25 +109,33 @@ const PasoDosGore = () =>
               soporte nacional, por lo que no son replicables region a region.
             </h6>
           </div>
-          <DosA
-            costosDirecSectorGet={costos_directos_sector}
-            PersonalDirecto={personal_directo_sector}
-            costosDircGore={costos_directos_gore}
+          <CostosGORE
+            costosSectorGet={costos_directos_sector}
+            Personal={personal_directo_sector}
+            costosGore={costos_directos_gore}
             data={dataPasoGore}
             resumen={resumen_costos}
             id={dataFormGore?.id}
             stepNumber={stepNumber}
             solo_lectura={solo_lectura}
+            glosa={glosaDirecto}
+            titulo={tituloDirecto}
+            nombreModelo={nombreModeloDirecto}
+            seccion={seccionDirecto}
           />
-          <DosB
-            costosIndirectos={costos_indirectos_sector}
-            constIndiGore={costos_indirectos_gore}
-            resumen={resumen_costos}
-            personalIndirecto={personal_indirecto_sector}
-            id={dataFormGore?.id}
+          <CostosGORE
+            costosSectorGet={costos_indirectos_sector}
+            Personal={personal_indirecto_sector}
+            costosGore={costos_indirectos_gore}
             data={dataPasoGore}
+            resumen={resumen_costos}
+            id={dataFormGore?.id}
             stepNumber={stepNumber}
             solo_lectura={solo_lectura}
+            glosa={glosaIndirecto}
+            titulo={tituloIndirecto}
+            nombreModelo={nombreModeloIndirecto}
+            seccion={seccionIndirecto}
           />
           <ResumenTotal resumen={resumen_costos} />
           <Fluctuaciones

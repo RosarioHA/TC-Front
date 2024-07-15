@@ -1,57 +1,84 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import CustomTextarea from '../../forms/custom_textarea';
 import InputCosto from '../../forms/input_costo';
 import { OpcionesAB } from '../../forms/opciones_AB';
 import { FormGOREContext } from '../../../context/FormGore';
 import { Monto } from './Monto';
 
-export const CostosDirectosSector = ({ costoDirectosGet, solo_lectura }) => {
+export const CostosSector = ({
+  costoSectorGet,
+  solo_lectura,
+  seccion,
+  }) => {
   const { updatePasoGore } = useContext(FormGOREContext);
-  const [ inputStatus, setInputStatus ] = useState({
-    descripcion: { loading: false, saved: false },
-    total_anual_gore: { loading: false, saved: false },
-    es_transitorio: { loading: false, saved: false },
-  });
+  const [inputStatus, setInputStatus] = useState({});
+  const [inputValues, setInputValues] = useState({});
+  const [errors, setErrors] = useState({});
 
-  const handleUpdate = async (costoId, field, value, saveImmediately = false) => {
-    let finalValue = value;
-    if (field === 'total_anual_gore') {
-      finalValue = value.replace(/\./g, '');
+  useEffect(() => {
+    const initialInputs = {};
+    costoSectorGet.forEach(costo => {
+      initialInputs[`total_anual_gore-${costo.id}`] = costo.total_anual_gore || '';
+      initialInputs[`es_transitorio-${costo.id}`] = costo.es_transitorio || false;
+      initialInputs[`descripcion-${costo.id}`] = costo.descripcion || '';
+    });
+    setInputValues(initialInputs);
+  }, [costoSectorGet]);
+
+  const validateField = (name, value) => {
+    let error = '';
+    switch (name.split('-')[0]) {
+      case 'total_anual_gore':
+        if (!value) error = 'El Total Anual es obligatorio';
+        else if (!/^\d+$/.test(value)) error = 'El Total Anual debe ser un número entero';
+        else if (parseInt(value, 10) < 0) error = 'El Total Anual debe ser un número positivo';
+        break;
+      case 'descripcion':
+        if (!value) error = 'La descripción es obligatoria';
+        else if (value.length < 3) error = 'La descripción debe tener al menos 3 caracteres';
+        else if (value.length > 500) error = 'La descripción no debe exceder los 500 caracteres';
+        break;
+      // Agrega más casos según sea necesario
     }
-    setInputStatus((prev) => ({
-      ...prev,
-      [ costoId ]: {
-        ...prev[ costoId ],
-        [ field ]: { value, loading: false, saved: false },
-      },
-    }));
+    return error;
+  };
 
-    if (saveImmediately) {
-      try {
-        const payload = {
-          p_2_1_a_costos_directos: [ {
-            id: costoId,
-            [ field ]: finalValue, // Usa el valor limpio si es necesario.
-          } ],
-        };
-        await updatePasoGore(payload);
-        setInputStatus((prevStatus) => ({
-          ...prevStatus,
-          [ costoId ]: {
-            ...prevStatus[ costoId ],
-            [ field ]: { ...prevStatus[ costoId ][ field ], loading: false, saved: true },
-          },
-        }));
-      } catch (error) {
-        console.error('Error updating data', error);
-        setInputStatus((prevStatus) => ({
-          ...prevStatus,
-          [ costoId ]: {
-            ...prevStatus[ costoId ],
-            [ field ]: { loading: false, saved: false },
-          },
-        }));
-      }
+  const handleBlur = async (costoId, field) => {
+    const fieldName = `${field}-${costoId}`;
+    const value = inputValues[fieldName];
+    const error = validateField(fieldName, value);
+    setErrors(prev => ({ ...prev, [fieldName]: error }));
+
+    if (!error) {
+      // Llama a handleUpdate con saveImmediately establecido a true para enviar los cambios al backend
+      handleUpdate(costoId, field, value, true);
+    }
+  };
+
+  const updateInputStatus = (fieldName, loading, saved) => {
+    setInputStatus(prevStatus => ({
+      ...prevStatus,
+      [fieldName]: { loading, saved }
+    }));
+  };
+
+  const handleUpdate = async (costoId, field, value) => {
+    const fieldName = `${field}-${costoId}`;
+
+    updateInputStatus(fieldName, true, false);
+
+    let payload = {
+      [seccion]: [{
+        id: costoId,
+        [field]: value,
+      }],
+    };
+
+    try {
+      await updatePasoGore(payload);
+      updateInputStatus(fieldName, false, true);
+    } catch (error) {
+      updateInputStatus(fieldName, false, false)
     }
   };
 
@@ -59,7 +86,7 @@ export const CostosDirectosSector = ({ costoDirectosGet, solo_lectura }) => {
     <>
       <div className="mt-4 col-11">
         <div className="col-12">
-          {Array.isArray(costoDirectosGet) && costoDirectosGet.map((costodirecto, index) => (
+          {Array.isArray(costoSectorGet) && costoSectorGet.map((costodirecto, index) => (
             <React.Fragment key={index}>
               <div className="subrayado col-12" key={index}>
                 <span className="py-2 my-2 align-self-center">
@@ -104,14 +131,15 @@ export const CostosDirectosSector = ({ costoDirectosGet, solo_lectura }) => {
                       </p>
                       <InputCosto
                         id={`total_anual_gore-${costo.id}`}
-                        placeholder="Costo (M$)"
                         value={costo.total_anual_gore}
-                        onBlur={(value) => {
-                            handleUpdate(costo.id, 'total_anual_gore', value, true);
-                          }}
-                        loading={inputStatus[ costo.id ]?.total_anual_gore?.loading}
-                        saved={inputStatus[ costo.id ]?.total_anual_gore?.saved}
+                        placeholder="Costo (M$)"
+                        onChange={valor => setInputValues({ ...inputValues, [`total_anual_gore-${costo.id}`]: valor })}
+                        onBlur={() => handleBlur(costo.id, 'total_anual_gore', inputValues[`total_anual_gore-${costo.id}`])}
+                        loading={inputStatus[`total_anual_gore-${costo.id}`]?.loading || false}
+                        saved={inputStatus[`total_anual_gore-${costo.id}`]?.saved || false}
+
                         disabled={solo_lectura}
+                        error={errors[`total_anual_gore-${costo.id}`]}
                       />
                     </div>
                     <div className="col-6 ms-5 ps-3">
@@ -120,10 +148,11 @@ export const CostosDirectosSector = ({ costoDirectosGet, solo_lectura }) => {
                         id={`es_transitorio-${costo.id}`}
                         initialState={costo.es_transitorio}
                         handleEstadoChange={(value) =>
-                          handleUpdate(costo.id, 'es_transitorio', value, true)
+                          handleUpdate(costo.id, 'es_transitorio', value)
                         }
-                        loading={inputStatus[ costo.id ]?.es_transitorio?.loading}
-                        saved={inputStatus[ costo.id ]?.es_transitorio?.saved}
+                        loading={inputStatus[`es_transitorio-${costo.id}`]?.loading || false}
+                        saved={inputStatus[`es_transitorio-${costo.id}`]?.saved || false}
+                        error={errors[`es_transitorio-${costo.id}`]}
                         altA="Si"
                         altB="No"
                         field="es_transitorio"
@@ -147,14 +176,17 @@ export const CostosDirectosSector = ({ costoDirectosGet, solo_lectura }) => {
                   </div>
                   <div className="mx-2">
                     <CustomTextarea
+                      id={`descripcion-${costo.id}`}
                       label="Descripción"
                       placeholder="Describe el costo por subtítulo e ítem"
                       name="descripcion"
                       maxLength={500}
                       value={costo.descripcion || ''}
-                      onBlur={(e) => handleUpdate(costo.id, 'descripcion', e.target.value, true)}
-                      loading={inputStatus[ costo.id ]?.descripcion?.loading}
-                      saved={inputStatus[ costo.id ]?.descripcion?.saved}
+                      onChange={(e) => setInputValues({ ...inputValues, [`descripcion-${costo.id}`]: e.target.value })}
+                      onBlur={() => handleBlur(costo.id, 'descripcion', inputValues[`descripcion-${costo.id}`])}
+                      loading={inputStatus[`descripcion-${costo.id}`]?.loading || false}
+                      saved={inputStatus[`descripcion-${costo.id}`]?.saved || false}
+                      error={errors[`descripcion-${costo.id}`]}
                       readOnly={solo_lectura}
                     />
                   </div>

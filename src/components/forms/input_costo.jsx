@@ -3,7 +3,7 @@ import { NumericFormat } from "react-number-format";
 
 const InputCosto = forwardRef(
   ({ loading, saved, placeholder, id, error, readOnly, onChange, onBlur, initialValue, onKeyDown, ...props }, ref) => {
-    const [inputValue, setInputValue] = useState(initialValue || '');
+    const [inputValue, setInputValue] = useState(initialValue !== undefined ? initialValue : '');
 
     const inputStyle = () => {
       if (loading) {
@@ -32,6 +32,7 @@ const InputCosto = forwardRef(
         onKeyDown(e);
       }
     };
+
 
     return (
       <div className="d-flex flex-column input-container col-11">
