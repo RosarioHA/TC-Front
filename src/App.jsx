@@ -113,7 +113,9 @@ function App()
             path="observaciones_subdere/:id/"
             element={
               <FormularioProvider>
+                  <ProtectedRoute allowedProfiles={[ 'Usuario Sectorial', 'SUBDERE','DIPRES' ]}>
                 <ObservacionesSubdere />
+                </ProtectedRoute>
               </FormularioProvider>
             } />
           <Route
@@ -158,7 +160,7 @@ function App()
             path="formulario_gore/:id/observaciones_subdere"
             element={
               <FormGoreProvider>
-                <ProtectedRoute allowedProfiles={[ 'Usuario Sectorial', 'SUBDERE', 'Usuario Observador', 'GORE' ]}>
+                <ProtectedRoute allowedProfiles={[ 'Usuario Sectorial', 'SUBDERE', 'Usuario Observador', 'GORE' ,'DIPRES']}>
                   <ObservacionesSubdereGore />
                 </ProtectedRoute>
               </FormGoreProvider>

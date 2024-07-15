@@ -9,7 +9,8 @@ import { useEtapa } from "../../hooks/etapa/useEtapa";
 const ObservacionesSubdereDipres = () => {
   const { id } = useParams();
   const { competenciaDetails } = useCompetencia(id);
-  const { etapa, updateEtapa } = useEtapa(id, 3);
+  const idEtapa = competenciaDetails?.etapa3?.id;
+  const { etapa, updateEtapa } = useEtapa(idEtapa, 3);
   const [observacionMinutaDipres, setObservacionMinutaDipres] = useState("");
   const [observacionEnviada, setObservacionEnviada] = useState(false);
   const [isSubmitSuccessful, setIsSubmitSuccessful] = useState(false);
