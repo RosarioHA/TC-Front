@@ -93,7 +93,7 @@ export const Etapa5 = ({ etapa, idCompetencia, etapaCuatro }) => {
             );
         }
         if (userSubdere && subetapa.accion === "Subir Observaciones" && subetapa.estado === "pendiente") {
-            path = `/home/formulario_gore/${etapa.id}/observaciones_subdere`;
+            path = `/home/formulario_gore/${idCompetencia}/observaciones_subdere`;
             return (
                 <button to={path} className="btn-secundario-s text-decoration-none disabled" id="btn">
                     <span className="material-symbols-outlined me-1">{icon}</span>

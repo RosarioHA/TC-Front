@@ -13,7 +13,6 @@ const ObservacionesSubdereGore = () =>
   const { competenciaDetails } = useCompetencia(id);
   const { patchComentarioMinuta, loadingPatch } = useEtapa5();
   const [ observacionMinutaDipres, setObservacionMinutaDipres ] = useState("");
-  const [ observacionEnviada, setObservacionEnviada ] = useState(false);
   const [ isSubmitSuccessful, setIsSubmitSuccessful ] = useState(false);
   const navigate = useNavigate();
   const observacionesEnviadas = competenciaDetails?.etapa5?.observacion_minuta_gore_enviada;
@@ -21,7 +20,7 @@ const ObservacionesSubdereGore = () =>
   const adicionalGore = competenciaDetails?.etapa4?.formularios_gore[ 0 ]
 
 
-  console.log(adicionalGore)
+  console.log(observacionesEnviadas)
 
   useEffect(() =>
   {
@@ -38,10 +37,6 @@ const ObservacionesSubdereGore = () =>
     navigate(-1);
   };
 
-  const handleGuardarObservacion = () =>
-  {
-    setObservacionEnviada(true);
-  };
 
   const handleCerrarEtapa = async () =>
   {
@@ -93,7 +88,7 @@ const ObservacionesSubdereGore = () =>
                     <td>{formulario.nombre.replace('Completar formulario GORE - ', '')}</td>
                     <td className="">
                       <button className="btn-secundario-s text-decoration-underline" onClick={() => handleVerFormulario(formulario.id)}>
-                        {formulario.accion}
+                        Subir Observaciones
                       </button>
                     </td>
                   </tr>
@@ -104,7 +99,7 @@ const ObservacionesSubdereGore = () =>
                     className={`d-flex justify-content-between p-3 align-items-center ${index % 2 === 0 ? 'neutral-line' : 'white-line'}`}
                     key={formulario.id}
                   >
-                    <td>{formulario.nombre}</td>
+                    <td>{formulario.nombre.replace('Completar formulario GORE - ', '')}</td>
                     <td className="">
                       <button className="btn-secundario-s text-decoration-underline" onClick={() => handleVerFormulario(formulario.id)}>
                         {formulario.accion}
@@ -136,7 +131,6 @@ const ObservacionesSubdereGore = () =>
                 value={observacionMinutaDipres}
                 onChange={(e) => setObservacionMinutaDipres(e.target.value)}
                 readOnly={observacionesEnviadas}
-                onBlur={handleGuardarObservacion}
                 loading={loadingPatch}
               />
             </div>
@@ -178,7 +172,7 @@ const ObservacionesSubdereGore = () =>
 
           {!observacionesEnviadas && (
             <div className="mb-4">
-              {!observacionEnviada ? (
+              {!observacionesEnviadas ? (
                 <>
                   <h2 className="text-sans-h2">Debes revisar todos los formularios y escribir observaciones para DIPRES antes de terminar la etapa</h2>
                   <p className="text-sans-p">Para poder terminar la etapa debes revisar todos los formularios y dejar observaciones donde consideres necesario.</p>
@@ -191,15 +185,12 @@ const ObservacionesSubdereGore = () =>
               )}
             </div>
           )}
-
-          {!observacionesEnviadas && (
             <div className="d-flex justify-content-end my-5">
-              <button className="btn-primario-s" disabled={!observacionEnviada} onClick={handleCerrarEtapa}>
+              <button className="btn-primario-s" disabled={observacionesEnviadas} onClick={handleCerrarEtapa}>
                 <p className="mb-0 text-decoration-underline">Cerrar etapa</p>
                 <i className="material-symbols-rounded ms-2">arrow_forward_ios</i>
               </button>
             </div>
-          )}
         </>
       ) : (
         <SuccessOSminutaDIPRES

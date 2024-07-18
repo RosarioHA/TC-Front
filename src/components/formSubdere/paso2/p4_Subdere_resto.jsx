@@ -94,9 +94,6 @@ export const RestoCampos = ({
             4.4 Modalidad de ejercicio
           </h4>
           <div className="text-sans-h6 my-3 col-11">
-            {/* <h6>
-              Texto de apoyo
-            </h6> */}
           </div>
           <div className=" d-flex  justify-content-between mb-4 col-11 ">
             <div className="col-1 mx-4 my-0 text-sans-p-bold"> #</div>
@@ -108,12 +105,12 @@ export const RestoCampos = ({
               Elige la modalidad de ejercicio
             </div>
           </div>
-          <div className=" d-flex  justify-content-between mb-4 col-11 subrayado-gris">
-            <div className="col-1 mx-4 my-3"> 1</div>
+          <div className=" d-flex  justify-content-between mb-4 col-11 subrayado-gris h-auto">
+            <div className="col-1 mx-4 my-auto">1</div>
             <div className="col-4 mx-4 my-3">
               {nombre_compentencia}
             </div>
-            <div className="col-6 my-2 mx-5">
+            <div className="col-6 my-auto mx-5 ">
               <OpcionesAB
                 id={`modalidad_ejercicio`}
                 initialState={modalidadEjercicioInicial} // Usar el valor booleano convertido

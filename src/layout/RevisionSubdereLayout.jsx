@@ -11,8 +11,6 @@ const FormLayout = () => {
   const params = useParams();
   const navigate = useNavigate();
 
-  console.log("dataFormSubdere en rev final layout", dataFormSubdere);
-
   useEffect(() => {
     const currentId = location.state?.id || params.id;
     if (currentId) {
