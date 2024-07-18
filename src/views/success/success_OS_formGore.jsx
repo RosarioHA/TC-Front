@@ -53,7 +53,7 @@ const SuccessOS_Gore = () => {
       </div>
 
       <div className="d-flex justify-content-center mt-5">
-        <button className="btn-secundario-s text-decoration-underline" onClick={handleVolverBtn}>Volver al expediente de la Competencia</button>
+        <button className="btn-secundario-s text-decoration-underline" onClick={handleVolverBtn}>Volver a Observaciones</button>
       </div>
 
     </div>

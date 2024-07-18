@@ -149,10 +149,10 @@ const SegundaMinuta = () =>
                     className={`d-flex justify-content-between p-3 align-items-center ${index % 2 === 0 ? 'neutral-line' : 'white-line'}`}
                     key={formulario.id}
                   >
-                    <td>{formulario.nombre.replace('Completar formularion GORE -', '')}</td>
+                    <td>{formulario.nombre.replace('Completar formulario GORE -', '')}</td>
                     <td className="">
                       {!userObservador ? (
-                        <button className="btn-secundario-s text-decoration-underline" onClick={() => handleVerFormularioGore(formulario.id)}>
+                        <button className="btn-secundario-s" onClick={() => handleVerFormularioGore(formulario.id)}>
                           <span className="material-symbols-outlined me-1 ">visibility</span>
                           <u>Ver Formulario</u>
                         </button>

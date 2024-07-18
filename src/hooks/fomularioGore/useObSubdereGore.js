@@ -4,6 +4,7 @@ import { apiTransferenciaCompentencia } from '../../services/transferenciaCompet
 export const useObservacionesGORE = (id) =>
 {
   const [ observaciones, setObservaciones ] = useState({});
+  const [ archivoObs, setArchivoObs ] = useState()
   const [ loadingObservaciones, setLoadingObservaciones ] = useState(false);
   const [ errorObservaciones, setErrorObservaciones ] = useState(null);
   const [ saved, setSaved ] = useState(false);
@@ -13,6 +14,7 @@ export const useObservacionesGORE = (id) =>
     if (!id)
     {
       setObservaciones({});
+      setArchivoObs();
       setLoadingObservaciones(false);
       return;
     }
@@ -22,6 +24,7 @@ export const useObservacionesGORE = (id) =>
     {
       const response = await apiTransferenciaCompentencia.get(`/formulario-gore/${id}/observaciones-subdere-gore/`);
       setObservaciones(response.data.observaciones_gore);
+      setArchivoObs(response.data.antecedente_adicional_subdere)
     } catch (err)
     {
       setErrorObservaciones(err);
@@ -58,7 +61,7 @@ export const useObservacionesGORE = (id) =>
   const subirArchivo = async (file) =>
   {
     const formData = new FormData();
-    formData.append('antecedente_adicional_gore', file);
+    formData.append('antecedente_adicional_subdere', file);
 
     try
     {
@@ -95,12 +98,11 @@ export const useObservacionesGORE = (id) =>
   const eliminarArchivo = async () =>
   {
     const payload = {
-      id: id,
-      antecedente_adicional_gore: null // Envía null para eliminar el archivo
+      antecedente_adicional_subdere: null
     };
     try
     {
-      await apiTransferenciaCompentencia.patch(`/formulario-gore/${id}/`, payload);
+      await apiTransferenciaCompentencia.patch(`/formulario-gore/${id}/observaciones-subdere-gore/`, payload);
       fetchObservaciones(); // Recarga las observaciones para reflejar la eliminación
     } catch (error)
     {
@@ -110,5 +112,5 @@ export const useObservacionesGORE = (id) =>
 
 
 
-  return { observaciones, subirArchivo, guardarDescripcion, eliminarArchivo, loadingObservaciones, saved, errorObservaciones, updateObservacion, fetchObservaciones };
+  return { observaciones,archivoObs,  subirArchivo, guardarDescripcion, eliminarArchivo, loadingObservaciones, saved, errorObservaciones, updateObservacion, fetchObservaciones };
 };
