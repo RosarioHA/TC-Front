@@ -1,10 +1,30 @@
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 import { apiTransferenciaCompentencia } from "../../services/transferenciaCompetencia";
 
-export const useEtapa5 = () => {
+export const useEtapa5 = (idEtapa) => {
+  const [etapaCinco, setEtapaCinco] = useState(null);
   const [loadingPatch, setLoadingPatch] = useState(false);
   const [errorPatch, setErrorPatch] = useState(null);
   const [archivoSubido, setArchivoSubido] = useState(false);
+
+  useEffect(() => {
+    const fetchEtapa = async () => {
+      if (!idEtapa) {
+        setLoadingPatch(false);
+        return;
+      }
+      try {
+        const response = await apiTransferenciaCompentencia.get(`etapa5/${idEtapa}/`);
+        setEtapaCinco(response.data);
+      } catch (error) {
+        errorPatch(error);
+      } finally {
+        setLoadingPatch(false);
+      }
+    };
+
+    fetchEtapa();
+  }, [idEtapa]);
 
   const patchArchivoMinuta = useCallback(async (idEtapa, file) => {
     setLoadingPatch(true);
@@ -29,7 +49,7 @@ export const useEtapa5 = () => {
     try {
       const data = {
         comentario_minuta_etapa5: comentarios,
-        observacion_minuta_gore_enviada: true,
+        aprobada: true,
       };
       await apiTransferenciaCompentencia.patch(`/etapa5/${idEtapa}/`, data);
     } catch (error) {
@@ -40,5 +60,5 @@ export const useEtapa5 = () => {
     }
   }, []);
 
-  return { patchArchivoMinuta, patchComentarioMinuta, archivoSubido, loadingPatch, errorPatch };
+  return { patchArchivoMinuta,etapaCinco, patchComentarioMinuta, archivoSubido, loadingPatch, errorPatch };
 };
