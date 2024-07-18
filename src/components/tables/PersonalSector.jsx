@@ -194,7 +194,8 @@ const PersonalSectorial = ({
           calidadJuridica,
           personas.map(persona => {
             if (persona.id === personaId) {
-              const newValue = (typeof valor === 'object' && valor !== null) ? valor.value : valor;
+              // Si el campo es un objeto (como en DropdownSelect), guardamos su valor
+              const newValue = typeof valor === 'object' ? valor.value : valor;
               return { ...persona, [campo]: newValue };
             }
             return persona;
@@ -347,18 +348,13 @@ const PersonalSectorial = ({
   };
 
 
-  function containsNull(obj, parentKey = '', excludeFields = ['grado']) {
-    // Retorna false si el campo está en la lista de exclusiones
-    if (excludeFields.includes(parentKey)) {
-      return false;
-    }
-  
+  function containsNull(obj, parentKey = '') {
     if (obj === null) return parentKey; // Retorna la clave padre si el valor es null
     if (typeof obj === 'object') {
       for (const key in obj) {
         // Uso de hasOwnProperty mediante Object.prototype.call para evitar problemas de prototipo
         if (Object.prototype.hasOwnProperty.call(obj, key)) {
-          const result = containsNull(obj[key], key, excludeFields);
+          const result = containsNull(obj[key], key);
           if (result) return result; // Retorna el nombre del campo que tiene el valor nulo
         }
       }
@@ -368,7 +364,6 @@ const PersonalSectorial = ({
   
 
   function createPayload(fieldName, arrayNameId, newValue) {
-    const payloadValue = newValue === '' ? null : newValue;
     const personaEncontrada = findPersona(arrayNameId);
 
     switch (fieldName) {
@@ -383,13 +378,6 @@ const PersonalSectorial = ({
       case 'estamento':
         return {
           regiones: [{ region, [payloadModel]: [{ id: arrayNameId, [fieldName]: newValue.value }] }]
-        };
-      case 'grado':
-        return {
-          regiones: [{
-            region: region,
-            [payloadModel]: [{ id: arrayNameId, grado: payloadValue }]
-          }]
         };
       default:
         if (!personaEncontrada) {
@@ -613,17 +601,16 @@ const PersonalSectorial = ({
                         const { onChange, onBlur, value } = field;
 
                         const handleChange = (valor) => {
-                          const valueToSend = valor.trim() === '' ? null : valor;
-                          onChange(valueToSend);
-                          handleInputChange(persona.id, 'grado', valueToSend);
+                          clearErrors(`grado_${persona.id}`);
+                          onChange(valor);
+                          handleInputChange(persona.id, 'grado', valor);
                         };
-
 
                         // Función para manejar el evento onBlur
                         const handleBlur = async () => {
                           const isFieldValid = await trigger(`grado_${persona.id}`);
                           if (isFieldValid) {
-                            handleSave(persona.id, 'grado', value);
+                            handleSave(persona.id, 'grado');
                           }
                           onBlur();
                         };
