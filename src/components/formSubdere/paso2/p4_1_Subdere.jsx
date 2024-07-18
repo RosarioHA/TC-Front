@@ -1,6 +1,6 @@
-import { useContext, useState, useEffect } from 'react';
+import React,{useContext, useState, useEffect } from 'react';
 import CustomTextarea from '../../forms/custom_textarea';
-import DropdownSelect from '../../dropdown/select';
+import {DropdownSelectSimple } from '../../dropdown/selectSimple';
 import { CheckboxRegion2 } from '../../dropdown/checkboxRegiones2.0';
 import { FormSubdereContext } from '../../../context/RevisionFinalSubdere';
 import { useForm, Controller } from 'react-hook-form';
@@ -61,13 +61,10 @@ export const Temporalidad = ({
   };
 
   const handleUpdate = async (grupoId, field, value) => {
-    // Obtener el estado actual del grupo que se va a actualizar
     const grupoActual = grupos.find((grupo) => grupo.id === grupoId);
-
-    // Crear un nuevo objeto con todas las propiedades existentes del grupo más la nueva propiedad actualizada
     const nuevoGrupo = {
-      ...grupoActual, // Esto copia todas las propiedades existentes
-      [field]: value, // Esto actualiza la propiedad específica con el nuevo valor
+      ...grupoActual,
+      [field]: field === 'region' ? value.map(Number) : value, // Convertir a número si es la región
     };
 
     setInputStatus((prev) => ({
@@ -132,6 +129,9 @@ export const Temporalidad = ({
     value: region?.value || '',
   }));
 
+
+  console.log(regiones_temporalidad )
+
   return (
     <>
       <div className="col-11">
@@ -151,8 +151,8 @@ export const Temporalidad = ({
               <form onSubmit={handleSubmit(onSubmit)}>
                 {Array.isArray(grupos) && grupos.length > 0 ? (
                   grupos.map((grupo, index) => (
-                    <>
-                      <div key={grupo.id}>
+                    <React.Fragment key={grupo.id}>
+                      <div>
                         <div className="row border my-4">
                           <div className="col-1 border-end border-bottom">
                             <p className="text-sans-p-bold my-2">
@@ -220,9 +220,9 @@ export const Temporalidad = ({
                                   <Controller
                                     name={`grupos[${index}].temporalidad`}
                                     control={control}
-                                    defaultValue={grupo.temporalidad} // Asegúrate de que este valor inicial refleje el estado actual
+                                    defaultValue={grupo.temporalidad}
                                     render={({ field }) => (
-                                      <DropdownSelect
+                                      <DropdownSelectSimple 
                                         id="temporalidad"
                                         label="Elige la temporalidad para este grupo"
                                         placeholder="Definitiva o temporal"
@@ -235,7 +235,7 @@ export const Temporalidad = ({
                                         )}
                                         onSelectionChange={(selectedOption) => {
                                           const selectedValue =
-                                            selectedOption.value; // Solo el valor
+                                            selectedOption.value;
                                           field.onChange(selectedValue);
                                           handleUpdate(
                                             grupo.id,
@@ -477,7 +477,7 @@ export const Temporalidad = ({
                             </div>
                           </>
                         )}
-                    </>
+                    </React.Fragment>
                   ))
                 ) : (
                   <div className="alert alert-info">
