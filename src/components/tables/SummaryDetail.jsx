@@ -6,7 +6,6 @@ export const SummaryDetail = ({ competencia }) => {
   const navigate = useNavigate();
   const { resumen } = useResumenFinal(competencia.id);
   const { descargarDocumento } = useDescargarDocumento(competencia.id);  
-
   const etapas_info =
     competencia.etapas_info || competencia.resumen_competencia?.etapas_info;
   const tiempo_transcurrido =
@@ -16,8 +15,8 @@ export const SummaryDetail = ({ competencia }) => {
   const ambito_definitivo_competencia =
     competencia.ambito_definitivo_competencia ||
     competencia.resumen_competencia?.ambito_definitivo_competencia;
-  // const fecha_fin =
-  //   competencia.fecha_fin || competencia.resumen_competencia?.fecha_fin;
+  const fechaFin =
+    competencia.fecha_fin || competencia.resumen_competencia?.fecha_fin;
   // const ambito_competencia_origen =
   //   competencia.ambito_competencia_origen ||
   //   competencia.resumen_competencia?.ambito_competencia_origen;
@@ -76,7 +75,6 @@ export const SummaryDetail = ({ competencia }) => {
   // Calcula el tiempo restante (ajusta los valores según sea necesario)
   const { dias, horas, minutos } = tiempo_transcurrido;
 
-  const fechaFin = '2024-04-10T08:41:53.302402-04:00';
   const formattedDate = new Date(fechaFin).toLocaleDateString('es-ES', {
     day: '2-digit',
     month: '2-digit',
