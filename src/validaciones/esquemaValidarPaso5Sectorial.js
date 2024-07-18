@@ -52,6 +52,7 @@ export const construirValidacionPaso5_2evolucion = (modeloCostos) => {
       schemaFields[campoCostoId] = yup
         .number()
         .typeError('El costo debe ser un número')
+        .min(0, 'El costo no debe ser un número negativo')
         .integer('El costo debe ser un número entero sin decimales')
         .required('El costo es obligatorio');
     });

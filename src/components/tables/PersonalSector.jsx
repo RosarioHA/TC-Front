@@ -319,6 +319,7 @@ const PersonalSectorial = ({
     startSavingField(fieldId);
 
     let payload = createPayload(fieldName, arrayNameId, newValue);
+    console.log("Payload antes de enviar:", payload);
     if (!payload) {
       console.error('Error al crear el payload');
       setError(fieldId, { type: 'manual', message: 'Error al crear el payload. Intenta de nuevo.' });
@@ -360,8 +361,11 @@ const PersonalSectorial = ({
     }
     return false;
   }
+  
 
   function createPayload(fieldName, arrayNameId, newValue) {
+    const personaEncontrada = findPersona(arrayNameId);
+
     switch (fieldName) {
       case 'calidad_juridica':
         return {
@@ -376,7 +380,6 @@ const PersonalSectorial = ({
           regiones: [{ region, [payloadModel]: [{ id: arrayNameId, [fieldName]: newValue.value }] }]
         };
       default:
-        const personaEncontrada = findPersona(arrayNameId);
         if (!personaEncontrada) {
           console.error('Persona no encontrada');
           return null;
@@ -565,12 +568,6 @@ const PersonalSectorial = ({
                           onBlur();
                         };
 
-                        const handleKeyDown = (e) => {
-                          if (e.key === 'Enter') {
-                            e.preventDefault();
-                          }
-                        };
-
                         return (
                           <InputCosto
                             id={`renta_bruta_${persona.id}`}
@@ -578,7 +575,6 @@ const PersonalSectorial = ({
                             value={value}
                             onChange={handleChange}
                             onBlur={handleBlur}
-                            onKeyDown={handleKeyDown}
                             loading={inputStatus[`renta_bruta_${persona.id}`]?.loading ?? false}
                             saved={inputStatus[`renta_bruta_${persona.id}`]?.saved ?? false}
                             error={errors[`renta_bruta_${persona.id}`]?.message}
@@ -685,8 +681,8 @@ const PersonalSectorial = ({
                 );
 
                 const counterClass = (item.por_justificar) == 0
-                ? "text-sans-p-bold"
-                : "text-sans-h6-bold-darkred";
+                  ? "text-sans-p-bold"
+                  : "text-sans-h6-bold-darkred";
 
                 if (itemCorrespondiente) {
                   return (

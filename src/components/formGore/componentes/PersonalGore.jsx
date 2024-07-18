@@ -2,7 +2,10 @@ import { useEffect, useContext, useState } from 'react';
 import { FormGOREContext } from '../../../context/FormGore';
 import DropdownSelect from '../../dropdown/select';
 import CustomTextarea from '../../forms/custom_textarea';
-import { PersonalInformado } from './PersonalInformado';export const Personal = ({
+import { PersonalInformado } from './PersonalInformado';
+
+
+export const PersonalGore = ({
  personalSector,
  personalGore,
  title,

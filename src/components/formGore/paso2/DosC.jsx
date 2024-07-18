@@ -23,40 +23,7 @@ export const Fluctuaciones = ({ id, dataGastos, solo_lectura }) => {
   const [datosGastos, setDatosGastos] = useState([]);
   const { updatePasoGore } = useContext(FormGOREContext);
   const [esquemaValidacion, setEsquemaValidacion] = useState(null);
-
-  useEffect(() => {
-    // Intenta leer los datos almacenados de localStorage
-    const storedDataJSON = localStorage.getItem('datosGastosState');
-    const storedData = storedDataJSON ? JSON.parse(storedDataJSON) : null;
-  
-    if (Array.isArray(dataGastos)) {
-      const formattedData = dataGastos.map((item) => {
-        // Encuentra el item correspondiente en el estado almacenado, si existe
-        const storedItem = storedData ? storedData.find(storedItem => storedItem.id === item.id) : null;
-        return {
-          ...item,
-          costo_anio_gore: item.costo_anio_gore?.map((costo) => {
-            const storedCosto = storedItem?.costo_anio_gore.find(storedCosto => storedCosto.id === costo.id);
-            return {
-              ...costo,
-              estados: storedCosto?.estados || {
-                loading: false,
-                saved: false,
-              },
-            };
-          }),
-          estados: storedItem?.estados || {
-            descripcion: {
-              loading: false,
-              saved: false,
-            },
-          },
-        };
-      });
-      // Actualiza el estado con los datos formateados
-      setDatosGastos(formattedData);
-    }
-  }, [dataGastos]); 
+  const [inputStatus, setInputStatus] = useState({});
 
   useEffect(() => {
     const esquema = validacionFluctuacion(datosGastos);
@@ -73,41 +40,41 @@ export const Fluctuaciones = ({ id, dataGastos, solo_lectura }) => {
     mode: 'onBlur',
   });
 
+  useEffect(() => {
+  
+    if (Array.isArray(dataGastos)) {
+      const formattedData = dataGastos.map((item) => {
+        
+        return {
+          ...item,
+          costo_anio_gore: item.costo_anio_gore?.map((costo) => {
+            return {
+              ...costo,
+              estados: {
+                loading: false,
+                saved: false,
+              },
+            };
+          }),
+          estados:{
+            descripcion: {
+              loading: false,
+              saved: false,
+            },
+          },
+        };
+      });
+      // Actualiza el estado con los datos formateados
+      setDatosGastos(formattedData);
+    }
+  }, [dataGastos]); 
+
+
+
   if (!datosGastos.length) {
     return <div className="text-center text-sans-h5-medium-blue ">Cargando datos...</div>;
   }
 
-  // Función para recargar campos por separado
-  const updateFieldState = (subtituloId, costoAnioId, fieldName, newState) => {
-    setDatosGastos((prevDatosGastos) => {
-      const newDatosGastos = prevDatosGastos.map((subtitulo) => {
-        if (subtitulo.id === subtituloId) {
-          // Clonando subtitulo para evitar mutaciones directas del estado
-          let updatedSubtitulo = { ...subtitulo };
-          if (fieldName === 'costo' && costoAnioId) {
-            // Actualizando el estado del costo específico
-            updatedSubtitulo.costo_anio_gore = subtitulo.costo_anio_gore.map((costoAnio) => {
-              if (costoAnio.id === costoAnioId) {
-                return {
-                  ...costoAnio,
-                  estados: { ...costoAnio.estados, ...newState },
-                };
-              }
-              return costoAnio;
-            });
-          } else if (fieldName === 'descripcion') {
-            // Actualizando el estado de la descripción
-            updatedSubtitulo.estados = { ...subtitulo.estados, descripcion: { ...newState } };
-          }
-          return updatedSubtitulo;
-        }
-        return subtitulo;
-      });
-      // Almacenar el nuevo estado en Local Storage para persistencia entre recargas
-      localStorage.setItem('datosGastosState', JSON.stringify(newDatosGastos));
-      return newDatosGastos;
-    });
-  };
 
   // Manejadora de CustomInput y CustomTextArea
   const handleInputChange = (subtituloId, campo, valor) => {
@@ -122,13 +89,19 @@ export const Fluctuaciones = ({ id, dataGastos, solo_lectura }) => {
     );
   };
 
+  const updateInputStatus = (arrayNameId, loading, saved) => {
+    setInputStatus(prevStatus => ({
+      ...prevStatus,
+      [arrayNameId]: { loading, saved }
+    }));
+  };
+
   // Función de guardado
   const handleSave = async (subtituloId, costoAnioId, fieldName, fieldValue) => {
+    const isDescripcion = fieldName === 'descripcion';
+    const arrayNameId = isDescripcion ? `descripcion_${subtituloId}` : `costo_${costoAnioId}`;
     // Indica que el guardado está en proceso
-    updateFieldState(subtituloId, costoAnioId, fieldName, {
-      loading: true,
-      saved: false,
-    });
+    updateInputStatus(arrayNameId, true, false);
   
     // Prepara el payload específico para el campo actualizado
     let specificPayload;
@@ -155,17 +128,11 @@ export const Fluctuaciones = ({ id, dataGastos, solo_lectura }) => {
       // Envío de la actualización al backend
       await updatePasoGore(payload);
       // Si la actualización es exitosa, actualiza el estado para reflejar el éxito
-      updateFieldState(subtituloId, costoAnioId, fieldName, {
-        loading: false,
-        saved: true,
-      });
+      updateInputStatus(arrayNameId, false, true);
     } catch (error) {
       console.error('Error al guardar los datos:', error);
       // En caso de error, actualiza el estado para reflejar el fallo
-      updateFieldState(subtituloId, costoAnioId, fieldName, {
-        loading: false,
-        saved: false,
-      });
+      updateInputStatus(arrayNameId, false, false);
     }
   };
 
@@ -271,8 +238,8 @@ export const Fluctuaciones = ({ id, dataGastos, solo_lectura }) => {
                                 disabled={solo_lectura}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
-                                loading={costoAnio?.estados?.loading ?? false}
-                                saved={costoAnio?.estados?.saved ?? false}
+                                loading={inputStatus[`costo_${costoAnio?.id}`]?.loading ?? false}
+                                saved={inputStatus[`costo_${costoAnio?.id}`]?.saved ?? false}
                                 error={errors[`costo_${costoAnio?.id}`]?.message}
                               />
                             );
@@ -334,10 +301,8 @@ export const Fluctuaciones = ({ id, dataGastos, solo_lectura }) => {
                                   : 'bg-color-odd'
                               }`}
                               readOnly={solo_lectura}
-                              loading={
-                                item.estados?.descripcion?.loading ?? false
-                              }
-                              saved={item.estados?.descripcion?.saved ?? false}
+                              loading={inputStatus[`descripcion_${item.id}`]?.loading ?? false}
+                              saved={inputStatus[`descripcion_${item.id}`]?.saved ?? false}
                               error={errors[`descripcion_${item.id}`]?.message}
                             />
                           );

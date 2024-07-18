@@ -7,7 +7,8 @@ const DropdownSelect = ({ label, placeholder, options, onSelectionChange, select
 
   // Inicialización y actualización de selectedOption
   useEffect(() => {
-    if (selected && typeof selected === 'object' && selected.hasOwnProperty('label') && selected.hasOwnProperty('value')) {
+    //if (selected && typeof selected === 'object' && selected.hasOwnProperty('label') && selected.hasOwnProperty('value')) {
+    if (selected && typeof selected === 'object' && selected.label && selected.value) {
       setSelectedOption(selected);
     } else {
       // Asumiendo que cuando selected es nulo, se resetea la selección
