@@ -33,6 +33,17 @@ export const GastosEvolucionVariacion = ({
     mode: 'onBlur',
   });
 
+  const formatearNumero = (numero) => {
+    const valorNumerico = Number(numero);
+    if (!isNaN(valorNumerico)) {
+      return valorNumerico.toLocaleString('es-CL', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2,
+      });
+    }
+    return numero;
+  };
+
   useEffect(() => {
     setDatosGastos(Array.isArray(dataGastos) ? dataGastos : []);
   }, [dataGastos]);
@@ -128,11 +139,14 @@ export const GastosEvolucionVariacion = ({
           <thead>
             <tr>
               <th scope="col" className="text-sans-p-bold pt-2">Subtítulo</th>
-              {headers.map((year, index) => (
+              {headers.slice(0, -1).map((year, index) => (
                 <th key={index} scope="col" className="text-sans-p text-center">
                   <u>{year}</u>
                 </th>
               ))}
+              <th scope="col" className="text-sans-p text-center">
+                <u>{headers[headers.length - 1]}</u>
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -140,30 +154,49 @@ export const GastosEvolucionVariacion = ({
               <React.Fragment key={item.id}>
                 <tr>
                   <th scope="row" className="text-sans-p-bold pt-2"><u>{item.nombre_subtitulo}</u></th>
-                  {headers.map((year, colIndex) => {
+                  {headers.slice(0, -1).map((year, colIndex) => {
                     const costoAnio = item.costo_anio.find(anio => anio.anio === parseInt(year));
                     return (
                       <td key={`${rowIndex}-${colIndex}`} className="px-1">
-                        <InputCosto
-                          id={`costo_${costoAnio?.id}`}
-                          placeholder="Costo (M$)"
-                          value={costoAnio?.costo || ''}
-                          onChange={(value) => {
-                            handleInputChange(item.id, costoAnio.id, 'costo', value);
-                            clearErrors(`costo_${costoAnio?.id}`);
+                      <Controller
+                          control={control}
+                          name={`costo_${costoAnio?.id}`}
+                          defaultValue={costoAnio?.costo || ''}
+                          render={({ field }) => {
+                            const { onChange, onBlur, value } = field;
+                            const handleChange = (value) => {
+                              clearErrors(`costo_${costoAnio?.id}`);
+                              onChange(value);
+                              handleInputChange(item.id, costoAnio.id, 'costo', value);
+                            };
+                            const handleBlur = async () => {
+                              const isFieldValid = await trigger(`costo_${costoAnio?.id}`);
+                              if (isFieldValid) {
+                                handleSave(item.id, costoAnio.id, 'costo', value);
+                              }
+                              onBlur();
+                            };
+                            return (
+                              <InputCosto
+                                id={`costo_${costoAnio?.id}`}
+                                placeholder="Costo (M$)"
+                                value={value}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                loading={inputStatus[`costo_${costoAnio?.id}`]?.loading ?? false}
+                                saved={inputStatus[`costo_${costoAnio?.id}`]?.saved ?? false}
+                                error={errors[`costo_${costoAnio?.id}`]?.message}
+                              />
+                            );
                           }}
-                          onBlur={(value) => {
-                            handleSave(item.id, costoAnio?.id, 'costo', value);
-                            clearErrors(`costo_${costoAnio?.id}`);
-                          }}
-                          loading={inputStatus[`costo_${costoAnio?.id}`]?.loading ?? false}
-                          saved={inputStatus[`costo_${costoAnio?.id}`]?.saved ?? false}
-                          error={errors[`costo_${costoAnio?.id}`]?.message}
-                          disabled={solo_lectura || parseInt(year) === Math.max(...headers.map(Number))}
                         />
                       </td>
                     );
                   })}
+                  {/* Columna solo lectura para el último año */}
+                  <td className="text-sans-p-bold col-2 text-center">
+                    {formatearNumero(item.costo_anio.find(anio => anio.anio === parseInt(headers[headers.length - 1]))?.costo || '')}
+                  </td>
                 </tr>
                 <tr>
                   <td colSpan={headers.length + 1} className="px-0 my-5">
