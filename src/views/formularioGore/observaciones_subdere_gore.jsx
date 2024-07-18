@@ -11,16 +11,20 @@ const ObservacionesSubdereGore = () =>
 {
   const { id } = useParams();
   const { competenciaDetails } = useCompetencia(id);
-  const { patchComentarioMinuta, loadingPatch } = useEtapa5();
   const [ observacionMinutaDipres, setObservacionMinutaDipres ] = useState("");
   const [ isSubmitSuccessful, setIsSubmitSuccessful ] = useState(false);
   const navigate = useNavigate();
-  const observacionesEnviadas = competenciaDetails?.etapa5?.observacion_minuta_gore_enviada;
   const idEtapa = competenciaDetails?.etapa5?.id
+  const { patchComentarioMinuta, loadingPatch, etapaCinco } = useEtapa5(idEtapa);
   const adicionalGore = competenciaDetails?.etapa4?.formularios_gore[ 0 ]
+  const adicinalesGore = competenciaDetails?.etapa4?.formularios_gore?.detalle_formularios_gore
+  const observaciones = etapaCinco?.observaciones_subere_gore?.detalle_observaciones_subdere_gore
+  const observacion = etapaCinco?.observaciones_subere_gore[ 0 ]
+  const observacionesEnviadas = etapaCinco?.observacion_minuta_gore_enviada;
 
 
-  console.log(observacionesEnviadas)
+
+  console.log('5', etapaCinco)
 
   useEffect(() =>
   {
@@ -78,41 +82,34 @@ const ObservacionesSubdereGore = () =>
           {/* FORMULARIOS GORE */}
           <div className="border-bottom pb-3">
             <h2 className="text-sans-25 mt-4 mb-4">Formularios GORE</h2>
-            {competenciaDetails?.etapa4?.formularios_gore ? (
-              Array.isArray(competenciaDetails.etapa4.formularios_gore) ? (
-                competenciaDetails.etapa4.formularios_gore.map((formulario, index) => (
-                  <tr
-                    className={`d-flex justify-content-between p-3 align-items-center ${index % 2 === 0 ? 'neutral-line' : 'white-line'}`}
-                    key={formulario.id}
-                  >
-                    <td>{formulario.nombre.replace('Completar formulario GORE - ', '')}</td>
-                    <td className="">
-                      <button className="btn-secundario-s text-decoration-underline" onClick={() => handleVerFormulario(formulario.id)}>
-                        Subir Observaciones
-                      </button>
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                competenciaDetails.etapa4.formularios_gore.detalle_formularios_gore.map((formulario, index) => (
-                  <tr
-                    className={`d-flex justify-content-between p-3 align-items-center ${index % 2 === 0 ? 'neutral-line' : 'white-line'}`}
-                    key={formulario.id}
-                  >
-                    <td>{formulario.nombre.replace('Completar formulario GORE - ', '')}</td>
-                    <td className="">
-                      <button className="btn-secundario-s text-decoration-underline" onClick={() => handleVerFormulario(formulario.id)}>
-                        {formulario.accion}
-                      </button>
-                    </td>
-                  </tr>
-                ))
-              )
+            {observacion ? (
+              <tr
+                className='d-flex justify-content-between p-3 align-items-center neutral-line'
+                key={observacion.id}
+              >
+                <td className="col-10">{observacion.nombre.replace('Observación del formulario GORE (', '').slice(0, -1)}</td>
+                <td className="">
+                  <button className="btn-secundario-s text-decoration-underline" onClick={() => handleVerFormulario(observacion.id)}>
+                    {observacion.accion}
+                  </button>
+                </td>
+              </tr>
             ) : (
-              <p>No hay formularios disponibles.</p>
+              observaciones?.map((formulario, index) => (
+                <tr
+                  className={`d-flex justify-content-between p-3 align-items-center ${index % 2 === 0 ? 'neutral-line' : 'white-line'}`}
+                  key={formulario.id}
+                >
+                  <td className="col-6">{formulario.nombre.replace('Observación del formulario GORE (', '').slice(0, -1)}</td>
+                  <td className="">
+                    <button className="btn-secundario-s text-decoration-underline" onClick={() => handleVerFormulario(formulario.id)}>
+                      {formulario.accion}
+                    </button>
+                  </td>
+                </tr>
+              ))
             )}
           </div>
-
           {/* MINUTA DIPRES */}
           <div className="mt-4 border-bottom">
             <h2 className="text-sans-25 mt-4 mb-4">Minuta DIPRES</h2>
@@ -135,39 +132,77 @@ const ObservacionesSubdereGore = () =>
               />
             </div>
           </div>
-
-          {/* DOCUMENTOS ANTECEDENTES ADICIONALES GORE:
-        aqui el usuario SUBDERE envia sus AA sobre cada Region de la competencia
-        pendiente conecciones PATCH con el backend*/}
-          <div className="my-4">
-            <p className="text-sans-h4 mt-5">Antecedentes Adicionales de sector</p>
-            {adicionalGore && (
-              <div key={adicionalGore.region_id}>
-                <p>{adicionalGore.nombre.replace('Completar formulario GORE - ', '')}</p>
-                <div>
-                  <div className="d-flex justify-content-between py-3 fw-bold">
-                    <div className="d-flex mb-2">
-                      <div className="ms-4">#</div>
-                      <div className="ms-5">Documento</div>
+          <div>
+            <h2 className="text-sans-25 mt-4 mb-4">Antecedentes Adicionales de Gore</h2>
+          </div>
+          {adicinalesGore?.map((adicionalGore) => (
+            <div key={adicionalGore.region_id}>
+              <p className="text-sans-h5 my-2 "><strong>{adicionalGore.nombre.replace('Completar formulario GORE - ', '')}</strong></p>
+              {adicionalGore.antecedente_adicional_gore !== 'No aplica' ? (
+                <>
+                  <div>
+                    <div className="d-flex justify-content-between py-3 fw-bold">
+                      <div className="d-flex mb-2">
+                        <div className="ms-4">#</div>
+                        <div className="ms-5">Documento</div>
+                      </div>
+                      <div className="me-5">Acción</div>
                     </div>
-                    <div className="me-5">Acción</div>
                   </div>
-                </div>
-                <SubirArchivo
-                  readOnly={true}
-                  tituloDocumento={adicionalGore.antecedente_adicional_gore}
-                  archivoDescargaUrl={adicionalGore.antecedente_adicional_gore}
-                />
-                <div className="my-4">
-                  <CustomTextarea
-                    label="Descripción del archivo adjunto (Opcional)"
-                    placeholder="Describe el archivo adjunto"
-                    value={adicionalGore.descripcion_antecedente}
+                  <SubirArchivo
                     readOnly={true}
+                    tituloDocumento={adicionalGore.antecedente_adicional_gore}
+                    archivoDescargaUrl={adicionalGore.antecedente_adicional_gore}
                   />
-                </div>
+                  <div className="my-4">
+                    <CustomTextarea
+                      label="Descripción del archivo adjunto (Opcional)"
+                      placeholder="Describe el archivo adjunto"
+                      value={adicionalGore.descripcion_antecedente}
+                      readOnly={true}
+                    />
+                  </div>
+                </>
+              ) : (<div className="my-4 px-3 neutral-line py-3">
+                Gore no subió antecedentes adicionales.
+              </div>)}
+            </div>
+          ))}
+          <div>
+            {adicionalGore &&
+              <div className="col-10">
+                <p className="text-sans-h5 my-2 "><strong>{adicionalGore.nombre.replace('Completar formulario GORE - ', '')}</strong></p>
+                {adicionalGore.antecedente_adicional_gore !== 'No aplica' ? (
+                  <>
+                    <div>
+                      <div className="d-flex justify-content-between py-3 fw-bold">
+                        <div className="d-flex mb-2">
+                          <div className="ms-4">#</div>
+                          <div className="ms-5">Documento</div>
+                        </div>
+                        <div className="me-5">Acción</div>
+                      </div>
+                    </div>
+                    <SubirArchivo
+                      readOnly={true}
+                      tituloDocumento={adicionalGore.antecedente_adicional_gore}
+                      archivoDescargaUrl={adicionalGore.antecedente_adicional_gore}
+                    />
+                    <div className="my-4">
+                      <CustomTextarea
+                        label="Descripción del archivo adjunto (Opcional)"
+                        placeholder="Describe el archivo adjunto"
+                        value={adicionalGore.descripcion_antecedente}
+                        readOnly={true}
+                      />
+                    </div>
+                  </>
+                ) : (
+                  <div className="my-5 px-3 neutral-line py-3">
+                    GORE no subió antecedentes adicionales.
+                  </div>)}
               </div>
-            )}
+            }
           </div>
 
           {!observacionesEnviadas && (
@@ -185,21 +220,23 @@ const ObservacionesSubdereGore = () =>
               )}
             </div>
           )}
-            <div className="d-flex justify-content-end my-5">
-              <button className="btn-primario-s" disabled={observacionesEnviadas} onClick={handleCerrarEtapa}>
-                <p className="mb-0 text-decoration-underline">Cerrar etapa</p>
-                <i className="material-symbols-rounded ms-2">arrow_forward_ios</i>
-              </button>
-            </div>
+          <div className="d-flex justify-content-end my-5">
+            {!etapaCinco?.aprobada ? (
+            <button className="btn-primario-s" disabled={!observacionesEnviadas} onClick={handleCerrarEtapa}>
+              <p className="mb-0 text-decoration-underline">Cerrar etapa</p>
+              <i className="material-symbols-rounded ms-2">arrow_forward_ios</i>
+            </button>):("")}
+          </div>
         </>
       ) : (
         <SuccessOSminutaDIPRES
           idCompetencia={competenciaDetails?.id}
           mensaje="Dependiendo de la decisión que hayas tomado sobre la siguiente etapa, el usuario correspondiente será notificado para comenzar con la etapa que le corresponda."
         />
-      )}
+      )
+      }
 
-    </div>
+    </div >
   )
 };
 
