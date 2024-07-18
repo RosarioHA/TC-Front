@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 const ResumenOS_Gore = () =>
 {
   const { dataFormGore } = useContext(FormGOREContext);
-  const { observaciones, fetchObservaciones, updateObservacion, subirArchivo, guardarDescripcion, eliminarArchivo } = useObservacionesGORE(dataFormGore ? dataFormGore.id : null);
+  const { observaciones,archivoObs, fetchObservaciones, updateObservacion, subirArchivo, guardarDescripcion, eliminarArchivo } = useObservacionesGORE(dataFormGore ? dataFormGore.id : null);
   const navigate = useNavigate();
   const observacionesEnviadas = observaciones?.observacion_enviada;
   const [ inputStatus, setInputStatus ] = useState({
@@ -100,14 +100,13 @@ const ResumenOS_Gore = () =>
     try
     {
       await updateObservacion({ observacion_enviada: true });
-      navigate(`/home/success_observaciones_subdere/${dataFormGore.competencia_id}/`);
+      navigate(`/home/success_cierre_observaciones_gore/${dataFormGore.id}/`);
     } catch (error)
     {
       console.error("Error al enviar observaciones:", error);
     }
   };
   
-  console.log(dataFormGore)
   const titulosPasos = {
     1: "Proyección del ejercicio de la competencia",
     2: "Estimación de recursos económicos",
@@ -189,8 +188,8 @@ const ResumenOS_Gore = () =>
           index="1"
           handleFileSelect={handleFileSelect}
           handleDeleteFile={handleDeleteFile}
-          // archivoDescargaUrl={data?.antecedente_adicional_gore}
-          // tituloDocumento={data?.antecedente_adicional_gore}
+          archivoDescargaUrl={archivoObs}
+          tituloDocumento={archivoObs}
           fieldName="antecedente_adicional_gore "
           readOnly={observacionesEnviadas}
         />
