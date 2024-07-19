@@ -290,7 +290,7 @@ export const Fluctuaciones = ({ id, dataGastos, solo_lectura }) => {
                             <CustomTextarea
                               id={`descripcion_${item?.id}`}
                               value={value}
-                              label="Descripción (Opcional)"
+                              label="Descripción"
                               placeholder="Describe la evolución del gasto por subtitulo"
                               maxLength={500}
                               onChange={handleChange}
