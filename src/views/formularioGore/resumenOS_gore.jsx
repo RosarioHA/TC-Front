@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 const ResumenOS_Gore = () =>
 {
   const { dataFormGore } = useContext(FormGOREContext);
-  const { observaciones,archivoObs, fetchObservaciones, updateObservacion, subirArchivo, guardarDescripcion, eliminarArchivo } = useObservacionesGORE(dataFormGore ? dataFormGore.id : null);
+  const { observaciones, archivoObs, fetchObservaciones, updateObservacion, subirArchivo, guardarDescripcion, eliminarArchivo } = useObservacionesGORE(dataFormGore ? dataFormGore.id : null);
   const navigate = useNavigate();
   const observacionesEnviadas = observaciones?.observacion_enviada;
   const [ inputStatus, setInputStatus ] = useState({
@@ -106,7 +106,7 @@ const ResumenOS_Gore = () =>
       console.error("Error al enviar observaciones:", error);
     }
   };
-  
+
   const titulosPasos = {
     1: "Proyección del ejercicio de la competencia",
     2: "Estimación de recursos económicos",
@@ -170,11 +170,48 @@ const ResumenOS_Gore = () =>
         </>
       )}
 
-      {/* DOCUMENTOS ANTECEDENTES ADICIONALES SECTOR:
-      aqui usuario SUBDERE ve los AA subidos por el sector correspondiente
-      pendiente conecciones GET con el backend*/}
       <div className="my-4">
-        <p className="text-sans-h5 mb-1">Antecedentes Adicionales subidos por GORE</p>
+        <p className="text-sans-h5 mb-1">Antecedentes Adicionales</p>
+        {observaciones.observacion_enviada ? (
+          archivoObs === null ? (
+            <div className="my-5 px-3 neutral-line py-3">
+              Subdere no subió antecedentes adicionales.
+            </div>
+          ) : (
+            <div>
+              <div className="d-flex justify-content-between py-3 fw-bold">
+                <div className="d-flex mb-2">
+                  <div className="ms-4">#</div>
+                  <div className="ms-5">Documento</div>
+                </div>
+                <div className="me-5">Acción</div>
+              </div>
+              <SubirArchivo
+                index="1"
+                handleFileSelect={handleFileSelect}
+                handleDeleteFile={handleDeleteFile}
+                archivoDescargaUrl={archivoObs}
+                tituloDocumento={archivoObs}
+                fieldName="antecedente_adicional_gore"
+                readOnly={observacionesEnviadas}
+              />
+              <div className="my-4">
+                <CustomTextarea
+                  label="Descripción del archivo adjunto (Opcional)"
+                  placeholder="Describe el archivo adjunto"
+                  name="descripcion_documento"
+                  value={observaciones?.descripcion_documento}
+                  onChange={(e) => handleChange('descripcion_documento', e)}
+                  onBlur={() => handleSave('descripcion_documento')}
+                  loading={inputStatus.descripcion_documento.loading}
+                  saved={inputStatus.descripcion_documento.saved}
+                  readOnly={observacionesEnviadas}
+                  maxLength={500}
+                />
+              </div>
+            </div>
+          )
+        ) : (
         <div>
           <div className="d-flex justify-content-between py-3 fw-bold">
             <div className="d-flex mb-2">
@@ -183,33 +220,35 @@ const ResumenOS_Gore = () =>
             </div>
             <div className="me-5">Acción</div>
           </div>
-        </div>
-        <SubirArchivo
-          index="1"
-          handleFileSelect={handleFileSelect}
-          handleDeleteFile={handleDeleteFile}
-          archivoDescargaUrl={archivoObs}
-          tituloDocumento={archivoObs}
-          fieldName="antecedente_adicional_gore "
-          readOnly={observacionesEnviadas}
-        />
-        <div className="my-4">
-          <CustomTextarea
-            label="Descripción del archivo adjunto (Opcional)"
-            placeholder="Describe el archivo adjunto"
-            name="descripcion_documento"
-            value={observaciones?.descripcion_documento}
-            onChange={(e) => handleChange('descripcion_documento', e)}
-            onBlur={() => handleSave('descripcion_documento')}
-            loading={inputStatus.descripcion_documento.loading}
-            saved={inputStatus.descripcion_documento.saved}
+          <SubirArchivo
+            index="1"
+            handleFileSelect={handleFileSelect}
+            handleDeleteFile={handleDeleteFile}
+            archivoDescargaUrl={archivoObs}
+            tituloDocumento={archivoObs}
+            fieldName="antecedente_adicional_gore"
             readOnly={observacionesEnviadas}
-            maxLength={500}
           />
-        </div>
+          <div className="my-4">
+            <CustomTextarea
+              label="Descripción del archivo adjunto (Opcional)"
+              placeholder="Describe el archivo adjunto"
+              name="descripcion_documento"
+              value={observaciones?.descripcion_documento}
+              onChange={(e) => handleChange('descripcion_documento', e)}
+              onBlur={() => handleSave('descripcion_documento')}
+              loading={inputStatus.descripcion_documento.loading}
+              saved={inputStatus.descripcion_documento.saved}
+              readOnly={observacionesEnviadas}
+              maxLength={500}
+            />
+          </div>
         <p className="text-sans-p">
           Asegúrate que los datos ingresados son correctos, ya que una vez que envíes el formulario,
           no podrás editarlo a menos que SUBDERE requiera información adicional.</p>
+        </div>
+      )}
+
       </div>
 
 
