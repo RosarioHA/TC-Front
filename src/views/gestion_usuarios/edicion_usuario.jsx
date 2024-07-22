@@ -112,7 +112,7 @@ const EdicionUsuario = () =>
 
     // Verificar cambios específicos
     const perfilChanged = watch('perfil') !== userDetails?.perfil;
-    const regionChanged = watch('region') !== userDetails?.region;
+    const regionChanged = watch('region') !== userDetails?.region?.id;
     const sectorChanged = watch('sector') !== userDetails?.sector;
     const estadoChanged = watch('is_active') !== (userDetails?.is_active === 'activo');
 
@@ -183,18 +183,14 @@ const EdicionUsuario = () =>
     e.stopPropagation();
   }
 
-  const handleDdSelectChange = (fieldName, selectedOption) =>
-  {
-    try
-    {
-      if (selectedOption && selectedOption.label)
-      {
+  const handleDdSelectChange = (fieldName, selectedOption) => {
+    try {
+      if (selectedOption && selectedOption.label) {
         setValue(fieldName, selectedOption.label);
         setRegionId('');
       }
       updateHasChanged(true);
-    } catch (error)
-    {
+    } catch (error) {
       console.error('Error en handleDdSelectChange:', error);
     }
   };
@@ -213,6 +209,10 @@ const EdicionUsuario = () =>
     try {
       if (selectedOption && selectedOption.value) {
         setValue(fieldName, selectedOption.value);
+        if (fieldName === 'region') {
+          setRegionId(selectedOption.value); 
+          console.log('s',selectedOption.value)// Actualiza regionId cuando se selecciona una nueva región
+        }
         if (fieldName === 'sector') {
           setSectorId(selectedOption.value);
         }
@@ -238,6 +238,7 @@ const EdicionUsuario = () =>
   {
     // Validaciones adicionales para campos condicionales
     let validationErrors = {};
+    console.log('f',formData.region)
     if (formData.perfil === 'GORE' && !formData.region)
     {
       validationErrors.region = "Seleccionar una región para el perfil GORE.";
@@ -253,6 +254,7 @@ const EdicionUsuario = () =>
     {
       const payload = {
         ...formData,
+        region: regionId, 
         competencias_asignadas: competenciasSeleccionadas,
       };
       try
@@ -373,20 +375,20 @@ const EdicionUsuario = () =>
                   render={({ field }) => (
                     <div>
                       <DropdownSelectBuscador
-                        label="Elige la región a la que representa (Obligatorio)"
-                        placeholder={userDetails.region || ''}
-                        id="region"
-                        name="region"
-                        readOnly={!editMode}
-                        options={loadingRegiones ? [] : opcionesDeRegiones}
-                        control={control}
-                        initialValue={userDetails?.region}
-                        onSelectionChange={(selectedOption) =>
-                        {
-                          field.onChange(selectedOption.value);
-                          handleDdSelectBuscadorChange('region', selectedOption);
-                        }}
-                      />
+                      label="Elige la región a la que representa (Obligatorio)"
+                      placeholder={userDetails.region || ''}
+                      id="region"
+                      name="region"
+                      readOnly={!editMode}
+                      options={loadingRegiones ? [] : opcionesDeRegiones}
+                      control={control}
+                      initialValue={userDetails?.region?.id}
+                      onSelectionChange={(selectedOption) =>
+                      {
+                        field.onChange(selectedOption.value);
+                        handleDdSelectBuscadorChange('region', selectedOption);
+                      }}
+                    />
                       {conditionalFieldErrors.region && (
                         <p className="text-sans-h6-darkred mt-2 mb-0">{conditionalFieldErrors.region}</p>
                       )}
@@ -408,7 +410,7 @@ const EdicionUsuario = () =>
                   render={({ field }) => (
                     <div>
                       <DropdownSelectBuscadorUnico
-                        label="Elige el organismo al que pertenece (Obligatorio)"
+                        label="Elige el sector al que pertenece (Obligatorio)"
                         placeholder="Elige el sector de la competencia"
                         id="sector"
                         name="sector"

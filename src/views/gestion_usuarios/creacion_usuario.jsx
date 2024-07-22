@@ -308,8 +308,8 @@ const CreacionUsuario = () => {
                   render={({ field }) => (
                     <div>
                       <DropdownSelectBuscadorUnico
-                        label="Elige el organismo al que pertenece (Obligatorio)"
-                        placeholder="Elige el organismo del usuario"
+                        label="Elige el sector al que pertenece (Obligatorio)"
+                        placeholder="Elige el sector del usuario"
                         options={opcionesSector}
                         onSelectionChange={(value) =>
                         {
