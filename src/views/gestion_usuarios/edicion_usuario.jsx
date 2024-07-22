@@ -211,7 +211,6 @@ const EdicionUsuario = () =>
         setValue(fieldName, selectedOption.value);
         if (fieldName === 'region') {
           setRegionId(selectedOption.value); 
-          console.log('s',selectedOption.value)// Actualiza regionId cuando se selecciona una nueva región
         }
         if (fieldName === 'sector') {
           setSectorId(selectedOption.value);
@@ -238,7 +237,6 @@ const EdicionUsuario = () =>
   {
     // Validaciones adicionales para campos condicionales
     let validationErrors = {};
-    console.log('f',formData.region)
     if (formData.perfil === 'GORE' && !formData.region)
     {
       validationErrors.region = "Seleccionar una región para el perfil GORE.";

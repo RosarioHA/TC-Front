@@ -23,9 +23,6 @@ const ObservacionesSubdereGore = () =>
   const observacionesEnviadas = etapaCinco?.observacion_minuta_gore_enviada;
 
 
-
-  console.log('5', etapaCinco)
-
   useEffect(() =>
   {
     // Verificar si las observaciones ya han sido enviadas

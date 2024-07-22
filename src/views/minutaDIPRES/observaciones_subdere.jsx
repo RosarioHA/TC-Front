@@ -33,7 +33,6 @@ const ObservacionesSubdereDipres = () => {
 
     try {
       await updateEtapa(3, data);
-      console.log(data);
       setIsSubmitSuccessful(true);
     } catch (error) {
       console.error("Error closing stage:", error);
