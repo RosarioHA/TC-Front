@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 
 export const DocumentsAditionals = ({ onFilesChanged, marcoJuridicoData, handleDelete, readOnly }) => {
+  
   const [files, setFiles] = useState([]);
   const maxFiles = 5; // Máximo número de archivos permitidos
   const maxSize = 20 * 1024 * 1024; // 20 MB
@@ -12,9 +13,17 @@ export const DocumentsAditionals = ({ onFilesChanged, marcoJuridicoData, handleD
     if (marcoJuridicoData && marcoJuridicoData.length > 0) {
       const updatedFiles = marcoJuridicoData.map(doc => {
         if (doc && doc.documento_url) {
+          let title = doc.documento_url.split('/').pop();
+          
+          // Remove any query parameters or additional text after ".pdf"
+          const pdfIndex = title.indexOf('.pdf');
+          if (pdfIndex !== -1) {
+            title = title.substring(0, pdfIndex + 4); // "+4" to include ".pdf"
+          }
+
           return {
             id: doc.id,
-            title: doc.documento_url.split('/').pop(), // Extraer el nombre del archivo de la URL
+            title: title,
             url: doc.documento, // URL completa para la descarga
             isTooLarge: false // Estado inicial para comprobar si el archivo es demasiado grande (puedes implementar lógica adicional aquí)
           };
@@ -29,7 +38,6 @@ export const DocumentsAditionals = ({ onFilesChanged, marcoJuridicoData, handleD
       setMaxFilesReached(false); // Actualizar el estado de máximo alcanzado a falso si no hay archivos
     }
   }, [marcoJuridicoData, maxFiles]); 
-
 
   const handleDownload = (url) => {
     window.open(url, '_blank'); // Abrir el documento en una nueva pestaña para iniciar la descarga
@@ -47,7 +55,7 @@ export const DocumentsAditionals = ({ onFilesChanged, marcoJuridicoData, handleD
     }
 
     // Agregar verificación de tipo de archivo
-  const filesNotPdf = incomingFiles.filter(file => !file.type.includes('pdf'));
+    const filesNotPdf = incomingFiles.filter(file => !file.type.includes('pdf'));
 
     if (filesNotPdf.length > 0) {
       setFileTooLarge(false); // Restablecer el estado de fileTooLarge en caso de que se haya establecido previamente
@@ -77,7 +85,6 @@ export const DocumentsAditionals = ({ onFilesChanged, marcoJuridicoData, handleD
       setMaxFilesReached(true);
     }
   };
-  
 
   const handleDeleteDoc = (index) => {
     const documentoId = files[index].id;
@@ -91,74 +98,73 @@ export const DocumentsAditionals = ({ onFilesChanged, marcoJuridicoData, handleD
 
   return (
     <>
-    {readOnly ? (
-      files.map((fileObj, index) => (
-        <div key={index} className={`row align-items-center me-5 pe-5 col-11 mt-2 ${index % 2 === 0 ? 'neutral-line' : 'white-line'}`}>
-          <div className="col-1 p-3">{index + 1}</div>
-          <div className="col p-3">{fileObj.title}</div>
-          <div className="col p-3"></div>
-          <div className="col-2 p-3 d-flex">
-            <button
-              type="button"
-              onClick={() => handleDownload(fileObj.url)}
-              className="btn-secundario-s px-0 d-flex align-items-center mx-0"
-            >
-              <span className="text-sans-b-green mx-2">Descargar</span>
-              <i className="material-symbols-rounded mx-2">download</i>
-            </button>
+      {readOnly ? (
+        files.map((fileObj, index) => (
+          <div key={index} className={`row align-items-center me-5 pe-5 col-11 mt-2 ${index % 2 === 0 ? 'neutral-line' : 'white-line'}`}>
+            <div className="col-1 p-3">{index + 1}</div>
+            <div className="col p-3">{fileObj.title}</div>
+            <div className="col p-3"></div>
+            <div className="col-2 p-3 d-flex">
+              <button
+                type="button"
+                onClick={() => handleDownload(fileObj.url)}
+                className="btn-secundario-s px-0 d-flex align-items-center mx-0"
+              >
+                <span className="text-sans-b-green mx-2">Descargar</span>
+                <i className="material-symbols-rounded mx-2">download</i>
+              </button>
+            </div>
           </div>
-        </div>
-      ))
-    ) : (
-    <>
-      <input
-        type="file"
-        multiple
-        //accept="application/pdf"
-        accept=".pdf"
-        onChange={handleFileChange}
-        id="fileInput"
-        style={{ display: "none" }}
-      />
-      {!maxFilesReached && (
-        <button className="btn-secundario-s d-flex" onClick={() => document.getElementById('fileInput').click()}>
-          <i className="material-symbols-outlined">upgrade</i>
-          <u className="align-self-center text-sans-b-white">Subir Archivo</u>
-        </button>
-      )}
-      {fileTooLarge && (
-        <h6 className="text-sans-p-bold-darkred my-2">
-          El archivo no debe superar los 20 MB.
-        </h6>
-      )}
-      {files.map((fileObj, index) => (
-        <div key={index} className={`row align-items-center me-5 pe-5 col-11 mt-2 ${index % 2 === 0 ? 'neutral-line' : 'white-line'}`}>
-          <div className="col-1 p-3">{index + 1}</div>
-          <div className="col p-3">{fileObj.title}</div>
-          <div className="col p-3"></div>
-          <div className="col-2 p-3 d-flex">
-            <button
-              type="button"
-              onClick={() => handleDeleteDoc(index)}
-              className="btn-terciario-ghost px-0 d-flex align-items-center mx-0">
-              <span className="text-sans-b-red mx-2">Borrar</span><i className="material-symbols-rounded">delete</i>
+        ))
+      ) : (
+        <>
+          <input
+            type="file"
+            multiple
+            //accept="application/pdf"
+            accept=".pdf"
+            onChange={handleFileChange}
+            id="fileInput"
+            style={{ display: "none" }}
+          />
+          {!maxFilesReached && (
+            <button className="btn-secundario-s d-flex" onClick={() => document.getElementById('fileInput').click()}>
+              <i className="material-symbols-outlined">upgrade</i>
+              <u className="align-self-center text-sans-b-white">Subir Archivo</u>
             </button>
-          </div>
-        </div>
-      ))}
-      {maxFilesReached && (
-        <h6 className="text-sans-h6-primary">
-          Alcanzaste el número máximo de archivos permitidos ({maxFiles} archivos).
-        </h6>
+          )}
+          {fileTooLarge && (
+            <h6 className="text-sans-p-bold-darkred my-2">
+              El archivo no debe superar los 20 MB.
+            </h6>
+          )}
+          {files.map((fileObj, index) => (
+            <div key={index} className={`row align-items-center me-5 pe-5 col-11 mt-2 ${index % 2 === 0 ? 'neutral-line' : 'white-line'}`}>
+              <div className="col-1 p-3">{index + 1}</div>
+              <div className="col p-3">{fileObj.title}</div>
+              <div className="col p-3"></div>
+              <div className="col-2 p-3 d-flex">
+                <button
+                  type="button"
+                  onClick={() => handleDeleteDoc(index)}
+                  className="btn-terciario-ghost px-0 d-flex align-items-center mx-0">
+                  <span className="text-sans-b-red mx-2">Borrar</span><i className="material-symbols-rounded">delete</i>
+                </button>
+              </div>
+            </div>
+          ))}
+          {maxFilesReached && (
+            <h6 className="text-sans-h6-primary">
+              Alcanzaste el número máximo de archivos permitidos ({maxFiles} archivos).
+            </h6>
+          )}
+          {errorMessage && (
+            <h6 className="text-sans-p-bold-darkred my-2">
+              {errorMessage}
+            </h6>
+          )}
+        </>
       )}
-      {errorMessage && (
-        <h6 className="text-sans-p-bold-darkred my-2">
-          {errorMessage}
-        </h6>
-      )}
-    </>
-    )}
-  
     </>
   );
 };

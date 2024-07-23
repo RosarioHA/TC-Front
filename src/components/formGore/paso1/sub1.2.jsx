@@ -86,7 +86,7 @@ export const SubUno_dos = ({ flujograma, id, stepNumber, solo_lectura }) => {
           deleting={deleting}
         />
       ))}
-      {!uploading && flujograma?.length < 3 && (
+      {!uploading && !solo_lectura && flujograma?.length < 3 && (
         <SubirArchivo
           index={flujograma?.length + 1}
           handleFileSelect={(file) => uploadFile(file)}

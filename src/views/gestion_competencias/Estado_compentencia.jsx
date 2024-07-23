@@ -53,7 +53,14 @@ const EstadoCompetencia = () =>
 
   const extractFileName = (url) => {
     // Extrae el nombre del archivo después de la última barra (/)
-    const fileNameWithExtension = url.split('/').pop();
+    let fileNameWithExtension = url.split('/').pop();
+  
+    // Remover cualquier texto adicional después de ".pdf"
+    const pdfIndex = fileNameWithExtension.indexOf('.pdf');
+    if (pdfIndex !== -1) {
+      fileNameWithExtension = fileNameWithExtension.substring(0, pdfIndex + 4); // "+4" para incluir ".pdf"
+    }
+  
     return fileNameWithExtension;
   };
   

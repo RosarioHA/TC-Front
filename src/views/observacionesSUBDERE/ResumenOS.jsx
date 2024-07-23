@@ -187,7 +187,7 @@ const ResumenOS = () => {
             maxLength={500}
           />
         </div>
-        {observaciones.observacion_enviada ? (
+        {!observaciones.observacion_enviada ? (
         <p className="text-sans-p">
           Asegúrate que los datos ingresados son correctos, ya que una vez que envíes el formulario, 
           no podrás editarlo a menos que SUBDERE requiera información adicional.</p>

@@ -1,26 +1,34 @@
 import { useState, useEffect } from "react";
 import { BtnOrganigrama } from "../commons/btnOrganigrama";
 
-export const SubirArchivo = ({ index, tituloDocumento, readOnly, archivoDescargaUrl, handleFileSelect, fieldName, handleDeleteFile }) => {
-  const [ fileUploaded, setFileUploaded ] = useState(false);
-  const [ fileName, setFileName ] = useState('');
-  const [ error, setError ] = useState('');
+export const SubirArchivo = ({ index,  readOnly,tituloDocumento,  archivoDescargaUrl, handleFileSelect, fieldName, handleDeleteFile }) => {
+
+  const [fileUploaded, setFileUploaded] = useState(false);
+  const [fileName, setFileName] = useState('');
+  const [error, setError] = useState('');
 
   useEffect(() => {
     if (tituloDocumento) {
       const parts = tituloDocumento.split('/');
-      const name = parts.pop() || tituloDocumento;
+      let name = parts.pop() || tituloDocumento;
+      
+      // Remove any query parameters or additional text after ".pdf"
+      const pdfIndex = name.indexOf('.pdf');
+      if (pdfIndex !== -1) {
+        name = name.substring(0, pdfIndex + 4); // "+4" to include ".pdf"
+      }
+
       setFileName(name);
       setFileUploaded(true);
     } else {
       setFileUploaded(false);
     }
-  }, [ tituloDocumento ]);
+  }, [tituloDocumento]);
 
   const displayFileType = fileUploaded ? "Archivo guardado" : "No seleccionado";
 
   const handleFileChange = (event) => {
-    const file = event.target.files[ 0 ];
+    const file = event.target.files[0];
     if (file) {
       if (file.type !== "application/pdf") {
         setError("Solo se permiten archivos PDF.");
@@ -87,4 +95,3 @@ export const SubirArchivo = ({ index, tituloDocumento, readOnly, archivoDescarga
     </>
   );
 };
-

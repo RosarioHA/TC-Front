@@ -289,10 +289,17 @@ const EdicionCompetencia = () =>
     }
   };
 
-  const extractFileName = (url) =>
-  {
-    return url.split('/').pop();
-  };
+const extractFileName = (url) => {
+  let fileName = url.split('/').pop();
+
+  // Remove any query parameters or additional text after ".pdf"
+  const pdfIndex = fileName.indexOf('.pdf');
+  if (pdfIndex !== -1) {
+    fileName = fileName.substring(0, pdfIndex + 4); // "+4" to include ".pdf"
+  }
+
+  return fileName;
+};
 
   // manejo de usuario 
   const userOptions = usuarios ? groupUsersByType(usuarios) : [];
