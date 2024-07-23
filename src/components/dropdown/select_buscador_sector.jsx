@@ -50,8 +50,11 @@ export const DropdownSelectBuscadorUnico = ({
           [sectorAndMinisterio.ministerioLabel]: true,
         }));
       }
+    } else {
+      setSelectedOption(null); // Limpiar selección si sectorId no está presente
     }
   }, [sectorId, options]);
+
   const toggleDropdown = () => {
     if (!readOnly) {
       setIsOpen(!isOpen);
@@ -128,6 +131,7 @@ export const DropdownSelectBuscadorUnico = ({
   const toggleSection = (label) => {
     setOpenSections((prev) => ({ ...prev, [label]: !prev[label] }));
   };
+
   const handleInputClick = (e) => {
     e.stopPropagation();
   };
@@ -145,9 +149,10 @@ export const DropdownSelectBuscadorUnico = ({
 
   const clearSelection = () => {
     setSelectedOption(null);
+    setSearchTerm(''); // Limpiar el término de búsqueda también
     setOpenSections({});
-    onSelectionChange(null);
-  };
+    onSelectionChange(null); // Asegúrate de que esto envíe null correctamente
+    }
 
   return (
     <div className={`input-container ${readOnly ? 'readonly' : ''}`}>
@@ -160,7 +165,7 @@ export const DropdownSelectBuscadorUnico = ({
           type="search"
           placeholder="Buscar..."
           value={searchTerm}
-          onChange={handleSearchChange} // Usar el nuevo manejador
+          onChange={handleSearchChange}
           onClick={handleInputClick}
           autoFocus
         />

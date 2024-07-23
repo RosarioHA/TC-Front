@@ -20,6 +20,7 @@ export const Etapa5 = ({ etapa, idCompetencia, etapaCuatro }) => {
         oficio_origen
     } = etapa;
 
+
     const combinedSubetapas = [
         usuario_notificado,
         oficio_inicio_dipres,
@@ -85,6 +86,7 @@ export const Etapa5 = ({ etapa, idCompetencia, etapaCuatro }) => {
         }
         if (subetapa.accion === "Ver minuta" && subetapa.estado === "finalizada") {
             path = `/home/minuta_dipres/${idCompetencia}/segunda_minuta_dipres`;
+            console.log(idCompetencia)
             return (
                 <Link to={path} className="btn-secundario-s text-decoration-none" id="btn">
                     <span className="material-symbols-outlined me-1">{icon}</span>
@@ -102,7 +104,7 @@ export const Etapa5 = ({ etapa, idCompetencia, etapaCuatro }) => {
             );
         }
         if (subetapa.accion === "Ver Observaciones" && subetapa.estado === "finalizada") {
-            path = `/home/formulario_gore/${etapa.id}/observaciones_subdere`;
+            path = `/home/formulario_gore/${idCompetencia}/observaciones_subdere`;
             return (
                 <Link to={path} className="btn-secundario-s text-decoration-none" id="btn">
                     <span className="material-symbols-outlined me-1">{icon}</span>

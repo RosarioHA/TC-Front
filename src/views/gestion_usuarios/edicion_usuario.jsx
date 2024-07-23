@@ -1,4 +1,4 @@
-import { useState, useEffect , useMemo} from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Controller, useForm } from 'react-hook-form';
 import CustomInput from "../../components/forms/custom_input";
@@ -19,7 +19,8 @@ import { useFormContext } from "../../context/FormAlert";
 import ModalAbandonoFormulario from "../../components/commons/modalAbandonoFormulario";
 import { DropdownSelectBuscadorUnico } from "../../components/dropdown/select_buscador_sector";
 
-const EdicionUsuario = () => {
+const EdicionUsuario = () =>
+{
   const { id } = useParams();
   const history = useNavigate();
   const { userDetails } = useUserDetails(id);
@@ -34,7 +35,7 @@ const EdicionUsuario = () => {
   const [ competenciasSeleccionadas, setCompetenciasSeleccionadas ] = useState([]);
   const { editMode, updateEditMode, hasChanged, updateHasChanged } = useFormContext();
   const [ isModalOpen, setIsModalOpen ] = useState(false);
-  const [conditionalFieldErrors, setConditionalFieldErrors] = useState({});
+  const [ conditionalFieldErrors, setConditionalFieldErrors ] = useState({});
   const { userData } = useAuth();
   const userIsSubdere = userData?.perfil?.includes('SUBDERE');
 
@@ -46,27 +47,32 @@ const EdicionUsuario = () => {
       nombre_completo: userDetails?.nombre_completo || "",
       email: userDetails?.email || "",
       perfil: userDetails?.perfil || "",
-      region: userDetails?.region?.id || null,
-      sector: userDetails?.sector?.id || null,
+      region: userDetails?.region || null,
+      sector: userDetails?.sector|| null,
       is_active: userDetails?.is_active !== undefined ? userDetails.is_active === 'activo' : false,
     },
   });
 
-
-  useEffect(() => {
-    if (userDetails) {
+  useEffect(() =>
+  {
+    if (userDetails)
+    {
       setCompetenciasAsignadas(userDetails.competencias_asignadas || []);
-    if (userDetails.perfil === 'GORE' && userDetails.regionId) {
+      if (userDetails.perfil === 'GORE' && userDetails.regionId)
+      {
         setRegionId(userDetails.regionId);
       }
-    if (userDetails.perfil === 'Usuario Sectorial' && userDetails.sector) {
+      if (userDetails.perfil === 'Usuario Sectorial' && userDetails.sector)
+      {
         setSectorId(userDetails.sector);
       }
     }
   }, [ userDetails ]);
 
-  useEffect(() => {
-    if (userDetails && userDetails.competencias_asignadas)  {
+  useEffect(() =>
+  {
+    if (userDetails && userDetails.competencias_asignadas)
+    {
       // Transforma las competencias asignadas en un formato que el componente hijo pueda entender
       const asignadasIds = userDetails.competencias_asignadas.map(competencia => competencia.id);
       setCompetenciasSeleccionadas(asignadasIds);
@@ -76,26 +82,30 @@ const EdicionUsuario = () => {
   const perfil = watch('perfil') || '';
   const renderizadoCondicional = editMode ? perfil : userDetails?.perfil;
 
-  useEffect(() => {
-    if (editMode && userDetails) {
+  useEffect(() =>
+  {
+    if (editMode && userDetails)
+    {
       // En modo edicion, actualiza los valores iniciales con los valores actuales.
       setValue('nombre_completo', userDetails.nombre_completo || "");
       setValue('email', userDetails.email || "");
       setValue('perfil', userDetails.perfil || "");
-      setValue('region', userDetails.region ? userDetails.region.id : null);
-      setValue('sector', userDetails.sector ? userDetails.sector.id : null);
+      setValue('region', userDetails.region ? userDetails.region : null);
+      setValue('sector', userDetails.sector ? userDetails.sector : null);
       setValue('is_active', userDetails.is_active !== undefined ? userDetails.is_active : false);
     }
   }, [ editMode, userDetails, setValue ]);
 
   //detecta cambios sin guardar en el formulario
-  function handleOnChange(event) {
+  function handleOnChange(event)
+  {
     const data = new FormData(event.currentTarget);
     const formEntries = Array.from(data.entries());
-    console.log('Form Entries:', formEntries);// no borrar
+    // console.log('Form Entries:', formEntries);// no borrar
 
     // Verifica si hay cambios respecto al valor inicial
-    const formHasChanged = Array.from(data.entries()).some(([ name, value ]) => {
+    const formHasChanged = Array.from(data.entries()).some(([ name, value ]) =>
+    {
       const initialValue = userDetails[ name ];
       return value !== String(initialValue);
     });
@@ -103,33 +113,42 @@ const EdicionUsuario = () => {
     // Verificar cambios específicos
     const perfilChanged = watch('perfil') !== userDetails?.perfil;
     const regionChanged = watch('region') !== userDetails?.region?.id;
-    const sectorChanged = watch('sector') !== userDetails?.sector?.id;
+    const sectorChanged = watch('sector') !== userDetails?.sector;
     const estadoChanged = watch('is_active') !== (userDetails?.is_active === 'activo');
 
     // Establecer hasChanged si hay algún cambio
     updateHasChanged(formHasChanged || perfilChanged || regionChanged || sectorChanged || estadoChanged);
   }
 
-  const handleBackButtonClick = () => {
-    if (editMode) {
-      if (hasChanged) {
+  const handleBackButtonClick = () =>
+  {
+    if (editMode)
+    {
+      if (hasChanged)
+      {
         setIsModalOpen(true);
-      } else {
+      } else
+      {
         updateEditMode(false);
       }
-    } else {
+    } else
+    {
       history(-1);
     }
   };
 
-  const handleEditClick = () => {
-    if (!editMode) {
+  const handleEditClick = () =>
+  {
+    if (!editMode)
+    {
       // Si no está en modo edición, simplemente cambia a modo edición
       updateEditMode(true);
-    } else if (hasChanged) {
+    } else if (hasChanged)
+    {
       // Si está en modo edición y hay cambios, mostrar el modal de advertencia
       setIsModalOpen(true);
-    } else {
+    } else
+    {
       // Si está en modo edición y no hay cambios, cambia a modo visualización
       updateEditMode(false);
     }
@@ -151,14 +170,15 @@ const EdicionUsuario = () => {
       value: sector.id,
       ministerioId: ministerio.id
     }))
-  })), [dataSector]);
+  })), [ dataSector ]);
   //opciones Filtro Competencias
   const opcionesFiltroCompetencias = dataFiltroCompetencias.map(competencia => ({
     value: competencia.id,
     label: competencia.nombre,
   }));
 
-  const handleInputClick = (e) => {
+  const handleInputClick = (e) =>
+  {
     // Previene que el evento se propague al boton
     e.stopPropagation();
   }
@@ -176,19 +196,29 @@ const EdicionUsuario = () => {
   };
 
   const handleSectorSelectionChange = (selectedSectorValue) => {
-    setSectorId(selectedSectorValue);
+    setSectorId(selectedSectorValue); // Actualiza sectorId cuando se selecciona un nuevo sector
     setValue('sector', selectedSectorValue, { shouldValidate: true });
+  
+    if (selectedSectorValue === null) {
+      setSectorId(null); // Limpia sectorId si la selección es nula
+    }
   };
+
 
   const handleDdSelectBuscadorChange = (fieldName, selectedOption) => {
     try {
       if (selectedOption && selectedOption.value) {
         setValue(fieldName, selectedOption.value);
         if (fieldName === 'region') {
-          setRegionId(selectedOption.value); // Actualiza regionId cuando se selecciona una nueva región
+          setRegionId(selectedOption.value); 
         }
-        if (fieldName === 'sector')  {
-          setSectorId(selectedOption.value); // Actualiza sectorId cuando se selecciona un nuevo sector
+        if (fieldName === 'sector') {
+          setSectorId(selectedOption.value);
+        }
+      } else {
+        setValue(fieldName, null); // Limpia el valor si la selección es null
+        if (fieldName === 'sector') {
+          setSectorId(null); // Limpia sectorId si la selección es nula
         }
       }
       updateHasChanged(true);
@@ -196,36 +226,43 @@ const EdicionUsuario = () => {
       console.error('Error en handleDdSelectBuscadorChange:', error);
     }
   };
-
-  const handleEstadoChange = (nuevoEstado) => {
+  const handleEstadoChange = (nuevoEstado) =>
+  {
     const isActivo = nuevoEstado === "activo";
     setValue("is_active", isActivo);
     updateHasChanged(true);
   };
 
-  const onSubmit = async (formData) => {
+  const onSubmit = async (formData) =>
+  {
     // Validaciones adicionales para campos condicionales
     let validationErrors = {};
-    if (formData.perfil === 'GORE' && !formData.region) {
+    if (formData.perfil === 'GORE' && !formData.region)
+    {
       validationErrors.region = "Seleccionar una región para el perfil GORE.";
     }
-    if (formData.perfil === 'Usuario Sectorial' && !formData.sector) {
+    if (formData.perfil === 'Usuario Sectorial' && !formData.sector)
+    {
       validationErrors.sector = "Seleccionar un sector para el perfil de Usuario Sectorial.";
     }
     // Actualizar el estado de los errores
     setConditionalFieldErrors(validationErrors);
 
-    if (Object.keys(validationErrors).length === 0) {
+    if (Object.keys(validationErrors).length === 0)
+    {
       const payload = {
         ...formData,
+        region: regionId, 
         competencias_asignadas: competenciasSeleccionadas,
       };
-      try {
+      try
+      {
         await editUser(id, payload);
         updateEditMode(false);
         updateHasChanged(false);
         history('/home/success_edicion', { state: { origen: "editar_usuario", id } });
-      } catch (error) {
+      } catch (error)
+      {
         console.error("Error al editar el usuario:", error);
       }
     }
@@ -329,27 +366,27 @@ const EdicionUsuario = () => {
           {/* Renderizan de manera condicional según el Perfil de usuario */}
           {renderizadoCondicional === 'GORE' && (
             <div className="my-4 col-11 ">
-              { dataRegiones && dataRegiones.length > 0 ? (
+              {dataRegiones && dataRegiones.length > 0 ? (
                 <Controller
                   name="region"
                   control={control}
                   render={({ field }) => (
                     <div>
                       <DropdownSelectBuscador
-                        label="Elige la región a la que representa (Obligatorio)"
-                        placeholder={userDetails.region || ''}
-                        id="region"
-                        name="region"
-                        readOnly={!editMode}
-                        options={loadingRegiones ? [] : opcionesDeRegiones}
-                        control={control}
-                        initialValue={userDetails?.region?.id}
-                        onSelectionChange={(selectedOption) =>
-                        {
-                          field.onChange(selectedOption.value);
-                          handleDdSelectBuscadorChange('region', selectedOption);
-                        }}
-                      />
+                      label="Elige la región a la que representa (Obligatorio)"
+                      placeholder={userDetails.region || ''}
+                      id="region"
+                      name="region"
+                      readOnly={!editMode}
+                      options={loadingRegiones ? [] : opcionesDeRegiones}
+                      control={control}
+                      initialValue={userDetails?.region?.id}
+                      onSelectionChange={(selectedOption) =>
+                      {
+                        field.onChange(selectedOption.value);
+                        handleDdSelectBuscadorChange('region', selectedOption);
+                      }}
+                    />
                       {conditionalFieldErrors.region && (
                         <p className="text-sans-h6-darkred mt-2 mb-0">{conditionalFieldErrors.region}</p>
                       )}
@@ -364,31 +401,31 @@ const EdicionUsuario = () => {
 
           {renderizadoCondicional === 'Usuario Sectorial' && (
             <div className="my-4 col-11 ">
-              { dataSector && dataSector.length > 0 ? (
-                <Controller 
-                name="sector"
-                control={control}
-                render={({ field }) => (
-                  <div>
-                    <DropdownSelectBuscadorUnico
-                      label="Elige el organismo al que pertenece (Obligatorio)"
-                      placeholder={userDetails.sector || ''}
-                      id="sector"
-                      name="sector"
-                      readOnly={!editMode}
-                      options={loadingSector ? [] : opcionesSector}
-                      control={control}
-                      onSelectionChange={handleSectorSelectionChange}
-                      sectorId={userDetails.sector || ''}
-                      {...field}
-                    />
-                    {conditionalFieldErrors.sector && (
-                      <p className="text-sans-h6-darkred mt-2 mb-0">{conditionalFieldErrors.sector}</p>
-                    )}
-                  </div>
-                )}
+              {dataSector && dataSector.length > 0 ? (
+                <Controller
+                  name="sector"
+                  control={control}
+                  render={({ field }) => (
+                    <div>
+                      <DropdownSelectBuscadorUnico
+                        label="Elige el sector al que pertenece (Obligatorio)"
+                        placeholder="Elige el sector de la competencia"
+                        id="sector"
+                        name="sector"
+                        readOnly={!editMode}
+                        options={loadingSector ? [] : opcionesSector}
+                        control={control}
+                        onSelectionChange={handleSectorSelectionChange}
+                        sectorId={userDetails.sector || ''}
+                        {...field}
+                      />
+                      {conditionalFieldErrors.sector && (
+                        <p className="text-sans-h6-darkred mt-2 mb-0">{conditionalFieldErrors.sector}</p>
+                      )}
+                    </div>
+                  )}
                 />
-                ) : (
+              ) : (
                 <input type="text" value="No hay organismos para mostrar" readOnly />
               )}
             </div>

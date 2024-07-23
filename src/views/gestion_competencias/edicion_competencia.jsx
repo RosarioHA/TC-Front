@@ -68,18 +68,18 @@ const EdicionCompetencia = () =>
 
   //opciones selectores
   const opcionesRegiones = useMemo(() => dataRegiones.map(region => ({
-    label: region.region,
-    value: region.id,
+    label: region?.region,
+    value: region?.id,
   })), [ dataRegiones ]);
 
   const opcionesOrigen = origenes.map(origen => ({
-    label: origen.descripcion,
-    value: origen.clave,
+    label: origen?.descripcion,
+    value: origen?.clave,
   }));
 
   const opcionesAmbito = ambitos.map(ambito => ({
-    label: ambito.nombre,
-    value: ambito.id,
+    label: ambito?.nombre,
+    value: ambito?.id,
   }));
 
 

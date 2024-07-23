@@ -28,11 +28,8 @@ const PasoDos = () =>
   const [ observacionPaso2, setObservacionPaso2 ] = useState("");
   const observacionesEnviadas = observaciones?.observacion_enviada;
   const formSectorialEnviado = data?.formulario_enviado;
-  // const { activeOS, id} = useOutletContext();
 
-  // console.log('2', activeOS,  id )
-
-
+  
   useEffect(() =>
   {
     updateStepNumber(stepNumber);
