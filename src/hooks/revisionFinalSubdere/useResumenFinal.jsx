@@ -67,6 +67,28 @@ export const useResumenFinal = (id) => {
     }
   };
 
+  const guardarDescripcion = async (fieldName, value) => {
+    try {
+      await apiTransferenciaCompentencia.patch(`revision-final-competencia/${id}/resumen/`, {
+        [fieldName]: value
+      });
+      fetchResumen();
+    } catch (error) {
+      console.error(`Error al guardar la descripción del archivo:`, error);
+    }
+  };
 
-  return { resumen, loading, error, fetchResumen, actualizarFormularioEnviado, subirArchivo };
+  const eliminarArchivo = async () => {
+    try {
+      await apiTransferenciaCompentencia.patch(`revision-final-competencia/${id}/resumen/`, {
+        antecedente_adicional_revision_subdere: true
+      });
+      fetchResumen();  // Recargar el resumen para reflejar la eliminación
+    } catch (error) {
+      console.error('Error al eliminar el archivo:', error);
+    }
+  };
+
+
+  return { resumen, loading, error, fetchResumen, actualizarFormularioEnviado, subirArchivo,guardarDescripcion ,eliminarArchivo };
 };

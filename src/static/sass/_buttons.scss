@@ -292,3 +292,15 @@ span.material-symbols-outlined {
         outline-offset: 3px;
     }
 }
+
+
+.btn-secundario-s-clear {
+    @include btn-border(fit-content, $blue-color);
+    @include typo-style;
+    background-color: transparent;
+
+    // Asegurar que el color del ícono sea el mismo que el texto por defecto
+    span.material-symbols-outlined {
+        color: $blue-color;
+    }
+}
