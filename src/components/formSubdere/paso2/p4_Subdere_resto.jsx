@@ -1,5 +1,5 @@
 import { useContext, useState, useMemo } from "react";
-import { OpcionesAB } from "../../forms/opciones_AB";
+import { OpcionesCheck } from "../../forms/OpcionesCheck";
 import CKEditorField from "../../forms/ck_editor";
 import { FormSubdereContext } from "../../../context/RevisionFinalSubdere";
 
@@ -9,59 +9,87 @@ export const RestoCampos = ({
   modalidad_ejercicio,
   implementacion_acompanamiento,
   condiciones_ejercicio,
-  nombre_compentencia,
+  nombre_competencia,
+  competencias_agrupadas,
   regiones_recomendadas
-}) => {
+}) =>
+{
 
   const { updatePasoSubdere } = useContext(FormSubdereContext);
-  const [inputStatus, setInputStatus] = useState({
+  const [ inputStatus, setInputStatus ] = useState({
     justificacion: { loading: false, saved: false },
   });
 
-  const modalidadEjercicioInicial = modalidad_ejercicio === "Exclusiva";
 
   // Determinar si todos los componentes deben estar deshabilitados
-  const disableAll = useMemo(() => regiones_recomendadas.length === 0, [regiones_recomendadas]);
+  const disableAll = useMemo(() => regiones_recomendadas.length === 0, [ regiones_recomendadas ]);
 
-  const handleBlur = (fieldName, value) => {
-    if (!disableAll) {
+  const handleBlur = (fieldName, value) =>
+  {
+    if (!disableAll)
+    {
       handleUpdate(fieldName, value, true);
     }
   };
 
-  const handleUpdate = async (field, value, saveImmediately = false) => {
-    if (!disableAll) {
-      setInputStatus((prev) => ({
+
+  const handleUpdate = async (field, value, saveImmediately = false) =>
+  {
+    if (!disableAll)
+    {
+      setInputStatus(prev => ({
         ...prev,
-        [field]: { ...prev[field], loading: true, saved: false },
+        [ field ]: { ...prev[ field ], loading: true, saved: false },
       }));
 
       let adjustedValue = value;
-      if (field === 'modalidad_ejercicio') {
-        adjustedValue = value ? 'Exclusiva' : 'Compartida';
-      }
 
-      if (saveImmediately) {
-        try {
-          const payload = {
-            [field]: adjustedValue,
-          };
+      if (saveImmediately)
+      {
+        try
+        {
+          let payload;
+
+          // Condición para manejar el caso cuando competencias_agrupadas.length === 0
+          if (Array.isArray(competencias_agrupadas) && competencias_agrupadas.length === 0)
+          {
+            payload = {
+              modalidad_ejercicio: adjustedValue,
+            };
+          } else
+          {
+            const updatedCompetencias = competencias_agrupadas.map((comp) =>
+            {
+              if (comp.id === Number(field.split('_')[ 1 ]))
+              {
+                return { ...comp, modalidad_ejercicio: adjustedValue };
+              }
+              return comp;
+            });
+
+            payload = {
+              competencias_agrupadas: updatedCompetencias,
+            };
+          }
+
           await updatePasoSubdere(payload);
-          setInputStatus((prevStatus) => ({
+          setInputStatus(prevStatus => ({
             ...prevStatus,
-            [field]: { loading: false, saved: true },
+            [ field ]: { loading: false, saved: true },
           }));
-        } catch (error) {
+        } catch (error)
+        {
           console.error('Error updating data:', error);
-          setInputStatus((prevStatus) => ({
+          setInputStatus(prevStatus => ({
             ...prevStatus,
-            [field]: { loading: false, saved: false },
+            [ field ]: { loading: false, saved: false },
           }));
         }
-      } else {
-        setInputStatus((prevStatus) => ({
+      } else
+      {
+        setInputStatus(prevStatus => ({
           ...prevStatus,
-          [field]: { value: adjustedValue, loading: false, saved: false },
+          [ field ]: { value: adjustedValue, loading: false, saved: false },
         }));
       }
     }
@@ -84,7 +112,7 @@ export const RestoCampos = ({
               placeholder="Describe el costo por subtítulo e ítem"
               data={recursos_requeridos || ''}
               onBlur={(value) => handleBlur('recursos_requeridos', value)}
-              readOnly={solo_lectura || disableAll} 
+              readOnly={solo_lectura || disableAll}
               loading={inputStatus?.recursos_requeridos?.loading}
               saved={inputStatus?.recursos_requeridos?.saved}
             />
@@ -105,26 +133,61 @@ export const RestoCampos = ({
               Elige la modalidad de ejercicio
             </div>
           </div>
-          <div className=" d-flex  justify-content-between mb-4 col-11 subrayado-gris h-auto">
-            <div className="col-1 mx-4 my-auto">1</div>
-            <div className="col-4 mx-4 my-3">
-              {nombre_compentencia}
+
+
+          {competencias_agrupadas ? (
+            <div className="my-4">
+              {competencias_agrupadas.map((competencia, index) => (
+                <div key={competencia.id}>
+                  <div className="d-flex justify-content-between col-11 subrayado-gris h-auto">
+                    <div className="col-1 ms-4 my-auto">{index + 1}</div>
+                    <div className="col-5 mx-2 my-4">{competencia.nombre}</div>
+                    <div className="col-6 my-auto mx-5">
+                      <OpcionesCheck
+                        initialState={competencia.modalidad_ejercicio}
+                        handleEstadoChange={(value) => handleUpdate(`competencia_${competencia.id}_modalidad_ejercicio`, value, true)}
+                        loading={inputStatus[ `competencia_${competencia.id}_modalidad_ejercicio` ]?.loading}
+                        saved={inputStatus[ `competencia_${competencia.id}_modalidad_ejercicio` ]?.saved}
+                        altA="Exclusiva"
+                        altB="Compartida"
+                        field="modalidad_ejercicio"
+                        fieldName="modalidad_ejercicio"
+                        readOnly={solo_lectura || disableAll}
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
-            <div className="col-6 my-auto mx-5 ">
-              <OpcionesAB
-                id={`modalidad_ejercicio`}
-                initialState={modalidadEjercicioInicial} // Usar el valor booleano convertido
-                handleEstadoChange={(value) => handleUpdate('modalidad_ejercicio', value, true)}
-                loading={inputStatus?.modalidad_ejercicio?.loading}
-                saved={inputStatus?.modalidad_ejercicio?.saved}
-                altA="Exclusiva"
-                altB="Compartida"
-                field="modalidad_ejercicio"
-                fieldName="modalidad_ejercicio"
-                readOnly={solo_lectura || disableAll} 
-              />
-            </div>
-          </div>
+          ) : (
+            ""
+          )}
+
+
+          {Array.isArray(competencias_agrupadas) && competencias_agrupadas.length === 0 && (
+            <>
+              <div className="d-flex justify-content-between col-11 subrayado-gris h-auto my-3">
+                <div className="col-1 mx-4 my-auto">1</div>
+                <div className="col-4 mx-4 my-3">
+                  {nombre_competencia}
+                </div>
+                <div className="col-6 my-auto mx-5">
+                  <OpcionesCheck
+                    id={`modalidad_ejercicio`}
+                    handleEstadoChange={(value) => handleUpdate('modalidad_ejercicio', value, true)}
+                    initialState={modalidad_ejercicio}
+                    loading={inputStatus?.modalidad_ejercicio?.loading}
+                    saved={inputStatus?.modalidad_ejercicio?.saved}
+                    altA="Exclusiva"
+                    altB="Compartida"
+                    field="modalidad_ejercicio"
+                    fieldName="modalidad_ejercicio"
+                    readOnly={solo_lectura || disableAll}
+                  />
+                </div>
+              </div>
+            </>
+          )}
 
           <h4 className="text-sans-h4">
             4.5 Implementación y acompañamiento
@@ -138,7 +201,7 @@ export const RestoCampos = ({
                 placeholder="Describe el costo por subtítulo e ítem"
                 data={implementacion_acompanamiento || ''}
                 onBlur={(value) => handleBlur('implementacion_acompanamiento', value)}
-                readOnly={solo_lectura || disableAll} 
+                readOnly={solo_lectura || disableAll}
                 loading={inputStatus?.implementacion_acompanamiento?.loading}
                 saved={inputStatus?.implementacion_acompanamiento?.saved}
               />
@@ -159,7 +222,7 @@ export const RestoCampos = ({
                 placeholder="Describe el costo por subtítulo e ítem"
                 data={condiciones_ejercicio || ''}
                 onBlur={(value) => handleBlur('condiciones_ejercicio', value)}
-                readOnly={solo_lectura || disableAll} 
+                readOnly={solo_lectura || disableAll}
                 loading={inputStatus?.condiciones_ejercicio?.loading}
                 saved={inputStatus?.condiciones_ejercicio?.saved}
               />
@@ -201,7 +264,7 @@ export const RestoCampos = ({
           </div>
 
         </div>
-      </div>
+      </div >
     </>
   );
 };
