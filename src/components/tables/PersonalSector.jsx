@@ -19,7 +19,8 @@ const PersonalSectorial = ({
   region,
   prefix,
   payloadModel,
-  descripcionModelo
+  descripcionModelo,
+  personalPendiente
 }) => {
 
   // Verificar que paso5 no sea null o undefined y proporcionar valores por defecto
@@ -734,6 +735,11 @@ const PersonalSectorial = ({
           ))}
         </form>
       </div>
+      <h6 className="text-sans-h6-primary mt-3">Te recordamos que estos son los subtítulos para los que debes justificar personal:</h6>
+        <div className="d-flex ">
+        {personalPendiente.map((item,index)=>(
+        <div key={index} className="badge-info mx-2 my-2">{item}</div>))}
+        </div>
 
       {mostrarFormularioNuevo && (
         <>
