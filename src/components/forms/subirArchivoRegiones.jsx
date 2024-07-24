@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import UploadBtn from "../commons/uploadBtn";
 
-export const SubirArchivoRegiones = ({ index, tituloDocumento, handleDelete, readOnly, archivoDescargaUrl, handleFileSelect, fieldName, region }) =>
+export const SubirArchivoRegiones = ({ index, handleDelete,tituloDocumento, readOnly, archivoDescargaUrl, handleFileSelect, fieldName, region }) =>
 {
   const [ fileUploaded, setFileUploaded ] = useState(false);
   const [ fileName, setFileName ] = useState('');
@@ -13,6 +13,11 @@ export const SubirArchivoRegiones = ({ index, tituloDocumento, handleDelete, rea
     {
       const parts = tituloDocumento.split('/');
       let name = parts.pop() || tituloDocumento;
+      const pdfIndex = name.indexOf('.pdf');
+      if (pdfIndex !== -1) {
+        name = name.substring(0, pdfIndex + 4); // "+4" to include ".pdf"
+      }
+
       // Decodificando el nombre para mostrar correctamente los acentos
       name = decodeURIComponent(name);
       // Truncando el nombre a 30 caracteres si es más largo

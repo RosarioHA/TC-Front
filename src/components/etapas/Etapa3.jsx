@@ -2,7 +2,8 @@ import { useNavigate } from 'react-router-dom';
 import { Counter } from "../tables/Counter";
 import { useAuth } from '../../context/AuthContext';
 
-export const Etapa3 = ({ etapa, idCompetencia, etapaDos }) => {
+export const Etapa3 = ({ etapa, idCompetencia, etapaDos }) =>
+{
   const navigate = useNavigate();
   const { userData } = useAuth();
   const userSubdere = userData?.perfil?.includes('SUBDERE');
@@ -20,35 +21,45 @@ export const Etapa3 = ({ etapa, idCompetencia, etapaDos }) => {
     oficio_origen
   } = etapa;
 
-  if (!etapa) {
+  if (!etapa)
+  {
     return <div>Cargando...</div>;
   }
 
-  const renderButtonOrBadgeForSubetapa = (subetapa) => {
+  const renderButtonOrBadgeForSubetapa = (subetapa) =>
+  {
     const isFinalizado = subetapa.estado === "finalizada";
     let buttonText = subetapa.accion;
     let icon = isFinalizado ? "visibility" : "draft";
 
     // Verificar si el estado general es 'Omitida'
-    if (estado === "Omitida") {
+    if (estado === "Omitida")
+    {
       return <span className="badge-status-pending">{buttonText}</span>;
     }
 
-    const onClickAction = () => {
-      if (subetapa.accion === "Subir Observaciones" && subetapa.nombre === "Revisión SUBDERE" && subetapa.estado === "revision" && userSubdere) {
+    const onClickAction = () =>
+    {
+      if (subetapa.accion === "Subir Observaciones" && subetapa.nombre === "Revisión SUBDERE" && subetapa.estado === "revision" && userSubdere)
+      {
         navigate(`/home/minuta_dipres/${idCompetencia}/observaciones_subdere`);
         return;
       }
 
-      if (isFinalizado && subetapa.accion === "Ver oficio") {
+      if (isFinalizado && subetapa.accion === "Ver oficio")
+      {
         window.open(oficio_origen, '_blank');
-      } else if (subetapa.accion === "Subir minuta" && subetapa.estado === "revision" && userDipres) {
+      } else if (subetapa.accion === "Subir minuta" && subetapa.estado === "revision" && userDipres)
+      {
         navigate(`/home/minuta_dipres/${idCompetencia}`);
-      } else if (isFinalizado && subetapa.accion === "Ver minuta") {
+      } else if (isFinalizado && subetapa.accion === "Ver minuta")
+      {
         navigate(`/home/minuta_dipres/${idCompetencia}`);
-      } else if (isFinalizado && subetapa.accion === "Ver Observaciones") {
+      } else if (isFinalizado && subetapa.accion === "Ver Observaciones")
+      {
         navigate(`/home/minuta_dipres/${idCompetencia}/observaciones_subdere`);
-      } else if (etapaDos.estado === "Finalizada") {
+      } else if (etapaDos.estado === "Finalizada")
+      {
         navigate(`/home/estado_competencia/${idCompetencia}/subir_oficio_dipres`);
       }
     };
@@ -73,19 +84,23 @@ export const Etapa3 = ({ etapa, idCompetencia, etapaDos }) => {
     );
   };
 
-  const handleClick = (usuario) => {
-    if (usuario.estado === "pendiente") {
+  const handleClick = (usuario) =>
+  {
+    if (usuario.estado === "pendiente")
+    {
       navigate(`/home/editar_competencia/${idCompetencia}`);
     }
   };
 
-  const renderNotificacionUsuario = (usuario) => {
+  const renderNotificacionUsuario = (usuario) =>
+  {
     const isFinalizado = usuario.estado === "finalizada";
     const icon = isFinalizado ? "visibility" : "person_add";
     const isPending = etapaDos.estado !== "Finalizada";
 
     // Verificar si el estado general es 'Omitida'
-    if (estado === "Omitida") {
+    if (estado === "Omitida")
+    {
       return (
         <div className="d-flex justify-content-between text-sans-p border-top border-bottom my-3 py-1">
           <div className="align-self-center">{usuario.nombre}</div>
@@ -94,7 +109,8 @@ export const Etapa3 = ({ etapa, idCompetencia, etapaDos }) => {
       );
     }
 
-    if (isFinalizado && !isPending) {
+    if (isFinalizado && !isPending)
+    {
       return (
         <div className="d-flex justify-content-between text-sans-p border-top border-bottom my-3 py-1">
           <div className="align-self-center">{usuario.nombre}</div>
@@ -125,13 +141,17 @@ export const Etapa3 = ({ etapa, idCompetencia, etapaDos }) => {
       </div>
       <div>
         {usuario_notificado && usuario_notificado.nombre.includes("Notificar a") && renderNotificacionUsuario(usuario_notificado)}
-        {[oficio_inicio_dipres, minuta_sectorial, observacion_minuta_sectorial].map((subetapa, index) => (
+        {[ oficio_inicio_dipres, minuta_sectorial, observacion_minuta_sectorial ].map((subetapa, index) => (
           <div key={index} className="d-flex justify-content-between text-sans-p border-top border-bottom my-3 py-1">
             <div className="align-self-center">{subetapa.nombre}</div>
             {renderButtonOrBadgeForSubetapa(subetapa)}
           </div>
         ))}
-        {estado !== "Aún no puede comenzar" && <Counter plazoDias={etapa.plazo_dias} tiempoTranscurrido={etapa.calcular_tiempo_transcurrido} />}
+        {estado !== 'Omitida' ? (
+          <>
+            {estado !== "Aún no puede comenzar" && <Counter plazoDias={etapa.plazo_dias} tiempoTranscurrido={etapa.calcular_tiempo_transcurrido} />}
+          </>
+        ) : ("")}
         <div className="text-sans-p">Fecha última modificación: {fecha_ultima_modificacion}</div>
       </div>
     </div>

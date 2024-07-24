@@ -289,7 +289,7 @@ export const Etapa4 = ({ etapa, etapaTres, idCompetencia }) => {
         {renderFormulariosGore()}
         {estado !== "Aún no puede comenzar" && (
           <Counter
-            plazoDias={etapa.plazo_formulario_gore}
+            plazoDias={etapa.plazo_dias}
             tiempoTranscurrido={etapa.calcular_tiempo_transcurrido}
           />
         )}
