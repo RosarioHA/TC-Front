@@ -130,8 +130,6 @@ export const Temporalidad = ({
   }));
 
 
-  console.log(regiones_temporalidad )
-
   return (
     <>
       <div className="col-11">

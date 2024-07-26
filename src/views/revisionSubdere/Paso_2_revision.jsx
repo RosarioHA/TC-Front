@@ -9,7 +9,6 @@ import { NavigationSubdere } from "../../components/layout/navigationSubdere";
 
 const Paso_2_Revision = () => {
   const {
-    dataFormSubdere,
     dataPasoSubdere,
     errorPasoSubdere,
     updateStepNumber,
@@ -45,9 +44,10 @@ const Paso_2_Revision = () => {
     implementacion_acompanamiento,
     condiciones_ejercicio,
     regiones_recomendadas,
+    competencias_agrupadas, 
+    nombre
   } = dataPasoSubdere;
 
-  const { competencia_nombre } = dataFormSubdere;
 
   return (
     <>
@@ -94,7 +94,8 @@ const Paso_2_Revision = () => {
                     modalidad_ejercicio_opciones={modalidad_ejercicio_opciones}
                     implementacion_acompanamiento={implementacion_acompanamiento}
                     condiciones_ejercicio={condiciones_ejercicio}
-                    nombre_compentencia={competencia_nombre}
+                    nombre_competencia={nombre}
+                    competencias_agrupadas={competencias_agrupadas}
                     regiones_recomendadas={regiones_recomendadas}
                   />
                 </div>

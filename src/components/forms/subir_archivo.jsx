@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import UploadBtn from "../commons/uploadBtn";
 
-const SubirArchivo = ({ index, tituloDocumento, readOnly, onViewFile, archivoDescargaUrl,
+const SubirArchivo = ({ index,  readOnly,onViewFile, archivoDescargaUrl,tituloDocumento,
   handleFileSelect, handleDelete, ver }) =>
 {
   const [ fileUploaded, setFileUploaded ] = useState(false);
@@ -16,7 +16,13 @@ const SubirArchivo = ({ index, tituloDocumento, readOnly, onViewFile, archivoDes
     if (typeof tituloDocumento === 'string')
     {
       const parts = tituloDocumento.split('/');
-      const name = parts.pop() || tituloDocumento;
+      let name = parts.pop() || tituloDocumento;
+      
+      // Remove any query parameters or additional text after ".pdf"
+      const pdfIndex = name.indexOf('.pdf');
+      if (pdfIndex !== -1) {
+        name = name.substring(0, pdfIndex + 4); // "+4" to include ".pdf"
+      }
       setFileName(name);
       setFileUploaded(true);
     } else
@@ -97,7 +103,7 @@ const SubirArchivo = ({ index, tituloDocumento, readOnly, onViewFile, archivoDes
         )}
         <div className="py-3 px-2">
           {error ? (
-            <div className="text-sans-p-bold-darkred">{error}</div>
+            <div className="text-sans-p-bold-darkred ">{error}</div>
           ) : isUploading ? (
             <div className="text-center text-sans-h5-medium-blue">Cargando archivo...</div> // Mensaje de carga
           ) : isDeleting ? (
@@ -123,7 +129,7 @@ const SubirArchivo = ({ index, tituloDocumento, readOnly, onViewFile, archivoDes
               )}
             </div>
           ) : archivoDescargaUrl && (
-            <div className="d-flex flex-row ">
+            <div className="d-flex flex-row">
               <UploadBtn
                 onFileChange={handleFileChange}
                 fileUploaded={fileUploaded}
