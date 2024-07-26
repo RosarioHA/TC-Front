@@ -320,10 +320,10 @@ export const AgregarPersonal = ({
                   <Controller
                     name={`personal[${index}].renta_bruta`}
                     control={control}
+                    defaultValue={personal.renta_bruta || ''}
                     render={({ field, fieldState: { error } }) => (
                       <InputCosto
                         {...field}
-                        value={personal.renta_bruta || ''}
                         placeholder="Costo (M$)"
                         error={error?.message}
                         disabled={solo_lectura}
