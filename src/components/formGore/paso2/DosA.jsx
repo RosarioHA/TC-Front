@@ -1,4 +1,5 @@
 import { CostosSector } from "../componentes/CostosSector"
+import { ResumenIndirectos } from "../componentes/ResumenIndirectos"
 import { ResumenDirectos } from "../componentes/ResumenDirectos"
 import { SubAdicionales } from "../componentes/SubAdicionales"
 import { Subtitulo21 } from "../componentes/Subtitulo21"
@@ -23,6 +24,8 @@ export const CostosGORE = ({
       <h6 key={index}>{line}</h6>
     ));
   };
+
+  const ResumenComponente = nombreModelo === 'directos' ? ResumenDirectos : ResumenIndirectos;
 
   return (
     <>
@@ -59,7 +62,7 @@ export const CostosGORE = ({
           />
         </div>
         <div className="my-4 ">
-          <ResumenDirectos resumen={resumen} />
+          <ResumenComponente resumen={resumen} />
         </div>
       </div>
     </>

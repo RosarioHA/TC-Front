@@ -33,13 +33,13 @@ export const Sub1_b = ({ data, solo_lectura }) => {
         <div>
           <CostoPersonal 
             title="indirectos"
-            plantaJustificado={paso3_gore?.sub21b_personal_planta_justificado}
+            plantaInformado={paso3_gore?.sub21b_personal_planta_justificado}
             plantaJustificar={paso3_gore?.sub21b_personal_planta_justificar}
-            contrataJustificado={paso3_gore?.sub21b_personal_contrata_justificado}
+            contrataInformado={paso3_gore?.sub21b_personal_contrata_justificado}
             contrataJustificar={paso3_gore?.sub21b_personal_contrata_justificar}
-            otrasJustificado={paso3_gore?.sub21b_otras_remuneraciones_justificado}
+            otrasInformado={paso3_gore?.sub21b_otras_remuneraciones_justificado}
             otrasJustificar={paso3_gore?.sub21b_otras_remuneraciones_justificar}
-            gastoPersonalJustificado={paso3_gore?.sub21b_gastos_en_personal_justificado}
+            gastoPersonalInformado={paso3_gore?.sub21b_gastos_en_personal_justificado}
             gastosPersonalJustificar={paso3_gore?.sub21b_gastos_en_personal_justificar} 
           />
           <PersonalGore

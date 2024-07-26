@@ -2,16 +2,20 @@
 // import { FormGOREContext } from '../../../context/FormGore';
 import { CostoPersonal } from '../componentes/CostoPersonal';
 import { PersonalGore } from '../componentes/PersonalGore';
+import { PersonalInformadoSector } from '../componentes/PersonalInformadoSector';
 
-export const Sub1_a = ({data, solo_lectura}) => {
 
-  const { paso3_gore, p3_personal_directo_sector , 
+export const Sub1_a = ({ data, solo_lectura }) => {
+
+  const {
+    paso3_gore,
+    p3_personal_directo_sector,
     p3_personal_directo_gore,
     listado_estamentos
   } = data;
 
   let directos = {};
-  
+
   // Separación de los datos
   for (let key in paso3_gore) {
     if (key.startsWith("sub21_")) {
@@ -34,32 +38,34 @@ export const Sub1_a = ({data, solo_lectura}) => {
           </h6>
         </div>
         <div>
+          <PersonalInformadoSector
+            personalSector={p3_personal_directo_sector}
+            title="directo"
+            seccion="p_3_1_a_personal_directo"
+            solo_lectura={solo_lectura}
+          />
+
           <CostoPersonal
             title="directos"
-            plantaJustificado={paso3_gore?.sub21_personal_planta_justificado}
+            plantaInformado={paso3_gore?.sub21_total_personal_planta}
             plantaJustificar={paso3_gore?.sub21_personal_planta_justificar}
-            contrataJustificado={paso3_gore?.sub21_personal_contrata_justificado}
+            contrataInformado={paso3_gore?.sub21_total_personal_contrata}
             contrataJustificar={paso3_gore?.sub21_personal_contrata_justificar}
-            otrasJustificado={paso3_gore?.sub21_otras_remuneraciones_justificado}
+            otrasInformado={paso3_gore?.sub21_total_otras_remuneraciones}
             otrasJustificar={paso3_gore?.sub21_otras_remuneraciones_justificar}
-            gastoPersonalJustificado={paso3_gore?.sub21_gastos_en_personal_justificado}
+            gastoPersonalInformado={paso3_gore?.sub21_total_gastos_en_personal}
             gastosPersonalJustificar={paso3_gore?.sub21_gastos_en_personal_justificar}
             solo_lectura={solo_lectura}
           />
 
           <PersonalGore
-          personalSector={p3_personal_directo_sector}
-          personalGore={p3_personal_directo_gore}
-          estamentos={listado_estamentos}
-          title="directo"
-          campoDestino="descripcion_perfiles_tecnicos_directo"
-          seccion="p_3_1_a_personal_directo"
-          seccionGore3="paso3_gore"
-          dataPersonal={directos}
-          dataPaso={data}
-          solo_lectura={solo_lectura}
+            personalGore={p3_personal_directo_gore}
+            estamentos={listado_estamentos}
+            title="directo"
+            seccion="p_3_1_a_personal_directo"
+            dataPersonal={directos}
+            solo_lectura={solo_lectura}
           />
-
         </div>
       </div>
     </>
