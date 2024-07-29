@@ -816,7 +816,7 @@ const PersonalSectorial = ({
           ))}
         </form>
       </div>
-      {personalPendiente.length > 1 ? (
+      {personalPendiente.length >= 1 ? (
         <>
           <h6 className="text-sans-h6-primary mt-3">Te recordamos que estos son los subtítulos para los que debes justificar personal:</h6>
           <div className="d-flex ">

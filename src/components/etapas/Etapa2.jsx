@@ -193,7 +193,7 @@ export const Etapa2 = ({ etapa, idCompetencia }) =>
     {
       return usuariosNotificadosDetalles.map((usuario, index) => (
         <div key={index} className="usuario-notificado d-flex justify-content-between py-2 my-1 border-top border-bottom">
-          <span>{usuario.nombre}</span>
+          <span className="col-9">{usuario.nombre}</span>
           {usuario.estado === "revision" && userSubdere ? (
             <button
               className="btn-secundario-s"
@@ -243,7 +243,7 @@ export const Etapa2 = ({ etapa, idCompetencia }) =>
                   {etapa.formulario_sectorial.detalle_formularios_sectoriales.map((formulario, index) => (
                     <tr key={index}>
                       <td className="d-flex justify-content-between">
-                        <span className="align-self-center">{formulario.nombre}</span>
+                        <span className="align-self-center col-9">{formulario.nombre}</span>
                         {formulario.estado ?
                           renderButtonForFormularioSectorial(formulario)
                           : formulario.accion}

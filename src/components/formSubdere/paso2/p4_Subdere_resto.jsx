@@ -50,25 +50,23 @@ export const RestoCampos = ({
         {
           let payload;
 
-          // Condición para manejar el caso cuando competencias_agrupadas.length === 0
-          if (Array.isArray(competencias_agrupadas) && competencias_agrupadas.length === 0)
+          if (Array.isArray(competencias_agrupadas) && competencias_agrupadas.length > 0)
+          {
+            const competenciaId = Number(field.split('_')[ 1 ]);
+            const updatedCompetencia = competencias_agrupadas.find(comp => comp.id === competenciaId);
+
+            if (updatedCompetencia)
+            {
+              payload = {
+                competencias_agrupadas: [
+                  { id: competenciaId, modalidad_ejercicio: adjustedValue }
+                ]
+              };
+            }
+          } else
           {
             payload = {
               modalidad_ejercicio: adjustedValue,
-            };
-          } else
-          {
-            const updatedCompetencias = competencias_agrupadas.map((comp) =>
-            {
-              if (comp.id === Number(field.split('_')[ 1 ]))
-              {
-                return { ...comp, modalidad_ejercicio: adjustedValue };
-              }
-              return comp;
-            });
-
-            payload = {
-              competencias_agrupadas: updatedCompetencias,
             };
           }
 
@@ -137,27 +135,32 @@ export const RestoCampos = ({
 
           {competencias_agrupadas ? (
             <div className="my-4">
-              {competencias_agrupadas.map((competencia, index) => (
-                <div key={competencia.id}>
-                  <div className="d-flex justify-content-between col-11 subrayado-gris h-auto">
-                    <div className="col-1 ms-4 my-auto">{index + 1}</div>
-                    <div className="col-5 mx-2 my-4">{competencia.nombre}</div>
-                    <div className="col-6 my-auto mx-5">
-                      <OpcionesCheck
-                        initialState={competencia.modalidad_ejercicio}
-                        handleEstadoChange={(value) => handleUpdate(`competencia_${competencia.id}_modalidad_ejercicio`, value, true)}
-                        loading={inputStatus[ `competencia_${competencia.id}_modalidad_ejercicio` ]?.loading}
-                        saved={inputStatus[ `competencia_${competencia.id}_modalidad_ejercicio` ]?.saved}
-                        altA="Exclusiva"
-                        altB="Compartida"
-                        field="modalidad_ejercicio"
-                        fieldName="modalidad_ejercicio"
-                        readOnly={solo_lectura || disableAll}
-                      />
+              {competencias_agrupadas
+                .slice() 
+                .sort((a, b) => a.id - b.id)
+                .map((competencia, index) => (
+                  <div key={competencia.id}>
+                    <div className="d-flex justify-content-between col-11 subrayado-gris h-auto">
+                      <div className="col-1 ms-4 my-auto">{index + 1}</div>
+                      <div className="col-5 mx-2 my-4">{competencia.nombre}</div>
+                      <div className="col-6 my-auto mx-5">
+                        <OpcionesCheck
+                          initialState={competencia.modalidad_ejercicio}
+                          handleEstadoChange={(value) =>
+                            handleUpdate(`competencia_${competencia.id}_modalidad_ejercicio`, value, true)
+                          }
+                          loading={inputStatus[ `competencia_${competencia.id}_modalidad_ejercicio` ]?.loading}
+                          saved={inputStatus[ `competencia_${competencia.id}_modalidad_ejercicio` ]?.saved}
+                          altA="Exclusiva"
+                          altB="Compartida"
+                          field="modalidad_ejercicio"
+                          fieldName="modalidad_ejercicio"
+                          readOnly={solo_lectura || disableAll}
+                        />
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
             </div>
           ) : (
             ""

@@ -51,22 +51,32 @@ const EstadoCompetencia = () =>
     return <div>No se encontraron detalles de la competencia</div>;
   }
 
-  const extractFileName = (url) => {
+  const extractFileName = (url) =>
+  {
     // Extrae el nombre del archivo después de la última barra (/)
     let fileNameWithExtension = url.split('/').pop();
-  
+
     // Remover cualquier texto adicional después de ".pdf"
     const pdfIndex = fileNameWithExtension.indexOf('.pdf');
-    if (pdfIndex !== -1) {
+    if (pdfIndex !== -1)
+    {
       fileNameWithExtension = fileNameWithExtension.substring(0, pdfIndex + 4); // "+4" para incluir ".pdf"
     }
-  
+
     return fileNameWithExtension;
   };
-  
+
   // Ejemplo de uso
   const fileUrl = resumen?.antecedente_adicional_revision_subdere;
   const fileName = fileUrl ? extractFileName(fileUrl) : '';
+
+
+  const handleDownload = () =>
+  {
+    {
+      window.open(fileUrl, '_blank');
+    }
+  };
 
   return (
     <>
@@ -112,29 +122,29 @@ const EstadoCompetencia = () =>
             </div>
             <div>
               {resumen?.antecedente_adicional_revision_subdere ? (
-              <>
-                <p className="text-sans-p-blue mt-4">Antecedentes Adicionales</p>
-                <div className="my-1 col-12  mx-2">
-                  <div className="d-flex justify-content-between align-items-center gap-2 align-items-center">
-                    <div className="d-flex mb-2">
-                      <div className="text-sans-p-blue mx-2"><strong>1</strong></div>
-                      <div className="text-sans-p-blue mx-4">{fileName}</div>
-                    </div>
-                    <button className="btn-secundario-s-clear  px-2 d-flex align-items-center m-3">
-                      <span className="text-sans-b-green text-decoration-underline mx-1">Descargar</span>
-                      <i className="material-symbols-rounded ms-2">download</i>
-                    </button>
-                  </div>
-                </div>
-                <div className="my-4 col-11 mx-2">
-                  <div className="d-flex flex-column textarea-container">
-                    <label className="text-sans-p-blue input-label-blue ms-3 ms-sm-0">Descripción del archivo adjunto (Opcional)</label>
-                    <div className='textarea-text input-textarea-blue p-3'>
-                      <p className="text-sans-p-blue mb-0">{resumen?.descripcion_antecedente}</p>
+                <>
+                  <p className="text-sans-p-blue mt-4">Antecedentes Adicionales</p>
+                  <div className="my-1 col-12  mx-2">
+                    <div className="d-flex justify-content-between align-items-center gap-2 align-items-center">
+                      <div className="d-flex mb-2">
+                        <div className="text-sans-p-blue mx-2"><strong>1</strong></div>
+                        <div className="text-sans-p-blue mx-4">{fileName}</div>
+                      </div>
+                      <button className="btn-secundario-s-clear  px-2 d-flex align-items-center m-3" onClick={handleDownload}>
+                        <span className="text-sans-b-green text-decoration-underline mx-1">Descargar</span>
+                        <i className="material-symbols-rounded ms-2">download</i>
+                      </button>
                     </div>
                   </div>
-                </div>
-              </>):("")}
+                  <div className="my-4 col-11 mx-2">
+                    <div className="d-flex flex-column textarea-container">
+                      <label className="text-sans-p-blue input-label-blue ms-3 ms-sm-0">Descripción del archivo adjunto (Opcional)</label>
+                      <div className='textarea-text input-textarea-blue p-3'>
+                        <p className="text-sans-p-blue mb-0">{resumen?.descripcion_antecedente}</p>
+                      </div>
+                    </div>
+                  </div>
+                </>) : ("")}
             </div>
           </div>
         )}
