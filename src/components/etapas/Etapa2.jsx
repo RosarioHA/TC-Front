@@ -172,7 +172,7 @@ export const Etapa2 = ({ etapa, idCompetencia }) =>
   {
     return (
       <div className="d-flex justify-content-between text-sans-p border-top border-bottom my-2 py-1">
-        <div className="align-self-center">{formulario.nombre}</div>
+        <div className="align-self-center col-8">{formulario.nombre}</div>
         {renderButtonForFormularioSectorial(formulario)}
       </div>
     );
@@ -185,7 +185,7 @@ export const Etapa2 = ({ etapa, idCompetencia }) =>
       const usuario = usuarios_notificados[ 0 ];
       return (
         <div className="usuario-notificado d-flex justify-content-between py-2 my-1 border-top border-bottom">
-          <span>{usuario.nombre}</span>
+          <span className="col-8">{usuario.nombre}</span>
           {renderBadge(usuario)}
         </div>
       );
@@ -193,7 +193,7 @@ export const Etapa2 = ({ etapa, idCompetencia }) =>
     {
       return usuariosNotificadosDetalles.map((usuario, index) => (
         <div key={index} className="usuario-notificado d-flex justify-content-between py-2 my-1 border-top border-bottom">
-          <span className="col-9">{usuario.nombre}</span>
+          <span className="col-8">{usuario.nombre}</span>
           {usuario.estado === "revision" && userSubdere ? (
             <button
               className="btn-secundario-s"
@@ -228,8 +228,8 @@ export const Etapa2 = ({ etapa, idCompetencia }) =>
       return (
         <div className='w-100 boder border-bottom border-top'>
           <button type="button" className="btn d-flex justify-content-between w-100 px-0" onClick={toggleCollapse}>
-            <span>{info.nombre}</span>
-            <div className="d-flex align-items-center">
+            <span className="col-8">{info.nombre}</span>
+            <div className="d-flex align-items-center ">
               {renderBadgeForEstado(info.estado)}
               <span className="material-symbols-outlined text-black">
                 {isCollapsed ? 'expand_less' : 'expand_more'}
@@ -243,7 +243,7 @@ export const Etapa2 = ({ etapa, idCompetencia }) =>
                   {etapa.formulario_sectorial.detalle_formularios_sectoriales.map((formulario, index) => (
                     <tr key={index}>
                       <td className="d-flex justify-content-between">
-                        <span className="align-self-center col-9">{formulario.nombre}</span>
+                        <span className="align-self-center col-8">{formulario.nombre}</span>
                         {formulario.estado ?
                           renderButtonForFormularioSectorial(formulario)
                           : formulario.accion}
@@ -283,7 +283,7 @@ export const Etapa2 = ({ etapa, idCompetencia }) =>
     {
       return formulariosFiltrados.map((formulario, index) => (
         <div key={index} className="d-flex justify-content-between text-sans-p border-top border-bottom my-2 py-1">
-          <div className="align-self-center">{formulario.nombre}</div>
+          <div className="align-self-center col-8">{formulario.nombre}</div>
           {renderButtonForFormularioSectorial(formulario)}
         </div>
       ));
@@ -302,20 +302,20 @@ export const Etapa2 = ({ etapa, idCompetencia }) =>
         {renderUsuariosNotificados()}
         {oficio_inicio_sectorial && (
           <div className="d-flex justify-content-between text-sans-p border-top border-bottom my-2 py-1">
-            <div className="align-self-center">{oficio_inicio_sectorial.nombre}</div>
+            <div className="align-self-center col-8">{oficio_inicio_sectorial.nombre}</div>
             {renderButtonForSubetapa(oficio_inicio_sectorial)}
           </div>
         )}
         {userSubdere || userGore || userDipres || userObservador ? renderFormularioSectorial() : renderFormularioSectorialParaUsuarioSectorial()}
         {estadoObservaciones && (
           <div className="d-flex justify-content-between text-sans-p border-top border-bottom my-3 py-1">
-            <div className="align-self-center">{estadoObservaciones.nombre}</div>
+            <div className="align-self-center col-8">{estadoObservaciones.nombre}</div>
             {renderButtonForSubetapa(estadoObservaciones)}
           </div>
         )}
         {estadoObservacion && (
           <div className="d-flex justify-content-between text-sans-p border-top border-bottom my-3 py-1">
-            <div className="align-self-center">{estadoObservacion.nombre}</div>
+            <div className="align-self-center col-8">{estadoObservacion.nombre}</div>
             {renderButtonForSubetapa(estadoObservacion)}
           </div>
         )}

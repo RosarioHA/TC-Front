@@ -66,7 +66,7 @@ export const RestoCampos = ({
           } else
           {
             payload = {
-              modalidad_ejercicio: adjustedValue,
+              [ field ]: adjustedValue, // Asigna el campo y valor dinámicamente
             };
           }
 
@@ -92,6 +92,7 @@ export const RestoCampos = ({
       }
     }
   };
+
   return (
     <>
       <div className="col-11">
@@ -136,7 +137,7 @@ export const RestoCampos = ({
           {competencias_agrupadas ? (
             <div className="my-4">
               {competencias_agrupadas
-                .slice() 
+                .slice()
                 .sort((a, b) => a.id - b.id)
                 .map((competencia, index) => (
                   <div key={competencia.id}>

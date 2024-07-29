@@ -145,3 +145,7 @@
 .border-error {
     border-color: $dark-red;  
 }
+
+.ck-editor__editable {
+    min-height: 400px;
+}
