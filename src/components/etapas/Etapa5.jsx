@@ -48,7 +48,7 @@ export const Etapa5 = ({ etapa, idCompetencia, etapaCuatro }) => {
 
         // Condición específica para mostrar el botón activo para "Subir Observaciones"
         if (userSubdere && subetapa.accion === "Subir Observaciones" && subetapa.estado === "revision") {
-            path = `/home/formulario_gore/${etapa.id}/observaciones_subdere`;
+            path = `/home/formulario_gore/${idCompetencia}/observaciones_subdere`;
             return (
                 <Link to={path} className="btn-secundario-s text-decoration-none" id="btn">
                     <span className="material-symbols-outlined me-1">{icon}</span>
@@ -67,7 +67,7 @@ export const Etapa5 = ({ etapa, idCompetencia, etapaCuatro }) => {
         }
 
         if (userSubdere && subetapa.accion === "Revisión SUBDERE" && subetapa.estado === "finalizada") {
-            path = `/home/formulario_gore/${etapa.id}/observaciones_subdere`;
+            path = `/home/formulario_gore/${idCompetencia}/observaciones_subdere`;
             return (
                 <Link to={path} className="btn-secundario-s text-decoration-none" id="btn">
                     <span className="material-symbols-outlined me-1">{icon}</span>

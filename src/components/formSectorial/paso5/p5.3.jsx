@@ -15,7 +15,7 @@ export const Subpaso_CincoPuntoTres = (
 {
 
   const personalPendienteDirecto = paso5?.[ 0 ].personal_directo_pendiente;
-  const personalPendienteIndirecto = paso5?.[ 0 ].personal_directo_pendiente;
+  const personalPendienteIndirecto = paso5?.[ 0 ].personal_indirecto_pendiente;
 
   return (
     <div className="my-4">

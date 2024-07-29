@@ -89,7 +89,7 @@ export const CostosSector = ({
           {Array.isArray(costoSectorGet) && costoSectorGet.map((costodirecto, index) => (
             <React.Fragment key={index}>
               <div className="subrayado col-12" key={index}>
-                <span className="py-2 my-2 align-self-center">
+                <span className="py-2 my-2 mx-1 align-self-center">
                   {costodirecto.sector}
                 </span>
               </div>

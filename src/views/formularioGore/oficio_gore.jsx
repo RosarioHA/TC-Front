@@ -225,9 +225,7 @@ const OficioGore = () => {
                 )}
                 <div className="d-flex mb-3 mt-1 text-sans-h6-primary">
                   <i className="material-symbols-rounded me-2">info</i>
-                  <h6 className="mt-1">La fecha del oficio debe coincidir con la fecha en que
-                    DIPRES recibió la información, así los plazos previamente establecidos
-                    para el llenado de la minuta comienzan a correr.</h6>
+                  <h6 className="mt-1">La fecha del oficio debe coincidir con la fecha en que el o los GORE recibieron la información, así los plazos previamente establecidos para el llenado del formulario GORE.</h6>
                 </div>
 
                 <div className="d-flex justify-content-end">
