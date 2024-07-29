@@ -2,10 +2,11 @@ import { useNavigate } from 'react-router-dom';
 import { useResumenFinal } from '../../hooks/revisionFinalSubdere/useResumenFinal';
 import { useDescargarDocumento } from '../../hooks/competencias/useDownloadPDFFinal';
 
-export const SummaryDetail = ({ competencia }) => {
+export const SummaryDetail = ({ competencia }) =>
+{
   const navigate = useNavigate();
   const { resumen } = useResumenFinal(competencia.id);
-  const { descargarDocumento } = useDescargarDocumento(competencia.id);  
+  const { descargarDocumento } = useDescargarDocumento(competencia.id);
   const etapas_info =
     competencia.etapas_info || competencia.resumen_competencia?.etapas_info;
   const tiempo_transcurrido =
@@ -24,7 +25,8 @@ export const SummaryDetail = ({ competencia }) => {
     competencia.recomendacion_transferencia ||
     competencia.resumen_competencia?.recomendacion_transferencia;
 
-  if (!competencia || !etapas_info) {
+  if (!competencia || !etapas_info)
+  {
     return <div className="text-center text-sans-h5-medium-blue ">Cargando...</div>;
   }
   // Transformar etapas_info en un arreglo para facilitar su manejo
@@ -33,11 +35,14 @@ export const SummaryDetail = ({ competencia }) => {
     ...etapas_info[ key ],
   }));
 
-  const handleDownloadClick = async () => {
-    try {
+  const handleDownloadClick = async () =>
+  {
+    try
+    {
       await descargarDocumento();
       // Handle successful download (e.g., show a success message)
-    } catch (error) {
+    } catch (error)
+    {
       // Handle error during download (e.g., show an error message)
     }
   };
@@ -49,7 +54,8 @@ export const SummaryDetail = ({ competencia }) => {
   const totalEtapas = etapasArray.length;
 
 
-  const getBadgeDetails = (estado) => {
+  const getBadgeDetails = (estado) =>
+  {
     const badgeClasses = {
       Finalizada: 'badge-status-finish',
       'En Estudio': 'badge-status-review',
@@ -68,7 +74,8 @@ export const SummaryDetail = ({ competencia }) => {
     return { class: classForState, text: estado };
   };
 
-  const handleVerRevisionSubdere = () => {
+  const handleVerRevisionSubdere = () =>
+  {
     navigate(`/home/revision_subdere/${competencia.id}/paso_1/`);
   };
 
@@ -81,29 +88,23 @@ export const SummaryDetail = ({ competencia }) => {
     year: 'numeric',
   });
 
-  const etapas_finalizada = [ {
-      nombre: 'Proceso de Levantamiento de Información',
-      fecha: formattedDate,
-      estado: 'Finalizado',
-    },
-    {
-      nombre: 'Ámbito de la competencia',
-      ambito: ambito_definitivo_competencia,
-    },
-    {
-      nombre: 'Recomendación de transferencia',
-      estado: recomendacion_transferencia,
-    },
-  ];
+  const etapa_levantamiento = {
+    nombre: 'Proceso de Levantamiento de Información',
+    fecha: formattedDate,
+    estado: 'Finalizado',
+  }
+  const ambito_definitivo = {
+    nombre: 'Ámbito de la competencia',
+    estado: ambito_definitivo_competencia,
+  }
+  const recomendacion = {
+    nombre: 'Recomendación de transferencia',
+    estado: recomendacion_transferencia,
+  }
 
-  const etapasFinalizadasArray = Object.entries(etapas_finalizada).map(
-    ([ id, data ]) => ({
-      id,
-      ...data,
-    })
-  );
 
-  if (estado === 'Finalizada') {
+  if (estado === 'Finalizada')
+  {
     return (
       <>
         <div className="row">
@@ -155,23 +156,27 @@ export const SummaryDetail = ({ competencia }) => {
           <div className="col-8">
             <div className="mb-4 ms-4">
               <ul className="list-group list-group-flush my-3">
-                {etapasFinalizadasArray.map((etapa, index) => {
-                  const badgeDetails = getBadgeDetails(etapa.estado);
-                  return (
-                    <li
-                      className="list-group-item d-flex justify-content-between "
-                      key={index}
-                    >
-                      <span>
-                        {etapa.nombre}{' '}
-                        <span className="mx-5 px-5">{etapa.fecha}</span>
-                      </span>
-                      <div className={badgeDetails.class}>
-                        {badgeDetails.text || etapa.ambito}
-                      </div>
-                    </li>
-                  );
-                })}
+                <li
+                  className="list-group-item d-flex justify-content-between "                    >
+                  <span>
+                    {etapa_levantamiento.nombre}
+                    <span className="mx-5 px-5">{etapa_levantamiento.fecha}</span>
+                  </span>
+                  <span className={getBadgeDetails(etapa_levantamiento.estado).class}>
+                    {getBadgeDetails(etapa_levantamiento.estado).text}
+                  </span>
+                </li>
+                <li
+                  className="list-group-item d-flex justify-content-between "                    >
+                  <span>
+                    {ambito_definitivo.nombre}
+                  </span>
+                  <div>
+                    <span className={getBadgeDetails(ambito_definitivo.estado).class}>
+                      {getBadgeDetails(ambito_definitivo.estado).text}
+                    </span>
+                  </div>
+                </li>
                 <li className="list-group-item d-flex justify-content-between ">
                   <span>
                     <p>Documento de información levantada</p>
@@ -196,6 +201,18 @@ export const SummaryDetail = ({ competencia }) => {
                         )}
                       </>
                     )}
+                  </div>
+                </li>
+                <li
+                  className="list-group-item d-flex justify-content-between "                    >
+                  <span>
+                    {recomendacion.nombre}
+                    <span className="mx-5 px-5"></span>
+                  </span>
+                  <div>
+                    <span className={getBadgeDetails(recomendacion.estado).class}>
+                      {getBadgeDetails(recomendacion.estado).text}
+                    </span>
                   </div>
                 </li>
               </ul>
@@ -260,7 +277,8 @@ export const SummaryDetail = ({ competencia }) => {
         <div className="col-8">
           <div className="mb-4 ms-4">
             <ul className="list-group list-group-flush my-3">
-              {etapasArray.map((etapa) => {
+              {etapasArray.map((etapa) =>
+              {
                 const badgeDetails = getBadgeDetails(etapa.estado);
                 return (
                   <li

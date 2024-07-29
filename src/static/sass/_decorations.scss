@@ -159,8 +159,9 @@ border-radius: 50%;
 
 .subrayado{
   background-color:$blue-sky;
-  height: 40px;
+  min-height: 40px;
   padding-top: 8px;
+  height: auto;
 }
 .subrayado-gris{
   background-color:$neutral-color;

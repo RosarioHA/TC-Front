@@ -16,8 +16,7 @@ export const Subpaso_CincoPuntoTres = (
 
   const personalPendienteDirecto = paso5?.[ 0 ].personal_directo_pendiente;
   const personalPendienteIndirecto = paso5?.[ 0 ].personal_directo_pendiente;
-  console.log('d', personalPendienteDirecto)
-  console.log('i', personalPendienteIndirecto)
+
   return (
     <div className="my-4">
       <h4 className="text-sans-h4">5.3 Cálculo de personal asociado al ejercicio de la competencia</h4>
@@ -32,7 +31,7 @@ export const Subpaso_CincoPuntoTres = (
       <>
         <p className="text-sans-p-bold mt-4">Estos son los costos en personal (subtítulo 21) que declaraste en el punto 5.1a:</p>
         <h6 className="text-sans-h6-primary mt-3">Debes justificar el 100% de los recursos declarados en las rentas del personal para completar esta sección.</h6>
-        {personalPendienteDirecto.length > 1 ? (
+        {personalPendienteDirecto.length >= 1 ? (
           <>
             <h6 className="text-sans-h6-primary mt-3">Te recordamos que estos son los subtítulos para los que debes justificar personal:</h6>
             <div className="d-flex ">
@@ -67,7 +66,7 @@ export const Subpaso_CincoPuntoTres = (
         <p className="text-sans-p-bold mt-4">Estos son los costos en personal (subtítulo 21) que declaraste en el punto 5.1b:</p>
         <h6 className="text-sans-h6-primary mt-3">Debes justificar el 100% de los recursos declarados en las rentas del personal para completar esta sección.</h6>
 
-        {personalPendienteIndirecto.length > 1  ? (
+        {personalPendienteIndirecto.length >= 1  ? (
           <>
             <h6 className="text-sans-h6-primary mt-3">Te recordamos que estos son los subtítulos para los que debes justificar personal:</h6>
             <div className="d-flex ">
