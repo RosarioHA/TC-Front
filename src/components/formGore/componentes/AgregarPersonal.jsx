@@ -21,7 +21,7 @@ export const AgregarPersonal = ({
   const { updatePasoGore } = useContext(FormGOREContext);
   const [opcionesEstamentos, setOpcionesEstamentos] = useState([]);
 
-  const { control, handleSubmit } = useForm({
+  const { control, handleSubmit, clearErrors, trigger, formState: { errors } } = useForm({
     resolver: yupResolver(validacionesCalidadJuridica),
     mode: 'onBlur',
   });
@@ -35,10 +35,10 @@ export const AgregarPersonal = ({
   useEffect(() => {
     const personalFiltrado = Array.isArray(personalGore)
       ? personalGore.filter(
-          (personal) =>
-            personal.calidad_juridica == idCalidad &&
-            personal.nombre_calidad_juridica === calidadJuridica
-        )
+        (personal) =>
+          personal.calidad_juridica == idCalidad &&
+          personal.nombre_calidad_juridica === calidadJuridica
+      )
       : [];
     setNuevoPersonal(personalFiltrado);
   }, [personalGore, idCalidad, calidadJuridica]);
@@ -62,6 +62,7 @@ export const AgregarPersonal = ({
     }
   }, [estamentos]);
 
+  // Botón para agregar personal dentro de la calidad jurídica
   const agregarPersonal = async () => {
     const nuevaPersonaPayload = {
       calidad_juridica: idCalidad,
@@ -84,6 +85,7 @@ export const AgregarPersonal = ({
     }
   };
 
+  // Guardar campos
   const handleUpdate = async (fichaId, field, value) => {
     let finalValue = value;
     if (field === 'renta_bruta') {
@@ -213,12 +215,12 @@ export const AgregarPersonal = ({
           )}
           <div className="col">
             <p className="text-sans-p-bold">
-              Renta bruta <br/> mensual ($M)
+              Renta bruta <br /> mensual ($M)
             </p>
           </div>
           <div className="col">
             <p className="text-sans-p-bold ">
-              Grado (Si <br/> corresponde)
+              Grado (Si <br /> corresponde)
             </p>
           </div>
           {title === 'directo' && (
@@ -301,7 +303,7 @@ export const AgregarPersonal = ({
                             field.onBlur();
                             if (
                               personal.numero_personas_gore !==
-                                e.target.value &&
+                              e.target.value &&
                               !error
                             ) {
                               handleUpdate(
@@ -320,35 +322,39 @@ export const AgregarPersonal = ({
                   <Controller
                     name={`personal[${index}].renta_bruta`}
                     control={control}
-                    defaultValue={personal.renta_bruta || ''}
-                    render={({ field, fieldState: { error } }) => (
-                      <InputCosto
-                        {...field}
-                        placeholder="Costo (M$)"
-                        error={error?.message}
-                        disabled={solo_lectura}
-                        loading={
-                          inputStatus[personal.id]?.renta_bruta?.loading &&
-                          !error
+                    defaultValue={personal?.renta_bruta || ''}
+                    render={({ field }) => {
+                      const { onChange, onBlur, value } = field;
+
+                      const handleChange = valor => {
+                        clearErrors(`personal[${index}].renta_bruta`);
+                        onChange(valor);
+                        handleUpdate(personal.id, `renta_bruta`, valor);
+                      };
+
+                      const handleBlur = async () => {
+                        const isFieldValid = await trigger(`renta_bruta_${personal.id}`);
+                        if (!isFieldValid) {
+                          handleUpdate(personal.id, `renta_bruta`, value);
                         }
-                        saved={
-                          inputStatus[personal.id]?.renta_bruta?.saved && !error
-                        }
-                        onBlur={(e) => {
-                          field.onBlur();
-                          if (
-                            personal.renta_bruta !== e.target.value &&
-                            !error
-                          ) {
-                            handleUpdate(
-                              personal.id,
-                              'renta_bruta',
-                              e.target.value
-                            );
-                          }
-                        }}
-                      />
-                    )}
+                        onBlur();
+                      };
+
+                      return (
+                        <InputCosto
+                          id={`renta_bruta_${personal.id}`}
+                          placeholder="Costo (M$)"
+                          loading={
+                            inputStatus[personal.id]?.renta_bruta?.loading}
+                          saved={inputStatus[personal.id]?.renta_bruta?.saved}
+                          error={errors[`renta_bruta_${personal.id}`]?.message}
+                          disabled={solo_lectura}
+                          value={value}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                        />
+                      );
+                    }}
                   />
                 </div>
                 <div className="col">
