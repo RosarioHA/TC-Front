@@ -3,8 +3,6 @@ import { Sub1_b } from "./Sub1_b"
 
 export const Sub_1 = ({ data, solo_lectura }) => {
 
-  console.log(data.paso3_gore)
-
   return (
     <>
       <div className="pe-xxl-5 me-xxl-5 mt-4 col-12">

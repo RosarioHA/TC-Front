@@ -21,6 +21,12 @@ export const AgregarPersonal = ({
   const { updatePasoGore } = useContext(FormGOREContext);
   const [opcionesEstamentos, setOpcionesEstamentos] = useState([]);
 
+  const formatNumber = (number) => {
+    // Verificar si el número es 0 para manejar el caso "No informado"
+    if (number === 0) return "No informado";
+    return new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP', minimumFractionDigits: 0 }).format(number);
+  };
+
   const { control, handleSubmit, clearErrors, trigger, formState: { errors } } = useForm({
     resolver: yupResolver(validacionesCalidadJuridica),
     mode: 'onBlur',
@@ -392,7 +398,7 @@ export const AgregarPersonal = ({
                 {title === 'indirecto' && (
                   <div className="col-2 border">
                     <span className="text-sans-p-bold-blue">
-                      $ {Number(personal.total_rentas).toLocaleString('es-CL')}
+                      $ {formatNumber(personal.total_rentas)}
                     </span>
                   </div>
                 )}
@@ -463,9 +469,9 @@ export const AgregarPersonal = ({
                       <tr key={index} className="my-5">
                         <td>{index + 1}</td>
                         <td className="col">{calidadJuridica}</td>
-                        <td>{dato.datos.total || ''}</td>
-                        <td>{dato.datos.justificado || ''}</td>
-                        <td>{dato.datos.justificar || ''}</td>
+                        <td>{formatNumber(dato.datos.total) || ''}</td>
+                        <td>{formatNumber(dato.datos.justificado) || ''}</td>
+                        <td>{formatNumber(dato.datos.justificar) || ''}</td>
                       </tr>
                     ))}
               </tbody>
