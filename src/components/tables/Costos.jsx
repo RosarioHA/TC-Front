@@ -462,7 +462,7 @@ const Costos = ({
                       return (
                         <CustomTextarea
                           id={`descripcion_${costo.id}`}
-                          label="Descripción"
+                          label="Descripción (Obligatorio)"
                           placeholder="Describe el costo por subtítulo e ítem."
                           maxLength={500}
                           value={value}

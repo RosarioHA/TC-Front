@@ -34,8 +34,8 @@ const PasoUnoGore = () => {
     if (observaciones && Object.keys(observaciones).length === 0) {
       fetchObservaciones();
     }
-    if (observaciones && observaciones.observacion_paso1) {
-      setObservacionPaso1(observaciones.observacion_paso1);
+    if (observaciones && observaciones?.observacion_paso1) {
+      setObservacionPaso1(observaciones?.observacion_paso1);
     }
   }, [updateStepNumber, stepNumber, observaciones, fetchObservaciones]);
 

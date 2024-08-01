@@ -36,7 +36,6 @@ const ResumenOS_Gore = () =>
     try
     {
       await subirArchivo(file);
-      console.log('Archivo subido exitosamente');
     } catch (error)
     {
       console.error('Error al subir el archivo:', error);
@@ -47,7 +46,6 @@ const ResumenOS_Gore = () =>
     try
     {
       await eliminarArchivo();
-      console.log('Archivo eliminado exitosamente');
     } catch (error)
     {
       console.error('Error al eliminar el archivo:', error);

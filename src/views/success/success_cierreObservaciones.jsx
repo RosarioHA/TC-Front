@@ -1,20 +1,15 @@
-import { useContext, useEffect } from "react";
+// import { useContext, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { FormularioContext } from '../../context/FormSectorial';
+// import { FormularioContext } from '../../context/FormSectorial';
 import { useCompetencia } from "../../hooks/competencias/useCompetencias";
 import successIcon from '../../static/icons/success.svg';
 
 const SuccessCierreOS = () => {
-  const { data, updateFormId, loading } = useContext(FormularioContext);
   const { id } = useParams();
   const navigate = useNavigate();
   const { competenciaDetails } = useCompetencia(id);
 
-  useEffect(() => {
-    if (id) {
-      updateFormId(id);
-    }
-  }, [id, updateFormId]);
+
 
   const handleVolverBtn = () => {
     return (
@@ -22,15 +17,16 @@ const SuccessCierreOS = () => {
     )
   };
 
-  if (loading) {
-    return <div className="d-flex align-items-center flex-column ">
-    <div className="text-center text-sans-h5-medium-blue ">Cargando...</div>
-    <span className="placeholder col-4 bg-primary"></span>
-  </div>;
-  }
-  if (!data) {
-    return <div>No hay datos disponibles.</div>;
-  }
+
+  // if (loading) {
+  //   return <div className="d-flex align-items-center flex-column ">
+  //   <div className="text-center text-sans-h5-medium-blue ">Cargando...</div>
+  //   <span className="placeholder col-4 bg-primary"></span>
+  // </div>;
+  // }
+  // if (!data) {
+  //   return <div>No hay datos disponibles.</div>;
+  // }
 
   return (
     <div className="container col-11 ps-5 ms-5">

@@ -21,6 +21,7 @@ const ObservacionesSubdereGore = () =>
   const observaciones = etapaCinco?.observaciones_subere_gore?.detalle_observaciones_subdere_gore
   const observacion = etapaCinco?.observaciones_subere_gore[ 0 ]
   const observacionesEnviadas = etapaCinco?.observacion_minuta_gore_enviada;
+  const aprobada= etapaCinco?.aprobada;
 
 
   useEffect(() =>
@@ -29,7 +30,7 @@ const ObservacionesSubdereGore = () =>
     if (competenciaDetails?.etapa5?.observacion_minuta_gore_enviada)
     {
       // Establecer las observaciones existentes como estado inicial
-      setObservacionMinutaDipres(competenciaDetails?.etapa5?.comentario_minuta_etapa5);
+      setObservacionMinutaDipres(competenciaDetails?.etapa5?.comentario_minuta_gore);
     }
   }, [ competenciaDetails ]);
 
@@ -49,6 +50,7 @@ const ObservacionesSubdereGore = () =>
   {
     navigate(`/home/formulario_gore/${formularioId}/paso_1`);
   };
+
 
   return (
     <div className="container col-10 col-xxl-11">
@@ -95,12 +97,12 @@ const ObservacionesSubdereGore = () =>
               observaciones?.map((formulario, index) => (
                 <tr
                   className={`d-flex justify-content-between p-3 align-items-center ${index % 2 === 0 ? 'neutral-line' : 'white-line'}`}
-                  key={formulario.id}
+                  key={formulario?.id}
                 >
                   <td className="col-6">{formulario.nombre.replace('Observación del formulario GORE (', '').slice(0, -1)}</td>
                   <td className="">
-                    <button className="btn-secundario-s text-decoration-underline" onClick={() => handleVerFormulario(formulario.id)}>
-                      {formulario.accion}
+                    <button className="btn-secundario-s text-decoration-underline" onClick={() => handleVerFormulario(formulario?.id)}>
+                      {formulario?.accion}
                     </button>
                   </td>
                 </tr>
@@ -122,9 +124,9 @@ const ObservacionesSubdereGore = () =>
                 placeholder="Escribe tus observaciones de este paso del formulario"
                 rows={6}
                 maxLength={500}
-                value={observacionMinutaDipres}
+                value={etapaCinco?.comentario_minuta_gore}
                 onChange={(e) => setObservacionMinutaDipres(e.target.value)}
-                readOnly={observacionesEnviadas}
+                readOnly={aprobada}
                 loading={loadingPatch}
               />
             </div>

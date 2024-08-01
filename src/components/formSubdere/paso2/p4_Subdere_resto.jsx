@@ -32,66 +32,65 @@ export const RestoCampos = ({
     }
   };
 
+  
 
-  const handleUpdate = async (field, value, saveImmediately = false) =>
-  {
-    if (!disableAll)
-    {
-      setInputStatus(prev => ({
-        ...prev,
-        [ field ]: { ...prev[ field ], loading: true, saved: false },
-      }));
-
-      let adjustedValue = value;
-
-      if (saveImmediately)
-      {
-        try
-        {
-          let payload;
-
-          if (Array.isArray(competencias_agrupadas) && competencias_agrupadas.length > 0)
-          {
-            const competenciaId = Number(field.split('_')[ 1 ]);
-            const updatedCompetencia = competencias_agrupadas.find(comp => comp.id === competenciaId);
-
-            if (updatedCompetencia)
-            {
-              payload = {
-                competencias_agrupadas: [
-                  { id: competenciaId, modalidad_ejercicio: adjustedValue }
-                ]
-              };
-            }
-          } else
-          {
+  const handleUpdate = async (field, value, saveImmediately = false) => {
+    setInputStatus((prev) => ({
+      ...prev,
+      [field]: { ...prev[field], loading: true, saved: false },
+    }));
+  
+    let adjustedValue = value;
+    if (field === 'modalidad_ejercicio') {
+      adjustedValue = value ? 'Exclusiva' : 'Compartida';
+    }
+  
+    if (saveImmediately) {
+      try {
+        let payload;
+  
+        if (Array.isArray(competencias_agrupadas) && competencias_agrupadas.length > 0) {
+          const competenciaId = Number(field.split('_')[1]);
+          const updatedCompetencia = competencias_agrupadas.find((comp) => comp.id === competenciaId);
+  
+          if (updatedCompetencia) {
             payload = {
-              [ field ]: adjustedValue, // Asigna el campo y valor dinámicamente
+              competencias_agrupadas: [
+                { id: competenciaId, modalidad_ejercicio: adjustedValue }
+              ]
+            };
+          } else {
+            payload = {
+              [field]: adjustedValue,
             };
           }
-
-          await updatePasoSubdere(payload);
-          setInputStatus(prevStatus => ({
-            ...prevStatus,
-            [ field ]: { loading: false, saved: true },
-          }));
-        } catch (error)
-        {
-          console.error('Error updating data:', error);
-          setInputStatus(prevStatus => ({
-            ...prevStatus,
-            [ field ]: { loading: false, saved: false },
-          }));
+        } else {
+          payload = {
+            [field]: adjustedValue,
+          };
         }
-      } else
-      {
-        setInputStatus(prevStatus => ({
+  
+        await updatePasoSubdere(payload);
+        setInputStatus((prevStatus) => ({
           ...prevStatus,
-          [ field ]: { value: adjustedValue, loading: false, saved: false },
+          [field]: { loading: false, saved: true },
+        }));
+      } catch (error) {
+        console.error('Error updating data:', error);
+        setInputStatus((prevStatus) => ({
+          ...prevStatus,
+          [field]: { loading: false, saved: false },
         }));
       }
+    } else {
+      setInputStatus((prevStatus) => ({
+        ...prevStatus,
+        [field]: { value: adjustedValue, loading: false, saved: false },
+      }));
     }
   };
+  
+  
 
   return (
     <>

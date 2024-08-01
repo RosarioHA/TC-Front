@@ -8,19 +8,19 @@ export const SummaryDetail = ({ competencia }) =>
   const { resumen } = useResumenFinal(competencia.id);
   const { descargarDocumento } = useDescargarDocumento(competencia.id);
   const etapas_info =
-    competencia.etapas_info || competencia.resumen_competencia?.etapas_info;
+    competencia.etapas_info || competencia?.resumen_competencia?.etapas_info;
   const tiempo_transcurrido =
     competencia.tiempo_transcurrido ||
     competencia.resumen_competencia?.tiempo_transcurrido;
-  const estado = competencia.estado || competencia.resumen_competencia?.estado;
+  const estado = competencia.estado || competencia?.resumen_competencia?.estado;
   const ambito_definitivo_competencia =
     competencia.ambito_definitivo_competencia ||
     competencia.resumen_competencia?.ambito_definitivo_competencia;
   const fechaFin =
     competencia.fecha_fin || competencia.resumen_competencia?.fecha_fin;
-  // const ambito_competencia_origen =
-  //   competencia.ambito_competencia_origen ||
-  //   competencia.resumen_competencia?.ambito_competencia_origen;
+  const ambito_competencia_origen =
+    competencia.ambito_competencia_origen ||
+    competencia.resumen_competencia?.ambito_competencia_origen;
   const recomendacion_transferencia =
     competencia.recomendacion_transferencia ||
     competencia.resumen_competencia?.recomendacion_transferencia;
@@ -95,7 +95,7 @@ export const SummaryDetail = ({ competencia }) =>
   }
   const ambito_definitivo = {
     nombre: 'Ámbito de la competencia',
-    estado: ambito_definitivo_competencia,
+    estado: ambito_definitivo_competencia || ambito_competencia_origen,
   }
   const recomendacion = {
     nombre: 'Recomendación de transferencia',
@@ -106,11 +106,10 @@ export const SummaryDetail = ({ competencia }) =>
   if (estado === 'Finalizada')
   {
     return (
-      <>
-        <div className="row">
+      <div className="py-2">
+        <div className="row pt-3">
           <div className="col-4">
-            <div className="d-flex flex-row my-3 justify-content-center"></div>
-            <div className="">
+            <div>
               <ul className="chart-skills">
                 {Array.from({ length: totalEtapas }, (_, index) => (
                   <li
@@ -159,11 +158,11 @@ export const SummaryDetail = ({ competencia }) =>
                 <li
                   className="list-group-item d-flex justify-content-between "                    >
                   <span>
-                    {etapa_levantamiento.nombre}
-                    <span className="mx-5 px-5">{etapa_levantamiento.fecha}</span>
+                    {etapa_levantamiento?.nombre}
+                    <span className="mx-5 px-5">{etapa_levantamiento?.fecha}</span>
                   </span>
-                  <span className={getBadgeDetails(etapa_levantamiento.estado).class}>
-                    {getBadgeDetails(etapa_levantamiento.estado).text}
+                  <span className={getBadgeDetails(etapa_levantamiento?.estado).class}>
+                    {getBadgeDetails(etapa_levantamiento?.estado).text}
                   </span>
                 </li>
                 <li
@@ -172,8 +171,8 @@ export const SummaryDetail = ({ competencia }) =>
                     {ambito_definitivo.nombre}
                   </span>
                   <div>
-                    <span className={getBadgeDetails(ambito_definitivo.estado).class}>
-                      {getBadgeDetails(ambito_definitivo.estado).text}
+                    <span className={getBadgeDetails(ambito_definitivo?.estado).class}>
+                      {getBadgeDetails(ambito_definitivo?.estado).text}
                     </span>
                   </div>
                 </li>
@@ -210,8 +209,8 @@ export const SummaryDetail = ({ competencia }) =>
                     <span className="mx-5 px-5"></span>
                   </span>
                   <div>
-                    <span className={getBadgeDetails(recomendacion.estado).class}>
-                      {getBadgeDetails(recomendacion.estado).text}
+                    <span className={getBadgeDetails(recomendacion?.estado).class}>
+                      {getBadgeDetails(recomendacion?.estado).text}
                     </span>
                   </div>
                 </li>
@@ -219,7 +218,7 @@ export const SummaryDetail = ({ competencia }) =>
             </div>
           </div>
         </div>
-      </>
+      </div>
     );
   }
   return (

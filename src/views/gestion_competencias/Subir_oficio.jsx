@@ -207,7 +207,7 @@ const SubirOficio = () => {
               )}
               <div className="d-flex mb-3 mt-1 text-sans-h6-primary">
                 <i className="material-symbols-rounded me-2">info</i>
-                <h6 className="mt-1">La fecha del oficio debe coincidir con la fecha en que el sector recibió la información, así los plazos previamente establecidos para el llenado del formulario sectorial </h6>
+                <h6 className="mt-1">La fecha del oficio debe coincidir con la fecha en que el sector recibió la información, así los plazos previamente establecidos para el llenado del formulario sectorial. </h6>
               </div>
               <div className="d-flex justify-content-end">
                 {errorMessage && <div className="text-sans-h6-darkred me-4">{errorMessage}</div>}
