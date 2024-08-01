@@ -10,8 +10,8 @@ export const ProtectedRoute = ({ children, allowedProfiles }) =>
   {
     return (
       <div className="m-5">
-        <h2>Acceso Denegado</h2>
-        <p>No tienes permiso para acceder a esta página.</p>
+        <h2 className="mx-5">Acceso Denegado</h2>
+        <p className="mx-5">No tienes permiso para acceder a esta página.</p>
       </div>
     );
   }

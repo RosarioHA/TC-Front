@@ -29,7 +29,6 @@ const ResumenOS = () => {
   const handleFileSelect = async (file) => {
     try {
       await subirArchivo(file);
-      console.log('Archivo subido exitosamente');
     } catch (error) {
       console.error('Error al subir el archivo:', error);
     }
@@ -38,7 +37,6 @@ const ResumenOS = () => {
   const handleDeleteFile = async () => {
     try {
       await eliminarArchivo();
-      console.log('Archivo eliminado exitosamente');
     } catch (error) {
       console.error('Error al eliminar el archivo:', error);
     }

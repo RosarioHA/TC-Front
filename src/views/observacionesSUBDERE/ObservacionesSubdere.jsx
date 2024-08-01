@@ -97,7 +97,7 @@ const ObservacionesSubdere = () =>
                 className={`d-flex justify-content-between p-3 align-items-center ${index % 2 === 0 ? 'neutral-line' : 'white-line'}`}
                 key={observaciones.id}
               >
-                <td>{observaciones.nombre}</td>
+                <td className="col-8">{observaciones.nombre}</td>
                 <td className="">
                   <button
                     className='btn-secundario-s text-decoration-underline'
@@ -116,7 +116,7 @@ const ObservacionesSubdere = () =>
                   className={`d-flex justify-content-between p-3 align-items-center ${index % 2 === 0 ? 'neutral-line' : 'white-line'}`}
                   key={observaciones.id}
                 >
-                  <td>{observaciones.nombre}</td>
+                  <td className="col-8">{observaciones.nombre}</td>
                   <td className="">
                     <button
                       className='btn-secundario-s text-decoration-underline'

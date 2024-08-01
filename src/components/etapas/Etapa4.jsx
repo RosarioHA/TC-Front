@@ -118,7 +118,7 @@ export const Etapa4 = ({ etapa, etapaTres, idCompetencia }) => {
                   {usuariosParaRenderizar.map((usuario, index) => (
                     <tr key={index}>
                       <td className="d-flex justify-content-between">
-                        <span className="align-self-center my-1">{usuario.nombre}</span>
+                        <span className="align-self-center my-1 col-8">{usuario.nombre}</span>
                         {renderBadgeOrButtonForUsuario(usuario)}
                       </td>
                     </tr>
@@ -258,8 +258,8 @@ export const Etapa4 = ({ etapa, etapaTres, idCompetencia }) => {
                   {formulariosParaRenderizar.map((formulario, index) => (
                     <tr key={index}>
                       <td className="d-flex justify-content-between">
-                        <span className="my-2">{formulario.nombre}</span>
-                        {renderButtonForFormularioGore(formulario)}
+                        <span className="my-2 col-8">{formulario.nombre}</span>
+                        <div>{renderButtonForFormularioGore(formulario)}</div>
                       </td>
                     </tr>
                   ))}

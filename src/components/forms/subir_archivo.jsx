@@ -23,6 +23,12 @@ const SubirArchivo = ({ index,  readOnly,onViewFile, archivoDescargaUrl,tituloDo
       if (pdfIndex !== -1) {
         name = name.substring(0, pdfIndex + 4); // "+4" to include ".pdf"
       }
+      name = decodeURIComponent(name);
+      // Truncando el nombre a 30 caracteres si es más largo
+      if (name.length > 30)
+      {
+        name = name.substring(0, 30) + '...';
+      }
       setFileName(name);
       setFileUploaded(true);
     } else
@@ -99,7 +105,7 @@ const SubirArchivo = ({ index,  readOnly,onViewFile, archivoDescargaUrl,tituloDo
       <div className="d-flex justify-content-between align-items-center gap-2 neutral-line align-items-center">
         <div className="p-3 ps-3 me-0">{index}</div>
         {fileName && (
-          <div className="py-3 text-wrap col-5">{fileName.substring(0, 29)}</div>
+          <div className="py-3 text-wrap col-5">{fileName}</div>
         )}
         <div className="py-3 px-2">
           {error ? (
