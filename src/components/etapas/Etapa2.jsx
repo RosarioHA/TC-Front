@@ -138,23 +138,23 @@ export const Etapa2 = ({ etapa, idCompetencia }) =>
     if (isButtonEnabled)
     {
       return (
-        <div>
-        <button onClick={() => handleNavigation(path)}
-          className={`btn-secundario-s text-decoration-none py-2 ${isDisabled ? 'disabled' : ''}`} id="btn"
-          disabled={isDisabled}>
-          <span className="material-symbols-outlined me-1">{icon}</span>
-          <u>{buttonText}</u>
-        </button>
+        <div className="my-auto">
+          <button onClick={() => handleNavigation(path)}
+            className={`btn-secundario-s text-decoration-none py-2 ${isDisabled ? 'disabled' : ''}`} id="btn"
+            disabled={isDisabled}>
+            <span className="material-symbols-outlined me-1">{icon}</span>
+            <u>{buttonText}</u>
+          </button>
         </div>
       );
     } else
     {
       return (
         <div>
-        <button className="btn-secundario-s disabled  py-2" id="btn" disabled>
-          <span className="material-symbols-outlined me-1">{icon}</span>
-          <u>{buttonText}</u>
-        </button>
+          <button className="btn-secundario-s disabled  py-2" id="btn" disabled>
+            <span className="material-symbols-outlined me-1">{icon}</span>
+            <u>{buttonText}</u>
+          </button>
         </div>
       );
     }
@@ -168,17 +168,17 @@ export const Etapa2 = ({ etapa, idCompetencia }) =>
     let icon = formulario.estado === "finalizada" ? 'visibility' : (formulario.estado === "pendiente" ? 'edit' : 'draft');
 
     return (
-      <div>
+      <div className="my-auto">
         <button
           onClick={() => handleNavigation(path)}
-          className={`btn-secundario-s text-decoration-none ${ isButtonDisabled ? 'disabled' : ''}`}
+          className={`btn-secundario-s text-decoration-none ${isButtonDisabled ? 'disabled' : ''}`}
           id={`btn-formulario-${formulario.id}`}
           disabled={isButtonDisabled}
         >
           <span className="material-symbols-outlined me-1">{icon}</span>
           <u>{buttonText}</u>
         </button>
-        </div>
+      </div>
     );
   };
 
@@ -200,7 +200,7 @@ export const Etapa2 = ({ etapa, idCompetencia }) =>
       return (
         <div className="usuario-notificado d-flex justify-content-between py-2 my-1 border-top border-bottom">
           <span className="col-8">{usuario.nombre}</span>
-          {renderBadge(usuario)}
+          <div className="my-auto">{renderBadge(usuario)}</div>
         </div>
       );
     } else if (usuariosNotificadosDetalles.length > 0)
@@ -217,7 +217,7 @@ export const Etapa2 = ({ etapa, idCompetencia }) =>
               <u>{usuario.accion}</u>
             </button>
           ) : (
-            renderBadge(usuario)
+            <div className="my-auto"> {renderBadge(usuario)}</div>
           )}
         </div>
       ));
@@ -298,7 +298,7 @@ export const Etapa2 = ({ etapa, idCompetencia }) =>
       return formulariosFiltrados.map((formulario, index) => (
         <div key={index} className="d-flex justify-content-between text-sans-p border-top border-bottom my-2 py-1">
           <div className="align-self-center col-8">{formulario.nombre}</div>
-          <div>{renderButtonForFormularioSectorial(formulario)}</div>
+          <div className="my-auto">{renderButtonForFormularioSectorial(formulario)}</div>
         </div>
       ));
     } else

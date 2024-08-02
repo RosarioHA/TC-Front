@@ -7,31 +7,38 @@ export const SubirOrganigrama = ({ index,tituloDocumento , readOnly, archivoDesc
   const [ fileName, setFileName ] = useState('');
   const [ error, setError ] = useState('');
 
-  useEffect(() =>
-  {
-    if (tituloDocumento)
-    {
+  useEffect(() => {
+    if (typeof tituloDocumento === 'string') {
       const parts = tituloDocumento.split('/');
       let name = parts.pop() || tituloDocumento;
-      // Remueve todos texto despues de ".pdf"
+  
       const pdfIndex = name.indexOf('.pdf');
-      if (pdfIndex !== -1)
-      {
-        name = name.substring(0, pdfIndex + 4); 
+      if (pdfIndex !== -1) {
+        name = name.substring(0, pdfIndex + 4);
       }
       name = decodeURIComponent(name);
-      if (name.length > 15)
-        {
-          name = name.substring(0, 15) + '...';
-        }
-
+  
+      // Obtener el ancho de la pantalla
+      const screenWidth = window.innerWidth;
+  
+      // Definir la longitud máxima de acuerdo al ancho de la pantalla
+      let maxLength = 25; // Por defecto, si la pantalla es mayor a 1400px
+      if (screenWidth < 1400) {
+        maxLength = 15; // Si la pantalla es menor a 1400px
+      }
+  
+      // Truncar el nombre si es más largo que la longitud máxima
+      if (name.length > maxLength) {
+        name = name.substring(0, maxLength) + '...';
+      }
+  
       setFileName(name);
       setFileUploaded(true);
-    } else
-    {
+    } else {
       setFileUploaded(false);
     }
-  }, [ tituloDocumento ]);
+  }, [tituloDocumento]);
+
 
   const displayFileType = fileUploaded ? "Archivo guardado" : "No seleccionado";
 

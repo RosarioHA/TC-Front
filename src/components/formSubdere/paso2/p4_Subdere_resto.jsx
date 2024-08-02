@@ -32,65 +32,75 @@ export const RestoCampos = ({
     }
   };
 
-  
 
-  const handleUpdate = async (field, value, saveImmediately = false) => {
+
+  const handleUpdate = async (field, value, saveImmediately = false) =>
+  {
     setInputStatus((prev) => ({
       ...prev,
-      [field]: { ...prev[field], loading: true, saved: false },
+      [ field ]: { ...prev[ field ], loading: true, saved: false },
     }));
-  
+
     let adjustedValue = value;
-    if (field === 'modalidad_ejercicio') {
+    if (field === 'modalidad_ejercicio')
+    {
       adjustedValue = value ? 'Exclusiva' : 'Compartida';
     }
-  
-    if (saveImmediately) {
-      try {
+
+    if (saveImmediately)
+    {
+      try
+      {
         let payload;
-  
-        if (Array.isArray(competencias_agrupadas) && competencias_agrupadas.length > 0) {
-          const competenciaId = Number(field.split('_')[1]);
+
+        if (Array.isArray(competencias_agrupadas) && competencias_agrupadas.length > 0)
+        {
+          const competenciaId = Number(field.split('_')[ 1 ]);
           const updatedCompetencia = competencias_agrupadas.find((comp) => comp.id === competenciaId);
-  
-          if (updatedCompetencia) {
+
+          if (updatedCompetencia)
+          {
             payload = {
               competencias_agrupadas: [
                 { id: competenciaId, modalidad_ejercicio: adjustedValue }
               ]
             };
-          } else {
+          } else
+          {
             payload = {
-              [field]: adjustedValue,
+              [ field ]: adjustedValue,
             };
           }
-        } else {
+        } else
+        {
           payload = {
-            [field]: adjustedValue,
+            [ field ]: adjustedValue,
           };
         }
-  
+
         await updatePasoSubdere(payload);
         setInputStatus((prevStatus) => ({
           ...prevStatus,
-          [field]: { loading: false, saved: true },
+          [ field ]: { loading: false, saved: true },
         }));
-      } catch (error) {
+      } catch (error)
+      {
         console.error('Error updating data:', error);
         setInputStatus((prevStatus) => ({
           ...prevStatus,
-          [field]: { loading: false, saved: false },
+          [ field ]: { loading: false, saved: false },
         }));
       }
-    } else {
+    } else
+    {
       setInputStatus((prevStatus) => ({
         ...prevStatus,
-        [field]: { value: adjustedValue, loading: false, saved: false },
+        [ field ]: { value: adjustedValue, loading: false, saved: false },
       }));
     }
   };
-  
-  
+
+
 
   return (
     <>
@@ -231,41 +241,41 @@ export const RestoCampos = ({
               />
             </h6>
           </div>
-
-          <h4 className="text-sans-h4">
-            4.7 Condiciones cuyo incumplimiento dan lugar a la revocación de la transferencia
-          </h4>
-          <div className="text-sans-h6 my-3 col-11">
-            <p className="text-sans-p">
-              Según establece el reglamento que fija las condiciones, plazos y demás materias concernientes al procedimiento
-              de transferencia de competencias, el Presidente de la República podrá revocar de oficio y fundadamente la
-              transferencia de las competencias efectuada en forma temporal, cuando se constate la concurrencia de alguna de
-              las siguientes causales:
-            </p>
+          <div className="col-11">
+            <h4 className="text-sans-h4">
+              4.7 Condiciones cuyo incumplimiento dan lugar a la revocación de la transferencia
+            </h4>
+            <div className="text-sans-h6 my-3">
+              <p className="text-sans-p col-11">
+                Según establece el reglamento que fija las condiciones, plazos y demás materias concernientes al procedimiento
+                de transferencia de competencias, el Presidente de la República podrá revocar de oficio y fundadamente la
+                transferencia de las competencias efectuada en forma temporal, cuando se constate la concurrencia de alguna de
+                las siguientes causales:
+              </p>
+            </div>
+            <div className="mb-4 col-11">
+              <p className="text-sans-p ms-3">
+                a. Incumplimiento de las condiciones que se hayan establecido para el ejercicio de la competencia transferida
+                en el decreto supremo que la dispuso, o sus modificaciones, según lo dispuesto en el artículo 29 literal e)
+                del reglamento aprobado por el Decreto N° 656, de 2019, que fija las condiciones, plazos y demás materias
+                concernientes al procedimiento de transferencia de competencias.
+              </p>
+              <p className="text-sans-p ms-3">
+                b. Deficiente prestación del servicio a la comunidad.
+              </p>
+              <p className="text-sans-p ms-3">
+                c. Ejercicio de las competencias transferidas de una forma que sea incompatible con las políticas nacionales
+                cuando éstas hayan sido dictadas en forma posterior a la transferencia, sin que se realizaren los ajustes
+                necesarios. Para ello, en caso de un cambio en la política nacional, el gobierno regional tendrá un plazo de
+                seis meses para efectuar la adecuación respectiva.
+              </p>
+              <p className="text-sans-p ms-3">
+                d. No cumplir con los estándares de resguardo técnico establecidos en Protocolo de Coordinación Internivel
+                con organismos encargados de movilidad, y que serán supervisados por el Ministerio de Transportes y
+                Telecomunicaciones.
+              </p>
+            </div>
           </div>
-          <div className="mb-4 col-11">
-            <p className="text-sans-p ms-3">
-              a. Incumplimiento de las condiciones que se hayan establecido para el ejercicio de la competencia transferida
-              en el decreto supremo que la dispuso, o sus modificaciones, según lo dispuesto en el artículo 29 literal e)
-              del reglamento aprobado por el Decreto N° 656, de 2019, que fija las condiciones, plazos y demás materias
-              concernientes al procedimiento de transferencia de competencias.
-            </p>
-            <p className="text-sans-p ms-3">
-              b. Deficiente prestación del servicio a la comunidad.
-            </p>
-            <p className="text-sans-p ms-3">
-              c. Ejercicio de las competencias transferidas de una forma que sea incompatible con las políticas nacionales
-              cuando éstas hayan sido dictadas en forma posterior a la transferencia, sin que se realizaren los ajustes
-              necesarios. Para ello, en caso de un cambio en la política nacional, el gobierno regional tendrá un plazo de
-              seis meses para efectuar la adecuación respectiva.
-            </p>
-            <p className="text-sans-p ms-3">
-              d. No cumplir con los estándares de resguardo técnico establecidos en Protocolo de Coordinación Internivel
-              con organismos encargados de movilidad, y que serán supervisados por el Ministerio de Transportes y
-              Telecomunicaciones.
-            </p>
-          </div>
-
         </div>
       </div >
     </>

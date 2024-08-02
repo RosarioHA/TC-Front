@@ -15,7 +15,7 @@ const EstadoCompetencia = () =>
   const navigate = useNavigate();
   const [ competencia, setCompetencia ] = useState(null);
   const { dataFormSubdere } = useFormularioSubdere(id);
-  const mostrarMensajeFinalizada = competenciaDetails.estado === 'Finalizada' && resumen?.formulario_final_enviado === true;
+  const mostrarMensajeFinalizada = competenciaDetails?.estado === 'Finalizada' && resumen?.formulario_final_enviado === true;
 
   useEffect(() =>
   {
@@ -37,10 +37,13 @@ const EstadoCompetencia = () =>
 
   if (loading)
   {
-    return <div className="d-flex align-items-center flex-column ">
+    return 
+    <>
+    <div className="d-flex align-items-center flex-column ">
       <div className="text-center text-sans-h5-medium-blue ">Cargando detalles de la competencia...</div>
       <span className="placeholder col-4 bg-primary"></span>
-    </div>;
+    </div>
+    </>
   }
   if (error)
   {
@@ -91,25 +94,25 @@ const EstadoCompetencia = () =>
           <nav className="container mx-5" aria-label="breadcrumb">
             <ol className="breadcrumb breadcrumb-style d-flex my-2">
               <li className="breadcrumb-item align-self-center"><Link to="/home">Inicio</Link></li>
-              <li className="breadcrumb-item align-self-center text-sans-p-lightgrey" aria-current="page">Estado de la Competencia: {competencia.nombre}</li>
+              <li className="breadcrumb-item align-self-center text-sans-p-lightgrey" aria-current="page">Estado de la Competencia: {competencia?.nombre}</li>
             </ol>
           </nav>
         </div>
         <span className="text-sans-Title">Estado de la Competencia</span>
         <div className="my-3">
           <div className="d-flex">
-            <span className="badge-tipo mt-1">{competencia.agrupada ? 'Agrupada' : 'Individual'}</span>
-            <h1 className="text-sans-h1 mb-4 ms-2">{competencia.nombre}</h1>
+            <span className="badge-tipo mt-1">{competencia?.agrupada ? 'Agrupada' : 'Individual'}</span>
+            <h1 className="text-sans-h1 mb-4 ms-2">{competencia?.nombre}</h1>
           </div>
           <SummaryDetail competencia={competencia} />
         </div>
         <div className="mt-5">
           <div className="text-sans-h2 my-4">Personas asignadas</div>
           <PersonsAssigned
-            usuariosSubdere={competencia.usuarios_subdere}
-            usuariosDipres={competencia.usuarios_dipres}
-            usuariosSectoriales={competencia.usuarios_sectoriales}
-            usuariosGore={competencia.usuarios_gore}
+            usuariosSubdere={competencia?.usuarios_subdere}
+            usuariosDipres={competencia?.usuarios_dipres}
+            usuariosSectoriales={competencia?.usuarios_sectoriales}
+            usuariosGore={competencia?.usuarios_gore}
           />
         </div>
 
@@ -151,7 +154,7 @@ const EstadoCompetencia = () =>
 
         <div className="mt-5 mx-0">
           <div className="text-sans-h2 my-3">Etapas de levantamiento de información</div>
-          <VerticalStepper etapasObjeto={competencia.resumen_competencia} etapaDatos={competencia} id={id} />
+          <VerticalStepper etapasObjeto={competencia?.resumen_competencia} etapaDatos={competencia} id={id} />
         </div>
       </div>
     </>

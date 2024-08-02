@@ -161,9 +161,11 @@ export const SummaryDetail = ({ competencia }) =>
                     {etapa_levantamiento?.nombre}
                     <span className="mx-5 px-5">{etapa_levantamiento?.fecha}</span>
                   </span>
-                  <span className={getBadgeDetails(etapa_levantamiento?.estado).class}>
-                    {getBadgeDetails(etapa_levantamiento?.estado).text}
-                  </span>
+                  <div className="my-auto">
+                    <span className={getBadgeDetails(etapa_levantamiento?.estado).class}>
+                      {getBadgeDetails(etapa_levantamiento?.estado).text}
+                    </span>
+                  </div>
                 </li>
                 <li
                   className="list-group-item d-flex justify-content-between "                    >

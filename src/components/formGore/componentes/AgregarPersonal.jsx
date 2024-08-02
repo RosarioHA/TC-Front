@@ -416,7 +416,7 @@ export const AgregarPersonal = ({
         )}
 
         <div className="my-4">
-          <p className="subrayado text-sans-p-bold">
+          <p className="subrayado text-sans-p-bold  h-auto">
             Resumen de justificación de costos de personal {title} : {''}
             {calidadJuridica}
           </p>

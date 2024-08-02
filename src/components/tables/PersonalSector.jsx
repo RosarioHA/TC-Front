@@ -769,7 +769,7 @@ const PersonalSectorial = ({
                 {
                   return (
                     <div key={itemIndex} className="my-4">
-                      <div className="subrayado col-12">
+                      <div className="subrayado col-12 h-auto">
                         <span className="py-2 ps-2 my-2 align-self-center text-sans-p-bold">
                           Resumen de justificación de costos de personal {descripcionModelo === "directo" ? "directo" : "indirecto"}: {item.label}
                         </span>

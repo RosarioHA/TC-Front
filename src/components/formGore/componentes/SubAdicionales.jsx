@@ -243,7 +243,7 @@ export const SubAdicionales = ({
   return (
     <>
       <div className="mt-4 col-11">
-        <div className="subrayado col-12">
+        <div className="subrayado col-12 h-auto">
           <span className="py-2 ps-2 my-2 align-self-center">{titulo}</span>
         </div>
         <div className="text-sans-h6-primary my-3 col-12">
