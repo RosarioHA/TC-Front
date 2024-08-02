@@ -96,7 +96,7 @@ export const PersonalInformadoSector = ({
       <div className="my-5 col-11">
         <div className="subrayado col-12">
           <span className="py-2 my-2 align-self-center">
-            <p className="text-sans-p ms-2"> Personal {title} informado por el sector:</p>
+            <p className="text-sans-p-bold ms-2"> Personal {title} informado por el sector:</p>
           </span>
         </div>
         <form onSubmit={handleSubmit(onSubmit)}>
