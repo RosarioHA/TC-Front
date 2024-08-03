@@ -243,7 +243,7 @@ export const AgregarPersonal = ({
           {Array.isArray(nuevoPersonal) &&
             nuevoPersonal?.map((personal, index) => (
               <div
-                className="row align-items-center d-flex mb-3"
+                className={`row py-3 ${index % 2 === 0 ? 'white-line' : 'neutral-line'} align-items-center me-3`}
                 key={personal.id}
               >
                 <div className="col-3 d-flex">

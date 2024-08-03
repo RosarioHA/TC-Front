@@ -1,7 +1,6 @@
 import * as yup from 'yup';
 
-export const validacionesCalidadJuridica = 
-yup.object({
+export const validacionesCalidadJuridica = yup.object({
   personal: yup.array().of(
     yup.object().shape({
       estamento: yup.string()
