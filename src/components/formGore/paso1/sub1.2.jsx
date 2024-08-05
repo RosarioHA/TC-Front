@@ -49,7 +49,7 @@ export const SubUno_dos = ({ flujograma, id, stepNumber, solo_lectura }) => {
 
 
   return (
-    <>
+    <div className="col-11">
     <h4 className="text-sans-h4">
       1.2 Flujograma de ejercicio de la competencia:
     </h4>
@@ -62,7 +62,7 @@ export const SubUno_dos = ({ flujograma, id, stepNumber, solo_lectura }) => {
       (Mínimo 1 archivo, máximo 3 archivos, peso máximo 20 MB cada uno, formato PDF)
     </h6>
 
-    <div className="col-11 pe-5">
+    <div className="col-12">
       <div className="d-flex justify-content-between py-3 fw-bold">
         <div className="d-flex mb-2">
           <div className="ms-4">#</div>
@@ -107,6 +107,6 @@ export const SubUno_dos = ({ flujograma, id, stepNumber, solo_lectura }) => {
         ></iframe>
       </div>
     )}
-  </>
+  </div>
   );
 };

@@ -84,8 +84,8 @@ export const Etapa4 = ({ etapa, etapaTres, idCompetencia }) => {
     if (usuariosParaRenderizar.length === 1) {
       const usuario = usuariosParaRenderizar[0];
       return (
-        <div className="d-flex justify-content-between text-sans-p border-top border-bottom my-3 py-1">
-          <div className="align-self-center">{usuario.nombre}</div>
+        <div className="d-flex justify-content-between text-sans-p border-top border-bottom my-3 py-1 ">
+          <div className="align-self-center col-9">{usuario.nombre}</div>
           <div>{renderBadgeOrButtonForUsuario(usuario)}</div>
         </div>
       );

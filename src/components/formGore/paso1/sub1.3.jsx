@@ -90,7 +90,7 @@ export const SubUno_Tres = ({ pasoData, id, stepNumber, solo_lectura }) => {
           (Máximo 1 archivo, peso máximo 20 MB, formato PDF)
         </h6>
 
-        <div className="col-11">
+        <div className="col-12">
           <div className="d-flex justify-content-between py-3 fw-bold">
             <div className="d-flex mb-2">
               <div className="ms-4">#</div>
