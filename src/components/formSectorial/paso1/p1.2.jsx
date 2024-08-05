@@ -172,7 +172,7 @@ export const Subpaso_dos = ({
   return (
     <div className="pe-5 me-5 mt-4 col-12">
       <h4 className="text-sans-h4">1.2 Organización Institucional</h4>
-      <div className="text-sans-h6-primary mb-4 col-11">
+      <div className="text-sans-h6-primary mb-4 col-12">
         <h6>
           En esta sección se debe representar gráficamente la estructura
           orgánica de la institución a nivel nacional y regional, incluyendo el
@@ -186,7 +186,7 @@ export const Subpaso_dos = ({
         Máximo 1 archivo, peso máximo 20MB, formato PDF
       </h6>
 
-      <div className="col-11">
+      <div className="col-12">
         <div className="d-flex justify-content-between py-3 fw-bold">
           <div className="d-flex mb-2">
             <div className="ms-4">#</div>
@@ -234,7 +234,7 @@ export const Subpaso_dos = ({
         Regiones asociadas a la competencia:
       </p>
 
-      <div className="col-11">
+      <div className="col-12">
         <div className="d-flex justify-content-between py-3 fw-bold">
           <div className="d-flex mb-2">
             <div className="mx-3">#</div>

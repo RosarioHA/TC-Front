@@ -132,7 +132,7 @@ export const Temporalidad = ({
 
   return (
     <>
-      <div className="col-11">
+      <div className="col-12">
         <div className="container-fluid">
           <h4 className="text-sans-h4">4.1 Temporalidad y Gradualidad</h4>
           <div className="text-sans-h6 my-3 col-11">
@@ -145,7 +145,7 @@ export const Temporalidad = ({
           </div>
 
           <div className="mb-4 col-11">
-            <div className="container-fluid">
+            <div className="container">
               <form onSubmit={handleSubmit(onSubmit)}>
                 {Array.isArray(grupos) && grupos.length > 0 ? (
                   grupos.map((grupo, index) => (

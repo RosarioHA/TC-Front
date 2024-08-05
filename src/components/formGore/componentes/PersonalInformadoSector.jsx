@@ -88,7 +88,7 @@ export const PersonalInformadoSector = ({
   return (
     <>
       <div className="my-5 col-11">
-        <div className="subrayado col-12">
+        <div className="subrayado col-12 h-auto">
           <span className="py-2 my-2 align-self-center">
             <p className="text-sans-p ms-2"> Personal {title} informado por el sector:</p>
           </span>

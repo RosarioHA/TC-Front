@@ -183,7 +183,7 @@ const ResumenSectorial = () =>
                     />
                   </div>
 
-                  <div className="my-5 col-10">
+                  <div className="my-5 col-12">
                     <CustomTextarea
                       label="Descripción del archivo adjunto (Opcional)"
                       placeholder="Describe el archivo adjunto"

@@ -7,7 +7,7 @@ export const ResumenDiferencial = ({ informada, justificados, justificar }) => {
   return (
     <>
       <div className="pe-5 me-5 mt-4 col-11">
-        <div className="subrayado col-12">
+        <div className="subrayado col-12 h-auto">
           <div className="align-self-center text-sans-h4">
             <p className="text-sans-p ms-2">Resumen de diferencial de costos con la información entregada por el sector</p>
           </div>

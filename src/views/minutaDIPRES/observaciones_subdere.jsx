@@ -79,7 +79,7 @@ const ObservacionesSubdereDipres = () => {
             placeholder="Escribe tus observaciones de este paso del formulario"
             rows={6}
             maxLength={500}
-            value={observacionMinutaDipres}
+            value={etapa?.comentario_minuta_sectorial || ""}
             onChange={(e) => setObservacionMinutaDipres(e.target.value)}
             readOnly={observacionesEnviadas}
             onBlur={handleGuardarObservacion}

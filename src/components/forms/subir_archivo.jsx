@@ -11,32 +11,37 @@ const SubirArchivo = ({ index,  readOnly,onViewFile, archivoDescargaUrl,tituloDo
   const [ isUploading, setIsUploading ] = useState(false);
   const [ isDeleting, setIsDeleting ] = useState(false);
 
-  useEffect(() =>
-  {
-    if (typeof tituloDocumento === 'string')
-    {
+  useEffect(() => {
+    if (typeof tituloDocumento === 'string') {
       const parts = tituloDocumento.split('/');
       let name = parts.pop() || tituloDocumento;
-      
-      // Remove any query parameters or additional text after ".pdf"
+  
       const pdfIndex = name.indexOf('.pdf');
       if (pdfIndex !== -1) {
-        name = name.substring(0, pdfIndex + 4); // "+4" to include ".pdf"
+        name = name.substring(0, pdfIndex + 4);
       }
       name = decodeURIComponent(name);
-      // Truncando el nombre a 30 caracteres si es más largo
-      if (name.length > 30)
-      {
-        name = name.substring(0, 30) + '...';
+  
+      // Obtener el ancho de la pantalla
+      const screenWidth = window.innerWidth;
+  
+      // Definir la longitud máxima de acuerdo al ancho de la pantalla
+      let maxLength = 25; // Por defecto, si la pantalla es mayor a 1400px
+      if (screenWidth < 1400) {
+        maxLength = 15; // Si la pantalla es menor a 1400px
       }
+  
+      // Truncar el nombre si es más largo que la longitud máxima
+      if (name.length > maxLength) {
+        name = name.substring(0, maxLength) + '...';
+      }
+  
       setFileName(name);
       setFileUploaded(true);
-    } else
-    {
-      // Handle the case where tituloDocumento is not a string
+    } else {
       setFileUploaded(false);
     }
-  }, [ tituloDocumento ]);
+  }, [tituloDocumento]);
 
   const displayFileType = fileUploaded ? "Archivo guardado" : "No seleccionado";
 
@@ -105,7 +110,7 @@ const SubirArchivo = ({ index,  readOnly,onViewFile, archivoDescargaUrl,tituloDo
       <div className="d-flex justify-content-between align-items-center gap-2 neutral-line align-items-center">
         <div className="p-3 ps-3 me-0">{index}</div>
         {fileName && (
-          <div className="py-3 text-wrap col-5">{fileName}</div>
+          <div className="py-3 text-wrap col-4">{fileName}</div>
         )}
         <div className="py-3 px-2">
           {error ? (
@@ -120,7 +125,7 @@ const SubirArchivo = ({ index,  readOnly,onViewFile, archivoDescargaUrl,tituloDo
         </div>
         <div>
           {!readOnly ? (
-            <div className="col p-3 d-flex">
+            <div className="col-1 p-3 d-flex">
               <UploadBtn
                 onFileChange={handleFileChange}
                 fileUploaded={fileUploaded}
