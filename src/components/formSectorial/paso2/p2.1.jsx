@@ -413,11 +413,11 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
           ([ organismoDisplay, filas ], index) => (
             <div key={index} className="tabla-organismo">
               <div className="row border-top border-start border-bottom">
-                <div className="col-2 p-3">
+                <div className="col-3 p-3">
                   <p className="text-wrap">{organismoDisplay}</p>
                 </div>
 
-                <div className="col-10 border-start border-end p-2">
+                <div className="col-9 border-start border-end p-2">
                   {filas?.map((fila, filaIndex) => (
                     <div key={fila?.id} className="row p-1">
                       <div className="col-10 p-3">
@@ -554,7 +554,7 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
         {mostrarFormularioNuevoOrganismo && (
           <div className="tabla-organismo mt-2">
             <div className="row border">
-              <div className="col-2 p-3">
+              <div className="col-3 p-3">
                 <p>
                   <DropdownSelect
                     options={opciones}
@@ -566,7 +566,7 @@ export const Subpaso_dosPuntoUno = ({ id, data, lista, stepNumber, setRefreshSub
                 </p>
               </div>
 
-              <div className="col-10 border-start p-2">
+              <div className="col-9 border-start p-2">
                 <div className="row">
                   <div className="col-10 p-3">
                     <CustomInputArea
