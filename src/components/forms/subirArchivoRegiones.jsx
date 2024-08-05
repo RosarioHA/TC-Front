@@ -103,7 +103,7 @@ export const SubirArchivoRegiones = ({ index, handleDelete,tituloDocumento, read
               )}
             </div>
           ) : archivoDescargaUrl && (
-            <button onClick={handleDownload} className="btn-secundario-s px-2 d-flex align-items-center">
+            <button onClick={handleDownload} className="btn-secundario-s px-2 me-3 d-flex align-items-center">
               <span className="text-sans-b-green text-decoration-underline mx-1">Descargar</span>
               <i className="material-symbols-rounded ms-2">download</i>
             </button>

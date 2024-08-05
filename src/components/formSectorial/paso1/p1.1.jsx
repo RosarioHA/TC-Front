@@ -189,12 +189,12 @@ export const Subpaso_uno = ({ dataPaso, id, stepNumber, marcojuridico, solo_lect
             <h6 className="mt-0">Corresponde a su naturaleza jurídica: centralizado o descentralizado, concentrado o desconcentrado.</h6>
           </div>
         </div>
-        <div className="container-fluid pb-3 ">
+        <div className="container pb-3 ">
           <div className="mb-3 ">
             <span className="text-sans-h5">Marco jurídico que lo rige (Obligatorio)</span>
             <p className="text-sans-h6-grey">Mínimo 1 archivo, máximo 5 archivos, peso máximo 20MB, formato PDF)</p>
           </div>
-          <div className="col-10">
+          <div className="">
             <DocumentsAditionals
               onFilesChanged={uploadFile}
               marcoJuridicoData={marcoJuridicoFiles}

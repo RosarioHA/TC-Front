@@ -92,7 +92,7 @@ const PasoUno = () =>
           {/* { activeOS ? (
             <> */}
               {((userSubdere && formSectorialEnviado) || (userSectorial && observacionesEnviadas) || (userDIPRES && observacionesEnviadas) ) && (
-                <div className="mt-5 my-4">
+                <div className="mt-5 my-4 col-11">
                   {!observacionPaso1.trim() && observacionesEnviadas ? (
                     <p>No se han dejado observaciones en este paso.</p>
                   ) : (
