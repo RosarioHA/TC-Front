@@ -37,13 +37,10 @@ const EstadoCompetencia = () =>
 
   if (loading)
   {
-    return 
-    <>
-    <div className="d-flex align-items-center flex-column ">
+    return <div className="d-flex align-items-center flex-column ">
       <div className="text-center text-sans-h5-medium-blue ">Cargando detalles de la competencia...</div>
       <span className="placeholder col-4 bg-primary"></span>
     </div>
-    </>
   }
   if (error)
   {
