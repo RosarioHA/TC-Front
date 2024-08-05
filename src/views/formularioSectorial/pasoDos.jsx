@@ -158,7 +158,7 @@ const PasoDos = () =>
           {/* {activeOS ? (
             <> */}
               {((userSubdere && formSectorialEnviado) || (userSectorial && observacionesEnviadas) || (userDIPRES && observacionesEnviadas) ) && (
-                <div className="mt-5 my-4">
+                <div className="my-4 col-11">
                   {!observacionPaso2.trim() && observacionesEnviadas ? (
                     <p>No se han dejado observaciones en este paso.</p>
                   ) : (
