@@ -175,8 +175,8 @@ const GestionCompetencias = () => {
                 <td className="pt-4 col-2">
                   <span className="badge-tipo">{competencia.agrupada ? 'Agrupada' : 'Individual'}</span>
                 </td>
-                <td className="col-1">
-                  <span className={`badge my-3 ${getBadgeClass(competencia.estado)}`}>
+                <td className="col-2 pe-4 pt-3">
+                  <span className={`  ${getBadgeClass(competencia.estado)}`}>
                     {competencia.estado}
                   </span>
                 </td>

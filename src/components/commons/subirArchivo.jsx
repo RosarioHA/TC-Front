@@ -17,6 +17,12 @@ export const SubirArchivo = ({ index,  readOnly,tituloDocumento,  archivoDescarg
       if (pdfIndex !== -1) {
         name = name.substring(0, pdfIndex + 4); // "+4" to include ".pdf"
       }
+      name = decodeURIComponent(name);
+      // Truncando el nombre a 30 caracteres si es más largo
+      if (name.length > 15 )
+      {
+        name = name.substring(0, 15) + '...';
+      }
 
       setFileName(name);
       setFileUploaded(true);

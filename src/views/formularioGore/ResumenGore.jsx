@@ -130,18 +130,18 @@ const ResumenGore = () =>
                   <img src="/check.svg" alt="Check" /> :
                   <img src="/warning.svg" alt="Warning" />}
               </div>
-              <div className="col-2 d-flex justify-content-end">
+              <div className="col-3 d-flex justify-content-end">
                 {paso?.completado ? (
                   <div className="d-flex justify-content-center">
-                    <span className="text-sans-p-blue text-center">Listo</span>
+                    <span className="text-sans-p-blue text-center mx-5">Listo</span>
                   </div>
                 ) : (
-                  <button
-                    className="btn-secundario-s my-2"
-                    onClick={() => navigate(`/home/formulario_gore/${id}/paso_${paso.numero_paso}`)}
-                  >
-                    Completar paso
-                  </button>
+                    <button
+                      className="btn-secundario-s my-2"
+                      onClick={() => navigate(`/home/formulario_gore/${id}/paso_${paso.numero_paso}`)}
+                    >
+                      Completar paso
+                    </button>
                 )}
               </div>
             </div>

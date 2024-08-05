@@ -80,7 +80,7 @@ const PrimeraMinuta = () =>
                     className={`d-flex justify-content-between p-3 align-items-center ${index % 2 === 0 ? 'neutral-line' : 'white-line'}`}
                     key={formulario.id}
                   >
-                    <td>{formulario.nombre.replace('Completar formulario Sectorial - ', '')}</td>
+                    <td  className="col-8">{formulario.nombre.replace('Completar formulario Sectorial - ', '')}</td>
                     <td className="">
                       {!userObservador? (
                       <button className="btn-secundario-s text-decoration-underline" onClick={() => handleVerFormulario(formulario.id)}>
@@ -97,7 +97,7 @@ const PrimeraMinuta = () =>
                     className={`d-flex justify-content-between p-3 align-items-center ${index % 2 === 0 ? 'neutral-line' : 'white-line'}`}
                     key={formulario.id}
                   >
-                    <td>{formulario.nombre.replace('Completar formulario Sectorial - ', '')}</td>
+                    <td className="col-8">{formulario.nombre.replace('Completar formulario Sectorial - ', '')}</td>
                     <td className="">
                       {!userObservador ? (
                       <button
@@ -126,7 +126,7 @@ const PrimeraMinuta = () =>
 
             {userData?.perfil === 'DIPRES' && (
               <>
-                <div className="d-flex justify-content-between py-3 fw-bold">
+                <div className="d-flex justify-content-between py-3 fw-bold col-11">
                   <div className="d-flex mb-2">
                     <div className="ms-2">#</div>
                     <div className="ms-5">Documento</div>

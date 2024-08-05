@@ -71,31 +71,38 @@ export const Etapa2 = ({ etapa, idCompetencia }) =>
     navigate(path);
   };
 
-  const renderButtonForSubetapa = (subetapa) => {
+  const renderButtonForSubetapa = (subetapa) =>
+  {
     const { estado, accion, nombre } = subetapa;
     let buttonText = accion;
     let icon = estado === "finalizada" ? "visibility" : "draft";
     let path = "/";
-    const formularios = formulario_sectorial?.formularios_sectoriales?.[0] || null;
+    const formularios = formulario_sectorial?.formularios_sectoriales?.[ 0 ] || null;
     let isDisabled = estado === "pendiente" || (formularios && formularios?.estado !== "finalizada");
-  
+
     // Verificar si es una de las secciones de observaciones y el usuario es observador y está finalizada
-    if ((nombre.includes("Observaciones de formularios sectoriales") || nombre.includes("Observación del formulario sectorial")) && estado === 'finalizada' && userObservador || userGore ) {
+    if ((nombre.includes("Observaciones de formularios sectoriales") || nombre.includes("Observación del formulario sectorial")) && estado === 'finalizada' && userObservador || userGore)
+    {
       return <span className="badge-status-finish">{accion}</span>;
     }
-  
-    switch (true) {
+
+    switch (true)
+    {
       case nombre.startsWith("Notificar a") && estado === "finalizada":
         return <span className="badge-status-finish">{accion}</span>;
-  
+
       case nombre.includes("Subir oficio y su fecha para habilitar formulario sectorial"):
-        if (estado !== "pendiente") {
+        if (estado !== "pendiente")
+        {
           return (
             <button
-              onClick={() => {
-                if (estado === "finalizada") {
+              onClick={() =>
+              {
+                if (estado === "finalizada")
+                {
                   window.open(oficio_origen, '_blank');
-                } else {
+                } else
+                {
                   navigate(`/home/estado_competencia/${idCompetencia}/subir_oficio_sectorial`);
                 }
               }}
@@ -108,42 +115,47 @@ export const Etapa2 = ({ etapa, idCompetencia }) =>
           );
         }
         break;
-  
+
       case nombre.includes("Observaciones de formularios sectoriales"):
         path = `/home/observaciones_subdere/${idCompetencia}/`;
         buttonText = accion;
         icon = "draft";
-        isDisabled = estado === "pendiente"; 
+        isDisabled = estado === "pendiente";
         break;
-  
+
       case nombre.includes("Observación del formulario sectorial"):
         path = `/home/observaciones_subdere/${idCompetencia}/`;
         buttonText = accion;
         icon = "draft";
-        isDisabled = estado === "pendiente"; 
-        break;
-  
+        isDisabled = estado === "pendiente";
+        break
       default:
         break;
     }
-  
+
     const isButtonEnabled = (userSubdere || userGore || userDipres || usuarioSector) && (estado === "pendiente" || estado === "revision" || estado === "finalizada");
-  
-    if (isButtonEnabled) {
+
+    if (isButtonEnabled)
+    {
       return (
+        <div>
         <button onClick={() => handleNavigation(path)}
-          className={`btn-secundario-s text-decoration-none ${isDisabled ? 'disabled' : ''}`} id="btn"
+          className={`btn-secundario-s text-decoration-none py-2 ${isDisabled ? 'disabled' : ''}`} id="btn"
           disabled={isDisabled}>
           <span className="material-symbols-outlined me-1">{icon}</span>
           <u>{buttonText}</u>
         </button>
+        </div>
       );
-    } else {
+    } else
+    {
       return (
-        <button className="btn-secundario-s disabled" id="btn" disabled>
+        <div>
+        <button className="btn-secundario-s disabled  py-2" id="btn" disabled>
           <span className="material-symbols-outlined me-1">{icon}</span>
           <u>{buttonText}</u>
         </button>
+        </div>
       );
     }
   };
@@ -156,15 +168,17 @@ export const Etapa2 = ({ etapa, idCompetencia }) =>
     let icon = formulario.estado === "finalizada" ? 'visibility' : (formulario.estado === "pendiente" ? 'edit' : 'draft');
 
     return (
-      <button
-        onClick={() => handleNavigation(path)}
-        className={`btn-secundario-s text-decoration-none ${isButtonDisabled ? 'disabled' : ''}`}
-        id={`btn-formulario-${formulario.id}`}
-        disabled={isButtonDisabled}
-      >
-        <span className="material-symbols-outlined me-1">{icon}</span>
-        <u>{buttonText}</u>
-      </button>
+      <div>
+        <button
+          onClick={() => handleNavigation(path)}
+          className={`btn-secundario-s text-decoration-none ${ isButtonDisabled ? 'disabled' : ''}`}
+          id={`btn-formulario-${formulario.id}`}
+          disabled={isButtonDisabled}
+        >
+          <span className="material-symbols-outlined me-1">{icon}</span>
+          <u>{buttonText}</u>
+        </button>
+        </div>
     );
   };
 
@@ -228,7 +242,7 @@ export const Etapa2 = ({ etapa, idCompetencia }) =>
       return (
         <div className='w-100 boder border-bottom border-top'>
           <button type="button" className="btn d-flex justify-content-between w-100 px-0" onClick={toggleCollapse}>
-            <span className="col-8">{info.nombre}</span>
+            <span>{info.nombre}</span>
             <div className="d-flex align-items-center ">
               {renderBadgeForEstado(info.estado)}
               <span className="material-symbols-outlined text-black">
@@ -284,7 +298,7 @@ export const Etapa2 = ({ etapa, idCompetencia }) =>
       return formulariosFiltrados.map((formulario, index) => (
         <div key={index} className="d-flex justify-content-between text-sans-p border-top border-bottom my-2 py-1">
           <div className="align-self-center col-8">{formulario.nombre}</div>
-          {renderButtonForFormularioSectorial(formulario)}
+          <div>{renderButtonForFormularioSectorial(formulario)}</div>
         </div>
       ));
     } else

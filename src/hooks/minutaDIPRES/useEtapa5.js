@@ -48,7 +48,7 @@ export const useEtapa5 = (idEtapa) => {
     setLoadingPatch(true);
     try {
       const data = {
-        comentario_minuta_etapa5: comentarios,
+        comentario_minuta_gore: comentarios,
         aprobada: true,
       };
       await apiTransferenciaCompentencia.patch(`/etapa5/${idEtapa}/`, data);

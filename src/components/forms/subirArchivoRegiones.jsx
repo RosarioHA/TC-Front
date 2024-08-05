@@ -21,9 +21,9 @@ export const SubirArchivoRegiones = ({ index, handleDelete,tituloDocumento, read
       // Decodificando el nombre para mostrar correctamente los acentos
       name = decodeURIComponent(name);
       // Truncando el nombre a 30 caracteres si es más largo
-      if (name.length > 40)
+      if (name.length > 30)
       {
-        name = name.substring(0, 40) + '...';
+        name = name.substring(0, 30) + '...';
       }
       setFileName(name);
       setFileUploaded(true);

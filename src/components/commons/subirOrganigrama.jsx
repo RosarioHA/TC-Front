@@ -19,6 +19,11 @@ export const SubirOrganigrama = ({ index,tituloDocumento , readOnly, archivoDesc
       {
         name = name.substring(0, pdfIndex + 4); 
       }
+      name = decodeURIComponent(name);
+      if (name.length > 15)
+        {
+          name = name.substring(0, 15) + '...';
+        }
 
       setFileName(name);
       setFileUploaded(true);
