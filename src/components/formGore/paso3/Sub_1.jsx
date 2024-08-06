@@ -31,7 +31,7 @@ export const Sub_1 = ({ data, solo_lectura }) => {
                 <tr>
                   <th scope="col">
                     <span className="py-2">
-                      Costos Totales Anual <br /> Subtítulo 21 ($M)
+                      Costo Total Anual <br /> Subtítulo 21 ($M)
                     </span>
                   </th>
                   <th scope="col">

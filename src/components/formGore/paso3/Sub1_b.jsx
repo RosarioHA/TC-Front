@@ -3,7 +3,6 @@ import { PersonalGore } from '../componentes/PersonalGore';
 
 export const Sub1_b = ({ data, solo_lectura }) => {
   const { paso3_gore,
-    p3_personal_indirecto_sector,
     p3_personal_indirecto_gore,
     listado_estamentos,
     listado_calidades_juridicas_indirectas

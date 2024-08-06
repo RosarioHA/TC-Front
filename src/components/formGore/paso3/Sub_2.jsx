@@ -37,6 +37,14 @@ export const Sub_2 = ({ data, paso3, solo_lectura }) => {
           <FichaInformatico dataInformatico={p_3_2_a_sistemas_informaticos} solo_lectura={solo_lectura} />
         </div>
         <div className="my-4 ">
+          <ResumenSubtitulos
+            nombreSubtitulo="Subtítulo 29"
+            subDiferencia={subtitulo_29_diferencia_sector}
+            subJustificados={subtitulo_29_justificados_gore}
+            subJustificar={subtitulo_29_por_justificar}
+          />
+        </div>
+        <div className="my-4 ">
           <FisicoInfraestructura
             dataRecursosFisicos={p_3_2_b_recursos_fisicos_infraestructura}
             solo_lectura={solo_lectura}
@@ -44,12 +52,10 @@ export const Sub_2 = ({ data, paso3, solo_lectura }) => {
         </div>
         <div className="my-4 ">
           <ResumenSubtitulos
-            sub22Diferencia={subtitulo_22_diferencia_sector}
-            sub22Justificados={subtitulo_22_justificados_gore}
-            sub22Jutificar={subtitulo_22_por_justificar}
-            sub29Diferencia={subtitulo_29_diferencia_sector}
-            sub29Justificados={subtitulo_29_justificados_gore}
-            sub29Justificar={subtitulo_29_por_justificar}
+            nombreSubtitulo="Subtítulo 22"
+            subDiferencia={subtitulo_22_diferencia_sector}
+            subJustificados={subtitulo_22_justificados_gore}
+            subJustificar={subtitulo_22_por_justificar}
           />
         </div>
       </div>

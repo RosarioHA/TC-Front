@@ -9,7 +9,7 @@ import { FormGOREContext } from '../../../context/FormGore';
 export const FichaInformatico = ({ dataInformatico, solo_lectura }) => {
   const [fichasTecnicas, setFichasTecnicas] = useState(dataInformatico);
   const { updatePasoGore } = useContext(FormGOREContext);
-  const { control, handleSubmit } = useForm({
+  const { control, handleSubmit, trigger, formState: { errors } } = useForm({
     resolver: yupResolver(validacionFichaInformaticos),
     mode: 'onBlur',
   });
@@ -235,31 +235,33 @@ export const FichaInformatico = ({ dataInformatico, solo_lectura }) => {
                         <Controller
                           name={`fichas[${index}].costo`}
                           control={control}
-                          render={({ field, fieldState: { error } }) => (
-                            <InputCosto
-                              {...field}
-                              value={ficha.costo || ''}
-                              placeholder="Costo del recurso"
-                              error={error?.message}
-                              disabled={solo_lectura}
-                              loading={
-                                inputStatus[ficha.id]?.costo?.loading && !error
+                          defaultValue={ ficha?.costo || ''}
+                          render={({ field }) => {
+                            const { onChange, onBlur, value } = field;
+
+                            const handleBlur = async () => {
+                              // Dispara la validación
+                              const isFieldValid = await trigger(`fichas[${index}].costo`);
+                              // Si el campo es válido y el valor ha cambiado, actualiza el servidor
+                              if (isFieldValid && ficha.costo !== value) {
+                                handleUpdate(ficha.id, 'costo', value.replace(/\./g, ''));
                               }
-                              saved={
-                                inputStatus[ficha.id]?.costo?.saved && !error
-                              }
-                              onBlur={(e) => {
-                                field.onBlur();
-                                if (ficha.costo !== e.target.value && !error) {
-                                  handleUpdate(
-                                    ficha.id,
-                                    'costo',
-                                    e.target.value
-                                  );
-                                }
-                              }}
-                            />
-                          )}
+                              onBlur();
+                            };
+                            return (
+                              <InputCosto
+                                id={`costo_${ficha.id}`}
+                                placeholder="Costo (M$)"
+                                loading={inputStatus[ficha.id]?.costo?.loading}
+                                saved={inputStatus[ficha.id]?.costo?.saved}
+                                error={errors[`fichas[${index}].costo`]?.message}
+                                disabled={solo_lectura}
+                                value={value}
+                                onChange={onChange}
+                                onBlur={handleBlur}
+                              />
+                            );
+                          }}
                         />
                       </div>
                       <div className="d-flex col-10 mb-5 mt-3">
