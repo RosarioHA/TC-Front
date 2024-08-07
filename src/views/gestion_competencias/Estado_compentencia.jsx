@@ -35,7 +35,7 @@ const EstadoCompetencia = () =>
     navigate(`/home/revision_subdere/${id}/paso_1/`)
   }
 
-  if (loading)
+  if (loading && competencia)
   {
     return <div className="d-flex align-items-center flex-column ">
       <div className="text-center text-sans-h5-medium-blue ">Cargando detalles de la competencia...</div>
@@ -46,29 +46,33 @@ const EstadoCompetencia = () =>
   {
     return <div>Error al cargar los detalles: {error.message}</div>;
   }
-  if (!competencia)
-  {
-    return <div>No se encontraron detalles de la competencia</div>;
-  }
 
-  const extractFileName = (url) =>
-  {
+  const truncateFileName = (name) => {
+    const screenWidth = window.innerWidth;
+    let maxLength = screenWidth < 1400 ? 15 : 60;
+
+    if (name.length > maxLength) {
+      return name.substring(0, maxLength) + '...';
+    }
+    return name;
+  };
+
+  const extractFileName = (url) => {
     // Extrae el nombre del archivo después de la última barra (/)
     let fileNameWithExtension = url.split('/').pop();
 
     // Remover cualquier texto adicional después de ".pdf"
     const pdfIndex = fileNameWithExtension.indexOf('.pdf');
-    if (pdfIndex !== -1)
-    {
+    if (pdfIndex !== -1) {
       fileNameWithExtension = fileNameWithExtension.substring(0, pdfIndex + 4); // "+4" para incluir ".pdf"
     }
 
     return fileNameWithExtension;
   };
 
-  // Ejemplo de uso
   const fileUrl = resumen?.antecedente_adicional_revision_subdere;
   const fileName = fileUrl ? extractFileName(fileUrl) : '';
+  const truncatedFileName = truncateFileName(fileName);
 
 
   const handleDownload = () =>
@@ -101,7 +105,7 @@ const EstadoCompetencia = () =>
             <span className="badge-tipo mt-1">{competencia?.agrupada ? 'Agrupada' : 'Individual'}</span>
             <h1 className="text-sans-h1 mb-4 ms-2">{competencia?.nombre}</h1>
           </div>
-          <SummaryDetail competencia={competencia} />
+          {competencia && <SummaryDetail competencia={competencia} />}
         </div>
         <div className="mt-5">
           <div className="text-sans-h2 my-4">Personas asignadas</div>
@@ -128,7 +132,7 @@ const EstadoCompetencia = () =>
                     <div className="d-flex justify-content-between align-items-center gap-2 align-items-center">
                       <div className="d-flex mb-2">
                         <div className="text-sans-p-blue mx-2"><strong>1</strong></div>
-                        <div className="text-sans-p-blue mx-4">{fileName}</div>
+                        <div className="text-sans-p-blue mx-4">{truncatedFileName}</div>
                       </div>
                       <button className="btn-secundario-s-clear  px-2 d-flex align-items-center m-3" onClick={handleDownload}>
                         <span className="text-sans-b-green text-decoration-underline mx-1">Descargar</span>

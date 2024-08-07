@@ -55,7 +55,6 @@ export const GastosEvolucionVariacion = ({
     })).sort((a, b) => a.nombre_subtitulo.localeCompare(b.nombre_subtitulo));
   }, [datosGastos])
 
-  console.log(sortedDatosGastos);
 
 
 

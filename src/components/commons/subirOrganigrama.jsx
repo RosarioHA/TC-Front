@@ -43,28 +43,42 @@ export const SubirOrganigrama = ({ index,tituloDocumento , readOnly, archivoDesc
   const displayFileType = fileUploaded ? "Archivo guardado" : "No seleccionado";
 
   const handleFileChange = (event) =>
-  {
-    const file = event.target.files[ 0 ];
-    if (file)
     {
-      if (file.type !== "application/pdf")
+      const file = event.target.files[0];
+      if (file)
       {
-        setError("Solo se permiten archivos PDF.");
-        return;
+        if (file.type !== "application/pdf")
+        {
+          setError("Solo se permiten archivos PDF.");
+          return;
+        }
+    
+        if (file.size > 20971520)
+        {
+          setError("El archivo no debe superar los 20 MB.");
+          return;
+        }
+    
+        let name = file.name;
+      
+        // Definir la longitud máxima de acuerdo al ancho de la pantalla
+        let maxLength = 25; // Por defecto, si la pantalla es mayor a 1400px
+        const screenWidth = window.innerWidth;
+        if (screenWidth < 1400) {
+          maxLength = 15; // Si la pantalla es menor a 1400px
+        }
+      
+        // Truncar el nombre si es más largo que la longitud máxima
+        if (name.length > maxLength) {
+          name = name.substring(0, maxLength) + '...';
+        }
+    
+        setError('');
+        setFileName(name);
+        setFileUploaded(true);
+        handleFileSelect(file, fieldName);
       }
-
-      if (file.size > 20971520)
-      {
-        setError("El archivo no debe superar los 20 MB.");
-        return;
-      }
-
-      setError('');
-      setFileName(file.name);
-      setFileUploaded(true);
-      handleFileSelect(file, fieldName);
-    }
-  };
+    };
 
   const handleDelete = () =>
   {
@@ -86,10 +100,9 @@ export const SubirOrganigrama = ({ index,tituloDocumento , readOnly, archivoDesc
     <>
       <div className="d-flex justify-content-between align-items-center gap-2 neutral-line align-items-center">
         <div className="p-3 ps-3 me-0">{index}</div>
-        {fileName && (
+        
           <div className="py-3 text-wrap col-5">{fileName}</div>
-        )
-        }
+  
         <div className="py-3 px-2">{error ? <div className="text-sans-p-bold-darkred">{error}</div> : displayFileType}</div>
         <div>
           {!readOnly ? (

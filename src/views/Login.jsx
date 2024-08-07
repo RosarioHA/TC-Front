@@ -81,7 +81,7 @@ const Login = () =>
               />
               <label htmlFor='password'></label>
               <input
-                className="my-3 col-12 p-2"
+                className="my-4 col-12 p-2"
                 placeholder='Ingresa tu contraseña'
                 type='password'
                 id='password'

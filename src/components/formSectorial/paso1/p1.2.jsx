@@ -186,7 +186,7 @@ export const Subpaso_dos = ({
         Máximo 1 archivo, peso máximo 20MB, formato PDF
       </h6>
 
-      <div className="col-12">
+      <div className="col-sm-12 col-lg-11">
         <div className="d-flex justify-content-between py-3 fw-bold">
           <div className="d-flex mb-2">
             <div className="ms-4">#</div>
@@ -234,14 +234,14 @@ export const Subpaso_dos = ({
         Regiones asociadas a la competencia:
       </p>
 
-      <div className="col-12">
+      <div className="col-sm-12 col-lg-11">
         <div className="d-flex justify-content-between py-3 fw-bold">
-          <div className="d-flex mb-2">
+          <div className="d-flex mb-2 col-9">
             <div className="mx-3">#</div>
             <div className="me-5 ms-2 pe-5 ">Región</div>
             <div className="mx-5 pe-5">Documento</div>
           </div>
-          <div className="me-5">Acción</div>
+          <div className="me-5 col-4">Acción</div>
         </div>
         {organigrama?.map((region, index) => (
           <SubirArchivoRegiones
