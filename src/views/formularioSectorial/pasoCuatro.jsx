@@ -1,4 +1,5 @@
 import { useEffect, useContext, useState } from "react";
+import { useOutletContext } from 'react-router-dom';
 import { Avance } from "../../components/tables/Avance";
 import { ButtonsNavigate } from "../../components/layout/ButtonsNavigate";
 import { FormularioContext } from "../../context/FormSectorial";
@@ -10,6 +11,7 @@ import { useObservacionesSubdere } from '../../hooks/formulario/useObSubdereSect
 
 const PasoCuatro = () =>
 {
+  const {  mostrarInput} = useOutletContext();
   const { updateStepNumber, pasoData, data } = useContext(FormularioContext);
   const stepNumber = 4;
   const { userData } = useAuth();
@@ -133,7 +135,7 @@ const PasoCuatro = () =>
               ))}
             </div>
           </div>
-          {/* {activeOS ? ( */}
+          {mostrarInput && (
             <>
             {((userSubdere && formSectorialEnviado) || (userSectorial && observacionesEnviadas) || (userDIPRES && observacionesEnviadas) ) && (
                 <div className="mt-5 my-4">
@@ -156,7 +158,7 @@ const PasoCuatro = () =>
                 </div>
               )}
             </>
-          {/* ) : ("")} */}
+          )}
 
           {/*Botones navegacion*/}
           <div className="container me-5 pe-5">

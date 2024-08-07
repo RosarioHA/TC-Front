@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
-// import { useOutletContext } from 'react-router-dom';
+import { useOutletContext } from 'react-router-dom';
 import { FormularioContext } from '../../context/FormSectorial';
 import { Avance } from "../../components/tables/Avance";
 import { ButtonsNavigate } from "../../components/layout/ButtonsNavigate";
@@ -17,6 +17,7 @@ const PasoDos = () =>
 {
   const { pasoData, errorPaso, updateStepNumber, data } = useContext(FormularioContext);
   const stepNumber = 2;
+  const { mostrarInput } = useOutletContext();
   const [ refreshSubpasoDos_dos, setRefreshSubpasoDos_dos ] = useState(false);
   const [ refreshSubpasoDos_tres, setRefreshSubpasoDos_tres ] = useState(false);
   const [ refreshSubpasoDos_cuatro, setRefreshSubpasoDos_cuatro ] = useState(false);
@@ -29,7 +30,7 @@ const PasoDos = () =>
   const observacionesEnviadas = observaciones?.observacion_enviada;
   const formSectorialEnviado = data?.formulario_enviado;
 
-  
+
   useEffect(() =>
   {
     updateStepNumber(stepNumber);
@@ -155,9 +156,9 @@ const PasoDos = () =>
               solo_lectura={solo_lectura}
               limite_caracteres={multiplicador_caracteres_competencia} />
           </div>
-          {/* {activeOS ? (
-            <> */}
-              {((userSubdere && formSectorialEnviado) || (userSectorial && observacionesEnviadas) || (userDIPRES && observacionesEnviadas) ) && (
+          {mostrarInput && (
+            <>
+              {((userSubdere && formSectorialEnviado) || (userSectorial && observacionesEnviadas) || (userDIPRES && observacionesEnviadas)) && (
                 <div className="my-4 col-11">
                   {!observacionPaso2.trim() && observacionesEnviadas ? (
                     <p>No se han dejado observaciones en este paso.</p>
@@ -177,8 +178,9 @@ const PasoDos = () =>
                   )}
                 </div>
               )}
-            {/* </>
-          ) : ("")} */}
+            </>
+          )}
+
           <div className="container me-5 pe-5">
             <ButtonsNavigate step={paso2.numero_paso} id={data.id} />
           </div>

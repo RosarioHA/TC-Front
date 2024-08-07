@@ -1,4 +1,5 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState  } from 'react';
+import { useOutletContext } from 'react-router-dom';
 import { Avance } from "../../components/tables/Avance";
 import { FormularioContext } from '../../context/FormSectorial';
 import { Subpaso_uno } from '../../components/formSectorial/paso1/p1.1';
@@ -12,6 +13,7 @@ import { useObservacionesSubdere } from '../../hooks/formulario/useObSubdereSect
 
 const PasoUno = () =>
 {
+  const {  mostrarInput} = useOutletContext();
   const { pasoData, errorPaso, updateStepNumber, data } = useContext(FormularioContext);
   const stepNumber = 1;
   const { userData } = useAuth();
@@ -29,8 +31,6 @@ const PasoUno = () =>
   useEffect(() =>
   {
     updateStepNumber(1);
-
-    // Carga inicial de observaciones
     if (data?.id)
     {
       fetchObservaciones();
@@ -89,8 +89,9 @@ const PasoUno = () =>
           <Subpaso_uno dataPaso={paso1Data} marcojuridico={marcojuridico} id={data ? data.id : null} stepNumber={stepNumber} solo_lectura={solo_lectura} />
           <Subpaso_dos pasoData={paso1Data} organigrama={organigramaregional} id={data ? data.id : null} stepNumber={stepNumber} solo_lectura={solo_lectura} />
           <Subpaso_tres pasoData={paso1Data} id={data ? data.id : null} stepNumber={stepNumber} solo_lectura={solo_lectura} />
-          {/* { activeOS ? (
-            <> */}
+
+          {mostrarInput && (
+            <>
               {((userSubdere && formSectorialEnviado) || (userSectorial && observacionesEnviadas) || (userDIPRES && observacionesEnviadas) ) && (
                 <div className="mt-5 my-4 col-11">
                   {!observacionPaso1.trim() && observacionesEnviadas ? (
@@ -111,8 +112,8 @@ const PasoUno = () =>
                   )}
                 </div>
               )}
-            {/* </>
-          ) : ("")} */}
+              </>
+            )}
           <ButtonsNavigate step={paso1Data.numero_paso} id={data ? data.id : null} />
         </div>
       </div>

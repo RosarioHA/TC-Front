@@ -1,4 +1,5 @@
 import { useEffect, useContext, useState } from 'react';
+import { useOutletContext } from 'react-router-dom';
 import { Avance } from "../../components/tables/Avance";
 import { ButtonsNavigate } from "../../components/layout/ButtonsNavigate";
 import { MonoStepers } from "../../components/stepers/MonoStepers";
@@ -12,6 +13,7 @@ import { useObservacionesSubdere } from '../../hooks/formulario/useObSubdereSect
 
 const PasoCinco = () =>
 {
+  const { mostrarInput } = useOutletContext();
   const { updateStepNumber, pasoData, data, errorPaso } = useContext(FormularioContext);
   const stepNumber = 5;
   const { userData } = useAuth();
@@ -155,9 +157,9 @@ const PasoCinco = () =>
               </div>
             </div>
           ))}
-          {/* {activeOS ? (
-            <> */}
-              {((userSubdere && formSectorialEnviado) || (userSectorial && observacionesEnviadas) || (userDIPRES && observacionesEnviadas) ) && (
+          {mostrarInput && (
+            <>
+              {((userSubdere && formSectorialEnviado) || (userSectorial && observacionesEnviadas) || (userDIPRES && observacionesEnviadas)) && (
                 <div className="mt-5 my-4">
                   {!observacionPaso5.trim() && observacionesEnviadas ? (
                     <p>No se han dejado observaciones en este paso.</p>
@@ -176,15 +178,15 @@ const PasoCinco = () =>
                     />
                   )}
                 </div>
-              )}  
-              {/* </>
-          ) : ("")} */}
+              )}
+            </>
+          )}
 
           <div className="container me-5 pe-5">
             <ButtonsNavigate step={paso5encabezado.numero_paso} id={data.id} />
           </div>
         </div>
-      </div>
+      </div >
     </>
   );
 }

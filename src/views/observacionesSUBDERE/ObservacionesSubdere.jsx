@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useCompetencia } from "../../hooks/competencias/useCompetencias";
+import { FormularioContext } from '../../context/FormSectorial';
 import { useEtapa3 } from "../../hooks/minutaDIPRES/useEtapa3";
 import { useEtapa } from "../../hooks/etapa/useEtapa";
 import { EncabezadoFormularios } from "../../components/layout/EncabezadoFormularios";
@@ -22,6 +23,10 @@ const ObservacionesSubdere = () =>
   const formularios = competenciaDetails?.etapa2?.formulario_sectorial?.detalle_formularios_sectoriales;
   const formulario = competenciaDetails?.etapa2?.formulario_sectorial[0];
 
+  const { setMostrarInput } = useContext(FormularioContext);
+
+
+  
 
 
   useEffect(() =>
@@ -45,6 +50,7 @@ const ObservacionesSubdere = () =>
 
   const handleVerFormulario = (formularioId) =>
   {
+    setMostrarInput(true); 
     navigate(`/home/formulario_sectorial/${formularioId}/paso_1`);
   };
 

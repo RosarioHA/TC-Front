@@ -6,7 +6,7 @@ import { Timmer } from "../components/layout/Timmer";
 import { FormularioContext } from "../context/FormSectorial";
 
 const FormularioLayout = () => {
-  const { data, loading, error, updateFormId } = useContext(FormularioContext);
+  const { data, loading, error, updateFormId, mostrarInput, setMostrarInput } = useContext(FormularioContext);
   const location = useLocation();
   const params = useParams();
 
@@ -50,7 +50,8 @@ const FormularioLayout = () => {
         </div>
       </div>
       <div className="row">
-        <Outlet context={{ id: data.id, ...data }} />
+        <Outlet context={{ id: data.id,  mostrarInput, setMostrarInput, ...data }} />
+        {console.log(data)}
       </div>
     </div>
   );

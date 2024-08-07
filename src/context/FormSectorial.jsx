@@ -9,6 +9,7 @@ export const FormularioContext = createContext();
 export const FormularioProvider = ({ children }) => {
   const [id, setId] = useState(null);
   const [stepNumber, setStepNumber] = useState(null);
+  const [mostrarInput, setMostrarInput] = useState(false); 
 
   const { dataFormSectorial, loadingFormSectorial, errorFormSectorial} = useFormSectorial(id);
   const { dataPaso, loadingPaso, errorPaso, refetchTrigger } = usePasoForm(id, stepNumber);
@@ -90,6 +91,8 @@ export const FormularioProvider = ({ children }) => {
     handleUploadFiles,
     handleUploadFilesOrganigramaregional,
     refetchTrigger,
+    mostrarInput, 
+    setMostrarInput,  
   };
 
   return (

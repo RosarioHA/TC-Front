@@ -1,4 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
+import { useOutletContext } from 'react-router-dom';
 import { Avance } from '../../components/tables/Avance';
 import { ButtonsNavigate } from '../../components/layout/ButtonsNavigate';
 import CustomTextarea from '../../components/forms/custom_textarea';
@@ -11,6 +12,7 @@ import { useObservacionesSubdere } from '../../hooks/formulario/useObSubdereSect
 
 const PasoTres = () =>
 {
+  const {  mostrarInput} = useOutletContext();
   const { handleUpdatePaso, updateStepNumber, pasoData, data } = useContext(FormularioContext);
   const { userData } = useAuth();
   const userSubdere = userData?.perfil?.includes('SUBDERE');
@@ -301,7 +303,8 @@ const PasoTres = () =>
             </div>
           </div>
         ))}
-        {/* {activeOS ? ( */}
+        
+        {mostrarInput && (
           <>
           {((userSubdere && formSectorialEnviado) || (userSectorial && observacionesEnviadas) || (userDIPRES && observacionesEnviadas) ) && (
               <div className="mt-5 my-4">
@@ -324,7 +327,7 @@ const PasoTres = () =>
               </div>
             )}
           </>
-        {/* ) : ("")} */}
+        )}
 
         {/* Botones navegación */}
         <div className="container me-5 pe-5">
