@@ -7,7 +7,8 @@ export const PersonalInformado = ({
   seccion,
   estamentos,
   dataPersonal,
-  solo_lectura
+  solo_lectura,
+  prefix
 }) => {
 
   const datosAgrupadosPorCalidadJuridica = useMemo(() => {
@@ -26,18 +27,19 @@ export const PersonalInformado = ({
 
   return (
     <>
-      <div className="my-5 col-11">
+      <div className="my-4 col-11">
         <form>
           {Object.entries(datosAgrupadosPorCalidadJuridica).map(
             ([calidadJuridica, personas]) => (
               <React.Fragment key={calidadJuridica}>
                 <div key={calidadJuridica}>
-                  <p className="my-4">
+                  <p className="ps-4 my-4 subrayado">
                     <strong>Calidad Jurídica </strong>
                     <span className="mx-2">
                       {personas[0].nombre_calidad_juridica}
                     </span>
                   </p>
+                  <p className='text-sans-h6-primary col-11'>Si requieres de personal adicional puedes agregarlos:</p>
                 </div>
                 <AgregarPersonal
                   calidadJuridica={personas[0].nombre_calidad_juridica}
@@ -48,6 +50,7 @@ export const PersonalInformado = ({
                   dataPersonal={dataPersonal}
                   title={title}
                   solo_lectura={solo_lectura}
+                  prefix={prefix}
                 />
               </React.Fragment>
             )

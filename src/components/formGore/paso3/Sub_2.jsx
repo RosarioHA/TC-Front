@@ -2,6 +2,7 @@ import { FichaInformatico } from "../componentes/FichaInformatico"
 import { FisicoInfraestructura } from "../componentes/FisicoInfraestructura"
 import { JustificarCostos } from "../componentes/JustificarCostos"
 import { ResumenSubtitulos } from "../componentes/ResumenSubtitulos"
+import { ResumenSubtitulosSistemasInformaticos } from "../componentes/ResumenSubtitulosSistemasInformaticos"
 
 export const Sub_2 = ({ data, paso3, solo_lectura }) => {
 
@@ -12,11 +13,15 @@ export const Sub_2 = ({ data, paso3, solo_lectura }) => {
     subtitulo_29_diferencia_sector,
     subtitulo_29_justificados_gore,
     subtitulo_29_por_justificar,
+    sub29_item07_diferencia_sector,
+    sub29_item07_justificados_gore,
+    sub29_item07_por_justificar
   } = paso3;
 
   const { p_3_2_recursos_comparados,
     p_3_2_a_sistemas_informaticos,
-    p_3_2_b_recursos_fisicos_infraestructura
+    p_3_2_b_recursos_fisicos_infraestructura,
+    id_item_subtitulo_programas_informaticos
   } = data
 
   return (
@@ -34,7 +39,19 @@ export const Sub_2 = ({ data, paso3, solo_lectura }) => {
           <JustificarCostos recursos={p_3_2_recursos_comparados} />
         </div>
         <div className="my-4 ">
-          <FichaInformatico dataInformatico={p_3_2_a_sistemas_informaticos} solo_lectura={solo_lectura} />
+          <FichaInformatico 
+          idItem={id_item_subtitulo_programas_informaticos} 
+          dataInformatico={p_3_2_a_sistemas_informaticos} 
+          solo_lectura={solo_lectura} 
+          />
+        </div>
+        <div className="my-4 ">
+          <ResumenSubtitulosSistemasInformaticos
+            nombreSubtitulo="Subtítulo 29"
+            subDiferencia={sub29_item07_diferencia_sector}
+            subJustificados={sub29_item07_justificados_gore}
+            subJustificar={sub29_item07_por_justificar}
+          />
         </div>
         <div className="my-4 ">
           <FisicoInfraestructura
@@ -44,9 +61,10 @@ export const Sub_2 = ({ data, paso3, solo_lectura }) => {
         </div>
         <div className="my-4 ">
           <ResumenSubtitulos
+            nombreSubtitulo="Subtítulo 22"
             sub22Diferencia={subtitulo_22_diferencia_sector}
             sub22Justificados={subtitulo_22_justificados_gore}
-            sub22Jutificar={subtitulo_22_por_justificar}
+            sub22Justificar={subtitulo_22_por_justificar}
             sub29Diferencia={subtitulo_29_diferencia_sector}
             sub29Justificados={subtitulo_29_justificados_gore}
             sub29Justificar={subtitulo_29_por_justificar}

@@ -16,12 +16,35 @@ export const AgregarPersonal = ({
   idCalidad,
   dataPersonal,
   title,
+  prefix
 }) => {
   const [nuevoPersonal, setNuevoPersonal] = useState([]);
   const { updatePasoGore } = useContext(FormGOREContext);
   const [opcionesEstamentos, setOpcionesEstamentos] = useState([]);
 
-  const { control, handleSubmit } = useForm({
+  const itemsJustificados = [
+    { label: '01 - Personal de Planta', informado: dataPersonal[`${prefix}_total_personal_planta`], justificado: dataPersonal[`${prefix}_personal_planta_justificado`], por_justificar: dataPersonal[`${prefix}_personal_planta_justificar`] },
+    { label: '02 - Personal de Contrata', informado: dataPersonal[`${prefix}_total_personal_contrata`], justificado: dataPersonal[`${prefix}_personal_contrata_justificado`], por_justificar: dataPersonal[`${prefix}_personal_contrata_justificar`] },
+    { label: '03 - Otras Remuneraciones', informado: dataPersonal[`${prefix}_total_otras_remuneraciones`], justificado: dataPersonal[`${prefix}_otras_remuneraciones_justificado`], por_justificar: dataPersonal[`${prefix}_otras_remuneraciones_justificar`] },
+    { label: '04 - Otros Gastos en Personal', informado: dataPersonal[`${prefix}_total_gastos_en_personal`], justificado: dataPersonal[`${prefix}_gastos_en_personal_justificado`], por_justificar: dataPersonal[`${prefix}_gastos_en_personal_justificar`] },
+  ];
+
+  const relacion_item_calidad = {
+    "Planta": "01 - Personal de Planta",
+    "Contrata": "02 - Personal de Contrata",
+    "Honorario a suma alzada": "03 - Otras Remuneraciones",
+    "Honorario asimilado a grado": "04 - Otros Gastos en Personal",
+    "Comisión de servicio": "04 - Otros Gastos en Personal",
+    "Otro": "04 - Otros Gastos en Personal",
+  };
+
+  const formatNumber = (number) => {
+    // Verificar si el número es 0 para manejar el caso "No informado"
+    if (number === 0) return "No informado";
+    return new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP', minimumFractionDigits: 0 }).format(number);
+  };
+
+  const { control, handleSubmit, clearErrors, trigger, formState: { errors } } = useForm({
     resolver: yupResolver(validacionesCalidadJuridica),
     mode: 'onBlur',
   });
@@ -35,10 +58,10 @@ export const AgregarPersonal = ({
   useEffect(() => {
     const personalFiltrado = Array.isArray(personalGore)
       ? personalGore.filter(
-          (personal) =>
-            personal.calidad_juridica == idCalidad &&
-            personal.nombre_calidad_juridica === calidadJuridica
-        )
+        (personal) =>
+          personal.calidad_juridica == idCalidad &&
+          personal.nombre_calidad_juridica === calidadJuridica
+      ).sort((a, b) => a.id - b.id)
       : [];
     setNuevoPersonal(personalFiltrado);
   }, [personalGore, idCalidad, calidadJuridica]);
@@ -62,6 +85,7 @@ export const AgregarPersonal = ({
     }
   }, [estamentos]);
 
+  // Botón para agregar personal dentro de la calidad jurídica
   const agregarPersonal = async () => {
     const nuevaPersonaPayload = {
       calidad_juridica: idCalidad,
@@ -84,6 +108,7 @@ export const AgregarPersonal = ({
     }
   };
 
+  // Guardar campos
   const handleUpdate = async (fichaId, field, value) => {
     let finalValue = value;
     if (field === 'renta_bruta') {
@@ -156,44 +181,17 @@ export const AgregarPersonal = ({
     }
   };
 
+  function MensajeErrorPresupuesto({ por_justificar }) {
+    if (por_justificar == 0) {
+      return <p></p>
+    } else {
+      return <p className="col-3 text-sans-h6-bold-darkred">Debes justificar el total del costo</p>;
+    }
+  }
+
   const onSubmit = () => {
     agregarPersonal();
   };
-
-  function crearArrays(dataPersonal) {
-    // Crear objetos para almacenar los datos según el id de la palabra clave
-    const categorias = {
-      personal_planta: { id: 1, datos: {} },
-      personal_contrata: { id: 2, datos: {} },
-      otras_remuneraciones: { id: 3, datos: {} },
-      gastos_en_personal: { id: 4, datos: {} },
-    };
-
-    // Recorrer la lista de datos
-    for (const clave in dataPersonal) {
-      // Preparar la clave para análisis
-      let nuevaClave = clave.replace(/sub21[b_]?_/g, '');
-
-      // Determinar la categoría y el tipo de dato
-      Object.keys(categorias).forEach((categoria) => {
-        if (nuevaClave.includes(categoria)) {
-          // Determinar si es justificado, justificar o total
-          if (nuevaClave.includes('justificado')) {
-            categorias[categoria].datos['justificado'] = dataPersonal[clave];
-          } else if (nuevaClave.includes('justificar')) {
-            categorias[categoria].datos['justificar'] = dataPersonal[clave];
-          } else if (nuevaClave.includes('total')) {
-            categorias[categoria].datos['total'] = dataPersonal[clave];
-          }
-        }
-      });
-    }
-
-    // Retornar los arrays creados
-    return Object.values(categorias);
-  }
-
-  const arrays = crearArrays(dataPersonal);
 
   return (
     <div className="my-4">
@@ -213,12 +211,12 @@ export const AgregarPersonal = ({
           )}
           <div className="col">
             <p className="text-sans-p-bold">
-              Renta bruta <br/> mensual ($M)
+              Renta bruta <br /> mensual ($M)
             </p>
           </div>
           <div className="col">
             <p className="text-sans-p-bold ">
-              Grado (Si <br/> corresponde)
+              Grado (Si <br /> corresponde)
             </p>
           </div>
           {title === 'directo' && (
@@ -245,7 +243,7 @@ export const AgregarPersonal = ({
           {Array.isArray(nuevoPersonal) &&
             nuevoPersonal?.map((personal, index) => (
               <div
-                className="row align-items-center d-flex mb-3"
+                className={`row py-3 ${index % 2 === 0 ? 'white-line' : 'neutral-line'} align-items-center me-3`}
                 key={personal.id}
               >
                 <div className="col-3 d-flex">
@@ -301,7 +299,7 @@ export const AgregarPersonal = ({
                             field.onBlur();
                             if (
                               personal.numero_personas_gore !==
-                                e.target.value &&
+                              e.target.value &&
                               !error
                             ) {
                               handleUpdate(
@@ -320,37 +318,36 @@ export const AgregarPersonal = ({
                   <Controller
                     name={`personal[${index}].renta_bruta`}
                     control={control}
-                    defaultValue={personal.renta_bruta || ''}
-                    render={({ field, fieldState: { error } }) => (
-                      <InputCosto
-                        {...field}
-                        placeholder="Costo (M$)"
-                        error={error?.message}
-                        disabled={solo_lectura}
-                        loading={
-                          inputStatus[personal.id]?.renta_bruta?.loading &&
-                          !error
+                    defaultValue={personal?.renta_bruta || ''}
+                    render={({ field }) => {
+                      const { onChange, onBlur, value } = field;
+
+                      const handleBlur = async () => {
+                        // Dispara la validación
+                        const isFieldValid = await trigger(`personal[${index}].renta_bruta`);
+                        // Si el campo es válido y el valor ha cambiado, actualiza el servidor
+                        if (isFieldValid && personal.renta_bruta !== value) {
+                          handleUpdate(personal.id, 'renta_bruta', value.replace(/\./g, ''));
                         }
-                        saved={
-                          inputStatus[personal.id]?.renta_bruta?.saved && !error
-                        }
-                        onBlur={(e) => {
-                          field.onBlur();
-                          if (
-                            personal.renta_bruta !== e.target.value &&
-                            !error
-                          ) {
-                            handleUpdate(
-                              personal.id,
-                              'renta_bruta',
-                              e.target.value
-                            );
-                          }
-                        }}
-                      />
-                    )}
+                        onBlur();
+                      };
+                      return (
+                        <InputCosto
+                          id={`renta_bruta_${personal.id}`}
+                          placeholder="Costo (M$)"
+                          loading={inputStatus[personal.id]?.renta_bruta?.loading}
+                          saved={inputStatus[personal.id]?.renta_bruta?.saved}
+                          error={errors[`personal[${index}].renta_bruta`]?.message}
+                          disabled={solo_lectura}
+                          value={value}
+                          onChange={onChange}
+                          onBlur={handleBlur}
+                        />
+                      );
+                    }}
                   />
                 </div>
+
                 <div className="col">
                   <Controller
                     name={`personal[${index}].grado`}
@@ -386,7 +383,7 @@ export const AgregarPersonal = ({
                 {title === 'indirecto' && (
                   <div className="col-2 border">
                     <span className="text-sans-p-bold-blue">
-                      $ {Number(personal.total_rentas).toLocaleString('es-CL')}
+                      $ {formatNumber(personal.total_rentas)}
                     </span>
                   </div>
                 )}
@@ -407,7 +404,7 @@ export const AgregarPersonal = ({
         </form>
 
         {!solo_lectura && (
-          <button className="btn-secundario-s m-2" onClick={agregarPersonal}>
+          <button className="btn-secundario-s m-2" onClick={agregarPersonal} type='button'>
             <i className="material-symbols-rounded me-2">add</i>
             <p className="mb-0 text-decoration-underline">
               Agregar {calidadJuridica}
@@ -416,56 +413,72 @@ export const AgregarPersonal = ({
         )}
 
         <div className="my-4">
-          <p className="subrayado text-sans-p-bold  h-auto">
-            Resumen de justificación de costos de personal {title} : {''}
-            {calidadJuridica}
-          </p>
+          <span className="py-2 my-2 align-self-center subrayado col-12">
+            <p className="text-sans-p-bold ms-2">
+              Resumen de justificación de costos de personal {title} : {''}
+              {relacion_item_calidad[calidadJuridica] || 'Categoría desconocida'}
+            </p>
+          </span>
           <h6 className="text-sans-h6-primary mt-3">
             Debes justificar el 100% del costo informado en el paso 2 para
             completar esta sección.
           </h6>
-          <div className="ps-3 my-4">
-            {/* Encabezado */}
-            <table className="table my-4">
-              <thead>
-                <tr>
-                  <th scope="col">
-                    <span className="py-2">#</span>
-                  </th>
-                  <th scope="col">
-                    <span className="py-2">item</span>
-                  </th>
-                  <th scope="col">
-                    <span className="py-2">
-                      Costo adicional <br />
-                      informado por <br />
-                      GORE ($M)
-                    </span>
-                  </th>
-                  <th scope="col ps-4 py-2">Costo justificado</th>
-                  <th scope="col ps-4 py-2 ">
-                    Pendiente por <br />
-                    justificar
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="table-secondary">
-                {Array.isArray(arrays) &&
-                  arrays
-                    .filter((dato) => Number(dato.id) === Number(idCalidad))
-                    .map((dato, index) => (
-                      <tr key={index} className="my-5">
-                        <td>{index + 1}</td>
-                        <td className="col">{calidadJuridica}</td>
-                        <td>{dato.datos.total || ''}</td>
-                        <td>{dato.datos.justificado || ''}</td>
-                        <td>{dato.datos.justificar || ''}</td>
-                      </tr>
-                    ))}
-              </tbody>
-            </table>
-          </div>
         </div>
+        {itemsJustificados.map((item, itemIndex) => {
+          const itemCorrespondiente = Object.entries(relacion_item_calidad).find(([key, value]) =>
+            (value === item.label && key === calidadJuridica) ||
+            (Array.isArray(value) && value.includes(item.label) && key === calidadJuridica)
+          );
+
+          const counterClass = (item.por_justificar) == 0
+            ? "text-sans-p-bold"
+            : "text-sans-h6-bold-darkred";
+
+          if (itemCorrespondiente) {
+            return (
+              <div key={itemIndex}>
+                <div>
+                  {/* Encabezado */}
+                  <table className="table mb-5">
+                    <thead>
+                      <tr>
+                        <th scope="col-2">
+                          Costo adicional informado<br />
+                          por GORE ($M)
+                        </th>
+                        <th scope="col-2">Costo justificado</th>
+                        <th scope="col-2">
+                          Pendiente por <br />
+                          justificar
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="table-secondary">
+                      {/* Items */}
+                      <tr key={itemIndex} className="my-5">
+                        <td className="col-2">
+                          <p className="text-sans-p-bold">{formatNumber(item.informado)}</p>
+                        </td>
+                        <td className="col-2">
+                          <p className="text-sans-p-bold">{formatNumber(item.justificado)}</p>
+                        </td>
+                        <td className="col-2">
+                          <p className={counterClass}>{formatNumber(item.por_justificar)}</p>
+                          <div className="d-flex justify-content-end p-0 m-0">
+                            <MensajeErrorPresupuesto
+                              por_justificar={item.por_justificar}
+                            />
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            );
+          }
+          return null;
+        })}
       </div>
     </div>
   );

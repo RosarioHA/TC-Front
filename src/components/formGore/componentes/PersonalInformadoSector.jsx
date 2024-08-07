@@ -31,6 +31,12 @@ export const PersonalInformadoSector = ({
     mode: 'onBlur',
   });
 
+  const formatNumber = (number) => {
+    // Verificar si el número es 0 para manejar el caso "No informado"
+    if (number === 0) return "No informado";
+    return new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP', minimumFractionDigits: 0 }).format(number);
+  };
+
   const datosAgrupadosPorCalidadJuridica = useMemo(() => {
     if (!Array.isArray(personalSector)) {
       return {};
@@ -90,7 +96,7 @@ export const PersonalInformadoSector = ({
       <div className="my-5 col-11">
         <div className="subrayado col-12 h-auto">
           <span className="py-2 my-2 align-self-center">
-            <p className="text-sans-p ms-2"> Personal {title} informado por el sector:</p>
+            <p className="text-sans-p-bold ms-2"> Personal {title} informado por el sector:</p>
           </span>
         </div>
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -142,12 +148,7 @@ export const PersonalInformadoSector = ({
                           <th scope="row">{index + 1}</th>
                           <td>{persona.nombre_estamento}</td>
                           <td className="text-center">
-                            {persona.renta_bruta
-                              ? parseInt(
-                                persona.renta_bruta,
-                                10
-                              ).toLocaleString('es-CL')
-                              : 'sin información'}
+                            {formatNumber(persona.renta_bruta) || 'sin información'}
                           </td>
                           <td className="text-center">
                             {persona.grado || '-'}

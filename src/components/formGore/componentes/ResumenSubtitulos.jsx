@@ -1,7 +1,7 @@
 export const ResumenSubtitulos = ({
   sub22Diferencia,
   sub22Justificados,
-  sub22Jutificar,
+  sub22Justificar,
   sub29Diferencia,
   sub29Justificados,
   sub29Justificar,
@@ -52,7 +52,7 @@ export const ResumenSubtitulos = ({
               {formatNumber(sub22Justificados || 0)}
             </td>
             <td className="py-3">
-              {formatNumber(sub22Jutificar || 0, true)}
+              {formatNumber(sub22Justificar || 0, true)}
             </td>
           </tr>
           <tr className="text-center py-5 table-secondary ">

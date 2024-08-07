@@ -6,8 +6,8 @@ import CustomTextarea from '../../forms/custom_textarea';
 import { FormGOREContext } from '../../../context/FormGore';
 import InputCosto from '../../forms/input_costo';
 
-export const FisicoInfraestructura = ({ dataRecursosFisicos , solo_lectura}) => {
-  const { control, handleSubmit } = useForm({
+export const FisicoInfraestructura = ({ dataRecursosFisicos, solo_lectura }) => {
+  const { control, handleSubmit, trigger, formState: { errors } } = useForm({
     resolver: yupResolver(validacionInfraestructura),
     mode: 'onBlur',
   });
@@ -108,82 +108,73 @@ export const FisicoInfraestructura = ({ dataRecursosFisicos , solo_lectura}) => 
                       <div className="mb-2 d-flex">
                         <div className="mx-3 my-3">{index + 1}</div>
                         <div className="my-3 ms-3 col-9 ">
+                        <div className="text-start my-1">Cantidad</div>
                           <Controller
                             name={`fichas[${index}].cantidad`}
                             control={control}
-                            defaultValue={ficha.cantidad || ''}
-                            render={({ field, fieldState: { error } }) => (
-                              <CustomTextarea
-                                {...field}
-                                label="Cantidad"
-                                placeholder="Cantidad del recurso seleccionado"
-                                descripcion="Campo numérico en miles de pesos."
-                                error={error?.message}
-                                readOnly={solo_lectura}
-                                loading={
-                                  inputStatus[ficha.id]?.cantidad?.loading &&
-                                  !error
+                            defaultValue={ficha?.cantidad || ''}
+                            render={({ field }) => {
+                              const { onChange, onBlur, value } = field;
+
+                              const handleBlur = async () => {
+                                // Dispara la validación
+                                const isFieldValid = await trigger(`fichas[${index}].cantidad`);
+                                // Si el campo es válido y el valor ha cambiado, actualiza el servidor
+                                if (isFieldValid && ficha.cantidad !== value) {
+                                  handleUpdate(ficha.id, 'cantidad', value.replace(/\./g, ''));
                                 }
-                                saved={
-                                  inputStatus[ficha.id]?.cantidad?.saved &&
-                                  !error
-                                }
-                                onBlur={(e) => {
-                                  field.onBlur();
-                                  if (
-                                    ficha.cantidad !== e.target.value &&
-                                    !error
-                                  ) {
-                                    handleUpdate(
-                                      ficha.id,
-                                      `cantidad`,
-                                      e.target.value
-                                    );
-                                  }
-                                }}
-                              />
-                            )}
+                                onBlur();
+                              };
+                              return (
+                                <InputCosto
+                                  id={`cantidad_${ficha.id}`}
+                                  placeholder="Cantidad del recurso seleccionado"
+                                  loading={inputStatus[ficha.id]?.cantidad?.loading}
+                                  saved={inputStatus[ficha.id]?.cantidad?.saved}
+                                  error={errors[`fichas[${index}].cantidad`]?.message}
+                                  disabled={solo_lectura}
+                                  value={value}
+                                  onChange={onChange}
+                                  onBlur={handleBlur}
+                                />
+                              );
+                            }}
                           />
                         </div>
                       </div>
                       <div className="d-flex flex-row col">
                         <div className="my-3 col-6 ms-5 ps-2">
-                        <div className="text-start my-1">Costo total (M$)</div>
+                          <div className="text-start my-1">Costo total (M$)</div>
                           <Controller
                             name={`fichas[${index}].costo_total`}
                             control={control}
-                            render={({ field, fieldState: { error } }) => (
-                              <InputCosto
-                                {...field}
-                                value={ficha.costo_total || ''}
-                                label="Costo total (M$)"
-                                disabled={solo_lectura}
-                                placeholder="Costo del recurso"
-                                descripcion="Campo numérico en miles de pesos."
-                                error={error?.message}
-                                loading={
-                                  inputStatus[ficha.id]?.costo_total?.loading &&
-                                  !error
+                            defaultValue={ficha?.costo_total || ''}
+                            render={({ field }) => {
+                              const { onChange, onBlur, value } = field;
+
+                              const handleBlur = async () => {
+                                // Dispara la validación
+                                const isFieldValid = await trigger(`fichas[${index}].costo_total`);
+                                // Si el campo es válido y el valor ha cambiado, actualiza el servidor
+                                if (isFieldValid && ficha.costo_total !== value) {
+                                  handleUpdate(ficha.id, 'costo_total', value.replace(/\./g, ''));
                                 }
-                                saved={
-                                  inputStatus[ficha.id]?.costo_total?.saved &&
-                                  !error
-                                }
-                                onBlur={(e) => {
-                                  field.onBlur();
-                                  if (
-                                    ficha.costo_total !== e.target.value &&
-                                    !error
-                                  ) {
-                                    handleUpdate(
-                                      ficha.id,
-                                      'costo_total',
-                                      e.target.value
-                                    );
-                                  }
-                                }}
-                              />
-                            )}
+                                onBlur();
+                              };
+                              return (
+                                <InputCosto
+                                  id={`costo_total_${ficha.id}`}
+                                  placeholder="Costo (M$)"
+                                  loading={inputStatus[ficha.id]?.costo_total?.loading}
+                                  saved={inputStatus[ficha.id]?.costo_total?.saved}
+                                  error={errors[`fichas[${index}].costo_total`]?.message}
+                                  disabled={solo_lectura}
+                                  value={value}
+                                  onChange={onChange}
+                                  onBlur={handleBlur}
+                                />
+                              );
+                            }}
                           />
                         </div>
                         <div className="col-3  py-1 px-1 ms-3">
@@ -191,8 +182,8 @@ export const FisicoInfraestructura = ({ dataRecursosFisicos , solo_lectura}) => 
                           <div className="text-sans-p-bold-blue px-2 my-2 text-center">
                             {ficha.costo_unitario
                               ? new Intl.NumberFormat('es-CL').format(
-                                  ficha.costo_unitario
-                                )
+                                ficha.costo_unitario
+                              )
                               : '-'}
                           </div>
                         </div>

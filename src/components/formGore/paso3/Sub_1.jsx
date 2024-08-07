@@ -3,6 +3,10 @@ import { Sub1_b } from "./Sub1_b"
 
 export const Sub_1 = ({ data, solo_lectura }) => {
 
+  const formatNumber = (number) => {
+    return new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP', minimumFractionDigits: 0 }).format(number);
+  };
+
   console.log(data.paso3_gore)
 
   return (
@@ -27,7 +31,7 @@ export const Sub_1 = ({ data, solo_lectura }) => {
                 <tr>
                   <th scope="col">
                     <span className="py-2">
-                      Costos Totales Anual <br />  Subtítulo 21 ($M)
+                      Costo Total Anual <br /> Subtítulo 21 ($M)
                     </span>
                   </th>
                   <th scope="col">
@@ -48,9 +52,9 @@ export const Sub_1 = ({ data, solo_lectura }) => {
               <tbody>
                 <tr >
                   <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
+                  <td>{formatNumber(data.paso3_gore.subtitulo_21_informados_gore)}</td>
+                  <td>{formatNumber(data.paso3_gore.subtitulo_21_justificados_gore)}</td>
+                  <td>{formatNumber(data.paso3_gore.subtitulo_21_por_justificar)}</td>
                 </tr>
               </tbody>
             </table>

@@ -3,9 +3,9 @@ import { PersonalGore } from '../componentes/PersonalGore';
 
 export const Sub1_b = ({ data, solo_lectura }) => {
   const { paso3_gore,
-    p3_personal_indirecto_sector,
     p3_personal_indirecto_gore,
-    listado_estamentos
+    listado_estamentos,
+    listado_calidades_juridicas_indirectas
   } = data
   
   let indirectos = {};
@@ -43,15 +43,14 @@ export const Sub1_b = ({ data, solo_lectura }) => {
             gastosPersonalJustificar={paso3_gore?.sub21b_gastos_en_personal_justificar} 
           />
           <PersonalGore
-            personalSector={p3_personal_indirecto_sector}
             personalGore={p3_personal_indirecto_gore}
             estamentos={listado_estamentos}
+            listado_calidades_disponibles={listado_calidades_juridicas_indirectas}
             title="indirecto"
-            campoDestino="descripcion_perfiles_tecnicos_indirecto"
             seccion="p_3_1_b_personal_indirecto"
-            seccionGore3="paso3_gore"
+            prefix={"sub21b"}
             dataPersonal={indirectos}
-            dataPaso={data}
+            seccionGore3={paso3_gore}
             solo_lectura={solo_lectura} 
           />
         </div>

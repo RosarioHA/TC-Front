@@ -31,7 +31,7 @@ export const CostoPersonal = ({
         <div className="col-12">
           <div className="subrayado h-auto col-12">
             <span className="py-2 my-2 align-self-center">
-              <p className="text-sans-p ms-2"> Costos de personal {title} a justificar por GORE:</p>
+              <p className="text-sans-p-bold ms-2"> Costos de personal {title} a justificar por GORE:</p>
             </span>
           </div>
           <table className="table table-striped align-middle">

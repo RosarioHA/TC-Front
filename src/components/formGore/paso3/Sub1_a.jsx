@@ -11,7 +11,8 @@ export const Sub1_a = ({ data, solo_lectura }) => {
     paso3_gore,
     p3_personal_directo_sector,
     p3_personal_directo_gore,
-    listado_estamentos
+    listado_estamentos,
+    listado_calidades_juridicas_directas
   } = data;
 
   let directos = {};
@@ -61,9 +62,12 @@ export const Sub1_a = ({ data, solo_lectura }) => {
           <PersonalGore
             personalGore={p3_personal_directo_gore}
             estamentos={listado_estamentos}
+            listado_calidades_disponibles={listado_calidades_juridicas_directas}
             title="directo"
             seccion="p_3_1_a_personal_directo"
+            prefix="sub21"
             dataPersonal={directos}
+            seccionGore3={paso3_gore}
             solo_lectura={solo_lectura}
           />
         </div>
