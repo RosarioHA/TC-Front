@@ -8,6 +8,7 @@ export const FormGOREContext = createContext();
 export const FormGoreProvider = ({ children }) => {
   const [id, setId] = useState(null);
   const [stepNumber, setStepNumber] = useState(null);
+  const [mostrarInput, setMostrarInput] = useState(false); 
 
 
   const { dataFormGore, loadingFormGore, errorFormGore } = useFormularioGore(id);
@@ -65,7 +66,9 @@ export const FormGoreProvider = ({ children }) => {
     patchResponse: response,
     updatePasoGore,
     handleUploadFiles,
-    refetchTriggerGore
+    refetchTriggerGore,
+    mostrarInput, 
+    setMostrarInput, 
   };
 
   return (
