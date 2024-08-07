@@ -11,6 +11,15 @@ export const DocumentsAditionals = ({ onFilesChanged, marcoJuridicoData, handleD
 
   useEffect(() => {
     if (marcoJuridicoData && marcoJuridicoData.length > 0) {
+      // Obtener el ancho de la pantalla
+      const screenWidth = window.innerWidth;
+  
+      // Definir la longitud máxima de acuerdo al ancho de la pantalla
+      let maxLength = 25; // Por defecto, si la pantalla es mayor a 1400px
+      if (screenWidth < 1400) {
+        maxLength = 15; // Si la pantalla es menor a 1400px
+      }
+  
       const updatedFiles = marcoJuridicoData.map(doc => {
         if (doc && doc.documento_url) {
           let title = doc.documento_url.split('/').pop();
@@ -20,7 +29,12 @@ export const DocumentsAditionals = ({ onFilesChanged, marcoJuridicoData, handleD
           if (pdfIndex !== -1) {
             title = title.substring(0, pdfIndex + 4); // "+4" to include ".pdf"
           }
-
+  
+          // Truncar el título si es más largo que la longitud máxima
+          if (title.length > maxLength) {
+            title = title.substring(0, maxLength) + '...';
+          }
+  
           return {
             id: doc.id,
             title: title,
@@ -37,7 +51,8 @@ export const DocumentsAditionals = ({ onFilesChanged, marcoJuridicoData, handleD
       setFiles([]); // Vaciar el estado de archivos si no hay datos
       setMaxFilesReached(false); // Actualizar el estado de máximo alcanzado a falso si no hay archivos
     }
-  }, [marcoJuridicoData, maxFiles]); 
+  }, [marcoJuridicoData, maxFiles]);
+  
 
   const handleDownload = (url) => {
     window.open(url, '_blank'); // Abrir el documento en una nueva pestaña para iniciar la descarga
@@ -100,7 +115,7 @@ export const DocumentsAditionals = ({ onFilesChanged, marcoJuridicoData, handleD
     <>
       {readOnly ? (
         files.map((fileObj, index) => (
-          <div key={index} className={`row align-items-center me-5 pe-5 col-11 mt-2 ${index % 2 === 0 ? 'neutral-line' : 'white-line'}`}>
+          <div key={index} className={`row align-items-center  pe-5 mt-2 ${index % 2 === 0 ? 'neutral-line' : 'white-line'}`}>
             <div className="col-1 p-3">{index + 1}</div>
             <div className="col p-3">{fileObj.title}</div>
             <div className="col p-3"></div>
@@ -139,7 +154,7 @@ export const DocumentsAditionals = ({ onFilesChanged, marcoJuridicoData, handleD
             </h6>
           )}
           {files.map((fileObj, index) => (
-            <div key={index} className={`row align-items-center me-5 pe-5 col-11 mt-2 ${index % 2 === 0 ? 'neutral-line' : 'white-line'}`}>
+            <div key={index} className={`row align-items-center me-5 pe-5  mt-2 ${index % 2 === 0 ? 'neutral-line' : 'white-line'}`}>
               <div className="col-1 p-3">{index + 1}</div>
               <div className="col p-3">{fileObj.title}</div>
               <div className="col p-3"></div>

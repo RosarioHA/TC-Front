@@ -8,28 +8,37 @@ export const SubirArchivo = ({ index,  readOnly,tituloDocumento,  archivoDescarg
   const [error, setError] = useState('');
 
   useEffect(() => {
-    if (tituloDocumento) {
+    if (typeof tituloDocumento === 'string') {
       const parts = tituloDocumento.split('/');
       let name = parts.pop() || tituloDocumento;
-      
-      // Remove any query parameters or additional text after ".pdf"
+  
       const pdfIndex = name.indexOf('.pdf');
       if (pdfIndex !== -1) {
-        name = name.substring(0, pdfIndex + 4); // "+4" to include ".pdf"
+        name = name.substring(0, pdfIndex + 4);
       }
       name = decodeURIComponent(name);
-      // Truncando el nombre a 30 caracteres si es más largo
-      if (name.length > 15 )
-      {
-        name = name.substring(0, 15) + '...';
+  
+      // Obtener el ancho de la pantalla
+      const screenWidth = window.innerWidth;
+  
+      // Definir la longitud máxima de acuerdo al ancho de la pantalla
+      let maxLength = 25; // Por defecto, si la pantalla es mayor a 1400px
+      if (screenWidth < 1400) {
+        maxLength = 15; // Si la pantalla es menor a 1400px
       }
-
+  
+      // Truncar el nombre si es más largo que la longitud máxima
+      if (name.length > maxLength) {
+        name = name.substring(0, maxLength) + '...';
+      }
+  
       setFileName(name);
       setFileUploaded(true);
     } else {
       setFileUploaded(false);
     }
   }, [tituloDocumento]);
+
 
   const displayFileType = fileUploaded ? "Archivo guardado" : "No seleccionado";
 

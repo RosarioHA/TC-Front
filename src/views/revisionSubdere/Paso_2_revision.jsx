@@ -77,7 +77,7 @@ const Paso_2_Revision = () => {
                     Deberás explicar la recomendación de transferencia y las condiciones en cada criterio para las regiones con recomendación favorable.
                   </h6>
                 </div>
-                <div className="my-4 ">
+                <div className="my-4 col-10 ">
                   <Temporalidad
                     temporalidad={temporalidad_gradualidad}
                     regiones_temporalidad={regiones_temporalidad}

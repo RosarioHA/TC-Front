@@ -27,7 +27,6 @@ export const GastosPromedioAnual = ({
     return numero;
   };
 
- 
 
   useEffect(() => {
     setDatosGastos(Array.isArray(dataGastos) ? dataGastos : []);

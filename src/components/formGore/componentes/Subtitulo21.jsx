@@ -7,7 +7,7 @@ export const Subtitulo21 = ({ personal, solo_lectura }) => {
       <div className="mt-4 col-11">
         {Array.isArray(personal) && personal.map((sectorData) => (
           <React.Fragment key={sectorData.sector}>
-            <div className="subrayado col-12">
+            <div className="subrayado col-12 h-auto">
               <span className="py-2 ps-2 my-2 align-self-center">
                 Subtítulo 21 - Gastos en Personal informados por {sectorData.sector}
               </span>

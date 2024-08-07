@@ -769,7 +769,7 @@ const PersonalSectorial = ({
                 {
                   return (
                     <div key={itemIndex} className="my-4">
-                      <div className="subrayado col-12">
+                      <div className="subrayado col-12 h-auto">
                         <span className="py-2 ps-2 my-2 align-self-center text-sans-p-bold">
                           Resumen de justificación de costos de personal {descripcionModelo === "directo" ? "directo" : "indirecto"}: {item.label}
                         </span>
@@ -828,10 +828,10 @@ const PersonalSectorial = ({
         <>
           <p>Primero elige la calidad jurídica que quieres agregar:</p>
           <div className="row">
-            <div className="col-1">
+            <div className="col-2">
               <p className="text-sans-p-bold mt-3">Calidad Jurídica</p>
             </div>
-            <div className="col-2">
+            <div className="col-3">
               <DropdownSelect
                 placeholder="Calidad Jurídica"
                 options={opcionesCalidadJuridica}

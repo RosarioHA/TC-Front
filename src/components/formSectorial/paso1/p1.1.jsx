@@ -189,27 +189,28 @@ export const Subpaso_uno = ({ dataPaso, id, stepNumber, marcojuridico, solo_lect
             <h6 className="mt-0">Corresponde a su naturaleza jurídica: centralizado o descentralizado, concentrado o desconcentrado.</h6>
           </div>
         </div>
-        <div className="container-fluid pb-3 col-12">
+        <div className="container pb-3 ">
           <div className="mb-3 ">
             <span className="text-sans-h5">Marco jurídico que lo rige (Obligatorio)</span>
             <p className="text-sans-h6-grey">Mínimo 1 archivo, máximo 5 archivos, peso máximo 20MB, formato PDF)</p>
           </div>
-          <DocumentsAditionals
-            onFilesChanged={uploadFile}
-            marcoJuridicoData={marcoJuridicoFiles}
-            handleDelete={eliminarDocMarco}
-            readOnly={solo_lectura}
-          />
-          {isUploading && (
-            <div className="loading-indicator col-11 w-50 mx-auto">
-              <div className="text-center">
-                Guardando archivo...
+          <div className="">
+            <DocumentsAditionals
+              onFilesChanged={uploadFile}
+              marcoJuridicoData={marcoJuridicoFiles}
+              handleDelete={eliminarDocMarco}
+              readOnly={solo_lectura}
+            />
+            {isUploading && (
+              <div className="loading-indicator col-10 w-50 mx-auto">
+                <div className="text-center">
+                  Guardando archivo...
+                </div>
+                <div className="progress" role="progressbar" aria-label="Animated striped example" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
+                  <div className="progress-bar progress-bar-striped progress-bar-animated" style={{ width: '100%' }}></div>
+                </div>
               </div>
-              <div className="progress" role="progressbar" aria-label="Animated striped example" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
-                <div className="progress-bar progress-bar-striped progress-bar-animated" style={{ width: '100%' }}></div>
-              </div>
-            </div>
-          )}
+            )}</div>
         </div>
         <div className="my-4">
           <CustomTextarea
