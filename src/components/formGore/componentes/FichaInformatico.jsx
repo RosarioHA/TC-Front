@@ -6,7 +6,11 @@ import InputCosto from '../../forms/input_costo';
 import { validacionFichaInformaticos } from '../../../validaciones/esquemasFichas';
 import { FormGOREContext } from '../../../context/FormGore';
 
-export const FichaInformatico = ({ dataInformatico, solo_lectura }) => {
+export const FichaInformatico = ({
+  idItem,
+  dataInformatico,
+  solo_lectura
+}) => {
   const [fichasTecnicas, setFichasTecnicas] = useState(dataInformatico);
   const { updatePasoGore } = useContext(FormGOREContext);
   const { control, handleSubmit, trigger, formState: { errors } } = useForm({
@@ -27,18 +31,7 @@ export const FichaInformatico = ({ dataInformatico, solo_lectura }) => {
 
   const agregarFichaTecnica = async () => {
     const nuevaFichaPayload = {
-      nombre_plataforma: '',
-      descripcion_tecnica: '',
-      costo: null,
-      funcion: '',
-      sector: null,
-      sector_nombre: '',
-      subtitulo_label_value: { label: 'Sub. 29', value: '9' },
-      item_subtitulo: 43,
-      item_subtitulo_label_value: {
-        label: '07 - Programas Informáticos',
-        value: '43',
-      },
+      item_subtitulo: idItem,
     };
 
     try {
@@ -235,7 +228,7 @@ export const FichaInformatico = ({ dataInformatico, solo_lectura }) => {
                         <Controller
                           name={`fichas[${index}].costo`}
                           control={control}
-                          defaultValue={ ficha?.costo || ''}
+                          defaultValue={ficha?.costo || ''}
                           render={({ field }) => {
                             const { onChange, onBlur, value } = field;
 

@@ -1,8 +1,10 @@
 export const ResumenSubtitulos = ({
-  nombreSubtitulo,
-  subDiferencia,
-  subJustificados,
-  subJustificar
+  sub22Diferencia,
+  sub22Justificados,
+  sub22Justificar,
+  sub29Diferencia,
+  sub29Justificados,
+  sub29Justificar,
 }) => {
   // Función modificada para formatear los números con separadores de miles
   // y cambiar el color si el número es negativo
@@ -16,14 +18,12 @@ export const ResumenSubtitulos = ({
 
   return (
     <>
-    <div className="my-4 col-12 pe-5">
-    <div className="ps-3 my-4">
-      <table className="table table-secondary my-4">
+      <table className="table my-4">
         <thead>
-          <tr>
-            <th scope="col">
+          <tr className="table-secondary">
+            <th scope="col align-items-center">
               <span className="py-2">
-                Costo Total Anual <br /> {`${nombreSubtitulo} `}($M)
+                Costos Totales Anual <br /> ($M) por subtítulo
               </span>
             </th>
             <th scope="col">
@@ -41,22 +41,36 @@ export const ResumenSubtitulos = ({
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td></td>
-            <td>
-              {formatNumber(subDiferencia || 0)}
+          <tr className="text-center py-5 ">
+            <td className="text-start align-middle">
+              <span className="mx-3">Subtítulo 22</span>
             </td>
-            <td>
-              {formatNumber(subJustificados || 0)}
+            <td className="py-3">
+              {formatNumber(sub22Diferencia || 0)}
             </td>
-            <td>
-              {formatNumber(subJustificar || 0, true)}
+            <td className="py-3">
+              {formatNumber(sub22Justificados || 0)}
+            </td>
+            <td className="py-3">
+              {formatNumber(sub22Justificar || 0, true)}
+            </td>
+          </tr>
+          <tr className="text-center py-5 table-secondary ">
+            <td className="text-start align-middle">
+              <span className="mx-3">Subtítulo 29</span>
+            </td>
+            <td className="py-3">
+              {formatNumber(sub29Diferencia || 0)}
+            </td>
+            <td className="py-3">
+              {formatNumber(sub29Justificados || 0)}
+            </td>
+            <td className="py-3">
+              {formatNumber(sub29Justificar || 0, true)}
             </td>
           </tr>
         </tbody>
       </table>
-      </div>
-      </div>
     </>
   );
 };
