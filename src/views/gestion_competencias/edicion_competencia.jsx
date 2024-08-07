@@ -514,7 +514,7 @@ const extractFileName = (url) => {
             )} />
         </div>
 
-        <div className="my-4 h-auto">
+        <div className="my-4 h-auto col-10">
           <DropdownConSecciones
             key={sectorSeleccionado + '-' + regionSeleccionada}
             label="Asignar Usuarios (Opcional)"

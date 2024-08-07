@@ -161,7 +161,7 @@ export const Subpaso_dosPuntoCinco = ({ id, stepNumber, data, flujograma, solo_l
       </div>
 
       {showPdfViewer && (
-        <div className="my-4 col-11">
+        <div className="my-4 col-11 col-sm-12">
           <iframe
             id="visorPDF"
             src={iframeSrc}

@@ -200,7 +200,19 @@ export const Etapa2 = ({ etapa, idCompetencia }) =>
       return (
         <div className="usuario-notificado d-flex justify-content-between py-2 my-1 border-top border-bottom">
           <span className="col-8">{usuario.nombre}</span>
-          <div className="my-auto">{renderBadge(usuario)}</div>
+          <div className="my-auto">
+            { userSubdere &&  usuario.estado === "revision" ? (
+              <button
+                className="btn-secundario-s"
+                onClick={() => navigate(`/home/editar_competencia/${idCompetencia}`)}
+              >
+                <span className="material-symbols-outlined me-2">person_add</span>
+                <u>{usuario.accion}</u>
+              </button>
+            ) : (
+              renderBadge(usuario)
+            )}
+          </div>
         </div>
       );
     } else if (usuariosNotificadosDetalles.length > 0)
@@ -209,13 +221,15 @@ export const Etapa2 = ({ etapa, idCompetencia }) =>
         <div key={index} className="usuario-notificado d-flex justify-content-between py-2 my-1 border-top border-bottom">
           <span className="col-8">{usuario.nombre}</span>
           {usuario.estado === "revision" && userSubdere ? (
-            <button
-              className="btn-secundario-s"
-              onClick={() => navigate(`/home/editar_competencia/${idCompetencia}`)}
-            >
-              <span className="material-symbols-outlined me-2">person_add</span>
-              <u>{usuario.accion}</u>
-            </button>
+            <div className="my-auto">
+              <button
+                className="btn-secundario-s"
+                onClick={() => navigate(`/home/editar_competencia/${idCompetencia}`)}
+              >
+                <span className="material-symbols-outlined me-2">person_add</span>
+                <u>{usuario.accion}</u>
+              </button>
+            </div>
           ) : (
             <div className="my-auto"> {renderBadge(usuario)}</div>
           )}

@@ -178,7 +178,7 @@ const DropdownConSecciones = ({
     }
 
     return (
-      <div className="mb-5 mt-5">
+      <div className="mb-5 mt-5 col-12">
         <p className="text-sans-p-bold ms-2 mb-3">
           {tipoUsuario || tipoPerfil}
         </p>
@@ -207,8 +207,8 @@ const DropdownConSecciones = ({
                 <td>
                   <p className="mx-4 my-3">{index + 1}</p>
                 </td>
-                <td>
-                  <span className="my-3">
+                <td className="col-7">
+                  <span className="my-3 col-8">
                   {user.nombre_completo} {(user.sector_nombre || user.region_nombre) ? `- ${user.sector_nombre || user.region_nombre}` : ''}
                     
                   </span>
@@ -234,9 +234,9 @@ const DropdownConSecciones = ({
   };
 
   return (
-    <div className={`input-container col-11 ${readOnly ? 'readonly' : ''}`}>
+    <div className={`input-container col-10 ${readOnly ? 'readonly' : ''}`}>
       {readOnly ? (
-        <div className="pt-3">
+        <div className="pt-3 col-10">
           <label className="text-sans-h5 input-label">
             Usuario(s) Asignado(s):
           </label>
