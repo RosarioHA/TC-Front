@@ -83,10 +83,10 @@ export const SubirArchivoRegiones = ({ index, handleDelete,tituloDocumento, read
   return (
     <>
       <div className="d-flex justify-content-between grid align-items-center neutral-line align-items-center">
-        <dv className="col-sm-2 col-3 d-flex ">
+        <div className="col-sm-2 col-3 d-flex ">
         <div className="py-3 px-3 my-auto">{index}</div>
         <div className="py-2 col-3 col-sm-1 ms-1">{region}</div>
-        </dv>
+        </div>
         <div className="py-3 col-4 col-sm-2">{fileName}</div>
         <div className="py-3 col-1 px-1 me-2">{error ? <div className="text-sans-p-bold-darkred">{error}</div> : displayFileType}</div>
         <div className="col-4">
