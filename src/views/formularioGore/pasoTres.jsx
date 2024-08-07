@@ -1,4 +1,5 @@
 import { useContext, useEffect, useCallback, useState } from "react";
+import { useOutletContext } from 'react-router-dom';
 import { FormGOREContext } from "../../context/FormGore";
 import { MonoStepers } from "../../components/stepers/MonoStepers";
 import { Avance } from "../../components/tables/Avance";
@@ -12,6 +13,7 @@ import { useAuth } from '../../context/AuthContext';
 
 const PasoTresGore = () =>
 {
+  const { mostrarInput } = useOutletContext();
   const { dataFormGore, dataPasoGore, errorPasoGore, updateStepNumber } = useContext(FormGOREContext);
   const stepNumber = 3;
   const { userData } = useAuth();
@@ -82,28 +84,30 @@ const PasoTresGore = () =>
             justificados={paso3_gore.costos_justificados_gore}
             justificar={paso3_gore.costos_justificar_gore}
           />
-
-          {formularioEnviado && userSubdere && (
-            <div className="mt-5 my-4 border-top pt-5">
-              {!observacionPaso3.trim() && observacionesEnviadas ? (
-                <p>No se han dejado observaciones en este paso.</p>
-              ) : (
-                <CustomTextarea
-                  label="Observaciones (Opcional)"
-                  placeholder="Escribe tus observaciones de este paso del formulario"
-                  rows={5}
-                  maxLength={500}
-                  value={observacionPaso3}
-                  onChange={(e) => setObservacionPaso3(e.target.value)}
-                  readOnly={observacionesEnviadas}
-                  onBlur={handleGuardarObservacion}
-                  loading={loadingObservaciones}
-                  saved={saved}
-                />
+          {mostrarInput && (
+            <>
+              {formularioEnviado && userSubdere && (
+                <div className="mt-5 my-4 border-top pt-5">
+                  {!observacionPaso3.trim() && observacionesEnviadas ? (
+                    <p>No se han dejado observaciones en este paso.</p>
+                  ) : (
+                    <CustomTextarea
+                      label="Observaciones (Opcional)"
+                      placeholder="Escribe tus observaciones de este paso del formulario"
+                      rows={5}
+                      maxLength={500}
+                      value={observacionPaso3}
+                      onChange={(e) => setObservacionPaso3(e.target.value)}
+                      readOnly={observacionesEnviadas}
+                      onBlur={handleGuardarObservacion}
+                      loading={loadingObservaciones}
+                      saved={saved}
+                    />
+                  )}
+                </div>
               )}
-            </div>
+            </>
           )}
-
           <NavigationGore step={stepNumber} id={dataFormGore ? dataFormGore.id : null} />
         </div>
       </div>

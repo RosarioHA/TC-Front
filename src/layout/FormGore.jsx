@@ -6,7 +6,7 @@ import { Timmer } from "../components/layout/Timmer";
 import { FormGOREContext } from "../context/FormGore";
 
 const FormGoreLayout = () => {
-  const { dataFormGore, loadingFormGore, errorFormGore, updateFormId } = useContext(FormGOREContext);
+  const { dataFormGore, loadingFormGore, errorFormGore, updateFormId,mostrarInput, setMostrarInput } = useContext(FormGOREContext);
   const location = useLocation();
   const params = useParams();
 
@@ -41,7 +41,7 @@ const FormGoreLayout = () => {
         </div>
       </div>
       <div className="row">
-        <Outlet key={params.id} context={{ id: dataFormGore.id, ...dataFormGore }} />
+        <Outlet key={params.id} context={{ id: dataFormGore.id,mostrarInput, setMostrarInput, ...dataFormGore }} />
       </div>
     </div>
   );

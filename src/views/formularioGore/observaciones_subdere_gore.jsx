@@ -1,5 +1,6 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect,useContext } from "react";
+import { FormGOREContext } from "../../context/FormGore";
 import { useCompetencia } from "../../hooks/competencias/useCompetencias";
 import { SubirArchivo } from "../../components/commons/subirArchivo";
 import CustomTextarea from "../../components/forms/custom_textarea";
@@ -9,6 +10,7 @@ import { EncabezadoFormularios } from "../../components/layout/EncabezadoFormula
 
 const ObservacionesSubdereGore = () =>
 {
+  const { setMostrarInput } = useContext(FormGOREContext);
   const { id } = useParams();
   const { competenciaDetails } = useCompetencia(id);
   const [ observacionMinutaDipres, setObservacionMinutaDipres ] = useState("");
@@ -48,6 +50,7 @@ const ObservacionesSubdereGore = () =>
 
   const handleVerFormulario = (formularioId) =>
   {
+    setMostrarInput(true); 
     navigate(`/home/formulario_gore/${formularioId}/paso_1`);
   };
 

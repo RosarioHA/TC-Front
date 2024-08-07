@@ -1,4 +1,5 @@
 import { useContext, useEffect, useCallback, useState } from "react";
+import { useOutletContext } from 'react-router-dom';
 import { FormGOREContext } from "../../context/FormGore";
 import { MonoStepers } from "../../components/stepers/MonoStepers";
 import { Avance } from "../../components/tables/Avance";
@@ -10,38 +11,45 @@ import CustomTextarea from "../../components/forms/custom_textarea";
 import { useObservacionesGORE } from "../../hooks/fomularioGore/useObSubdereGore";
 import { useAuth } from '../../context/AuthContext';
 
-const PasoUnoGore = () => {
+const PasoUnoGore = () =>
+{
+  const { mostrarInput } = useOutletContext();
   const { dataFormGore, dataPasoGore, errorPasoGore, updateStepNumber } = useContext(FormGOREContext);
   const stepNumber = 1;
   const { userData } = useAuth();
   const { observaciones, loadingObservaciones, updateObservacion, fetchObservaciones, saved } = useObservacionesGORE(dataFormGore ? dataFormGore.id : null);
-  const [observacionPaso1, setObservacionPaso1] = useState("");
+  const [ observacionPaso1, setObservacionPaso1 ] = useState("");
   const userSubdere = userData?.perfil?.includes('SUBDERE');
   const solo_lectura = dataPasoGore?.solo_lectura;
   const formularioEnviado = dataFormGore?.formulario_enviado
   const observacionesEnviadas = observaciones?.observacion_enviada;
 
-  const handleUpdateStepNumber = useCallback(() => {
+  const handleUpdateStepNumber = useCallback(() =>
+  {
     const stepNumber = 1;
     updateStepNumber(stepNumber);
   }, [ updateStepNumber ]);
 
-  useEffect(() => {
+  useEffect(() =>
+  {
     handleUpdateStepNumber();
   }, [ handleUpdateStepNumber ]);
 
-  useEffect(() => {
-    if (observaciones && Object.keys(observaciones).length === 0) {
+  useEffect(() =>
+  {
+    if (observaciones && Object.keys(observaciones).length === 0)
+    {
       fetchObservaciones();
     }
-    if (observaciones && observaciones?.observacion_paso1) {
+    if (observaciones && observaciones?.observacion_paso1)
+    {
       setObservacionPaso1(observaciones?.observacion_paso1);
     }
-  }, [updateStepNumber, stepNumber, observaciones, fetchObservaciones]);
+  }, [ updateStepNumber, stepNumber, observaciones, fetchObservaciones ]);
 
 
   if (errorPasoGore) return <div>Error: {errorPasoGore.message || "Error desconocido"}</div>;
-  if (!dataPasoGore?.paso1_gore) return 
+  if (!dataPasoGore?.paso1_gore) return
   <div className="d-flex align-items-center flex-column ">
     <div className="text-center text-sans-h5-medium-blue ">Cargando paso 1</div>
     <span className="placeholder col-4 bg-primary"></span>
@@ -50,8 +58,10 @@ const PasoUnoGore = () => {
 
   const { paso1_gore = {}, flujograma_ejercicio_competencia } = dataPasoGore;
 
-  const handleGuardarObservacion = async () => {
-    if (!observacionesEnviadas) {
+  const handleGuardarObservacion = async () =>
+  {
+    if (!observacionesEnviadas)
+    {
       const observacionData = {
         observacion_paso1: observacionPaso1,
       };
@@ -89,26 +99,29 @@ const PasoUnoGore = () => {
             stepNumber={stepNumber}
             solo_lectura={solo_lectura}
           />
-
-          {formularioEnviado && userSubdere && (
-            <div className="mt-5 my-4 border-top pt-5">
-              {!observacionPaso1.trim() && observacionesEnviadas ? (
-                <p>No se han dejado observaciones en este paso.</p>
-              ) : (
-                <CustomTextarea 
-                  label="Observaciones (Opcional)"
-                  placeholder="Escribe tus observaciones de este paso del formulario"
-                  rows={5}
-                  maxLength={500}
-                  value={observacionPaso1}
-                  onChange={(e) => setObservacionPaso1(e.target.value)}
-                  readOnly={observacionesEnviadas}
-                  onBlur={handleGuardarObservacion}
-                  loading={loadingObservaciones}
-                  saved={saved}
-                />
+          {mostrarInput && (
+            <>
+              {formularioEnviado && userSubdere && (
+                <div className="mt-5 my-4 border-top pt-5">
+                  {!observacionPaso1.trim() && observacionesEnviadas ? (
+                    <p>No se han dejado observaciones en este paso.</p>
+                  ) : (
+                    <CustomTextarea
+                      label="Observaciones (Opcional)"
+                      placeholder="Escribe tus observaciones de este paso del formulario"
+                      rows={5}
+                      maxLength={500}
+                      value={observacionPaso1}
+                      onChange={(e) => setObservacionPaso1(e.target.value)}
+                      readOnly={observacionesEnviadas}
+                      onBlur={handleGuardarObservacion}
+                      loading={loadingObservaciones}
+                      saved={saved}
+                    />
+                  )}
+                </div>
               )}
-            </div>
+            </>
           )}
 
           <NavigationGore step={paso1_gore.numero_paso} id={dataFormGore?.id} />
