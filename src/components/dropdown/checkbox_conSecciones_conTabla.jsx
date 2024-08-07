@@ -234,7 +234,7 @@ const DropdownConSecciones = ({
   };
 
   return (
-    <div className={`input-container col-10 ${readOnly ? 'readonly' : ''}`}>
+    <div className={`input-container ${readOnly ? 'readonly' : ''}`}>
       {readOnly ? (
         <div className="pt-3 col-10">
           <label className="text-sans-h5 input-label">

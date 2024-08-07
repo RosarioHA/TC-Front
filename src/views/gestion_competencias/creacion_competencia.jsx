@@ -466,7 +466,7 @@ const CreacionCompetencia = () =>
                   <h6> El ámbito se puede modificar en las revisiones SUBDERE que ocurren a lo largo del proceso, la elección en esta etapa no es necesariamente definitiva. </h6>
                 </div>
               </div>
-              <div className="mb-4">
+              <div className="mb-4 col-11">
                 <div >
                   <DropdownConSecciones
                     key={sectorSeleccionado + '-' + regionSeleccionada}
