@@ -360,7 +360,6 @@ const PersonalSectorial = ({
     startSavingField(fieldId);
 
     let payload = createPayload(fieldName, arrayNameId, newValue);
-    console.log("Payload antes de enviar:", payload);
     if (!payload)
     {
       console.error('Error al crear el payload');
@@ -372,7 +371,6 @@ const PersonalSectorial = ({
     const nullField = containsNull(payload);
     if (nullField)
     {
-      console.log(`Se detectó un valor null en el payload para el campo ${fieldName}.`);
       setError(`${nullField}_${arrayNameId}`, { type: 'manual', message: 'Error de guardado. Borra e ingresa el dato otra vez.' });
       finishSavingField(fieldId, false);
       return; // Terminar ejecución si se encuentra un valor null

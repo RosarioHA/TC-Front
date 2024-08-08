@@ -7,7 +7,6 @@ export const Sub_1 = ({ data, solo_lectura }) => {
     return new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP', minimumFractionDigits: 0 }).format(number);
   };
 
-  console.log(data.paso3_gore)
 
   return (
     <>

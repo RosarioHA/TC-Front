@@ -51,7 +51,6 @@ const FormularioLayout = () => {
       </div>
       <div className="row">
         <Outlet context={{ id: data.id,  mostrarInput, setMostrarInput, ...data }} />
-        {console.log(data)}
       </div>
     </div>
   );

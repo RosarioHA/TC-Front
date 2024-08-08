@@ -36,16 +36,22 @@ const PasoUnoGore = () =>
   }, [ handleUpdateStepNumber ]);
 
   useEffect(() =>
-  {
-    if (observaciones && Object.keys(observaciones).length === 0)
     {
-      fetchObservaciones();
-    }
-    if (observaciones && observaciones?.observacion_paso1)
+      updateStepNumber(1);
+      if (dataFormGore?.id)
+      {
+        fetchObservaciones();
+      }
+    }, [ dataFormGore?.id, fetchObservaciones, updateStepNumber ]);
+  
+    // Seguimiento de cambios en las observaciones para actualizar el estado local
+    useEffect(() =>
     {
-      setObservacionPaso1(observaciones?.observacion_paso1);
-    }
-  }, [ updateStepNumber, stepNumber, observaciones, fetchObservaciones ]);
+      if (observaciones?.observacion_paso1)
+      {
+        setObservacionPaso1(observaciones?.observacion_paso1);
+      }
+    }, [ observaciones?.observacion_paso1 ]);
 
 
   if (errorPasoGore) return <div>Error: {errorPasoGore.message || "Error desconocido"}</div>;
@@ -102,7 +108,7 @@ const PasoUnoGore = () =>
           {mostrarInput && (
             <>
               {formularioEnviado && userSubdere && (
-                <div className="mt-5 my-4 border-top pt-5">
+                <div className="mt-5 my-4 border-top pt-5 col-11">
                   {!observacionPaso1.trim() && observacionesEnviadas ? (
                     <p>No se han dejado observaciones en este paso.</p>
                   ) : (

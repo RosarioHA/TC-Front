@@ -23,8 +23,6 @@ export const SubAdicionales = ({
   const [inputStatus, setInputStatus] = useState({});
 
 
-  //console.log(esquemaValidacion)// no eliminar
-
   useEffect(() => {
     setSubAdicionales(Array.isArray(data) ? data : []);
   }, [data]);

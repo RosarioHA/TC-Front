@@ -1,5 +1,5 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { useState, useEffect,useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import { FormGOREContext } from "../../context/FormGore";
 import { useCompetencia } from "../../hooks/competencias/useCompetencias";
 import { SubirArchivo } from "../../components/commons/subirArchivo";
@@ -23,7 +23,7 @@ const ObservacionesSubdereGore = () =>
   const observaciones = etapaCinco?.observaciones_subere_gore?.detalle_observaciones_subdere_gore
   const observacion = etapaCinco?.observaciones_subere_gore[ 0 ]
   const observacionesEnviadas = etapaCinco?.observacion_minuta_gore_enviada;
-  const aprobada= etapaCinco?.aprobada;
+  const aprobada = etapaCinco?.aprobada;
 
 
   useEffect(() =>
@@ -50,7 +50,7 @@ const ObservacionesSubdereGore = () =>
 
   const handleVerFormulario = (formularioId) =>
   {
-    setMostrarInput(true); 
+    setMostrarInput(true);
     navigate(`/home/formulario_gore/${formularioId}/paso_1`);
   };
 
@@ -84,33 +84,37 @@ const ObservacionesSubdereGore = () =>
           {/* FORMULARIOS GORE */}
           <div className="border-bottom pb-3">
             <h2 className="text-sans-25 mt-4 mb-4">Formularios GORE</h2>
-            {observacion ? (
-              <tr
-                className='d-flex justify-content-between p-3 align-items-center neutral-line'
-                key={observacion.id}
-              >
-                <td className="col-10">{observacion.nombre.replace('Observación del formulario GORE (', '').slice(0, -1)}</td>
-                <td className="">
-                  <button className="btn-secundario-s text-decoration-underline" onClick={() => handleVerFormulario(observacion.id)}>
-                    {observacion.accion}
-                  </button>
-                </td>
-              </tr>
-            ) : (
-              observaciones?.map((formulario, index) => (
-                <tr
-                  className={`d-flex justify-content-between p-3 align-items-center ${index % 2 === 0 ? 'neutral-line' : 'white-line'}`}
-                  key={formulario?.id}
-                >
-                  <td className="col-6">{formulario.nombre.replace('Observación del formulario GORE (', '').slice(0, -1)}</td>
-                  <td className="">
-                    <button className="btn-secundario-s text-decoration-underline" onClick={() => handleVerFormulario(formulario?.id)}>
-                      {formulario?.accion}
-                    </button>
-                  </td>
-                </tr>
-              ))
-            )}
+            <table className="col-12">
+              <tbody>
+                {observacion ? (
+                  <tr
+                    className='d-flex justify-content-between p-3 align-items-center neutral-line'
+                    key={observacion.id}
+                  >
+                    <td className="col-10">{observacion.nombre.replace('Observación del formulario GORE (', '').slice(0, -1)}</td>
+                    <td className="">
+                      <button className="btn-secundario-s text-decoration-underline" onClick={() => handleVerFormulario(observacion.id)}>
+                        {observacion.accion}
+                      </button>
+                    </td>
+                  </tr>
+                ) : (
+                  observaciones?.map((formulario, index) => (
+                    <tr
+                      className={`d-flex justify-content-between p-3 align-items-center ${index % 2 === 0 ? 'neutral-line' : 'white-line'}`}
+                      key={formulario?.id}
+                    >
+                      <td className="col-6">{formulario.nombre.replace('Observación del formulario GORE (', '').slice(0, -1)}</td>
+                      <td className="">
+                        <button className="btn-secundario-s text-decoration-underline" onClick={() => handleVerFormulario(formulario?.id)}>
+                          {formulario?.accion}
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
           </div>
           {/* MINUTA DIPRES */}
           <div className="mt-4 border-bottom">
@@ -224,10 +228,10 @@ const ObservacionesSubdereGore = () =>
           )}
           <div className="d-flex justify-content-end my-5">
             {!etapaCinco?.aprobada ? (
-            <button className="btn-primario-s" disabled={!observacionesEnviadas} onClick={handleCerrarEtapa}>
-              <p className="mb-0 text-decoration-underline">Cerrar etapa</p>
-              <i className="material-symbols-rounded ms-2">arrow_forward_ios</i>
-            </button>):("")}
+              <button className="btn-primario-s" disabled={!observacionesEnviadas} onClick={handleCerrarEtapa}>
+                <p className="mb-0 text-decoration-underline">Cerrar etapa</p>
+                <i className="material-symbols-rounded ms-2">arrow_forward_ios</i>
+              </button>) : ("")}
           </div>
         </>
       ) : (

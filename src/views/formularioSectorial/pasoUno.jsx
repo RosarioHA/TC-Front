@@ -42,7 +42,7 @@ const PasoUno = () =>
   {
     if (observaciones?.observacion_paso1)
     {
-      setObservacionPaso1(observaciones.observacion_paso1);
+      setObservacionPaso1(observaciones?.observacion_paso1);
     }
   }, [ observaciones?.observacion_paso1 ]);
 
@@ -94,7 +94,7 @@ const PasoUno = () =>
             <>
               {((userSubdere && formSectorialEnviado) || (userSectorial && observacionesEnviadas) || (userDIPRES && observacionesEnviadas) ) && (
                 <div className="mt-5 my-4 col-11">
-                  {!observacionPaso1.trim() && observacionesEnviadas ? (
+                  {!observacionPaso1?.trim() && observacionesEnviadas ? (
                     <p>No se han dejado observaciones en este paso.</p>
                   ) : (
                     <CustomTextarea

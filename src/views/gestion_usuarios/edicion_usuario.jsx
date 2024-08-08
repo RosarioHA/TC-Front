@@ -101,7 +101,6 @@ const EdicionUsuario = () =>
   {
     const data = new FormData(event.currentTarget);
     const formEntries = Array.from(data.entries());
-    // console.log('Form Entries:', formEntries);// no borrar
 
     // Verifica si hay cambios respecto al valor inicial
     const formHasChanged = Array.from(data.entries()).some(([ name, value ]) =>
