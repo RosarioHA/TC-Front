@@ -36,7 +36,7 @@ export const AuthProvider = ({children}) => {
         const response = await apiTransferenciaCompentencia.post('logout/', {
           refresh_token: refreshToken  // Incluye el refresh token aquí
         });
-        console.log('Logout successful', response);
+        console.log('Logout successful', response);//no borrar
       } catch (error) {
         console.error('Error en el cierre de sesión:', error);
       }

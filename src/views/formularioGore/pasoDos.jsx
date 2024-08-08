@@ -149,7 +149,7 @@ const PasoDosGore = () =>
           {mostrarInput && (
             <>
               {formularioEnviado && userSubdere && (
-                <div className="mt-5 my-4 border-top pt-5">
+                <div className="mt-5 my-4 border-top pt-5 col-11">
                   {!observacionPaso2.trim() && observacionesEnviadas ? (
                     <p>No se han dejado observaciones en este paso.</p>
                   ) : (
