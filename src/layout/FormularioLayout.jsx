@@ -11,7 +11,7 @@ const FormularioLayout = () => {
   const params = useParams();
 
   useEffect(() => {
-    const currentId = location.state?.id || params.id;
+    const currentId = location?.state?.id || params?.id;
     if (currentId) {
       updateFormId(currentId);
     }
