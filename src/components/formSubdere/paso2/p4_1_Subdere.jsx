@@ -1,11 +1,11 @@
 import React,{useContext, useState, useEffect } from 'react';
-import CustomTextarea from '../../forms/custom_textarea';
-import {DropdownSelectSimple } from '../../dropdown/selectSimple';
-import { CheckboxRegion2 } from '../../dropdown/checkboxRegiones2.0';
+import CustomTextarea from '../../fase1/forms/custom_textarea';
+import {DropdownSelectSimple } from '../../fase1/dropdown/selectSimple';
+import { CheckboxRegion2 } from '../../fase1/dropdown/checkboxRegiones2.0';
 import { FormSubdereContext } from '../../../context/RevisionFinalSubdere';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { validacionTemporalidadGradualidad } from '../../../validaciones/temporalidadGradualidad';
+import { validacionTemporalidadGradualidad } from '../../../validaciones/fase1/temporalidadGradualidad';
 
 export const Temporalidad = ({
   temporalidad = [],

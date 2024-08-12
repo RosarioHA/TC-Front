@@ -1,4 +1,4 @@
-import { Etapa1, Etapa2, Etapa3, Etapa4, Etapa5 } from "../etapas";
+import { Etapa1, Etapa2, Etapa3, Etapa4, Etapa5 } from "../fase1/etapas";
 
 const Etapa = ({ etapaInfo, index, id, usuarios}) => {
 

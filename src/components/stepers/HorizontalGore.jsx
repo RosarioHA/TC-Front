@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useResumenGore } from "../../hooks/fomularioGore/useResumenGore";
+import { useResumenGore } from "../../hooks/fase1/fomularioGore/useResumenGore";
 
 export const HorizontalGore = ({ baseUrl, id }) => {
   const navigate = useNavigate();

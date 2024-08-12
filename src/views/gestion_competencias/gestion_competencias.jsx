@@ -2,8 +2,8 @@ import { useState, useCallback, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useCompetencia } from "../../hooks/competencias/useCompetencias";
 import { useAuth } from "../../context/AuthContext";
-import InputSearch from "../../components/forms/Input_search";
-import { TableCheckbox } from "../../components/tables/TableCheck";
+import InputSearch from "../../components/fase1/forms/Input_search";
+import { TableCheckbox } from "../../components/fase1/tables/TableCheck";
 import { columnTitleCompetencias } from "../../Data/Usuarios";
 
 const GestionCompetencias = () => {

@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { SummaryDetail } from '../components/tables/SummaryDetail';
+import { SummaryDetail } from '../components/fase1/tables/SummaryDetail';
 import { useCompetencia } from '../hooks/competencias/useCompetencias';
 
 const Home = () =>

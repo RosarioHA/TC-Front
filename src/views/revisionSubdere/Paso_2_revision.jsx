@@ -1,5 +1,5 @@
 import { useContext, useEffect, useCallback } from "react";
-import { Avance } from "../../components/tables/Avance";
+import { Avance } from "../../components/fase1/tables/Avance";
 import { MonoStepers } from "../../components/stepers/MonoStepers";
 import { FormSubdereContext } from "../../context/RevisionFinalSubdere";
 import { JustificacionDesfavorables } from "../../components/formSubdere/paso2/p3_Subdere";

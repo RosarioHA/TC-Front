@@ -1,7 +1,7 @@
 import { createContext, useCallback, useState } from "react";
-import { useFormularioGore } from "../hooks/fomularioGore/useFormularioGore";
-import { useGorePasos } from "../hooks/fomularioGore/useFormGorePaso";
-import { usePatchGorePaso } from "../hooks/fomularioGore/useFormGoreUpdate";
+import { useFormularioGore } from "../hooks/fase1/fomularioGore/useFormularioGore";
+import { useGorePasos } from "../hooks/fase1/fomularioGore/useFormGorePaso";
+import { usePatchGorePaso } from "../hooks/fase1/fomularioGore/useFormGoreUpdate";
 
 export const FormGOREContext = createContext();
 

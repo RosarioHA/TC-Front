@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from 'react-router-dom';
-import { Avance } from "../../components/tables/Avance";
+import { Avance } from "../../components/fase1/tables/Avance";
 import { useResumenFinal } from "../../hooks/revisionFinalSubdere/useResumenFinal";
-import { SubirArchivo } from "../../components/commons/subirArchivo";
-import CustomTextarea from "../../components/forms/custom_textarea";
+import { SubirArchivo } from "../../components/fase1/commons/subirArchivo";
+import CustomTextarea from "../../components/fase1/forms/custom_textarea";
 
 const ResumenFinal = () =>
 {

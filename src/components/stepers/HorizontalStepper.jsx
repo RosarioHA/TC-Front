@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useResumenFormulario } from "../../hooks/formulario/useResumenFormulario";
+import { useResumenFormulario } from "../../hooks/fase1/formulario/useResumenFormulario";
 
 export const HorizontalStepper = ({ baseUrl, id }) => {
   const navigate = useNavigate();

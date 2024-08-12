@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate, useLocation, Link } from "react-router-dom";
-import { useCompetencia } from "../../hooks/competencias/useCompetencias";
-import { useUpdateEtapa } from "../../hooks/competencias/useOficio";
-import { SuccessSOficio } from "../../components/success/oficio";
+import { useCompetencia } from "../../../hooks/competencias/useCompetencias";
+import { useUpdateEtapa } from "../../../hooks/competencias/useOficio";
+import { SuccessSOficio } from "../../../components/success/oficio";
 
 const SubirOficio = () => {
   const updateEtapa = useUpdateEtapa();

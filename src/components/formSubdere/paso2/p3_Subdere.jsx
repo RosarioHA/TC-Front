@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import CustomTextarea from "../../forms/custom_textarea";
+import CustomTextarea from "../../fase1/forms/custom_textarea";
 import { FormSubdereContext } from "../../../context/RevisionFinalSubdere";
 
 export const JustificacionDesfavorables = ({ recomendaciones_desfavorables, solo_lectura }) => {

@@ -1,11 +1,11 @@
 import { useState, useEffect, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Controller, useForm } from 'react-hook-form';
-import CustomInput from "../../components/forms/custom_input";
-import { DropdownSelectSimple } from "../../components/dropdown/selectSimple";
-import DropdownSelectBuscador from "../../components/dropdown/select_buscador";
-import DropdownSinSecciones from "../../components/dropdown/checkbox_sinSecciones_conTabla";
-import { OpcionesAB } from "../../components/forms/opciones_AB";
+import CustomInput from "../../components/fase1/forms/custom_input";
+import { DropdownSelectSimple } from "../../components/fase1/dropdown/selectSimple";
+import DropdownSelectBuscador from "../../components/fase1/dropdown/select_buscador";
+import DropdownSinSecciones from "../../components/fase1/dropdown/checkbox_sinSecciones_conTabla";
+import { OpcionesAB } from "../../components/fase1/forms/opciones_AB";
 import { useEditUser } from "../../hooks/usuarios/useEditUser";
 import { useUserDetails } from "../../hooks/usuarios/useUserDetail";
 import { useGroups } from "../../hooks/useGroups";
@@ -14,10 +14,10 @@ import { useSector } from "../../hooks/useSector";
 import { yupResolver } from '@hookform/resolvers/yup';
 import { esquemaEdicionUsuarios } from "../../validaciones/esquemaEditarUsuario-Competencia";
 import { useAuth } from "../../context/AuthContext";
-import { useFiltroCompetencias } from "../../hooks/useFiltrarCompetencias";
+import { useFiltroCompetencias } from "../../hooks/competencias/useFiltrarCompetencias";
 import { useFormContext } from "../../context/FormAlert";
-import ModalAbandonoFormulario from "../../components/commons/modalAbandonoFormulario";
-import { DropdownSelectBuscadorUnico } from "../../components/dropdown/select_buscador_sector";
+import ModalAbandonoFormulario from "../../components/fase1/commons/modalAbandonoFormulario";
+import { DropdownSelectBuscadorUnico } from "../../components/fase1/dropdown/select_buscador_sector";
 
 const EdicionUsuario = () =>
 {
