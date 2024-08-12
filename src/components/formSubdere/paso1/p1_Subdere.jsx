@@ -2,7 +2,7 @@ import { useContext, useState, useEffect } from "react";
 import { FormSubdereContext } from "../../../context/RevisionFinalSubdere";
 import { useAmbitos } from "../../../hooks/useAmbitos";
 import { useForm, Controller } from "react-hook-form";
-import  {DropdownSelectSimple} from "../../dropdown/selectSimple"; 
+import  {DropdownSelectSimple} from "../../fase1/dropdown/selectSimple"; 
 
 export const AmbitoDefinitivo = ({ ambito_definitivo_competencia, solo_lectura }) => {
   const { updatePasoSubdere } = useContext(FormSubdereContext);
@@ -58,7 +58,7 @@ export const AmbitoDefinitivo = ({ ambito_definitivo_competencia, solo_lectura }
 
   return (
     <>
-      <div className="col-11">
+      <div className="col">
         <div className="container container-xxl-fluid">
           <h4 className="text-sans-h4">
             1. Ámbito definitivo de la competencia:

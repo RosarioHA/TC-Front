@@ -1,7 +1,7 @@
 import { useAuth } from '../../context/AuthContext';
 import { useState } from 'react';
 import { useFormContext } from '../../context/FormAlert';
-import ModalAbandonoFormulario from '../commons/modalAbandonoFormulario';
+import ModalAbandonoFormulario from '../fase1/commons/modalAbandonoFormulario';
 
 const Navbar = () => {
   const { userData: { nombre_completo, rut }, logout } = useAuth(); // Mejora de desestructuración

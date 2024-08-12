@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useUsers } from '../../hooks/usuarios/useUsers';
 import { useAuth } from '../../context/AuthContext';
 //import InputSearch from "../../components/forms/Input_search";
-import { TableCheckbox } from "../../components/tables/TableCheck";
+import { TableCheckbox } from "../../components/fase1/tables/TableCheck";
 import { columnTitlesUser } from "../../Data/Usuarios";
 
 const GestionUsuarios = () => {

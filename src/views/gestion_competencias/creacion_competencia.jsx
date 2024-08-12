@@ -2,11 +2,11 @@ import { useState, useCallback, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import CustomInput from "../../components/forms/custom_input";
-import { CheckboxRegion } from "../../components/dropdown/checkboxRegion";
-import { DropdownSelectSimple } from "../../components/dropdown/selectSimple";
-import DropdownConSecciones from "../../components/dropdown/checkbox_conSecciones_conTabla";
-import { DropdownSelectBuscadorCheck } from "../../components/dropdown/select_buscador_checkbox";
+import CustomInput from "../../components/fase1/forms/custom_input";
+import { CheckboxRegion } from "../../components/fase1/dropdown/checkboxRegion";
+import { DropdownSelectSimple } from "../../components/fase1/dropdown/selectSimple";
+import DropdownConSecciones from "../../components/fase1/dropdown/checkbox_conSecciones_conTabla";
+import { DropdownSelectBuscadorCheck } from "../../components/fase1/dropdown/select_buscador_checkbox";
 import { esquemaCreacionCompetencia } from "../../validaciones/esquemaCrearUsuario_Competencia";
 import { useCrearCompetencia } from "../../hooks/competencias/useCrearCompetencia";
 import { useCrearCompetenciaAgrupada } from "../../hooks/competencias/useCrearCompetenciaAgrupada";
@@ -16,9 +16,9 @@ import { useSector } from "../../hooks/useSector";
 import { useOrigenes } from "../../hooks/useOrigenes";
 import { useAmbitos } from "../../hooks/useAmbitos";
 import { useFormContext } from "../../context/FormAlert";
-import { BtnRadio } from "../../components/forms/BtnRadio";
-import ModalAbandonoFormulario from "../../components/commons/modalAbandonoFormulario";
-import { ListaNombres } from "../../components/tables/ListaNombres";
+import { BtnRadio } from "../../components/fase1/forms/BtnRadio";
+import ModalAbandonoFormulario from "../../components/fase1/commons/modalAbandonoFormulario";
+import { ListaNombres } from "../../components/fase1/tables/ListaNombres";
 
 
 const initialValues = {

@@ -3,7 +3,7 @@ import DualListBox from 'react-dual-listbox';
 import 'react-dual-listbox/lib/react-dual-listbox.css';
 import 'material-icons/iconfont/material-icons.css';
 import { FormSubdereContext } from '../../../context/RevisionFinalSubdere';
-import { ModalAdvertencia } from '../../commons/modalAdvertencia';
+import { ModalAdvertencia } from '../../fase1/commons/modalAdvertencia';
 
 export const RecomendacionTransferencia = ({ regionesListado, regionesRecomendadas, solo_lectura }) => {
   // Transforma el listado de regiones al formato esperado por DualListBox
@@ -83,7 +83,7 @@ export const RecomendacionTransferencia = ({ regionesListado, regionesRecomendad
 
   return (
     <>
-      <div className="col-11">
+      <div className="col">
         <div className="container container-xxl-fluid">
           <h4 className="text-sans-h4">
             2. Recomendación de transferencia
