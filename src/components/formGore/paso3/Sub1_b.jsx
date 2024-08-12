@@ -1,8 +1,12 @@
 import { CostoPersonal } from '../componentes/CostoPersonal';
 import { PersonalGore } from '../componentes/PersonalGore';
+import { PersonalInformadoSector } from '../componentes/PersonalInformadoSector';
+
 
 export const Sub1_b = ({ data, solo_lectura }) => {
-  const { paso3_gore,
+  const { 
+    paso3_gore,
+    p3_personal_indirecto_sector,
     p3_personal_indirecto_gore,
     listado_estamentos,
     listado_calidades_juridicas_indirectas
@@ -31,6 +35,13 @@ export const Sub1_b = ({ data, solo_lectura }) => {
           </h6>
         </div>
         <div>
+          <PersonalInformadoSector
+            personalSector={p3_personal_indirecto_sector}
+            title="indirecto"
+            seccion="p_3_1_b_personal_indirecto"
+            solo_lectura={solo_lectura}
+          />
+
           <CostoPersonal 
             title="indirectos"
             plantaInformado={paso3_gore?.sub21b_personal_planta_justificado}
