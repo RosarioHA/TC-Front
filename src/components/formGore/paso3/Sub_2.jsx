@@ -3,6 +3,7 @@ import { FisicoInfraestructura } from "../componentes/FisicoInfraestructura"
 import { JustificarCostos } from "../componentes/JustificarCostos"
 import { ResumenSubtitulos } from "../componentes/ResumenSubtitulos"
 import { ResumenSubtitulosSistemasInformaticos } from "../componentes/ResumenSubtitulosSistemasInformaticos"
+import { Sub_2_a } from "./Sub_2_a"
 
 export const Sub_2 = ({ data, paso3, solo_lectura }) => {
 
@@ -13,14 +14,21 @@ export const Sub_2 = ({ data, paso3, solo_lectura }) => {
     subtitulo_29_diferencia_sector,
     subtitulo_29_justificados_gore,
     subtitulo_29_por_justificar,
-    sub29_item07_diferencia_sector,
-    sub29_item07_justificados_gore,
-    sub29_item07_por_justificar
+    sub29_item07_diferencia_sector_directo,
+    sub29_item07_justificados_gore_directo,
+    sub29_item07_por_justificar_directo,
+    sub29_item07_diferencia_sector_indirecto,
+    sub29_item07_justificados_gore_indirecto,
+    sub29_item07_por_justificar_indirecto
   } = paso3;
 
-  const { p_3_2_recursos_comparados,
-    p_3_2_a_sistemas_informaticos,
-    p_3_2_b_recursos_fisicos_infraestructura,
+  const { 
+    recursos_comparados_directos,
+    recursos_comparados_indirectos,
+    sistemas_informaticos_directos,
+    sistemas_informaticos_indirectos,
+    rec_fis_infra_directos,
+    rec_fis_infra_indirectos,
     id_item_subtitulo_programas_informaticos
   } = data
 
@@ -35,30 +43,42 @@ export const Sub_2 = ({ data, paso3, solo_lectura }) => {
             El objetivo de este apartado es cuantificar el personal necesario para realizar los procedimientos y tareas identificadas en el paso 2, Arquitectura de Procesos.
           </h6>
         </div>
-        <div className="my-4 col-11">
-          <JustificarCostos recursos={p_3_2_recursos_comparados} />
-        </div>
-        <div className="my-4 ">
-          <FichaInformatico 
-          idItem={id_item_subtitulo_programas_informaticos} 
-          dataInformatico={p_3_2_a_sistemas_informaticos} 
-          solo_lectura={solo_lectura} 
-          />
-        </div>
-        <div className="my-4 ">
-          <ResumenSubtitulosSistemasInformaticos
+        
+        <div className="my-4 col-12">
+          <Sub_2_a
+            titulo_costo="3.2.a Costos directos"
+            sufijo_costos="(costos directos)"
+            recursos_comparados={recursos_comparados_directos}
+            idItem={id_item_subtitulo_programas_informaticos}
+            dataInformatico={sistemas_informaticos_directos}
             nombreSubtitulo="Subtítulo 29"
-            subDiferencia={sub29_item07_diferencia_sector}
-            subJustificados={sub29_item07_justificados_gore}
-            subJustificar={sub29_item07_por_justificar}
-          />
-        </div>
-        <div className="my-4 ">
-          <FisicoInfraestructura
-            dataRecursosFisicos={p_3_2_b_recursos_fisicos_infraestructura}
+            subDiferencia={sub29_item07_diferencia_sector_directo}
+            subJustificados={sub29_item07_justificados_gore_directo}
+            subJustificar={sub29_item07_por_justificar_directo}
+            dataRecursosFisicos={rec_fis_infra_directos}
             solo_lectura={solo_lectura}
           />
         </div>
+
+        <div className="my-4 col-12">
+          <Sub_2_a
+            titulo_costo="3.2.b Costos indirectos"
+            sufijo_costos="(costos indirectos)"
+            recursos_comparados={recursos_comparados_indirectos}
+            idItem={id_item_subtitulo_programas_informaticos}
+            dataInformatico={sistemas_informaticos_indirectos}
+            nombreSubtitulo="Subtítulo 29"
+            subDiferencia={sub29_item07_diferencia_sector_indirecto}
+            subJustificados={sub29_item07_justificados_gore_indirecto}
+            subJustificar={sub29_item07_por_justificar_indirecto}
+            dataRecursosFisicos={rec_fis_infra_indirectos}
+            solo_lectura={solo_lectura}
+          />
+        </div>
+
+        <span className="my-4 text-sans-h4">
+          Resumen estimación razonada de la capacidad administrativa
+        </span>
         <div className="my-4 ">
           <ResumenSubtitulos
             nombreSubtitulo="Subtítulo 22"

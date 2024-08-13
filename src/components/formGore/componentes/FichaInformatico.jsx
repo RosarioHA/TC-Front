@@ -9,6 +9,7 @@ import { FormGOREContext } from '../../../context/FormGore';
 export const FichaInformatico = ({
   idItem,
   dataInformatico,
+  sufijo_costos,
   solo_lectura
 }) => {
   const [fichasTecnicas, setFichasTecnicas] = useState(dataInformatico);
@@ -121,9 +122,9 @@ export const FichaInformatico = ({
   return (
     <>
       <div>
-        <div className="pe-5 me-5 mt-4 col-12">
+        
           <span className="my-4 text-sans-h4">
-            a. Ficha de sistemas informáticos
+            a. Ficha de sistemas informáticos {`${sufijo_costos} `}
           </span>
           <form onSubmit={handleSubmit(onSubmit)}>
             {Array.isArray(fichasTecnicas) &&
@@ -344,7 +345,7 @@ export const FichaInformatico = ({
               )}
             </div>
           </form>
-        </div>
+        
       </div>
     </>
   );
