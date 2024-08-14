@@ -6,7 +6,7 @@ import CustomTextarea from '../../forms/custom_textarea';
 import { FormGOREContext } from '../../../context/FormGore';
 import InputCosto from '../../forms/input_costo';
 
-export const FisicoInfraestructura = ({ dataRecursosFisicos, solo_lectura }) => {
+export const FisicoInfraestructura = ({ dataRecursosFisicos, sufijo_costos, solo_lectura }) => {
   const { control, handleSubmit, trigger, formState: { errors } } = useForm({
     resolver: yupResolver(validacionInfraestructura),
     mode: 'onBlur',
@@ -71,7 +71,7 @@ export const FisicoInfraestructura = ({ dataRecursosFisicos, solo_lectura }) => 
       <div>
         <div className="pe-5 me-5 mt-5 col-12">
           <span className="my-4 text-sans-h4">
-            b. Recursos físicos e infraestructura
+            b. Recursos físicos e infraestructura {`${sufijo_costos} `}
           </span>
           <div className="text-sans-h6-primary my-3 col-11">
             <h6>
