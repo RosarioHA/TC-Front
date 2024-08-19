@@ -24,8 +24,6 @@ export const Sub_2_a = ({
   sub29Justificados,
   sub29Justificar
 }) => {
-
-  console.log(dataInformatico)
   return (
     <>
       <span className="my-4 text-sans-h4">

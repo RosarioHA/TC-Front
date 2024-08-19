@@ -141,7 +141,7 @@ export const PersonalGore = ({
       <div className="mt-5">
         <CustomTextarea
           id={`descripcion_perfiles_tecnicos_${title}`}
-          label={`Descripción de perfiles técnicos ${title}s`}
+          label={`Descripción de perfiles técnicos ${title}s (Obligatorio)`}
           placeholder={`Describe los perfiles técnicos ${title} necesarios`}
           maxLength={300}
           value={descripcion} // Controla el valor con el estado

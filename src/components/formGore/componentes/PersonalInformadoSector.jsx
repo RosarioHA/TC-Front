@@ -1,92 +1,92 @@
 import React, { useContext, useState, useMemo } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
 import CustomInput from '../../forms/custom_input';
 import { OpcionesAB } from '../../forms/opciones_AB';
 import { FormGOREContext } from '../../../context/FormGore';
+import { validacionesPersonalInformado } from '../../../validaciones/esquemaPersonalGore'
 
-const schema = yup
-  .object({
-    utilizar_recurso: yup.boolean().required('Debe indicar una opción'),
-    numero_personas_gore: yup
-      .number()
-      .typeError('Debe ser un número')
-      .integer('Debe ser un número entero')
-      .positive('Debe ser un número positivo')
-      .min(1, 'Debe ser igual o mayor a 1'),
-  })
-  .required();
 
 export const PersonalInformadoSector = ({
   personalSector,
   title,
   seccion,
   solo_lectura
-}) => {
+}) =>
+{
   const { updatePasoGore } = useContext(FormGOREContext);
-  const [inputStatus, setInputStatus] = useState({});
-  const { control, handleSubmit } = useForm({
-    resolver: yupResolver(schema),
-    mode: 'onBlur',
+  const [ inputStatus, setInputStatus ] = useState({});
+  const { control, handleSubmit, formState: { errors } } = useForm({
+    resolver: yupResolver(validacionesPersonalInformado),
   });
 
-  const formatNumber = (number) => {
+  const formatNumber = (number) =>
+  {
     // Verificar si el número es 0 para manejar el caso "No informado"
     if (number === 0) return "No informado";
     return new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP', minimumFractionDigits: 0 }).format(number);
   };
 
-  const datosAgrupadosPorCalidadJuridica = useMemo(() => {
-    if (!Array.isArray(personalSector)) {
+  const datosAgrupadosPorCalidadJuridica = useMemo(() =>
+  {
+    if (!Array.isArray(personalSector))
+    {
       return {};
     }
-    return personalSector.reduce((acc, persona) => {
-      if (!acc[persona.calidad_juridica]) {
-        acc[persona.calidad_juridica] = [];
+    return personalSector.reduce((acc, persona) =>
+    {
+      if (!acc[ persona.calidad_juridica ])
+      {
+        acc[ persona.calidad_juridica ] = [];
       }
-      acc[persona.calidad_juridica].push(persona);
+      acc[ persona.calidad_juridica ].push(persona);
       return acc;
     }, {});
-  }, [personalSector]);
+  }, [ personalSector ]);
 
-  const handleUpdate = async (personaId, field, value) => {
+  const handleUpdate = async (personaId, field, value) =>
+  {
     setInputStatus((prev) => ({
       ...prev,
-      [personaId]: {
-        ...prev[personaId],
-        [field]: { loading: true, saved: false },
+      [ personaId ]: {
+        ...prev[ personaId ],
+        [ field ]: { loading: true, saved: false },
       },
     }));
 
-    try {
+    try
+    {
       const payload = {
-        [seccion]: [{ id: personaId, [field]: value }],
+        [ seccion ]: [ { id: personaId, [ field ]: value } ],
       };
       await updatePasoGore(payload);
       setInputStatus((prev) => ({
         ...prev,
-        [personaId]: {
-          ...prev[personaId],
-          [field]: { loading: false, saved: true },
+        [ personaId ]: {
+          ...prev[ personaId ],
+          [ field ]: { loading: false, saved: true },
         },
       }));
-    } catch (error) {
+    } catch (error)
+    {
       console.error('Error updating data', error);
       setInputStatus((prev) => ({
         ...prev,
-        [personaId]: {
-          ...prev[personaId],
-          [field]: { loading: false, saved: false },
+        [ personaId ]: {
+          ...prev[ personaId ],
+          [ field ]: { loading: false, saved: false },
         },
       }));
     }
   };
 
-  const onSubmit = (data) => {
-    Object.entries(data).forEach(([key, value]) => {
-      const [fieldName, personaId] = key.split('-');
-      if (fieldName && personaId) {
+  const onSubmit = (data) =>
+  {
+    Object.entries(data).forEach(([ key, value ]) =>
+    {
+      const [ fieldName, personaId ] = key.split('-');
+      if (fieldName && personaId)
+      {
         handleUpdate(personaId, fieldName, value);
       }
     });
@@ -101,13 +101,13 @@ export const PersonalInformadoSector = ({
         </div>
         <form onSubmit={handleSubmit(onSubmit)}>
           {Object.entries(datosAgrupadosPorCalidadJuridica).map(
-            ([calidadJuridica, personas]) => (
+            ([ calidadJuridica, personas ]) => (
               <React.Fragment key={calidadJuridica}>
                 <div key={calidadJuridica}>
                   <p className="my-4">
                     <strong>Calidad Jurídica </strong>
                     <span className="mx-2">
-                      {personas[0].nombre_calidad_juridica}
+                      {personas[ 0 ].nombre_calidad_juridica}
                     </span>
                   </p>
                   <table className="table table-striped align-middle">
@@ -170,7 +170,8 @@ export const PersonalInformadoSector = ({
                                     {...field}
                                     id={`utilizara_recurso-${persona.id}`}
                                     initialState={persona.utilizara_recurso}
-                                    handleEstadoChange={(value) => {
+                                    handleEstadoChange={(value) =>
+                                    {
                                       field.onChange(value);
                                       handleUpdate(
                                         persona.id,
@@ -180,11 +181,11 @@ export const PersonalInformadoSector = ({
                                       );
                                     }}
                                     loading={
-                                      inputStatus[persona.id]?.utilizara_recurso
+                                      inputStatus[ persona.id ]?.utilizara_recurso
                                         ?.loading
                                     }
                                     saved={
-                                      inputStatus[persona.id]?.utilizara_recurso
+                                      inputStatus[ persona.id ]?.utilizara_recurso
                                         ?.saved
                                     }
                                     altA="Si"
@@ -203,42 +204,24 @@ export const PersonalInformadoSector = ({
                               </td>
                               <td className="col-2 pe-5">
                                 <Controller
-                                  name={`numero_personas_gore-${persona.id}`}
+                                  name={`persona.${persona.id}.numero_personas_gore`}
                                   control={control}
-                                  rules={{ required: true }}
-                                  defaultValue={
-                                    persona.numero_personas_gore || ''
-                                  }
-                                  render={({
-                                    field,
-                                    fieldState: { error },
-                                  }) => (
+                                  defaultValue={persona.numero_personas_gore || ''}
+                                  render={({ field, fieldState }) => (
                                     <CustomInput
                                       {...field}
                                       placeholder="número"
                                       disabled={solo_lectura}
-                                      loading={
-                                        inputStatus[persona.id]
-                                          ?.numero_personas_gore?.loading
-                                      }
-                                      saved={
-                                        inputStatus[persona.id]
-                                          ?.numero_personas_gore?.saved
-                                      }
-                                      error={error ? error.message : null}
-                                      onBlur={(e) => {
+                                      loading={inputStatus[ persona.id ]?.numero_personas_gore?.loading}
+                                      saved={inputStatus[ persona.id ]?.numero_personas_gore?.saved}
+                                      error={fieldState.error ? fieldState.error.message : null}
+                                      onBlur={(e) =>
+                                      {
                                         field.onBlur();
                                         const newValue = e.target.value;
-                                        if (
-                                          persona.numero_personas_gore !==
-                                          newValue &&
-                                          !error
-                                        ) {
-                                          handleUpdate(
-                                            persona.id,
-                                            'numero_personas_gore',
-                                            newValue
-                                          );
+                                        if (persona.numero_personas_gore !== newValue && !fieldState.error)
+                                        {
+                                          handleUpdate(persona.id, 'numero_personas_gore', newValue);
                                         }
                                       }}
                                     />
