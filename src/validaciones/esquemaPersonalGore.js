@@ -24,13 +24,15 @@ export const validacionesCalidadJuridica = yup.object({
         .min(1, 'El N° de personas no puede ser 0')
         .nullable(false)
         .when('title', {
-          is: 'indirecto', // If title is 'indirecto'
-          then: schema => schema.required('El N° de personas es requerido'), // Required
-          otherwise: schema => schema // Optional if not 'indirecto'
+          is: 'indirecto', 
+          then: schema => schema.required('El N° de personas es requerido'),
+          otherwise: schema => schema 
         })
     })
   )
 });
+
+
 export const validacionesPersonalInformado = yup.object({
   persona: yup.array().of(
     yup.object().shape({
@@ -40,7 +42,6 @@ export const validacionesPersonalInformado = yup.object({
         .integer('El N° de personas debe ser un número entero')
         .required('El N° de personas es obligatorio')
         .min(1, 'Debe ser igual o mayor a 1 '),
-      utilizar_recurso: yup.boolean().required('Debe indicar una opción'),
     })
   )
 });

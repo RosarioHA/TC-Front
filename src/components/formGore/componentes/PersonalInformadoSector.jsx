@@ -16,8 +16,9 @@ export const PersonalInformadoSector = ({
 {
   const { updatePasoGore } = useContext(FormGOREContext);
   const [ inputStatus, setInputStatus ] = useState({});
-  const { control, handleSubmit, formState: { errors } } = useForm({
+  const { control,  trigger, getValues ,handleSubmit, formState: { errors } } = useForm({
     resolver: yupResolver(validacionesPersonalInformado),
+    mode: 'onBlur'
   });
 
   const formatNumber = (number) =>
@@ -214,14 +215,22 @@ export const PersonalInformadoSector = ({
                                       disabled={solo_lectura}
                                       loading={inputStatus[ persona.id ]?.numero_personas_gore?.loading}
                                       saved={inputStatus[ persona.id ]?.numero_personas_gore?.saved}
-                                      error={fieldState.error ? fieldState.error.message : null}
-                                      onBlur={(e) =>
+                                      error={fieldState?.error?.message}
+                                      onBlur={async (e) =>
                                       {
-                                        field.onBlur();
+                                        field.onBlur(); // Llama a la función onBlur de React Hook Form
                                         const newValue = e.target.value;
-                                        if (persona.numero_personas_gore !== newValue && !fieldState.error)
+
+                                        // Forzar la validación del campo
+                                        const isValid = await trigger(`persona.${persona.id}.numero_personas_gore`);
+
+                                        if (isValid)
                                         {
-                                          handleUpdate(persona.id, 'numero_personas_gore', newValue);
+                                          const currentValue = getValues(`persona.${persona.id}.numero_personas_gore`);
+                                          if (currentValue !== persona.numero_personas_gore)
+                                          {
+                                            handleUpdate(persona.id, 'numero_personas_gore', currentValue);
+                                          }
                                         }
                                       }}
                                     />
