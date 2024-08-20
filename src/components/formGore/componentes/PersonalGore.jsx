@@ -18,6 +18,7 @@ export const PersonalGore = ({
 }) => {
   // Inicializamos el estado de la descripción aquí, asumiendo que puede ser actualizado por un prop externo
   const [descripcion, setDescripcion] = useState('');
+  const [descripcionInicial, setDescripcionInicial] = useState(''); 
   const [estadoGuardado, setEstadoGuardado] = useState({ loading: false, saved: false });
   const [calidades, setCalidades] = useState(listado_calidades_disponibles || []);
   const [selectedCalidadJuridica, setSelectedCalidadJuridica] = useState('');
@@ -28,6 +29,7 @@ export const PersonalGore = ({
       const key = `descripcion_perfiles_tecnicos_${title}`;
       if (seccionGore3[key] !== undefined) {
         setDescripcion(seccionGore3[key]);
+        setDescripcionInicial(seccionGore3[key]); // Almacena el valor inicial
       }
     }
   }, [seccionGore3, title]);
@@ -50,6 +52,10 @@ export const PersonalGore = ({
 
 
   const handleBlur = async () => {
+    if (descripcion === descripcionInicial) {
+      return; // No hacer nada si el valor no ha cambiado
+    }
+
     setEstadoGuardado({ loading: true, saved: false });
     const payload = {
       ["paso3_gore"]: {
@@ -60,16 +66,12 @@ export const PersonalGore = ({
     try {
       await updatePasoGore(payload);
       setEstadoGuardado({ loading: false, saved: true });
+      setDescripcionInicial(descripcion); // Actualiza el valor inicial después de guardar
     } catch (error) {
       console.error('Error updating data', error);
       setEstadoGuardado({ loading: false, saved: false });
     }
   };
-
-  const handleCalidadChange = (selectedOption) => {
-    setSelectedCalidadJuridica(selectedOption.value);
-  };
-  
 
   // Botón para agregar calidad jurídica
   const agregarCalidadJuridica = async () => {
@@ -139,9 +141,9 @@ export const PersonalGore = ({
       )}
 
       <div className="mt-5">
-        <CustomTextarea
+      <CustomTextarea
           id={`descripcion_perfiles_tecnicos_${title}`}
-          label={`Descripción de perfiles técnicos ${title}s`}
+          label={`Descripción de perfiles técnicos ${title}s (Obligatorio)`}
           placeholder={`Describe los perfiles técnicos ${title} necesarios`}
           maxLength={300}
           value={descripcion} // Controla el valor con el estado
