@@ -155,7 +155,7 @@ export const PersonalInformadoSector = ({
                             {persona.grado || '-'}
                           </td>
                           <td>{persona.sector_nombre}</td>
-                          <td className="col-2 px-5">
+                          <td className="col-1 px-1 text-center">
                             <span className="text-sans-p-bold-blue">
                               {persona.comision_servicio ? 'Sí' : 'No'}
                             </span>
@@ -200,10 +200,10 @@ export const PersonalInformadoSector = ({
                           )}
                           {title === 'indirecto' && (
                             <>
-                              <td className="col-2 pe-3 text-center">
+                              <td className="col-1 text-center">
                                 {persona.numero_personas_sectorial}
                               </td>
-                              <td className="col-2 pe-5">
+                              <td className="col-2">
                                 <Controller
                                   name={`persona.${persona.id}.numero_personas_gore`}
                                   control={control}

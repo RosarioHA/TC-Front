@@ -24,9 +24,9 @@ export const validacionesCalidadJuridica = yup.object({
         .min(1, 'El N° de personas no puede ser 0')
         .nullable(false)
         .when('title', {
-          is: 'indirecto', 
+          is: 'indirecto',
           then: schema => schema.required('El N° de personas es requerido'),
-          otherwise: schema => schema 
+          otherwise: schema => schema
         })
     })
   )
@@ -44,4 +44,13 @@ export const validacionesPersonalInformado = yup.object({
         .min(1, 'Debe ser igual o mayor a 1 '),
     })
   )
+});
+
+
+export const perfilesTecnicos = yup.object({
+  descripcion_perfiles_tecnicos: yup
+    .string()
+    .required('La descripción es obligatoria')
+    .min(20, 'La descripción debe tener al menos 20 caracteres')
+    .max(300, 'La descripción no debe exceder los 300 caracteres'),
 });

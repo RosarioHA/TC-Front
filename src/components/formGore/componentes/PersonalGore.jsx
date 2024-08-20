@@ -3,6 +3,7 @@ import { FormGOREContext } from '../../../context/FormGore';
 import DropdownSelect from '../../dropdown/select';
 import CustomTextarea from '../../forms/custom_textarea';
 import { PersonalInformado } from './PersonalInformado';
+import { perfilesTecnicos } from '../../../validaciones/esquemaPersonalGore'
 
 
 export const PersonalGore = ({
@@ -15,90 +16,113 @@ export const PersonalGore = ({
   seccionGore3,
   solo_lectura,
   prefix,
-}) => {
+}) =>
+{
   // Inicializamos el estado de la descripción aquí, asumiendo que puede ser actualizado por un prop externo
-  const [descripcion, setDescripcion] = useState('');
-  const [descripcionInicial, setDescripcionInicial] = useState(''); 
-  const [estadoGuardado, setEstadoGuardado] = useState({ loading: false, saved: false });
-  const [calidades, setCalidades] = useState(listado_calidades_disponibles || []);
-  const [selectedCalidadJuridica, setSelectedCalidadJuridica] = useState('');
+  const [ descripcion, setDescripcion ] = useState('');
+  const [ descripcionInicial, setDescripcionInicial ] = useState('');
+  const [ estadoGuardado, setEstadoGuardado ] = useState({ loading: false, saved: false });
+  const [ calidades, setCalidades ] = useState(listado_calidades_disponibles || []);
+  const [ selectedCalidadJuridica, setSelectedCalidadJuridica ] = useState('');
   const { updatePasoGore } = useContext(FormGOREContext);
+  const [error, setError] = useState('');
 
-  useEffect(() => {
-    if (seccionGore3 && title) {
+
+  useEffect(() =>
+  {
+    if (seccionGore3 && title)
+    {
       const key = `descripcion_perfiles_tecnicos_${title}`;
-      if (seccionGore3[key] !== undefined) {
-        setDescripcion(seccionGore3[key]);
-        setDescripcionInicial(seccionGore3[key]); // Almacena el valor inicial
+      if (seccionGore3[ key ] !== undefined)
+      {
+        setDescripcion(seccionGore3[ key ]);
+        setDescripcionInicial(seccionGore3[ key ]); // Almacena el valor inicial
       }
     }
-  }, [seccionGore3, title]);
+  }, [ seccionGore3, title ]);
 
 
   // Carga y actualiza las calidades disponibles
-  useEffect(() => {
-    if (Array.isArray(listado_calidades_disponibles)) { // Verifica que sea un arreglo
+  useEffect(() =>
+  {
+    if (Array.isArray(listado_calidades_disponibles))
+    { // Verifica que sea un arreglo
       const nuevasCalidades = listado_calidades_disponibles.map(dato => ({
         label: dato.calidad_juridica,
         value: dato.id.toString()
       }));
       setCalidades(nuevasCalidades);
-    } else {
+    } else
+    {
       // Maneja el caso en que listado_calidades_disponibles no sea un arreglo
       console.error('listado_calidades_disponibles debe ser un arreglo');
       setCalidades([]); // Puedes establecerlo como un arreglo vacío o manejar el error como prefieras
     }
-  }, [listado_calidades_disponibles]);
-
-
-  const handleBlur = async () => {
-    if (descripcion === descripcionInicial) {
-      return; // No hacer nada si el valor no ha cambiado
-    }
-
-    setEstadoGuardado({ loading: true, saved: false });
-    const payload = {
-      ["paso3_gore"]: {
-        [`descripcion_perfiles_tecnicos_${title}`]: descripcion,
-      },
-    };
-
-    try {
-      await updatePasoGore(payload);
-      setEstadoGuardado({ loading: false, saved: true });
-      setDescripcionInicial(descripcion); // Actualiza el valor inicial después de guardar
-    } catch (error) {
-      console.error('Error updating data', error);
-      setEstadoGuardado({ loading: false, saved: false });
-    }
-  };
-
-  // Botón para agregar calidad jurídica
-  const agregarCalidadJuridica = async () => {
-    if (!selectedCalidadJuridica) {
-      console.error('No se ha seleccionado ninguna calidad jurídica');
-      return;
-    }
-  
-    const nuevaCalidadPayload = {
-      calidad_juridica: selectedCalidadJuridica,
-    };
-  
-    try {
-      await updatePasoGore({
-        [seccion]: [nuevaCalidadPayload],
-      });
-      
-    } catch (error) {
-      console.error('Error al agregar personal nuevo', error);
-    }
-  };
-  
+  }, [ listado_calidades_disponibles ]);
 
   const handleDescripcionChange = (e) => {
     setDescripcion(e.target.value);
     setEstadoGuardado({ loading: false, saved: false });
   };
+
+  const handleBlur = async () => {
+    if (descripcion === descripcionInicial) return; // No hace nada si no hubo cambios
+  
+    try {
+      // Valida el campo utilizando el esquema importado
+      await perfilesTecnicos.validate({ descripcion_perfiles_tecnicos: descripcion });
+      
+      // Si pasa la validación, procede a guardar
+      setEstadoGuardado({ loading: true, saved: false });
+      const payload = {
+        ["paso3_gore"]: {
+          [`descripcion_perfiles_tecnicos_${title}`]: descripcion,
+        },
+      };
+  
+      try {
+        await updatePasoGore(payload); // Envía el payload para guardar los datos
+        setEstadoGuardado({ loading: false, saved: true });
+        setDescripcionInicial(descripcion); // Actualiza la descripción inicial para futuras comparaciones
+        setError(null); // Limpia cualquier error previo si la validación es exitosa
+      } catch (error) {
+        console.error('Error updating data', error);
+        setEstadoGuardado({ loading: false, saved: false });
+      }
+    } catch (validationError) {
+      // Captura el mensaje de error de Yup y lo muestra en el estado
+      setError(validationError.message); 
+  
+      // Actualiza el estado para reflejar que no se guardó debido a un error de validación
+      setEstadoGuardado({ loading: false, saved: false });
+    }
+  };
+  
+  // Botón para agregar calidad jurídica
+  const agregarCalidadJuridica = async () =>
+  {
+    if (!selectedCalidadJuridica)
+    {
+      console.error('No se ha seleccionado ninguna calidad jurídica');
+      return;
+    }
+
+    const nuevaCalidadPayload = {
+      calidad_juridica: selectedCalidadJuridica,
+    };
+
+    try
+    {
+      await updatePasoGore({
+        [ seccion ]: [ nuevaCalidadPayload ],
+      });
+
+    } catch (error)
+    {
+      console.error('Error al agregar personal nuevo', error);
+    }
+  };
+
 
 
   return (
@@ -146,13 +170,15 @@ export const PersonalGore = ({
           label={`Descripción de perfiles técnicos ${title}s (Obligatorio)`}
           placeholder={`Describe los perfiles técnicos ${title} necesarios`}
           maxLength={300}
-          value={descripcion} // Controla el valor con el estado
-          onChange={handleDescripcionChange}
+          value={descripcion}
           onBlur={handleBlur}
+          onChange={(e) => setDescripcion(e.target.value)}
           loading={estadoGuardado.loading}
           saved={estadoGuardado.saved}
           readOnly={solo_lectura}
+          error={error}
         />
+
         <div className="d-flex mb-3 mt-1 text-sans-h6-primary col-11">
           <i className="material-symbols-rounded me-2">info</i>
           <h6 className="mt-0">
