@@ -60,19 +60,16 @@ export const PersonalGore = ({
     }
   }, [ listado_calidades_disponibles ]);
 
-  const handleDescripcionChange = (e) => {
-    setDescripcion(e.target.value);
-    setEstadoGuardado({ loading: false, saved: false });
-  };
+  // const handleDescripcionChange = (e) => {
+  //   setDescripcion(e.target.value);
+  //   setEstadoGuardado({ loading: false, saved: false });
+  // };
 
   const handleBlur = async () => {
-    if (descripcion === descripcionInicial) return; // No hace nada si no hubo cambios
+    if (descripcion === descripcionInicial) return;
   
     try {
-      // Valida el campo utilizando el esquema importado
       await perfilesTecnicos.validate({ descripcion_perfiles_tecnicos: descripcion });
-      
-      // Si pasa la validación, procede a guardar
       setEstadoGuardado({ loading: true, saved: false });
       const payload = {
         ["paso3_gore"]: {
@@ -81,21 +78,22 @@ export const PersonalGore = ({
       };
   
       try {
-        await updatePasoGore(payload); // Envía el payload para guardar los datos
+        await updatePasoGore(payload); 
         setEstadoGuardado({ loading: false, saved: true });
-        setDescripcionInicial(descripcion); // Actualiza la descripción inicial para futuras comparaciones
-        setError(null); // Limpia cualquier error previo si la validación es exitosa
+        setDescripcionInicial(descripcion); 
+        setError(null);
       } catch (error) {
         console.error('Error updating data', error);
         setEstadoGuardado({ loading: false, saved: false });
       }
     } catch (validationError) {
-      // Captura el mensaje de error de Yup y lo muestra en el estado
       setError(validationError.message); 
-  
-      // Actualiza el estado para reflejar que no se guardó debido a un error de validación
       setEstadoGuardado({ loading: false, saved: false });
     }
+  };
+
+  const handleCalidadChange = (selectedOption) => {
+    setSelectedCalidadJuridica(selectedOption.value);
   };
   
   // Botón para agregar calidad jurídica
