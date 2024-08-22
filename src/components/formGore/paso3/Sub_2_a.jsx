@@ -24,6 +24,7 @@ export const Sub_2_a = ({
   sub29Justificados,
   sub29Justificar
 }) => {
+
   return (
     <>
       <span className="my-4 text-sans-h4">
@@ -58,6 +59,7 @@ export const Sub_2_a = ({
                 sufijo_costos={sufijo_costos}
                 dataInformatico={dataInformatico}
                 solo_lectura={solo_lectura}
+                nombre_costo={nombre_costo}
               />
               <ResumenSubtitulosSistemasInformaticos
                 nombreSubtitulo={nombreSubtitulo}

@@ -13,7 +13,7 @@ export const validacionFichaInformaticos = yup.object({
         .max(500, 'La descripción  no debe exceder los 30 caracteres'),
       costo: yup.number()
         .typeError('El costo debe ser un número')
-        .min(0, 'El costo no debe ser un número negativo')
+        .min(1, 'El costo no puede ser 0')
         .nullable(true)
         .required('El costo es obligatorio'),
       funcion: yup.string()
@@ -30,11 +30,13 @@ export const validacionInfraestructura = yup.object({
       cantidad: yup.number()
         .typeError('Los datos ingresados deben ser un número')
         .required('La cantidad es requerida')
+        .min(1, 'La cantidad  no puede ser 0')
         .positive('La cantidad debe ser un número positivo')
         .integer('La cantidad debe ser un número entero'),
       costo_total: yup.number()
         .typeError('Los datos ingresados deben ser un número')
         .required('El costo total es requerido')
+        .min(1, 'El costo total no puede ser 0')
         .positive('El costo total debe ser un número positivo')
         .integer('El costo total debe ser un número entero'),
       fundamentacion: yup.string()

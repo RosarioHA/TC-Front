@@ -11,6 +11,7 @@ import CustomTextarea from "../../components/forms/custom_textarea";
 const ObservacionesSubdere = () =>
 {
   const [ etapaOmitida, setEtapaOmitida ] = useState(false);
+  const [opcionSeleccionada, setOpcionSeleccionada] = useState(false);
   const navigate = useNavigate();
   const { id } = useParams();
   const { competenciaDetails } = useCompetencia(id, 2);
@@ -46,6 +47,7 @@ const ObservacionesSubdere = () =>
   const handleRadioButtonChange = (value) =>
   {
     setEtapaOmitida(value === 'B');
+    setOpcionSeleccionada(true);
   };
 
   const handleVerFormulario = (formularioId) =>
@@ -293,7 +295,7 @@ const ObservacionesSubdere = () =>
         {!etapaFinalizada && (
           <button
             className="btn-primario-s"
-            disabled={!etapaOmitida && !observacionesEnviadas}
+            disabled={!opcionSeleccionada || !observacionesEnviadas || etapaFinalizada} 
             onClick={handleCerrarEtapa}
           >
             Cerrar etapa

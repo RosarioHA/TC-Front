@@ -10,7 +10,8 @@ export const FichaInformatico = ({
   idItem,
   dataInformatico,
   sufijo_costos,
-  solo_lectura
+  solo_lectura,
+  nombre_costo
 }) => {
   const [fichasTecnicas, setFichasTecnicas] = useState(dataInformatico);
   const { updatePasoGore } = useContext(FormGOREContext);
@@ -33,8 +34,9 @@ export const FichaInformatico = ({
   const agregarFichaTecnica = async () => {
     const nuevaFichaPayload = {
       item_subtitulo: idItem,
+      tipo_costo:nombre_costo
     };
-
+  
     try {
       const respuesta = await updatePasoGore({
         p_3_2_a_sistemas_informaticos: [nuevaFichaPayload],
@@ -49,6 +51,25 @@ export const FichaInformatico = ({
       }
     } catch (error) {
       console.error('Error al agregar la ficha técnica', error);
+    }
+  };
+  
+
+  const handleAddFichaTecnica = async () => {
+    const fichasLength = fichasTecnicas.length;
+  
+    // Validar solo los campos de la última ficha técnica antes de agregar una nueva
+    const isValid = await trigger([
+      `fichas[${fichasLength - 1}].nombre_plataforma`,
+      `fichas[${fichasLength - 1}].descripcion_tecnica`,
+      `fichas[${fichasLength - 1}].costo`,
+      `fichas[${fichasLength - 1}].funcion`,
+    ]);
+  
+    if (isValid) {
+      agregarFichaTecnica();
+    } else {
+      console.error('Hay errores en los campos obligatorios de la ficha anterior');
     }
   };
 
@@ -126,10 +147,18 @@ export const FichaInformatico = ({
           <span className="my-4 text-sans-h4">
             a. Ficha de sistemas informáticos {`${sufijo_costos} `}
           </span>
+          <div className="text-sans-h6-primary my-3 col-11">
+            <h6>
+              Tomando como base la informacion aportada por el Ministerio o
+              Servicio de origen, agregue todas aquellas fichas técnicas de
+              programas o softwares requeridos y que el Gobierno Regional no
+              posee:
+            </h6>
+          </div>
           <form onSubmit={handleSubmit(onSubmit)}>
             {Array.isArray(fichasTecnicas) &&
               fichasTecnicas?.map((ficha, index) => (
-                <div key={ficha.id} className="col-10 mt-5 mb-3 border-bottom">
+                <div key={ficha.id} className="col-11 mt-5 mb-3 border-bottom">
                   {/* Nombre de Plataforma o Software */}
                   <div className="d-flex flex-row col">
                     <div className="mt-2 me-3">{index + 1}</div>
@@ -225,12 +254,12 @@ export const FichaInformatico = ({
                       Costo (M$)
                     </div>
                     <div className="d-flex flex-row col">
-                      <div className="my-3 col-5 me-3">
+                      <div className="my-3 col-4 me-3">
                         <Controller
                           name={`fichas[${index}].costo`}
                           control={control}
                           defaultValue={ficha?.costo || ''}
-                          render={({ field }) => {
+                          render={({ field ,fieldState: { error }}) => {
                             const { onChange, onBlur, value } = field;
 
                             const handleBlur = async () => {
@@ -248,7 +277,7 @@ export const FichaInformatico = ({
                                 placeholder="Costo (M$)"
                                 loading={inputStatus[ficha.id]?.costo?.loading}
                                 saved={inputStatus[ficha.id]?.costo?.saved}
-                                error={errors[`fichas[${index}].costo`]?.message}
+                                error={error?.message}
                                 disabled={solo_lectura}
                                 value={value}
                                 onChange={onChange}
@@ -258,14 +287,14 @@ export const FichaInformatico = ({
                           }}
                         />
                       </div>
-                      <div className="d-flex col-10 mb-5 mt-3">
-                        <div className="border border-1 col-3  py-1 px-1 ms-3">
-                          <div className="text-sans-p-grayc px-2 my-3 text-center">
+                      <div className="d-flex col-5 mb-5 mt-3 gap-0">
+                        <div className="border border-1 col">
+                          <div className="text-sans-p-grayc px-2 my-3 mx-1 text-center">
                             {ficha.subtitulo_label_value?.label}
                           </div>
                         </div>
-                        <div className="border border-1 col-3 py-1 px-1 ms-3">
-                          <div className="text-sans-p-grayc  px-1 m-1">
+                        <div className="border border-1 col mx-2 px-1 ">
+                          <div className="text-sans-p-grayc mx-2 my-1 w-auto text-wrap">
                             {ficha.item_subtitulo_label_value?.label}
                           </div>
                         </div>
@@ -335,7 +364,7 @@ export const FichaInformatico = ({
                 <button
                   className="btn-secundario-s m-2"
                   type="button"
-                  onClick={agregarFichaTecnica}
+                  onClick={handleAddFichaTecnica}
                 >
                   <i className="material-symbols-rounded me-2">add</i>
                   <p className="mb-0 text-decoration-underline">
