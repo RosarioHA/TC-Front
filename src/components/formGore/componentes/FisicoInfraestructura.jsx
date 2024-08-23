@@ -6,17 +6,16 @@ import CustomTextarea from '../../forms/custom_textarea';
 import { FormGOREContext } from '../../../context/FormGore';
 import InputCosto from '../../forms/input_costo';
 
-export const FisicoInfraestructura = ({ dataRecursosFisicos, sufijo_costos, solo_lectura }) =>
-{
+export const FisicoInfraestructura = ({ dataRecursosFisicos, sufijo_costos, solo_lectura }) => {
   const { control, handleSubmit, trigger, formState: { errors } } = useForm({
     resolver: yupResolver(validacionInfraestructura),
     mode: 'onBlur',
   });
+
   const { updatePasoGore } = useContext(FormGOREContext);
-  const [ inputStatus, setInputStatus ] = useState(() =>
-    dataRecursosFisicos.reduce((acc, ficha) =>
-    {
-      acc[ ficha.id ] = {
+  const [inputStatus, setInputStatus] = useState(() =>
+    dataRecursosFisicos.reduce((acc, ficha) => {
+      acc[ficha.id] = {
         cantidad: { loading: false, saved: false },
         costo_total: { loading: false, saved: false },
         fundamentacion: { loading: false, saved: false },
@@ -25,48 +24,47 @@ export const FisicoInfraestructura = ({ dataRecursosFisicos, sufijo_costos, solo
     }, {})
   );
 
-  const handleUpdate = async (fichaId, field, value) =>
-  {
-    setInputStatus((prev) => ({
+  const handleUpdate = async (fichaId, field, value) => {
+    setInputStatus(prev => ({
       ...prev,
-      [ fichaId ]: {
-        ...prev[ fichaId ],
-        [ field ]: { loading: true, saved: false }, // Inicia con loading en true
+      [fichaId]: {
+        ...prev[fichaId],
+        [field]: { loading: true, saved: false },
       },
     }));
 
-    try
-    {
+    try {
       const payload = {
         p_3_2_b_recursos_fisicos_infraestructura: [
           {
             id: fichaId,
-            [ field ]: value,
+            [field]: value,
           },
         ],
       };
       await updatePasoGore(payload);
-      setInputStatus((prevStatus) => ({
+      setInputStatus(prevStatus => ({
         ...prevStatus,
-        [ fichaId ]: {
-          ...prevStatus[ fichaId ],
-          [ field ]: { loading: false, saved: true }, // Finaliza con loading en false y saved en true
+        [fichaId]: {
+          ...prevStatus[fichaId],
+          [field]: { loading: false, saved: true },
         },
       }));
-    } catch (error)
-    {
+    } catch (error) {
       console.error('Error updating data', error);
-      setInputStatus((prevStatus) => ({
+      setInputStatus(prevStatus => ({
         ...prevStatus,
-        [ fichaId ]: {
-          ...prevStatus[ fichaId ],
-          [ field ]: { loading: false, saved: false }, // En caso de error, vuelve a false ambos
+        [fichaId]: {
+          ...prevStatus[fichaId],
+          [field]: { loading: false, saved: false },
         },
       }));
     }
   };
 
-  const onSubmit = () => handleUpdate();
+  const onSubmit = () => {
+    // Aquí podrías manejar la lógica de envío final si es necesario
+  };
 
   return (
     <>
@@ -80,7 +78,7 @@ export const FisicoInfraestructura = ({ dataRecursosFisicos, sufijo_costos, solo
           {Array.isArray(dataRecursosFisicos) &&
             dataRecursosFisicos.map((ficha, index) => (
               <React.Fragment key={index}>
-                <div className="col-12 my-5 border ">
+                <div className="col-12 my-5 border">
                   <div className="row">
                     <div className="col-4 border-end d-flex justify-content-between flex-column">
                       <div className="my-5 mx-3 pb-5">
@@ -92,7 +90,7 @@ export const FisicoInfraestructura = ({ dataRecursosFisicos, sufijo_costos, solo
                       </div>
                       <div className="my-5 mx-3 pt-5">
                         <div className="border border-1 py-1 px-1 ms-3">
-                          <div className="text-sans-p-grayc  px-2 m-2">
+                          <div className="text-sans-p-grayc px-2 m-2">
                             {ficha.item_subtitulo_label_value.label}
                           </div>
                         </div>
@@ -112,15 +110,13 @@ export const FisicoInfraestructura = ({ dataRecursosFisicos, sufijo_costos, solo
                                 {...field}
                                 id={`cantidad_${ficha.id}`}
                                 placeholder="Cantidad del recurso seleccionado"
-                                loading={inputStatus[ ficha.id ]?.cantidad?.loading}
-                                saved={inputStatus[ ficha.id ]?.cantidad?.saved}
-                                error={errors?.fichas?.[ index ]?.cantidad?.message}
+                                loading={inputStatus[ficha.id]?.cantidad?.loading}
+                                saved={inputStatus[ficha.id]?.cantidad?.saved}
+                                error={errors?.fichas?.[index]?.cantidad?.message}
                                 disabled={solo_lectura}
-                                onBlur={async (e) =>
-                                {
+                                onBlur={async (e) => {
                                   const isValid = await trigger(`fichas[${index}].cantidad`);
-                                  if (isValid && ficha.cantidad !== field.value)
-                                  {
+                                  if (isValid && ficha.cantidad !== field.value) {
                                     handleUpdate(ficha.id, 'cantidad', field.value.replace(/\./g, ''));
                                   }
                                   field.onBlur(e);
@@ -142,15 +138,13 @@ export const FisicoInfraestructura = ({ dataRecursosFisicos, sufijo_costos, solo
                                 {...field}
                                 id={`costo_total_${ficha.id}`}
                                 placeholder="Costo (M$)"
-                                loading={inputStatus[ ficha.id ]?.costo_total?.loading}
-                                saved={inputStatus[ ficha.id ]?.costo_total?.saved}
-                                error={errors?.fichas?.[ index ]?.costo_total?.message}
+                                loading={inputStatus[ficha.id]?.costo_total?.loading}
+                                saved={inputStatus[ficha.id]?.costo_total?.saved}
+                                error={errors?.fichas?.[index]?.costo_total?.message}
                                 disabled={solo_lectura}
-                                onBlur={async (e) =>
-                                {
+                                onBlur={async (e) => {
                                   const isValid = await trigger(`fichas[${index}].costo_total`);
-                                  if (isValid && ficha.costo_total !== field.value)
-                                  {
+                                  if (isValid && ficha.costo_total !== field.value) {
                                     handleUpdate(ficha.id, 'costo_total', field.value.replace(/\./g, ''));
                                   }
                                   field.onBlur(e);
@@ -163,9 +157,7 @@ export const FisicoInfraestructura = ({ dataRecursosFisicos, sufijo_costos, solo
                           <div className="text-center">Costo Unitario (M$)</div>
                           <div className="text-sans-p-bold-blue px-2 my-2 text-center">
                             {ficha.costo_unitario
-                              ? new Intl.NumberFormat('es-CL').format(
-                                ficha.costo_unitario
-                              )
+                              ? new Intl.NumberFormat('es-CL').format(ficha.costo_unitario)
                               : '-'}
                           </div>
                         </div>
@@ -181,17 +173,16 @@ export const FisicoInfraestructura = ({ dataRecursosFisicos, sufijo_costos, solo
                               label="Fundamentación (Obligatorio)"
                               placeholder="Fundamentos del uso y cantidad de este recurso."
                               maxLength={300}
-                              error={errors?.fichas?.[ index ]?.fundamentacion?.message}
-                              loading={inputStatus[ ficha.id ]?.fundamentacion?.loading}
-                              saved={inputStatus[ ficha.id ]?.fundamentacion?.saved}
+                              error={errors?.fichas?.[index]?.fundamentacion?.message}
+                              loading={inputStatus[ficha.id]?.fundamentacion?.loading}
+                              saved={inputStatus[ficha.id]?.fundamentacion?.saved}
                               readOnly={solo_lectura}
-                              onBlur={(e) =>
-                              {
-                                field.onBlur(e);
-                                if (ficha.fundamentacion !== e.target.value && !errors?.fichas?.[ index ]?.fundamentacion)
-                                {
+                              onBlur={async (e) => {
+                                const isValid = await trigger(`fichas[${index}].fundamentacion`);
+                                if (isValid && ficha.fundamentacion !== e.target.value) {
                                   handleUpdate(ficha.id, 'fundamentacion', e.target.value);
                                 }
+                                field.onBlur(e);
                               }}
                             />
                           )}

@@ -22,7 +22,7 @@ export const validacionFichaInformaticos = yup.object({
         .max(500, 'La descripción  no debe exceder los 30 caracteres'),
     })
   )
-});
+});git 
 
 export const validacionInfraestructura = yup.object({
   fichas: yup.array().of(
@@ -31,13 +31,11 @@ export const validacionInfraestructura = yup.object({
         .typeError('Los datos ingresados deben ser un número')
         .required('La cantidad es requerida')
         .min(1, 'La cantidad  no puede ser 0')
-        .positive('La cantidad debe ser un número positivo')
         .integer('La cantidad debe ser un número entero'),
       costo_total: yup.number()
         .typeError('Los datos ingresados deben ser un número')
         .required('El costo total es requerido')
         .min(1, 'El costo total no puede ser 0')
-        .positive('El costo total debe ser un número positivo')
         .integer('El costo total debe ser un número entero'),
       fundamentacion: yup.string()
         .required('La fundamentación es requerida')
