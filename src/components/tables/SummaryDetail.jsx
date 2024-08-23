@@ -5,7 +5,7 @@ import { useDescargarDocumento } from '../../hooks/competencias/useDownloadPDFFi
 export const SummaryDetail = ({ competencia }) => {
   const navigate = useNavigate();
   const { resumen } = useResumenFinal(competencia.id);
-  const { verificarYDescargar, disponible } = useDescargarDocumento(competencia.id);
+  const { descargarDocumento, disponible } = useDescargarDocumento(competencia.id);
   const etapas_info =
     competencia.etapas_info || competencia?.resumen_competencia?.etapas_info;
   const tiempo_transcurrido =
@@ -34,7 +34,7 @@ export const SummaryDetail = ({ competencia }) => {
   }));
 
   const handleDownloadClick = () => {
-    verificarYDescargar();
+    descargarDocumento();
   };
 
   // Calcula la cantidad de etapas finalizadas
