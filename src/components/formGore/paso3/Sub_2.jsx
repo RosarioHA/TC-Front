@@ -67,7 +67,7 @@ export const Sub_2 = ({ data, paso3, solo_lectura }) => {
               <Sub_2_a
                 titulo_costo="3.2.a Costos directos"
                 sufijo_costos="(costos directos)"
-                nombre_costo="directos"
+                nombre_costo="directo"
                 recursos_comparados={recursos_comparados_directos}
                 idItem={id_item_subtitulo_programas_informaticos}
                 dataInformatico={sistemas_informaticos_directos}
@@ -90,7 +90,7 @@ export const Sub_2 = ({ data, paso3, solo_lectura }) => {
               <Sub_2_a
                 titulo_costo="3.2.b Costos indirectos"
                 sufijo_costos="(costos indirectos)"
-                nombre_costo="indirectos"
+                nombre_costo="indirecto"
                 recursos_comparados={recursos_comparados_indirectos}
                 idItem={id_item_subtitulo_programas_informaticos}
                 dataInformatico={sistemas_informaticos_indirectos}

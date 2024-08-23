@@ -338,13 +338,13 @@ export const Etapa2 = ({ etapa, idCompetencia }) =>
         {estadoObservaciones && (
           <div className="d-flex justify-content-between text-sans-p border-top border-bottom my-3 py-1">
             <div className="align-self-center col-8">{estadoObservaciones.nombre}</div>
-            {renderButtonForSubetapa(estadoObservaciones)}
+            <did className='my-auto'>{renderButtonForSubetapa(estadoObservaciones)}</did>
           </div>
         )}
         {estadoObservacion && (
           <div className="d-flex justify-content-between text-sans-p border-top border-bottom my-3 py-1">
             <div className="align-self-center col-8">{estadoObservacion.nombre}</div>
-            {renderButtonForSubetapa(estadoObservacion)}
+            <did className='my-auto'>{renderButtonForSubetapa(estadoObservacion)}</did>
           </div>
         )}
         {(estado !== "Aún no puede comenzar") && (

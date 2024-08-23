@@ -31,13 +31,13 @@ export const JustificarCostos = ({ recursos }) => {
               <td className="col-2 text-center">
                 {recurso.sector_nombre || "-"}
               </td>
-              <td className="mx-5 text-center col-2">
-                <div className="border-gris px-3 py-1">
+              <td className="text-center col-2">
+                <div className=" py-1">
                   {formatNumber(recurso.costo_sector)}
                 </div>
               </td>
-              <td className="mx-5 col-2 text-center">
-                <div className="border-gris px-3 py-1">
+              <td className="col-2 text-center">
+                <div className="">
                   {formatNumber(recurso.costo_gore)}
                 </div>
               </td>
