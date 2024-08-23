@@ -2,11 +2,10 @@ import { useNavigate } from 'react-router-dom';
 import { useResumenFinal } from '../../hooks/revisionFinalSubdere/useResumenFinal';
 import { useDescargarDocumento } from '../../hooks/competencias/useDownloadPDFFinal';
 
-export const SummaryDetail = ({ competencia }) =>
-{
+export const SummaryDetail = ({ competencia }) => {
   const navigate = useNavigate();
   const { resumen } = useResumenFinal(competencia.id);
-  const { descargarDocumento } = useDescargarDocumento(competencia.id);
+  const { verificarYDescargar, disponible } = useDescargarDocumento(competencia.id);
   const etapas_info =
     competencia.etapas_info || competencia?.resumen_competencia?.etapas_info;
   const tiempo_transcurrido =
@@ -25,26 +24,17 @@ export const SummaryDetail = ({ competencia }) =>
     competencia.recomendacion_transferencia ||
     competencia.resumen_competencia?.recomendacion_transferencia;
 
-  if (!competencia || !etapas_info)
-  {
+  if (!competencia || !etapas_info) {
     return <div className="text-center text-sans-h5-medium-blue ">Cargando...</div>;
   }
   // Transformar etapas_info en un arreglo para facilitar su manejo
   const etapasArray = Object.keys(etapas_info).map((key) => ({
     id: key,
-    ...etapas_info[ key ],
+    ...etapas_info[key],
   }));
 
-  const handleDownloadClick = async () =>
-  {
-    try
-    {
-      await descargarDocumento();
-      // Handle successful download (e.g., show a success message)
-    } catch (error)
-    {
-      // Handle error during download (e.g., show an error message)
-    }
+  const handleDownloadClick = () => {
+    verificarYDescargar();
   };
 
   // Calcula la cantidad de etapas finalizadas
@@ -54,8 +44,7 @@ export const SummaryDetail = ({ competencia }) =>
   const totalEtapas = etapasArray.length;
 
 
-  const getBadgeDetails = (estado) =>
-  {
+  const getBadgeDetails = (estado) => {
     const badgeClasses = {
       Finalizada: 'badge-status-finish',
       'En Estudio': 'badge-status-review',
@@ -70,12 +59,11 @@ export const SummaryDetail = ({ competencia }) =>
       'Atrasada': 'badge-status-borderRed',
     };
 
-    const classForState = badgeClasses[ estado ] || '';
+    const classForState = badgeClasses[estado] || '';
     return { class: classForState, text: estado };
   };
 
-  const handleVerRevisionSubdere = () =>
-  {
+  const handleVerRevisionSubdere = () => {
     navigate(`/home/revision_subdere/${competencia.id}/paso_1/`);
   };
 
@@ -103,8 +91,7 @@ export const SummaryDetail = ({ competencia }) =>
   }
 
 
-  if (estado === 'Finalizada')
-  {
+  if (estado === 'Finalizada') {
     return (
       <div className="py-2">
         <div className="row pt-3">
@@ -178,32 +165,6 @@ export const SummaryDetail = ({ competencia }) =>
                     </span>
                   </div>
                 </li>
-                <li className="list-group-item d-flex justify-content-between ">
-                  <span>
-                    <p>Documento de información levantada</p>
-                  </span>
-                  <div>
-                    {resumen && (
-                      <>
-                        {resumen.formulario_final_enviado ? (
-                          <button className="btn-secundario-s" onClick={handleDownloadClick}>
-                            <i className="material-symbols-rounded ms-2">
-                              download
-                            </i>
-                            <u>Descargar</u>
-                          </button>
-                        ) : (
-                          <button
-                            className="text-decoration-underline btn-secundario-s"
-                            onClick={handleVerRevisionSubdere}
-                          >
-                            <u>Ver Revisión SUBDERE</u>
-                          </button>
-                        )}
-                      </>
-                    )}
-                  </div>
-                </li>
                 <li
                   className="list-group-item d-flex justify-content-between "                    >
                   <span>
@@ -216,6 +177,38 @@ export const SummaryDetail = ({ competencia }) =>
                     </span>
                   </div>
                 </li>
+
+                <li className="list-group-item d-flex justify-content-between ">
+                  <span>
+                    <p>Documento de información levantada</p>
+                  </span>
+                  <div>
+                    {resumen && (
+                      <>
+                        {resumen.formulario_final_enviado ? (
+                          <div>
+                            {disponible ? (
+                              <button className="btn-secundario-s" onClick={handleDownloadClick}>
+                                <i className="material-symbols-rounded ms-2">download</i>
+                                <u>Descargar</u>
+                              </button>
+                            ) : (
+                              <span className="badge-status-pending">Pendiente</span>
+                            )}
+                          </div>
+                        ) : (
+                          <button
+                            className="text-decoration-underline btn-secundario-s"
+                            onClick={handleVerRevisionSubdere}
+                          >
+                            <u>Ver Revisión SUBDERE</u>
+                          </button>
+                        )}
+                      </>
+                    )}
+                  </div>
+                </li>
+
               </ul>
             </div>
           </div>
@@ -278,8 +271,7 @@ export const SummaryDetail = ({ competencia }) =>
         <div className="col-8">
           <div className="mb-4 ms-4">
             <ul className="list-group list-group-flush my-3">
-              {etapasArray.map((etapa) =>
-              {
+              {etapasArray.map((etapa) => {
                 const badgeDetails = getBadgeDetails(etapa.estado);
                 return (
                   <li

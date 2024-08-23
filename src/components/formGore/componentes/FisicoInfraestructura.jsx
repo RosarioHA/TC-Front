@@ -196,7 +196,7 @@ export const FisicoInfraestructura = ({ dataRecursosFisicos, sufijo_costos, solo
                           render={({ field, fieldState: { error } }) => (
                             <CustomTextarea
                               {...field}
-                              label="Fundamentación"
+                              label="Fundamentación (Obligatorio)"
                               placeholder="Fundamentos del uso y cantidad de este recurso."
                               maxLength={300}
                               error={error?.message}
