@@ -8,17 +8,18 @@ export const PersonsAssigned = ({ usuariosSubdere, usuariosDipres, usuariosSecto
 
   // Reorganizar el array TypeUser para reflejar el nuevo orden de las pestañas
   const TypeUser = [
-    { id: 2, tipoUsuario: 'Subdere' },
+    { id: 2, tipoUsuario: 'SUBDERE' },
     { id: 3, tipoUsuario: 'Sectorial' },
-    { id: 4, tipoUsuario: 'Gore' },
-    { id: 1, tipoUsuario: 'Dipres' },
+    { id: 4, tipoUsuario: 'GORE' },
+    { id: 1, tipoUsuario: 'DIPRES' },
   ];
 
+  
   const userMappings = {
-    Dipres: usuariosDipres,
-    Subdere: usuariosSubdere,
+    DIPRES: usuariosDipres,
+    SUBDERE: usuariosSubdere,
     Sectorial: usuariosSectoriales,
-    Gore: usuariosGore
+    GORE: usuariosGore
   };
 
   const getUserData = () => userMappings[selectedTab] || [];
@@ -32,7 +33,7 @@ export const PersonsAssigned = ({ usuariosSubdere, usuariosDipres, usuariosSecto
         {TypeUser.map((user) => (
           <li className="nav-item" role="presentation" key={user.id}>
             <button
-              className={`nav-link ${selectedTab === user.tipoUsuario ? 'active' : ''}`}
+              className={`nav-link ${selectedTab === user.tipoUsuario ? 'actived' : ''}`}
               id={`pills-${user.tipoUsuario.toLowerCase()}-tab`}
               data-bs-toggle="pill"
               data-bs-target={`#pills-${user.tipoUsuario.toLowerCase()}`}
