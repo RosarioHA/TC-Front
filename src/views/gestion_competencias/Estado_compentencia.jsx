@@ -85,6 +85,7 @@ const EstadoCompetencia = () =>
         </div>
         {userSubdere && (
           <CardDocumento
+            id={id}
             editorName={dataFormSubdere?.ultimo_editor?.nombre_completo}
             editionDate={dataFormSubdere?.fecha_ultima_modificacion}
             antecedentes={resumen?.antecedente_adicional_revision_subdere}

@@ -1,7 +1,7 @@
 import React from 'react'
 import { useNavigate } from "react-router-dom";
 
-export const CardDocumento = ({ estadoFinalizado, resumen, editorName, editionDate, btnRevision, antecedentes, descripcion }) =>
+export const CardDocumento = ({id, estadoFinalizado, resumen, editorName, editionDate, btnRevision, antecedentes, descripcion }) =>
 {
   const navigate = useNavigate();
   const fileUrl = resumen?.antecedente_adicional_revision_subdere;
@@ -9,7 +9,7 @@ export const CardDocumento = ({ estadoFinalizado, resumen, editorName, editionDa
 
   //condiciones prueba 
   const updateDate = "26/08/2024 - 10:26"
-  const pendiente = false;
+  const pendiente = true;
   const documentReady = true;
 
 
