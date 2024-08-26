@@ -777,6 +777,44 @@ span.material-symbols-outlined {
   color: #0F69C4;
 }
 
+.btn-secundario-s-clear:hover {
+  width: -moz-fit-content;
+  width: fit-content;
+  background-color: transparent;
+  color: #FFF;
+  border: 2px solid #0F69C4;
+  display: flex;
+  padding: 10px;
+  text-align: center;
+  font-family: Roboto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #0F69C4;
+}
+.btn-secundario-s-clear:hover span.material-symbols-outlined {
+  color: #FFF;
+}
+
+.btn-secundario-s-clear:focus {
+  width: -moz-fit-content;
+  width: fit-content;
+  background-color: transparent;
+  color: #0F69C4;
+  border: 2px solid #093F75;
+  display: flex;
+  padding: 10px;
+  text-align: center;
+  font-family: Roboto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent;
+}
+.btn-secundario-s-clear:focus span.material-symbols-outlined {
+  color: #FFF;
+}
+
 .container-fluid {
   min-width: 900px;
 }
@@ -1075,6 +1113,10 @@ span.material-symbols-outlined {
   border-color: #871a1a;
 }
 
+.ck-editor__editable {
+  min-height: 400px;
+}
+
 .custom-pagination-btn {
   border: none;
   background-color: transparent;
@@ -1088,13 +1130,27 @@ span.material-symbols-outlined {
 
 .nav-underline .nav-link {
   color: #001C41;
-  border-bottom: 2px solid transparent;
+  border-bottom: 3px solid #006FB3;
+  width: 200px;
 }
 
-.nav-link:hover,
-.nav-link-active:hover {
+.nav-link:hover {
   color: #006FB3;
-  border-bottom: 2px solid #006FB3;
+  border-bottom: 3px solid #006FB3;
+  width: 200px;
+}
+
+.nav-link:focus {
+  color: #006FB3;
+  border-bottom: 3px solid #006FB3;
+  width: 200px;
+}
+
+.nav-link.actived {
+  color: #006FB3;
+  font-weight: 500;
+  border-bottom: 3px solid #006FB3;
+  width: 200px;
 }
 
 .bg-color-even {
@@ -1349,13 +1405,27 @@ a.btn-link:hover, a.btn-link:focus {
 
 .nav-underline .nav-link {
   color: #001C41;
-  border-bottom: 2px solid transparent;
+  border-bottom: 3px solid #006FB3;
+  width: 200px;
 }
 
-.nav-link:hover,
-.nav-link-active:hover {
+.nav-link:hover {
   color: #006FB3;
-  border-bottom: 2px solid #006FB3;
+  border-bottom: 3px solid #006FB3;
+  width: 200px;
+}
+
+.nav-link:focus {
+  color: #006FB3;
+  border-bottom: 3px solid #006FB3;
+  width: 200px;
+}
+
+.nav-link.actived {
+  color: #006FB3;
+  font-weight: 500;
+  border-bottom: 3px solid #006FB3;
+  width: 200px;
 }
 
 .bg-color-even {
@@ -1528,10 +1598,12 @@ a.btn-link:hover, a.btn-link:focus {
   border-radius: 5px;
   text-align: center;
   font-family: Roboto;
-  font-size: 16px;
+  font-size: 15px;
   font-style: normal;
   font-weight: 700;
   line-height: 100%;
+  height: 32px;
+  margin: 2px 2px 2px 2px;
 }
 
 .badge-status-review {
@@ -1546,10 +1618,12 @@ a.btn-link:hover, a.btn-link:focus {
   border-radius: 5px;
   text-align: center;
   font-family: Roboto;
-  font-size: 16px;
+  font-size: 15px;
   font-style: normal;
   font-weight: 700;
   line-height: 100%;
+  height: 32px;
+  margin: 2px 2px 2px 2px;
 }
 
 .badge-status-study {
@@ -1564,10 +1638,12 @@ a.btn-link:hover, a.btn-link:focus {
   border-radius: 5px;
   text-align: center;
   font-family: Roboto;
-  font-size: 16px;
+  font-size: 15px;
   font-style: normal;
   font-weight: 700;
   line-height: 100%;
+  height: 32px;
+  margin: 2px 2px 2px 2px;
 }
 
 .badge-status-pending {
@@ -1582,10 +1658,34 @@ a.btn-link:hover, a.btn-link:focus {
   border-radius: 5px;
   text-align: center;
   font-family: Roboto;
-  font-size: 16px;
+  font-size: 15px;
   font-style: normal;
   font-weight: 700;
   line-height: 100%;
+  height: 32px;
+  margin: 2px 2px 2px 2px;
+}
+
+.badge-status-pending-lg {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #656565;
+  color: #FFF;
+  padding: 4px 8px 4px 8px;
+  border: 2px solid #656565;
+  border-radius: 5px;
+  text-align: center;
+  font-family: Roboto;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 100%;
+  height: 32px;
+  margin: 2px 2px 2px 2px;
+  font-size: 20px;
+  padding: 8px 15px 8px 15px;
 }
 
 .badge-status-warning {
@@ -1600,10 +1700,12 @@ a.btn-link:hover, a.btn-link:focus {
   border-radius: 5px;
   text-align: center;
   font-family: Roboto;
-  font-size: 16px;
+  font-size: 15px;
   font-style: normal;
   font-weight: 700;
   line-height: 100%;
+  height: 32px;
+  margin: 2px 2px 2px 2px;
 }
 
 .badge-status-red {
@@ -1618,10 +1720,12 @@ a.btn-link:hover, a.btn-link:focus {
   border-radius: 5px;
   text-align: center;
   font-family: Roboto;
-  font-size: 16px;
+  font-size: 15px;
   font-style: normal;
   font-weight: 700;
   line-height: 100%;
+  height: 32px;
+  margin: 2px 2px 2px 2px;
 }
 
 .badge-status-green {
@@ -1636,10 +1740,12 @@ a.btn-link:hover, a.btn-link:focus {
   border-radius: 5px;
   text-align: center;
   font-family: Roboto;
-  font-size: 16px;
+  font-size: 15px;
   font-style: normal;
   font-weight: 700;
   line-height: 100%;
+  height: 32px;
+  margin: 2px 2px 2px 2px;
 }
 
 .badge-status-borderRed {
@@ -1654,10 +1760,32 @@ a.btn-link:hover, a.btn-link:focus {
   border-radius: 5px;
   text-align: center;
   font-family: Roboto;
-  font-size: 16px;
+  font-size: 15px;
   font-style: normal;
   font-weight: 700;
   line-height: 100%;
+  height: 32px;
+  margin: 2px 2px 2px 2px;
+}
+
+.badge-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #CFE1F3;
+  color: #0F69C4;
+  padding: 4px 8px 4px 8px;
+  border: 2px solid #CFE1F3;
+  border-radius: 5px;
+  text-align: center;
+  font-family: Roboto;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 100%;
+  height: 32px;
+  margin: 2px 2px 2px 2px;
 }
 
 .badge-percent {
@@ -1697,8 +1825,9 @@ a.btn-link:hover, a.btn-link:focus {
 
 .subrayado {
   background-color: #CFE1F3;
-  height: 40px;
+  min-height: 40px;
   padding-top: 8px;
+  height: auto;
 }
 
 .subrayado-gris {
