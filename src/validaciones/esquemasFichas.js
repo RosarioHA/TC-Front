@@ -22,7 +22,7 @@ export const validacionFichaInformaticos = yup.object({
         .max(500, 'La descripción  no debe exceder los 30 caracteres'),
     })
   )
-});git 
+});
 
 export const validacionInfraestructura = yup.object({
   fichas: yup.array().of(

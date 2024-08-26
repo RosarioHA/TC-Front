@@ -158,12 +158,10 @@ export const FichaInformatico = ({
           </h6>
         </div>
         <form onSubmit={handleSubmit(onSubmit)}>
-          {console.log(fichasTecnicas)}
           {Array.isArray(fichasTecnicas) &&
             fichasTecnicas?.map((ficha, index) => (
               <div key={ficha?.id || `ficha_${index}`} className="col-11 mt-5 mb-3 border-bottom">
                 {/* Nombre de Plataforma o Software */}
-                {console.log(ficha, ficha.id)}
                 <div className="d-flex flex-row col">
                   <div className="mt-2 me-3">{index + 1}</div>
                   <div className="my-2 col-3 text-sans-p-bold">
