@@ -117,23 +117,23 @@ export const SummaryDetail = ({ competencia }) => {
 
               <div>
                 <div className="d-flex justify-content-center mt-3">
-                  <span className="text-sans-h6-bold-darkblue">
+                  <span className="text-sans-h6-bold-green">
                     Proceso finalizado en:
                   </span>
                 </div>
 
                 <div className="d-flex justify-content-between px-4 px-xxl-5 mx-xxl-5 mt-3">
                   <div className="d-flex flex-column align-items-center">
-                    <span className="text-sans-h6-bold-darkblue">{dias}</span>
-                    <span className="text-sans-h6-darkblue">Días</span>
+                    <span className="text-sans-h6-bold-green">{dias}</span>
+                    <span className="text-sans-h6-green">Días</span>
                   </div>
                   <div className="d-flex flex-column align-items-center">
-                    <span className="text-sans-h6-bold-darkblue">{horas}</span>
-                    <span className="text-sans-h6-darkblue">Horas</span>
+                    <span className="text-sans-h6-bold-green">{horas}</span>
+                    <span className="text-sans-h6-green">Horas</span>
                   </div>
                   <div className="d-flex flex-column align-items-center">
-                    <span className="text-sans-h6-bold-darkblue">{minutos}</span>
-                    <span className="text-sans-h6-darkblue">Mins</span>
+                    <span className="text-sans-h6-bold-green">{minutos}</span>
+                    <span className="text-sans-h6-green">Mins</span>
                   </div>
                 </div>
               </div>

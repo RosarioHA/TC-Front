@@ -108,6 +108,11 @@ border-radius: 50%;
 .badge-status-pending{
   @include badge-status($grey-light-color,$grey-light-color,$grey-a-color)
 }
+.badge-status-pending-lg{
+  @include badge-status($grey-c-color,$grey-c-color,$white-color);
+  font-size: 20px; 
+  padding: 8px 15px 8px 15px ;
+}
 .badge-status-warning{
   @include badge-status( $alert-danger,$alert-danger,$white-color); 
 }

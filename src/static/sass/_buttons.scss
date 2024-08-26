@@ -5,11 +5,11 @@
     border: 2px solid $btnBG;
     display: flex; 
 }
-@mixin btn-border ($btnSize, $btnColor){
+@mixin btn-border ($btnSize, $btnColor, $btnBorder){
     width: $btnSize;
     background-color: transparent;
     color: $btnColor;
-    border: 2px solid $btnColor;
+    border: 2px solid $btnBorder;
     display: flex;     
 }
 @mixin btn-borderless ($btnSize, $btnColor){
@@ -67,7 +67,7 @@
 
 
 .btn-secundario-s-round{
-    @include btn-border(fit-content, $blue-color);
+    @include btn-border(fit-content, $blue-color,$blue-color);
     @include typo;
     background-color: $white-color;
     border-radius: 30px;
@@ -110,7 +110,7 @@
 // BOTON SECUNDARIO
 // fondo transp. con borde y letras azules. Existe en S-fitcontent Y L-100%
 .btn-secundario-s {
-    @include btn-border(fit-content, $blue-color);
+    @include btn-border(fit-content, $blue-color,$blue-color);
     @include typo-style;
     background-color: $white-color;
 
@@ -140,7 +140,7 @@
 }
 
 .btn-secundario-l{
-    @include btn-border(100%, $blue-color);
+    @include btn-border(100%, $blue-color,$blue-color);
     @include typo-style;
     &:hover  , &:focus  {
         background-color: $blue-color;
@@ -164,7 +164,7 @@
 // BOTON TERCIARIO
 // fondo transp. con borde y letras rojas
 .btn-terciario{
-    @include btn-border(fit-content, $dark-red);
+    @include btn-border(fit-content, $dark-red,$dark-red);
     @include typo-style;
     text-decoration: underline;
     border-radius: 4px;
@@ -178,7 +178,7 @@
 // BOTON TERCIARIO SIN BORDE
 // fondo transp. con hover y letras rojas
 .btn-terciario-ghost{
-    @include btn-border(fit-content, $dark-red);
+    @include btn-border(fit-content, $dark-red,$dark-red);
     @include typo-style;
     border-radius: 4px;
     border: none;
@@ -295,12 +295,34 @@ span.material-symbols-outlined {
 
 
 .btn-secundario-s-clear {
-    @include btn-border(fit-content, $blue-color);
+    @include btn-border(fit-content, $blue-color, $blue-color);
     @include typo-style;
     background-color: transparent;
 
     // Asegurar que el color del ícono sea el mismo que el texto por defecto
     span.material-symbols-outlined {
         color: $blue-color;
+    }
+}
+
+.btn-secundario-s-clear:hover {
+    @include btn-border(fit-content, $white-color, $blue-color);
+    @include typo-style;
+    background-color: $blue-color;
+
+    // Asegurar que el color del ícono sea el mismo que el texto por defecto
+    span.material-symbols-outlined {
+        color: $white-color;
+    }
+}
+
+.btn-secundario-s-clear:focus {
+    @include btn-border(fit-content, $blue-color,$dark-blue);
+    @include typo-style;
+    background-color: transparent;
+
+    // Asegurar que el color del ícono sea el mismo que el texto por defecto
+    span.material-symbols-outlined {
+        color: $white-color;
     }
 }
