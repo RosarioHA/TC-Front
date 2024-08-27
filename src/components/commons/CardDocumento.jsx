@@ -49,14 +49,13 @@ export const CardDocumento = ({id, estadoFinalizado, resumen, editorName, editio
   const truncatedFileName = truncateFileName(fileName);
 
 
-  const handleVerRevisionSubdere = () =>
-  {
+  const handleVerRevisionSubdere = () =>{
     navigate(`/home/revision_subdere/${id}/paso_1/`)
   }
 
   return (
     <div className="bluesky-container p-3 mt-4">
-      {estadoFinalizado ? (
+      {estadoFinalizado? (
         <>
           <h3 className="text-sans-h3-blue mb-3">Revisión SUBDERE finalizada.</h3>
           <div className="d-flex pt-4 justify-content-between blue-border-top">
@@ -90,7 +89,8 @@ export const CardDocumento = ({id, estadoFinalizado, resumen, editorName, editio
                 </div>
               </>) : ("")}
           </div>
-        </>) : (
+        </>
+        ) : (
         <>
           <h3 className="text-sans-h3-blue mb-3">Descarga el documento con información parcial</h3>
           <div className="d-flex pt-4 justify-content-between blue-border-top my-3">
@@ -117,7 +117,8 @@ export const CardDocumento = ({id, estadoFinalizado, resumen, editorName, editio
                 <span><u>Actualizar documento</u></span>
               </button>
             </div>) : ("")}
-        </>)}
+        </>
+        )}
     </div>
   )
 }
