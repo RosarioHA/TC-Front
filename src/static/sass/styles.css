@@ -1139,6 +1139,7 @@ span.material-symbols-outlined {
 
 .nav-underline .nav-link {
   color: #001C41;
+  font-weight: 400;
   border-bottom: 3px solid #006FB3;
   width: 200px;
 }
@@ -1157,9 +1158,13 @@ span.material-symbols-outlined {
 
 .nav-link.actived {
   color: #006FB3;
-  font-weight: 500;
+  font-weight: 600;
   border-bottom: 3px solid #006FB3;
   width: 200px;
+}
+
+.nav-underline.actived {
+  border-bottom: 3px solid #006FB3;
 }
 
 .bg-color-even {
@@ -1414,6 +1419,7 @@ a.btn-link:hover, a.btn-link:focus {
 
 .nav-underline .nav-link {
   color: #001C41;
+  font-weight: 400;
   border-bottom: 3px solid #006FB3;
   width: 200px;
 }
@@ -1432,9 +1438,13 @@ a.btn-link:hover, a.btn-link:focus {
 
 .nav-link.actived {
   color: #006FB3;
-  font-weight: 500;
+  font-weight: 600;
   border-bottom: 3px solid #006FB3;
   width: 200px;
+}
+
+.nav-underline.actived {
+  border-bottom: 3px solid #006FB3;
 }
 
 .bg-color-even {

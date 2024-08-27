@@ -74,7 +74,7 @@ const EstadoCompetencia = () =>
           </div>
           {competencia && <SummaryDetail competencia={competencia} />}
         </div>
-        <div className="mt-5">
+        <div className="my-5">
           <div className="text-sans-h2 my-4">Personas asignadas</div>
           <PersonsAssigned
             usuariosSubdere={competencia?.usuarios_subdere}
