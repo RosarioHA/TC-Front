@@ -2,24 +2,20 @@ import { useState } from 'react';
 import { Table } from './Table';
 
 export const PersonsAssigned = ({ usuariosSubdere, usuariosDipres, usuariosSectoriales, usuariosGore }) => {
+  const [selectedTab, setSelectedTab] = useState('SUBDERE');
 
-  // Cambiar el estado inicial para que coincida con la primera pestaña en el nuevo orden
-  const [selectedTab, setSelectedTab] = useState('Subdere');
-
-  // Reorganizar el array TypeUser para reflejar el nuevo orden de las pestañas
   const TypeUser = [
     { id: 2, tipoUsuario: 'SUBDERE' },
     { id: 3, tipoUsuario: 'Sectorial' },
-    { id: 4, tipoUsuario: 'GORE' },
+    { id: 4, tipoUsuario: 'Gore' },
     { id: 1, tipoUsuario: 'DIPRES' },
   ];
 
-  
   const userMappings = {
     DIPRES: usuariosDipres,
     SUBDERE: usuariosSubdere,
     Sectorial: usuariosSectoriales,
-    GORE: usuariosGore
+    Gore: usuariosGore
   };
 
   const getUserData = () => userMappings[selectedTab] || [];
@@ -43,7 +39,7 @@ export const PersonsAssigned = ({ usuariosSubdere, usuariosDipres, usuariosSecto
               aria-selected={selectedTab === user.tipoUsuario ? 'true' : 'false'}
               onClick={() => handleTabClick(user.tipoUsuario)}
             >
-              {user.tipoUsuario}
+              {user.tipoUsuario.toUpperCase()}
             </button>
           </li>
         ))}
@@ -58,7 +54,7 @@ export const PersonsAssigned = ({ usuariosSubdere, usuariosDipres, usuariosSecto
             tabIndex="0"
             key={user.id}
           >
-          <Table userData={getUserData()} userType={selectedTab} />
+            <Table userData={getUserData()} userType={selectedTab} />
           </div>
         ))}
       </div>

@@ -76,39 +76,43 @@ const PrimeraMinuta = () =>
             {competenciaDetails?.etapa2?.formulario_sectorial ? (
               Array.isArray(competenciaDetails.etapa2.formulario_sectorial) ? (
                 competenciaDetails.etapa2.formulario_sectorial.map((formulario, index) => (
-                  <tr
-                    className={`d-flex justify-content-between p-3 align-items-center ${index % 2 === 0 ? 'neutral-line' : 'white-line'}`}
-                    key={formulario.id}
-                  >
-                    <td  className="col-8">{formulario.nombre.replace('Completar formulario Sectorial - ', '')}</td>
-                    <td className="">
-                      {!userObservador? (
-                      <button className="btn-secundario-s text-decoration-underline" onClick={() => handleVerFormulario(formulario.id)}>
-                        Ver observaciones
-                      </button>):(
-                        <div className="badge-status-finish">Finalizada</div>
-                      )}
-                    </td>
-                  </tr>
+                  <table className="col-12" key={formulario.id}>
+                    <tbody>
+                      <tr
+                        className={`d-flex justify-content-between p-3 align-items-center ${index % 2 === 0 ? 'neutral-line' : 'white-line'}`}>
+                        <td className="col-8">{formulario.nombre.replace('Completar formulario Sectorial - ', '')}</td>
+                        <td className="">
+                          {!userObservador ? (
+                            <button className="btn-secundario-s text-decoration-underline" onClick={() => handleVerFormulario(formulario.id)}>
+                              Ver observaciones
+                            </button>) : (
+                            <div className="badge-status-finish">Finalizada</div>
+                          )}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
                 ))
               ) : (
                 competenciaDetails.etapa2.formulario_sectorial.detalle_formularios_sectoriales.map((formulario, index) => (
-                  <tr
-                    className={`d-flex justify-content-between p-3 align-items-center ${index % 2 === 0 ? 'neutral-line' : 'white-line'}`}
-                    key={formulario.id}
-                  >
-                    <td className="col-8">{formulario.nombre.replace('Completar formulario Sectorial - ', '')}</td>
-                    <td className="">
-                      {!userObservador ? (
-                      <button
-                        className="btn-secundario-s text-decoration-underline"
-                        onClick={() => handleVerFormulario(formulario.id)}
-                      >
-                        Ver observaciones
-                      </button> ):(<div className="badge-status-finish">Finalizada</div>
-                      )}
-                    </td>
-                  </tr>
+                  <table className="col-12" key={formulario.id}>
+                    <tbody>
+                      <tr
+                        className={`d-flex justify-content-between p-3 align-items-center ${index % 2 === 0 ? 'neutral-line' : 'white-line'}`}>
+                        <td className="col-8">{formulario.nombre.replace('Completar formulario Sectorial - ', '')}</td>
+                        <td className="">
+                          {!userObservador ? (
+                            <button
+                              className="btn-secundario-s text-decoration-underline"
+                              onClick={() => handleVerFormulario(formulario.id)}
+                            >
+                              Ver observaciones
+                            </button>) : (<div className="badge-status-finish">Finalizada</div>
+                          )}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
                 ))
               )
             ) : (

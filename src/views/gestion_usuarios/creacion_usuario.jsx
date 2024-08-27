@@ -49,7 +49,7 @@ const CreacionUsuario = () => {
   const [conditionalFieldErrors, setConditionalFieldErrors] = useState({});
 
   useEffect(() => {
-    console.log("competencias seleccionadas en vista", competenciasSeleccionadas);
+    competenciasSeleccionadas;
   }, [ competenciasSeleccionadas ]);
 
   const history = useNavigate();
