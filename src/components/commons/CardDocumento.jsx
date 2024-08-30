@@ -1,16 +1,16 @@
 import React from 'react'
 import { useNavigate } from "react-router-dom";
 
-export const CardDocumento = ({ id, estadoFinalizado, resumen, editorName, editionDate, btnRevision, antecedentes, descripcion }) =>
+export const CardDocumento = ({ id, estadoFinalizado, resumen, editorName, editionDate, antecedentes, descripcion }) =>
 {
   const navigate = useNavigate();
   const fileUrl = resumen?.antecedente_adicional_revision_subdere;
 
 
-  //condiciones prueba 
-  // const updateDate = "26/08/2024 - 10:26"
-  // const pendiente = true;
-  // const documentReady = true;
+  //condiciones para pruebar interacion 
+  const updateDate = "26/08/2024 - 10:26"
+  const pendiente = true;
+  const documentReady = true;
 
 
   const extractFileName = (url) =>
@@ -92,35 +92,37 @@ export const CardDocumento = ({ id, estadoFinalizado, resumen, editorName, editi
           </div>
         </div >
       ) : (
-        ""
-        // componente que genera el documento
-        //< div className = "bluesky-container p-3 mt-4" >
-        //   <h3 className="text-sans-h3-blue mb-3">Descarga el documento con información parcial</h3>
-        //   <div className="d-flex pt-4 justify-content-between blue-border-top my-3">
-        //     <p className="text-sans-p-blue my-2 ">El documento contiene la información completada hasta el momento.</p>
-        //     {!documentReady ? (
-        //       <>
-        //         {!pendiente ? (
-        //           <button className="btn-secundario-s-clear " onClick="">
-        //             <i className="material-symbols-rounded mx-2">draft</i>
-        //             <span><u>Generar documento</u></span>
-        //           </button>) : (<span className="badge-status-pending-lg my-auto">Pendiente</span>)}
+       //componente que genera el documento
+        < div className = "bluesky-container p-3 mt-4" >
+          <h3 className="text-sans-h3-blue mb-3">Descarga el documento con información parcial</h3>
+          <div className="d-flex pt-4 justify-content-between blue-border-top my-3">
+            <p className="text-sans-p-blue my-2 ">El documento contiene la información completada hasta el momento.</p>
+            {!documentReady ? (
+              <>
+                {!pendiente ? (
+                  //TODO:crear las funcion para generar documento
+                  <button className="btn-secundario-s-clear " onClick="">
+                    <i className="material-symbols-rounded mx-2">draft</i>
+                    <span><u>Generar documento</u></span>
+                  </button>) : (<span className="badge-status-pending-lg my-auto">Pendiente</span>)}
 
-        //       </>) : (
-        //       <button className="btn-secundario-s-clear " onClick="">
-        //         <i className="material-symbols-rounded mx-2">vertical_align_bottom</i>
-        //         <span><u>Descargar documento</u></span>
-        //       </button>)}
-        //   </div>
-        //   {documentReady ? (
-        //     <div className="d-flex align-items-center my-2">
-        //       <div className="text-sans-p-blue">Último documento generado - {updateDate}</div>
-        //       <button className="btn-secundario-s-clear mx-3" onClick="">
-        //         <i className="material-symbols-rounded mx-2">update</i>
-        //         <span><u>Actualizar documento</u></span>
-        //       </button>
-        //     </div>) : ("")}
-        // </div>
+              </>) : (
+              //TODO:crear las funcion para descargar
+              <button className="btn-secundario-s-clear " onClick="">
+                <i className="material-symbols-rounded mx-2">vertical_align_bottom</i>
+                <span><u>Descargar documento</u></span>
+              </button>)}
+          </div>
+          {documentReady ? (
+            <div className="d-flex align-items-center my-2">
+              <div className="text-sans-p-blue">Último documento generado - {updateDate}</div>
+              //TODO:crear las funcion para actualizar  documento
+              <button className="btn-secundario-s-clear mx-3" onClick="">
+                <i className="material-symbols-rounded mx-2">update</i>
+                <span><u>Actualizar documento</u></span>
+              </button>
+            </div>) : ("")}
+        </div>
       )}
     </>
   )
