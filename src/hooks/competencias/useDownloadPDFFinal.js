@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { apiTransferenciaCompentencia } from '../../services/transferenciaCompetencia';
 
+
 export const useDescargarDocumento = (competenciaId) => {
   const [loading, setLoading] = useState(false);
   const [disponible, setDisponible] = useState(false);
