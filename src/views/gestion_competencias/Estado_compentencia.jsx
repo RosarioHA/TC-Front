@@ -35,7 +35,6 @@ const EstadoCompetencia = () =>
   };
 
 
-
   if (loading && competencia)
   {
     return <div className="d-flex align-items-center flex-column ">
@@ -47,7 +46,6 @@ const EstadoCompetencia = () =>
   {
     return <div>Error al cargar los detalles: {error.message}</div>;
   }
-
 
   return (
     <>
@@ -92,6 +90,7 @@ const EstadoCompetencia = () =>
             descripcion={resumen?.descripcion_antecedente}
             resumen={resumen}
             estadoFinalizado={mostrarMensajeFinalizada}
+            fechaDocumento={competenciaDetails?.ultimo_pdf_generado}
           />
         )}
         <div className="mt-5 mx-0">
