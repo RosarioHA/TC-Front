@@ -26,6 +26,7 @@ export const CardDocumento = ({ id, estadoFinalizado, resumen, editorName, editi
       await generarDocumento(id);
       // Llamar a fetchCompetenciaDetails manualmente después de generar el documento
       await fetchCompetenciaDetails(id);
+      await verificarDocumento()
     } catch (error) {
       console.error("Error al generar el PDF:", error);
     }
@@ -35,6 +36,7 @@ export const CardDocumento = ({ id, estadoFinalizado, resumen, editorName, editi
     try {
       await eliminarDocumento(id);
       await generarDocumento(id);
+      await verificarDocumento()
       // Llamar a fetchCompetenciaDetails manualmente después de actualizar el documento
       await fetchCompetenciaDetails(id);
     } catch (err) {
