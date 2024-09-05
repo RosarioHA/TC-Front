@@ -22,6 +22,29 @@ export const useDescargarDocumento = (competenciaId) => {
     }
   }, [competenciaId, disponible]);
 
+  const verificarPDF = useCallback(async () => {
+    setLoading(true);
+    try {
+      const verifyResponse = await apiTransferenciaCompentencia.get(`/revision-final-competencia/${competenciaId}/verificar-documento/`);
+      const exists = verifyResponse.data.exists;
+  
+      // Aquí verificamos si 'exists' es verdadero y aplicamos setTimeout
+      if (exists) {
+        setTimeout(() => {
+          setPendiente(exists);  // Si el documento existe, pendiente es falso.
+          setDisponible(exists);
+        }, 5000);  // Por ejemplo, un retardo de 2 segundos
+      } else {
+        setPendiente(exists);
+        setDisponible(exists);
+      }
+    } catch (error) {
+      setError(error);
+    } finally {
+      setLoading(false);
+    }
+  }, [competenciaId]);
+
   const descargarDocumento = useCallback(async () => {
     if (!disponible) {
       setError(new Error("El documento no está disponible para descarga."));
@@ -49,5 +72,5 @@ export const useDescargarDocumento = (competenciaId) => {
 
 
 
-  return { descargarDocumento, verificarDocumento, disponible, pendiente, loading, error };
+  return { descargarDocumento, verificarDocumento, verificarPDF, disponible, pendiente, loading, error };
 };

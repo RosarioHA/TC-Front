@@ -9,7 +9,7 @@ export const CardDocumento = ({ id, estadoFinalizado, resumen, editorName, editi
   const [fecha, setFecha] = useState(null);
   const { competenciaDetails, fetchCompetenciaDetails } = useCompetencia(id); // Usamos la función para obtener detalles
   const { generarDocumento, eliminarDocumento, error } = useGenerarDocumento();
-  const { verificarDocumento, pendiente, descargarDocumento, disponible } = useDescargarDocumento(id);
+  const {verificarPDF, pendiente, descargarDocumento, disponible } = useDescargarDocumento(id);
   const navigate = useNavigate();
   const fileUrl = resumen?.antecedente_adicional_revision_subdere;
 
@@ -27,7 +27,7 @@ export const CardDocumento = ({ id, estadoFinalizado, resumen, editorName, editi
 
     const checkDocumento = async () => {
       try {
-        await verificarDocumento();
+        await verificarPDF();
       } catch (error) {
         console.error("Error al verificar el documento:", error);
       }
@@ -42,7 +42,7 @@ export const CardDocumento = ({ id, estadoFinalizado, resumen, editorName, editi
     return () => {
       if (interval) clearInterval(interval);
     };
-  }, [checking, disponible, verificarDocumento]);
+  }, [checking, disponible, verificarPDF]);
 
   useEffect(() => {
     if (!disponible) {
@@ -58,7 +58,7 @@ export const CardDocumento = ({ id, estadoFinalizado, resumen, editorName, editi
       await generarDocumento(id);
       // Llamar a fetchCompetenciaDetails manualmente después de generar el documento
       await fetchCompetenciaDetails(id);
-      await verificarDocumento()
+      await verificarPDF()
     } catch (error) {
       console.error("Error al generar el PDF:", error);
     }
@@ -68,7 +68,7 @@ export const CardDocumento = ({ id, estadoFinalizado, resumen, editorName, editi
     try {
       await eliminarDocumento(id);
       await generarDocumento(id);
-      await verificarDocumento()
+      await verificarPDF()
       // Llamar a fetchCompetenciaDetails manualmente después de actualizar el documento
       await fetchCompetenciaDetails(id);
     } catch (err) {
