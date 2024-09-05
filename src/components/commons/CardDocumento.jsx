@@ -12,13 +12,45 @@ export const CardDocumento = ({ id, estadoFinalizado, resumen, editorName, editi
   const { verificarDocumento, pendiente, descargarDocumento, disponible } = useDescargarDocumento(id);
   const navigate = useNavigate();
   const fileUrl = resumen?.antecedente_adicional_revision_subdere;
-  console.log(fecha)
+
+  const [checking, setChecking] = useState(false);
 
   useEffect(() => {
     if (competenciaDetails) {
       setFecha(competenciaDetails.ultimo_pdf_generado);
     }
   }, [competenciaDetails]);
+
+
+  useEffect(() => {
+    let interval;
+
+    const checkDocumento = async () => {
+      try {
+        await verificarDocumento();
+      } catch (error) {
+        console.error("Error al verificar el documento:", error);
+      }
+    };
+
+    if (!disponible && checking) {
+      interval = setInterval(() => {
+        checkDocumento();
+      }, 5000); // Verificar cada 5 segundos
+    }
+
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [checking, disponible, verificarDocumento]);
+
+  useEffect(() => {
+    if (!disponible) {
+      setChecking(true);
+    } else {
+      setChecking(false);
+    }
+  }, [disponible]);
 
   const generarPDF = async () => {
     setPdfGenerado(true);

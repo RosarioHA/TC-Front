@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { apiTransferenciaCompentencia } from '../../services/transferenciaCompetencia';
 
 export const useDescargarDocumento = (competenciaId) => {
@@ -8,6 +8,7 @@ export const useDescargarDocumento = (competenciaId) => {
   const [error, setError] = useState(null);
 
   const verificarDocumento = useCallback(async () => {
+    if (disponible) return;
     setLoading(true);
     try {
       const verifyResponse = await apiTransferenciaCompentencia.get(`/revision-final-competencia/${competenciaId}/verificar-documento/`);
@@ -19,7 +20,7 @@ export const useDescargarDocumento = (competenciaId) => {
     } finally {
       setLoading(false);
     }
-  }, [competenciaId]);
+  }, [competenciaId, disponible]);
 
   const descargarDocumento = useCallback(async () => {
     if (!disponible) {
@@ -46,14 +47,7 @@ export const useDescargarDocumento = (competenciaId) => {
     }
   }, [competenciaId, disponible]);
 
-  // Configurar un intervalo para verificar el documento automáticamente
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      verificarDocumento();  // Verifica el estado del documento periódicamente
-    }, 10000);  // Intervalo de 10 segundos
 
-    return () => clearInterval(intervalId);  // Limpia el intervalo cuando se desmonta el componente
-  }, [verificarDocumento]);
 
   return { descargarDocumento, verificarDocumento, disponible, pendiente, loading, error };
 };
