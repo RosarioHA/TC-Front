@@ -1,17 +1,19 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useEffect, useCallback, useState } from 'react';
 import { apiTransferenciaCompentencia } from '../../services/transferenciaCompetencia';
-
 
 export const useDescargarDocumento = (competenciaId) => {
   const [loading, setLoading] = useState(false);
   const [disponible, setDisponible] = useState(false);
+  const [pendiente, setPendiente] = useState(false); 
   const [error, setError] = useState(null);
 
   const verificarDocumento = useCallback(async () => {
     setLoading(true);
     try {
       const verifyResponse = await apiTransferenciaCompentencia.get(`/revision-final-competencia/${competenciaId}/verificar-documento/`);
-      setDisponible(verifyResponse.data.exists);
+      const exists = verifyResponse.data.exists;
+      setPendiente(exists);  // Si el documento existe, pendiente es falso.
+      setDisponible(exists);
     } catch (error) {
       setError(error);
     } finally {
@@ -44,9 +46,14 @@ export const useDescargarDocumento = (competenciaId) => {
     }
   }, [competenciaId, disponible]);
 
+  // Configurar un intervalo para verificar el documento automáticamente
   useEffect(() => {
-    verificarDocumento();
+    const intervalId = setInterval(() => {
+      verificarDocumento();  // Verifica el estado del documento periódicamente
+    }, 10000);  // Intervalo de 10 segundos
+
+    return () => clearInterval(intervalId);  // Limpia el intervalo cuando se desmonta el componente
   }, [verificarDocumento]);
 
-  return { descargarDocumento, verificarDocumento, disponible, loading, error };
+  return { descargarDocumento, verificarDocumento, disponible, pendiente, loading, error };
 };

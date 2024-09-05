@@ -20,5 +20,21 @@ export const useGenerarDocumento = () => {
     }
   };
 
-  return { generarDocumento, loading, error, data };
+  const eliminarDocumento = async (id) => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await apiTransferenciaCompentencia.delete(`/competencias/${id}/eliminar-documento/`);
+      setData(response.data);
+    } catch (err) {
+      setError(err.response ? err.response.data : 'Error al eliminar el documento');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  
+
+  return { generarDocumento, eliminarDocumento, loading, error, data };
 };
