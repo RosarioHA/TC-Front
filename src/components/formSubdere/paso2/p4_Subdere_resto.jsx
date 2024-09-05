@@ -108,7 +108,7 @@ export const RestoCampos = ({
         <div className="container-fluid">
 
           <h4 className="text-sans-h4">
-            4.3 Recursos requeridos
+            4.2 Recursos requeridos
           </h4>
           <div className="text-sans-h6 my-3 col-11">
             {/* <h6>
@@ -127,7 +127,7 @@ export const RestoCampos = ({
           </div>
 
           <h4 className="text-sans-h4">
-            4.4 Modalidad de ejercicio
+            4.3 Modalidad de ejercicio
           </h4>
           <div className="text-sans-h6 my-3 col-11">
           </div>
@@ -203,7 +203,7 @@ export const RestoCampos = ({
           )}
 
           <h4 className="text-sans-h4">
-            4.5 Implementación y acompañamiento
+            4.4 Implementación y acompañamiento
           </h4>
           <div className="text-sans-h6-primary my-3 col-11">
             <h6> En esta instancia aún no podrás construir indicadores. Tendrás una instancia nueva post-CID, que aparecerá en esta sección con esos fines.</h6>
@@ -222,7 +222,7 @@ export const RestoCampos = ({
           </div>
 
           <h4 className="text-sans-h4">
-            4.6 Condiciones de ejercicio
+            4.5 Condiciones de ejercicio
           </h4>
           <div className="text-sans-h6 my-3 col-11">
             {/* <h6>
@@ -243,7 +243,7 @@ export const RestoCampos = ({
           </div>
           <div className="col-11">
             <h4 className="text-sans-h4">
-              4.7 Condiciones cuyo incumplimiento dan lugar a la revocación de la transferencia
+              4.6 Condiciones cuyo incumplimiento dan lugar a la revocación de la transferencia
             </h4>
             <div className="text-sans-h6 my-3">
               <p className="text-sans-p col-11">

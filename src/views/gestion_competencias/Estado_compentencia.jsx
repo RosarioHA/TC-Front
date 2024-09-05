@@ -90,7 +90,6 @@ const EstadoCompetencia = () =>
             descripcion={resumen?.descripcion_antecedente}
             resumen={resumen}
             estadoFinalizado={mostrarMensajeFinalizada}
-            fechaDocumento={competenciaDetails?.ultimo_pdf_generado}
           />
         )}
         <div className="mt-5 mx-0">
