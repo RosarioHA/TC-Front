@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { apiTransferenciaCompentencia } from '../../services/transferenciaCompetencia';
 
 export const useDescargarDocumento = (competenciaId) => {
@@ -8,12 +8,36 @@ export const useDescargarDocumento = (competenciaId) => {
   const [error, setError] = useState(null);
 
   const verificarDocumento = useCallback(async () => {
+    if (disponible) return;
     setLoading(true);
     try {
       const verifyResponse = await apiTransferenciaCompentencia.get(`/revision-final-competencia/${competenciaId}/verificar-documento/`);
       const exists = verifyResponse.data.exists;
       setPendiente(exists);  // Si el documento existe, pendiente es falso.
       setDisponible(exists);
+    } catch (error) {
+      setError(error);
+    } finally {
+      setLoading(false);
+    }
+  }, [competenciaId, disponible]);
+
+  const verificarPDF = useCallback(async () => {
+    setLoading(true);
+    try {
+      const verifyResponse = await apiTransferenciaCompentencia.get(`/revision-final-competencia/${competenciaId}/verificar-documento/`);
+      const exists = verifyResponse.data.exists;
+  
+      // Aquí verificamos si 'exists' es verdadero y aplicamos setTimeout
+      if (exists) {
+        setTimeout(() => {
+          setPendiente(exists);  // Si el documento existe, pendiente es falso.
+          setDisponible(exists);
+        }, 5000);  // Por ejemplo, un retardo de 2 segundos
+      } else {
+        setPendiente(exists);
+        setDisponible(exists);
+      }
     } catch (error) {
       setError(error);
     } finally {
@@ -46,14 +70,7 @@ export const useDescargarDocumento = (competenciaId) => {
     }
   }, [competenciaId, disponible]);
 
-  // Configurar un intervalo para verificar el documento automáticamente
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      verificarDocumento();  // Verifica el estado del documento periódicamente
-    }, 10000);  // Intervalo de 10 segundos
 
-    return () => clearInterval(intervalId);  // Limpia el intervalo cuando se desmonta el componente
-  }, [verificarDocumento]);
 
-  return { descargarDocumento, verificarDocumento, disponible, pendiente, loading, error };
+  return { descargarDocumento, verificarDocumento, verificarPDF, disponible, pendiente, loading, error };
 };

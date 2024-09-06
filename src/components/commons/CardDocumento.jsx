@@ -9,10 +9,11 @@ export const CardDocumento = ({ id, estadoFinalizado, resumen, editorName, editi
   const [fecha, setFecha] = useState(null);
   const { competenciaDetails, fetchCompetenciaDetails } = useCompetencia(id); // Usamos la función para obtener detalles
   const { generarDocumento, eliminarDocumento, error } = useGenerarDocumento();
-  const { verificarDocumento, pendiente, descargarDocumento, disponible } = useDescargarDocumento(id);
+  const {verificarPDF, pendiente, descargarDocumento, disponible } = useDescargarDocumento(id);
   const navigate = useNavigate();
   const fileUrl = resumen?.antecedente_adicional_revision_subdere;
-  console.log(fecha)
+
+  const [checking, setChecking] = useState(false);
 
   useEffect(() => {
     if (competenciaDetails) {
@@ -20,13 +21,44 @@ export const CardDocumento = ({ id, estadoFinalizado, resumen, editorName, editi
     }
   }, [competenciaDetails]);
 
+
+  useEffect(() => {
+    let interval;
+
+    const checkDocumento = async () => {
+      try {
+        await verificarPDF();
+      } catch (error) {
+        console.error("Error al verificar el documento:", error);
+      }
+    };
+
+    if (!disponible && checking) {
+      interval = setInterval(() => {
+        checkDocumento();
+      }, 5000); // Verificar cada 5 segundos
+    }
+
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [checking, disponible, verificarPDF]);
+
+  useEffect(() => {
+    if (!disponible) {
+      setChecking(true);
+    } else {
+      setChecking(false);
+    }
+  }, [disponible]);
+
   const generarPDF = async () => {
     setPdfGenerado(true);
     try {
       await generarDocumento(id);
       // Llamar a fetchCompetenciaDetails manualmente después de generar el documento
       await fetchCompetenciaDetails(id);
-      await verificarDocumento()
+      await verificarPDF()
     } catch (error) {
       console.error("Error al generar el PDF:", error);
     }
@@ -36,7 +68,7 @@ export const CardDocumento = ({ id, estadoFinalizado, resumen, editorName, editi
     try {
       await eliminarDocumento(id);
       await generarDocumento(id);
-      await verificarDocumento()
+      await verificarPDF()
       // Llamar a fetchCompetenciaDetails manualmente después de actualizar el documento
       await fetchCompetenciaDetails(id);
     } catch (err) {

@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useResumenFinal } from '../../hooks/revisionFinalSubdere/useResumenFinal';
 import { useDescargarDocumento } from '../../hooks/competencias/useDownloadPDFFinal';
@@ -9,15 +10,24 @@ export const SummaryDetail = ({ competencia }) =>
   const navigate = useNavigate();
   const { resumen } = useResumenFinal(competencia.id);
   const { userData } = useAuth();
-  const { descargarDocumento, disponible } = useDescargarDocumento(competencia.id);
+  const { descargarDocumento , verificarDocumento , disponible } = useDescargarDocumento(competencia.id);
   const userSubdere = userData?.perfil?.includes('SUBDERE');
+
+  const estado = competencia.estado || competencia?.resumen_competencia?.estado;
+
+  useEffect(() => {
+    // Solo verifica el documento si el estado es 'Finalizada'
+    if (estado === 'Finalizada') {
+      verificarDocumento();
+    }
+  }, [estado, verificarDocumento]);
+
 
   const etapas_info =
     competencia.etapas_info || competencia?.resumen_competencia?.etapas_info;
   const tiempo_transcurrido =
     competencia.tiempo_transcurrido ||
     competencia.resumen_competencia?.tiempo_transcurrido;
-  const estado = competencia.estado || competencia?.resumen_competencia?.estado;
   const ambito_definitivo_competencia =
     competencia.ambito_definitivo_competencia ||
     competencia.resumen_competencia?.ambito_definitivo_competencia;
@@ -40,10 +50,13 @@ export const SummaryDetail = ({ competencia }) =>
     ...etapas_info[ key ],
   }));
 
+
+
   const handleDownloadClick = () =>
   {
     descargarDocumento();
   };
+
 
   // Calcula la cantidad de etapas finalizadas
   const etapasFinalizadas = etapasArray.filter(
