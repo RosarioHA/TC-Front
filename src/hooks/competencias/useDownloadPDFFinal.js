@@ -24,26 +24,34 @@ export const useDescargarDocumento = (competenciaId) => {
 
   const verificarPDF = useCallback(async () => {
     setLoading(true);
+    setError(null);  // Reiniciar el error
     try {
-      const verifyResponse = await apiTransferenciaCompentencia.get(`/revision-final-competencia/${competenciaId}/verificar-documento/`);
-      const exists = verifyResponse.data.exists;
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Error en la generación del documento. Intente nuevamente.')), 600000) // 5 minutos
+      );
   
-      // Aquí verificamos si 'exists' es verdadero y aplicamos setTimeout
+      const verifyPromise = apiTransferenciaCompentencia.get(`/revision-final-competencia/${competenciaId}/verificar-documento/`);
+  
+      const verifyResponse = await Promise.race([verifyPromise, timeoutPromise]);
+  
+      const exists = verifyResponse?.data?.exists;
+  
       if (exists) {
         setTimeout(() => {
           setPendiente(exists);  // Si el documento existe, pendiente es falso.
           setDisponible(exists);
-        }, 5000);  // Por ejemplo, un retardo de 2 segundos
+        }, 30000);  // Un retardo de 30 segundos
       } else {
-        setPendiente(exists);
-        setDisponible(exists);
+        setPendiente(false);
+        setDisponible(false);
       }
     } catch (error) {
-      setError(error);
+      setError(error.message);  // Aquí se establece el mensaje de error
     } finally {
       setLoading(false);
     }
   }, [competenciaId]);
+  
 
   const descargarDocumento = useCallback(async () => {
     if (!disponible) {
