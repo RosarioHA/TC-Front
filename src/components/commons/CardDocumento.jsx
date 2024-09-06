@@ -36,7 +36,7 @@ export const CardDocumento = ({ id, estadoFinalizado, resumen, editorName, editi
     if (!disponible && checking) {
       interval = setInterval(() => {
         checkDocumento();
-      }, 5000); // Verificar cada 5 segundos
+      }, 30000); // Verificar cada 30 segundos
     }
 
     return () => {
