@@ -7,20 +7,28 @@ import { useCompetencia } from "../../hooks/competencias/useCompetencias";
 export const CardDocumento = ({ id, estadoFinalizado, resumen, editorName, editionDate, antecedentes, descripcion }) => {
   const [pdfGenerado, setPdfGenerado] = useState(false);
   const [fecha, setFecha] = useState(null);
-  const { competenciaDetails, fetchCompetenciaDetails } = useCompetencia(id); // Usamos la función para obtener detalles
-  const { generarDocumento, eliminarDocumento, error } = useGenerarDocumento();
-  const {verificarPDF, pendiente, descargarDocumento, disponible } = useDescargarDocumento(id);
+  const { competenciaDetails, fetchCompetenciaDetails } = useCompetencia(id);
+  const { generarDocumento, eliminarDocumento } = useGenerarDocumento();
+  const { verificarDocumento, verificarPDF, pendiente, descargarDocumento, disponible, error } = useDescargarDocumento(id);
   const navigate = useNavigate();
   const fileUrl = resumen?.antecedente_adicional_revision_subdere;
-
   const [checking, setChecking] = useState(false);
+
+  console.log( pendiente)
+
+  useEffect(() => {
+    const fetchDocumentStatus = async () => {
+      await verificarDocumento();
+    };
+
+    fetchDocumentStatus();
+  }, [verificarDocumento]);
 
   useEffect(() => {
     if (competenciaDetails) {
       setFecha(competenciaDetails.ultimo_pdf_generado);
     }
   }, [competenciaDetails]);
-
 
   useEffect(() => {
     let interval;
@@ -56,11 +64,14 @@ export const CardDocumento = ({ id, estadoFinalizado, resumen, editorName, editi
     setPdfGenerado(true);
     try {
       await generarDocumento(id);
-      // Llamar a fetchCompetenciaDetails manualmente después de generar el documento
       await fetchCompetenciaDetails(id);
-      await verificarPDF()
+      await verificarPDF();
+      if (error) {
+        throw new Error(error); // Si hay un error en verificarPDF, lánzalo para que sea capturado
+      }
     } catch (error) {
       console.error("Error al generar el PDF:", error);
+      alert(error.message || "Error al generar documento, intente nuevamente");
     }
   };
 
@@ -68,11 +79,14 @@ export const CardDocumento = ({ id, estadoFinalizado, resumen, editorName, editi
     try {
       await eliminarDocumento(id);
       await generarDocumento(id);
-      await verificarPDF()
-      // Llamar a fetchCompetenciaDetails manualmente después de actualizar el documento
       await fetchCompetenciaDetails(id);
-    } catch (err) {
-      console.error("Error al actualizar el PDF:", err);
+      await verificarPDF();
+      if (error) {
+        throw new Error(error); // Si hay un error en verificarPDF, lánzalo para que sea capturado
+      }
+    } catch (error) {
+      console.error("Error al actualizar el PDF:", error);
+      alert(error.message || "Error al generar documento, intente nuevamente");
     }
   };
 
