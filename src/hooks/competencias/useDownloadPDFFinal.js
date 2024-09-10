@@ -1,21 +1,72 @@
-import { useState, useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { apiTransferenciaCompentencia } from '../../services/transferenciaCompetencia';
 
 export const useDescargarDocumento = (competenciaId) => {
   const [loading, setLoading] = useState(false);
+  const [disponible, setDisponible] = useState(false);
+  const [pendiente, setPendiente] = useState(false); 
   const [error, setError] = useState(null);
 
-  const descargarDocumento = useCallback(async () => {
+  const verificarDocumento = useCallback(async () => {
+    if (disponible) return;
     setLoading(true);
     try {
-      const response = await apiTransferenciaCompentencia.get(`/revision-final-competencia/${competenciaId}/descargar-documento/`, {
-        responseType: 'blob', // Importante para manejar la descarga de archivos
+      const verifyResponse = await apiTransferenciaCompentencia.get(`/revision-final-competencia/${competenciaId}/verificar-documento/`);
+      const exists = verifyResponse.data.exists;
+      setPendiente(exists);  // Si el documento existe, pendiente es falso.
+      setDisponible(exists);
+    } catch (error) {
+      setError(error);
+    } finally {
+      setLoading(false);
+    }
+  }, [competenciaId, disponible]);
+
+  const verificarPDF = useCallback(async () => {
+    setLoading(true);
+    setError(null);  // Reiniciar el error
+    try {
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Error en la generación del documento. Intente nuevamente.')), 600000) // 5 minutos
+      );
+  
+      const verifyPromise = apiTransferenciaCompentencia.get(`/revision-final-competencia/${competenciaId}/verificar-documento/`);
+  
+      const verifyResponse = await Promise.race([verifyPromise, timeoutPromise]);
+  
+      const exists = verifyResponse?.data?.exists;
+  
+      if (exists) {
+        setTimeout(() => {
+          setPendiente(exists);  // Si el documento existe, pendiente es falso.
+          setDisponible(exists);
+        }, 30000);  // Un retardo de 30 segundos
+      } else {
+        setPendiente(false);
+        setDisponible(false);
+      }
+    } catch (error) {
+      setError(error.message);  // Aquí se establece el mensaje de error
+    } finally {
+      setLoading(false);
+    }
+  }, [competenciaId]);
+  
+
+  const descargarDocumento = useCallback(async () => {
+    if (!disponible) {
+      setError(new Error("El documento no está disponible para descarga."));
+      return;
+    }
+    try {
+      setLoading(true);
+      const downloadResponse = await apiTransferenciaCompentencia.get(`/revision-final-competencia/${competenciaId}/descargar-documento/`, {
+        responseType: 'blob',
       });
-      // Crear un enlace temporal para descargar el archivo
-      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const url = window.URL.createObjectURL(new Blob([downloadResponse.data]));
       const link = document.createElement('a');
       link.href = url;
-      link.setAttribute('download', `competencia_${competenciaId}_document.pdf`); // O el nombre que prefieras
+      link.setAttribute('download', `competencia_${competenciaId}_document.pdf`);
       document.body.appendChild(link);
       link.click();
       link.parentNode.removeChild(link);
@@ -25,7 +76,9 @@ export const useDescargarDocumento = (competenciaId) => {
     } finally {
       setLoading(false);
     }
-  }, [competenciaId]);
+  }, [competenciaId, disponible]);
 
-  return { descargarDocumento, loading, error };
+
+
+  return { descargarDocumento, verificarDocumento, verificarPDF, disponible, pendiente, loading, error };
 };

@@ -244,7 +244,7 @@ export const RestoCampos = ({
           </div>
           <div className="col-11">
             <h4 className="text-sans-h4">
-              4.7 Condiciones cuyo incumplimiento dan lugar a la revocación de la transferencia
+              4.6 Condiciones cuyo incumplimiento dan lugar a la revocación de la transferencia
             </h4>
             <div className="text-sans-h6 my-3">
               <p className="text-sans-p col-11">

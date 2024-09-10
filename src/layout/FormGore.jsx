@@ -11,13 +11,13 @@ const FormGoreLayout = () => {
   const params = useParams();
 
   useEffect(() => {
-    const currentId = location.state?.id || params.id;
+    const currentId = location?.state?.id || params?.id;
     if (currentId) {
       updateFormId(currentId);
     }
-  }, [location, params.id, updateFormId]);
+  }, [location, params?.id, updateFormId]);
 
-  const baseUrl = `/home/formulario_gore/${params.id}`;
+  const baseUrl = `/home/formulario_gore/${params?.id}`;
 
   if (errorFormGore) {
     return <div>Error: {errorFormGore.message}</div>;
@@ -33,15 +33,15 @@ const FormGoreLayout = () => {
     <div className="container col-10 col-xxl-11">
       <div className="row">
         <div className="col mb-2">
-          <FormTitle data={dataFormGore} title="Formulario Gobierno Regional" loading={loadingFormGore} id={dataFormGore.id} />
+          <FormTitle data={dataFormGore} title="Formulario Gobierno Regional" loading={loadingFormGore} id={dataFormGore?.id} />
           <div className="mx-5">
-            {dataFormGore && <HorizontalGore baseUrl={baseUrl} id={params.id} />}
-            <Timmer data={dataFormGore} loading={loadingFormGore} id={dataFormGore.id} />
+            {dataFormGore && <HorizontalGore baseUrl={baseUrl} id={params?.id} />}
+            <Timmer data={dataFormGore} loading={loadingFormGore} id={dataFormGore?.id} />
           </div>
         </div>
       </div>
       <div className="row">
-        <Outlet key={params.id} context={{ id: dataFormGore.id,mostrarInput, setMostrarInput, ...dataFormGore }} />
+        <Outlet key={params?.id} context={{ id: dataFormGore?.id, mostrarInput, setMostrarInput, ...dataFormGore }} />
       </div>
     </div>
   );

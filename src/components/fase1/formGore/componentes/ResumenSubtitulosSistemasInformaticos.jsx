@@ -42,7 +42,9 @@ export const ResumenSubtitulosSistemasInformaticos = ({
         </thead>
         <tbody>
           <tr>
-            <td></td>
+            <td>
+            Ítem 07 - Programas <br /> Informáticos
+            </td>
             <td>
               {formatNumber(subDiferencia || 0)}
             </td>

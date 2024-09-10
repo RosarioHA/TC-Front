@@ -74,7 +74,7 @@ export const SubUno_Tres = ({ pasoData, id, stepNumber, solo_lectura }) => {
   
   return (
     <>
-      <div className="pe-5 me-5 mt-4 col-12">
+      <div className="mt-4 col-11">
         <h4 className="text-sans-h4">
           1.3 Organigrama del Gobierno Regional que identifique dónde se alojará
           la competencia
@@ -90,7 +90,7 @@ export const SubUno_Tres = ({ pasoData, id, stepNumber, solo_lectura }) => {
           (Máximo 1 archivo, peso máximo 20 MB, formato PDF)
         </h6>
 
-        <div className="col-12">
+        <div>
           <div className="d-flex justify-content-between py-3 fw-bold">
             <div className="d-flex mb-2">
               <div className="ms-4">#</div>

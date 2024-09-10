@@ -34,7 +34,7 @@ export const CostosGORE = ({
         {titulo}
         </span>
         <div className="text-sans-h6-primary my-3 col-11">
-        <h6>{formatGlosa(glosa)}</h6> 
+        <div className="text-sans-h6-primary">{formatGlosa(glosa)}</div> 
         </div>
         <div className="my-4">
           <CostosSector
