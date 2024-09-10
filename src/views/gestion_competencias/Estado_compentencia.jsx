@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { SummaryDetail } from "../../components/tables/SummaryDetail";
-import { PersonsAssigned } from "../../components/tables/PersonsAssigned";
+import { SummaryDetail } from "../../components/fase1/tables/SummaryDetail";
+import { PersonsAssigned } from "../../components/fase1/tables/PersonsAssigned";
 import { VerticalStepper } from "../../components/stepers/VerticalStepper";
 import { useCompetencia } from "../../hooks/competencias/useCompetencias";
-import { useFormularioSubdere } from "../../hooks/revisionFinalSubdere/useFormularioSubdere";
-import { useResumenFinal } from "../../hooks/revisionFinalSubdere/useResumenFinal";
-import { CardDocumento } from "../../components/commons/CardDocumento";
+import { useFormularioSubdere } from "../../hooks/fase1/revisionFinalSubdere/useFormularioSubdere";
+import { useResumenFinal } from "../../hooks/fase1/revisionFinalSubdere/useResumenFinal";
+import { CardDocumento } from "../../components/fase1/commons/CardDocumento";
 
 const EstadoCompetencia = () =>
 {

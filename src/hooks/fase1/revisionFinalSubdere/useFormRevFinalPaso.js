@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { apiTransferenciaCompentencia } from "../../services/transferenciaCompetencia";
+import { apiTransferenciaCompentencia } from "../../../services/transferenciaCompetencia";
 
 
 export const useSubderePasos = (id, stepNumber) => {

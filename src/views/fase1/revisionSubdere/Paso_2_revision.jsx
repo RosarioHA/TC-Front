@@ -1,11 +1,11 @@
 import { useContext, useEffect, useCallback } from "react";
-import { Avance } from "../../components/fase1/tables/Avance";
-import { MonoStepers } from "../../components/stepers/MonoStepers";
-import { FormSubdereContext } from "../../context/RevisionFinalSubdere";
-import { JustificacionDesfavorables } from "../../components/formSubdere/paso2/p3_Subdere";
-import { Temporalidad } from "../../components/formSubdere/paso2/p4_1_Subdere";
-import { RestoCampos } from "../../components/formSubdere/paso2/p4_Subdere_resto";
-import { NavigationSubdere } from "../../components/layout/navigationSubdere";
+import { Avance } from "../../../components/fase1/tables/Avance";
+import { MonoStepers } from "../../../components/stepers/MonoStepers";
+import { FormSubdereContext } from "../../../context/RevisionFinalSubdere";
+import { JustificacionDesfavorables } from "../../../components/fase1/formSubdere/paso2/p3_Subdere";
+import { Temporalidad } from "../../../components/fase1/formSubdere/paso2/p4_1_Subdere";
+import { RestoCampos } from "../../../components/fase1/formSubdere/paso2/p4_Subdere_resto";
+import { NavigationSubdere } from "../../../components/layout/navigationSubdere";
 
 const Paso_2_Revision = () => {
   const {

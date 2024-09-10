@@ -1,7 +1,7 @@
 import { useContext, useState, useMemo } from "react";
-import { OpcionesCheck } from "../../fase1/forms/OpcionesCheck";
-import CKEditorField from "../../fase1/forms/ck_editor";
-import { FormSubdereContext } from "../../../context/RevisionFinalSubdere";
+import { OpcionesCheck } from "../../../fase1/forms/OpcionesCheck";
+import CKEditorField from "../../../fase1/forms/ck_editor";
+import { FormSubdereContext } from "../../../../context/RevisionFinalSubdere";
 //import IndicadoresRecomendacion from "../../tables/IndicadoresRecomendacion";
 
 export const RestoCampos = ({

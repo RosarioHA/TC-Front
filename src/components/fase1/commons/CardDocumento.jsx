@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDescargarDocumento } from "../../hooks/competencias/useDownloadPDFFinal";
-import { useGenerarDocumento } from '../../hooks/competencias/useGenerarDocumento';
-import { useCompetencia } from "../../hooks/competencias/useCompetencias";
+import { useDescargarDocumento } from "../../../hooks/competencias/useDownloadPDFFinal";
+import { useGenerarDocumento } from '../../../hooks/competencias/useGenerarDocumento';
+import { useCompetencia } from "../../../hooks/competencias/useCompetencias";
 
 export const CardDocumento = ({ id, estadoFinalizado, resumen, editorName, editionDate, antecedentes, descripcion }) => {
   const [pdfGenerado, setPdfGenerado] = useState(false);
@@ -14,7 +14,6 @@ export const CardDocumento = ({ id, estadoFinalizado, resumen, editorName, editi
   const fileUrl = resumen?.antecedente_adicional_revision_subdere;
   const [checking, setChecking] = useState(false);
 
-  console.log( pendiente)
 
   useEffect(() => {
     const fetchDocumentStatus = async () => {

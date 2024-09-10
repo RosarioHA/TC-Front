@@ -1,8 +1,7 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from "../../context/AuthContext";
-
-import { useResumenFinal } from '../../../hooks/revisionFinalSubdere/useResumenFinal';
+import { useAuth } from "../../../context/AuthContext";
+import { useResumenFinal } from '../../../hooks/fase1/revisionFinalSubdere/useResumenFinal';
 import { useDescargarDocumento } from '../../../hooks/competencias/useDownloadPDFFinal';
 
 export const SummaryDetail = ({ competencia }) =>

@@ -1,5 +1,5 @@
 import { useState} from 'react';
-import { apiTransferenciaCompentencia } from "../../services/transferenciaCompetencia";
+import { apiTransferenciaCompentencia } from "../../../services/transferenciaCompetencia";
 
 export const usePatchSubderePaso = () => {
   const [isLoading, setIsLoading] = useState(false);

@@ -50,9 +50,9 @@ const PasoTresGore = React.lazy(() => import('./views/fase1/formularioGore/pasoT
 const ResumenOS = React.lazy(() => import('./views/fase1/observacionesSUBDERE/ResumenOS'));
 const ResumenOS_Gore = React.lazy(() => import('./views/fase1/formularioGore/ResumenGore.jsx'));
 const ObservacionesSubdere = React.lazy(() => import('./views/fase1/observacionesSUBDERE/ObservacionesSubdere'));
-const Paso_1_Revision = React.lazy(() => import("./views/revisionSubdere/Paso_1_revision"));
-const Paso_2_Revision = React.lazy(() => import("./views/revisionSubdere/Paso_2_revision"));
-const ResumenFinal = React.lazy(() => import('./views/revisionSubdere/Resumen'));
+const Paso_1_Revision = React.lazy(() => import("./views/fase1/revisionSubdere/Paso_1_revision"));
+const Paso_2_Revision = React.lazy(() => import("./views/fase1/revisionSubdere/Paso_2_revision"));
+const ResumenFinal = React.lazy(() => import('./views/fase1/revisionSubdere/Resumen'));
 const SuccessRevisionFinal = React.lazy(() => import('./views/success/success_revision_final'));
 const OficioDipres2 = React.lazy(() => import("./views/fase1/minutaDIPRES/segundo_oficio"));
 const RecomendacionPostCIDLayout = React.lazy(() => import('./layout/RecomendacionPostCIDLayout'));
