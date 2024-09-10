@@ -1,16 +1,19 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useRef, useEffect, useCallback, forwardRef } from 'react';
 
-export const CheckboxRegion2 =  ({
+export const CheckboxRegion2 = forwardRef(({
   label,
   options,
   placeholder,
   readOnly,
   selectedRegions,
   onSelectionChange,
-}) => {
+  onChange,
+  value,
+  error
+}, ref) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState(() => selectedRegions || []);
-  const [userHasMadeSelection, setUserHasMadeSelection] = useState(false); 
+  const [userHasMadeSelection, setUserHasMadeSelection] = useState(false);
   const dropdownRef = useRef(null);
   const toggleRef = useRef(null);
 
@@ -32,13 +35,11 @@ export const CheckboxRegion2 =  ({
     };
   }, [handleClickOutside]);
 
-
   useEffect(() => {
-    // Actualizar solo si el usuario no ha hecho ninguna selección
-    if (selectedRegions && !userHasMadeSelection) {
-      setSelectedOptions(selectedRegions);
+    if (value && !userHasMadeSelection) {
+      setSelectedOptions(value);
     }
-  }, [selectedRegions, userHasMadeSelection]);
+  }, [value, userHasMadeSelection]);
 
   const handleDropdownClick = useCallback(() => {
     setIsOpen(!isOpen);
@@ -47,7 +48,7 @@ export const CheckboxRegion2 =  ({
   const handleCheckboxChange = useCallback((option) => {
     if (readOnly) return;
     let newSelectedOptions;
-  
+
     if (option === 'Todas') {
       newSelectedOptions = options.filter(opt => opt.label !== 'Sin región asociada');
     } else if (option === 'Eliminar Selección') {
@@ -55,25 +56,24 @@ export const CheckboxRegion2 =  ({
     } else {
       const index = selectedOptions.findIndex(opt => opt.value === option.value);
       if (index > -1) {
-        // Deseleccionar
         newSelectedOptions = [
           ...selectedOptions.slice(0, index),
           ...selectedOptions.slice(index + 1)
         ];
       } else {
-        // Seleccionar
         newSelectedOptions = [...selectedOptions, option];
       }
     }
 
-    setSelectedOptions(newSelectedOptions)
+    setSelectedOptions(newSelectedOptions);
     setUserHasMadeSelection(true);
-    // Llamar a la función de callback pasada por el componente padre
     if (onSelectionChange) {
       onSelectionChange(newSelectedOptions);
     }
-  }, [selectedOptions, options, onSelectionChange, readOnly]);
-
+    if (onChange) {
+      onChange(newSelectedOptions);
+    }
+  }, [selectedOptions, options, onSelectionChange, readOnly, onChange]);
 
   const renderSelectedOptions = () => {
     if (readOnly && selectedRegions && selectedRegions.length > 0) {
@@ -149,6 +149,7 @@ export const CheckboxRegion2 =  ({
           ))}
         </div>
       )}
+      {error && <p className="text-danger">{error}</p>}
     </div>
   );
-};
+});

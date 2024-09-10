@@ -9,10 +9,10 @@ import { FormGOREContext} from '../../../../context/FormGore';
 const inputNumberStyle = {
   // Estilos para ocultar flechas en navegadores que usan Webkit y Mozilla
   MozAppearance: 'textfield',
-  '&::WebkitOuterSpinButton': {
-    WebkitAppearance: 'none',
-    margin: 0,
-  },
+  // '&::WebkitOuterSpinButton': {
+  //   WebkitAppearance: 'none',
+  //   margin: 0,
+  // },
   '&::WebkitOuterSpinButton': {
     WebkitAppearance: 'none',
     margin: 0,
