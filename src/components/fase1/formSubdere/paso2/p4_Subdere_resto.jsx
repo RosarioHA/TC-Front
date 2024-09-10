@@ -1,7 +1,7 @@
 import { useContext, useState, useMemo } from "react";
-import { OpcionesCheck } from "../../fase1/forms/OpcionesCheck";
-import CKEditorField from "../../fase1/forms/ck_editor";
-import { FormSubdereContext } from "../../../context/RevisionFinalSubdere";
+import { OpcionesCheck } from "../../../fase1/forms/OpcionesCheck";
+import CKEditorField from "../../../fase1/forms/ck_editor";
+import { FormSubdereContext } from "../../../../context/RevisionFinalSubdere";
 //import IndicadoresRecomendacion from "../../tables/IndicadoresRecomendacion";
 
 export const RestoCampos = ({
@@ -244,7 +244,7 @@ export const RestoCampos = ({
           </div>
           <div className="col-11">
             <h4 className="text-sans-h4">
-              4.7 Condiciones cuyo incumplimiento dan lugar a la revocación de la transferencia
+              4.6 Condiciones cuyo incumplimiento dan lugar a la revocación de la transferencia
             </h4>
             <div className="text-sans-h6 my-3">
               <p className="text-sans-p col-11">

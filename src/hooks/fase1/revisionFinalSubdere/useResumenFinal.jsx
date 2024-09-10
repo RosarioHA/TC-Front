@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
-import { apiTransferenciaCompentencia } from '../../services/transferenciaCompetencia';
+import { apiTransferenciaCompentencia } from '../../../services/transferenciaCompetencia';
 
 export const useResumenFinal = (id) => {
   const [resumen, setResumen] = useState(null);

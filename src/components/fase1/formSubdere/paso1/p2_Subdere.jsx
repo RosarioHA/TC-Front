@@ -2,8 +2,8 @@ import { useState, useContext, useRef, useEffect } from 'react';
 import DualListBox from 'react-dual-listbox';
 import 'react-dual-listbox/lib/react-dual-listbox.css';
 import 'material-icons/iconfont/material-icons.css';
-import { FormSubdereContext } from '../../../context/RevisionFinalSubdere';
-import { ModalAdvertencia } from '../../fase1/commons/modalAdvertencia';
+import { FormSubdereContext } from '../../../../context/RevisionFinalSubdere';
+import { ModalAdvertencia } from '../../../fase1/commons/modalAdvertencia';
 
 export const RecomendacionTransferencia = ({ regionesListado, regionesRecomendadas, solo_lectura }) => {
   // Transforma el listado de regiones al formato esperado por DualListBox

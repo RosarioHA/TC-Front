@@ -10,7 +10,8 @@ import CustomTextarea from "../../../components/fase1/forms/custom_textarea";
 
 const ObservacionesSubdere = () =>
 {
-  const [etapaOmitida, setEtapaOmitida] = useState(false);
+  const [ etapaOmitida, setEtapaOmitida ] = useState(false);
+  const [opcionSeleccionada, setOpcionSeleccionada] = useState(false);
   const navigate = useNavigate();
   const { id } = useParams();
   const { competenciaDetails } = useCompetencia(id, 2);
@@ -21,12 +22,12 @@ const ObservacionesSubdere = () =>
   const etapaFinalizada = competenciaDetails?.etapa2?.estado === 'Finalizada';
 
   const formularios = competenciaDetails?.etapa2?.formulario_sectorial?.detalle_formularios_sectoriales;
-  const formulario = competenciaDetails?.etapa2?.formulario_sectorial[0];
+  const formulario = competenciaDetails?.etapa2?.formulario_sectorial[ 0 ];
 
   const { setMostrarInput } = useContext(FormularioContext);
 
 
-  
+
 
 
   useEffect(() =>
@@ -46,11 +47,12 @@ const ObservacionesSubdere = () =>
   const handleRadioButtonChange = (value) =>
   {
     setEtapaOmitida(value === 'B');
+    setOpcionSeleccionada(true);
   };
 
   const handleVerFormulario = (formularioId) =>
   {
-    setMostrarInput(true); 
+    setMostrarInput(true);
     navigate(`/home/formulario_sectorial/${formularioId}/paso_1`);
   };
 
@@ -60,7 +62,7 @@ const ObservacionesSubdere = () =>
     try
     {
       // Realizar la actualización del paso 2 aquí
-      await updateEtapa( 2,{ aprobada: true});
+      await updateEtapa(2, { aprobada: true });
       await patchCompetenciaOmitida(competenciaDetails?.etapa3?.id, etapaOmitida);
       navigate(`/home/success_cierre_observaciones/${competenciaDetails?.id}`);
     } catch (error)
@@ -99,44 +101,51 @@ const ObservacionesSubdere = () =>
         {competenciaDetails?.etapa2?.observaciones_sectorial ? (
           Array.isArray(competenciaDetails.etapa2.observaciones_sectorial) ? (
             competenciaDetails.etapa2.observaciones_sectorial.map((observaciones, index) => (
-              <tr
-                className={`d-flex justify-content-between p-3 align-items-center ${index % 2 === 0 ? 'neutral-line' : 'white-line'}`}
-                key={observaciones.id}
-              >
-                <td className="col-8">{observaciones.nombre}</td>
-                <td className="">
-                  <button
-                    className='btn-secundario-s text-decoration-underline'
-                    onClick={() => handleVerFormulario(observaciones.id)}
+              <table className="col-12"  key={observaciones.id}>
+                <tbody>
+                  <tr
+                    className={`d-flex justify-content-between p-3 align-items-center ${index % 2 === 0 ? 'neutral-line' : 'white-line'}`}
                   >
-                    <p className="mb-0">{observaciones.accion}</p>
-                  </button>
-                </td>
-              </tr>
+                    <td className="col-8">{observaciones.nombre}</td>
+                    <td className="">
+                      <button
+                        className='btn-secundario-s text-decoration-underline'
+                        onClick={() => handleVerFormulario(observaciones.id)}
+                      >
+                        <p className="mb-0">{observaciones.accion}</p>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             ))
           ) : (
             competenciaDetails?.etapa2.observaciones_sectorial?.detalle_observaciones_sectoriales
               .sort((a, b) => b.id - a.id)
               .map((observaciones, index) => (
-                <tr
-                  className={`d-flex justify-content-between p-3 align-items-center ${index % 2 === 0 ? 'neutral-line' : 'white-line'}`}
-                  key={observaciones.id}
-                >
-                  <td className="col-8">{observaciones.nombre}</td>
-                  <td className="">
-                    <button
-                      className='btn-secundario-s text-decoration-underline'
-                      onClick={() => handleVerFormulario(observaciones.id)}
-                    >
-                      <p className="mb-0">{observaciones.accion}</p>
-                    </button>
-                  </td>
-                </tr>
+                <table className="col-12" key={observaciones.id}>
+                  <tbody>
+                    <tr
+                      className={`d-flex justify-content-between p-3 align-items-center ${index % 2 === 0 ? 'neutral-line' : 'white-line'}`}>
+                      <td className="col-8">{observaciones.nombre}</td>
+                      <td className="">
+                        <button
+                          className='btn-secundario-s text-decoration-underline'
+                          onClick={() => handleVerFormulario(observaciones.id)}
+                        >
+                          <p className="mb-0">{observaciones.accion}</p>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               ))
           )
+
         ) : (
           <p>No hay formularios disponibles.</p>
         )}
+
       </div>
       <hr />
 
@@ -286,7 +295,7 @@ const ObservacionesSubdere = () =>
         {!etapaFinalizada && (
           <button
             className="btn-primario-s"
-            disabled={!etapaOmitida && !observacionesEnviadas}
+            disabled={!opcionSeleccionada || !observacionesEnviadas || etapaFinalizada} 
             onClick={handleCerrarEtapa}
           >
             Cerrar etapa

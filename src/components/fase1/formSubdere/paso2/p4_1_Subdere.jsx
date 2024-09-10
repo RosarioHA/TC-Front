@@ -1,11 +1,11 @@
 import React,{useContext, useState, useEffect } from 'react';
-import CustomTextarea from '../../fase1/forms/custom_textarea';
-import {DropdownSelectSimple } from '../../fase1/dropdown/selectSimple';
-import { CheckboxRegion2 } from '../../fase1/dropdown/checkboxRegiones2.0';
-import { FormSubdereContext } from '../../../context/RevisionFinalSubdere';
+import CustomTextarea from '../../../fase1/forms/custom_textarea';
+import {DropdownSelectSimple } from '../../../fase1/dropdown/selectSimple';
+import { CheckboxRegion2 } from '../../../fase1/dropdown/checkboxRegiones2.0';
+import { FormSubdereContext } from '../../../../context/RevisionFinalSubdere';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { validacionTemporalidadGradualidad } from '../../../validaciones/fase1/temporalidadGradualidad';
+import { validacionTemporalidadGradualidad } from '../../../../validaciones/fase1/temporalidadGradualidad';
 
 export const Temporalidad = ({
   temporalidad = [],
@@ -13,26 +13,29 @@ export const Temporalidad = ({
   regiones_recomendadas = [],
   temporalidad_opciones = [],
   regiones_temporalidad = [],
-}) => {
+}) =>
+{
   const { updatePasoSubdere } = useContext(FormSubdereContext);
-  const [grupos, setGrupos] = useState(temporalidad);
+  const [ grupos, setGrupos ] = useState(temporalidad);
   const {
     control,
     handleSubmit,
+    formState: { errors }
   } = useForm({
     resolver: yupResolver(validacionTemporalidadGradualidad),
     mode: 'onBlur',
     reValidateMode: 'onChange',
   });
 
-  useEffect(() => {
+  useEffect(() =>
+  {
     const gruposOrdenados = Array.isArray(temporalidad)
       ? temporalidad.sort((a, b) => a.id - b.id)
       : [];
     setGrupos(gruposOrdenados);
-  }, [temporalidad]);
+  }, [ temporalidad ]);
 
-  const [inputStatus, setInputStatus] = useState({
+  const [ inputStatus, setInputStatus ] = useState({
     justificacion_temporalidad: { loading: false, saved: false },
     gradualidad_meses: { loading: false, saved: false },
     justificacion_gradualidad: { loading: false, saved: false },
@@ -40,73 +43,84 @@ export const Temporalidad = ({
     region: { loading: false, saved: false },
   });
 
-  const agregarGrupo = async () => {
+  const agregarGrupo = async () =>
+  {
     const nuevoGrupoPayload = {};
 
-    try {
+    try
+    {
       const respuesta = await updatePasoSubdere({
-        temporalidad_gradualidad: [nuevoGrupoPayload],
+        temporalidad_gradualidad: [ nuevoGrupoPayload ],
       });
-      if (respuesta && respuesta.grupoCreado) {
-        setGrupos((gruposActuales) => {
-          const nuevosGrupos = [...gruposActuales, respuesta.grupoCreado];
+      if (respuesta && respuesta.grupoCreado)
+      {
+        setGrupos((gruposActuales) =>
+        {
+          const nuevosGrupos = [ ...gruposActuales, respuesta.grupoCreado ];
           return nuevosGrupos.sort((a, b) => a.id - b.id);
         });
-      } else {
+      } else
+      {
         console.error('El grupo no fue creada correctamente');
       }
-    } catch (error) {
+    } catch (error)
+    {
       console.error('Error al agregar grupo', error);
     }
   };
 
-  const handleUpdate = async (grupoId, field, value) => {
+  const handleUpdate = async (grupoId, field, value) =>
+  {
     const grupoActual = grupos.find((grupo) => grupo.id === grupoId);
     const nuevoGrupo = {
       ...grupoActual,
-      [field]: field === 'region' ? value.map(Number) : value, // Convertir a número si es la región
+      [ field ]: field === 'region' ? value.map(Number) : value, // Convertir a número si es la región
     };
 
     setInputStatus((prev) => ({
       ...prev,
-      [grupoId]: {
-        ...prev[grupoId],
-        [field]: { value, loading: false, saved: false },
+      [ grupoId ]: {
+        ...prev[ grupoId ],
+        [ field ]: { value, loading: false, saved: false },
       },
     }));
 
-    try {
+    try
+    {
       const payload = {
-        temporalidad_gradualidad: [nuevoGrupo],
+        temporalidad_gradualidad: [ nuevoGrupo ],
       };
       await updatePasoSubdere(payload);
       setInputStatus((prevStatus) => ({
         ...prevStatus,
-        [grupoId]: {
-          ...prevStatus[grupoId],
-          [field]: {
-            ...prevStatus[grupoId][field],
+        [ grupoId ]: {
+          ...prevStatus[ grupoId ],
+          [ field ]: {
+            ...prevStatus[ grupoId ][ field ],
             loading: false,
             saved: true,
           },
         },
       }));
-    } catch (error) {
+    } catch (error)
+    {
       console.error('Error updating data', error);
       setInputStatus((prevStatus) => ({
         ...prevStatus,
-        [grupoId]: {
-          ...prevStatus[grupoId],
-          [field]: { loading: false, saved: false },
+        [ grupoId ]: {
+          ...prevStatus[ grupoId ],
+          [ field ]: { loading: false, saved: false },
         },
       }));
     }
   };
 
-  const eliminarGrupo = async (idGrupo) => {
+  const eliminarGrupo = async (idGrupo) =>
+  {
     const nuevosGrupos = grupos.filter((ficha) => ficha.id !== idGrupo);
     setGrupos(nuevosGrupos);
-    try {
+    try
+    {
       await updatePasoSubdere({
         temporalidad_gradualidad: [
           {
@@ -115,12 +129,14 @@ export const Temporalidad = ({
           },
         ],
       });
-    } catch (error) {
+    } catch (error)
+    {
       console.error('Error eliminando la ficha:', error);
     }
   };
 
-  const onSubmit = () => {
+  const onSubmit = () =>
+  {
     agregarGrupo();
   };
 
@@ -164,31 +180,28 @@ export const Temporalidad = ({
                                 <>
                                   Región:{' '}
                                   <div className="border-gris my-2 px-3 py-3">
-                                    {grupo.region_label_value[0]?.label}
+                                    {grupo.region_label_value[ 0 ]?.label}
                                   </div>
                                 </>
                               ) : (
                                 <>
-                                  <CheckboxRegion2
-                                    label="Región (Obligatorio)"
-                                    options={opcionesRegion}
-                                    selectedRegions={grupo.region_label_value.map(
-                                      (item) => ({
-                                        label: item.label,
-                                        value: item.value,
-                                      })
+                                  <Controller
+                                    control={control}
+                                    name={`grupos[${index}].region`}
+                                    defaultValue={grupo.region_label_value.map(item => ({ label: item.label, value: item.value }))}
+                                    render={({ field: { onChange, value, ref }, fieldState: { error } }) => (
+                                      <CheckboxRegion2
+                                        ref={ref}
+                                        label="Región (Obligatorio)"
+                                        options={opcionesRegion}
+                                        selectedRegions={value}
+                                        onSelectionChange={onChange}
+                                        readOnly={solo_lectura}
+                                        error={error?.message}
+                                      />
                                     )}
-                                    onSelectionChange={(selectedOptions) => {
-                                      handleUpdate(
-                                        grupo.id,
-                                        'region',
-                                        selectedOptions.map(
-                                          (option) => option.value
-                                        )
-                                      );
-                                    }}
-                                    readOnly={solo_lectura}
                                   />
+
                                   {grupo.region_label_value.length > 1 && (
                                     <div className="mt-3">
                                       Regiones seleccionadas :{' '}
@@ -216,12 +229,12 @@ export const Temporalidad = ({
                               <div className=" d-flex  flex-row col my-2 mx-3 p-2">
                                 <div className="col-6 me-2">
                                   <Controller
-                                    name={`grupos[${index}].temporalidad`}
                                     control={control}
+                                    name={`grupos[${index}].temporalidad`}
                                     defaultValue={grupo.temporalidad}
-                                    render={({ field }) => (
-                                      <DropdownSelectSimple 
-                                        id="temporalidad"
+                                    render={({ field, fieldState: { error } }) => (
+                                      <DropdownSelectSimple
+                                        id={grupo.id}
                                         label="Elige la temporalidad para este grupo"
                                         placeholder="Definitiva o temporal"
                                         name={`grupos[${index}].temporalidad`}
@@ -231,7 +244,8 @@ export const Temporalidad = ({
                                             value: opcion.value,
                                           })
                                         )}
-                                        onSelectionChange={(selectedOption) => {
+                                        onSelectionChange={(selectedOption) =>
+                                        {
                                           const selectedValue =
                                             selectedOption.value;
                                           field.onChange(selectedValue);
@@ -245,6 +259,7 @@ export const Temporalidad = ({
                                           field.value || grupo.temporalidad
                                         } // Asegúrate de que este valor se inicializa correctamente con el estado actual
                                         readOnly={solo_lectura}
+                                        error={error?.message}
                                       />
                                     )}
                                   />
@@ -267,19 +282,21 @@ export const Temporalidad = ({
                                           error={error?.message}
                                           readOnly={solo_lectura}
                                           loading={
-                                            inputStatus[grupo.id]?.anios
+                                            inputStatus[ grupo.id ]?.anios
                                               ?.loading && !error
                                           }
                                           saved={
-                                            inputStatus[grupo.id]?.anios
+                                            inputStatus[ grupo.id ]?.anios
                                               ?.saved && !error
                                           }
-                                          onBlur={(e) => {
+                                          onBlur={(e) =>
+                                          {
                                             field.onBlur();
                                             if (
                                               grupo.anios !== e.target.value &&
                                               !error
-                                            ) {
+                                            )
+                                            {
                                               handleUpdate(
                                                 grupo.id,
                                                 'anios',
@@ -306,28 +323,30 @@ export const Temporalidad = ({
                                   }) => (
                                     <CustomTextarea
                                       {...field}
-                                      label="Justifica la temporalidad de este grupo"
+                                      label="Justifica la temporalidad de este grupo (Obligatorio)"
                                       placeholder="Describe los costos de la plataforma o software"
                                       error={error?.message}
                                       readOnly={solo_lectura}
                                       maxLength={500}
                                       loading={
-                                        inputStatus[grupo.id]
+                                        inputStatus[ grupo.id ]
                                           ?.justificacion_temporalidad
                                           ?.loading && !error
                                       }
                                       saved={
-                                        inputStatus[grupo.id]
+                                        inputStatus[ grupo.id ]
                                           ?.justificacion_temporalidad?.saved &&
                                         !error
                                       }
-                                      onBlur={(e) => {
+                                      onBlur={(e) =>
+                                      {
                                         field.onBlur();
                                         if (
                                           grupo.justificacion_temporalidad !==
-                                            e.target.value &&
+                                          e.target.value &&
                                           !error
-                                        ) {
+                                        )
+                                        {
                                           handleUpdate(
                                             grupo.id,
                                             'justificacion_temporalidad',
@@ -349,38 +368,24 @@ export const Temporalidad = ({
                                 <Controller
                                   control={control}
                                   name={`grupos[${index}].gradualidad_meses`}
-                                  defaultValue={grupo.gradualidad_meses || ''}
-                                  render={({
-                                    field,
-                                    fieldState: { error },
-                                  }) => (
+                                  defaultValue={grupo.gradualidad_meses ?? ''} // Manejar valores nulos
+                                  render={({ field, fieldState: { error } }) => (
                                     <CustomTextarea
                                       {...field}
                                       label="Gradualidad en meses para este grupo"
                                       placeholder="meses"
-                                      descripcion="Campo númerico"
+                                      descripcion="Campo numérico"
                                       error={error?.message}
                                       readOnly={solo_lectura}
-                                      loading={
-                                        inputStatus[grupo.id]?.gradualidad_meses
-                                          ?.loading && !error
-                                      }
-                                      saved={
-                                        inputStatus[grupo.id]?.gradualidad_meses
-                                          ?.saved && !error
-                                      }
-                                      onBlur={(e) => {
+                                      loading={inputStatus[ grupo.id ]?.gradualidad_meses?.loading && !error}
+                                      saved={inputStatus[ grupo.id ]?.gradualidad_meses?.saved && !error}
+                                      onBlur={(e) =>
+                                      {
                                         field.onBlur();
-                                        if (
-                                          grupo.gradualidad_meses !==
-                                            e.target.value &&
-                                          !error
-                                        ) {
-                                          handleUpdate(
-                                            grupo.id,
-                                            'gradualidad_meses',
-                                            e.target.value
-                                          );
+                                        const value = Number(e.target.value);
+                                        if (!isNaN(value) && grupo.gradualidad_meses !== value && !error)
+                                        {
+                                          handleUpdate(grupo.id, 'gradualidad_meses', value);
                                         }
                                       }}
                                     />
@@ -400,28 +405,30 @@ export const Temporalidad = ({
                                   }) => (
                                     <CustomTextarea
                                       {...field}
-                                      label="Justifica la gradualidad de este grupo"
+                                      label="Justifica la gradualidad de este grupo (Obligatorio)"
                                       placeholder="Describe los costos de la plataforma o software"
                                       error={error?.message}
                                       readOnly={solo_lectura}
                                       maxLength={500}
                                       loading={
-                                        inputStatus[grupo.id]
+                                        inputStatus[ grupo.id ]
                                           ?.justificacion_gradualidad
                                           ?.loading && !error
                                       }
                                       saved={
-                                        inputStatus[grupo.id]
+                                        inputStatus[ grupo.id ]
                                           ?.justificacion_gradualidad?.saved &&
                                         !error
                                       }
-                                      onBlur={(e) => {
+                                      onBlur={(e) =>
+                                      {
                                         field.onBlur();
                                         if (
                                           grupo.justificacion_gradualidad !==
-                                            e.target.value &&
+                                          e.target.value &&
                                           !error
-                                        ) {
+                                        )
+                                        {
                                           handleUpdate(
                                             grupo.id,
                                             'justificacion_gradualidad',
@@ -448,7 +455,7 @@ export const Temporalidad = ({
                                       delete
                                     </i>
                                     <p className="mb-0 text-decoration-underline">
-                                      Borrar 
+                                      Borrar
                                     </p>
                                   </button>
                                 )}

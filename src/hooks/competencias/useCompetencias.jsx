@@ -152,7 +152,8 @@ export const useCompetencia = (id) =>
     currentPageCompetencia,
     setCurrentPageCompetencia,
     setCurrentPageListaHome ,
-    currentPageListaHome
+    currentPageListaHome,
+    fetchCompetenciaDetails 
   };
   
 };

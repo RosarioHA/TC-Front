@@ -13,15 +13,33 @@
 //table Personas Asignadas 
 .nav-underline .nav-link {
   color: $tertiary-color;
-  border-bottom: 2px solid transparent;
+  font-weight: 400;
+  border-bottom: 3px solid $primary-color;
+  width: 200px;
 }
+//table Personas Asignadas 
 
-
-.nav-link:hover,
-.nav-link-active:hover{
+.nav-link:hover {
   color: $primary-color;
-  border-bottom: 2px solid $primary-color; 
+  border-bottom: 3px solid $primary-color; 
+  width: 200px;
 }
+.nav-link:focus {
+  color: $primary-color;
+  border-bottom: 3px solid $primary-color; 
+  width: 200px;
+}
+
+.nav-link.actived {
+  color: $primary-color;
+  font-weight: 600;
+  border-bottom: 3px solid $primary-color;
+  width:200px
+}
+.nav-underline.actived {
+  border-bottom: 3px solid $primary-color;
+}
+
 
 //tabla de evolucion gastos 
 .bg-color-even {

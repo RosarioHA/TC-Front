@@ -1,10 +1,10 @@
 import { useContext, useEffect, useCallback } from "react";
-import { Avance } from "../../components/fase1/tables/Avance";
-import { MonoStepers } from "../../components/stepers/MonoStepers";
-import { FormSubdereContext } from "../../context/RevisionFinalSubdere";
-import { AmbitoDefinitivo } from "../../components/formSubdere/paso1/p1_Subdere";
-import { RecomendacionTransferencia } from "../../components/formSubdere/paso1/p2_Subdere";
-import { NavigationSubdere } from "../../components/layout/navigationSubdere";
+import { Avance } from "../../../components/fase1/tables/Avance";
+import { MonoStepers } from "../../../components/stepers/MonoStepers";
+import { FormSubdereContext } from "../../../context/RevisionFinalSubdere";
+import { AmbitoDefinitivo } from "../../../components/fase1/formSubdere/paso1/p1_Subdere";
+import { RecomendacionTransferencia } from "../../../components/fase1/formSubdere/paso1/p2_Subdere";
+import { NavigationSubdere } from "../../../components/layout/navigationSubdere";
 
 const Paso_1_revision = () => {
   const {

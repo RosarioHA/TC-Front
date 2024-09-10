@@ -9,30 +9,25 @@ export const useObservacionesGORE = (id) =>
   const [ errorObservaciones, setErrorObservaciones ] = useState(null);
   const [ saved, setSaved ] = useState(false);
 
-  const fetchObservaciones = useCallback(async () =>
-  {
-    if (!id)
-    {
+  const fetchObservaciones = useCallback(async () => {
+    if (!id) {
       setObservaciones({});
-      setArchivoObs();
-      setLoadingObservaciones(false);
-      return;
+      setArchivoObs(undefined);
+      return setLoadingObservaciones(false);
     }
-
+  
     setLoadingObservaciones(true);
-    try
-    {
-      const response = await apiTransferenciaCompentencia.get(`/formulario-gore/${id}/observaciones-subdere-gore/`);
-      setObservaciones(response.data.observaciones_gore);
-      setArchivoObs(response.data.antecedente_adicional_subdere)
-    } catch (err)
-    {
+    try {
+      const { data } = await apiTransferenciaCompentencia.get(`/formulario-gore/${id}/observaciones-subdere-gore/`);
+      setObservaciones(data.observaciones_gore);
+      setArchivoObs(data.antecedente_adicional_subdere);
+    } catch (err) {
       setErrorObservaciones(err);
-    } finally
-    {
+    } finally {
       setLoadingObservaciones(false);
     }
-  }, [ id ]);
+  }, [id]);
+  
 
   const updateObservacion = useCallback(async (observacionData) =>
   {

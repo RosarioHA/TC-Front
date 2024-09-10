@@ -1,18 +1,32 @@
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useResumenFinal } from '../../../hooks/revisionFinalSubdere/useResumenFinal';
+import { useAuth } from "../../../context/AuthContext";
+import { useResumenFinal } from '../../../hooks/fase1/revisionFinalSubdere/useResumenFinal';
 import { useDescargarDocumento } from '../../../hooks/competencias/useDownloadPDFFinal';
 
 export const SummaryDetail = ({ competencia }) =>
 {
   const navigate = useNavigate();
   const { resumen } = useResumenFinal(competencia.id);
-  const { descargarDocumento } = useDescargarDocumento(competencia.id);
+  const { userData } = useAuth();
+  const { descargarDocumento , verificarDocumento , disponible } = useDescargarDocumento(competencia.id);
+  const userSubdere = userData?.perfil?.includes('SUBDERE');
+
+  const estado = competencia.estado || competencia?.resumen_competencia?.estado;
+
+  useEffect(() => {
+    // Solo verifica el documento si el estado es 'Finalizada'
+    if (estado === 'Finalizada') {
+      verificarDocumento();
+    }
+  }, [estado, verificarDocumento]);
+
+
   const etapas_info =
     competencia.etapas_info || competencia?.resumen_competencia?.etapas_info;
   const tiempo_transcurrido =
     competencia.tiempo_transcurrido ||
     competencia.resumen_competencia?.tiempo_transcurrido;
-  const estado = competencia.estado || competencia?.resumen_competencia?.estado;
   const ambito_definitivo_competencia =
     competencia.ambito_definitivo_competencia ||
     competencia.resumen_competencia?.ambito_definitivo_competencia;
@@ -35,17 +49,13 @@ export const SummaryDetail = ({ competencia }) =>
     ...etapas_info[ key ],
   }));
 
-  const handleDownloadClick = async () =>
+
+
+  const handleDownloadClick = () =>
   {
-    try
-    {
-      await descargarDocumento();
-      // Handle successful download (e.g., show a success message)
-    } catch (error)
-    {
-      // Handle error during download (e.g., show an error message)
-    }
+    descargarDocumento();
   };
+
 
   // Calcula la cantidad de etapas finalizadas
   const etapasFinalizadas = etapasArray.filter(
@@ -130,23 +140,23 @@ export const SummaryDetail = ({ competencia }) =>
 
               <div>
                 <div className="d-flex justify-content-center mt-3">
-                  <span className="text-sans-h6-bold-darkblue">
+                  <span className="text-sans-h6-bold-green">
                     Proceso finalizado en:
                   </span>
                 </div>
 
                 <div className="d-flex justify-content-between px-4 px-xxl-5 mx-xxl-5 mt-3">
                   <div className="d-flex flex-column align-items-center">
-                    <span className="text-sans-h6-bold-darkblue">{dias}</span>
-                    <span className="text-sans-h6-darkblue">Días</span>
+                    <span className="text-sans-h6-bold-green">{dias}</span>
+                    <span className="text-sans-h6-green">Días</span>
                   </div>
                   <div className="d-flex flex-column align-items-center">
-                    <span className="text-sans-h6-bold-darkblue">{horas}</span>
-                    <span className="text-sans-h6-darkblue">Horas</span>
+                    <span className="text-sans-h6-bold-green">{horas}</span>
+                    <span className="text-sans-h6-green">Horas</span>
                   </div>
                   <div className="d-flex flex-column align-items-center">
-                    <span className="text-sans-h6-bold-darkblue">{minutos}</span>
-                    <span className="text-sans-h6-darkblue">Mins</span>
+                    <span className="text-sans-h6-bold-green">{minutos}</span>
+                    <span className="text-sans-h6-green">Mins</span>
                   </div>
                 </div>
               </div>
@@ -156,7 +166,7 @@ export const SummaryDetail = ({ competencia }) =>
             <div className="mb-4 ms-4">
               <ul className="list-group list-group-flush my-3">
                 <li
-                  className="list-group-item d-flex justify-content-between "                    >
+                  className="list-group-item d-flex justify-content-between ">
                   <span>
                     {etapa_levantamiento?.nombre}
                     <span className="mx-5 px-5">{etapa_levantamiento?.fecha}</span>
@@ -178,51 +188,58 @@ export const SummaryDetail = ({ competencia }) =>
                     </span>
                   </div>
                 </li>
-                <li className="list-group-item d-flex justify-content-between ">
-                  <span>
-                    <p>Documento de información levantada</p>
-                  </span>
-                  <div>
-                    {resumen && (
-                      <>
-                        {resumen.formulario_final_enviado ? (
-                          <button className="btn-secundario-s" onClick={handleDownloadClick}>
-                            <i className="material-symbols-rounded ms-2">
-                              download
-                            </i>
-                            <u>Descargar</u>
-                          </button>
-                        ) : (
-                          <button
-                            className="text-decoration-underline btn-secundario-s"
-                            onClick={handleVerRevisionSubdere}
-                          >
-                            <u>Ver Revisión SUBDERE</u>
-                          </button>
-                        )}
-                      </>
-                    )}
-                  </div>
-                </li>
                 <li
                   className="list-group-item d-flex justify-content-between "                    >
                   <span>
                     {recomendacion.nombre}
                     <span className="mx-5 px-5"></span>
                   </span>
+                  {resumen?.formulario_final_enviado ? (
+                    <div>
+                      <span className={getBadgeDetails(recomendacion?.estado).class}>
+                        {getBadgeDetails(recomendacion?.estado).text}
+                      </span>
+                    </div>
+                  ) : (
+                    <button
+                      className="btn-secundario-s"
+                      onClick={handleVerRevisionSubdere}
+                      disabled={!userSubdere} // Deshabilitado si no es SUBDERE
+                    >
+                      <u>Revisión Final SUBDERE</u>
+                      <i className="material-symbols-rounded ms-2">create_new_folder</i>
+                    </button>
+                  )}
+                </li>
+
+                <li className="list-group-item d-flex justify-content-between ">
+                  <span>
+                    <p>Documento de información levantada</p>
+                  </span>
                   <div>
-                    <span className={getBadgeDetails(recomendacion?.estado).class}>
-                      {getBadgeDetails(recomendacion?.estado).text}
-                    </span>
+                    <div>
+                      {disponible ? (
+                        <button className="btn-secundario-s" 
+                        disabled={!userSubdere}
+                        onClick={handleDownloadClick}
+                        >
+                          <i className="material-symbols-rounded ms-2">download</i>
+                          <u>Descargar</u>
+                        </button>
+                      ) : (
+                        <span className="badge-status-pending">Pendiente</span>
+                      )}
+                    </div>
                   </div>
                 </li>
               </ul>
             </div>
           </div>
         </div>
-      </div>
-    );
+      </div >
+    )
   }
+
   return (
     <>
       <div className="row">

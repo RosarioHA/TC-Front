@@ -2,21 +2,18 @@ import { useState } from 'react';
 import { Table } from './Table';
 
 export const PersonsAssigned = ({ usuariosSubdere, usuariosDipres, usuariosSectoriales, usuariosGore }) => {
+  const [selectedTab, setSelectedTab] = useState('SUBDERE');
 
-  // Cambiar el estado inicial para que coincida con la primera pestaña en el nuevo orden
-  const [selectedTab, setSelectedTab] = useState('Subdere');
-
-  // Reorganizar el array TypeUser para reflejar el nuevo orden de las pestañas
   const TypeUser = [
-    { id: 2, tipoUsuario: 'Subdere' },
+    { id: 2, tipoUsuario: 'SUBDERE' },
     { id: 3, tipoUsuario: 'Sectorial' },
     { id: 4, tipoUsuario: 'Gore' },
-    { id: 1, tipoUsuario: 'Dipres' },
+    { id: 1, tipoUsuario: 'DIPRES' },
   ];
 
   const userMappings = {
-    Dipres: usuariosDipres,
-    Subdere: usuariosSubdere,
+    DIPRES: usuariosDipres,
+    SUBDERE: usuariosSubdere,
     Sectorial: usuariosSectoriales,
     Gore: usuariosGore
   };
@@ -32,7 +29,7 @@ export const PersonsAssigned = ({ usuariosSubdere, usuariosDipres, usuariosSecto
         {TypeUser.map((user) => (
           <li className="nav-item" role="presentation" key={user.id}>
             <button
-              className={`nav-link ${selectedTab === user.tipoUsuario ? 'active' : ''}`}
+              className={`nav-link ${selectedTab === user.tipoUsuario ? 'actived' : ''}`}
               id={`pills-${user.tipoUsuario.toLowerCase()}-tab`}
               data-bs-toggle="pill"
               data-bs-target={`#pills-${user.tipoUsuario.toLowerCase()}`}
@@ -42,7 +39,7 @@ export const PersonsAssigned = ({ usuariosSubdere, usuariosDipres, usuariosSecto
               aria-selected={selectedTab === user.tipoUsuario ? 'true' : 'false'}
               onClick={() => handleTabClick(user.tipoUsuario)}
             >
-              {user.tipoUsuario}
+              {user.tipoUsuario.toUpperCase()}
             </button>
           </li>
         ))}
@@ -57,7 +54,7 @@ export const PersonsAssigned = ({ usuariosSubdere, usuariosDipres, usuariosSecto
             tabIndex="0"
             key={user.id}
           >
-          <Table userData={getUserData()} userType={selectedTab} />
+            <Table userData={getUserData()} userType={selectedTab} />
           </div>
         ))}
       </div>

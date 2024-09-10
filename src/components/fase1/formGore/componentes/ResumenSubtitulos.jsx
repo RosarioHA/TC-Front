@@ -5,6 +5,7 @@ export const ResumenSubtitulos = ({
   sub29Diferencia,
   sub29Justificados,
   sub29Justificar,
+  sufijo_costos
 }) => {
   // Función modificada para formatear los números con separadores de miles
   // y cambiar el color si el número es negativo
@@ -43,7 +44,7 @@ export const ResumenSubtitulos = ({
         <tbody>
           <tr className="text-center py-5 ">
             <td className="text-start align-middle">
-              <span className="mx-3">Subtítulo 22</span>
+              <span >Subtítulo 22 <br />{`${sufijo_costos} `}</span>
             </td>
             <td className="py-3">
               {formatNumber(sub22Diferencia || 0)}
@@ -57,7 +58,7 @@ export const ResumenSubtitulos = ({
           </tr>
           <tr className="text-center py-5 table-secondary ">
             <td className="text-start align-middle">
-              <span className="mx-3">Subtítulo 29</span>
+              <span>Subtítulo 29 <br /> {`${sufijo_costos} `}</span>
             </td>
             <td className="py-3">
               {formatNumber(sub29Diferencia || 0)}

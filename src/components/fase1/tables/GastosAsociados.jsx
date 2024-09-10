@@ -5,10 +5,10 @@ import CustomTextarea from "../forms/custom_textarea";
 const inputNumberStyle = {
   // Estilos para ocultar flechas en navegadores que usan Webkit y Mozilla
   MozAppearance: 'textfield',
-  '&::-webkit-outer-spin-button': {
-    WebkitAppearance: 'none',
-    margin: 0,
-  },
+  // '&::WebkitOuterSpinButton': {
+  //   WebkitAppearance: 'none',
+  //   margin: 0,
+  // },
   '&::WebkitOuterSpinButton': {
     WebkitAppearance: 'none',
     margin: 0,
