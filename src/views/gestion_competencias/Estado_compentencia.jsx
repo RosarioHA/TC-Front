@@ -10,8 +10,7 @@ import { useResumenFinal } from "../../hooks/fase1/revisionFinalSubdere/useResum
 import { CardDocumento } from "../../components/fase1/commons/CardDocumento";
 import { CardInicioFase2 } from "../../components/fase2/CardInicioFase2";
 
-const EstadoCompetencia = () =>
-{
+const EstadoCompetencia = () => {
   const { id } = useParams();
   const { userData } = useAuth();
   const { competenciaDetails, loading, error } = useCompetencia(id);
@@ -22,29 +21,23 @@ const EstadoCompetencia = () =>
   const userSubdere = userData?.perfil?.includes('SUBDERE');
   const mostrarMensajeFinalizada = competenciaDetails?.estado === 'Finalizada' && resumen?.formulario_final_enviado === true;
 
-  useEffect(() =>
-  {
-    if (competenciaDetails)
-    {
+  useEffect(() => {
+    if (competenciaDetails) {
       setCompetencia(competenciaDetails);
     }
   }, [ competenciaDetails ]);
 
-  const handleBackButtonClick = () =>
-  {
+  const handleBackButtonClick = () => {
     navigate(-1);
   };
 
 
-  if (loading && competencia)
-  {
+  if (loading && competencia) {
     return <div className="d-flex align-items-center flex-column ">
       <div className="text-center text-sans-h5-medium-blue ">Cargando detalles de la competencia...</div>
       <span className="placeholder col-4 bg-primary"></span>
     </div>
-  }
-  if (error)
-  {
+  } if (error) {
     return <div>Error al cargar los detalles: {error.message}</div>;
   }
 
