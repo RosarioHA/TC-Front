@@ -13,9 +13,7 @@ export const CardDocumento = ({ id, estadoFinalizado, resumen, editorName, editi
   const navigate = useNavigate();
   const fileUrl = resumen?.antecedente_adicional_revision_subdere;
   const [checking, setChecking] = useState(false);
-
-  console.log( pendiente)
-
+  
   useEffect(() => {
     const fetchDocumentStatus = async () => {
       await verificarDocumento();

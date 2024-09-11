@@ -15,7 +15,7 @@ export const FichaInformatico = ({
 }) => {
   const [fichasTecnicas, setFichasTecnicas] = useState(dataInformatico);
   const { updatePasoGore } = useContext(FormGOREContext);
-  const { control, handleSubmit, reset, trigger, formState: { errors } } = useForm({
+  const { control, handleSubmit, reset, trigger } = useForm({
     resolver: yupResolver(validacionFichaInformaticos),
     mode: 'onBlur',
   });
