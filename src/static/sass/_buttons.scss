@@ -335,3 +335,36 @@ span.material-symbols-outlined {
         color: $white-color;
     }
 }
+
+
+.btn-secundario-s-success {
+    @include btn-border(fit-content, $success-color, $success-color);
+    @include typo-style;
+    background-color: transparent;
+
+    // Asegurar que el color del ícono sea el mismo que el texto por defecto
+    span.material-symbols-outlined {
+        color: $success-color;
+    }
+}
+
+.btn-secundario-s-success:hover {
+    @include btn-border(fit-content, $white-color, $success-color);
+    @include typo-style;
+    background-color: $success-color;
+    // Asegurar que el color del ícono sea el mismo que el texto por defecto
+    span.material-symbols-outlined {
+        color: $success-light;
+    }
+}
+
+.btn-secundario-s-success:focus {
+    @include btn-border(fit-content,$success-color, $success-color);
+    @include typo-style;
+    background-color: transparent;
+
+    // Asegurar que el color del ícono sea el mismo que el texto por defecto
+    span.material-symbols-outlined {
+        color: $success-light;
+    }
+}

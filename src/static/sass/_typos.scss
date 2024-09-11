@@ -80,6 +80,9 @@
 .text-sans-h3-blue{
     @include font-sans(24px, 500, $blue-color);
 }
+.text-sans-h3-success{
+    @include font-sans(24px, 500, $success-color);
+}
 
 .text-sans-h3-bold{
     @include font-sans(24px, 700, $dark-grey);
@@ -162,6 +165,9 @@
 }
 .text-sans-p-blue{
     @include font-sans(16px, 400, $blue-color);
+}
+.text-sans-p-sueccess{
+    @include font-sans(16px, 400, $success-color);
 }
 .text-sans-p-tertiary{
     @include font-sans(16px, 400, $tertiary-color);

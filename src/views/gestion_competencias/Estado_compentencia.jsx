@@ -8,6 +8,7 @@ import { useCompetencia } from "../../hooks/competencias/useCompetencias";
 import { useFormularioSubdere } from "../../hooks/fase1/revisionFinalSubdere/useFormularioSubdere";
 import { useResumenFinal } from "../../hooks/fase1/revisionFinalSubdere/useResumenFinal";
 import { CardDocumento } from "../../components/fase1/commons/CardDocumento";
+import { CardInicioFase2 } from "../../components/fase2/CardInicioFase2";
 
 const EstadoCompetencia = () =>
 {
@@ -81,6 +82,13 @@ const EstadoCompetencia = () =>
             usuariosGore={competencia?.usuarios_gore}
           />
         </div>
+
+        {/* CARD INICIO FASE 2, FALTA ESA CONDICION */}
+        {userSubdere && (
+          <CardInicioFase2
+          />
+        )}
+
         {userSubdere && (
           <CardDocumento
             id={id}
@@ -92,6 +100,7 @@ const EstadoCompetencia = () =>
             estadoFinalizado={mostrarMensajeFinalizada}
           />
         )}
+
         <div className="mt-5 mx-0">
           <div className="text-sans-h2 my-3">Etapas de levantamiento de información</div>
           <VerticalStepper etapasObjeto={competencia?.resumen_competencia} etapaDatos={competencia} id={id} />
