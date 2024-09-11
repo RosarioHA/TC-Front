@@ -11,10 +11,6 @@ export const CardInicioFase2 = ({ onButtonClick }) => {
                     Iniciar etapa
                 </button>
             </div>
-            {/* <button className="text-decoration-underline btn-secundario-s-success" onClick={onButtonClick}>
-                Iniciar etapa
-            </button> */}
-
         </div>
       </div>
     );

@@ -76,8 +76,7 @@ const EstadoCompetencia = () => {
           />
         </div>
 
-        {/* CARD INICIO FASE 2, FALTA ESA CONDICION */}
-        {userSubdere && (
+        {userSubdere && mostrarMensajeFinalizada && (
           <CardInicioFase2
           />
         )}
