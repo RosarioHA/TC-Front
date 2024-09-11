@@ -13,8 +13,6 @@ install_dependencies:
   image: 
     name: node:18.20.3
     pull_policy: if-not-present
-  tags:
-    - huawei-cloud
   script:
     - npm install --prefer-offline
 
@@ -24,8 +22,6 @@ lint:
   image: 
     name: node:18.20.3
     pull_policy: if-not-present
-  tags:
-    - huawei-cloud
   script:
     - echo "Checking style"
     - npm run lint -- --ignore-pattern dist
@@ -37,8 +33,6 @@ lint:
   image: 
     name: node:18.20.3
     pull_policy: if-not-present
-  tags:
-    - huawei-cloud
   before_script:
     - echo "Building the code..."
   artifacts:
