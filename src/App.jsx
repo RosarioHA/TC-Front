@@ -105,6 +105,7 @@ function App()
           {createProtectedRoute("estado_competencia/:id/subir_segundo_oficio_dipres", OficioDipres2, [ 'SUBDERE', 'Usuario Observador' ])}
           {createProtectedRoute("estado_competencia/:id/subir_oficio_gore", SubirOficioGore, [ 'SUBDERE', 'Usuario Observador' ])}
           <Route path="estado_competencia/:id/" element={<EstadoCompentencia />} />
+          <Route path="estado_seguimiento/:id/" element={<EstadoSeguimiento />} />
           <Route path="success_edicion" element={<SuccessEdicion />} />
           <Route path="success_creacion" element={<SuccessCreacion />} />
           <Route path="success_formulario_sectorial/:id/" element={<FormularioProvider> <SuccessFormSectorial /> </FormularioProvider>} />
