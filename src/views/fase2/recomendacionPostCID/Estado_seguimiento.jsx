@@ -9,7 +9,6 @@ import { PersonsAssigned } from '../../../components/fase1/tables/PersonsAssigne
 import { CardDocumento } from '../../../components/fase1/commons/CardDocumento';
 
 const EstadoSeguimiento = () => {
-  const [isEstadoCompetenciaOpen, setIsEstadoCompetenciaOpen] = useState(false);
   const { id } = useParams();
   const navigate = useNavigate();
   const { competenciaDetails, loading, error } = useCompetencia(id);
@@ -18,6 +17,8 @@ const EstadoSeguimiento = () => {
   const userSubdere = userData?.perfil?.includes('SUBDERE');
   const { dataFormSubdere } = useFormularioSubdere(id);
   const { resumen } = useResumenFinal(id);
+  const [isLevantamientoOpen, setIsLevantamientoOpen] = useState(false);
+  const [isSeguimientoOpen, setIsSeguimientoOpen] = useState(false);
 
   const mostrarMensajeFinalizada = competenciaDetails?.estado === 'Finalizada' && resumen?.formulario_final_enviado === true;
 
@@ -31,9 +32,13 @@ const EstadoSeguimiento = () => {
     navigate(-1);
   };
 
-  // Función para alternar el estado
-  const toggleEstadoCompetencia = () => {
-    setIsEstadoCompetenciaOpen(!isEstadoCompetenciaOpen);
+
+  const toggleLevantamiento = () => {
+    setIsLevantamientoOpen(!isLevantamientoOpen);
+  };
+
+  const toggleSeguimiento = () => {
+    setIsSeguimientoOpen(!isSeguimientoOpen);
   };
 
   if (loading && competencia) {
@@ -68,7 +73,7 @@ const EstadoSeguimiento = () => {
           <span className="badge-tipo mt-1">{competencia?.agrupada ? 'Agrupada' : 'Individual'}</span>
           <h1 className="text-sans-h1 mb-4 ms-2">{competencia?.nombre}</h1>
         </div>
-        {/* AQUI VA UN CLON DE SummaryDetail */}
+        {/* AQUI VA UN CLON DE SummaryDetail, CREAR */}
       </div>
 
       <div className="my-5">
@@ -80,11 +85,8 @@ const EstadoSeguimiento = () => {
           usuariosGore={competencia?.usuarios_gore} />
       </div>
 
-      {/* {userSubdere && mostrarMensajeFinalizada && (
-        <CardInicioFase2 />
-      )} */}
-
       {userSubdere && (
+        // NECESITA UN TERCER ESTADO DONDE NO MUESTRE EL BOTON "GENERAR DOCUMENTO"
         <CardDocumento
           id={id}
           editorName={dataFormSubdere?.ultimo_editor?.nombre_completo}
@@ -99,14 +101,13 @@ const EstadoSeguimiento = () => {
         <div className="text-sans-h2 my-3">Etapas de levantamiento de información</div>
           {/* Desplegable Levantamiento informacion */}
           <div>
-            <button onClick={toggleEstadoCompetencia}>
+            <button onClick={toggleLevantamiento}>
               {/* AQUI COMPONENTE QUE CAMBIE DE COLOR Y ETC CUANDO ESTE ABIERTO O CERRADO, PARA TODOS LOS DESPLEGABLES */}
-              {isEstadoCompetenciaOpen ? 'Cerrar Estado Competencia' : 'Abrir Estado Competencia'}
+              {isLevantamientoOpen ? 'Cerrar Estado Competencia' : 'Abrir Estado Competencia'}
             </button>
-            {isEstadoCompetenciaOpen && (
+            {isLevantamientoOpen && (
               <div className="estado-competencia-content">
                 <div className="mt-5 mx-0">
-                  <div className="text-sans-h2 my-3">Etapas de levantamiento de información</div>
                   <VerticalStepper etapasObjeto={competencia?.resumen_competencia} etapaDatos={competencia} id={id} />
                 </div>
               </div>
@@ -114,12 +115,12 @@ const EstadoSeguimiento = () => {
           </div>
 
           {/* Desplegable Recomendacion Post CID */}
-          <div>
-            <button onClick={toggleEstadoCompetencia}>
+          <div className="my-3">
+            <button onClick={toggleSeguimiento}>
               {/* AQUI COMPONENTE QUE CAMBIE DE COLOR Y ETC CUANDO ESTE ABIERTO O CERRADO, PARA TODOS LOS DESPLEGABLES */}
-              {isEstadoCompetenciaOpen ? 'Cerrar Estado Competencia' : 'Abrir Estado Competencia'}
+              {isSeguimientoOpen ? 'Cerrar Estado Competencia' : 'Abrir Estado Competencia'}
             </button>
-            {isEstadoCompetenciaOpen && (
+            {isSeguimientoOpen && (
               <div className="estado-competencia-content">
                 <div className="mt-5 mx-0">
                   <div className="text-sans-h2 my-3">nuevo stepper de fase 2</div>
