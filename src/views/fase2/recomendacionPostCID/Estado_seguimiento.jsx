@@ -7,6 +7,7 @@ import { useResumenFinal } from '../../../hooks/fase1/revisionFinalSubdere/useRe
 import { VerticalStepper } from '../../../components/stepers/VerticalStepper';
 import { PersonsAssigned } from '../../../components/fase1/tables/PersonsAssigned';
 import { CardDocumento } from '../../../components/fase1/commons/CardDocumento';
+import { DesplegableEstadoFase2 } from '../../../components/fase2/DesplegableEstado';
 
 const EstadoSeguimiento = () => {
   const { id } = useParams();
@@ -18,7 +19,7 @@ const EstadoSeguimiento = () => {
   const { dataFormSubdere } = useFormularioSubdere(id);
   const { resumen } = useResumenFinal(id);
   const [isLevantamientoOpen, setIsLevantamientoOpen] = useState(false);
-  const [isSeguimientoOpen, setIsSeguimientoOpen] = useState(false);
+  const [isRecomendacionOpen, setIsRecomendacionOpen] = useState(true); //Deberia ser dinamico segun la etapa en la que estemos. Mientras la vamos a dejar asi.
 
   const mostrarMensajeFinalizada = competenciaDetails?.estado === 'Finalizada' && resumen?.formulario_final_enviado === true;
 
@@ -37,8 +38,8 @@ const EstadoSeguimiento = () => {
     setIsLevantamientoOpen(!isLevantamientoOpen);
   };
 
-  const toggleSeguimiento = () => {
-    setIsSeguimientoOpen(!isSeguimientoOpen);
+  const toggleRecomendacion = () => {
+    setIsRecomendacionOpen(!isRecomendacionOpen);
   };
 
   if (loading && competencia) {
@@ -99,12 +100,14 @@ const EstadoSeguimiento = () => {
 
       <div className="mt-5 mx-0">
         <div className="text-sans-h2 my-3">Etapas de levantamiento de información</div>
-          {/* Desplegable Levantamiento informacion */}
-          <div>
-            <button onClick={toggleLevantamiento}>
-              {/* AQUI COMPONENTE QUE CAMBIE DE COLOR Y ETC CUANDO ESTE ABIERTO O CERRADO, PARA TODOS LOS DESPLEGABLES */}
-              {isLevantamientoOpen ? 'Cerrar Estado Competencia' : 'Abrir Estado Competencia'}
-            </button>
+
+        {/* Desplegable Levantamiento informacion */}
+        <div>
+            <DesplegableEstadoFase2 
+            onButtonClick={toggleLevantamiento} 
+            isOpen={isLevantamientoOpen}
+            title="Levantamiento de información sectorial y de gobiernos regionales"
+            />
             {isLevantamientoOpen && (
               <div className="estado-competencia-content">
                 <div className="mt-5 mx-0">
@@ -116,11 +119,12 @@ const EstadoSeguimiento = () => {
 
           {/* Desplegable Recomendacion Post CID */}
           <div className="my-3">
-            <button onClick={toggleSeguimiento}>
-              {/* AQUI COMPONENTE QUE CAMBIE DE COLOR Y ETC CUANDO ESTE ABIERTO O CERRADO, PARA TODOS LOS DESPLEGABLES */}
-              {isSeguimientoOpen ? 'Cerrar Estado Competencia' : 'Abrir Estado Competencia'}
-            </button>
-            {isSeguimientoOpen && (
+            <DesplegableEstadoFase2 
+            onButtonClick={toggleRecomendacion} 
+            isOpen={isRecomendacionOpen}
+            title="Recomendación de transferencia post-CID y “pre-implementación” "
+            />
+            {isRecomendacionOpen && (
               <div className="estado-competencia-content">
                 <div className="mt-5 mx-0">
                   <div className="text-sans-h2 my-3">nuevo stepper de fase 2</div>
