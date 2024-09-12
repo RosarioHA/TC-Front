@@ -16,7 +16,7 @@ export const PersonalInformadoSector = ({
 {
   const { updatePasoGore } = useContext(FormGOREContext);
   const [ inputStatus, setInputStatus ] = useState({});
-  const { control,  trigger, getValues ,handleSubmit, formState: { errors } } = useForm({
+  const { control, trigger, getValues, handleSubmit } = useForm({
     resolver: yupResolver(validacionesPersonalInformado),
     mode: 'onBlur'
   });
@@ -216,10 +216,9 @@ export const PersonalInformadoSector = ({
                                       loading={inputStatus[ persona.id ]?.numero_personas_gore?.loading}
                                       saved={inputStatus[ persona.id ]?.numero_personas_gore?.saved}
                                       error={fieldState?.error?.message}
-                                      onBlur={async (e) =>
+                                      onBlur={async () =>
                                       {
                                         field.onBlur(); // Llama a la función onBlur de React Hook Form
-                                        const newValue = e.target.value;
 
                                         // Forzar la validación del campo
                                         const isValid = await trigger(`persona.${persona.id}.numero_personas_gore`);
@@ -236,6 +235,7 @@ export const PersonalInformadoSector = ({
                                     />
                                   )}
                                 />
+
                               </td>
                             </>
                           )}

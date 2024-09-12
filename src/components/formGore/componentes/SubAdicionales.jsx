@@ -45,7 +45,6 @@ export const SubAdicionales = ({
   const {
     handleSubmit,
     control,
-    setError,
     clearErrors,
     trigger,
     formState: { errors },
@@ -84,6 +83,7 @@ export const SubAdicionales = ({
       return { ...acc, [costo.id]: opcionesDeItems };
     }, {});
     setOpcionesItemsPorCosto(opcionesIniciales);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [subAdicionales, subtitulos, itemSub]);
 
 
