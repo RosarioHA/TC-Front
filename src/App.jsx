@@ -56,6 +56,7 @@ const ResumenFinal = React.lazy(() => import('./views/fase1/revisionSubdere/Resu
 const SuccessRevisionFinal = React.lazy(() => import('./views/success/success_revision_final'));
 const OficioDipres2 = React.lazy(() => import("./views/fase1/minutaDIPRES/segundo_oficio"));
 const RecomendacionPostCIDLayout = React.lazy(() => import('./layout/RecomendacionPostCIDLayout'));
+const EstadoSeguimiento = React.lazy(() => import('./views/fase2/recomendacionPostCID/Estado_seguimiento.jsx'));
 const Recomendacion_paso1 = React.lazy(() => import('./views/fase2/recomendacionPostCID/pasoUno.jsx'));
 const Recomendacion_paso2 = React.lazy(() => import('./views/fase2/recomendacionPostCID/pasoDos.jsx'));
 
@@ -201,6 +202,7 @@ function App()
               </FormSubdereProvider>
             }
           >
+            <Route path="estado_seguimiento" element={<EstadoSeguimiento />} />
             <Route path="paso_1" element={<Recomendacion_paso1 />} />
             <Route path="paso_2" element={<Recomendacion_paso2 />} />
             <Route path="resumen_revision_final" element={<ResumenFinal />} />
