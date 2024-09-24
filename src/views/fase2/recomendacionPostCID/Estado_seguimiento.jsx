@@ -1,12 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-// import { useAuth } from '../../../context/AuthContext';
 import { useCompetencia } from '../../../hooks/competencias/useCompetencias';
-// import { useFormularioSubdere } from '../../../hooks/fase1/revisionFinalSubdere/useFormularioSubdere';
-// import { useResumenFinal } from '../../../hooks/fase1/revisionFinalSubdere/useResumenFinal';
 import { VerticalStepper } from '../../../components/stepers/VerticalStepper';
 import { PersonsAssigned } from '../../../components/fase1/tables/PersonsAssigned';
-// import { CardDocumento } from '../../../components/fase1/commons/CardDocumento';
 import { DesplegableEstadoFase2 } from '../../../components/fase2/DesplegableEstado';
 import { SummaryDetail2 } from '../../../components/fase2/SummaryDetails2';
 
@@ -15,18 +11,8 @@ const EstadoSeguimiento = () => {
   const navigate = useNavigate();
   const { competenciaDetails, loading, error } = useCompetencia(id);
   const [ competencia, setCompetencia ] = useState(null);
-  // const { userData } = useAuth();
-  // const userSubdere = userData?.perfil?.includes('SUBDERE');
-  // const { dataFormSubdere } = useFormularioSubdere(id);
-  // const { resumen } = useResumenFinal(id);
-  const [isLevantamientoOpen, setIsLevantamientoOpen] = useState(false);
-  const [isRecomendacionOpen, setIsRecomendacionOpen] = useState(true); //Deberia ser dinamico segun la etapa en la que estemos. Mientras la vamos a dejar asi.
-  const [isImplementacionOpen, setIsImplementacionOpen] = useState(false);
-  const [isSeguimientoOpen, setIsSeguimientoOpen] = useState(false);
-  const [isEvaluacionOpen, setIsEvaluacionOpen] = useState(false);
-
-  // const mostrarMensajeFinalizada = competenciaDetails?.estado === 'Finalizada' && resumen?.formulario_final_enviado === true;
-
+  const [openDropdown, setOpenDropdown] = useState(null);
+  
   useEffect(() => {
     if (competenciaDetails) {
       setCompetencia(competenciaDetails);
@@ -37,20 +23,9 @@ const EstadoSeguimiento = () => {
     navigate(-1);
   };
 
-  const toggleLevantamiento = () => {
-    setIsLevantamientoOpen(!isLevantamientoOpen);
-  };
-  const toggleRecomendacion = () => {
-    setIsRecomendacionOpen(!isRecomendacionOpen);
-  };
-  const toggleImplementacion = () => {
-    setIsImplementacionOpen(!isImplementacionOpen);
-  };
-  const toggleSeguimiento = () => {
-    setIsSeguimientoOpen(!isSeguimientoOpen);
-  };
-  const toggleEvaluacion = () => {
-    setIsEvaluacionOpen(!isEvaluacionOpen);
+  const toggleDropdown = (dropdown) => {
+    // Si el desplegable actual está abierto, cerrarlo. Si no, abrir el nuevo y cerrar el anterior.
+    setOpenDropdown(openDropdown === dropdown ? null : dropdown);
   };
 
   if (loading && competencia) {
@@ -98,28 +73,17 @@ const EstadoSeguimiento = () => {
           usuariosGore={competencia?.usuarios_gore} />
       </div>
 
-      {/* {userSubdere && (
-        <CardDocumento
-          id={id}
-          editorName={dataFormSubdere?.ultimo_editor?.nombre_completo}
-          editionDate={dataFormSubdere?.fecha_ultima_modificacion}
-          antecedentes={resumen?.antecedente_adicional_revision_subdere}
-          descripcion={resumen?.descripcion_antecedente}
-          resumen={resumen}
-          estadoFinalizado={mostrarMensajeFinalizada} />
-      )} */}
-
       <div className="mt-5 mx-0">
         <div className="text-sans-h2 my-3">Etapas de levantamiento de información</div>
 
         {/* Desplegable Levantamiento informacion */}
         <div>
             <DesplegableEstadoFase2 
-            onButtonClick={toggleLevantamiento} 
-            isOpen={isLevantamientoOpen}
+            onButtonClick={() => toggleDropdown('levantamiento')} 
+            isOpen={openDropdown === 'levantamiento'}
             title="Levantamiento de información sectorial y de gobiernos regionales"
             />
-            {isLevantamientoOpen && (
+            {openDropdown === 'levantamiento' && (
               <div className="estado-competencia-content">
                 <div className="mt-5 mx-0">
                   <VerticalStepper 
@@ -135,11 +99,11 @@ const EstadoSeguimiento = () => {
           {/* Desplegable Recomendacion Post CID */}
           <div className="my-3">
             <DesplegableEstadoFase2 
-            onButtonClick={toggleRecomendacion} 
-            isOpen={isRecomendacionOpen}
+            onButtonClick={() => toggleDropdown('recomendacion')} 
+            isOpen={openDropdown === 'recomendacion'}
             title="Recomendación de transferencia post-CID y “pre-implementación” "
             />
-            {isRecomendacionOpen && (
+            {openDropdown === 'recomendacion' && (
               <div className="estado-competencia-content">
                 <div className="mt-5 mx-0">
                   <h2 className="text-sans-h2 my-3">Etapa de Recomendación de transferencia post-CID y Definición de plazos de implementación y seguimiento</h2>
@@ -151,11 +115,11 @@ const EstadoSeguimiento = () => {
           {/* Desplegable Implementacion */}
           <div className="my-3">
             <DesplegableEstadoFase2 
-            onButtonClick={toggleImplementacion} 
-            isOpen={isImplementacionOpen}
+            onButtonClick={() => toggleDropdown('implementacion')} 
+            isOpen={openDropdown === 'implementacion'}
             title="Implementación"
             />
-            {isImplementacionOpen && (
+            {openDropdown === 'implementacion' && (
               <div className="estado-competencia-content">
                 <div className="mt-5 mx-0">
                   <h2 className="text-sans-h2 my-3">Etapas de implementación</h2>
@@ -167,11 +131,11 @@ const EstadoSeguimiento = () => {
           {/* Desplegable Seguimiento */}
           <div className="my-3">
             <DesplegableEstadoFase2 
-            onButtonClick={toggleSeguimiento} 
-            isOpen={isSeguimientoOpen}
+            onButtonClick={() => toggleDropdown('seguimiento')} 
+            isOpen={openDropdown === 'seguimiento'}
             title="Seguimiento"
             />
-            {isSeguimientoOpen && (
+            {openDropdown === 'seguimiento' && (
               <div className="estado-competencia-content">
                 <div className="mt-5 mx-0">
                   <h2 className="text-sans-h2 my-3">Etapas de seguimiento</h2>
@@ -183,11 +147,11 @@ const EstadoSeguimiento = () => {
           {/* Desplegable Evaluacion */}
           <div className="my-3">
             <DesplegableEstadoFase2 
-            onButtonClick={toggleEvaluacion} 
-            isOpen={isEvaluacionOpen}
+            onButtonClick={() => toggleDropdown('evaluacion')} 
+            isOpen={openDropdown === 'evaluacion'}
             title="Evaluación"
             />
-            {isEvaluacionOpen && (
+            {openDropdown === 'evaluacion' && (
               <div className="estado-competencia-content">
                 <div className="mt-5 mx-0">
                   <h2 className="text-sans-h2 my-3">Etapas de evaluación</h2>
