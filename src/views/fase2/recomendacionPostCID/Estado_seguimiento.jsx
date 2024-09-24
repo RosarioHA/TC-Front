@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { useAuth } from '../../../context/AuthContext';
+// import { useAuth } from '../../../context/AuthContext';
 import { useCompetencia } from '../../../hooks/competencias/useCompetencias';
-import { useFormularioSubdere } from '../../../hooks/fase1/revisionFinalSubdere/useFormularioSubdere';
-import { useResumenFinal } from '../../../hooks/fase1/revisionFinalSubdere/useResumenFinal';
+// import { useFormularioSubdere } from '../../../hooks/fase1/revisionFinalSubdere/useFormularioSubdere';
+// import { useResumenFinal } from '../../../hooks/fase1/revisionFinalSubdere/useResumenFinal';
 import { VerticalStepper } from '../../../components/stepers/VerticalStepper';
 import { PersonsAssigned } from '../../../components/fase1/tables/PersonsAssigned';
-import { CardDocumento } from '../../../components/fase1/commons/CardDocumento';
+// import { CardDocumento } from '../../../components/fase1/commons/CardDocumento';
 import { DesplegableEstadoFase2 } from '../../../components/fase2/DesplegableEstado';
 import { SummaryDetail2 } from '../../../components/fase2/SummaryDetails2';
 
@@ -15,17 +15,17 @@ const EstadoSeguimiento = () => {
   const navigate = useNavigate();
   const { competenciaDetails, loading, error } = useCompetencia(id);
   const [ competencia, setCompetencia ] = useState(null);
-  const { userData } = useAuth();
-  const userSubdere = userData?.perfil?.includes('SUBDERE');
-  const { dataFormSubdere } = useFormularioSubdere(id);
-  const { resumen } = useResumenFinal(id);
+  // const { userData } = useAuth();
+  // const userSubdere = userData?.perfil?.includes('SUBDERE');
+  // const { dataFormSubdere } = useFormularioSubdere(id);
+  // const { resumen } = useResumenFinal(id);
   const [isLevantamientoOpen, setIsLevantamientoOpen] = useState(false);
   const [isRecomendacionOpen, setIsRecomendacionOpen] = useState(true); //Deberia ser dinamico segun la etapa en la que estemos. Mientras la vamos a dejar asi.
   const [isImplementacionOpen, setIsImplementacionOpen] = useState(false);
   const [isSeguimientoOpen, setIsSeguimientoOpen] = useState(false);
   const [isEvaluacionOpen, setIsEvaluacionOpen] = useState(false);
 
-  const mostrarMensajeFinalizada = competenciaDetails?.estado === 'Finalizada' && resumen?.formulario_final_enviado === true;
+  // const mostrarMensajeFinalizada = competenciaDetails?.estado === 'Finalizada' && resumen?.formulario_final_enviado === true;
 
   useEffect(() => {
     if (competenciaDetails) {
@@ -98,8 +98,7 @@ const EstadoSeguimiento = () => {
           usuariosGore={competencia?.usuarios_gore} />
       </div>
 
-      {userSubdere && (
-        // NECESITA UN TERCER ESTADO DONDE NO MUESTRE EL BOTON "GENERAR DOCUMENTO"
+      {/* {userSubdere && (
         <CardDocumento
           id={id}
           editorName={dataFormSubdere?.ultimo_editor?.nombre_completo}
@@ -108,7 +107,7 @@ const EstadoSeguimiento = () => {
           descripcion={resumen?.descripcion_antecedente}
           resumen={resumen}
           estadoFinalizado={mostrarMensajeFinalizada} />
-      )}
+      )} */}
 
       <div className="mt-5 mx-0">
         <div className="text-sans-h2 my-3">Etapas de levantamiento de información</div>
