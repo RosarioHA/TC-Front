@@ -12,10 +12,8 @@ const Etapa = ({ etapaInfo, index, id, usuarios}) => {
   }
 };
 
-
 export const VerticalStepper = ({ etapasObjeto, etapaDatos, id }) => {
-  if (!etapasObjeto)
-  {
+  if (!etapasObjeto) {
     return <div className="text-center text-sans-h5-medium-blue ">Cargando...</div>;
   }
   
@@ -23,16 +21,11 @@ export const VerticalStepper = ({ etapasObjeto, etapaDatos, id }) => {
   const etapasClaves = Object.keys(etapasInfo);
   const idCompetencia = id
 
-
-
   let lastCompletedIndex = etapasClaves.findIndex((key, index) =>
     etapasInfo[ key ].estado !== 'Finalizada' && (index === 0 || etapasInfo[ etapasClaves[ index - 1 ] ].estado === 'Finalizada'));
 
-
-  const renderBadge = (estado) =>
-  {
-    switch (estado)
-    {
+  const renderBadge = (estado) => {
+    switch (estado) {
       case 'Finalizada':
         return <span className="badge-status-finish">{estado}</span>;
       case 'En Estudio':

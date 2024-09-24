@@ -75,6 +75,7 @@ const EstadoSeguimiento = () => {
           <h1 className="text-sans-h1 mb-4 ms-2">{competencia?.nombre}</h1>
         </div>
         {/* AQUI VA UN CLON DE SummaryDetail, CREAR */}
+          <div className="border-primary"> CLON DE SUMMARYDETAIL </div>
       </div>
 
       <div className="my-5">
@@ -111,7 +112,11 @@ const EstadoSeguimiento = () => {
             {isLevantamientoOpen && (
               <div className="estado-competencia-content">
                 <div className="mt-5 mx-0">
-                  <VerticalStepper etapasObjeto={competencia?.resumen_competencia} etapaDatos={competencia} id={id} />
+                  <VerticalStepper 
+                  etapasObjeto={competencia?.resumen_competencia} 
+                  etapaDatos={competencia} 
+                  id={id} 
+                  />
                 </div>
               </div>
             )}
