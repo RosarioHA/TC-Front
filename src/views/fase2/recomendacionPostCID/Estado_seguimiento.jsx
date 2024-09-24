@@ -8,6 +8,7 @@ import { VerticalStepper } from '../../../components/stepers/VerticalStepper';
 import { PersonsAssigned } from '../../../components/fase1/tables/PersonsAssigned';
 import { CardDocumento } from '../../../components/fase1/commons/CardDocumento';
 import { DesplegableEstadoFase2 } from '../../../components/fase2/DesplegableEstado';
+import { SummaryDetail2 } from '../../../components/fase2/SummaryDetails2';
 
 const EstadoSeguimiento = () => {
   const { id } = useParams();
@@ -20,6 +21,9 @@ const EstadoSeguimiento = () => {
   const { resumen } = useResumenFinal(id);
   const [isLevantamientoOpen, setIsLevantamientoOpen] = useState(false);
   const [isRecomendacionOpen, setIsRecomendacionOpen] = useState(true); //Deberia ser dinamico segun la etapa en la que estemos. Mientras la vamos a dejar asi.
+  const [isImplementacionOpen, setIsImplementacionOpen] = useState(false);
+  const [isSeguimientoOpen, setIsSeguimientoOpen] = useState(false);
+  const [isEvaluacionOpen, setIsEvaluacionOpen] = useState(false);
 
   const mostrarMensajeFinalizada = competenciaDetails?.estado === 'Finalizada' && resumen?.formulario_final_enviado === true;
 
@@ -33,13 +37,20 @@ const EstadoSeguimiento = () => {
     navigate(-1);
   };
 
-
   const toggleLevantamiento = () => {
     setIsLevantamientoOpen(!isLevantamientoOpen);
   };
-
   const toggleRecomendacion = () => {
     setIsRecomendacionOpen(!isRecomendacionOpen);
+  };
+  const toggleImplementacion = () => {
+    setIsImplementacionOpen(!isImplementacionOpen);
+  };
+  const toggleSeguimiento = () => {
+    setIsSeguimientoOpen(!isSeguimientoOpen);
+  };
+  const toggleEvaluacion = () => {
+    setIsEvaluacionOpen(!isEvaluacionOpen);
   };
 
   if (loading && competencia) {
@@ -75,7 +86,7 @@ const EstadoSeguimiento = () => {
           <h1 className="text-sans-h1 mb-4 ms-2">{competencia?.nombre}</h1>
         </div>
         {/* AQUI VA UN CLON DE SummaryDetail, CREAR */}
-          <div className="border-primary"> CLON DE SUMMARYDETAIL </div>
+        {competencia && <SummaryDetail2 competencia={competencia} />}
       </div>
 
       <div className="my-5">
@@ -132,11 +143,61 @@ const EstadoSeguimiento = () => {
             {isRecomendacionOpen && (
               <div className="estado-competencia-content">
                 <div className="mt-5 mx-0">
-                  <div className="text-sans-h2 my-3">nuevo stepper de fase 2</div>
+                  <h2 className="text-sans-h2 my-3">Etapa de Recomendación de transferencia post-CID y Definición de plazos de implementación y seguimiento</h2>
                 </div>
               </div>
             )}
           </div>
+
+          {/* Desplegable Implementacion */}
+          <div className="my-3">
+            <DesplegableEstadoFase2 
+            onButtonClick={toggleImplementacion} 
+            isOpen={isImplementacionOpen}
+            title="Implementación"
+            />
+            {isImplementacionOpen && (
+              <div className="estado-competencia-content">
+                <div className="mt-5 mx-0">
+                  <h2 className="text-sans-h2 my-3">Etapas de implementación</h2>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Desplegable Seguimiento */}
+          <div className="my-3">
+            <DesplegableEstadoFase2 
+            onButtonClick={toggleSeguimiento} 
+            isOpen={isSeguimientoOpen}
+            title="Seguimiento"
+            />
+            {isSeguimientoOpen && (
+              <div className="estado-competencia-content">
+                <div className="mt-5 mx-0">
+                  <h2 className="text-sans-h2 my-3">Etapas de seguimiento</h2>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Desplegable Evaluacion */}
+          <div className="my-3">
+            <DesplegableEstadoFase2 
+            onButtonClick={toggleEvaluacion} 
+            isOpen={isEvaluacionOpen}
+            title="Evaluación"
+            />
+            {isEvaluacionOpen && (
+              <div className="estado-competencia-content">
+                <div className="mt-5 mx-0">
+                  <h2 className="text-sans-h2 my-3">Etapas de evaluación</h2>
+                  <p className="text-sans-p">No disponible.</p>
+                </div>
+              </div>
+            )}
+          </div>
+
         </div>
       </div>
     </>
