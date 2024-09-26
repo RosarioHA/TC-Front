@@ -7,7 +7,7 @@ export const IndicadoresDesempeno = () => {
             <h4 className="text-sans-h4 mb-3"> 4.5a Indicadores de desempeño </h4>
             <div className="mx-1 border row">
               <div className="border-end col-1 p-3"> 1</div>
-              <div className="border col-11">
+              <div className="col-11">
                 <div className="row">
                   <div className="row py-3">
                     <div className="col-5 ps-4">
