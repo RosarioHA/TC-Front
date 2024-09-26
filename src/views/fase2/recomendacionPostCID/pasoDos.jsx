@@ -1,9 +1,9 @@
 import { useContext, useEffect, useCallback } from "react";
-import { FormSubdereContext } from "../../context/RevisionFinalSubdere";
-import { JustificacionDesfavorables } from "../../components/formSubdere/paso2/p3_Subdere";
-import { Temporalidad } from "../../components/formSubdere/paso2/p4_1_Subdere";
-import { RestoCampos } from "../../components/formSubdere/paso2/p4_Subdere_resto";
-import { NavigationSubdere } from "../../components/layout/navigationSubdere";
+import { FormSubdereContext } from "../../../context/RevisionFinalSubdere";
+import { JustificacionDesfavorables } from "../../../components/fase1/formSubdere/paso2/p3_Subdere";
+import { Temporalidad } from "../../../components/fase1/formSubdere/paso2/p4_1_Subdere";
+import { RestoCampos } from "../../../components/fase1/formSubdere/paso2/p4_Subdere_resto";
+import { NavigationSubdere } from "../../../components/layout/navigationSubdere";
 
 const PasoDosRevisionPostCid = () => {
   const {
@@ -86,6 +86,7 @@ const PasoDosRevisionPostCid = () => {
                   condiciones_ejercicio={condiciones_ejercicio}
                   nombre_compentencia={competencia_nombre}
                   regiones_recomendadas={regiones_recomendadas}
+                  segunda_etapa={true}
                 />
               </div>
             </>
