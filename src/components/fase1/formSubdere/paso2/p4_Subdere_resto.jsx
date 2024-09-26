@@ -226,12 +226,11 @@ export const RestoCampos = ({
 
           {/* APARECE SOLO DURANTE LA SEGUNDA ETAPA */}
           { segunda_etapa && 
-            <div  className="">
+            <div  className="my-3">
               <IndicadoresDesempeno/>
             </div>
           }
           
-
           <div className="col-11">
             <h4 className="text-sans-h4">
               4.6 Condiciones cuyo incumplimiento dan lugar a la revocación de la transferencia
