@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
-import { SubirArchivo } from '../../../components/fase1/commons/subirArchivo'
+import { SubirArchivo } from '../../../components/fase1/commons/subirArchivo';
+import CustomInput from '../../../components/fase1/forms/custom_input';
 
 const FormularioDDR = () => {
   const [ errorMessageDate, setErrorMessageDate ] = useState('');
@@ -80,10 +81,40 @@ const FormularioDDR = () => {
 
         {/* segunda seccion */}
         <div>
-            
+          <div className="d-flex mb-3">
+            <h4 className="text-sans-h4">Fecha y plazos de implementación</h4>
+            <div className="ms-5">AVANCE</div>
+          </div>
+
+          <div className="border row my-3 ms-1">
+            <div className="col-2">
+              <p>Grupo #</p>
+            </div>
+            <div className="col border-start p-3">
+              <p className="text-sans-m-semibold mb-3">Regiones del grupo</p>
+              <ul className="">
+                <li className="text-decoration-underline">region 1</li>
+                <li className="text-decoration-underline">region 2</li>
+              </ul>
+
+              <p className="text-sans-m-semibold mt-2 my-3">Fecha de comienzo de implementación</p>
+              <div className="my-2">mostrar fecha publicacion diario oficial o mensaje de aviso</div>
+
+              <p className="text-sans-m-semibold my-3 mb-4">Meses de duración de la etapa de implementación</p>
+              <div className="col-7">
+                <CustomInput
+                label="Ingresa la cantidad de meses"
+                placeholder="Meses"
+                />
+                <p className="text-sans-h6 text-end me-4 me-xxl-5">Campo númerico.</p>
+              </div>
+            </div>
+          </div>
         </div>
+
+        {/* tercera seccion */}
+        <div></div>
         
-          
       </div> 
     </div>
   )
