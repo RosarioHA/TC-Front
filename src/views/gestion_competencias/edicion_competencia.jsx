@@ -238,7 +238,6 @@ const EdicionCompetencia = () =>
         competencias: id,
       }));
 
-
       const dataToSend = {
         ...formData,
         sectores: sectorIds,

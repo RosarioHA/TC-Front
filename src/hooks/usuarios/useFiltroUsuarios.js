@@ -26,7 +26,7 @@ export const useFiltroUsuarios = (sectorSeleccionado, regionSeleccionada) => {
       const respuesta = await apiTransferenciaCompentencia.get(url);
       let filteredUsers = respuesta.data || [];
 
-      // Filtrar para retornar solo SUBDERE y DIPRES si no hay sectores o regiones seleccionados
+      // Filtrar para retornar solo SUBDERE, DIPRES y Usuario Seguimiento si no hay sectores o regiones seleccionados
       if (!sectors.length && !regions.length) {
         filteredUsers = filteredUsers.filter(user => user.perfil === 'SUBDERE' || user.perfil === 'DIPRES' || user.perfil === 'Usuario Seguimiento');
       }
