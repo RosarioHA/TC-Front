@@ -28,7 +28,7 @@ export const useFiltroUsuarios = (sectorSeleccionado, regionSeleccionada) => {
 
       // Filtrar para retornar solo SUBDERE y DIPRES si no hay sectores o regiones seleccionados
       if (!sectors.length && !regions.length) {
-        filteredUsers = filteredUsers.filter(user => user.perfil === 'SUBDERE' || user.perfil === 'DIPRES');
+        filteredUsers = filteredUsers.filter(user => user.perfil === 'SUBDERE' || user.perfil === 'DIPRES' || user.perfil === 'Usuario Seguimiento');
       }
 
       setUsuarios(filteredUsers);

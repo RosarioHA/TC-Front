@@ -151,6 +151,7 @@ const CreacionCompetencia = () =>
       usuarios_dipres: usuariosSeleccionados.usuarios_dipres,
       usuarios_sectoriales: usuariosSeleccionados.usuarios_sectoriales,
       usuarios_gore: usuariosSeleccionados.usuarios_gore,
+      usuarios_seguimiento: usuariosSeleccionados.usuarios_seguimiento,
       fecha_inicio: data.fecha_inicio,
       oficio_origen: selectedFile,
       agrupada: estado,
