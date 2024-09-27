@@ -6,8 +6,8 @@ import { FormSubdereContext } from '../context/RevisionFinalSubdere';
 //import { useCompetencia } from '../hooks/competencias/useCompetencias';
 import { EncabezadoFormularios } from '../components/layout/EncabezadoFormularios';
 
-const RecomendacionPostCIDLayout = () => {
-  const { dataFormSubdere, dataPasoSubdere, loadingFormSubdere, errorFormSubdere, updateFormId, permisoPaso2,setPermisoPaso2 } = useContext(FormSubdereContext);
+const FormularioPlazosLayout = () => {
+  const { dataFormSubdere,  errorFormSubdere, updateFormId, setPermisoPaso2 } = useContext(FormSubdereContext);
   const location = useLocation();
   const params = useParams();
   const navigate = useNavigate();
@@ -20,7 +20,7 @@ const RecomendacionPostCIDLayout = () => {
     }
   }, [location, params.id, updateFormId, setPermisoPaso2]);
 
-  const baseUrl = `/home/revision_subdere/${params.id}`;
+//   const baseUrl = `/home/revision_subdere/${params.id}`;
 
   if (errorFormSubdere) {
     return <div>Error: {errorFormSubdere.message}</div>;
@@ -52,7 +52,7 @@ const RecomendacionPostCIDLayout = () => {
           <ol className="breadcrumb breadcrumb-style d-flex my-2">
             <li className="breadcrumb-item align-self-center"><Link to="/home">Inicio</Link></li>
             <li className="breadcrumb-item align-self-center"><Link to={`/home/estado_seguimiento/${params.id}`}>Estado de la Competencia: {dataFormSubdere.competencia_nombre} </Link></li>
-            <li className="breadcrumb-item align-self-center text-sans-p-lightgrey" aria-current="page">Recomendación de transferencia post-CID</li>
+            <li className="breadcrumb-item align-self-center text-sans-p-lightgrey" aria-current="page">Formulario de definición de plazos</li>
           </ol>
         </nav>
       </div>
@@ -60,7 +60,7 @@ const RecomendacionPostCIDLayout = () => {
       <div className="row">
         <div className="col mb-">
           <div className="border-bottom my-3 pb-3">
-            <h1 className="text-sans-Title">Recomendación de transferencia post-CID</h1>
+            <h1 className="text-sans-Title">Formulario de definición de plazos</h1>
             <EncabezadoFormularios id={params.id} hideRegiones={true}/>
           </div>
 
@@ -81,4 +81,4 @@ const RecomendacionPostCIDLayout = () => {
   )
 }
 
-export default RecomendacionPostCIDLayout;
+export default FormularioPlazosLayout;

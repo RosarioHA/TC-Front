@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { useCompetencia } from '../../../hooks/competencias/useCompetencias';
-import { VerticalStepper } from '../../../components/stepers/VerticalStepper';
-import { PersonsAssigned } from '../../../components/fase1/tables/PersonsAssigned';
-import { DesplegableEstadoFase2 } from '../../../components/fase2/DesplegableEstado';
-import { SummaryDetail2 } from '../../../components/fase2/SummaryDetails2';
+import { useCompetencia } from '../../hooks/competencias/useCompetencias';
+import { VerticalStepper } from '../../components/stepers/VerticalStepper';
+import { PersonsAssigned } from '../../components/fase1/tables/PersonsAssigned';
+import { DesplegableEstadoFase2 } from '../../components/fase2/DesplegableEstado';
+import { SummaryDetail2 } from '../../components/fase2/SummaryDetails2';
 
 const EstadoSeguimiento = () => {
   const { id } = useParams();
