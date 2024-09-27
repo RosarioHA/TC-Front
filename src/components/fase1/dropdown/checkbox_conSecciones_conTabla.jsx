@@ -80,6 +80,7 @@ const DropdownConSecciones = ({
       usuarios_dipres: [],
       usuarios_sectoriales: [],
       usuarios_gore: [],
+      usuarios_seguimiento: [],
     };
 
     for (let perfil in selectedOptions)
