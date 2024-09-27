@@ -1,8 +1,8 @@
 import { createContext, useState, useCallback } from 'react';
-import { useFormSectorial } from '../hooks/formulario/useFormulario';
-import { usePasoForm } from '../hooks/formulario/usePasoForm';
-import { useUpdateForm } from '../hooks/formulario/useUpdateForm';
-import { useOrganigramaRegional } from '../hooks/formulario/useOrganigramaRegional';
+import { useFormSectorial } from '../hooks/fase1/formulario/useFormulario';
+import { usePasoForm } from '../hooks/fase1/formulario/usePasoForm';
+import { useUpdateForm } from '../hooks/fase1/formulario/useUpdateForm';
+import { useOrganigramaRegional } from '../hooks/fase1/formulario/useOrganigramaRegional';
 
 export const FormularioContext = createContext();
 

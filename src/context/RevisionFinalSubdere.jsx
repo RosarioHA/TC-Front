@@ -1,7 +1,7 @@
 import { createContext, useCallback, useState } from "react";
-import { useFormularioSubdere } from "../hooks/revisionFinalSubdere/useFormularioSubdere";
-import { useSubderePasos } from "../hooks/revisionFinalSubdere/useFormRevFinalPaso";
-import { usePatchSubderePaso } from "../hooks/revisionFinalSubdere/useFormRevFinalUpdate";
+import { useFormularioSubdere } from "../hooks/fase1/revisionFinalSubdere/useFormularioSubdere";
+import { useSubderePasos } from "../hooks/fase1/revisionFinalSubdere/useFormRevFinalPaso";
+import { usePatchSubderePaso } from "../hooks/fase1/revisionFinalSubdere/useFormRevFinalUpdate";
 
 
 export const FormSubdereContext = createContext();

@@ -1,40 +1,32 @@
 import { useState } from 'react';
 import { useCompetencia } from '../../hooks/competencias/useCompetencias';
 
-export const EncabezadoFormularios = ({ id }) =>
-{
+export const EncabezadoFormularios = ({ id, hideRegiones }) => {
   const { competenciaDetails } = useCompetencia(id);
   const [ competenciasCollapsed, setCompetenciasCollapsed ] = useState(false);
   const [ regionesCollapsed, setRegionesCollapsed ] = useState(false);
   const [ sectoresCollapsed, setSectoresCollapsed ] = useState(false);
 
-
-  const toggleCompetenciasCollapse = () =>
-  {
+  const toggleCompetenciasCollapse = () => {
     setCompetenciasCollapsed(!competenciasCollapsed);
   };
-  const toggleRegionesCollapse = () =>
-  {
+  const toggleRegionesCollapse = () => {
     setRegionesCollapsed(!regionesCollapsed);
   };
-  const toggleSectoresCollapse = () =>
-  {
+  const toggleSectoresCollapse = () => {
     setSectoresCollapsed(!sectoresCollapsed);
   };
 
-  const renderCompetenciasAgrupadas = () =>
-  {
+  const renderCompetenciasAgrupadas = () => {
     const competenciasAgrupadas = competenciaDetails?.competencias_agrupadas;
     const numCompetenciasAgrupadas = competenciasAgrupadas ? competenciasAgrupadas.length : 0;
-    if (competenciasAgrupadas && competenciasAgrupadas.length === 0)
-    {
+    if (competenciasAgrupadas && competenciasAgrupadas.length === 0) {
       return (
         <div className="">
           <span className="text-sans-h1 mb-1">{competenciaDetails?.nombre}</span>
         </div>
       );
-    } else if (competenciasAgrupadas?.length > 0)
-    {
+    } else if (competenciasAgrupadas?.length > 0) {
       return (
         <>
           <span className="text-sans-h1 mb-1 text-start">{competenciaDetails?.nombre}</span>
@@ -74,22 +66,18 @@ export const EncabezadoFormularios = ({ id }) =>
     return null;
   };
 
-  const renderRegiones = () =>
-  {
+  const renderRegiones = () => {
     const regiones = competenciaDetails?.nombres_regiones; //aqui falta apuntar al campo correcto
     const numRegiones = regiones ? regiones.length : 0;
 
-    if (regiones && numRegiones > 0)
-    {
-      if (numRegiones === 1)
-      {
+    if (regiones && numRegiones > 0) {
+      if (numRegiones === 1) {
         return (
           <div className="">
             <span className="text-sans-h3-greyc mb-1">{regiones[ 0 ].nombre}</span>
           </div>
         );
-      } else
-      {
+      } else {
         return (
           <div>
             <button
@@ -127,22 +115,18 @@ export const EncabezadoFormularios = ({ id }) =>
     return null;
   };
 
-  const renderSectores = () =>
-  {
+  const renderSectores = () => {
     const sectores = competenciaDetails?.sectores;
     const numSectores = sectores ? sectores.length : 0;
 
-    if (sectores && numSectores > 0)
-    {
-      if (numSectores === 1)
-      {
+    if (sectores && numSectores > 0) {
+      if (numSectores === 1) {
         return (
           <div className="">
             <span className="text-sans-h3-greyc mb-1">{sectores[ 0 ].nombre}</span>
           </div>
         );
-      } else
-      {
+      } else {
         return (
           <div>
             <button
@@ -185,9 +169,11 @@ export const EncabezadoFormularios = ({ id }) =>
       <div className="">
         {renderCompetenciasAgrupadas()}
       </div>
-      <div className="">
-        {renderRegiones()}
-      </div>
+      {!hideRegiones && (
+        <div className="">
+          {renderRegiones()}
+        </div>
+      )}
       <div className="">
         {renderSectores()}
       </div>

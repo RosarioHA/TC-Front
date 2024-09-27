@@ -2,20 +2,20 @@ import { useState, useEffect } from "react";
 import { useForm, Controller } from 'react-hook-form';
 import { useNavigate } from "react-router-dom";
 import { yupResolver } from '@hookform/resolvers/yup';
-import CustomInput from "../../components/forms/custom_input";
-import {DropdownSelectSimple} from "../../components/dropdown/selectSimple";
-import DropdownSelectBuscador from "../../components/dropdown/select_buscador";
-import DropdownSinSecciones from "../../components/dropdown/checkbox_sinSecciones_conTabla";
-import { RadioButtons } from "../../components/forms/radio_btns";
+import CustomInput from "../../components/fase1/forms/custom_input";
+import {DropdownSelectSimple} from "../../components/fase1/dropdown/selectSimple";
+import DropdownSelectBuscador from "../../components/fase1/dropdown/select_buscador";
+import DropdownSinSecciones from "../../components/fase1/dropdown/checkbox_sinSecciones_conTabla";
+import { RadioButtons } from "../../components/fase1/forms/radio_btns";
 import { esquemaCreacionUsuario } from "../../validaciones/esquemaCrearUsuario_Competencia";
 import { useCreateUser } from "../../hooks/usuarios/useCreateUser";
 import { useRegion } from "../../hooks/useRegion";
 import { useGroups } from "../../hooks/useGroups";
 import { useSector } from "../../hooks/useSector";
-import { useFiltroCompetencias } from "../../hooks/useFiltrarCompetencias";
+import { useFiltroCompetencias } from "../../hooks/competencias/useFiltrarCompetencias";
 import { useFormContext } from "../../context/FormAlert";
-import ModalAbandonoFormulario from "../../components/commons/modalAbandonoFormulario";
-import { DropdownSelectBuscadorUnico } from "../../components/dropdown/select_buscador_sector";
+import ModalAbandonoFormulario from "../../components/fase1/commons/modalAbandonoFormulario";
+import { DropdownSelectBuscadorUnico } from "../../components/fase1/dropdown/select_buscador_sector";
 
 const initialValues = {
   rut: '',
