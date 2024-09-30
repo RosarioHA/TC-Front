@@ -7,7 +7,7 @@ import { CheckboxRegion } from "../../components/fase1/dropdown/checkboxRegion";
 import { DropdownSelectSimple } from "../../components/fase1/dropdown/selectSimple";
 import DropdownConSecciones from "../../components/fase1/dropdown/checkbox_conSecciones_conTabla";
 import { DropdownSelectBuscadorCheck } from "../../components/fase1/dropdown/select_buscador_checkbox";
-import { esquemaCreacionCompetencia } from "../../validaciones/esquemaCrearUsuario_Competencia";
+import { esquemaCreacionCompetencia } from "../../validaciones/fase1/esquemaCrearUsuario_Competencia";
 import { useCrearCompetencia } from "../../hooks/competencias/useCrearCompetencia";
 import { useCrearCompetenciaAgrupada } from "../../hooks/competencias/useCrearCompetenciaAgrupada";
 import { useRegion } from "../../hooks/useRegion";
@@ -31,6 +31,7 @@ const initialValues = {
   usuarios_dipres: [],
   usuarios_sectoriales: [],
   usuarios_gore: [],
+  usuarios_seguimiento: [],
   fecha_inicio: '',
   oficio_origen: '',
   plazo_formulario_sectorial: undefined,
@@ -151,6 +152,7 @@ const CreacionCompetencia = () =>
       usuarios_dipres: usuariosSeleccionados.usuarios_dipres,
       usuarios_sectoriales: usuariosSeleccionados.usuarios_sectoriales,
       usuarios_gore: usuariosSeleccionados.usuarios_gore,
+      usuarios_seguimiento: usuariosSeleccionados.usuarios_seguimiento,
       fecha_inicio: data.fecha_inicio,
       oficio_origen: selectedFile,
       agrupada: estado,

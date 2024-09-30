@@ -74,6 +74,7 @@ export const Subpaso_dosPuntoCuatro = ({
       fetchDataDirecta();
       setRefreshSubpasoDos_cuatro(false);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refreshSubpasoDos_cuatro, id, stepNumber]);
 
   // Efecto para manejar la actualización de opciones basado en dataDirecta

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Table } from './Table';
 
-export const PersonsAssigned = ({ usuariosSubdere, usuariosDipres, usuariosSectoriales, usuariosGore }) => {
+export const PersonsAssigned = ({ usuariosSubdere, usuariosDipres, usuariosSectoriales, usuariosGore, usuariosSeguimiento }) => {
   const [selectedTab, setSelectedTab] = useState('SUBDERE');
 
   const TypeUser = [
@@ -9,13 +9,15 @@ export const PersonsAssigned = ({ usuariosSubdere, usuariosDipres, usuariosSecto
     { id: 3, tipoUsuario: 'Sectorial' },
     { id: 4, tipoUsuario: 'Gore' },
     { id: 1, tipoUsuario: 'DIPRES' },
+    { id: 5, tipoUsuario: 'Seguimiento'}
   ];
 
   const userMappings = {
     DIPRES: usuariosDipres,
     SUBDERE: usuariosSubdere,
     Sectorial: usuariosSectoriales,
-    Gore: usuariosGore
+    Gore: usuariosGore,
+    Seguimiento: usuariosSeguimiento
   };
 
   const getUserData = () => userMappings[selectedTab] || [];

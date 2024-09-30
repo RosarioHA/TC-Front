@@ -1,0 +1,58 @@
+stages:
+  - install
+  - quality
+  - build
+  - deploy
+
+cache:
+  paths:
+    - node_modules/
+
+install_dependencies:
+  stage: install
+  image: 
+    name: node:18.20.3
+    pull_policy: if-not-present
+  script:
+    - npm install --prefer-offline
+
+
+lint:
+  stage: quality
+  image: 
+    name: node:18.20.3
+    pull_policy: if-not-present
+  script:
+    - echo "Checking style"
+    - npm run lint -- --ignore-pattern dist
+  allow_failure: true
+
+
+.build-template: &build_template
+  stage: build
+  image: 
+    name: node:18.20.3
+    pull_policy: if-not-present
+  before_script:
+    - echo "Building the code..."
+  artifacts:
+    paths:
+      - dist/
+
+build_staging:
+    <<: *build_template
+    script:
+        - cp $ENV_FILE_STAGING ./.env
+        - npm run build
+    rules:
+    # corre solo en main
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+build_production:
+    <<: *build_template
+    script:
+        - cp $ENV_FILE_PRODUCTION ./.env
+        - npm run build
+    rules:
+    # corre solo en main... deberia correr en develop?
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH

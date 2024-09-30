@@ -79,6 +79,7 @@ const EstadoCompetencia = () =>
             usuariosDipres={competencia?.usuarios_dipres}
             usuariosSectoriales={competencia?.usuarios_sectoriales}
             usuariosGore={competencia?.usuarios_gore}
+            usuariosSeguimiento={competencia?.usuarios_seguimiento}
           />
         </div>
         {userSubdere && (

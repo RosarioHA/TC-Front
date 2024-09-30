@@ -12,7 +12,7 @@ import { useGroups } from "../../hooks/useGroups";
 import { useRegion } from "../../hooks/useRegion";
 import { useSector } from "../../hooks/useSector";
 import { yupResolver } from '@hookform/resolvers/yup';
-import { esquemaEdicionUsuarios } from "../../validaciones/esquemaEditarUsuario-Competencia";
+import { esquemaEdicionUsuarios } from "../../validaciones/fase1/esquemaEditarUsuario-Competencia";
 import { useAuth } from "../../context/AuthContext";
 import { useFiltroCompetencias } from "../../hooks/competencias/useFiltrarCompetencias";
 import { useFormContext } from "../../context/FormAlert";

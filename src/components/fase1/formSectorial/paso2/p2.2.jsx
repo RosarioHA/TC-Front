@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, useCallback } from 'react';
 import CustomInputArea from '../../forms/textarea_paso2';
 import { FormularioContext } from '../../../../context/FormSectorial';
 import { apiTransferenciaCompentencia } from '../../../../services/transferenciaCompetencia';
@@ -20,20 +20,10 @@ export const Subpaso_dosPuntoDos = ({
   const [ mostrarError, setMostrarError ] = useState(false);
   const [ controlBotones, setControlBotones ] = useState({});
   const [ erroresPorFila, setErroresPorFila ] = useState({});
+  console.log(controlBotones)
 
-  const fetchDataDirectly = async () =>
-  {
-    try
-    {
-      const response = await apiTransferenciaCompentencia.get(
-        `/formulario-sectorial/${id}/paso-${stepNumber}/`
-      );
-      setDataDirecta(response.data);
-    } catch (error)
-    {
-      console.error('Error al obtener datos directamente:', error);
-    }
-  };
+
+
 
   // Definición de la función 'agrupadosPorOrganismo'
   const agrupadosPorOrganismo = (datos) =>
@@ -58,6 +48,19 @@ export const Subpaso_dosPuntoDos = ({
       return acc;
     }, {});
   };
+  const fetchDataDirectly = useCallback(async () =>
+  {
+    try
+    {
+      const response = await apiTransferenciaCompentencia.get(
+        `/formulario-sectorial/${id}/paso-${stepNumber}/`
+      );
+      setDataDirecta(response.data);
+    } catch (error)
+    {
+      console.error('Error al obtener datos directamente:', error);
+    }
+  }, [ id, stepNumber ]);
 
   useEffect(() =>
   {
@@ -70,7 +73,8 @@ export const Subpaso_dosPuntoDos = ({
 
       setRefreshSubpasoDos_dos(false); // Reestablece el estado de refresco
     }
-  }, [ refreshSubpasoDos_dos, setRefreshSubpasoDos_dos, id, stepNumber ]);
+  }, [ refreshSubpasoDos_dos, setRefreshSubpasoDos_dos, fetchDataDirectly ]);
+
 
   useEffect(() =>
   {
@@ -141,6 +145,10 @@ export const Subpaso_dosPuntoDos = ({
   };
 
   const [ ultimaFilaId, setUltimaFilaId ] = useState(null);
+
+  console.log(ultimaFilaId)
+
+
 
   const agregarFila = (organismoDisplay, nombreMinisterio) =>
   {
@@ -340,7 +348,7 @@ export const Subpaso_dosPuntoDos = ({
       </h6>
 
       <div className="my-4">
-        <div className="row fw-bold my-2"> 
+        <div className="row fw-bold my-2">
           <div className="col-5">Organismos</div>
           <div className="col-3 ps-0">Unidades intervinientes</div>
         </div>
@@ -431,7 +439,7 @@ export const Subpaso_dosPuntoDos = ({
                               </div>
                             </div>
                             <div className="col-2 d-flex align-items-center justify-content-center">
-                            {unidadIndex > 0 && !solo_lectura &&( 
+                              {unidadIndex > 0 && !solo_lectura && (
                                 <button
                                   className="btn-terciario-ghost mb-2 me-5"
                                   onClick={() =>
@@ -461,6 +469,7 @@ export const Subpaso_dosPuntoDos = ({
                           </div>
 
                         ))}
+                        {mostrarError && <p className="error-message"></p>}
                         {!solo_lectura && (
                           <div className="row">
                             <div className="p-2">
