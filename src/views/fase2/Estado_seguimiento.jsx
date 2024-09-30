@@ -1,17 +1,23 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useCompetencia } from '../../hooks/competencias/useCompetencias';
+import { useFormularioSubdere } from '../../hooks/fase1/revisionFinalSubdere/useFormularioSubdere';
+import { useResumenFinal } from "../../hooks/fase1/revisionFinalSubdere/useResumenFinal";
 import { VerticalStepper } from '../../components/stepers/VerticalStepper';
 import { PersonsAssigned } from '../../components/fase1/tables/PersonsAssigned';
 import { DesplegableEstadoFase2 } from '../../components/fase2/DesplegableEstado';
 import { SummaryDetail2 } from '../../components/fase2/SummaryDetails2';
+import { CardDocumento } from '../../components/fase1/commons/CardDocumento';
 
 const EstadoSeguimiento = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { dataFormSubdere } = useFormularioSubdere(id);
+  const { resumen } = useResumenFinal(id);
   const { competenciaDetails, loading, error } = useCompetencia(id);
   const [ competencia, setCompetencia ] = useState(null);
   const [openDropdown, setOpenDropdown] = useState(null);
+  const mostrarMensajeFinalizada = competenciaDetails?.estado === 'Finalizada' && resumen?.formulario_final_enviado === true;
   
   useEffect(() => {
     if (competenciaDetails) {
@@ -86,6 +92,16 @@ const EstadoSeguimiento = () => {
             {openDropdown === 'levantamiento' && (
               <div className="estado-competencia-content">
                 <div className="mt-5 mx-0">
+                  <CardDocumento
+                    id={id}
+                    editorName={dataFormSubdere?.ultimo_editor?.nombre_completo}
+                    editionDate={dataFormSubdere?.fecha_ultima_modificacion}
+                    antecedentes={resumen?.antecedente_adicional_revision_subdere}
+                    descripcion={resumen?.descripcion_antecedente}
+                    resumen={resumen}
+                    estadoFinalizado={mostrarMensajeFinalizada}
+                    documentoCerrado={true}
+                  />
                   <VerticalStepper 
                   etapasObjeto={competencia?.resumen_competencia} 
                   etapaDatos={competencia} 
