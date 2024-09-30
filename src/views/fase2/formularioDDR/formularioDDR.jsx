@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { SubirArchivo } from '../../../components/fase1/commons/subirArchivo';
 import CustomInput from '../../../components/fase1/forms/custom_input';
+import DropdownSelect from '../../../components/fase1/dropdown/select';
 
 const FormularioDDR = () => {
   const [ errorMessageDate, setErrorMessageDate ] = useState('');
@@ -98,10 +99,11 @@ const FormularioDDR = () => {
               </ul>
 
               <p className="text-sans-m-semibold mt-2 my-3">Fecha de comienzo de implementación</p>
-              <div className="my-2">mostrar fecha publicacion diario oficial o mensaje de aviso</div>
+              <div className="my-2">mostrar fecha publicacion diario oficial o mensaje de aviso -Debes ingresar la fecha de la publicación en el diario oficial primero-</div>
 
               <p className="text-sans-m-semibold my-3 mb-4">Meses de duración de la etapa de implementación</p>
-              <div className="col-7">
+              <div className="col">
+                {/* ajustar para fecha igual que el input de la fecha diario oficial */}
                 <CustomInput
                 label="Ingresa la cantidad de meses"
                 placeholder="Meses"
@@ -113,7 +115,54 @@ const FormularioDDR = () => {
         </div>
 
         {/* tercera seccion */}
-        <div></div>
+        <div>
+          <div className="d-flex mb-3">
+            <h4 className="text-sans-h4">Fecha y plazo de Seguimiento</h4>
+            <div className="ms-5">AVANCE</div>
+          </div>
+
+          <div className="border row my-3 ms-1">
+            <div className="col-2">
+              <p>Grupo #</p>
+            </div>
+
+            <div className="col border-start p-3">
+              <p className="text-sans-m-semibold mb-3">Regiones del grupo</p>
+              <ul className="">
+                <li className="text-decoration-underline">region 1</li>
+                <li className="text-decoration-underline">region 2</li>
+              </ul>
+
+              <p className="text-sans-m-semibold mt-2 my-3">Fecha de entrega de informe de seguimiento</p>
+              <DropdownSelect 
+              label="Elige la fecha límite de entrega del informe de seguimiento (Obligatorio)"
+              placeholder="Elije una fecha"
+              />
+              <div className="d-flex mb-3 mt-1 text-sans-h6-primary">
+                <i className="material-symbols-rounded me-2">info</i>
+                <h6 className="mt-1">Luego de esta fecha, GORE podrá responder el informe pero será catalogado como atrasado.</h6>
+              </div>
+
+              <div className="col">
+                <CustomInput
+                label="Días corridos al pasado  (Obligatorio)"
+                placeholder="Escribe el número de días"
+                />
+                <p className="text-sans-h6 text-end me-4 me-xxl-5">Campo númerico.</p>
+              </div>
+              
+              <p className="text-sans-m-semibold mt-2 my-3">Fecha de apertura del informe de seguimiento</p>
+              <div className="my-2">mostrar fecha publicacion diario oficial o mensaje de aviso -Debes ingresar la fecha límite de entrega del informa primero-</div>
+              
+            </div>
+          </div>
+        </div>
+
+        {/* cuarta seccion */}
+        <div>
+          <h4 className="text-sans-h4">Evaluación</h4>
+          <h6 className="text-sans-h6-primary mt-1">Etapa aun no disponible en la plataforma.</h6>
+        </div>
         
       </div> 
     </div>
