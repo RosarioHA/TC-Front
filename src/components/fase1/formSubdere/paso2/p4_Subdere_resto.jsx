@@ -3,6 +3,7 @@ import { OpcionesCheck } from "../../../fase1/forms/OpcionesCheck";
 import CKEditorField from "../../../fase1/forms/ck_editor";
 import { FormSubdereContext } from "../../../../context/RevisionFinalSubdere";
 //import IndicadoresRecomendacion from "../../tables/IndicadoresRecomendacion";
+import { IndicadoresDesempeno } from "./p4_5a_Subdere_indicadores_desempeno";
 
 export const RestoCampos = ({
   solo_lectura,
@@ -12,68 +13,54 @@ export const RestoCampos = ({
   condiciones_ejercicio,
   nombre_competencia,
   competencias_agrupadas,
-  regiones_recomendadas
-}) =>
-{
-
+  regiones_recomendadas, 
+  segunda_etapa,
+}) => {
   const { updatePasoSubdere } = useContext(FormSubdereContext);
   const [ inputStatus, setInputStatus ] = useState({
     justificacion: { loading: false, saved: false },
   });
 
-
   // Determinar si todos los componentes deben estar deshabilitados
   const disableAll = useMemo(() => regiones_recomendadas.length === 0, [ regiones_recomendadas ]);
 
-  const handleBlur = (fieldName, value) =>
-  {
-    if (!disableAll)
-    {
+  const handleBlur = (fieldName, value) => {
+    if (!disableAll) {
       handleUpdate(fieldName, value, true);
     }
   };
 
-
-
-  const handleUpdate = async (field, value, saveImmediately = false) =>
-  {
+  const handleUpdate = async (field, value, saveImmediately = false) => {
     setInputStatus((prev) => ({
       ...prev,
       [ field ]: { ...prev[ field ], loading: true, saved: false },
     }));
 
     let adjustedValue = value;
-    if (field === 'modalidad_ejercicio')
-    {
+    if (field === 'modalidad_ejercicio') {
       adjustedValue = value ? 'Exclusiva' : 'Compartida';
     }
 
-    if (saveImmediately)
-    {
-      try
-      {
+    if (saveImmediately) {
+      try {
         let payload;
 
-        if (Array.isArray(competencias_agrupadas) && competencias_agrupadas.length > 0)
-        {
+        if (Array.isArray(competencias_agrupadas) && competencias_agrupadas.length > 0) {
           const competenciaId = Number(field.split('_')[ 1 ]);
           const updatedCompetencia = competencias_agrupadas.find((comp) => comp.id === competenciaId);
 
-          if (updatedCompetencia)
-          {
+          if (updatedCompetencia) {
             payload = {
               competencias_agrupadas: [
                 { id: competenciaId, modalidad_ejercicio: adjustedValue }
               ]
             };
-          } else
-          {
+          } else {
             payload = {
               [ field ]: adjustedValue,
             };
           }
-        } else
-        {
+        } else {
           payload = {
             [ field ]: adjustedValue,
           };
@@ -84,24 +71,20 @@ export const RestoCampos = ({
           ...prevStatus,
           [ field ]: { loading: false, saved: true },
         }));
-      } catch (error)
-      {
+      } catch (error) {
         console.error('Error updating data:', error);
         setInputStatus((prevStatus) => ({
           ...prevStatus,
           [ field ]: { loading: false, saved: false },
         }));
       }
-    } else
-    {
+    } else {
       setInputStatus((prevStatus) => ({
         ...prevStatus,
         [ field ]: { value: adjustedValue, loading: false, saved: false },
       }));
     }
   };
-
-
 
   return (
     <>
@@ -143,7 +126,6 @@ export const RestoCampos = ({
             </div>
           </div>
 
-
           {competencias_agrupadas ? (
             <div className="my-4">
               {competencias_agrupadas
@@ -176,7 +158,6 @@ export const RestoCampos = ({
           ) : (
             ""
           )}
-
 
           {Array.isArray(competencias_agrupadas) && competencias_agrupadas.length === 0 && (
             <>
@@ -242,6 +223,14 @@ export const RestoCampos = ({
               />
             </h6>
           </div>
+
+          {/* APARECE SOLO DURANTE LA SEGUNDA ETAPA */}
+          { segunda_etapa && 
+            <div  className="my-3">
+              <IndicadoresDesempeno/>
+            </div>
+          }
+          
           <div className="col-11">
             <h4 className="text-sans-h4">
               4.6 Condiciones cuyo incumplimiento dan lugar a la revocación de la transferencia

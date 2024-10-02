@@ -4,7 +4,7 @@ import { useDescargarDocumento } from "../../../hooks/competencias/useDownloadPD
 import { useGenerarDocumento } from '../../../hooks/competencias/useGenerarDocumento';
 import { useCompetencia } from "../../../hooks/competencias/useCompetencias";
 
-export const CardDocumento = ({ id, estadoFinalizado, resumen, editorName, editionDate, antecedentes, descripcion }) => {
+export const CardDocumento = ({ id, estadoFinalizado, resumen, editorName, editionDate, antecedentes, descripcion, documentoCerrado }) => {
   const [pdfGenerado, setPdfGenerado] = useState(false);
   const [fecha, setFecha] = useState(null);
   const { competenciaDetails, fetchCompetenciaDetails } = useCompetencia(id);
@@ -193,6 +193,7 @@ export const CardDocumento = ({ id, estadoFinalizado, resumen, editorName, editi
                   </button>
                 )}
               </div>
+              {!documentoCerrado &&
               <div className="d-flex flex-row justify-content-start my-2">
                 <div className="text-sans-p-blue my-auto">Último documento generado - {fecha}</div>
                 <button className="btn-secundario-s-clear mx-3" onClick={actualizarPDF}>
@@ -200,6 +201,8 @@ export const CardDocumento = ({ id, estadoFinalizado, resumen, editorName, editi
                   <span><u>Actualizar documento</u></span>
                 </button>
               </div>
+              }
+              
             </>
           )}
         </>

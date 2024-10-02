@@ -56,8 +56,11 @@ const ResumenFinal = React.lazy(() => import('./views/fase1/revisionSubdere/Resu
 const SuccessRevisionFinal = React.lazy(() => import('./views/success/success_revision_final'));
 const OficioDipres2 = React.lazy(() => import("./views/fase1/minutaDIPRES/segundo_oficio"));
 const RecomendacionPostCIDLayout = React.lazy(() => import('./layout/RecomendacionPostCIDLayout'));
+const EstadoSeguimiento = React.lazy(() => import('./views/fase2/Estado_seguimiento.jsx'));
 const Recomendacion_paso1 = React.lazy(() => import('./views/fase2/recomendacionPostCID/pasoUno.jsx'));
 const Recomendacion_paso2 = React.lazy(() => import('./views/fase2/recomendacionPostCID/pasoDos.jsx'));
+const FormularioPlazosLayout = React.lazy(() => import('./layout/FormularioPlazosLayout.jsx'))
+const FormularioDDR = React.lazy (() => import ('./views/fase2/formularioDDR/formularioDDR.jsx'))
 
 const createProtectedRoute = (path, Component, allowedProfiles) => (
   <Route
@@ -104,6 +107,7 @@ function App()
           {createProtectedRoute("estado_competencia/:id/subir_segundo_oficio_dipres", OficioDipres2, [ 'SUBDERE', 'Usuario Observador' ])}
           {createProtectedRoute("estado_competencia/:id/subir_oficio_gore", SubirOficioGore, [ 'SUBDERE', 'Usuario Observador' ])}
           <Route path="estado_competencia/:id/" element={<EstadoCompentencia />} />
+          <Route path="estado_seguimiento/:id/" element={<EstadoSeguimiento />} />
           <Route path="success_edicion" element={<SuccessEdicion />} />
           <Route path="success_creacion" element={<SuccessCreacion />} />
           <Route path="success_formulario_sectorial/:id/" element={<FormularioProvider> <SuccessFormSectorial /> </FormularioProvider>} />
@@ -195,17 +199,30 @@ function App()
             path="recomendacion_post_cid/:id"
             element={
               <FormSubdereProvider>
-                <ProtectedRoute allowedProfiles={[ 'Usuario Sectorial', 'SUBDERE', 'Usuario Observador', 'GORE' ]}>
+                <ProtectedRoute allowedProfiles={[ 'SUBDERE', 'GORE' ]}>
                   <RecomendacionPostCIDLayout />
                 </ProtectedRoute>
               </FormSubdereProvider>
             }
           >
+            <Route path="estado_seguimiento" element={<EstadoSeguimiento />} />
             <Route path="paso_1" element={<Recomendacion_paso1 />} />
             <Route path="paso_2" element={<Recomendacion_paso2 />} />
             <Route path="resumen_revision_final" element={<ResumenFinal />} />
           </Route>
 
+          <Route
+            path="definicion_plazos/:id"
+            element={
+              <FormSubdereProvider>
+                <ProtectedRoute allowedProfiles={[ 'SUBDERE', 'GORE' ]}>
+                  <FormularioPlazosLayout />
+                </ProtectedRoute>
+              </FormSubdereProvider>
+            }
+          >
+            <Route path="formulario" element={<FormularioDDR />} />
+          </Route>
 
           <Route path="*" element={<Error404 />} />
           <Route path="404" element={<Error404 />} />

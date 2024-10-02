@@ -1,7 +1,7 @@
 import { useContext, useCallback, useEffect } from "react";
 import { FormSubdereContext } from "../../../context/RevisionFinalSubdere";
-import { AmbitoDefinitivo } from "../../../components/formSubdere/paso1/p1_Subdere";
-import { RecomendacionTransferencia } from "../../../components/formSubdere/paso1/p2_Subdere";
+import { AmbitoDefinitivo } from "../../../components/fase1/formSubdere/paso1/p1_Subdere";
+import { RecomendacionTransferencia } from "../../../components/fase1/formSubdere/paso1/p2_Subdere";
 import { NavigationSubdere } from "../../../components/layout/navigationSubdere";
 
 const PasoUnoRevisionPostCid = () => {
