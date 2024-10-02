@@ -123,6 +123,7 @@ const EstadoSeguimiento = () => {
               <div className="estado-competencia-content">
                 <div className="mt-5 mx-0">
                   <h2 className="text-sans-h2 my-3">Etapa de Recomendación de transferencia post-CID y Definición de plazos de implementación y seguimiento</h2>
+                  < VerticalStepper />
                 </div>
               </div>
             )}

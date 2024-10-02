@@ -7,6 +7,7 @@ import { VerticalStepper } from "../../components/stepers/VerticalStepper";
 import { useCompetencia } from "../../hooks/competencias/useCompetencias";
 import { useFormularioSubdere } from "../../hooks/fase1/revisionFinalSubdere/useFormularioSubdere";
 import { useResumenFinal } from "../../hooks/fase1/revisionFinalSubdere/useResumenFinal";
+import { useCompetenciasPostCid } from "../../hooks/competencias/fase2/useCompetenciasPostCID";
 import { CardDocumento } from "../../components/fase1/commons/CardDocumento";
 import { CardInicioFase2 } from "../../components/fase2/CardInicioFase2";
 
@@ -21,6 +22,8 @@ const EstadoCompetencia = () => {
   const userSubdere = userData?.perfil?.includes('SUBDERE');
   const mostrarMensajeFinalizada = competenciaDetails?.estado === 'Finalizada' && resumen?.formulario_final_enviado === true;
 
+  const { updateCompetencia } = useCompetenciasPostCid(id);
+
   useEffect(() => {
     if (competenciaDetails) {
       setCompetencia(competenciaDetails);
@@ -31,13 +34,25 @@ const EstadoCompetencia = () => {
     navigate(-1);
   };
 
+  const handleIniciarPreImplementacion = async () => {
+    try {
+      const dataToUpdate = { iniciar_etapa_preimplementacion: true };
+      await updateCompetencia(dataToUpdate);
+      console.log("FASE PREIMPLEMENTACION INICIADA CORRECTAMENTE")
+      navigate(`/home/estado_seguimiento/${id}/`)
+    } catch (error) {
+      console.error('Error al iniciar la pre-implementación:', error);
+      console.log("ERROR AL INICIAR FASE PREIMPLEMENTACION")
+    }
+  };
 
   if (loading && competencia) {
     return <div className="d-flex align-items-center flex-column ">
       <div className="text-center text-sans-h5-medium-blue ">Cargando detalles de la competencia...</div>
       <span className="placeholder col-4 bg-primary"></span>
     </div>
-  } if (error) {
+  } 
+  if (error) {
     return <div>Error al cargar los detalles: {error.message}</div>;
   }
 
@@ -78,6 +93,7 @@ const EstadoCompetencia = () => {
 
         {userSubdere && mostrarMensajeFinalizada && (
           <CardInicioFase2
+          onButtonClick={handleIniciarPreImplementacion}
           />
         )}
 
