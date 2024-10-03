@@ -1,25 +1,11 @@
-// import { useEffect } from 'react';
-// import { useNavigate } from 'react-router-dom';
 // import { useAuth } from '../../../context/AuthContext'; 
-//import { useResumenFinal } from '../../hooks/fase1/revisionFinalSubdere/useResumenFinal';
 import { useCompetenciasPostCid } from '../../../hooks/competencias/fase2/useCompetenciasPostCID';
-// import { useDescargarDocumento } from '../../../hooks/competencias/useDownloadPDFFinal';
 
 export const SummaryDetail2 = ({ competencia }) => {
-  // const navigate = useNavigate();
   const { competenciaPostCid } = useCompetenciasPostCid(competencia.id);
   // const { userData } = useAuth();
   // const { descargarDocumento , verificarDocumento , disponible } = useDescargarDocumento(competencia.id);
   // const userSubdere = userData?.perfil?.includes('SUBDERE');
-
-  // const estado = competencia.estado || competencia?.resumen_competencia?.estado;
-
-  // useEffect(() => {
-  //   // Solo verifica el documento si el estado es 'Finalizada'
-  //   if (estado === 'Finalizada') {
-  //     verificarDocumento();
-  //   }
-  // }, [estado, verificarDocumento]);
 
   console.log("competenciaPostCid en SummaryDetails2, viene del hook", competenciaPostCid);
   console.log("competencia en SummaryDetails2, viene del padre", competencia);
@@ -28,17 +14,8 @@ export const SummaryDetail2 = ({ competencia }) => {
   // const tiempo_transcurrido =
   // competenciaPostCid?.tiempo_transcurrido ||
   // competenciaPostCid?.resumen_competencia?.tiempo_transcurrido;
-  // const ambito_definitivo_competencia =
-  // competenciaPostCid?.ambito_definitivo_competencia ||
-  // competenciaPostCid?.resumen_competencia?.ambito_definitivo_competencia;
   // const fechaFin =
   // competenciaPostCid?.fecha_fin || competenciaPostCid?.resumen_competencia?.fecha_fin;
-  // const ambito_competencia_origen =
-  // competenciaPostCid?.ambito_competencia_origen ||
-  // competenciaPostCid?.resumen_competencia?.ambito_competencia_origen;
-  // const recomendacion_transferencia =
-  // competenciaPostCid?.recomendacion_transferencia ||
-  // competenciaPostCid?.resumen_competencia?.recomendacion_transferencia;
 
   if (!competenciaPostCid || !etapas_info) {
     return <div className="text-center text-sans-h5-medium-blue ">Cargando...</div>;
@@ -48,10 +25,6 @@ export const SummaryDetail2 = ({ competencia }) => {
     id: key,
     ...etapas_info[ key ],
   }));
-
-  // const handleDownloadClick = () => {
-  //   descargarDocumento();
-  // };
 
   // Calcula la cantidad de etapas finalizadas
   const etapasFinalizadas = etapasArray.filter(
@@ -77,164 +50,6 @@ export const SummaryDetail2 = ({ competencia }) => {
     const classForState = badgeClasses[ estado ] || '';
     return { class: classForState, text: estado };
   };
-
-  // const handleVerRevisionSubdere = () => {
-  //   navigate(`/home/revision_subdere/${competencia.id}/paso_1/`);
-  // };
-
-  // Calcula el tiempo restante (ajusta los valores según sea necesario)
-  // const { dias, horas, minutos } = tiempo_transcurrido;
-
-  // const formattedDate = new Date(fechaFin).toLocaleDateString('es-ES', {
-  //   day: '2-digit',
-  //   month: '2-digit',
-  //   year: 'numeric',
-  // });
-
-  const preimplementacion = {
-    nombre: competenciaPostCid?.resumen_competencia?.etapas_info?.["Etapa Pre Implementación"].nombre,
-    estado: competenciaPostCid?.resumen_competencia?.etapas_info?.["Etapa Pre Implementación"].estado,
-  }
-  const implementacion = {
-    nombre: competenciaPostCid?.resumen_competencia?.etapas_info?.["Etapa Implementación"].nombre,
-    estado: competenciaPostCid?.resumen_competencia?.etapas_info?.["Etapa Implementación"].estado,
-  }
-  const Seguimiento = {
-    nombre: competenciaPostCid?.resumen_competencia?.etapas_info?.["Etapa Seguimiento"].nombre,
-    estado: competenciaPostCid?.resumen_competencia?.etapas_info?.["Etapa Seguimiento"].estado,
-  }
-  const Evaluacion = {
-    nombre: competenciaPostCid?.resumen_competencia?.etapas_info?.["Etapa Evaluación"].nombre,
-    estado: competenciaPostCid?.resumen_competencia?.etapas_info?.["Etapa Evaluación"].estado,
-  }
-
-
-  // if (estado === 'Finalizada') {
-  //   return (
-  //     <div className="py-2">
-  //       <p>FALTA MODIFICAR PARA QUE MUESTRE DATA DE NUEVA FASE 2</p>
-  //       <div className="row pt-3">
-  //         <div className="col-4">
-  //           <div>
-  //             <ul className="chart-skills">
-  //               {Array.from({ length: totalEtapas }, (_, index) => (
-  //                 <li
-  //                   key={index}
-  //                   style={{
-  //                     borderColor:
-  //                       index < etapasFinalizadas ? 'green' : 'green',
-  //                   }}
-  //                 >
-  //                   <span></span>
-  //                 </li>
-  //               ))}
-  //               <div className="chart-text">
-  //                 <div className="chart-numbers">5 de 5</div>
-  //                 <p>Etapas finalizadas</p>
-  //               </div>
-  //             </ul>
-
-  //             <div>
-  //               <div className="d-flex justify-content-center mt-3">
-  //                 <span className="text-sans-h6-bold-green">
-  //                   Proceso finalizado en:
-  //                 </span>
-  //               </div>
-
-  //               {/* <div className="d-flex justify-content-between px-4 px-xxl-5 mx-xxl-5 mt-3">
-  //                 <div className="d-flex flex-column align-items-center">
-  //                   <span className="text-sans-h6-bold-green">{dias}</span>
-  //                   <span className="text-sans-h6-green">Días</span>
-  //                 </div>
-  //                 <div className="d-flex flex-column align-items-center">
-  //                   <span className="text-sans-h6-bold-green">{horas}</span>
-  //                   <span className="text-sans-h6-green">Horas</span>
-  //                 </div>
-  //                 <div className="d-flex flex-column align-items-center">
-  //                   <span className="text-sans-h6-bold-green">{minutos}</span>
-  //                   <span className="text-sans-h6-green">Mins</span>
-  //                 </div>
-  //               </div> */}
-  //             </div>
-  //           </div>
-  //         </div>
-  //         <div className="col-8">
-  //           <div className="mb-4 ms-4">
-  //             <ul className="list-group list-group-flush my-3">
-  //               <li
-  //                 className="list-group-item d-flex justify-content-between ">
-  //                 <span>
-  //                   {preimplementacion?.nombre}
-  //                   <span className="mx-5 px-5">{preimplementacion?.fecha}</span>
-  //                 </span>
-  //                 <div className="my-auto">
-  //                   <span className={getBadgeDetails(preimplementacion?.estado).class}>
-  //                     {getBadgeDetails(preimplementacion?.estado).text}
-  //                   </span>
-  //                 </div>
-  //               </li>
-  //               <li
-  //                 className="list-group-item d-flex justify-content-between "                    >
-  //                 <span>
-  //                   {implementacion.nombre}
-  //                 </span>
-  //                 <div>
-  //                   <span className={getBadgeDetails(implementacion?.estado).class}>
-  //                     {getBadgeDetails(implementacion?.estado).text}
-  //                   </span>
-  //                 </div>
-  //               </li>
-  //               <li
-  //                 className="list-group-item d-flex justify-content-between "                    >
-  //                 <span>
-  //                   {Seguimiento.nombre}
-  //                   <span className="mx-5 px-5"></span>
-  //                 </span>
-  //                 {competenciaPostCid?.formulario_final_enviado ? (
-  //                   <div>
-  //                     <span className={getBadgeDetails(Seguimiento?.estado).class}>
-  //                       {getBadgeDetails(Seguimiento?.estado).text}
-  //                     </span>
-  //                   </div>
-  //                 ) : (
-  //                   <button
-  //                     className="btn-secundario-s"
-  //                     onClick={handleVerRevisionSubdere}
-  //                     disabled={!userSubdere} // Deshabilitado si no es SUBDERE
-  //                   >
-  //                     <u>Revisión Final SUBDERE</u>
-  //                     <i className="material-symbols-rounded ms-2">create_new_folder</i>
-  //                   </button>
-  //                 )}
-  //               </li>
-
-  //               <li className="list-group-item d-flex justify-content-between ">
-  //                 <span>
-  //                   <p>Documento de información levantada</p>
-  //                 </span>
-  //                 <div>
-  //                   <div>
-  //                     {disponible ? (
-  //                       <button className="btn-secundario-s" 
-  //                       disabled={!userSubdere}
-  //                       onClick={handleDownloadClick}
-  //                       >
-  //                         <i className="material-symbols-rounded ms-2">download</i>
-  //                         <u>Descargar</u>
-  //                       </button>
-  //                     ) : (
-  //                       <span className="badge-status-pending">Pendiente</span>
-  //                     )}
-  //                   </div>
-  //                 </div>
-  //               </li>
-  //             </ul>
-  //           </div>
-  //         </div>
-  //       </div>
-  //     </div >
-  //   )
-  // }
 
   return (
     <>
