@@ -1,17 +1,9 @@
-// import { useAuth } from '../../../context/AuthContext'; 
 import { useCompetenciasPostCid } from '../../../hooks/competencias/fase2/useCompetenciasPostCID';
 
 export const SummaryDetail2 = ({ competencia }) => {
   const { competenciaPostCid } = useCompetenciasPostCid(competencia.id);
-  // const { userData } = useAuth();
-  // const { descargarDocumento , verificarDocumento , disponible } = useDescargarDocumento(competencia.id);
-  // const userSubdere = userData?.perfil?.includes('SUBDERE');
 
-  console.log("competenciaPostCid en SummaryDetails2, viene del hook", competenciaPostCid);
-  console.log("competencia en SummaryDetails2, viene del padre", competencia);
-
-  const etapas_info = competenciaPostCid?.etapas_info || competenciaPostCid?.resumen_competencia?.etapas_info;
-  
+  const etapas_info = competenciaPostCid?.resumen_competencia?.etapas_info || {};
   const competenciaPostCidFirst = competenciaPostCid?.competencia_post_cid?.[0];
   const tiempo_transcurrido = competenciaPostCidFirst?.tiempo_transcurrido;
 
