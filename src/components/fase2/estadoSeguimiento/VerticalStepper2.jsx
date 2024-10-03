@@ -1,7 +1,7 @@
 // import { Etapa1, Etapa2, Etapa3, Etapa4, Etapa5 } from "../fase1/etapas";
 import { Etapa1Seguimiento } from "../etapas/etapa1";
 
-const Etapa = ({ etapaInfo, index, id, usuarios}) => {
+const Etapa = ({ etapaInfo, index, id, }) => { //usuarios
 
   switch (index) {
     case 0: return <Etapa1Seguimiento etapa={etapaInfo.etapa1} id={id}/>;

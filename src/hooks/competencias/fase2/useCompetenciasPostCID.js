@@ -3,7 +3,7 @@ import { apiTransferenciaCompentencia } from '../../../services/transferenciaCom
 
 // Hook personalizado para el endpoint /competencias-post-cid/{id}/
 export const useCompetenciasPostCid = (id) => {
-  const [competencia, setCompetencia] = useState(null); // Almacenar la data del GET
+  const [competenciaPostCid, setCompetencia] = useState(null); // Almacenar la data del GET
   const [loading, setLoading] = useState(true); // Estado de carga
   const [error, setError] = useState(null); // Almacenar errores del GET
   const [updateResponse, setUpdateResponse] = useState(null); // Almacenar la respuesta del PATCH
@@ -46,7 +46,7 @@ export const useCompetenciasPostCid = (id) => {
 
   // Devolver el estado y las funciones del hook
   return { 
-    competencia, 
+    competenciaPostCid, 
     loading, 
     error, 
     updateCompetencia, 
