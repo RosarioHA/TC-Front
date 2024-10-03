@@ -11,11 +11,9 @@ export const SummaryDetail2 = ({ competencia }) => {
   console.log("competencia en SummaryDetails2, viene del padre", competencia);
 
   const etapas_info = competenciaPostCid?.etapas_info || competenciaPostCid?.resumen_competencia?.etapas_info;
-  // const tiempo_transcurrido =
-  // competenciaPostCid?.tiempo_transcurrido ||
-  // competenciaPostCid?.resumen_competencia?.tiempo_transcurrido;
-  // const fechaFin =
-  // competenciaPostCid?.fecha_fin || competenciaPostCid?.resumen_competencia?.fecha_fin;
+  
+  const competenciaPostCidFirst = competenciaPostCid?.competencia_post_cid?.[0];
+  const tiempo_transcurrido = competenciaPostCidFirst?.tiempo_transcurrido;
 
   if (!competenciaPostCid || !etapas_info) {
     return <div className="text-center text-sans-h5-medium-blue ">Cargando...</div>;
@@ -85,20 +83,20 @@ export const SummaryDetail2 = ({ competencia }) => {
                 </span>
               </div>
 
-              {/* <div className="d-flex justify-content-between px-4 px-xxl-5 mx-xxl-5 mt-3">
+              <div className="d-flex justify-content-between px-4 px-xxl-5 mx-xxl-5 mt-3">
                 <div className="d-flex flex-column align-items-center">
-                  <span className="text-sans-h6-bold-darkblue">{dias}</span>
+                  <span className="text-sans-h6-bold-darkblue">{tiempo_transcurrido.dias}</span>
                   <span className="text-sans-h6-darkblue">Días</span>
                 </div>
                 <div className="d-flex flex-column align-items-center">
-                  <span className="text-sans-h6-bold-darkblue">{horas}</span>
+                  <span className="text-sans-h6-bold-darkblue">{tiempo_transcurrido.horas}</span>
                   <span className="text-sans-h6-darkblue">Horas</span>
                 </div>
                 <div className="d-flex flex-column align-items-center">
-                  <span className="text-sans-h6-bold-darkblue">{minutos}</span>
+                  <span className="text-sans-h6-bold-darkblue">{tiempo_transcurrido.minutos}</span>
                   <span className="text-sans-h6-darkblue">Mins</span>
                 </div>
-              </div> */}
+              </div>
             </div>
           </div>
         </div>
