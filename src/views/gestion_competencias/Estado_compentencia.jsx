@@ -9,7 +9,7 @@ import { useFormularioSubdere } from "../../hooks/fase1/revisionFinalSubdere/use
 import { useResumenFinal } from "../../hooks/fase1/revisionFinalSubdere/useResumenFinal";
 import { useCompetenciasPostCid } from "../../hooks/competencias/fase2/useCompetenciasPostCID";
 import { CardDocumento } from "../../components/fase1/commons/CardDocumento";
-import { CardInicioFase2 } from "../../components/fase2/CardInicioFase2";
+import { CardInicioFase2 } from "../../components/fase2/estadoSeguimiento/CardInicioFase2";
 
 const EstadoCompetencia = () => {
   const { id } = useParams();

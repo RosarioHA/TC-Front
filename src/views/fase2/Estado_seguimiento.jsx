@@ -4,9 +4,10 @@ import { useCompetencia } from '../../hooks/competencias/useCompetencias';
 import { useFormularioSubdere } from '../../hooks/fase1/revisionFinalSubdere/useFormularioSubdere';
 import { useResumenFinal } from "../../hooks/fase1/revisionFinalSubdere/useResumenFinal";
 import { VerticalStepper } from '../../components/stepers/VerticalStepper';
+import { VerticalStepperRecomendacion } from '../../components/fase2/estadoSeguimiento/VerticalStepper2';
 import { PersonsAssigned } from '../../components/fase1/tables/PersonsAssigned';
-import { DesplegableEstadoFase2 } from '../../components/fase2/DesplegableEstado';
-import { SummaryDetail2 } from '../../components/fase2/SummaryDetails2';
+import { DesplegableEstadoFase2 } from '../../components/fase2/estadoSeguimiento/DesplegableEstado';
+import { SummaryDetail2 } from '../../components/fase2/estadoSeguimiento/SummaryDetails2';
 import { CardDocumento } from '../../components/fase1/commons/CardDocumento';
 
 const EstadoSeguimiento = () => {
@@ -28,6 +29,8 @@ const EstadoSeguimiento = () => {
   const handleBackButtonClick = () => {
     navigate(-1);
   };
+
+  console.log("competenciaDetails", competenciaDetails);
 
   const toggleDropdown = (dropdown) => {
     // Si el desplegable actual está abierto, cerrarlo. Si no, abrir el nuevo y cerrar el anterior.
@@ -66,7 +69,7 @@ const EstadoSeguimiento = () => {
           <span className="badge-tipo mt-1">{competencia?.agrupada ? 'Agrupada' : 'Individual'}</span>
           <h1 className="text-sans-h1 mb-4 ms-2">{competencia?.nombre}</h1>
         </div>
-        {/* AQUI VA UN CLON DE SummaryDetail, CREAR */}
+        {/* AQUI VA UN CLON DE SummaryDetail */}
         {competencia && <SummaryDetail2 competencia={competencia} />}
       </div>
 
@@ -123,7 +126,11 @@ const EstadoSeguimiento = () => {
               <div className="estado-competencia-content">
                 <div className="mt-5 mx-0">
                   <h2 className="text-sans-h2 my-3">Etapa de Recomendación de transferencia post-CID y Definición de plazos de implementación y seguimiento</h2>
-                  < VerticalStepper />
+                  < VerticalStepperRecomendacion 
+                  etapasObjeto={competencia?.resumen_competencia} 
+                  etapaDatos={competencia} 
+                  id={id}
+                  />
                 </div>
               </div>
             )}

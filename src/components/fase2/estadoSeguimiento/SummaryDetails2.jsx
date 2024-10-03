@@ -1,12 +1,13 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
-import { useResumenFinal } from '../../hooks/fase1/revisionFinalSubdere/useResumenFinal';
-import { useDescargarDocumento } from '../../hooks/competencias/useDownloadPDFFinal';
+import { useAuth } from '../../../context/AuthContext'; 
+//import { useResumenFinal } from '../../hooks/fase1/revisionFinalSubdere/useResumenFinal';
+import { useCompetenciasPostCid } from '../../../hooks/competencias/fase2/useCompetenciasPostCID';
+import { useDescargarDocumento } from '../../../hooks/competencias/useDownloadPDFFinal';
 
 export const SummaryDetail2 = ({ competencia }) => {
   const navigate = useNavigate();
-  const { resumen } = useResumenFinal(competencia.id);
+  const { resumen } = useCompetenciasPostCid(competencia.id);
   const { userData } = useAuth();
   const { descargarDocumento , verificarDocumento , disponible } = useDescargarDocumento(competencia.id);
   const userSubdere = userData?.perfil?.includes('SUBDERE');
