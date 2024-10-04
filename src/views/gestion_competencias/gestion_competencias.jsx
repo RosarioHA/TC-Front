@@ -87,8 +87,17 @@ const GestionCompetencias = () => {
     setHasSearched(true);
   }, [ updateSearchTerm ]);
 
+
+console.log("Data List:", dataListCompetencia)
+
   const handleVerEstado = (competencia) => {
-    navigate(`/home/estado_competencia/${competencia.id}`, { state: { competencia } });
+    console.log("iniciar_etapa_preimplementacion:", competencia.iniciar_etapa_preimplementacion);
+
+    if (competencia.iniciar_etapa_preimplementacion) {
+      navigate(`/home/estado_seguimiento/${competencia.id}`, { state: { competencia } });
+    } else {
+      navigate(`/home/estado_competencia/${competencia.id}`, { state: { competencia } });
+    }
   };
   const handleVerDetalle = (competencia) => {
     navigate(`/home/editar_competencia/${competencia.id}`, { state: { competencia } });

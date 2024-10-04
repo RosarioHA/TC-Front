@@ -216,10 +216,6 @@ const ResumenFinal = () =>
               )}
             </>
           )}
-          {!formulario_cerrado ? (
-            <p className="text-sans-h6 mt-2 col-10">
-              Asegúrate que los datos ingresados son correctos, ya que una vez que envíes el formulario, no podrás editarlo a menos que SUBDERE requiera información adicional.
-            </p>) : ('')}
         </div>
       ) : (<div className="mb-5 mx-5 px-2">
         <span className="text-serif-h2">
