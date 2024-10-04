@@ -35,14 +35,14 @@ export const useResumenFinal = (id) => {
       await apiTransferenciaCompentencia.patch(
         `/revision-final-competencia/${id}/resumen/`,
         {
-          formulario_final_enviado: true,
+          competencia_fase1_finalizada: true,
           imprimir_formulario_final: true
         }
 
       );
       setResumen((prevState) => ({
         ...prevState,
-        formulario_final_enviado: true,
+        competencia_fase1_finalizada: true,
         imprimir_formulario_final: true
       }));
     } catch (error) {

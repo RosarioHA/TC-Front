@@ -10,7 +10,7 @@ const ResumenFinal = () =>
   const navigate = useNavigate();
   const [ pasos, setPasos ] = useState([]);
   const { id } = useParams();
-  const { resumen, actualizarFormularioEnviado,subirArchivo, guardarDescripcion, eliminarArchivo } = useResumenFinal(id);
+  const { resumen, actualizarFormularioEnviado, subirArchivo, guardarDescripcion, eliminarArchivo } = useResumenFinal(id);
   const [ inputStatus, setInputStatus ] = useState({
     descripcion_antecedente: { loading: false, saved: false },
   });
@@ -106,7 +106,7 @@ const ResumenFinal = () =>
 
       const formulario_completo = resumen?.formulario_completo;
 
-      const formulario_enviado = resumen?.formulario_final_enviado;
+      const formulario_enviado = resumen?.competencia_fase1_finalizada;
 
   return (
     <div className="container-fluid">
