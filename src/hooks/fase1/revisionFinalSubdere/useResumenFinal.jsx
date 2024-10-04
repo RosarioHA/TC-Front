@@ -36,14 +36,16 @@ export const useResumenFinal = (id) => {
         `/revision-final-competencia/${id}/resumen/`,
         {
           competencia_fase1_finalizada: true,
-          imprimir_formulario_final: true
+          imprimir_formulario_final: true,
+          formulario_recomendacion_cerrado: true
         }
 
       );
       setResumen((prevState) => ({
         ...prevState,
         competencia_fase1_finalizada: true,
-        imprimir_formulario_final: true
+        imprimir_formulario_final: true,
+        formulario_recomendacion_cerrado: true
       }));
     } catch (error) {
       console.error('Error al enviar el formulario:', error);

@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 
-export const NavigationSubdere = ({ step, id, permisoSiguiente, solo_lectura }) => {
+export const NavigationSubdere = ({ step, id, permisoSiguiente, etapa_implementacion, solo_lectura }) => {
   const navigate = useNavigate();
   const { userData } = useAuth();
   const userSubdere = userData?.perfil?.includes('SUBDERE');
@@ -26,7 +26,11 @@ export const NavigationSubdere = ({ step, id, permisoSiguiente, solo_lectura }) 
   };
 
   const handleExpedienteButtonClick = () => {
-    navigate(`/home/estado_competencia/${id}`);
+    if (etapa_implementacion) {
+      navigate(`/home/estado_seguimiento/${id}`);
+    } else {
+      navigate(`/home/estado_competencia/${id}`);
+    }
   };
 
   return (
@@ -53,7 +57,7 @@ export const NavigationSubdere = ({ step, id, permisoSiguiente, solo_lectura }) 
             </button>
           ) : (
             <button className="btn-primario-s" onClick={handleNextButtonClick}>
-              <p className="text-decoration-underline mb-0">{userSubdere ? 'Ir a resumen de observaciones final Subdere' : 'Ir a resumen de formulario'}</p>
+              <p className="text-decoration-underline mb-0">{userSubdere ? 'Siguiente' : 'Siguiente'}</p>
             </button>
           )}
         </div>

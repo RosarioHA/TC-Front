@@ -45,7 +45,8 @@ const Paso_2_Revision = () => {
     condiciones_ejercicio,
     regiones_recomendadas,
     competencias_agrupadas, 
-    nombre
+    nombre,
+    iniciar_etapa_preimplementacion
   } = dataPasoSubdere;
 
 
@@ -111,9 +112,13 @@ const Paso_2_Revision = () => {
         </div>
       </div>
       <div className="ps-5">
-        <NavigationSubdere step={paso2_revision_final_subdere.numero_paso} id={dataPasoSubdere?.id}
+        <NavigationSubdere 
+          step={paso2_revision_final_subdere.numero_paso} 
+          id={dataPasoSubdere?.id}
           permisoSiguiente={paso2_revision_final_subdere?.campos_obligatorios_completados}
-          solo_lectura={solo_lectura} />
+          solo_lectura={solo_lectura}
+          etapa_implementacion={iniciar_etapa_preimplementacion}
+          />
       </div>
       
     </>

@@ -31,14 +31,17 @@ const ResumenFinal = () =>
     navigate(-1);
   };
 
-  const handleEnviarClick = async () =>
-  {
-    try
-    {
+  const handleEnviarClick = async () => {
+    try {
       await actualizarFormularioEnviado();
-      navigate(`/home/success_revision_final/${id}`);
-    } catch (error)
-    {
+  
+      // Condicional para navegar según el valor de iniciar_etapa_preimplementacion
+      if (resumen?.iniciar_etapa_preimplementacion) {
+        navigate(`/home/success_formulario_subdere/${id}`);
+      } else {
+        navigate(`/home/success_revision_final/${id}`);
+      }
+    } catch (error) {
       console.error("Error al enviar el formulario:", error);
     }
   };
@@ -106,7 +109,7 @@ const ResumenFinal = () =>
 
       const formulario_completo = resumen?.formulario_completo;
 
-      const formulario_enviado = resumen?.competencia_fase1_finalizada;
+      const formulario_cerrado = resumen?.formulario_recomendacion_cerrado;
 
   return (
     <div className="container-fluid">
@@ -148,7 +151,7 @@ const ResumenFinal = () =>
       </div>
       {formulario_completo ? (
         <div className="mb-5 mx-5 px-2">
-          {!formulario_enviado ? (
+          {!formulario_cerrado ? (
             <>
               <span className="text-sans-h1">Está todo listo para que envíes el formulario</span><p className="text-sans-h6">
                 Ya llenaste todos los campos obligatorios de este formulario.
@@ -164,7 +167,7 @@ const ResumenFinal = () =>
 
           {formulario_completo && (
             <>
-              {!formulario_enviado || resumen?.antecedente_adicional_revision_subdere ? (
+              {!formulario_cerrado || resumen?.antecedente_adicional_revision_subdere ? (
                 <>
                   <div className="d-flex justify-content-between py-3 fw-bold">
                     <div className="col-10">
@@ -183,7 +186,7 @@ const ResumenFinal = () =>
                       archivoDescargaUrl={resumen?.antecedente_adicional_revision_subdere}
                       tituloDocumento={resumen?.antecedente_adicional_revision_subdere}
                       fieldName="antecedente_adicional_revision_subdere"
-                      readOnly={formulario_enviado}
+                      readOnly={formulario_cerrado}
                     />
                   </div>
                   <div className="my-5 col-10">
@@ -197,14 +200,14 @@ const ResumenFinal = () =>
                       loading={inputStatus.descripcion_antecedente.loading}
                       saved={inputStatus.descripcion_antecedente.saved}
                       maxLength={500}
-                      readOnly={formulario_enviado}
+                      readOnly={formulario_cerrado}
                     />
                   </div>
                 </>
 
               ) : (
                 <>
-                  {(formulario_enviado && !resumen?.antecedente_adicional_revision_subdere) && (
+                  {(formulario_cerrado && !resumen?.antecedente_adicional_revision_subdere) && (
                     <div className="my-5 px-3 neutral-line py-3">
                       El sector no subió antecedentes adicionales.
                     </div>
@@ -213,7 +216,7 @@ const ResumenFinal = () =>
               )}
             </>
           )}
-          {!formulario_enviado ? (
+          {!formulario_cerrado ? (
             <p className="text-sans-h6 mt-2 col-10">
               Asegúrate que los datos ingresados son correctos, ya que una vez que envíes el formulario, no podrás editarlo a menos que SUBDERE requiera información adicional.
             </p>) : ('')}
@@ -234,9 +237,9 @@ const ResumenFinal = () =>
           Atrás
         </button>
 
-        {formulario_completo && !formulario_enviado ? (
+        {formulario_completo && !formulario_cerrado ? (
           <button className="btn-primario-s" disabled={!formulario_completo} onClick={handleEnviarClick}>
-            <u>Enviar el formulario</u>
+            <u>Cerrar proceso</u>
           </button>)
           : ("")}
       </div>
