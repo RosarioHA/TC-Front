@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-export const Etapa1Seguimiento = ({ etapa, id }) => {
+export const Etapa2Recomendacion = ({ etapa, id }) => {
   const { competencia_creada, usuarios_vinculados, fecha_ultima_modificacion, ultimo_editor } = etapa;
 
 

@@ -3,8 +3,9 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useCompetencia } from '../../hooks/competencias/useCompetencias';
 import { useFormularioSubdere } from '../../hooks/fase1/revisionFinalSubdere/useFormularioSubdere';
 import { useResumenFinal } from "../../hooks/fase1/revisionFinalSubdere/useResumenFinal";
+import { useCompetenciasPostCid } from '../../hooks/competencias/fase2/useCompetenciasPostCID';
 import { VerticalStepper } from '../../components/stepers/VerticalStepper';
-import { VerticalStepperRecomendacion } from '../../components/fase2/estadoSeguimiento/VerticalStepper2';
+import { VerticalStepperRecomendacion } from '../../components/fase2/estadoSeguimiento/VerticalStepperRecomendacion';
 import { PersonsAssigned } from '../../components/fase1/tables/PersonsAssigned';
 import { DesplegableEstadoFase2 } from '../../components/fase2/estadoSeguimiento/DesplegableEstado';
 import { SummaryDetail2 } from '../../components/fase2/estadoSeguimiento/SummaryDetails2';
@@ -17,6 +18,8 @@ const EstadoSeguimiento = () => {
   const { resumen } = useResumenFinal(id);
   const { competenciaDetails, loading, error } = useCompetencia(id);
   const [ competencia, setCompetencia ] = useState(null);
+  const { competenciaPostCid } = useCompetenciasPostCid(id);
+  //const [ competenciaPostCid, setCompetenciaPostCid ] = useState(null);
   const [openDropdown, setOpenDropdown] = useState(null);
   const mostrarMensajeFinalizada = competenciaDetails?.estado === 'Finalizada' && resumen?.competencia_fase1_finalizada === true;
   
@@ -26,11 +29,17 @@ const EstadoSeguimiento = () => {
     }
   }, [ competenciaDetails ]);
 
+  // useEffect(() => {
+  //   if (CompetenciasPC) {
+  //     setCompetenciaPostCid(CompetenciasPC);
+  //   }
+  // }, [ CompetenciasPC ]);
+
+  console.log("competenciaPostCid en estado seguimiento", competenciaPostCid)
+
   const handleBackButtonClick = () => {
     navigate(-1);
   };
-
-  console.log("competenciaDetails", competenciaDetails);
 
   const toggleDropdown = (dropdown) => {
     // Si el desplegable actual está abierto, cerrarlo. Si no, abrir el nuevo y cerrar el anterior.
@@ -69,7 +78,6 @@ const EstadoSeguimiento = () => {
           <span className="badge-tipo mt-1">{competencia?.agrupada ? 'Agrupada' : 'Individual'}</span>
           <h1 className="text-sans-h1 mb-4 ms-2">{competencia?.nombre}</h1>
         </div>
-        {/* AQUI VA UN CLON DE SummaryDetail */}
         {competencia && <SummaryDetail2 competencia={competencia} />}
       </div>
 
@@ -127,10 +135,10 @@ const EstadoSeguimiento = () => {
                 <div className="mt-5 mx-0">
                   <h2 className="text-sans-h2 my-3">Etapa de Recomendación de transferencia post-CID y Definición de plazos de implementación y seguimiento</h2>
                   < VerticalStepperRecomendacion 
-                  etapasObjeto={competencia?.resumen_competencia} 
-                  etapaDatos={competencia} 
+                  etapasObjeto={competenciaPostCid?.resumen_competencia} 
+                  etapaDatos={competenciaPostCid} 
                   id={id}
-                  />
+                  /> 
                 </div>
               </div>
             )}

@@ -16,6 +16,7 @@ export const VerticalStepper = ({ etapasObjeto, etapaDatos, id }) => {
   if (!etapasObjeto) {
     return <div className="text-center text-sans-h5-medium-blue ">Cargando...</div>;
   }
+  console.log("etapaDatos dentro de VerticalStepper original", etapaDatos);
   
   const etapasInfo = etapasObjeto.etapas_info;
   const etapasClaves = Object.keys(etapasInfo);
@@ -75,5 +76,4 @@ export const VerticalStepper = ({ etapasObjeto, etapaDatos, id }) => {
       </ol>
     </div>
   );
-  
 };

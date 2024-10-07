@@ -1,14 +1,11 @@
 // import { Etapa1, Etapa2, Etapa3, Etapa4, Etapa5 } from "../fase1/etapas";
-import { Etapa1Seguimiento } from "../etapas/etapa1";
+import { Etapa1Recomendacion } from "../etapasRecomendacion/Etapa1";
+import { Etapa2Recomendacion } from "../etapasRecomendacion/Etapa2";
 
-const Etapa = ({ etapaInfo, index, id, }) => { //usuarios
-
+const Etapa = ({ etapaInfo, index, id }) => {
   switch (index) {
-    case 0: return <Etapa1Seguimiento etapa={etapaInfo.etapa1} id={id}/>;
-    // case 1: return <Etapa2 etapa={etapaInfo.etapa2} etapaUno={etapaInfo.etapa1}   sectoriales={usuarios.usuarios_sectoriales} idCompetencia={id}/>;
-    // case 2: return <Etapa3 etapa={etapaInfo.etapa3} etapaDos={etapaInfo.etapa2}  idCompetencia={id} />;
-    // case 3: return <Etapa4 etapa={etapaInfo.etapa4} etapaTres={etapaInfo.etapa3}  idCompetencia={id} />;
-    // case 4: return <Etapa5 etapa={etapaInfo.etapa5} etapaCuatro={etapaInfo.etapa4}  idCompetencia={id} />;
+    case 0: return <Etapa1Recomendacion etapa={etapaInfo.recomendacionpostcid} id={id} />;
+    case 1: return <Etapa2Recomendacion etapa={etapaInfo.definicionplazos} etapaUno={etapaInfo.recomendacionpostcid} id={id} />;
     default: return null;
   }
 };
@@ -18,6 +15,9 @@ export const VerticalStepperRecomendacion = ({ etapasObjeto, etapaDatos, id }) =
     return <div className="text-center text-sans-h5-medium-blue ">Cargando...</div>;
   }
   
+  console.log("etapaDatos", etapaDatos);
+  console.log("etapasObjeto", etapasObjeto);
+
   const etapasInfo = etapasObjeto.etapas_info;
   const etapasClaves = Object.keys(etapasInfo);
   const idCompetencia = id
@@ -64,7 +64,7 @@ export const VerticalStepperRecomendacion = ({ etapasObjeto, etapaDatos, id }) =
               </div>
               <div className="stepperContent">
                 <div className="d-flex justify-content-between">
-                  <h3 className="stepperTitle">{etapa.nombre}</h3>
+                  <h3 className="stepperTitle">HOLA AQUI ESTOY {etapa.nombre}</h3>
                   <div>{renderBadge(etapa.estado)}</div>
                 </div>
                 <Etapa etapaInfo={etapaDatos} index={index} id={idCompetencia} usuarios={etapaDatos}/>
