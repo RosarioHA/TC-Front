@@ -1,14 +1,6 @@
-// import { Etapa1, Etapa2, Etapa3, Etapa4, Etapa5 } from "../fase1/etapas";
 import { Etapa1Recomendacion } from "../etapasRecomendacion/Etapa1";
 import { Etapa2Recomendacion } from "../etapasRecomendacion/Etapa2";
 
-// const Etapa = ({ etapaInfo, index, id }) => {
-//   switch (index) {
-//     case 0: return <Etapa1Recomendacion etapa={etapaInfo.recomendacionpostcid} id={id} />;
-//     case 1: return <Etapa2Recomendacion etapa={etapaInfo.definicionplazos} etapaUno={etapaInfo.recomendacionpostcid} id={id} />;
-//     default: return null;
-//   }
-// };
 const Etapa = ({ etapaInfo, index, id }) => {
   switch (index) {
     case 0:

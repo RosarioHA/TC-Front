@@ -2,9 +2,7 @@ import { Link } from 'react-router-dom';
 
 export const Etapa1Recomendacion = ({ etapa }) => {
   const { usuario_notificado, fecha_ultima_modificacion, calcular_tiempo_transcurrido, formulario_recomendacion } = etapa;
-
   console.log("etapa dentro de etapa1", etapa)
-
   return (
     <div className="my-3">
       <div>

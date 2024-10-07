@@ -19,7 +19,6 @@ const EstadoSeguimiento = () => {
   const { competenciaDetails, loading, error } = useCompetencia(id);
   const [ competencia, setCompetencia ] = useState(null);
   const { competenciaPostCid } = useCompetenciasPostCid(id);
-  //const [ competenciaPostCid, setCompetenciaPostCid ] = useState(null);
   const [openDropdown, setOpenDropdown] = useState(null);
   const mostrarMensajeFinalizada = competenciaDetails?.estado === 'Finalizada' && resumen?.competencia_fase1_finalizada === true;
   
@@ -29,11 +28,6 @@ const EstadoSeguimiento = () => {
     }
   }, [ competenciaDetails ]);
 
-  // useEffect(() => {
-  //   if (CompetenciasPC) {
-  //     setCompetenciaPostCid(CompetenciasPC);
-  //   }
-  // }, [ CompetenciasPC ]);
 
   console.log("competenciaPostCid en estado seguimiento", competenciaPostCid)
 
@@ -99,6 +93,7 @@ const EstadoSeguimiento = () => {
             onButtonClick={() => toggleDropdown('levantamiento')} 
             isOpen={openDropdown === 'levantamiento'}
             title="Levantamiento de información sectorial y de gobiernos regionales"
+            
             />
             {openDropdown === 'levantamiento' && (
               <div className="estado-competencia-content">
