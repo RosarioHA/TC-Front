@@ -28,7 +28,6 @@ const EstadoSeguimiento = () => {
     }
   }, [ competenciaDetails ]);
 
-
   console.log("competenciaPostCid en estado seguimiento", competenciaPostCid)
 
   const handleBackButtonClick = () => {
@@ -40,12 +39,26 @@ const EstadoSeguimiento = () => {
     setOpenDropdown(openDropdown === dropdown ? null : dropdown);
   };
 
+  // const etapaMapping = {
+  //   "Levantamiento de información sectorial y de gobiernos regionales": "Etapa Pre Implementación",
+  //   "Recomendación de transferencia post-CID y “pre-implementación”": "Etapa Pre Implementación",
+  //   "Implementación": "Etapa Implementación",
+  //   "Seguimiento": "Etapa Seguimiento",
+  //   "Evaluación": "Etapa Evaluación"
+  // };
+
+  // const getEtapaEstado = (etapaNombre) => {
+  //   const etapaKey = etapaMapping[etapaNombre];
+  //   return competencia?.resumen_competencia?.etapas_info?.[etapaKey]?.estado || "Estado no disponible";
+  // };
+
   if (loading && competencia) {
     return <div className="d-flex align-items-center flex-column ">
       <div className="text-center text-sans-h5-medium-blue ">Cargando detalles de la competencia...</div>
       <span className="placeholder col-4 bg-primary"></span>
     </div>
-  } if (error) {
+  } 
+  if (error) {
     return <div>Error al cargar los detalles: {error.message}</div>;
   }
 
@@ -93,7 +106,7 @@ const EstadoSeguimiento = () => {
             onButtonClick={() => toggleDropdown('levantamiento')} 
             isOpen={openDropdown === 'levantamiento'}
             title="Levantamiento de información sectorial y de gobiernos regionales"
-            
+            estado="Finalizada"
             />
             {openDropdown === 'levantamiento' && (
               <div className="estado-competencia-content">
@@ -124,6 +137,7 @@ const EstadoSeguimiento = () => {
             onButtonClick={() => toggleDropdown('recomendacion')} 
             isOpen={openDropdown === 'recomendacion'}
             title="Recomendación de transferencia post-CID y “pre-implementación” "
+            estado={competenciaPostCid?.resumen_competencia?.etapas_info["Etapa Pre Implementación"]?.estado}
             />
             {openDropdown === 'recomendacion' && (
               <div className="estado-competencia-content">
@@ -145,6 +159,7 @@ const EstadoSeguimiento = () => {
             onButtonClick={() => toggleDropdown('implementacion')} 
             isOpen={openDropdown === 'implementacion'}
             title="Implementación"
+            estado={competenciaPostCid?.resumen_competencia?.etapas_info["Etapa Implementación"]?.estado}
             />
             {openDropdown === 'implementacion' && (
               <div className="estado-competencia-content">
@@ -161,6 +176,7 @@ const EstadoSeguimiento = () => {
             onButtonClick={() => toggleDropdown('seguimiento')} 
             isOpen={openDropdown === 'seguimiento'}
             title="Seguimiento"
+            estado={competenciaPostCid?.resumen_competencia?.etapas_info["Etapa Seguimiento"]?.estado}
             />
             {openDropdown === 'seguimiento' && (
               <div className="estado-competencia-content">
@@ -177,6 +193,7 @@ const EstadoSeguimiento = () => {
             onButtonClick={() => toggleDropdown('evaluacion')} 
             isOpen={openDropdown === 'evaluacion'}
             title="Evaluación"
+            estado={competenciaPostCid?.resumen_competencia?.etapas_info["Etapa Evaluación"]?.estado}
             />
             {openDropdown === 'evaluacion' && (
               <div className="estado-competencia-content">
