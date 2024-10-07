@@ -194,7 +194,7 @@ export const SummaryDetail = ({ competencia }) =>
                     {recomendacion.nombre}
                     <span className="mx-5 px-5"></span>
                   </span>
-                  {resumen?.formulario_final_enviado ? (
+                  {resumen?.competencia_fase1_finalizada ? (
                     <div>
                       <span className={getBadgeDetails(recomendacion?.estado).class}>
                         {getBadgeDetails(recomendacion?.estado).text}

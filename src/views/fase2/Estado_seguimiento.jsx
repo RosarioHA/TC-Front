@@ -17,7 +17,7 @@ const EstadoSeguimiento = () => {
   const { competenciaDetails, loading, error } = useCompetencia(id);
   const [ competencia, setCompetencia ] = useState(null);
   const [openDropdown, setOpenDropdown] = useState(null);
-  const mostrarMensajeFinalizada = competenciaDetails?.estado === 'Finalizada' && resumen?.formulario_final_enviado === true;
+  const mostrarMensajeFinalizada = competenciaDetails?.estado === 'Finalizada' && resumen?.competencia_fase1_finalizada === true;
   
   useEffect(() => {
     if (competenciaDetails) {

@@ -54,6 +54,7 @@ const Paso_1_Revision = React.lazy(() => import("./views/fase1/revisionSubdere/P
 const Paso_2_Revision = React.lazy(() => import("./views/fase1/revisionSubdere/Paso_2_revision"));
 const ResumenFinal = React.lazy(() => import('./views/fase1/revisionSubdere/Resumen'));
 const SuccessRevisionFinal = React.lazy(() => import('./views/success/success_revision_final'));
+const SuccessFormSubdere = React.lazy(() => import('./views/success/success_formularioSubdere'));
 const OficioDipres2 = React.lazy(() => import("./views/fase1/minutaDIPRES/segundo_oficio"));
 const RecomendacionPostCIDLayout = React.lazy(() => import('./layout/RecomendacionPostCIDLayout'));
 const EstadoSeguimiento = React.lazy(() => import('./views/fase2/Estado_seguimiento.jsx'));
@@ -116,6 +117,7 @@ function App()
           <Route path="success_cierre_observaciones_gore/:id/" element={<FormGoreProvider> <SuccessOS_Gore /> </FormGoreProvider>} />
           <Route path="success_formulario_gore/:id/" element={<FormGoreProvider> <SuccessFormGore /> </FormGoreProvider>} />
           <Route path="success_revision_final/:id/" element={<FormSubdereProvider> <SuccessRevisionFinal /> </FormSubdereProvider>} />
+          <Route path="success_formulario_subdere/:id/" element={<FormSubdereProvider> <SuccessFormSubdere /> </FormSubdereProvider>} />
           <Route
             path="observaciones_subdere/:id/"
             element={
