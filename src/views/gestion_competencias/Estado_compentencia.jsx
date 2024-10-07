@@ -20,7 +20,7 @@ const EstadoCompetencia = () => {
   const [ competencia, setCompetencia ] = useState(null);
   const { dataFormSubdere } = useFormularioSubdere(id);
   const userSubdere = userData?.perfil?.includes('SUBDERE');
-  const mostrarMensajeFinalizada = competenciaDetails?.estado === 'Finalizada' && resumen?.formulario_final_enviado === true;
+  const mostrarMensajeFinalizada = competenciaDetails?.estado === 'Finalizada' && resumen?.competencia_fase1_finalizada === true;
 
   const { updateCompetencia } = useCompetenciasPostCid(id);
 
@@ -88,6 +88,7 @@ const EstadoCompetencia = () => {
             usuariosDipres={competencia?.usuarios_dipres}
             usuariosSectoriales={competencia?.usuarios_sectoriales}
             usuariosGore={competencia?.usuarios_gore}
+            usuariosSeguimiento={competencia?.usuarios_seguimiento}
           />
         </div>
 

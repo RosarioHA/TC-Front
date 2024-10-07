@@ -94,7 +94,7 @@ export const AgregarPersonal = ({
   const agregarPersonal = async () =>
   {
     const personalValues = getValues('personal');
-
+    console.log(personalValues);
     const isValid = await trigger('personal');
 
     if (!isValid)
@@ -255,7 +255,7 @@ export const AgregarPersonal = ({
                   <span className="text-sans-p-bold me-1 mt-3">{index + 1}</span>
 
                   <div className="col-12 pe-1">
-                  <Controller
+                    <Controller
                       control={control}
                       name={`personal[${index}].estamento`}
                       defaultValue={personal?.estamento || ''}
@@ -264,7 +264,8 @@ export const AgregarPersonal = ({
                           id={`estamento_${personal.id}`}
                           placeholder="Estamento"
                           options={opcionesEstamentos}
-                          onSelectionChange={(selectedOption) => {
+                          onSelectionChange={(selectedOption) =>
+                          {
                             handleUpdate(personal.id, 'estamento', selectedOption.value);
                             field.onChange(selectedOption.value);
                             clearErrors(`personal[${index}].estamento`); // Limpiar errores aquí

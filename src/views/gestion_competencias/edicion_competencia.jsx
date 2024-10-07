@@ -120,6 +120,7 @@ const EdicionCompetencia = () =>
       usuarios_dipres: [],
       usuarios_sectoriales: [],
       usuarios_gore: [],
+      usuarios_seguimiento: [],
     },
   });
 
@@ -140,6 +141,7 @@ const EdicionCompetencia = () =>
       setValue("usuarios_gore", competencia.usuarios_gore || null);
       setValue("usuarios_sectoriales", competencia.usuarios_sectoriales || null);
       setValue("usuarios_subdere", competencia.usuarios_subdere || null);
+      setValue("usuarios_seguimiento", competencia.usuarios_seguimiento || null);
     }
   }, [ editMode, competencia, setValue ]);
 
@@ -236,7 +238,6 @@ const EdicionCompetencia = () =>
         competencias: id,
       }));
 
-
       const dataToSend = {
         ...formData,
         sectores: sectorIds,
@@ -309,7 +310,7 @@ const EdicionCompetencia = () =>
 
   const combineUsers = (competencia) =>
   {
-    const { usuarios_dipres, usuarios_gore, usuarios_sectoriales, usuarios_subdere } = competencia;
+    const { usuarios_dipres, usuarios_gore, usuarios_sectoriales, usuarios_subdere, usuarios_seguimiento } = competencia;
 
     // Función para agregar el nombre del perfil a cada usuario
     const addProfileToUsers = (users, profile) =>
@@ -322,7 +323,8 @@ const EdicionCompetencia = () =>
       ...addProfileToUsers(usuarios_dipres, 'DIPRES'),
       ...addProfileToUsers(usuarios_gore, 'GORE'),
       ...addProfileToUsers(usuarios_sectoriales, 'Usuario Sectorial'),
-      ...addProfileToUsers(usuarios_subdere, 'SUBDERE')
+      ...addProfileToUsers(usuarios_subdere, 'SUBDERE'),
+      ...addProfileToUsers(usuarios_seguimiento, 'Usuario Seguimiento')
     ];
   };
 
