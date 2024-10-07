@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { useCompetencia } from "../../hooks/competencias/useCompetencias";
-import { useUpdateEtapa } from "../../hooks/competencias/useOficio";
-import { SuccessSOficio } from "../../components/success/oficio";
-import { SubirArchivo } from "../../components/commons/subirArchivo";
+import { useCompetencia } from "../../../hooks/competencias/useCompetencias";
+import { useUpdateEtapa } from "../../../hooks/competencias/useOficio";
+import { SuccessSOficio } from "../../../components/success/oficio";
+import { SubirArchivo } from "../../../components/fase1/commons/subirArchivo";
 
 const OficioGore = () => {
   const updateEtapa = useUpdateEtapa();

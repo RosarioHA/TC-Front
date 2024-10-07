@@ -1,10 +1,10 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { useState, useEffect } from "react";
-import { useCompetencia } from "../../hooks/competencias/useCompetencias";
-import { SubirArchivo } from "../../components/commons/subirArchivo";
-import CustomTextarea from "../../components/forms/custom_textarea";
-import { SuccessOSminutaDIPRES } from "../../components/success/OSminutaDipres";
-import { useEtapa } from "../../hooks/etapa/useEtapa";
+import { useState } from "react";
+import { useCompetencia } from "../../../hooks/competencias/useCompetencias";
+import { SubirArchivo } from "../../../components/fase1/commons/subirArchivo";
+import CustomTextarea from "../../../components/fase1/forms/custom_textarea";
+import { SuccessOSminutaDIPRES } from '../../../components/success/OSminutaDipres';
+import { useEtapa } from "../../../hooks/fase1/etapa/useEtapa";
 
 const ObservacionesSubdereDipres = () => {
   const { id } = useParams();

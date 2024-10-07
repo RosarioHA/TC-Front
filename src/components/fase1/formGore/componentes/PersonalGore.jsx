@@ -3,7 +3,7 @@ import { FormGOREContext } from '../../../../context/FormGore';
 import DropdownSelect from '../../dropdown/select';
 import CustomTextarea from '../../forms/custom_textarea';
 import { PersonalInformado } from './PersonalInformado';
-import { perfilesTecnicos } from '../../../validaciones/esquemaPersonalGore'
+import { perfilesTecnicos } from '../../../../validaciones/fase1/esquemaPersonalGore'
 
 
 export const PersonalGore = ({

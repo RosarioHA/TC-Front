@@ -4,53 +4,33 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import CustomInput from '../../forms/custom_input';
 import { OpcionesAB } from '../../forms/opciones_AB';
 import { FormGOREContext } from '../../../../context/FormGore';
-
-const schema = yup
-  .object({
-    utilizar_recurso: yup.boolean().required('Debe indicar una opción'),
-    numero_personas_gore: yup
-      .number()
-      .typeError('Debe ser un número')
-      .integer('Debe ser un número entero')
-      .positive('Debe ser un número positivo')
-      .min(1, 'Debe ser igual o mayor a 1'),
-  })
-  .required();
-import { FormGOREContext } from '../../../context/FormGore';
-import { validacionesPersonalInformado } from '../../../validaciones/esquemaPersonalGore'
-
+import { validacionesPersonalInformado } from '../../../../validaciones/fase1/esquemaPersonalGore';
 
 export const PersonalInformadoSector = ({
   personalSector,
   title,
   seccion,
   solo_lectura
-}) =>
-{
+}) => {
   const { updatePasoGore } = useContext(FormGOREContext);
   const [ inputStatus, setInputStatus ] = useState({});
-  const { control,  trigger, getValues ,handleSubmit, formState: { errors } } = useForm({
+  const { control,  trigger, getValues ,handleSubmit} = useForm({
     resolver: yupResolver(validacionesPersonalInformado),
     mode: 'onBlur'
   });
 
-  const formatNumber = (number) =>
-  {
+  const formatNumber = (number) => {
     // Verificar si el número es 0 para manejar el caso "No informado"
     if (number === 0) return "No informado";
     return new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP', minimumFractionDigits: 0 }).format(number);
   };
 
-  const datosAgrupadosPorCalidadJuridica = useMemo(() =>
-  {
-    if (!Array.isArray(personalSector))
-    {
+  const datosAgrupadosPorCalidadJuridica = useMemo(() => {
+    if (!Array.isArray(personalSector)) {
       return {};
     }
-    return personalSector.reduce((acc, persona) =>
-    {
-      if (!acc[ persona.calidad_juridica ])
-      {
+    return personalSector.reduce((acc, persona) => {
+      if (!acc[ persona.calidad_juridica ]) {
         acc[ persona.calidad_juridica ] = [];
       }
       acc[ persona.calidad_juridica ].push(persona);
@@ -58,8 +38,7 @@ export const PersonalInformadoSector = ({
     }, {});
   }, [ personalSector ]);
 
-  const handleUpdate = async (personaId, field, value) =>
-  {
+  const handleUpdate = async (personaId, field, value) => {
     setInputStatus((prev) => ({
       ...prev,
       [ personaId ]: {
@@ -68,8 +47,7 @@ export const PersonalInformadoSector = ({
       },
     }));
 
-    try
-    {
+    try {
       const payload = {
         [ seccion ]: [ { id: personaId, [ field ]: value } ],
       };
@@ -81,8 +59,7 @@ export const PersonalInformadoSector = ({
           [ field ]: { loading: false, saved: true },
         },
       }));
-    } catch (error)
-    {
+    } catch (error) {
       console.error('Error updating data', error);
       setInputStatus((prev) => ({
         ...prev,
@@ -94,10 +71,8 @@ export const PersonalInformadoSector = ({
     }
   };
 
-  const onSubmit = (data) =>
-  {
-    Object.entries(data).forEach(([ key, value ]) =>
-    {
+  const onSubmit = (data) => {
+    Object.entries(data).forEach(([ key, value ]) => {
       const [ fieldName, personaId ] = key.split('-');
       if (fieldName && personaId)
       {
@@ -105,6 +80,7 @@ export const PersonalInformadoSector = ({
       }
     });
   };
+
   return (
     <>
       <div className="my-5 col-11">
@@ -232,8 +208,8 @@ export const PersonalInformadoSector = ({
                                       onBlur={async (e) =>
                                       {
                                         field.onBlur(); // Llama a la función onBlur de React Hook Form
-                                        const newValue = e.target.value;
-
+                                        //const newValue = e.target.value;
+e
                                         // Forzar la validación del campo
                                         const isValid = await trigger(`persona.${persona.id}.numero_personas_gore`);
 

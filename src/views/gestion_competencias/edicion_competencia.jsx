@@ -16,7 +16,7 @@ import ModalAbandonoFormulario from "../../components/fase1/commons/modalAbandon
 import { DropdownSelectBuscadorCheck } from "../../components/fase1/dropdown/select_buscador_checkbox";
 import { useFiltroUsuarios } from "../../hooks/usuarios/useFiltroUsuarios";
 import { yupResolver } from '@hookform/resolvers/yup';
-import { esquemaEdicionCompetencias } from "../../validaciones/esquemaEditarUsuario-Competencia";
+import { esquemaEdicionCompetencias } from "../../validaciones/fase1/esquemaEditarUsuario-Competencia";
 import { ListaNombres } from "../../components/fase1/tables/ListaNombres";
 
 const groupUsersByType = (usuarios) =>
