@@ -13,7 +13,6 @@ export const Etapa1Recomendacion = ({ etapa, id }) => {
           </div>
         ))}
 
-        <h1>{etapa.nombre_etapa}</h1>
         {/* Manejar usuarios_vinculados que es un objeto individual */}
         {/* <div className="d-flex justify-content-between text-sans-p border-top border-bottom my-3 py-1">
             <div className="align-self-center">nombre</div>

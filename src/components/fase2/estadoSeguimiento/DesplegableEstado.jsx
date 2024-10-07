@@ -7,7 +7,7 @@ export const DesplegableEstadoFase2 = ({ title, onButtonClick, isOpen}) => {
           <div className="badge-tipo mb-2">BADGE</div>
       </div>
 
-      <div className="d-flex justify-content-end align-items-center gap-3 align-items-center">
+      <div className="d-flex justify-content-end align-items-center gap-3 align-items-center"  onClick={onButtonClick}>
           <div className="col-3 d-flex justify-content-end">
               <button className="btn-secundario-s-round" onClick={onButtonClick}>
                   <p className="text-decoration-underline mb-0">{isOpen ? 'Ocultar sección' : 'Mostrar sección'}</p>
