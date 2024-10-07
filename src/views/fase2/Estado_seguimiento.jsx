@@ -39,19 +39,6 @@ const EstadoSeguimiento = () => {
     setOpenDropdown(openDropdown === dropdown ? null : dropdown);
   };
 
-  // const etapaMapping = {
-  //   "Levantamiento de información sectorial y de gobiernos regionales": "Etapa Pre Implementación",
-  //   "Recomendación de transferencia post-CID y “pre-implementación”": "Etapa Pre Implementación",
-  //   "Implementación": "Etapa Implementación",
-  //   "Seguimiento": "Etapa Seguimiento",
-  //   "Evaluación": "Etapa Evaluación"
-  // };
-
-  // const getEtapaEstado = (etapaNombre) => {
-  //   const etapaKey = etapaMapping[etapaNombre];
-  //   return competencia?.resumen_competencia?.etapas_info?.[etapaKey]?.estado || "Estado no disponible";
-  // };
-
   if (loading && competencia) {
     return <div className="d-flex align-items-center flex-column ">
       <div className="text-center text-sans-h5-medium-blue ">Cargando detalles de la competencia...</div>
@@ -107,6 +94,8 @@ const EstadoSeguimiento = () => {
             isOpen={openDropdown === 'levantamiento'}
             title="Levantamiento de información sectorial y de gobiernos regionales"
             estado="Finalizada"
+            etapaFinalizada={true}
+            data={competencia}
             />
             {openDropdown === 'levantamiento' && (
               <div className="estado-competencia-content">
