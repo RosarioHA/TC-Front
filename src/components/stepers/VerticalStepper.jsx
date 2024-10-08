@@ -1,4 +1,4 @@
-import { Etapa1, Etapa2, Etapa3, Etapa4, Etapa5 } from "../etapas";
+import { Etapa1, Etapa2, Etapa3, Etapa4, Etapa5 } from "../fase1/etapas";
 
 const Etapa = ({ etapaInfo, index, id, usuarios}) => {
 
@@ -12,27 +12,21 @@ const Etapa = ({ etapaInfo, index, id, usuarios}) => {
   }
 };
 
-
 export const VerticalStepper = ({ etapasObjeto, etapaDatos, id }) => {
-  if (!etapasObjeto)
-  {
+  if (!etapasObjeto) {
     return <div className="text-center text-sans-h5-medium-blue ">Cargando...</div>;
   }
+  console.log("etapaDatos dentro de VerticalStepper original", etapaDatos);
   
   const etapasInfo = etapasObjeto.etapas_info;
   const etapasClaves = Object.keys(etapasInfo);
   const idCompetencia = id
 
-
-
   let lastCompletedIndex = etapasClaves.findIndex((key, index) =>
     etapasInfo[ key ].estado !== 'Finalizada' && (index === 0 || etapasInfo[ etapasClaves[ index - 1 ] ].estado === 'Finalizada'));
 
-
-  const renderBadge = (estado) =>
-  {
-    switch (estado)
-    {
+  const renderBadge = (estado) => {
+    switch (estado) {
       case 'Finalizada':
         return <span className="badge-status-finish">{estado}</span>;
       case 'En Estudio':
@@ -82,5 +76,4 @@ export const VerticalStepper = ({ etapasObjeto, etapaDatos, id }) => {
       </ol>
     </div>
   );
-  
 };

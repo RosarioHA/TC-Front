@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useResumenFinal } from "../../hooks/revisionFinalSubdere/useResumenFinal";
+import { useResumenFinal } from "../../hooks/fase1/revisionFinalSubdere/useResumenFinal";
 
 export const HorizontalRevision = ({ baseUrl, permisoSiguiente, permisoPaso2 , id}) => {
   const navigate = useNavigate();

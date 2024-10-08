@@ -23,6 +23,22 @@
   background-color: $blue-sky;
 }
 
+.lightgreen-container{
+  border: 1px solid $success-color;
+  border-radius: 4px;
+  background-color: $success-light;
+}
+
+.grey-container{
+  border-bottom: 1px solid $grey-light-color;
+  background-color: $neutral-color;
+}
+
+.celeste-container{
+  border-bottom: 1px solid $grey-light-color;
+  background-color: $blue-sky;
+}
+
 .container-home{
   background-color:rgba(207, 225, 243, 0.35);
   min-height: 92vh;

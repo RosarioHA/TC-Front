@@ -1,10 +1,10 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useForm, Controller } from 'react-hook-form';
 import { useNavigate, useParams } from "react-router-dom";
-import CustomInput from "../../components/forms/custom_input";
-import { DropdownSelectSimple } from "../../components/dropdown/selectSimple";
-import { CheckboxRegion } from "../../components/dropdown/checkboxRegion";
-import DropdownConSecciones from "../../components/dropdown/checkbox_conSecciones_conTabla";
+import CustomInput from "../../components/fase1/forms/custom_input";
+import { DropdownSelectSimple } from "../../components/fase1/dropdown/selectSimple";
+import { CheckboxRegion } from "../../components/fase1/dropdown/checkboxRegion";
+import DropdownConSecciones from "../../components/fase1/dropdown/checkbox_conSecciones_conTabla";
 import { useOrigenes } from "../../hooks/useOrigenes";
 import { useRegion } from "../../hooks/useRegion";
 import { useSector } from "../../hooks/useSector";
@@ -12,12 +12,12 @@ import { useAmbitos } from "../../hooks/useAmbitos";
 import { useEditCompetencia } from "../../hooks/competencias/useEditCompetencia"
 import { useFormContext } from "../../context/FormAlert";
 import { useAuth } from '../../context/AuthContext';
-import ModalAbandonoFormulario from "../../components/commons/modalAbandonoFormulario";
-import { DropdownSelectBuscadorCheck } from "../../components/dropdown/select_buscador_checkbox";
+import ModalAbandonoFormulario from "../../components/fase1/commons/modalAbandonoFormulario";
+import { DropdownSelectBuscadorCheck } from "../../components/fase1/dropdown/select_buscador_checkbox";
 import { useFiltroUsuarios } from "../../hooks/usuarios/useFiltroUsuarios";
 import { yupResolver } from '@hookform/resolvers/yup';
-import { esquemaEdicionCompetencias } from "../../validaciones/esquemaEditarUsuario-Competencia";
-import { ListaNombres } from "../../components/tables/ListaNombres";
+import { esquemaEdicionCompetencias } from "../../validaciones/fase1/esquemaEditarUsuario-Competencia";
+import { ListaNombres } from "../../components/fase1/tables/ListaNombres";
 
 const groupUsersByType = (usuarios) =>
 {
@@ -120,6 +120,7 @@ const EdicionCompetencia = () =>
       usuarios_dipres: [],
       usuarios_sectoriales: [],
       usuarios_gore: [],
+      usuarios_seguimiento: [],
     },
   });
 
@@ -140,6 +141,7 @@ const EdicionCompetencia = () =>
       setValue("usuarios_gore", competencia.usuarios_gore || null);
       setValue("usuarios_sectoriales", competencia.usuarios_sectoriales || null);
       setValue("usuarios_subdere", competencia.usuarios_subdere || null);
+      setValue("usuarios_seguimiento", competencia.usuarios_seguimiento || null);
     }
   }, [ editMode, competencia, setValue ]);
 
@@ -236,7 +238,6 @@ const EdicionCompetencia = () =>
         competencias: id,
       }));
 
-
       const dataToSend = {
         ...formData,
         sectores: sectorIds,
@@ -289,17 +290,19 @@ const EdicionCompetencia = () =>
     }
   };
 
-const extractFileName = (url) => {
-  let fileName = url.split('/').pop();
+  const extractFileName = (url) =>
+  {
+    let fileName = url.split('/').pop();
 
-  // Remove any query parameters or additional text after ".pdf"
-  const pdfIndex = fileName.indexOf('.pdf');
-  if (pdfIndex !== -1) {
-    fileName = fileName.substring(0, pdfIndex + 4); // "+4" to include ".pdf"
-  }
+    // Remove any query parameters or additional text after ".pdf"
+    const pdfIndex = fileName.indexOf('.pdf');
+    if (pdfIndex !== -1)
+    {
+      fileName = fileName.substring(0, pdfIndex + 4); // "+4" to include ".pdf"
+    }
 
-  return fileName;
-};
+    return fileName;
+  };
 
   // manejo de usuario 
   const userOptions = usuarios ? groupUsersByType(usuarios) : [];
@@ -307,7 +310,7 @@ const extractFileName = (url) => {
 
   const combineUsers = (competencia) =>
   {
-    const { usuarios_dipres, usuarios_gore, usuarios_sectoriales, usuarios_subdere } = competencia;
+    const { usuarios_dipres, usuarios_gore, usuarios_sectoriales, usuarios_subdere, usuarios_seguimiento } = competencia;
 
     // Función para agregar el nombre del perfil a cada usuario
     const addProfileToUsers = (users, profile) =>
@@ -320,7 +323,8 @@ const extractFileName = (url) => {
       ...addProfileToUsers(usuarios_dipres, 'DIPRES'),
       ...addProfileToUsers(usuarios_gore, 'GORE'),
       ...addProfileToUsers(usuarios_sectoriales, 'Usuario Sectorial'),
-      ...addProfileToUsers(usuarios_subdere, 'SUBDERE')
+      ...addProfileToUsers(usuarios_subdere, 'SUBDERE'),
+      ...addProfileToUsers(usuarios_seguimiento, 'Usuario Seguimiento')
     ];
   };
 
@@ -362,11 +366,11 @@ const extractFileName = (url) => {
           </button>
           <h3 className="text-sans-h3 ms-3 mb-0">Competencia: {competencia?.nombre}</h3>
         </div>
-        { userSubdere ? (
-        <button className="btn-secundario-s ms-3" onClick={handleEditClick}>
-          <p className="mb-0 ms-2">{editMode ? 'Editando' : 'Editar'}</p>
-          <i className="material-symbols-rounded me-2">{editMode ? 'edit' : 'edit'}</i>
-        </button>):("")}
+        {userSubdere ? (
+          <button className="btn-secundario-s ms-3" onClick={handleEditClick}>
+            <p className="mb-0 ms-2">{editMode ? 'Editando' : 'Editar'}</p>
+            <i className="material-symbols-rounded me-2">{editMode ? 'edit' : 'edit'}</i>
+          </button>) : ("")}
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} onChange={handleOnChange}>

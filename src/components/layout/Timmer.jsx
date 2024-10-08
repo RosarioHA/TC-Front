@@ -1,5 +1,5 @@
-import { Counter } from "../tables/Counter";
-export const Timmer = ({data, error }) =>
+import { Counter } from "../fase1/tables/Counter";
+export const Timmer = ({ data, error }) =>
 {
 
   if (error) return <div>Error al cargar los datos: {error.message}</div>;

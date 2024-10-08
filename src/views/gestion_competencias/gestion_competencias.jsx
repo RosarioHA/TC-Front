@@ -2,8 +2,8 @@ import { useState, useCallback, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useCompetencia } from "../../hooks/competencias/useCompetencias";
 import { useAuth } from "../../context/AuthContext";
-import InputSearch from "../../components/forms/Input_search";
-import { TableCheckbox } from "../../components/tables/TableCheck";
+import InputSearch from "../../components/fase1/forms/Input_search";
+import { TableCheckbox } from "../../components/fase1/tables/TableCheck";
 import { columnTitleCompetencias } from "../../Data/Usuarios";
 
 const GestionCompetencias = () => {
@@ -87,8 +87,17 @@ const GestionCompetencias = () => {
     setHasSearched(true);
   }, [ updateSearchTerm ]);
 
+
+console.log("Data List:", dataListCompetencia)
+
   const handleVerEstado = (competencia) => {
-    navigate(`/home/estado_competencia/${competencia.id}`, { state: { competencia } });
+    console.log("iniciar_etapa_preimplementacion:", competencia.iniciar_etapa_preimplementacion);
+
+    if (competencia.iniciar_etapa_preimplementacion) {
+      navigate(`/home/estado_seguimiento/${competencia.id}`, { state: { competencia } });
+    } else {
+      navigate(`/home/estado_competencia/${competencia.id}`, { state: { competencia } });
+    }
   };
   const handleVerDetalle = (competencia) => {
     navigate(`/home/editar_competencia/${competencia.id}`, { state: { competencia } });

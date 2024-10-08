@@ -2,12 +2,12 @@ import { useState, useCallback, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import CustomInput from "../../components/forms/custom_input";
-import { CheckboxRegion } from "../../components/dropdown/checkboxRegion";
-import { DropdownSelectSimple } from "../../components/dropdown/selectSimple";
-import DropdownConSecciones from "../../components/dropdown/checkbox_conSecciones_conTabla";
-import { DropdownSelectBuscadorCheck } from "../../components/dropdown/select_buscador_checkbox";
-import { esquemaCreacionCompetencia } from "../../validaciones/esquemaCrearUsuario_Competencia";
+import CustomInput from "../../components/fase1/forms/custom_input";
+import { CheckboxRegion } from "../../components/fase1/dropdown/checkboxRegion";
+import { DropdownSelectSimple } from "../../components/fase1/dropdown/selectSimple";
+import DropdownConSecciones from "../../components/fase1/dropdown/checkbox_conSecciones_conTabla";
+import { DropdownSelectBuscadorCheck } from "../../components/fase1/dropdown/select_buscador_checkbox";
+import { esquemaCreacionCompetencia } from "../../validaciones/fase1/esquemaCrearUsuario_Competencia";
 import { useCrearCompetencia } from "../../hooks/competencias/useCrearCompetencia";
 import { useCrearCompetenciaAgrupada } from "../../hooks/competencias/useCrearCompetenciaAgrupada";
 import { useRegion } from "../../hooks/useRegion";
@@ -16,9 +16,9 @@ import { useSector } from "../../hooks/useSector";
 import { useOrigenes } from "../../hooks/useOrigenes";
 import { useAmbitos } from "../../hooks/useAmbitos";
 import { useFormContext } from "../../context/FormAlert";
-import { BtnRadio } from "../../components/forms/BtnRadio";
-import ModalAbandonoFormulario from "../../components/commons/modalAbandonoFormulario";
-import { ListaNombres } from "../../components/tables/ListaNombres";
+import { BtnRadio } from "../../components/fase1/forms/BtnRadio";
+import ModalAbandonoFormulario from "../../components/fase1/commons/modalAbandonoFormulario";
+import { ListaNombres } from "../../components/fase1/tables/ListaNombres";
 
 
 const initialValues = {
@@ -31,6 +31,7 @@ const initialValues = {
   usuarios_dipres: [],
   usuarios_sectoriales: [],
   usuarios_gore: [],
+  usuarios_seguimiento: [],
   fecha_inicio: '',
   oficio_origen: '',
   plazo_formulario_sectorial: undefined,
@@ -151,6 +152,7 @@ const CreacionCompetencia = () =>
       usuarios_dipres: usuariosSeleccionados.usuarios_dipres,
       usuarios_sectoriales: usuariosSeleccionados.usuarios_sectoriales,
       usuarios_gore: usuariosSeleccionados.usuarios_gore,
+      usuarios_seguimiento: usuariosSeleccionados.usuarios_seguimiento,
       fecha_inicio: data.fecha_inicio,
       oficio_origen: selectedFile,
       agrupada: estado,

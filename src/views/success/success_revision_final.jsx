@@ -60,7 +60,7 @@ const SuccessRevisionFinal = () =>
         <div className=" ms-0 col-8 p-3  mt-5 text-sans-p">Recuerda que el documento final, que agrupa todos los formularios, podría tomar un momento en generarse, una vez que esté listo estará disponible para descarga en el expediente de la competencia.</div>
       </div>
 
-      <div className="d-flex justify-content-center mt-5">
+      <div className="d-flex justify-content-center my-5">
         <button className="btn-secundario-s" onClick={handleVolverBtn}>
           <p className="text-decoration-underline mb-0"><u>Ir al expediente</u></p>
         </button>
