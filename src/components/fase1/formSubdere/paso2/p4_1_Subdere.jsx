@@ -69,47 +69,44 @@ export const Temporalidad = ({
     }
   };
 
-  const handleUpdate = async (grupoId, field, value) =>
-  {
+  const handleUpdate = async (grupoId, field, value) => {
     const grupoActual = grupos.find((grupo) => grupo.id === grupoId);
     const nuevoGrupo = {
       ...grupoActual,
-      [ field ]: field === 'region' ? value.map(Number) : value, // Convertir a número si es la región
+      [field]: field === 'region' ? value.map(item => Number(item.value)) : value,
     };
 
     setInputStatus((prev) => ({
       ...prev,
-      [ grupoId ]: {
-        ...prev[ grupoId ],
-        [ field ]: { value, loading: false, saved: false },
+      [grupoId]: {
+        ...prev[grupoId],
+        [field]: { value, loading: false, saved: false },
       },
     }));
 
-    try
-    {
+    try {
       const payload = {
-        temporalidad_gradualidad: [ nuevoGrupo ],
+        temporalidad_gradualidad: [nuevoGrupo],
       };
       await updatePasoSubdere(payload);
       setInputStatus((prevStatus) => ({
         ...prevStatus,
-        [ grupoId ]: {
-          ...prevStatus[ grupoId ],
-          [ field ]: {
-            ...prevStatus[ grupoId ][ field ],
+        [grupoId]: {
+          ...prevStatus[grupoId],
+          [field]: {
+            ...prevStatus[grupoId][field],
             loading: false,
             saved: true,
           },
         },
       }));
-    } catch (error)
-    {
+    } catch (error) {
       console.error('Error updating data', error);
       setInputStatus((prevStatus) => ({
         ...prevStatus,
-        [ grupoId ]: {
-          ...prevStatus[ grupoId ],
-          [ field ]: { loading: false, saved: false },
+        [grupoId]: {
+          ...prevStatus[grupoId],
+          [field]: { loading: false, saved: false },
         },
       }));
     }
@@ -195,7 +192,10 @@ export const Temporalidad = ({
                                         label="Región (Obligatorio)"
                                         options={opcionesRegion}
                                         selectedRegions={value}
-                                        onSelectionChange={onChange}
+                                        onSelectionChange={(selectedRegions) => {
+                                          onChange(selectedRegions);
+                                          handleUpdate(grupo.id, 'region', selectedRegions);
+                                        }}
                                         readOnly={solo_lectura}
                                         error={error?.message}
                                       />
