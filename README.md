@@ -1,5 +1,4 @@
-# Plataforma Transferencia de Competencias 
-## Front end
+# Plataforma Transferencia de Competencias - Front end
 
 Plataforma creada dentro del equipo de desarrollo interno de la Subsecretaria de Desarrollo Regional y Administrativo, como respuesta a la necesidad de la Secretaría Ejecutiva del Comité Interministerial de Descentralización del Gobierno de Chile, para apoyar el proceso de levantamiento de informacion necesario para la Transferencia de Competencias del Estado.
 
